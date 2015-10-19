@@ -1,0 +1,1361 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GammaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="1CCharacteristicProperties">
+    <Key>
+      <PropertyRef Name="1CCharacteristicID" />
+      <PropertyRef Name="1CPropertyID" />
+    </Key>
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CPropertyValueID" Type="uniqueidentifier" />
+    <Property Name="ValueText" Type="varchar" MaxLength="8000" />
+    <Property Name="ValueNumeric" Type="decimal" Precision="20" Scale="0" />
+  </EntityType>
+  <EntityType Name="1CCharacteristics">
+    <Key>
+      <PropertyRef Name="1CCharacteristicID" />
+    </Key>
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="MeasureUnitPackage" Type="uniqueidentifier" />
+    <Property Name="MeasureUnitPallet" Type="uniqueidentifier" />
+    <Property Name="Name" Type="varchar" MaxLength="255" />
+    <Property Name="IsActive" Type="bit" />
+  </EntityType>
+  <EntityType Name="1CMeasureUnitQualifiers">
+    <Key>
+      <PropertyRef Name="1CMeasureUnitQualifierID" />
+    </Key>
+    <Property Name="1CMeasureUnitQualifierID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCode" Type="varchar" MaxLength="20" />
+    <Property Name="IsInteger" Type="bit" />
+    <Property Name="Name" Type="varchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="1CMeasureUnits">
+    <Key>
+      <PropertyRef Name="1CMeasureUnitID" />
+    </Key>
+    <Property Name="1CMeasureUnitID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CMeasureUnitQualifierID" Type="uniqueidentifier" />
+    <Property Name="1CCode" Type="varchar" MaxLength="20" />
+    <Property Name="Coefficient" Type="decimal" Precision="10" Scale="3" />
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="1CNomenclature">
+    <Key>
+      <PropertyRef Name="1CNomenclatureID" />
+    </Key>
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CBaseMeasureUnitQualifier" Type="uniqueidentifier" />
+    <Property Name="1CCode" Type="varchar" MaxLength="11" Nullable="false" />
+    <Property Name="1CParentID" Type="uniqueidentifier" />
+    <Property Name="Name" Type="varchar" MaxLength="255" />
+    <Property Name="IsArchive" Type="bit" />
+    <Property Name="IsFolder" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="1CNomenclatureProperties">
+    <Key>
+      <PropertyRef Name="1CNomenclatureID" />
+      <PropertyRef Name="1CPropertyID" />
+    </Key>
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CPropertyValueID" Type="uniqueidentifier" />
+    <Property Name="ValueText" Type="varchar" MaxLength="8000" />
+    <Property Name="ValueNumeric" Type="decimal" Precision="20" Scale="0" />
+  </EntityType>
+  <EntityType Name="1CProperties">
+    <Key>
+      <PropertyRef Name="1CPropertyID" />
+    </Key>
+    <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="1CPropertyValues">
+    <Key>
+      <PropertyRef Name="1CPropertyValueID" />
+    </Key>
+    <Property Name="1CPropertyValueID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCode" Type="varchar" MaxLength="20" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Marked" Type="bit" />
+    <Property Name="Name" Type="varchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="DocMovement">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="InPlaceID" Type="uniqueidentifier" />
+    <Property Name="OutPlaceID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="DocProduction">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" />
+    <Property Name="InPlaceID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="DocProductionWithdrawals">
+    <Key>
+      <PropertyRef Name="DocWithdrawalID" />
+      <PropertyRef Name="DocProductionID" />
+    </Key>
+    <Property Name="DocWithdrawalID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DocProducts">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="IsInConfirmed" Type="bit" />
+    <Property Name="IsOutConfirmed" Type="bit" />
+  </EntityType>
+  <EntityType Name="Docs">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocTypeID" Type="int" />
+    <Property Name="Number" Type="varchar" MaxLength="50" />
+    <Property Name="IsConfirmed" Type="bit" />
+    <Property Name="UserID" Type="uniqueidentifier" />
+    <Property Name="Date" Type="datetime" />
+    <Property Name="Comment" Type="varchar" MaxLength="8000" />
+  </EntityType>
+  <EntityType Name="DocWithdrawal">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="OutPlaceID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Permits">
+    <Key>
+      <PropertyRef Name="PermitID" />
+    </Key>
+    <Property Name="PermitID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="GroupNumber" Type="tinyint" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="PermitTables">
+    <Key>
+      <PropertyRef Name="PermitTableID" />
+      <PropertyRef Name="PermitID" />
+    </Key>
+    <Property Name="PermitTableID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PermitID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Columns" Type="varchar" MaxLength="8000" />
+  </EntityType>
+  <EntityType Name="PlaceGroups">
+    <Key>
+      <PropertyRef Name="PlaceGroupID" />
+    </Key>
+    <Property Name="PlaceGroupID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Places">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="64" />
+    <Property Name="NameEng" Type="varchar" MaxLength="16" />
+    <Property Name="DepartmentID" Type="smallint" Nullable="false" />
+    <Property Name="PlaceGroupID" Type="smallint" />
+    <Property Name="IsWarehouse" Type="bit" />
+  </EntityType>
+  <EntityType Name="ProductGroupPacks">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="ProductKindID" Type="tinyint" />
+    <Property Name="Weight" Type="decimal" Precision="10" Scale="4" />
+    <Property Name="GrossWeight" Type="decimal" Precision="10" Scale="4" />
+  </EntityType>
+  <EntityType Name="ProductionTaskConfig">
+    <Key>
+      <PropertyRef Name="ProductionTaskConfigID" />
+    </Key>
+    <Property Name="ProductionTaskConfigID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocProductsQuantity" Type="tinyint" />
+    <Property Name="TaskQuantity" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductionTaskPM">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductionTaskRW">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductionTasks">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductionTaskKindID" Type="smallint" />
+    <Property Name="PlaceID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductionTaskStateID" Type="uniqueidentifier" />
+    <Property Name="UserID" Type="uniqueidentifier" />
+    <Property Name="Number" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="DateBegin" Type="datetime" />
+    <Property Name="DateEnd" Type="datetime" />
+    <Property Name="Comment" Type="varchar" MaxLength="8000" />
+    <Property Name="IsInPlan" Type="bit" />
+  </EntityType>
+  <EntityType Name="ProductionTaskStates">
+    <Key>
+      <PropertyRef Name="ProductionTaskStateID" />
+    </Key>
+    <Property Name="ProductionTaskStateID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="128" />
+    <Property Name="IsActual" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductionTaskWR">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="NumFilmLayers" Type="tinyint" />
+    <Property Name="IsWithCarton" Type="bit" />
+    <Property Name="IsEndProtected" Type="bit" />
+    <Property Name="GroupPackConfig" Type="varchar" MaxLength="8000" />
+  </EntityType>
+  <EntityType Name="ProductPalletItems">
+    <Key>
+      <PropertyRef Name="ProductPalletItemID" />
+    </Key>
+    <Property Name="ProductPalletItemID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="Quantity" Type="int" />
+  </EntityType>
+  <EntityType Name="ProductPallets">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductKindID" Type="tinyint" />
+  </EntityType>
+  <EntityType Name="Products">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Number" Type="varchar" MaxLength="20" />
+    <Property Name="BarCode" Type="varchar" MaxLength="20" />
+    <Property Name="ProductKindID" Type="tinyint" />
+  </EntityType>
+  <EntityType Name="ProductSpools">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="RealFormat" Type="int" />
+    <Property Name="Diameter" Type="int" Nullable="false" />
+    <Property Name="Weight" Type="int" Nullable="false" />
+    <Property Name="Length" Type="int" />
+    <Property Name="RealBasisWeight" Type="decimal" Precision="10" Scale="4" />
+    <Property Name="BreakNumber" Type="tinyint" />
+  </EntityType>
+  <EntityType Name="Reports">
+    <Key>
+      <PropertyRef Name="ReportID" />
+    </Key>
+    <Property Name="ReportID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="IsReport" Type="bit" Nullable="false" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Rests">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Quantity" Type="tinyint" />
+    <Property Name="PlaceID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="RolePermits">
+    <Key>
+      <PropertyRef Name="RoleID" />
+      <PropertyRef Name="PermitID" />
+    </Key>
+    <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PermitID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Mark" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="32" Nullable="false" />
+    <Property Name="Comment" Type="varchar" MaxLength="8000" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
+  <EntityType Name="SourceSpools">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Unwinder1Spool" Type="uniqueidentifier" />
+    <Property Name="Unwinder1Active" Type="bit" />
+    <Property Name="Unwinder2Spool" Type="uniqueidentifier" />
+    <Property Name="Unwinder2Active" Type="bit" />
+    <Property Name="Unwinder3Spool" Type="uniqueidentifier" />
+    <Property Name="Unwinder3Active" Type="bit" />
+  </EntityType>
+  <EntityType Name="Templates">
+    <Key>
+      <PropertyRef Name="TemplateID" />
+    </Key>
+    <Property Name="TemplateID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ReportID" Type="uniqueidentifier" />
+    <Property Name="Name" Type="varchar" MaxLength="255" />
+    <Property Name="Template" Type="image" />
+    <Property Name="Version" Type="varchar" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RoleID" Type="uniqueidentifier" />
+    <Property Name="Login" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+    <Property Name="Post" Type="varchar" MaxLength="200" />
+    <Property Name="PassChange" Type="datetime" />
+    <Property Name="PassMustChange" Type="bit" />
+    <Property Name="BlockBegin" Type="datetime" />
+    <Property Name="BlockEnd" Type="datetime" />
+    <Property Name="IsSignedOff" Type="bit" Nullable="false" />
+    <Property Name="ChkReport" Type="bit" Nullable="false" />
+    <Property Name="PlaceID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Exports" Type="bit" Nullable="false" />
+    <Property Name="ShowUserKind" Type="tinyint" Nullable="false" />
+    <Property Name="DBAdmin" Type="bit" Nullable="false" />
+    <Property Name="ShiftID" Type="tinyint" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="ProductsInfo">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductKindID" Type="tinyint" />
+    <Property Name="Number" Type="varchar" MaxLength="20" />
+    <Property Name="Date" Type="datetime" />
+    <Property Name="BarCode" Type="varchar" MaxLength="20" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+    <Property Name="Place" Type="varchar" MaxLength="64" />
+    <Property Name="ShiftID" Type="tinyint" />
+  </EntityType>
+  <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+    <End Role="1CCharacteristicProperties" Type="Self.1CCharacteristicProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="1CCharacteristicProperties">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristicProperties_1CProperties">
+    <End Role="1CProperties" Type="Self.1CProperties" Multiplicity="1" />
+    <End Role="1CCharacteristicProperties" Type="Self.1CCharacteristicProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CProperties">
+        <PropertyRef Name="1CPropertyID" />
+      </Principal>
+      <Dependent Role="1CCharacteristicProperties">
+        <PropertyRef Name="1CPropertyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristicProperties_1CPropertyValues">
+    <End Role="1CPropertyValues" Type="Self.1CPropertyValues" Multiplicity="0..1" />
+    <End Role="1CCharacteristicProperties" Type="Self.1CCharacteristicProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CPropertyValues">
+        <PropertyRef Name="1CPropertyValueID" />
+      </Principal>
+      <Dependent Role="1CCharacteristicProperties">
+        <PropertyRef Name="1CPropertyValueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristics_1CMeasureUnits">
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="1CCharacteristics">
+        <PropertyRef Name="MeasureUnitPackage" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristics_1CMeasureUnits1">
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="1CCharacteristics">
+        <PropertyRef Name="MeasureUnitPallet" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristics_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CCharacteristics">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMeasureUnits_1CMeasureUnitQualifiers">
+    <End Role="1CMeasureUnitQualifiers" Type="Self.1CMeasureUnitQualifiers" Multiplicity="0..1" />
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnitQualifiers">
+        <PropertyRef Name="1CMeasureUnitQualifierID" />
+      </Principal>
+      <Dependent Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitQualifierID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMeasureUnits_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CMeasureUnits">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclature_1CMeasureUnitQualifiers">
+    <End Role="1CMeasureUnitQualifiers" Type="Self.1CMeasureUnitQualifiers" Multiplicity="0..1" />
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnitQualifiers">
+        <PropertyRef Name="1CMeasureUnitQualifierID" />
+      </Principal>
+      <Dependent Role="1CNomenclature">
+        <PropertyRef Name="1CBaseMeasureUnitQualifier" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclature_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CNomenclature1" Type="Self.1CNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclature1">
+        <PropertyRef Name="1CParentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureProperties_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="1CNomenclatureProperties" Type="Self.1CNomenclatureProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureProperties">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureProperties_1CProperties">
+    <End Role="1CProperties" Type="Self.1CProperties" Multiplicity="1" />
+    <End Role="1CNomenclatureProperties" Type="Self.1CNomenclatureProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CProperties">
+        <PropertyRef Name="1CPropertyID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureProperties">
+        <PropertyRef Name="1CPropertyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureProperties_1CPropertyValues">
+    <End Role="1CPropertyValues" Type="Self.1CPropertyValues" Multiplicity="0..1" />
+    <End Role="1CNomenclatureProperties" Type="Self.1CNomenclatureProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CPropertyValues">
+        <PropertyRef Name="1CPropertyValueID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureProperties">
+        <PropertyRef Name="1CPropertyValueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_C1CPropertyValues_C1CProperties">
+    <End Role="1CProperties" Type="Self.1CProperties" Multiplicity="1" />
+    <End Role="1CPropertyValues" Type="Self.1CPropertyValues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CProperties">
+        <PropertyRef Name="1CPropertyID" />
+      </Principal>
+      <Dependent Role="1CPropertyValues">
+        <PropertyRef Name="1CPropertyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="InPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Places1">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="OutPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProduction_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProduction">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProduction_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocProduction">
+        <PropertyRef Name="InPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProductionWithdrawals_DocProduction">
+    <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="1" />
+    <End Role="DocProductionWithdrawals" Type="Self.DocProductionWithdrawals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocProduction">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProductionWithdrawals">
+        <PropertyRef Name="DocProductionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProductionWithdrawals_DocWithdrawal">
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
+    <End Role="DocProductionWithdrawals" Type="Self.DocProductionWithdrawals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocWithdrawal">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProductionWithdrawals">
+        <PropertyRef Name="DocWithdrawalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProducts_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocProducts" Type="Self.DocProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProducts">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProducts_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="DocProducts" Type="Self.DocProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="DocProducts">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Docs_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Docs">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawal_Docs1">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocWithdrawal">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawal_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocWithdrawal">
+        <PropertyRef Name="OutPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PermitTables_Permits">
+    <End Role="Permits" Type="Self.Permits" Multiplicity="1" />
+    <End Role="PermitTables" Type="Self.PermitTables" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Permits">
+        <PropertyRef Name="PermitID" />
+      </Principal>
+      <Dependent Role="PermitTables">
+        <PropertyRef Name="PermitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Places_PlaceGroups">
+    <End Role="PlaceGroups" Type="Self.PlaceGroups" Multiplicity="0..1" />
+    <End Role="Places" Type="Self.Places" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceGroups">
+        <PropertyRef Name="PlaceGroupID" />
+      </Principal>
+      <Dependent Role="Places">
+        <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductGroupPacks_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="ProductGroupPacks" Type="Self.ProductGroupPacks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="ProductGroupPacks">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductGroupPacks_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="ProductGroupPacks" Type="Self.ProductGroupPacks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductGroupPacks">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductGroupPacks_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="ProductGroupPacks" Type="Self.ProductGroupPacks" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductGroupPacks">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskConfig_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="ProductionTaskConfig" Type="Self.ProductionTaskConfig" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductionTaskConfig">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskPM_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ProductionTaskPM" Type="Self.ProductionTaskPM" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ProductionTaskPM">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskQuantity_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+    <End Role="ProductionTaskConfig" Type="Self.ProductionTaskConfig" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="ProductionTaskConfig">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskQuantity_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ProductionTaskConfig" Type="Self.ProductionTaskConfig" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ProductionTaskConfig">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskRW_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ProductionTaskRW" Type="Self.ProductionTaskRW" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ProductionTaskRW">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTasks_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="ProductionTasks">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTasks_ProductionTaskStates">
+    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="0..1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTaskStates">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Principal>
+      <Dependent Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskWR_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTaskWR" Type="Self.ProductionTaskWR" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ProductionTaskWR">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductPalletItems_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="ProductPalletItems">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductPalletItems_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductPalletItems">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductPalletItems_ProductPallets">
+    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="0..1" />
+    <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductPallets">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductPalletItems">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductPallets_Products1">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductPallets">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductSpools_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="ProductSpools">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductSpools_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductSpools">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductSpools_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Rests_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="Rests" Type="Self.Rests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="Rests">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Rests_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="Rests" Type="Self.Rests" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="Rests">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RolePermits_Permits">
+    <End Role="Permits" Type="Self.Permits" Multiplicity="1" />
+    <End Role="RolePermits" Type="Self.RolePermits" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Permits">
+        <PropertyRef Name="PermitID" />
+      </Principal>
+      <Dependent Role="RolePermits">
+        <PropertyRef Name="PermitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RolePermits_Roles1">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+    <End Role="RolePermits" Type="Self.RolePermits" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="RolePermits">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="SourceSpools" Type="Self.SourceSpools" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_ProductSpools">
+    <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="0..1" />
+    <End Role="SourceSpools" Type="Self.SourceSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="Unwinder1Spool" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_ProductSpools1">
+    <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="0..1" />
+    <End Role="SourceSpools" Type="Self.SourceSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="Unwinder2Spool" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_ProductSpools2">
+    <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="0..1" />
+    <End Role="SourceSpools" Type="Self.SourceSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="Unwinder3Spool" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Templates_Reports">
+    <End Role="Reports" Type="Self.Reports" Multiplicity="0..1" />
+    <End Role="Templates" Type="Self.Templates" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reports">
+        <PropertyRef Name="ReportID" />
+      </Principal>
+      <Dependent Role="Templates">
+        <PropertyRef Name="ReportID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Roles1">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="0..1" />
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="GetProductionTaskProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="TableName" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="GammaModelStoreContainer">
+    <EntitySet Name="1CCharacteristicProperties" EntityType="Self.1CCharacteristicProperties" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CCharacteristics" EntityType="Self.1CCharacteristics" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CMeasureUnitQualifiers" EntityType="Self.1CMeasureUnitQualifiers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CMeasureUnits" EntityType="Self.1CMeasureUnits" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CNomenclature" EntityType="Self.1CNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CNomenclatureProperties" EntityType="Self.1CNomenclatureProperties" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CProperties" EntityType="Self.1CProperties" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CPropertyValues" EntityType="Self.1CPropertyValues" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocProduction" EntityType="Self.DocProduction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PermitTables" EntityType="Self.PermitTables" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskConfig" EntityType="Self.ProductionTaskConfig" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskPM" EntityType="Self.ProductionTaskPM" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskRW" EntityType="Self.ProductionTaskRW" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductPalletItems" EntityType="Self.ProductPalletItems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductPallets" EntityType="Self.ProductPallets" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductSpools" EntityType="Self.ProductSpools" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Reports" EntityType="Self.Reports" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Rests" EntityType="Self.Rests" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RolePermits" EntityType="Self.RolePermits" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SourceSpools" EntityType="Self.SourceSpools" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductsInfo" EntityType="Self.ProductsInfo" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [ProductsInfo].[DocID] AS [DocID], 
+    [ProductsInfo].[ProductID] AS [ProductID], 
+    [ProductsInfo].[ProductKindID] AS [ProductKindID], 
+    [ProductsInfo].[Number] AS [Number], 
+    [ProductsInfo].[Date] AS [Date], 
+    [ProductsInfo].[BarCode] AS [BarCode], 
+    [ProductsInfo].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [ProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [ProductsInfo].[Quantity] AS [Quantity], 
+    [ProductsInfo].[NomenclatureName] AS [NomenclatureName], 
+    [ProductsInfo].[Place] AS [Place], 
+    [ProductsInfo].[ShiftID] AS [ShiftID]
+    FROM [dbo].[ProductsInfo] AS [ProductsInfo]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_1CCharacteristicProperties_1CCharacteristics" Association="Self.FK_1CCharacteristicProperties_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="1CCharacteristicProperties" EntitySet="1CCharacteristicProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristicProperties_1CProperties" Association="Self.FK_1CCharacteristicProperties_1CProperties">
+      <End Role="1CProperties" EntitySet="1CProperties" />
+      <End Role="1CCharacteristicProperties" EntitySet="1CCharacteristicProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristicProperties_1CPropertyValues" Association="Self.FK_1CCharacteristicProperties_1CPropertyValues">
+      <End Role="1CPropertyValues" EntitySet="1CPropertyValues" />
+      <End Role="1CCharacteristicProperties" EntitySet="1CCharacteristicProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristics_1CMeasureUnits" Association="Self.FK_1CCharacteristics_1CMeasureUnits">
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristics_1CMeasureUnits1" Association="Self.FK_1CCharacteristics_1CMeasureUnits1">
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristics_1CNomenclature" Association="Self.FK_1CCharacteristics_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMeasureUnits_1CMeasureUnitQualifiers" Association="Self.FK_1CMeasureUnits_1CMeasureUnitQualifiers">
+      <End Role="1CMeasureUnitQualifiers" EntitySet="1CMeasureUnitQualifiers" />
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMeasureUnits_1CNomenclature" Association="Self.FK_1CMeasureUnits_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclature_1CMeasureUnitQualifiers" Association="Self.FK_1CNomenclature_1CMeasureUnitQualifiers">
+      <End Role="1CMeasureUnitQualifiers" EntitySet="1CMeasureUnitQualifiers" />
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclature_1CNomenclature" Association="Self.FK_1CNomenclature_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclature1" EntitySet="1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureProperties_1CNomenclature" Association="Self.FK_1CNomenclatureProperties_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclatureProperties" EntitySet="1CNomenclatureProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureProperties_1CProperties" Association="Self.FK_1CNomenclatureProperties_1CProperties">
+      <End Role="1CProperties" EntitySet="1CProperties" />
+      <End Role="1CNomenclatureProperties" EntitySet="1CNomenclatureProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureProperties_1CPropertyValues" Association="Self.FK_1CNomenclatureProperties_1CPropertyValues">
+      <End Role="1CPropertyValues" EntitySet="1CPropertyValues" />
+      <End Role="1CNomenclatureProperties" EntitySet="1CNomenclatureProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_C1CPropertyValues_C1CProperties" Association="Self.FK_C1CPropertyValues_C1CProperties">
+      <End Role="1CProperties" EntitySet="1CProperties" />
+      <End Role="1CPropertyValues" EntitySet="1CPropertyValues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Places" Association="Self.FK_DocMovement_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Places1" Association="Self.FK_DocMovement_Places1">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProduction_Docs" Association="Self.FK_DocProduction_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocProduction" EntitySet="DocProduction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProduction_Places" Association="Self.FK_DocProduction_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocProduction" EntitySet="DocProduction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProductionWithdrawals_DocProduction" Association="Self.FK_DocProductionWithdrawals_DocProduction">
+      <End Role="DocProduction" EntitySet="DocProduction" />
+      <End Role="DocProductionWithdrawals" EntitySet="DocProductionWithdrawals" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProductionWithdrawals_DocWithdrawal" Association="Self.FK_DocProductionWithdrawals_DocWithdrawal">
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+      <End Role="DocProductionWithdrawals" EntitySet="DocProductionWithdrawals" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProducts_Docs" Association="Self.FK_DocProducts_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocProducts" EntitySet="DocProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProducts_Products" Association="Self.FK_DocProducts_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="DocProducts" EntitySet="DocProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Docs_Users" Association="Self.FK_Docs_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Docs" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawal_Docs1" Association="Self.FK_DocWithdrawal_Docs1">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawal_Places" Association="Self.FK_DocWithdrawal_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PermitTables_Permits" Association="Self.FK_PermitTables_Permits">
+      <End Role="Permits" EntitySet="Permits" />
+      <End Role="PermitTables" EntitySet="PermitTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Places_PlaceGroups" Association="Self.FK_Places_PlaceGroups">
+      <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+      <End Role="Places" EntitySet="Places" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="Self.FK_ProductGroupPacks_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductGroupPacks_1CNomenclature" Association="Self.FK_ProductGroupPacks_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductGroupPacks_Products" Association="Self.FK_ProductGroupPacks_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskConfig_1CNomenclature" Association="Self.FK_ProductionTaskConfig_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="ProductionTaskConfig" EntitySet="ProductionTaskConfig" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskPM_ProductionTasks" Association="Self.FK_ProductionTaskPM_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskPM" EntitySet="ProductionTaskPM" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskQuantity_1CCharacteristics" Association="Self.FK_ProductionTaskQuantity_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="ProductionTaskConfig" EntitySet="ProductionTaskConfig" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskQuantity_ProductionTasks" Association="Self.FK_ProductionTaskQuantity_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskConfig" EntitySet="ProductionTaskConfig" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskRW_ProductionTasks" Association="Self.FK_ProductionTaskRW_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskRW" EntitySet="ProductionTaskRW" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTasks_Places" Association="Self.FK_ProductionTasks_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTasks_ProductionTaskStates" Association="Self.FK_ProductionTasks_ProductionTaskStates">
+      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskWR_ProductionTasks" Association="Self.FK_ProductionTaskWR_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductPalletItems_1CCharacteristics" Association="Self.FK_ProductPalletItems_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductPalletItems_1CNomenclature" Association="Self.FK_ProductPalletItems_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductPalletItems_ProductPallets" Association="Self.FK_ProductPalletItems_ProductPallets">
+      <End Role="ProductPallets" EntitySet="ProductPallets" />
+      <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductPallets_Products1" Association="Self.FK_ProductPallets_Products1">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductPallets" EntitySet="ProductPallets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductSpools_1CCharacteristics" Association="Self.FK_ProductSpools_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductSpools_1CNomenclature" Association="Self.FK_ProductSpools_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductSpools_Products" Association="Self.FK_ProductSpools_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rests_Places" Association="Self.FK_Rests_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="Rests" EntitySet="Rests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rests_Products" Association="Self.FK_Rests_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="Rests" EntitySet="Rests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RolePermits_Permits" Association="Self.FK_RolePermits_Permits">
+      <End Role="Permits" EntitySet="Permits" />
+      <End Role="RolePermits" EntitySet="RolePermits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RolePermits_Roles1" Association="Self.FK_RolePermits_Roles1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="RolePermits" EntitySet="RolePermits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_Places" Association="Self.FK_SourceSpools_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_ProductSpools" Association="Self.FK_SourceSpools_ProductSpools">
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_ProductSpools1" Association="Self.FK_SourceSpools_ProductSpools1">
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_ProductSpools2" Association="Self.FK_SourceSpools_ProductSpools2">
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Templates_Reports" Association="Self.FK_Templates_Reports">
+      <End Role="Reports" EntitySet="Reports" />
+      <End Role="Templates" EntitySet="Templates" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Places" Association="Self.FK_Users_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Roles1" Association="Self.FK_Users_Roles1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

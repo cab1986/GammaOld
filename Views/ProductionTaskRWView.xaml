@@ -1,0 +1,42 @@
+﻿<UserControl xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" x:Class="Gamma.Views.ProductionTaskRWView"
+        mc:Ignorable="d ignore">
+
+    <dxlc:LayoutGroup Header="" View="GroupBox" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+        <dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" IsReadOnly="True">
+                    <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}" />
+                </dxe:ButtonEdit>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
+                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}"/>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
+        <dxlc:LayoutItem Label="Конфигурация" LabelPosition="Top">
+            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding ConfigurationElements, Mode=TwoWay}" MaxHeight="1000">
+                <dxg:GridControl.Columns>
+                    <dxg:GridColumn FieldName="CharacteristicID" Header="Характеристика">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Characteristics}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="DocProductQuantity" Header="Кол-во в съеме">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:SpinEditSettings MinValue="1" MaxValue="20" Mask="d"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                </dxg:GridControl.Columns>
+                <dxg:GridControl.View>
+                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" NewItemRowPosition="Bottom" />
+                </dxg:GridControl.View>
+            </dxg:GridControl>
+        </dxlc:LayoutItem>
+    </dxlc:LayoutGroup>
+
+</UserControl>

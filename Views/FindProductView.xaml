@@ -1,0 +1,100 @@
+﻿<g:MVVMWindow xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:g="clr-namespace:Gamma"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="Gamma.Views.FindProductView"
+        mc:Ignorable="d ignore"
+        Width="845.612" Height="539.478">
+
+    <dxlc:LayoutControl Orientation="Vertical">
+        <Grid Background="#FFB1CEF3" VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,-12,-12,-12" Orientation="Horizontal">
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Переделы" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
+                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Orientation="Vertical">
+                    <dxlc:LayoutGroup View="Group">
+                        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+                            <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False">
+                                <dxe:ButtonEdit.Buttons>
+                                    <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                                </dxe:ButtonEdit.Buttons>
+                            </dxe:ButtonEdit>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup View="Group">
+                        <dxlc:LayoutItem Label="Вид изделия" LabelPosition="Top">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" IsEnabled="{Binding ProductKindSelectEnabled}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                            <dxe:TextEdit EditValue="{Binding Number}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Штрих-код" LabelPosition="Top">
+                            <dxe:TextEdit EditValue="{Binding Barcode}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Статус" LabelPosition="Top" Width="150">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding States}" SelectedIndex="{Binding SelectedStateIndex}"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup View="Group">
+                        <dxlc:LayoutGroup View="Group">
+                            <dxlc:LayoutItem Label="Произведено с:" LabelPosition="Top">
+                                <dxe:DateEdit EditValue="{Binding DateBegin}"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Произведено по:" LabelPosition="Top">
+                                <dxe:DateEdit EditValue="{Binding DateEnd}" />
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutGroup>
+                        <dxlc:LayoutGroup HorizontalAlignment="Right" Height="40">
+                            <Button Content="Поиск" Command="{Binding FindCommand}"/>
+                        <Button Content="Сброс параметров поиска" Command="{Binding ResetSearchCommand}"/>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutControl>
+            <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding FoundProducts}" SelectedItem="{Binding SelectedProduct}" VerticalAlignment="Stretch">
+                <dxg:GridControl.Columns>
+                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="100"/>
+                    <dxg:GridColumn FieldName="Date" Header="Дата" Width="70">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:DateEditSettings Mask="g"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" />
+                    <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="30"/>
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="60"/>
+                    <dxg:GridColumn FieldName="ShiftID" Header="Смена" Width="50"/>
+                    <dxg:GridColumn FieldName="State" Header="Статус"/>
+                </dxg:GridControl.Columns>
+                <dxg:GridControl.View>
+                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False"/>
+                </dxg:GridControl.View>
+            </dxg:GridControl>
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Height="40" Margin="-12,0,-12,-12">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ButtonPanelVisible}" Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <Button Content="Выбрать" Margin="0,0,10,0" Command="{Binding ChooseProductCommand}"/>
+            <Button Content="Отмена" Command="{Binding CloseCommand}"/>
+        </StackPanel>
+    </dxlc:LayoutControl>
+</g:MVVMWindow>

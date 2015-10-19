@@ -1,0 +1,120 @@
+﻿<Window xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"  
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:ignore="http://www.galasoft.ch/ignore" 
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+    x:Class="Gamma.Views.ManageUsersView" 
+    mc:Ignorable="d ignore" 
+    DataContext="{Binding ManageUsers, Source={StaticResource Locator}}" 
+    Width="893.373">
+    <Grid>
+        <dxb:BarManager>
+            <dxb:BarManager.Bars>
+                <dxb:Bar>
+                    <dxb:BarButtonItem Content="BarButtonItem" Glyph="{dx:DXImage Image=Add_16x16.png}"/>
+                    <dxb:BarButtonItem Content="BarButtonItem" Glyph="{dx:DXImage Image=Edit_16x16.png}"/>
+                </dxb:Bar>
+            </dxb:BarManager.Bars>
+            <dx:DXTabControl>
+                <dx:DXTabItem Header="Пользователи">
+                    <Grid Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="11*"/>
+                            <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding Users}">
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn />
+                            </dxg:GridControl.Columns>
+                            <dxg:GridControl.View>
+                                <dxg:TableView AllowPerPixelScrolling="True" ShowDataNavigator="True"/>
+                            </dxg:GridControl.View>
+                        </dxg:GridControl>
+                        <dxlc:LayoutControl Grid.Column="1"  Orientation="Vertical">
+                            <dxlc:LayoutGroup Header="{Binding SelectedUser.Name}" View="GroupBox" Orientation="Vertical">
+                                <dxlc:LayoutItem Label="Логин">
+                                    <dxe:TextEdit EditValue="{Binding SelectedUser.Login}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Имя">
+                                    <dxe:TextEdit EditValue="{Binding SelectedUser.Name}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Должность">
+                                    <dxe:TextEdit EditValue="{Binding SelectedUser.Post}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Подразделение">
+                                    <dxe:ComboBoxEdit />
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Пароль">
+                                    <dxe:PasswordBoxEdit />
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem>
+                                    <dxe:PasswordBoxEdit />
+                                </dxlc:LayoutItem>
+                            </dxlc:LayoutGroup>
+                        </dxlc:LayoutControl>
+
+                    </Grid>
+                </dx:DXTabItem>
+                <dx:DXTabItem  Header="Настройка ролей">
+                    <Grid Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="400"/>
+                        </Grid.ColumnDefinitions>
+                        <dxg:GridControl AutoGenerateColumns="AddNew" EnableSmartColumnsGeneration="True">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True"/>
+                            </dxg:GridControl.View>
+                        </dxg:GridControl>
+                        <dxlc:LayoutControl Orientation="Vertical" Grid.Column="1">
+                            <dxlc:LayoutGroup Orientation="Vertical" View="GroupBox" Header="Разрешения роли" >
+                                <dxg:GridControl ItemsSource="{Binding RolePermits}">
+                                    <dxg:GridControl.Columns>
+                                        <dxg:GridColumn Header="Разрешение" FieldName="{Binding Permits.Name}"/>
+                                        <dxg:GridColumn Header="Уровень доступа" FieldName="{Binding Mark}">
+                                            <dxg:GridColumn.EditSettings>
+                                                <dxe:ComboBoxEditSettings />
+                                            </dxg:GridColumn.EditSettings>
+                                        </dxg:GridColumn>
+                                    </dxg:GridControl.Columns>
+                                </dxg:GridControl>
+                            </dxlc:LayoutGroup>
+                        </dxlc:LayoutControl>
+                    </Grid>
+                </dx:DXTabItem>
+                <dx:DXTabItem Header="Настройка видов доступа">
+                    <Grid Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="11*"/>
+                            <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <dxg:GridControl AutoGenerateColumns="AddNew" EnableSmartColumnsGeneration="True">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True"/>
+                            </dxg:GridControl.View>
+                        </dxg:GridControl>
+                        <dxlc:LayoutControl Orientation="Vertical" Grid.Column="1">
+                            <dxlc:LayoutGroup Header="Список таблиц вида доступа" Orientation="Vertical" View="GroupBox">
+                                <dxg:GridControl>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView  ShowDataNavigator="True"/> 
+                                    </dxg:GridControl.View>
+                                    <dxg:GridControl.Columns>
+                                        <dxg:GridColumn Header="Название таблицы" />
+                                        <dxg:GridColumn Header="Список столбцов" />
+                                    </dxg:GridControl.Columns>
+                                </dxg:GridControl>
+                            </dxlc:LayoutGroup>
+                        </dxlc:LayoutControl>
+                    </Grid>
+                </dx:DXTabItem>
+            </dx:DXTabControl>
+        </dxb:BarManager>
+    </Grid>
+
+</Window>

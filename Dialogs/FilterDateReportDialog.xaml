@@ -1,0 +1,33 @@
+﻿<Window x:Class="Gamma.Dialogs.FilterDateReportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        Height="137.985" Width="379.941"
+        Title="Фильтр дат">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
+            <dxlc:LayoutGroup Header="" View="GroupBox" Margin="-12">
+                <dxlc:LayoutItem Label="Начальная дата" LabelPosition="Top">
+                    <dxe:DateEdit Name="edtDateBegin" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                                               DisplayFormatString="dd-MMM-yyyy HH:mm"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Конечная дата" LabelPosition="Top">
+                    <dxe:DateEdit Name="edtDateEnd" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                                               DisplayFormatString="dd-MMM-yyyy HH:mm" />
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <Button Content="OK" Name="btnOK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="Отмена" IsCancel="True" Name="btnCancel"  Grid.Row="1"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />
+    </Grid>
+</Window>
+
