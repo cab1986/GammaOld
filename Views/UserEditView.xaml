@@ -1,0 +1,53 @@
+﻿<Window 
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    x:Class="Gamma.Views.UserEditView" 
+    Title="Пользователь" 
+    Width="307" 
+    Height="345.104">
+    <Grid>
+        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox" Background="#FFB1CEF3">
+            <dxlc:LayoutGroup x:Name="layoutGroup" Orientation="Vertical" VerticalAlignment="Stretch" View="Group">
+                <dxlc:LayoutItem IsRequired="True" Label="Логин:" LabelPosition="Top">
+                    <dxe:TextEdit MinWidth="200" EditValue="{Binding Login,ValidatesOnDataErrors=True}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup View="Group">
+                    <dxlc:LayoutItem IsRequired="True" Label="Пароль:" LabelPosition="Top">
+                        <dxe:PasswordBoxEdit MinWidth="200" EditValue="{Binding Password, ValidatesOnDataErrors=True}"/>
+                    </dxlc:LayoutItem>
+                    <Button Content="Сменить пароль" Height="30" Command="{Binding ChangePasswordCommand}" IsEnabled="{Binding ChangePassEnabled}"/>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutItem Label="Роль пользователя" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding RoleID,ValidatesOnDataErrors=True}" ItemsSource="{Binding Roles}" DisplayMember="Name" ValueMember="RoleID" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Имя" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Name, ValidatesOnDataErrors=True}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Должность" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Post}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Подразделение" LabelPosition="Top">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Places}" DisplayMember="Name" ValueMember="PlaceID" EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Номер смены" >
+                        <dxe:SpinEdit MinValue="0" MaxValue="4" EditValue="{Binding ShiftID}" EditValueType="{x:Type sys:Byte}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Администратор БД">
+                        <dxe:CheckEdit EditValue="{Binding IsDBAdmin}"/>
+                    </dxlc:LayoutItem>
+
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Height="30" VerticalAlignment="Bottom">
+                    <Button Content="OK" Command="{Binding SaveAndCloseCommand}"/>
+                    <Button Content="Отмена" Command="{Binding CloseCommand}"/>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+
+    </Grid>
+</Window>
