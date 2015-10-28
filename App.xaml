@@ -39,5 +39,9 @@
         <Style TargetType="{x:Type v:NomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:DocProductView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:FindProductView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:ManageUsersView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:UserEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:PermitEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:RoleEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
     </Application.Resources>
 </Application>

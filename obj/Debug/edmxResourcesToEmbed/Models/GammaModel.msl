@@ -125,16 +125,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="PermitTables">
-      <EntityTypeMapping TypeName="GammaModel.PermitTables">
-        <MappingFragment StoreEntitySet="PermitTables">
-          <ScalarProperty Name="Columns" ColumnName="Columns" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
-          <ScalarProperty Name="PermitTableID" ColumnName="PermitTableID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="C1CCharacteristicProperties">
       <EntityTypeMapping TypeName="GammaModel.C1CCharacteristicProperties">
         <MappingFragment StoreEntitySet="1CCharacteristicProperties">
@@ -357,46 +347,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="GammaModel.Users">
-        <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
-          <ScalarProperty Name="ShowUserKind" ColumnName="ShowUserKind" />
-          <ScalarProperty Name="Exports" ColumnName="Exports" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="ChkReport" ColumnName="ChkReport" />
-          <ScalarProperty Name="IsSignedOff" ColumnName="IsSignedOff" />
-          <ScalarProperty Name="BlockEnd" ColumnName="BlockEnd" />
-          <ScalarProperty Name="BlockBegin" ColumnName="BlockBegin" />
-          <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
-          <ScalarProperty Name="PassChange" ColumnName="PassChange" />
-          <ScalarProperty Name="Post" ColumnName="Post" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Login" ColumnName="Login" />
-          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-          <ScalarProperty Name="UserID" ColumnName="UserID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ProductsInfo">
-      <EntityTypeMapping TypeName="GammaModel.ProductsInfo">
-        <MappingFragment StoreEntitySet="ProductsInfo">
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="Place" ColumnName="Place" />
-          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Docs">
       <EntityTypeMapping TypeName="GammaModel.Docs">
         <MappingFragment StoreEntitySet="Docs">
@@ -425,5 +375,50 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="GammaModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
+          <ScalarProperty Name="Exports" ColumnName="Exports" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
+          <ScalarProperty Name="PassChange" ColumnName="PassChange" />
+          <ScalarProperty Name="Post" ColumnName="Post" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PermitTables">
+      <EntityTypeMapping TypeName="GammaModel.PermitTables">
+        <MappingFragment StoreEntitySet="PermitTables">
+          <ScalarProperty Name="Columns" ColumnName="Columns" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
+          <ScalarProperty Name="PermitTableID" ColumnName="PermitTableID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vProductsInfo">
+      <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
+        <MappingFragment StoreEntitySet="vProductsInfo">
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 using DevExpress.Xpf.Grid;
+using DevExpress.Xpf.Grid.ConditionalFormatting;
 using DevExpress.Xpf.Grid.LookUp;
 using DevExpress.Xpf.Grid.TreeList;
 using Gamma;

@@ -120,6 +120,7 @@ namespace Gamma.ViewModels
         {
             get { return (this.ValidPropertiesCount == this.TotalPropertiesWithValidationCount); }
         }
+        
     }
         
 }

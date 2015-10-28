@@ -41,11 +41,6 @@
     </FunctionImport>
     <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result)" />
     <EntitySet Name="Permits" EntityType="GammaModel.Permits" />
-    <EntitySet Name="PermitTables" EntityType="GammaModel.PermitTables" />
-    <AssociationSet Name="FK_PermitTables_Permits" Association="GammaModel.FK_PermitTables_Permits">
-      <End Role="Permits" EntitySet="Permits" />
-      <End Role="PermitTables" EntitySet="PermitTables" />
-    </AssociationSet>
     <AssociationSet Name="FK_RolePermits_Permits" Association="GammaModel.FK_RolePermits_Permits">
       <End Role="Permits" EntitySet="Permits" />
       <End Role="RolePermits" EntitySet="RolePermits" />
@@ -237,16 +232,6 @@
       <End Role="ProductSpools" EntitySet="ProductSpools" />
       <End Role="SourceSpools" EntitySet="SourceSpools" />
     </AssociationSet>
-    <EntitySet Name="Users" EntityType="GammaModel.Users" />
-    <AssociationSet Name="FK_Users_Places" Association="GammaModel.FK_Users_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="Users" EntitySet="Users" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Users_Roles1" Association="GammaModel.FK_Users_Roles1">
-      <End Role="Roles" EntitySet="Roles" />
-      <End Role="Users" EntitySet="Users" />
-    </AssociationSet>
-    <EntitySet Name="ProductsInfo" EntityType="GammaModel.ProductsInfo" />
     <EntitySet Name="Docs" EntityType="GammaModel.Docs" />
     <AssociationSet Name="FK_DocMovement_Docs" Association="GammaModel.FK_DocMovement_Docs">
       <End Role="Docs" EntitySet="Docs" />
@@ -260,10 +245,6 @@
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocProducts" EntitySet="DocProducts" />
     </AssociationSet>
-    <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
-      <End Role="Users" EntitySet="Users" />
-      <End Role="Docs" EntitySet="Docs" />
-    </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawal_Docs1" Association="GammaModel.FK_DocWithdrawal_Docs1">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
@@ -271,6 +252,25 @@
     <FunctionImport Name="GetProductionTaskProducts" ReturnType="Collection(GammaModel.GetProductionTaskProducts_Result3)">
       <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
     </FunctionImport>
+    <EntitySet Name="Users" EntityType="GammaModel.Users" />
+    <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Docs" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Places" Association="GammaModel.FK_Users_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Roles1" Association="GammaModel.FK_Users_Roles1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="PermitTables" EntityType="GammaModel.PermitTables" />
+    <AssociationSet Name="FK_PermitTables_Permits" Association="GammaModel.FK_PermitTables_Permits">
+      <End Role="Permits" EntitySet="Permits" />
+      <End Role="PermitTables" EntitySet="PermitTables" />
+    </AssociationSet>
+    <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
   </EntityContainer>
   <EntityType Name="DocMovement">
     <Key>
@@ -454,7 +454,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_RolePermits_Roles1">
-    <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1" />
+    <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Type="GammaModel.RolePermits" Role="RolePermits" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Roles">
@@ -516,34 +518,13 @@
     <Property Name="PermitID" Type="Guid" Nullable="false" />
     <Property Name="GroupNumber" Type="Byte" />
     <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="PermitTables" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="Permits" ToRole="PermitTables" />
     <NavigationProperty Name="RolePermits" Relationship="GammaModel.FK_RolePermits_Permits" FromRole="Permits" ToRole="RolePermits" />
+    <NavigationProperty Name="PermitTables" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="Permits" ToRole="PermitTables" />
   </EntityType>
-  <EntityType Name="PermitTables">
-    <Key>
-      <PropertyRef Name="PermitTableID" />
-      <PropertyRef Name="PermitID" />
-    </Key>
-    <Property Name="PermitTableID" Type="Guid" Nullable="false" />
-    <Property Name="PermitID" Type="Guid" Nullable="false" />
-    <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-    <Property Name="Columns" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="Permits" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="PermitTables" ToRole="Permits" />
-  </EntityType>
-  <Association Name="FK_PermitTables_Permits">
-    <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1" />
-    <End Type="GammaModel.PermitTables" Role="PermitTables" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Permits">
-        <PropertyRef Name="PermitID" />
-      </Principal>
-      <Dependent Role="PermitTables">
-        <PropertyRef Name="PermitID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_RolePermits_Permits">
-    <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1" />
+    <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Type="GammaModel.RolePermits" Role="RolePermits" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Permits">
@@ -1356,72 +1337,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="Users">
-    <Key>
-      <PropertyRef Name="UserID" />
-    </Key>
-    <Property Name="UserID" Type="Guid" Nullable="false" />
-    <Property Name="RoleID" Type="Guid" />
-    <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="Post" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="PassChange" Type="DateTime" Precision="3" />
-    <Property Name="PassMustChange" Type="Boolean" />
-    <Property Name="BlockBegin" Type="DateTime" Precision="3" />
-    <Property Name="BlockEnd" Type="DateTime" Precision="3" />
-    <Property Name="IsSignedOff" Type="Boolean" Nullable="false" />
-    <Property Name="ChkReport" Type="Boolean" Nullable="false" />
-    <Property Name="PlaceID" Type="Guid" Nullable="false" />
-    <Property Name="Exports" Type="Boolean" Nullable="false" />
-    <Property Name="ShowUserKind" Type="Byte" Nullable="false" />
-    <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
-    <Property Name="ShiftID" Type="Byte" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
-    <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
-    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
-  </EntityType>
-  <Association Name="FK_Users_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
-    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="Users">
-        <PropertyRef Name="PlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Users_Roles1">
-    <End Type="GammaModel.Roles" Role="Roles" Multiplicity="0..1" />
-    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Roles">
-        <PropertyRef Name="RoleID" />
-      </Principal>
-      <Dependent Role="Users">
-        <PropertyRef Name="RoleID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="ProductsInfo">
-    <Key>
-      <PropertyRef Name="DocID" />
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Precision="3" />
-    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Quantity" Type="Int32" />
-    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-    <Property Name="ShiftID" Type="Byte" />
-  </EntityType>
   <EntityType Name="Docs">
     <Key>
       <PropertyRef Name="DocID" />
@@ -1436,8 +1351,8 @@
     <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="Docs" ToRole="DocMovement" />
     <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />
     <NavigationProperty Name="DocProducts" Relationship="GammaModel.FK_DocProducts_Docs" FromRole="Docs" ToRole="DocProducts" />
-    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
     <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Docs1" FromRole="Docs" ToRole="DocWithdrawal" />
+    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
   </EntityType>
   <Association Name="FK_DocMovement_Docs">
     <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -1475,18 +1390,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Docs_Users">
-    <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
-    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Users">
-        <PropertyRef Name="UserID" />
-      </Principal>
-      <Dependent Role="Docs">
-        <PropertyRef Name="UserID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_DocWithdrawal_Docs1">
     <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
     <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="0..1" />
@@ -1510,4 +1413,101 @@
     <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
     <Property Type="Int32" Name="Quantity" Nullable="true" />
   </ComplexType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Guid" Nullable="false" />
+    <Property Name="RoleID" Type="Guid" />
+    <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Post" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PassChange" Type="DateTime" Precision="3" />
+    <Property Name="PassMustChange" Type="Boolean" />
+    <Property Name="PlaceID" Type="Guid" Nullable="false" />
+    <Property Name="Exports" Type="Boolean" Nullable="false" />
+    <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
+    <Property Name="ShiftID" Type="Byte" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
+    <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
+  </EntityType>
+  <Association Name="FK_Docs_Users">
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Docs">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Roles1">
+    <End Type="GammaModel.Roles" Role="Roles" Multiplicity="0..1" />
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="PermitTables">
+    <Key>
+      <PropertyRef Name="PermitTableID" />
+    </Key>
+    <Property Name="PermitTableID" Type="Guid" Nullable="false" />
+    <Property Name="PermitID" Type="Guid" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Columns" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Permits" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="PermitTables" ToRole="Permits" />
+  </EntityType>
+  <Association Name="FK_PermitTables_Permits">
+    <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="GammaModel.PermitTables" Role="PermitTables" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Permits">
+        <PropertyRef Name="PermitID" />
+      </Principal>
+      <Dependent Role="PermitTables">
+        <PropertyRef Name="PermitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="vProductsInfo">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="ProductID" Type="Guid" Nullable="false" />
+    <Property Name="ProductKindID" Type="Byte" />
+    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Precision="3" />
+    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="ShiftID" Type="Byte" />
+  </EntityType>
 </Schema>

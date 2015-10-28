@@ -85,18 +85,18 @@
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools1" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools2" />
-        <EntityTypeShape EntityType="GammaModel.ProductsInfo" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="GammaModel.Docs" Width="1.5" PointX="17.75" PointY="16.375" />
         <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProducts_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs1" />
-        <EntityTypeShape EntityType="GammaModel.PermitTables" Width="1.5" PointX="15.5" PointY="13.125" />
-        <AssociationConnector Association="GammaModel.FK_PermitTables_Permits" />
         <EntityTypeShape EntityType="GammaModel.Users" Width="1.5" PointX="15.5" PointY="16.125" />
         <AssociationConnector Association="GammaModel.FK_Docs_Users" />
         <AssociationConnector Association="GammaModel.FK_Users_Places" />
         <AssociationConnector Association="GammaModel.FK_Users_Roles1" />
+        <EntityTypeShape EntityType="GammaModel.PermitTables" Width="1.5" PointX="15.5" PointY="13.125" />
+        <AssociationConnector Association="GammaModel.FK_PermitTables_Permits" />
+        <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

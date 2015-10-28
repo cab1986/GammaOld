@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\CProjects\Gamma\Gamma\App.xaml
-17-1293811735
+201030551250
 
-111166903092
+120-2009887932
 50-920946800
-Dialogs\ChangeSpoolDialog.xaml;Dialogs\FilterDateReportDialog.xaml;Views\DocProductSpoolView.xaml;Views\DocProductUnloadView.xaml;Views\DocProductView.xaml;Views\FindProductView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\ManageUsersView.xaml;Views\NomenclatureView.xaml;Views\ProductionTaskPMView.xaml;Views\ProductionTaskRWView.xaml;Views\ProductionTasksPMView.xaml;Views\ProductionTasksRWView.xaml;Views\ProductionTaskView.xaml;Views\ReportListView.xaml;Views\SourceSpoolsView.xaml;
+Dialogs\ChangeSpoolDialog.xaml;Dialogs\FilterDateReportDialog.xaml;Views\DocProductSpoolView.xaml;Views\DocProductUnloadView.xaml;Views\DocProductView.xaml;Views\FindProductView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\ManageUsersView.xaml;Views\PermitEditView.xaml;Views\RoleEditView.xaml;Views\UserEditView.xaml;Views\NomenclatureView.xaml;Views\ProductionTaskPMView.xaml;Views\ProductionTaskRWView.xaml;Views\ProductionTasksPMView.xaml;Views\ProductionTasksRWView.xaml;Views\ProductionTaskView.xaml;Views\ReportListView.xaml;Views\SourceSpoolsView.xaml;
 
 False
 

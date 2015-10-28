@@ -360,8 +360,8 @@
           <Property Name="ShiftID" Type="tinyint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="ProductsInfo">
+warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
             <PropertyRef Name="ProductID" />
@@ -692,7 +692,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PermitTables_Permits">
-          <End Role="Permits" Type="Self.Permits" Multiplicity="1" />
+          <End Role="Permits" Type="Self.Permits" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="PermitTables" Type="Self.PermitTables" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Permits">
@@ -962,7 +964,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RolePermits_Permits">
-          <End Role="Permits" Type="Self.Permits" Multiplicity="1" />
+          <End Role="Permits" Type="Self.Permits" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="RolePermits" Type="Self.RolePermits" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Permits">
@@ -974,7 +978,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RolePermits_Roles1">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="RolePermits" Type="Self.RolePermits" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Roles">
@@ -1112,21 +1118,21 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           <EntitySet Name="SourceSpools" EntityType="Self.SourceSpools" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ProductsInfo" EntityType="Self.ProductsInfo" store:Type="Views" store:Schema="dbo">
+          <EntitySet Name="vProductsInfo" EntityType="Self.vProductsInfo" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [ProductsInfo].[DocID] AS [DocID], 
-    [ProductsInfo].[ProductID] AS [ProductID], 
-    [ProductsInfo].[ProductKindID] AS [ProductKindID], 
-    [ProductsInfo].[Number] AS [Number], 
-    [ProductsInfo].[Date] AS [Date], 
-    [ProductsInfo].[BarCode] AS [BarCode], 
-    [ProductsInfo].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [ProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [ProductsInfo].[Quantity] AS [Quantity], 
-    [ProductsInfo].[NomenclatureName] AS [NomenclatureName], 
-    [ProductsInfo].[Place] AS [Place], 
-    [ProductsInfo].[ShiftID] AS [ShiftID]
-    FROM [dbo].[ProductsInfo] AS [ProductsInfo]</DefiningQuery>
+    [vProductsInfo].[DocID] AS [DocID], 
+    [vProductsInfo].[ProductID] AS [ProductID], 
+    [vProductsInfo].[ProductKindID] AS [ProductKindID], 
+    [vProductsInfo].[Number] AS [Number], 
+    [vProductsInfo].[Date] AS [Date], 
+    [vProductsInfo].[BarCode] AS [BarCode], 
+    [vProductsInfo].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vProductsInfo].[Quantity] AS [Quantity], 
+    [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
+    [vProductsInfo].[Place] AS [Place], 
+    [vProductsInfo].[ShiftID] AS [ShiftID]
+    FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_1CCharacteristicProperties_1CCharacteristics" Association="Self.FK_1CCharacteristicProperties_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -1593,7 +1599,6 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
             <End Role="ProductSpools" EntitySet="ProductSpools" />
             <End Role="SourceSpools" EntitySet="SourceSpools" />
           </AssociationSet>
-          <EntitySet Name="ProductsInfo" EntityType="GammaModel.ProductsInfo" />
           <EntitySet Name="Docs" EntityType="GammaModel.Docs" />
           <AssociationSet Name="FK_DocMovement_Docs" Association="GammaModel.FK_DocMovement_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -1614,11 +1619,6 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           <FunctionImport Name="GetProductionTaskProducts" ReturnType="Collection(GammaModel.GetProductionTaskProducts_Result3)">
           <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
           </FunctionImport>
-          <EntitySet Name="PermitTables" EntityType="GammaModel.PermitTables" />
-          <AssociationSet Name="FK_PermitTables_Permits" Association="GammaModel.FK_PermitTables_Permits">
-            <End Role="Permits" EntitySet="Permits" />
-            <End Role="PermitTables" EntitySet="PermitTables" />
-          </AssociationSet>
           <EntitySet Name="Users" EntityType="GammaModel.Users" />
           <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
             <End Role="Users" EntitySet="Users" />
@@ -1632,6 +1632,12 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="PermitTables" EntityType="GammaModel.PermitTables" />
+          <AssociationSet Name="FK_PermitTables_Permits" Association="GammaModel.FK_PermitTables_Permits">
+            <End Role="Permits" EntitySet="Permits" />
+            <End Role="PermitTables" EntitySet="PermitTables" />
+          </AssociationSet>
+          <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
         </EntityContainer>
         <EntityType Name="DocMovement">
           <Key>
@@ -1815,7 +1821,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_RolePermits_Roles1">
-          <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1" />
+          <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="GammaModel.RolePermits" Role="RolePermits" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Roles">
@@ -1881,7 +1889,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           <NavigationProperty Name="PermitTables" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="Permits" ToRole="PermitTables" />
         </EntityType>
         <Association Name="FK_RolePermits_Permits">
-          <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1" />
+          <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="GammaModel.RolePermits" Role="RolePermits" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Permits">
@@ -2694,24 +2704,6 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ProductsInfo">
-          <Key>
-            <PropertyRef Name="DocID" />
-            <PropertyRef Name="ProductID" />
-          </Key>
-          <Property Name="DocID" Type="Guid" Nullable="false" />
-          <Property Name="ProductID" Type="Guid" Nullable="false" />
-          <Property Name="ProductKindID" Type="Byte" />
-          <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="C1CNomenclatureID" Type="Guid" />
-          <Property Name="C1CCharacteristicID" Type="Guid" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-          <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="ShiftID" Type="Byte" />
-        </EntityType>
         <EntityType Name="Docs">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2788,28 +2780,6 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
           <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
           <Property Type="Int32" Name="Quantity" Nullable="true" />
         </ComplexType>
-        <EntityType Name="PermitTables">
-          <Key>
-            <PropertyRef Name="PermitTableID" />
-          </Key>
-          <Property Name="PermitTableID" Type="Guid" Nullable="false" />
-          <Property Name="PermitID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Columns" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Permits" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="PermitTables" ToRole="Permits" />
-        </EntityType>
-        <Association Name="FK_PermitTables_Permits">
-          <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1" />
-          <End Type="GammaModel.PermitTables" Role="PermitTables" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Permits">
-              <PropertyRef Name="PermitID" />
-            </Principal>
-            <Dependent Role="PermitTables">
-              <PropertyRef Name="PermitID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserID" />
@@ -2865,6 +2835,48 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PermitTables">
+          <Key>
+            <PropertyRef Name="PermitTableID" />
+          </Key>
+          <Property Name="PermitTableID" Type="Guid" Nullable="false" />
+          <Property Name="PermitID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Columns" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Permits" Relationship="GammaModel.FK_PermitTables_Permits" FromRole="PermitTables" ToRole="Permits" />
+        </EntityType>
+        <Association Name="FK_PermitTables_Permits">
+          <End Type="GammaModel.Permits" Role="Permits" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GammaModel.PermitTables" Role="PermitTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permits">
+              <PropertyRef Name="PermitID" />
+            </Principal>
+            <Dependent Role="PermitTables">
+              <PropertyRef Name="PermitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vProductsInfo">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="ProductKindID" Type="Byte" />
+          <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="ShiftID" Type="Byte" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3217,24 +3229,6 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ProductsInfo">
-            <EntityTypeMapping TypeName="GammaModel.ProductsInfo">
-              <MappingFragment StoreEntitySet="ProductsInfo">
-                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-                <ScalarProperty Name="Place" ColumnName="Place" />
-                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Docs">
             <EntityTypeMapping TypeName="GammaModel.Docs">
               <MappingFragment StoreEntitySet="Docs">
@@ -3263,16 +3257,6 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="PermitTables">
-            <EntityTypeMapping TypeName="GammaModel.PermitTables">
-              <MappingFragment StoreEntitySet="PermitTables">
-                <ScalarProperty Name="Columns" ColumnName="Columns" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="PermitID" ColumnName="PermitID" />
-                <ScalarProperty Name="PermitTableID" ColumnName="PermitTableID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="GammaModel.Users">
               <MappingFragment StoreEntitySet="Users">
@@ -3287,6 +3271,34 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PermitTables">
+            <EntityTypeMapping TypeName="GammaModel.PermitTables">
+              <MappingFragment StoreEntitySet="PermitTables">
+                <ScalarProperty Name="Columns" ColumnName="Columns" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PermitID" ColumnName="PermitID" />
+                <ScalarProperty Name="PermitTableID" ColumnName="PermitTableID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vProductsInfo">
+            <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
+              <MappingFragment StoreEntitySet="vProductsInfo">
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

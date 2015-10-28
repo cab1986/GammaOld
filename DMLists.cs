@@ -44,9 +44,11 @@ namespace Gamma
     }
     public enum PermissionMark
     {
+        [Description("Нет доступа")]
+        NoAccess,
+        [Description("Чтение")]
         Read,
-        Write,
-        ReadAndWrite,
-        NoAccess
+        [Description("Чтение и запись")]
+        ReadAndWrite
     }
 }

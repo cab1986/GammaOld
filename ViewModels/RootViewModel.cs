@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
         }
         protected void CloseWindow()
         {
-  //          DB.RollBack();
+            DB.RollBack();
             CloseSignal = true;
             this.Cleanup();
         }

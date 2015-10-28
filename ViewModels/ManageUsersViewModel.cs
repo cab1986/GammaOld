@@ -2,6 +2,9 @@
 using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System;
+using System.Collections.Generic;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace Gamma.ViewModels
@@ -12,24 +15,47 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class ManageUsersViewModel : ViewModelBase
+    public class ManageUsersViewModel : RootViewModel
     {
         /// <summary>
         /// Initializes a new instance of the ManageUsersViewModel class.
         /// </summary>
         public ManageUsersViewModel()
         {
-            DB.GammaBase.Users.Load();
-            DB.GammaBase.Places.Load();
+            LoadTables();
+            EditItemCommand = new RelayCommand(EditItem,SelectedNotNull);
+            NewItemCommand = new RelayCommand(NewItem);
+            DeleteItemCommand = new RelayCommand(DeleteItem,SelectedNotNull);
+            Messenger.Default.Register<BaseReconnectedMessage>(this,LoadTables);
+        }
+        private bool SelectedNotNull()
+        {
+            switch (TabIndex)
+            {
+                case 0:
+                    return SelectedUser != null;
+                case 1:
+                    return SelectedRole != null;
+                case 2:
+                    return SelectedPermit != null;
+                default:
+                    return false;
+            }
+        }
+        private void LoadTables(BaseReconnectedMessage msg)
+        {
+            LoadTables();
+        }
+        private void LoadTables()
+        {
+            DB.GammaBase.Users.Include("Places").Load();
             DB.GammaBase.Roles.Load();
-            DB.GammaBase.RolePermits.Load();
             DB.GammaBase.Permits.Load();
             Users = DB.GammaBase.Users.Local;
-            Places = DB.GammaBase.Places.Local;
             Roles = DB.GammaBase.Roles.Local;
             Permits = DB.GammaBase.Permits.Local;
-            RolePermits = DB.GammaBase.RolePermits.Local;
         }
+
          
         private Users _selectedUser;
         public Users SelectedUser
@@ -147,6 +173,68 @@ namespace Gamma.ViewModels
             	_rolePermits = value;
                 RaisePropertyChanged("RolePermits");
             }
+        }
+        public List<string> PermissionMarks { get; set; }
+        public RelayCommand SavePermitsCommand { get; set; }
+        private void SavePermits()
+        {
+            DB.GammaBase.SaveChanges();
+        }
+        public int TabIndex { get; set; }
+        public RelayCommand NewItemCommand { get; set; }
+        private void NewItem()
+        {
+            switch (TabIndex)
+            {
+                case 0:
+                    MessageManager.EditUser();
+                    break;
+                case 1:
+                    MessageManager.EditRole();
+                    break;
+                case 2:
+                    MessageManager.EditPermit();
+                    break;
+                default:
+                    break;
+            }
+        }
+        public RelayCommand EditItemCommand { get; set; }
+        private void EditItem()
+        {
+            switch (TabIndex)
+            {
+                case 0:
+                    MessageManager.EditUser(SelectedUser.UserID);
+                    break;
+                case 1:
+                    MessageManager.EditRole(SelectedRole.RoleID);
+                    break;
+                case 2:
+                    MessageManager.EditPermit(SelectedPermit.PermitID);
+                    break;
+                default:
+                    break;
+            }
+        }
+        public RelayCommand DeleteItemCommand { get; set; }
+        private void DeleteItem()
+        {
+            switch (TabIndex)
+            {
+                case 0:
+                    Users.Remove(SelectedUser);
+                    break;
+                case 1:
+                    Roles.Remove(SelectedRole);
+                    break;
+                case 2:
+                    Permits.Remove(SelectedPermit);
+                    break;
+                default:
+                    break;
+            }
+            DB.GammaBase.SaveChanges();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Gamma
 {
+    public class BaseReconnectedMessage : MessageBase { }
     public class OpenFilterDateMessage : MessageBase { }
     public class PrintReportMessage : MessageBase
     {
@@ -47,9 +48,54 @@ namespace Gamma
     {
         public string Barcode;
     }
+    public class PermitEditMessage : MessageBase 
+    {
+        public Guid? PermitID;
+    }
+    public class RoleEditMessage : MessageBase
+    {
+        public Guid? RoleID;
+    }
+    public class UserEditMessage : MessageBase
+    {
+        public Guid? UserID;
+    }
+    public class UserChangedMessage : MessageBase { }
+    public class PermitChangedMessage : MessageBase { }
+    public class RoleChangedMessage : MessageBase { }
+    
     public class ParentSaveMessage : MessageBase { }
+    public class OpenManageUsersMessage : MessageBase { }
     public static class MessageManager
     {
+        public static void EditUser()
+        {
+            Messenger.Default.Send<UserEditMessage>(new UserEditMessage());
+        }
+        public static void EditUser(Guid userID)
+        {
+            Messenger.Default.Send<UserEditMessage>(new UserEditMessage() { UserID = userID });
+        }
+        public static void EditPermit()
+        {
+            Messenger.Default.Send<PermitEditMessage>(new PermitEditMessage());
+        }
+        public static void EditPermit(Guid permitID)
+        {
+            Messenger.Default.Send<PermitEditMessage>(new PermitEditMessage() { PermitID = permitID });
+        }
+        public static void EditRole()
+        {
+            Messenger.Default.Send<RoleEditMessage>(new RoleEditMessage());
+        }
+        public static void EditRole(Guid roleID)
+        {
+            Messenger.Default.Send<RoleEditMessage>(new RoleEditMessage() { RoleID = roleID });
+        }
+        public static void OpenManageUsers()
+        {
+            Messenger.Default.Send<OpenManageUsersMessage>(new OpenManageUsersMessage());
+        }
         public static void OpenMain()
         {
             Messenger.Default.Send<OpenMainMessage>(new OpenMainMessage());

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Gamma.Models;
 using Gamma.Dialogs;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -21,6 +22,8 @@ namespace Gamma.ViewModels
         /// </summary>
         public SourceSpoolsViewModel()
         {
+            if (WorkSession.PlaceGroup == PlaceGroups.RW || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
+            else SourceSpoolsVisible = Visibility.Collapsed;
             ChangeUnwinderActiveCommand = new RelayCommand<short>(ChangeUnwinderActive);
             DeleteSpoolCommand = new RelayCommand<short>(DeleteSpool);
             ChooseSpoolCommand = new RelayCommand<short>(ChooseSpool);
@@ -333,6 +336,19 @@ namespace Gamma.ViewModels
         {
             return DB.GammaBase.DocWithdrawal.Any(dw => dw.DocID == DB.GammaBase.DocProducts.Where
                 (dp => dp.ProductID == productID).Select(dp => dp.DocID).FirstOrDefault());
+        }
+        private Visibility _sourceSpoolsVisible;
+        public Visibility SourceSpoolsVisible
+        {
+            get
+            {
+                return _sourceSpoolsVisible;
+            }
+            set
+            {
+                _sourceSpoolsVisible = value;
+                RaisePropertyChanged("SourceSpoolsVisible");
+            }
         }
     }
 }

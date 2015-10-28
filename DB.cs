@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Data.Entity.Infrastructure;
 using System.Windows;
 using System.Data.Entity;
+using GalaSoft.MvvmLight.Messaging;
+using System.Data.SqlClient;
 
 namespace Gamma
 {
@@ -25,7 +27,7 @@ namespace Gamma
             }
             catch(Exception e)
             {
-                MessageBox.Show(e.InnerException.Message);
+                MessageBox.Show(String.Format("Message:{0} InnerMessage:{1}", e.Message, e.InnerException));
                 return false;
             }
         }
@@ -35,11 +37,13 @@ namespace Gamma
             GammaBase.Database.Connection.Close();
             GammaBase.Dispose();
             GammaBase = new GammaEntities(GammaSettings.ConnectionString);
-            GammaBase.Database.Connection.Open();          
+            GammaBase.Database.Connection.Open();
+            Messenger.Default.Send<BaseReconnectedMessage>(new BaseReconnectedMessage());
         }
         public static bool HaveChanges()
         {
-            return !GammaBase.
+            if (GammaBase == null) return false;
+            return GammaBase.
                    ChangeTracker.Entries().Any(e => e.State == EntityState.Added
                                               || e.State == EntityState.Modified
                                               || e.State == EntityState.Deleted);
@@ -76,6 +80,49 @@ namespace Gamma
             {
                 return GammaBase.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
             }
+        }
+        public static ObservableCollection<string> BaseTables
+        { 
+            get
+            {
+                return new ObservableCollection<string>(GammaBase.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
+            }
+        }
+        public static void ChangeUserPassword(Guid UserID,string password)
+        {
+            var login = DB.GammaBase.Users.Where(u => u.UserID == UserID).Select(u => u.Login).FirstOrDefault();
+            try
+            {
+                string sql = String.Format("ALTER LOGIN {0} WITH PASSWORD = '{1}'", login, password);
+                GammaBase.Database.ExecuteSqlCommand(sql);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Смена пароля не удалась", "Неудачная смена пароля", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public static void RecreateUserInDB(Guid userID,string password)
+        {
+            List<SqlParameter> parameterList = new List<SqlParameter>();
+            parameterList.Add(new SqlParameter("UserID",userID));
+            parameterList.Add(new SqlParameter("Password",password));
+            SqlParameter[] parameters = parameterList.ToArray();
+            DB.GammaBase.Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
+        }
+        public static void RecreateRolePermits(Guid roleID)
+        {
+            List<SqlParameter> parameterList = new List<SqlParameter>();
+            parameterList.Add(new SqlParameter("RoleID",roleID));
+            SqlParameter[] parameters = parameterList.ToArray();
+            DB.GammaBase.Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
+        }
+        public static bool HaveAccess(string tableName)
+        {
+            return true;
+            if (WorkSession.DBAdmin) return true;
+            var permit = DB.GammaBase.UserPermit("tableName").FirstOrDefault();
+            if (permit == null) return false;
+            else return permit > 0;
         }
     }
 

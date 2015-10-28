@@ -20,7 +20,8 @@ namespace Gamma
 
         private static void OnBoundPasswordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox box = d as PasswordBox;
+            var box = d as PasswordBox;
+            if (d == null)
 
             // only handle this event when the property is attached to a PasswordBox
             // and when the BindPassword attached property has been set to true

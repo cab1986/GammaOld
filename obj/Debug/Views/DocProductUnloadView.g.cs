@@ -25,6 +25,7 @@ using DevExpress.Xpf.Editors.Settings;
 using DevExpress.Xpf.Editors.Settings.Extension;
 using DevExpress.Xpf.Editors.Validation;
 using DevExpress.Xpf.Grid;
+using DevExpress.Xpf.Grid.ConditionalFormatting;
 using DevExpress.Xpf.Grid.LookUp;
 using DevExpress.Xpf.Grid.TreeList;
 using DevExpress.Xpf.LayoutControl;

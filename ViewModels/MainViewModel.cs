@@ -5,6 +5,7 @@ using System.Reflection;
 using Gamma.Interfaces;
 using System.Collections.Generic;
 using System;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -27,18 +28,26 @@ namespace Gamma.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
-            ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
-            ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
-            ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW);
-            FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
+            if (IsInDesignMode)
+            {
+                ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
+                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
+                ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW);
+                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
+                ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers());
+            }
+            else
+            {
+                ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList(),
+                () => WorkSession.DBAdmin || DB.GammaBase.UserPermit("Reports").FirstOrDefault() > 1);
+                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveAccess("ProductionTaskPM"));
+                ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW,
+                    () => DB.HaveAccess("ProductionTaskRW"));
+                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
+                ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
+            }
+            if (WorkSession.PlaceGroup == PlaceGroups.PM) CurrentView = ViewModelLocator.ProductionTasksPM;
+            else if (WorkSession.PlaceGroup == PlaceGroups.RW) CurrentView = ViewModelLocator.ProductionTasksRW;
         }
 
         private void CurrentViewChanged()
@@ -128,20 +137,7 @@ namespace Gamma.ViewModels
         public RelayCommand ShowProductionTasksPMCommand { get; private set; }
         public RelayCommand ShowProductionTasksRWCommand { get; private set; }
         public RelayCommand FindProductCommand { get; private set; }
-        private bool _unwinderPanelVisible = true;
-        public bool UnwinderPanelVisible
-        {
-            get
-            {
-                return _unwinderPanelVisible;
-            }
-            set
-            {
-                if (_unwinderPanelVisible == value)
-                    return;
-                _unwinderPanelVisible = value;
-                RaisePropertyChanged("UnwinderPanelVisible");
-            }
-        }
+        public RelayCommand ManageUsersCommand { get; set; }
+        public RelayCommand ConfigureComPortCommand { get; set; }
     }
 }

@@ -131,7 +131,7 @@ namespace Gamma.ViewModels
             Guid charID = SelectedCharacteristic == null ? new Guid() : SelectedCharacteristic.CharacteristicID;
             FoundProducts = new ObservableCollection<ProductInfo>
             (
-            from pinfo in DB.GammaBase.ProductsInfo
+            from pinfo in DB.GammaBase.vProductsInfo
             where 
             (pinfo.Number == Number || Number == "") &&
             (pinfo.BarCode == Barcode || Barcode == "") &&

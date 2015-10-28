@@ -12,7 +12,7 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductsInfo
+    public partial class vProductsInfo
     {
         public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }

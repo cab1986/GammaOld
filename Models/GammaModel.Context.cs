@@ -21,8 +21,7 @@ namespace Gamma.Models
             : base("name=GammaEntities")
         {
         }
-        public GammaEntities(string connection) : base(connection)
-        { }
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
@@ -60,10 +59,10 @@ namespace Gamma.Models
         public virtual DbSet<DocProduction> DocProduction { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual DbSet<SourceSpools> SourceSpools { get; set; }
-        public virtual DbSet<ProductsInfo> ProductsInfo { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
-        public virtual DbSet<PermitTables> PermitTables { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<PermitTables> PermitTables { get; set; }
+        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
     
         public virtual ObjectResult<Nullable<byte>> UserPermit(string tableName)
         {

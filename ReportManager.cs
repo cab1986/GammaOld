@@ -67,25 +67,27 @@ namespace Gamma
         {
             CurrentReportID = reportID;
             var repTemplate = (from rep in DB.GammaBase.Templates where rep.ReportID == reportID select rep.Template).FirstOrDefault();
-            var report = new Report();
-            if (repTemplate != null)
+            using (var report = new Report())
             {
-                report.Load(new MemoryStream(repTemplate));
-                report.FileName = (from rep in DB.GammaBase.Reports where rep.ReportID == reportID select rep.Name).FirstOrDefault();
-                report.Dictionary.Connections[0].ConnectionString = GammaSettings.SQLConnectionString;
+                if (repTemplate != null)
+                {
+                    report.Load(new MemoryStream(repTemplate));
+                    report.FileName = (from rep in DB.GammaBase.Reports where rep.ReportID == reportID select rep.Name).FirstOrDefault();
+                    report.Dictionary.Connections[0].ConnectionString = GammaSettings.SQLConnectionString;
+                }
+                else
+                {
+                    report.FileName = (from rep in DB.GammaBase.Reports where rep.ReportID == reportID select rep.Name).FirstOrDefault();
+                    MsSqlDataConnection conn = new MsSqlDataConnection();
+                    conn.Name = "GammaConnection";
+                    conn.ConnectionString = GammaSettings.SQLConnectionString;
+                    report.Dictionary.Connections.Add(conn);
+                    Parameter paramID = new Parameter("ParamID");
+                    paramID.DataType = typeof(Guid);
+                    report.Parameters.Add(paramID);
+                }
+                report.Design();
             }
-            else
-            {
-                report.FileName = (from rep in DB.GammaBase.Reports where rep.ReportID == reportID select rep.Name).FirstOrDefault();
-                MsSqlDataConnection conn = new MsSqlDataConnection();
-                conn.Name = "GammaConnection";
-                conn.ConnectionString = GammaSettings.SQLConnectionString;
-                report.Dictionary.Connections.Add(conn);
-                Parameter paramID = new Parameter("ParamID");
-                paramID.DataType = typeof(Guid);
-                report.Parameters.Add(paramID);
-            }
-            report.Design();
         }
 
         private static EnvironmentSettings ReportSettings = new EnvironmentSettings();

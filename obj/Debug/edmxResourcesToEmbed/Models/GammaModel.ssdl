@@ -149,7 +149,6 @@
   <EntityType Name="PermitTables">
     <Key>
       <PropertyRef Name="PermitTableID" />
-      <PropertyRef Name="PermitID" />
     </Key>
     <Property Name="PermitTableID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PermitID" Type="uniqueidentifier" Nullable="false" />
@@ -350,19 +349,14 @@
     <Property Name="Post" Type="varchar" MaxLength="200" />
     <Property Name="PassChange" Type="datetime" />
     <Property Name="PassMustChange" Type="bit" />
-    <Property Name="BlockBegin" Type="datetime" />
-    <Property Name="BlockEnd" Type="datetime" />
-    <Property Name="IsSignedOff" Type="bit" Nullable="false" />
-    <Property Name="ChkReport" Type="bit" Nullable="false" />
     <Property Name="PlaceID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Exports" Type="bit" Nullable="false" />
-    <Property Name="ShowUserKind" Type="tinyint" Nullable="false" />
     <Property Name="DBAdmin" Type="bit" Nullable="false" />
     <Property Name="ShiftID" Type="tinyint" />
   </EntityType>
   <!--Errors Found During Generation:
-warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-  <EntityType Name="ProductsInfo">
+warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vProductsInfo">
     <Key>
       <PropertyRef Name="DocID" />
       <PropertyRef Name="ProductID" />
@@ -693,7 +687,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_PermitTables_Permits">
-    <End Role="Permits" Type="Self.Permits" Multiplicity="1" />
+    <End Role="Permits" Type="Self.Permits" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="PermitTables" Type="Self.PermitTables" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Permits">
@@ -963,7 +959,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_RolePermits_Permits">
-    <End Role="Permits" Type="Self.Permits" Multiplicity="1" />
+    <End Role="Permits" Type="Self.Permits" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="RolePermits" Type="Self.RolePermits" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Permits">
@@ -975,7 +973,9 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_RolePermits_Roles1">
-    <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+    <End Role="Roles" Type="Self.Roles" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="RolePermits" Type="Self.RolePermits" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Roles">
@@ -1113,21 +1113,21 @@ warning 6002: The table/view 'Gamma.dbo.ProductsInfo' does not have a primary ke
     <EntitySet Name="SourceSpools" EntityType="Self.SourceSpools" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ProductsInfo" EntityType="Self.ProductsInfo" store:Type="Views" store:Schema="dbo">
+    <EntitySet Name="vProductsInfo" EntityType="Self.vProductsInfo" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
-    [ProductsInfo].[DocID] AS [DocID], 
-    [ProductsInfo].[ProductID] AS [ProductID], 
-    [ProductsInfo].[ProductKindID] AS [ProductKindID], 
-    [ProductsInfo].[Number] AS [Number], 
-    [ProductsInfo].[Date] AS [Date], 
-    [ProductsInfo].[BarCode] AS [BarCode], 
-    [ProductsInfo].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [ProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [ProductsInfo].[Quantity] AS [Quantity], 
-    [ProductsInfo].[NomenclatureName] AS [NomenclatureName], 
-    [ProductsInfo].[Place] AS [Place], 
-    [ProductsInfo].[ShiftID] AS [ShiftID]
-    FROM [dbo].[ProductsInfo] AS [ProductsInfo]</DefiningQuery>
+    [vProductsInfo].[DocID] AS [DocID], 
+    [vProductsInfo].[ProductID] AS [ProductID], 
+    [vProductsInfo].[ProductKindID] AS [ProductKindID], 
+    [vProductsInfo].[Number] AS [Number], 
+    [vProductsInfo].[Date] AS [Date], 
+    [vProductsInfo].[BarCode] AS [BarCode], 
+    [vProductsInfo].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vProductsInfo].[Quantity] AS [Quantity], 
+    [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
+    [vProductsInfo].[Place] AS [Place], 
+    [vProductsInfo].[ShiftID] AS [ShiftID]
+    FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
     </EntitySet>
     <AssociationSet Name="FK_1CCharacteristicProperties_1CCharacteristics" Association="Self.FK_1CCharacteristicProperties_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
