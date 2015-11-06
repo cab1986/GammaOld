@@ -20,7 +20,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public DBEditItemWithNomenclatureViewModel()
         {
-            ChooseNomenclatureCommand = new RelayCommand(ChooseNomenclature);
+            ChooseNomenclatureCommand = new RelayCommand(ChooseNomenclature,CanChooseNomenclature);
         }
 
         private Guid _nomenclatureID;
@@ -79,6 +79,9 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Characteristics");
             }
         }
-
+        protected virtual bool CanChooseNomenclature()
+        {
+            return true;
+        }
     }
 }

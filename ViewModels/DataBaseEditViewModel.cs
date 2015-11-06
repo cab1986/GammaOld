@@ -16,7 +16,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public DataBaseEditViewModel()
         {
-            SaveAndCloseCommand = new RelayCommand(SaveToModelAndClose,canExecute);
+            SaveAndCloseCommand = new RelayCommand(SaveToModelAndClose,CanSaveExecute);
         }
 
         public RelayCommand SaveAndCloseCommand { get; private set; }
@@ -37,7 +37,7 @@ namespace Gamma.ViewModels
             CloseWindow();
         }
 
-        protected virtual bool canExecute()
+        public virtual bool CanSaveExecute()
         {
             return IsValid;
         }

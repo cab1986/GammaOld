@@ -30,10 +30,6 @@ namespace Gamma.Models
         public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
-        public virtual DbSet<ProductionTaskPM> ProductionTaskPM { get; set; }
-        public virtual DbSet<ProductionTaskRW> ProductionTaskRW { get; set; }
-        public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
-        public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
         public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
@@ -41,20 +37,15 @@ namespace Gamma.Models
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Permits> Permits { get; set; }
         public virtual DbSet<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }
-        public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual DbSet<C1CMeasureUnitQualifiers> C1CMeasureUnitQualifiers { get; set; }
         public virtual DbSet<C1CMeasureUnits> C1CMeasureUnits { get; set; }
-        public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }
         public virtual DbSet<C1CProperties> C1CProperties { get; set; }
-        public virtual DbSet<C1CPropertyValues> C1CPropertyValues { get; set; }
         public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
-        public virtual DbSet<ProductionTaskConfig> ProductionTaskConfig { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<Templates> Templates { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<Products> Products { get; set; }
-        public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<DocProduction> DocProduction { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
@@ -63,6 +54,13 @@ namespace Gamma.Models
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<PermitTables> PermitTables { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
+        public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
+        public virtual DbSet<C1CEnumGroupTypes> C1CEnumGroupTypes { get; set; }
+        public virtual DbSet<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
+        public virtual DbSet<C1CPropertyValues> C1CPropertyValues { get; set; }
+        public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
+        public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
+        public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
     
         public virtual ObjectResult<Nullable<byte>> UserPermit(string tableName)
         {
@@ -94,6 +92,24 @@ namespace Gamma.Models
                 new ObjectParameter("ProductionTaskID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskProducts_Result3>("GetProductionTaskProducts", productionTaskIDParameter);
+        }
+    
+        public virtual ObjectResult<GetCharPropsDescriptions_Result> GetCharPropsDescriptions(Nullable<System.Guid> characteristicID)
+        {
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharPropsDescriptions_Result>("GetCharPropsDescriptions", characteristicIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<decimal>> GetCharSpoolFormat(Nullable<System.Guid> characteristicID)
+        {
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("GetCharSpoolFormat", characteristicIDParameter);
         }
     }
 }

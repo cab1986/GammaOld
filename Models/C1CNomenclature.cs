@@ -18,12 +18,13 @@ namespace Gamma.Models
         {
             this.C1CCharacteristics = new HashSet<C1CCharacteristics>();
             this.C1CMeasureUnits = new HashSet<C1CMeasureUnits>();
-            this.C1CChildNomenclature = new HashSet<C1CNomenclature>();
+            this.C1CNomenclature1 = new HashSet<C1CNomenclature>();
             this.C1CNomenclatureProperties = new HashSet<C1CNomenclatureProperties>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
-            this.ProductionTaskConfig = new HashSet<ProductionTaskConfig>();
             this.ProductSpools = new HashSet<ProductSpools>();
+            this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
+            this.ProductionTasks = new HashSet<ProductionTasks>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -37,12 +38,13 @@ namespace Gamma.Models
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual C1CMeasureUnitQualifiers C1CMeasureUnitQualifiers { get; set; }
         public virtual ICollection<C1CMeasureUnits> C1CMeasureUnits { get; set; }
-        public virtual ICollection<C1CNomenclature> C1CChildNomenclature { get; set; }
-        public virtual C1CNomenclature C1CParentNomenclature { get; set; }
+        public virtual ICollection<C1CNomenclature> C1CNomenclature1 { get; set; }
+        public virtual C1CNomenclature C1CNomenclature2 { get; set; }
         public virtual ICollection<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual ICollection<ProductionTaskConfig> ProductionTaskConfig { get; set; }
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
+        public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
+        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
     }
 }

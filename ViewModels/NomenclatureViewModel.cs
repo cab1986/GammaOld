@@ -101,7 +101,7 @@ namespace Gamma.ViewModels
         {
             Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>
             (new ObservableCollection<Nomenclature1C>(
-                from nom in DB.GammaBase.C1CNomenclature where nom.C1CParentID == FolderID && !nom.IsFolder
+                from nom in DB.GammaBase.C1CNomenclature where nom.C1CParentID == FolderID && !nom.IsFolder && !(bool)nom.IsArchive
                 select
         new Nomenclature1C
         {

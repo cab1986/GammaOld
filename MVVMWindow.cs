@@ -18,5 +18,6 @@ namespace Gamma
         {
             Messenger.Default.Unregister(this);
         }
+        
     }
 }

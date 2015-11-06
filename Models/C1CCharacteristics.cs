@@ -18,9 +18,10 @@ namespace Gamma.Models
         {
             this.C1CCharacteristicProperties = new HashSet<C1CCharacteristicProperties>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
+            this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
-            this.ProductionTaskConfig = new HashSet<ProductionTaskConfig>();
             this.ProductSpools = new HashSet<ProductSpools>();
+            this.ProductionTasks = new HashSet<ProductionTasks>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -29,15 +30,16 @@ namespace Gamma.Models
         public Nullable<System.Guid> MeasureUnitPackage { get; set; }
         public Nullable<System.Guid> MeasureUnitPallet { get; set; }
         public string Name { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public bool IsActive { get; set; }
     
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits1 { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
+        public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual ICollection<ProductionTaskConfig> ProductionTaskConfig { get; set; }
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
+        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
     }
 }

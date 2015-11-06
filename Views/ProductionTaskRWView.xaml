@@ -3,37 +3,118 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:conv="clr-namespace:Gamma.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" x:Class="Gamma.Views.ProductionTaskRWView"
         mc:Ignorable="d ignore">
+    <UserControl.Resources>
+        <conv:ElementEmptyConverter x:Key="EmptyConverter" />
+    </UserControl.Resources>
 
-    <dxlc:LayoutGroup Header="" View="GroupBox" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+    <dxlc:LayoutGroup Header="" View="Group" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
         <dxlc:LayoutGroup>
-            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
-                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" IsReadOnly="True">
-                    <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}" />
-                </dxe:ButtonEdit>
+            <dxlc:LayoutItem Label="Гильза" LabelPosition="Top">
+                <dxe:ComboBoxEdit EditValue="{Binding CoreDiameter,UpdateSourceTrigger=PropertyChanged}" Name="Core" ItemsSource="{Binding CoreDiameters}" IsTextEditable="False"/>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
-                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}"/>
+            <dxlc:LayoutItem Label="Слойность" LabelPosition="Top">
+                <dxe:ComboBoxEdit EditValue="{Binding LayerNumber,UpdateSourceTrigger=PropertyChanged}" Name="Layer" ItemsSource="{Binding LayerNumbers}"
+                                  IsEnabled="{Binding ElementName=Core,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Цвет" LabelPosition="Top" >
+                <dxe:ComboBoxEdit EditValue="{Binding Color,UpdateSourceTrigger=PropertyChanged}" Name="Color" ItemsSource="{Binding Colors}"
+                                  IsEnabled="{Binding ElementName=Layer,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top">
+                <dxe:ComboBoxEdit EditValue="{Binding Diameter,UpdateSourceTrigger=PropertyChanged}" Name="Diameter" ItemsSource="{Binding Diameters}"
+                                  IsEnabled="{Binding ElementName=Color,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Назначение" LabelPosition="Top">
+                <dxe:ComboBoxEdit EditValue="{Binding Destination,UpdateSourceTrigger=PropertyChanged}" Name="Destination" ItemsSource="{Binding Destinations}"
+                                  IsEnabled="{Binding ElementName=Diameter,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
         <dxlc:LayoutItem Label="Конфигурация" LabelPosition="Top">
-            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding ConfigurationElements, Mode=TwoWay}" MaxHeight="1000">
+            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding CuttingFormats}" Height="60" MaxHeight="100" 
+                             IsEnabled="{Binding ElementName=Destination,Converter={StaticResource EmptyConverter}, Path=EditValue}">
                 <dxg:GridControl.Columns>
-                    <dxg:GridColumn FieldName="CharacteristicID" Header="Характеристика">
+                    <dxg:GridColumn Binding="{Binding Format[0], Mode=TwoWay}" Header="01" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Characteristics}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" />
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
-                    <dxg:GridColumn FieldName="DocProductQuantity" Header="Кол-во в съеме">
+                    <dxg:GridColumn Binding="{Binding Format[1], Mode=TwoWay}" Header="02" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:SpinEditSettings MinValue="1" MaxValue="20" Mask="d"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[2], Mode=TwoWay}" Header="03" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[3], Mode=TwoWay}" Header="04" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[4], Mode=TwoWay}" Header="05" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[5], Mode=TwoWay}" Header="06" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[6], Mode=TwoWay}" Header="07" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[7], Mode=TwoWay}" Header="08" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[8], Mode=TwoWay}" Header="09" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[9], Mode=TwoWay}" Header="10" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[10], Mode=TwoWay}" Header="11" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[11], Mode=TwoWay}" Header="12" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[12], Mode=TwoWay}" Header="13" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[13], Mode=TwoWay}" Header="14" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[14], Mode=TwoWay}" Header="15" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
-                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" NewItemRowPosition="Bottom" />
+                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" />
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </dxlc:LayoutItem>

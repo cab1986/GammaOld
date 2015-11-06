@@ -16,18 +16,26 @@
         <dxdo:DockLayoutManager>
             <dxdo:LayoutGroup>
                 <dxdo:LayoutPanel Caption="Папки">
-                    <dxg:GridControl AutoGenerateColumns="AddNew" EnableSmartColumnsGeneration="True" ItemsSource="{Binding Nomenclature1CFolders}" SelectedItem="{Binding SelectedNomenclatureFolder}" SelectionMode="Row">
+                    <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding Nomenclature1CFolders}" SelectedItem="{Binding SelectedNomenclatureFolder}" SelectionMode="Row">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="Name" Header="Папка" AllowBestFit="True"  Width="600"/>
+                        </dxg:GridControl.Columns>
                         <dxg:GridControl.View>
-                            <dxg:TreeListView AllowPerPixelScrolling="True" ShowTotalSummary="True" KeyFieldName="Nomenclature1CFolderID" ParentFieldName="ParentFolderID" AllowEditing="False"/>
+                            <dxg:TreeListView AllowBestFit="True" BestFitArea="Rows" AllowPerPixelScrolling="True" ShowTotalSummary="True" KeyFieldName="Nomenclature1CFolderID" ParentFieldName="ParentFolderID" AllowEditing="False"/>
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxdo:LayoutPanel>
                 <dxdo:DocumentGroup>
                     <dxdo:DocumentPanel Caption="Номенклатура">
                         <Grid>
-                            <dxg:GridControl AutoGenerateColumns="AddNew" EnableSmartColumnsGeneration="True" SelectionMode="Row" ItemsSource="{Binding Nomenclature}" SelectedItem="{Binding SelectedNomenclature}">
+                            <dxg:GridControl EnableSmartColumnsGeneration="True" SelectionMode="Row" ItemsSource="{Binding Nomenclature}" SelectedItem="{Binding SelectedNomenclature}" >
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn BestFitMode="VisibleRows" AllowBestFit="True" FieldName="Name" 
+                                                    Header="Номенклатура" SortOrder="Ascending" SortIndex="0" BestFitArea="All"
+                                                    Width="500"/>
+                                </dxg:GridControl.Columns>
                                 <dxg:GridControl.View>
-                                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False"/>
+                                    <dxg:TableView BestFitMode="AllRows" AllowBestFit="True" AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False"/>
                                 </dxg:GridControl.View>
                             </dxg:GridControl>
                         </Grid>

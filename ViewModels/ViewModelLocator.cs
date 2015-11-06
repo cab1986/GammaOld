@@ -49,6 +49,7 @@ namespace Gamma.ViewModels
             SimpleIoc.Default.Register<ReportListViewModel>();
             SimpleIoc.Default.Register<SourceSpoolsViewModel>();
             SimpleIoc.Default.Register<ManageUsersViewModel>();
+            SimpleIoc.Default.Register<ProductionTasksConvertingViewModel>();
         }
 
         public static MainViewModel Main
@@ -98,7 +99,13 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<NomenclatureViewModel>();
             }
         }
-
+        public static ProductionTasksConvertingViewModel ProductionTasksConverting
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ProductionTasksConvertingViewModel>();
+            }
+        }
         public static ProductionTaskViewModel ProductionTask
         {
             get

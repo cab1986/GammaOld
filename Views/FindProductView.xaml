@@ -12,17 +12,16 @@
     <dxlc:LayoutControl Orientation="Vertical">
         <Grid Background="#FFB1CEF3" VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="150"/>
+                <RowDefinition Height="170"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,-12,-12,-12" Orientation="Horizontal">
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Переделы" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
-                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceName"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup Orientation="Vertical">
-                    <dxlc:LayoutGroup View="Group">
                         <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
                             <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False">
                                 <dxe:ButtonEdit.Buttons>
@@ -33,7 +32,6 @@
                         <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
                             <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
                         </dxlc:LayoutItem>
-                    </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup View="Group">
                         <dxlc:LayoutItem Label="Вид изделия" LabelPosition="Top">
                             <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" IsEnabled="{Binding ProductKindSelectEnabled}"/>
@@ -59,8 +57,8 @@
                         </dxlc:LayoutGroup>
                         <dxlc:LayoutGroup HorizontalAlignment="Right" Height="40">
                             <Button Content="Поиск" Command="{Binding FindCommand}"/>
-                        <Button Content="Сброс параметров поиска" Command="{Binding ResetSearchCommand}"/>
-                    </dxlc:LayoutGroup>
+                            <Button Content="Сброс параметров поиска" Command="{Binding ResetSearchCommand}"/>
+                        </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutControl>
@@ -83,7 +81,7 @@
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Height="40" Margin="-12,0,-12,-12">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Height="35" Margin="-12,0,-12,-12">
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Style.Triggers>
@@ -93,8 +91,8 @@
                     </Style.Triggers>
                 </Style>
             </StackPanel.Style>
-            <Button Content="Выбрать" Margin="0,0,10,0" Command="{Binding ChooseProductCommand}"/>
-            <Button Content="Отмена" Command="{Binding CloseCommand}"/>
+            <Button Content="Выбрать" Margin="0,0,10,0" Command="{Binding ChooseProductCommand}" Height="30" HorizontalContentAlignment="Right"/>
+            <Button Content="Отмена" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Height="30" Margin="0,0,5,0"/>
         </StackPanel>
     </dxlc:LayoutControl>
 </g:MVVMWindow>

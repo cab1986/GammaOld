@@ -12,10 +12,17 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductionTaskPM
+    public partial class C1CEnumGroupTypes
     {
-        public System.Guid ProductionTaskID { get; set; }
+        public C1CEnumGroupTypes()
+        {
+            this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
+        }
     
-        public virtual ProductionTasks ProductionTasks { get; set; }
+        public int C1CEnumGroupTypeID { get; set; }
+        public string Name { get; set; }
+        public string Alias { get; set; }
+    
+        public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
     }
 }

@@ -1,11 +1,9 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Linq;
-using System.Reflection;
 using Gamma.Interfaces;
 using System.Collections.Generic;
 using System;
-using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -28,6 +26,8 @@ namespace Gamma.ViewModels
         /// </summary>
         public MainViewModel()
         {
+            var settings = GammaSettings.Get();
+            StatusText = "Сервер: " + settings.HostName + " БД: " + settings.DbName + " Пользователь: " + settings.User;
             if (IsInDesignMode)
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
@@ -40,9 +40,9 @@ namespace Gamma.ViewModels
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList(),
                 () => WorkSession.DBAdmin || DB.GammaBase.UserPermit("Reports").FirstOrDefault() > 1);
-                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveAccess("ProductionTaskPM"));
+                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTaskPM"));
                 ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW,
-                    () => DB.HaveAccess("ProductionTaskRW"));
+                    () => DB.HaveReadAccess("ProductionTaskRW"));
                 FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
             }
@@ -93,6 +93,7 @@ namespace Gamma.ViewModels
                 CurrentViewChanged();
             }
         }
+        public string StatusText { get; set; }
         private RelayCommand _newItemCommand;
         public RelayCommand NewItemCommand 
         {
@@ -134,6 +135,7 @@ namespace Gamma.ViewModels
             }
         }
         public RelayCommand ShowReportListCommand { get; private set; }
+        public RelayCommand ShowProductionTasksConvertingCommand { get; private set; }
         public RelayCommand ShowProductionTasksPMCommand { get; private set; }
         public RelayCommand ShowProductionTasksRWCommand { get; private set; }
         public RelayCommand FindProductCommand { get; private set; }

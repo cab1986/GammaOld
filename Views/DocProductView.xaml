@@ -1,18 +1,25 @@
-﻿<g:MVVMWindow xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ignore="http://www.ignore.com"
-        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.DocProductView"
-        xmlns:vm="clr-namespace:Gamma.ViewModels"
-        xmlns:v="clr-namespace:Gamma.Views"
-        xmlns:g="clr-namespace:Gamma"
-        mc:Ignorable="d ignore">
+﻿<g:MVVMWindow 
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:ignore="http://www.ignore.com" 
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+    x:Class="Gamma.Views.DocProductView" 
+    xmlns:vm="clr-namespace:Gamma.ViewModels" 
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+    xmlns:v="clr-namespace:Gamma.Views" 
+    xmlns:g="clr-namespace:Gamma" 
+    mc:Ignorable="d ignore" 
+    Width="722">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DocProductSpoolViewModel}">
-            <v:DocProductSpoolView />    
+            <v:DocProductSpoolView DataContext="{Binding}"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocProductUnloadViewModel}">
             <v:DocProductUnloadView />
@@ -38,7 +45,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
         <dx:DXTabControl Grid.Row="1">
@@ -47,26 +54,32 @@
                     <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
                         <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="200" HorizontalAlignment="Left">
                             <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
-                                <dxe:TextEdit EditValue="{Binding Number}"/>
+                                <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Дата производства" LabelPosition="Top">
                                 <dxe:DateEdit EditValue="{Binding DocDate}"/>
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="По заданию" LabelPosition="Top"> 
+                            <dxlc:LayoutItem Label="По заданию" LabelPosition="Top">
                                 <dxe:ButtonEdit IsReadOnly="True" AllowDefaultButton="False" EditValue="{Binding ProductionTaskInfo}">
                                     <dxe:ButtonInfo Content="i" Command="{Binding OpenProductionTaskCommand}"/>
                                 </dxe:ButtonEdit>
                             </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Подтвержден:">
+                                <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left"/>
+                            </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <ContentControl Content="{Binding CurrentViewModel}" />
+                        <ContentControl Content="{Binding}" DataContext="{Binding CurrentViewModel}"/>
                     </dxlc:LayoutControl>
                 </Grid>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Связи">
-                
+                <dxg:GridControl Margin="-12,-12,-12,-12" />
             </dx:DXTabItem>
         </dx:DXTabControl>
-        <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Margin="0,0,85,0" Command="{Binding SaveAndCloseCommand}"/>
-        <Button Content="Отмена" Grid.Row="2" HorizontalAlignment="Right" Width="80" Command="{Binding CloseCommand}"/>
+        <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Height="30" Margin="0,5,85,5" Command="{Binding SaveAndCloseCommand}" />
+        <Button Content="Отмена" Grid.Row="2" Height ="30" Command="{Binding CloseCommand}" Width="70" Margin="0,5,5,5" HorizontalAlignment="Right"/>
+        <i:Interaction.Behaviors>
+            <g:UIAuthBehavior />
+        </i:Interaction.Behaviors>
     </Grid>
 </g:MVVMWindow>

@@ -71,7 +71,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\UserEditView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PermitEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\RoleEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\UserEditView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Data.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Mvvm.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Printing.v15.1.Core.dll
@@ -161,3 +160,6 @@ D:\CProjects\Gamma\Gamma\bin\Debug\de\DevExpress.XtraPrinting.v15.1.resources.dl
 D:\CProjects\Gamma\Gamma\bin\Debug\es\DevExpress.XtraPrinting.v15.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ja\DevExpress.XtraPrinting.v15.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ru\DevExpress.XtraPrinting.v15.1.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksConvertingView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksConvertingView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache

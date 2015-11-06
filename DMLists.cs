@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Gamma
 {
-    public enum ProductionTaskKinds { ProductionTaskPM, ProductionTaskRW, ProductionTaskWR}
+    public enum ProductionTaskKinds { ProductionTaskPM, ProductionTaskRW, ProductionTaskWR, ProductionTaskConverting }
     public enum ProductKinds 
     { 
         [Description("Тамбура")]
@@ -50,5 +50,14 @@ namespace Gamma
         Read,
         [Description("Чтение и запись")]
         ReadAndWrite
+    }
+    public enum ProductionTaskStates
+    {
+        [Description("На рассмотрении")]
+        NeedsDecision,
+        [Description("В производстве")]
+        InProduction,
+        [Description("Выполнено")]
+        Completed
     }
 }

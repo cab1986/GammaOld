@@ -12,6 +12,7 @@
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
     x:Class="Gamma.MainView" 
     mc:Ignorable="d ignore" 
+    Title="Gamma"
     Height="716" 
     Width="899">
 
@@ -39,6 +40,7 @@
                             <dxb:BarButtonItem Content="Задания на пр-во ПРС" Command="{Binding ShowProductionTasksRWCommand}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
+                    
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">
                             <dxb:BarButtonItem Content="Редактирование шаблонов отчетов" Command="{Binding ShowReportListCommand}" />
@@ -58,6 +60,7 @@
                     <dxb:Bar.DockInfo>
                         <dxb:BarDockInfo ContainerType="Bottom" />
                     </dxb:Bar.DockInfo>
+                    <dxb:BarButtonItem Content="{Binding StatusText}"/>
                 </dxb:Bar>
             </dxb:BarManager.Bars>
             <DockPanel>

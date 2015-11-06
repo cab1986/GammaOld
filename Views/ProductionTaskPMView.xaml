@@ -17,7 +17,7 @@
                     <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}" />
                 </dxe:ButtonEdit>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
+            <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="70">
                 <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>

@@ -1,33 +1,27 @@
 ﻿<UserControl xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:g="clr-namespace:Gamma"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.DocProductSpoolView"
-        mc:Ignorable="d ignore">
+        mc:Ignorable="d ignore"
+             DataContext="{Binding}">
     <Grid>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
-            <dxlc:LayoutGroup View="GroupBox" Orientation="Vertical">
-                <dxlc:LayoutGroup>
-                    <dxlc:LayoutItem Label="Номенклатура">
-                        <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName}">
-                            <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
-                        </dxe:ButtonEdit>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Характеристика">
-                        <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
-                    </dxlc:LayoutItem>
-                </dxlc:LayoutGroup>
-                <dxlc:LayoutGroup>
-                    <dxlc:LayoutItem Label="Статус">
-                        <dxe:TextEdit IsReadOnly="True" EditValue="{Binding State}"/>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Width="100">
-                        <Button Content="Сменить статус" Width="100" Command="{Binding ChangeStateCommand}"/>
-                    </dxlc:LayoutItem>
-                </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup View="Group" Orientation="Vertical">
+                <dxlc:LayoutItem Label="Номенклатура">
+                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
+                         <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                     </dxe:ButtonEdit>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Характеристика">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID}"
+                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
+                </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>
                 <dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">
                     <dxe:SpinEdit MinValue="0" AllowDefaultButton="False" EditValue="{Binding RealBasisWeight}" MaskUseAsDisplayFormat="True" 
@@ -37,7 +31,7 @@
                         <dxe:PopupCalcEdit AllowDefaultButton="False" EditValue="{Binding RealFormat}" MaskType="RegEx" Mask="\d+" MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
-                    <dxe:SpinEdit  EditValue="{Binding BreakNumber}" MinValue="0" MaxValue="500" EditValueType="{x:Type sys:Byte}"/>
+                    <dxe:SpinEdit  EditValue="{Binding BreakNumber}" MinValue="0" MaxValue="500" EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
@@ -54,4 +48,7 @@
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
     </Grid>
+    <i:Interaction.Behaviors>
+        <g:UIAuthBehavior />
+    </i:Interaction.Behaviors>
 </UserControl>

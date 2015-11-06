@@ -16,13 +16,16 @@ namespace Gamma.Models
     {
         public ProductionTasks()
         {
-            this.ProductionTaskConfig = new HashSet<ProductionTaskConfig>();
+            this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
         public Nullable<short> ProductionTaskKindID { get; set; }
         public System.Guid PlaceID { get; set; }
-        public Nullable<System.Guid> ProductionTaskStateID { get; set; }
+        public Nullable<byte> ProductionTaskStateID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public decimal Quantity { get; set; }
         public Nullable<System.Guid> UserID { get; set; }
         public string Number { get; set; }
         public System.DateTime Date { get; set; }
@@ -31,11 +34,9 @@ namespace Gamma.Models
         public string Comment { get; set; }
         public Nullable<bool> IsInPlan { get; set; }
     
+        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual Places Places { get; set; }
-        public virtual ICollection<ProductionTaskConfig> ProductionTaskConfig { get; set; }
-        public virtual ProductionTaskPM ProductionTaskPM { get; set; }
-        public virtual ProductionTaskRW ProductionTaskRW { get; set; }
-        public virtual ProductionTaskStates ProductionTaskStates { get; set; }
-        public virtual ProductionTaskWR ProductionTaskWR { get; set; }
+        public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
     }
 }

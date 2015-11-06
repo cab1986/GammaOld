@@ -16,6 +16,7 @@ namespace Gamma.Models
     {
         public C1CMeasureUnits()
         {
+            this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
             this.C1CCharacteristics = new HashSet<C1CCharacteristics>();
             this.C1CCharacteristics1 = new HashSet<C1CCharacteristics>();
         }
@@ -27,9 +28,10 @@ namespace Gamma.Models
         public Nullable<decimal> Coefficient { get; set; }
         public string Name { get; set; }
     
+        public virtual C1CMeasureUnitQualifiers C1CMeasureUnitQualifiers { get; set; }
+        public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics1 { get; set; }
-        public virtual C1CMeasureUnitQualifiers C1CMeasureUnitQualifiers { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }

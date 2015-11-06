@@ -21,7 +21,15 @@
     <Property Name="MeasureUnitPackage" Type="uniqueidentifier" />
     <Property Name="MeasureUnitPallet" Type="uniqueidentifier" />
     <Property Name="Name" Type="varchar" MaxLength="255" />
-    <Property Name="IsActive" Type="bit" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="1CEnumGroupTypes">
+    <Key>
+      <PropertyRef Name="1CEnumGroupTypeID" />
+    </Key>
+    <Property Name="1CEnumGroupTypeID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="40" />
+    <Property Name="Alias" Type="varchar" MaxLength="120" />
   </EntityType>
   <EntityType Name="1CMeasureUnitQualifiers">
     <Key>
@@ -55,6 +63,24 @@
     <Property Name="IsArchive" Type="bit" />
     <Property Name="IsFolder" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="1CNomenclatureGroupNomenclature">
+    <Key>
+      <PropertyRef Name="1CNomenclatureGroupID" />
+      <PropertyRef Name="1CNomenclatureID" />
+    </Key>
+    <Property Name="1CNomenclatureGroupID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="1CNomenclatureGroups">
+    <Key>
+      <PropertyRef Name="1CNomenclatureGroupID" />
+    </Key>
+    <Property Name="1CNomenclatureGroupID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCode" Type="char" MaxLength="9" />
+    <Property Name="1CEnumGroupTypeID" Type="int" />
+    <Property Name="Description" Type="varchar" MaxLength="140" />
+    <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+  </EntityType>
   <EntityType Name="1CNomenclatureProperties">
     <Key>
       <PropertyRef Name="1CNomenclatureID" />
@@ -79,11 +105,15 @@
       <PropertyRef Name="1CPropertyValueID" />
     </Key>
     <Property Name="1CPropertyValueID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CCode" Type="varchar" MaxLength="20" />
-    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="1CPropertyID" Type="uniqueidentifier" />
+    <Property Name="ValueType" Type="tinyint" />
     <Property Name="Marked" Type="bit" />
-    <Property Name="Name" Type="varchar" MaxLength="255" />
+    <Property Name="Folder" Type="bit" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Description" Type="varchar" MaxLength="50" />
+    <Property Name="PrintDescription" Type="ntext" />
+    <Property Name="ValueNumeric" Type="decimal" Precision="20" Scale="5" />
   </EntityType>
   <EntityType Name="DocMovement">
     <Key>
@@ -184,28 +214,14 @@
     <Property Name="Weight" Type="decimal" Precision="10" Scale="4" />
     <Property Name="GrossWeight" Type="decimal" Precision="10" Scale="4" />
   </EntityType>
-  <EntityType Name="ProductionTaskConfig">
+  <EntityType Name="ProductionTaskRWCutting">
     <Key>
-      <PropertyRef Name="ProductionTaskConfigID" />
+      <PropertyRef Name="ProductionTaskRWCuttingID" />
     </Key>
-    <Property Name="ProductionTaskConfigID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductionTaskRWCuttingID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="DocProductsQuantity" Type="tinyint" />
-    <Property Name="TaskQuantity" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ProductionTaskPM">
-    <Key>
-      <PropertyRef Name="ProductionTaskID" />
-    </Key>
-    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ProductionTaskRW">
-    <Key>
-      <PropertyRef Name="ProductionTaskID" />
-    </Key>
-    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CutIndex" Type="smallint" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="ProductionTasks">
     <Key>
@@ -214,7 +230,10 @@
     <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductionTaskKindID" Type="smallint" />
     <Property Name="PlaceID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ProductionTaskStateID" Type="uniqueidentifier" />
+    <Property Name="ProductionTaskStateID" Type="tinyint" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
     <Property Name="UserID" Type="uniqueidentifier" />
     <Property Name="Number" Type="varchar" MaxLength="64" Nullable="false" />
     <Property Name="Date" Type="datetime" Nullable="false" />
@@ -222,24 +241,6 @@
     <Property Name="DateEnd" Type="datetime" />
     <Property Name="Comment" Type="varchar" MaxLength="8000" />
     <Property Name="IsInPlan" Type="bit" />
-  </EntityType>
-  <EntityType Name="ProductionTaskStates">
-    <Key>
-      <PropertyRef Name="ProductionTaskStateID" />
-    </Key>
-    <Property Name="ProductionTaskStateID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Name" Type="varchar" MaxLength="128" />
-    <Property Name="IsActual" Type="bit" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ProductionTaskWR">
-    <Key>
-      <PropertyRef Name="ProductionTaskID" />
-    </Key>
-    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="NumFilmLayers" Type="tinyint" />
-    <Property Name="IsWithCarton" Type="bit" />
-    <Property Name="IsEndProtected" Type="bit" />
-    <Property Name="GroupPackConfig" Type="varchar" MaxLength="8000" />
   </EntityType>
   <EntityType Name="ProductPalletItems">
     <Key>
@@ -494,6 +495,54 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_1CNomenclatureGroupNomenclature_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="1CNomenclatureGroupNomenclature" Type="Self.1CNomenclatureGroupNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureGroupNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureGroupNomenclature_1CNomenclatureGroups">
+    <End Role="1CNomenclatureGroups" Type="Self.1CNomenclatureGroups" Multiplicity="1" />
+    <End Role="1CNomenclatureGroupNomenclature" Type="Self.1CNomenclatureGroupNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclatureGroups">
+        <PropertyRef Name="1CNomenclatureGroupID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureGroupNomenclature">
+        <PropertyRef Name="1CNomenclatureGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureGroups_1CEnumGroupTypes">
+    <End Role="1CEnumGroupTypes" Type="Self.1CEnumGroupTypes" Multiplicity="0..1" />
+    <End Role="1CNomenclatureGroups" Type="Self.1CNomenclatureGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CEnumGroupTypes">
+        <PropertyRef Name="1CEnumGroupTypeID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureGroups">
+        <PropertyRef Name="1CEnumGroupTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureGroups_1CMeasureUnits">
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+    <End Role="1CNomenclatureGroups" Type="Self.1CNomenclatureGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureGroups">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_1CNomenclatureProperties_1CNomenclature">
     <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
     <End Role="1CNomenclatureProperties" Type="Self.1CNomenclatureProperties" Multiplicity="*" />
@@ -530,8 +579,8 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_C1CPropertyValues_C1CProperties">
-    <End Role="1CProperties" Type="Self.1CProperties" Multiplicity="1" />
+  <Association Name="FK_1CPropertyValues_1CProperties">
+    <End Role="1CProperties" Type="Self.1CProperties" Multiplicity="0..1" />
     <End Role="1CPropertyValues" Type="Self.1CPropertyValues" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CProperties">
@@ -748,69 +797,51 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProductionTaskConfig_1CNomenclature">
-    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
-    <End Role="ProductionTaskConfig" Type="Self.ProductionTaskConfig" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="1CNomenclature">
-        <PropertyRef Name="1CNomenclatureID" />
-      </Principal>
-      <Dependent Role="ProductionTaskConfig">
-        <PropertyRef Name="1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductionTaskPM_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="ProductionTaskPM" Type="Self.ProductionTaskPM" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="ProductionTasks">
-        <PropertyRef Name="ProductionTaskID" />
-      </Principal>
-      <Dependent Role="ProductionTaskPM">
-        <PropertyRef Name="ProductionTaskID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductionTaskQuantity_1CCharacteristics">
-    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
-    <End Role="ProductionTaskConfig" Type="Self.ProductionTaskConfig" Multiplicity="*" />
+  <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CCharacteristics">
         <PropertyRef Name="1CCharacteristicID" />
       </Principal>
-      <Dependent Role="ProductionTaskConfig">
+      <Dependent Role="ProductionTaskRWCutting">
         <PropertyRef Name="1CCharacteristicID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProductionTaskQuantity_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="ProductionTaskConfig" Type="Self.ProductionTaskConfig" Multiplicity="*" />
+  <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
         <PropertyRef Name="ProductionTaskID" />
       </Principal>
-      <Dependent Role="ProductionTaskConfig">
+      <Dependent Role="ProductionTaskRWCutting">
         <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProductionTaskRW_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="ProductionTaskRW" Type="Self.ProductionTaskRW" Multiplicity="0..1" />
+  <Association Name="FK_ProductionTasks_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="ProductionTasks">
-        <PropertyRef Name="ProductionTaskID" />
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
       </Principal>
-      <Dependent Role="ProductionTaskRW">
-        <PropertyRef Name="ProductionTaskID" />
+      <Dependent Role="ProductionTasks">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTasks_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductionTasks">
+        <PropertyRef Name="1CNomenclatureID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -823,30 +854,6 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Principal>
       <Dependent Role="ProductionTasks">
         <PropertyRef Name="PlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductionTasks_ProductionTaskStates">
-    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="0..1" />
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProductionTaskStates">
-        <PropertyRef Name="ProductionTaskStateID" />
-      </Principal>
-      <Dependent Role="ProductionTasks">
-        <PropertyRef Name="ProductionTaskStateID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductionTaskWR_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
-    <End Role="ProductionTaskWR" Type="Self.ProductionTaskWR" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="ProductionTasks">
-        <PropertyRef Name="ProductionTaskID" />
-      </Principal>
-      <Dependent Role="ProductionTaskWR">
-        <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1070,6 +1077,12 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="GetCharPropsDescriptions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetCharSpoolFormat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetProductionTaskProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -1079,9 +1092,12 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
   <EntityContainer Name="GammaModelStoreContainer">
     <EntitySet Name="1CCharacteristicProperties" EntityType="Self.1CCharacteristicProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CCharacteristics" EntityType="Self.1CCharacteristics" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CEnumGroupTypes" EntityType="Self.1CEnumGroupTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CMeasureUnitQualifiers" EntityType="Self.1CMeasureUnitQualifiers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CMeasureUnits" EntityType="Self.1CMeasureUnits" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CNomenclature" EntityType="Self.1CNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CNomenclatureGroupNomenclature" EntityType="Self.1CNomenclatureGroupNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CNomenclatureGroups" EntityType="Self.1CNomenclatureGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CNomenclatureProperties" EntityType="Self.1CNomenclatureProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CProperties" EntityType="Self.1CProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CPropertyValues" EntityType="Self.1CPropertyValues" Schema="dbo" store:Type="Tables" />
@@ -1096,12 +1112,8 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ProductionTaskConfig" EntityType="Self.ProductionTaskConfig" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ProductionTaskPM" EntityType="Self.ProductionTaskPM" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ProductionTaskRW" EntityType="Self.ProductionTaskRW" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductPalletItems" EntityType="Self.ProductPalletItems" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductPallets" EntityType="Self.ProductPallets" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
@@ -1169,6 +1181,22 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="1CNomenclature1" EntitySet="1CNomenclature" />
     </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureGroupNomenclature_1CNomenclature" Association="Self.FK_1CNomenclatureGroupNomenclature_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclatureGroupNomenclature" EntitySet="1CNomenclatureGroupNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureGroupNomenclature_1CNomenclatureGroups" Association="Self.FK_1CNomenclatureGroupNomenclature_1CNomenclatureGroups">
+      <End Role="1CNomenclatureGroups" EntitySet="1CNomenclatureGroups" />
+      <End Role="1CNomenclatureGroupNomenclature" EntitySet="1CNomenclatureGroupNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureGroups_1CEnumGroupTypes" Association="Self.FK_1CNomenclatureGroups_1CEnumGroupTypes">
+      <End Role="1CEnumGroupTypes" EntitySet="1CEnumGroupTypes" />
+      <End Role="1CNomenclatureGroups" EntitySet="1CNomenclatureGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureGroups_1CMeasureUnits" Association="Self.FK_1CNomenclatureGroups_1CMeasureUnits">
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+      <End Role="1CNomenclatureGroups" EntitySet="1CNomenclatureGroups" />
+    </AssociationSet>
     <AssociationSet Name="FK_1CNomenclatureProperties_1CNomenclature" Association="Self.FK_1CNomenclatureProperties_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="1CNomenclatureProperties" EntitySet="1CNomenclatureProperties" />
@@ -1181,7 +1209,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       <End Role="1CPropertyValues" EntitySet="1CPropertyValues" />
       <End Role="1CNomenclatureProperties" EntitySet="1CNomenclatureProperties" />
     </AssociationSet>
-    <AssociationSet Name="FK_C1CPropertyValues_C1CProperties" Association="Self.FK_C1CPropertyValues_C1CProperties">
+    <AssociationSet Name="FK_1CPropertyValues_1CProperties" Association="Self.FK_1CPropertyValues_1CProperties">
       <End Role="1CProperties" EntitySet="1CProperties" />
       <End Role="1CPropertyValues" EntitySet="1CPropertyValues" />
     </AssociationSet>
@@ -1253,37 +1281,25 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       <End Role="Products" EntitySet="Products" />
       <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskConfig_1CNomenclature" Association="Self.FK_ProductionTaskConfig_1CNomenclature">
-      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
-      <End Role="ProductionTaskConfig" EntitySet="ProductionTaskConfig" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskPM_ProductionTasks" Association="Self.FK_ProductionTaskPM_ProductionTasks">
-      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-      <End Role="ProductionTaskPM" EntitySet="ProductionTaskPM" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskQuantity_1CCharacteristics" Association="Self.FK_ProductionTaskQuantity_1CCharacteristics">
+    <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="Self.FK_ProductionTaskRWCutting_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
-      <End Role="ProductionTaskConfig" EntitySet="ProductionTaskConfig" />
+      <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskQuantity_ProductionTasks" Association="Self.FK_ProductionTaskQuantity_ProductionTasks">
+    <AssociationSet Name="FK_ProductionTaskRWCutting_ProductionTasks" Association="Self.FK_ProductionTaskRWCutting_ProductionTasks">
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-      <End Role="ProductionTaskConfig" EntitySet="ProductionTaskConfig" />
+      <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskRW_ProductionTasks" Association="Self.FK_ProductionTaskRW_ProductionTasks">
+    <AssociationSet Name="FK_ProductionTasks_1CCharacteristics" Association="Self.FK_ProductionTasks_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-      <End Role="ProductionTaskRW" EntitySet="ProductionTaskRW" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTasks_1CNomenclature" Association="Self.FK_ProductionTasks_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductionTasks_Places" Association="Self.FK_ProductionTasks_Places">
       <End Role="Places" EntitySet="Places" />
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductionTasks_ProductionTaskStates" Association="Self.FK_ProductionTasks_ProductionTaskStates">
-      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
-      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskWR_ProductionTasks" Association="Self.FK_ProductionTaskWR_ProductionTasks">
-      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-      <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductPalletItems_1CCharacteristics" Association="Self.FK_ProductPalletItems_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />

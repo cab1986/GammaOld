@@ -21,11 +21,15 @@ namespace Gamma.Models
         }
     
         public System.Guid C1CPropertyValueID { get; set; }
-        public System.Guid C1CPropertyID { get; set; }
         public string C1CCode { get; set; }
-        public Nullable<System.Guid> ParentID { get; set; }
+        public Nullable<System.Guid> C1CPropertyID { get; set; }
+        public Nullable<byte> ValueType { get; set; }
         public Nullable<bool> Marked { get; set; }
-        public string Name { get; set; }
+        public Nullable<bool> Folder { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
+        public string Description { get; set; }
+        public string PrintDescription { get; set; }
+        public Nullable<decimal> ValueNumeric { get; set; }
     
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }
         public virtual ICollection<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }

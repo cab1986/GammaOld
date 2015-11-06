@@ -6,6 +6,7 @@ using Gamma.Models;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Gamma.Interfaces;
+using Gamma.Attributes;
 
 namespace Gamma.ViewModels
 {
@@ -15,7 +16,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductViewModel : DataBaseEditViewModel
+    public class DocProductViewModel : DataBaseEditViewModel, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the DocProductViewModel class.
@@ -54,6 +55,7 @@ namespace Gamma.ViewModels
             {
                 DocDate = Doc.Date;
                 ProductionTaskID = DocProduction.ProductionTaskID;
+                IsConfirmed = Doc.IsConfirmed ?? false;
             }
             Bars = (CurrentViewModel as IBarImplemented).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
@@ -82,7 +84,10 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime? DocDate { get; set; }
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public bool IsConfirmed { get; set; }
         public string Number { get; set; }
         private Guid DocProductID { get; set; }
         private Guid? _productionTaskID { get; set; }
@@ -133,13 +138,14 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             if (Doc == null)
             {
-                Doc = new Docs() { DocID = Guid.NewGuid(), UserID = WorkSession.UserID };
+                Doc = new Docs() { DocID = Guid.NewGuid(), UserID = WorkSession.UserID, IsConfirmed = IsConfirmed };
                 DocProduction = new DocProduction() { DocID = Doc.DocID, InPlaceID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ProductionTaskID).Select(p => p.PlaceID).FirstOrDefault(), ProductionTaskID = ProductionTaskID };
                 DB.GammaBase.Docs.Add(Doc);
                 DB.GammaBase.DocProduction.Add(DocProduction);
             }
             Doc.Number = Number;
             Doc.Date = DocDate;
+            Doc.IsConfirmed = IsConfirmed;
             DB.GammaBase.SaveChanges();
             CurrentViewModel.SaveToModel(Doc.DocID);
         }
@@ -152,6 +158,18 @@ namespace Gamma.ViewModels
                 return base.IsValid && CurrentViewModel.IsValid;
             }
         }
-        
+
+        public bool IsReadOnly
+        {
+            get 
+            {
+                return IsConfirmed || ((DB.GammaBase.UserPermit("DocProduction").FirstOrDefault() != (byte)PermissionMark.ReadAndWrite) && 
+                    !WorkSession.DBAdmin);
+            }
+        }
+        public override bool CanSaveExecute()
+        {
+            return CurrentViewModel.CanSaveExecute() && (DB.GammaBase.UserPermit("DocProduction").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite);
+        }
     }
 }

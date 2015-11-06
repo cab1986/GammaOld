@@ -19,7 +19,19 @@ namespace Gamma
         protected override void OnAttached()
         {
             base.OnAttached();
-            SetReadStatus();
+            if (this.AssociatedObject.DataContext == null)
+                this.AssociatedObject.DataContextChanged += AssociatedObject_DataContextChanged;
+            else
+                SetReadStatus();
+        }
+
+        void AssociatedObject_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.AssociatedObject.DataContext != null)
+            {
+                SetReadStatus();
+                this.AssociatedObject.DataContextChanged -= AssociatedObject_DataContextChanged;
+            }
         }
 
         private void SetReadStatus()
@@ -27,38 +39,52 @@ namespace Gamma
             var Control = this.AssociatedObject;
             if (Control.DataContext.GetType().GetInterfaces().Contains(typeof(ICheckedAccess)))
             {
+                if (!(Control.DataContext as ICheckedAccess).IsReadOnly) return;
                 object context = AssociatedObject.DataContext;
                 Type contextType = context.GetType();
                 PropertyInfo[] properties = contextType.GetProperties();
-                bool ReadOnly = (Control.DataContext as ICheckedAccess).IsReadOnly;
-                var ChildCount = VisualTreeHelper.GetChildrenCount(Control);
-                for (int i = 0; i < ChildCount; i++)
+                WalkDownLogicalTree(Control, properties);
+            }
+        }
+        private void WalkDownLogicalTree(FrameworkElement Control, PropertyInfo[] properties)
+        {
+            foreach (var element in LogicalTreeHelper.GetChildren(Control))
+            {
+                var frameElement = element as FrameworkElement;
+                if (frameElement == null) continue;
+                WalkDownLogicalTree(frameElement,properties);
+                if (frameElement is TextBox || frameElement is BaseEdit)
                 {
-                    var Element = VisualTreeHelper.GetChild(Control, i);
-                    if (Element is TextBox || Element is TextEdit)
+                    var Binding = new Binding();
+                    if (frameElement is BaseEdit)
                     {
-                        var Binding = new Binding();
-                        if (Element is TextEdit)
-                        {
-                            Binding = BindingOperations.GetBinding((DependencyObject)Element, TextEdit.EditValueProperty);
-                        }
-                        else
-                        {
-                            Binding = BindingOperations.GetBinding((DependencyObject)Element, TextBox.TextProperty);
-                        }
+                        Binding = BindingOperations.GetBinding((DependencyObject)frameElement, BaseEdit.EditValueProperty);
+                    }
+                    else
+                    {
+                        Binding = BindingOperations.GetBinding((DependencyObject)frameElement, TextBox.TextProperty);
+                    }
+                    if (Binding != null)
+                    {
                         PropertyInfo bounded = properties.Where(x => x.Name == Binding.Path.Path).FirstOrDefault();
                         foreach (var attr in bounded.GetCustomAttributes(true))
                         {
                             var UIAuthAttr = attr as UIAuthAttribute;
                             if (UIAuthAttr != null)
                             {
-                                if (UIAuthAttr.AuthLevel == UIAuthLevel.Invisible)
+                                switch (UIAuthAttr.AuthLevel)
                                 {
-                                    (Element as Control).Visibility = Visibility.Hidden;
-                                }
-                                else if (UIAuthAttr.AuthLevel == UIAuthLevel.ReadOnly)
-                                {
-                                    (Element as Control).IsEnabled = false;
+                                    case UIAuthLevel.Invisible:
+                                        (frameElement as Control).Visibility = Visibility.Collapsed;
+                                        break;
+                                    case UIAuthLevel.ReadOnly:
+                                        if (frameElement is BaseEdit) (frameElement as BaseEdit).IsReadOnly = true;
+                                        else (frameElement as TextBox).IsReadOnly = true;
+                                        break;
+                                    default:
+                                        (frameElement as Control).Visibility = Visibility.Visible;
+                                        (frameElement as Control).IsEnabled = true;
+                                        break;
                                 }
                             }
                         }

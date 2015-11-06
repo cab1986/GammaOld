@@ -49,5 +49,16 @@ namespace Gamma
             View.Show();
         }
         
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (MessageBox.Show("Хотите закончить работу с программой?", "Завершение работы", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                e.Cancel = true;
+                base.OnClosing(e);
+        }
+        protected override void OnClosed(System.EventArgs e)
+        {
+            base.OnClosed(e);
+            Application.Current.Shutdown();
+        }
     }
 }

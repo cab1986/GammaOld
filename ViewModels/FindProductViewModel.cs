@@ -39,6 +39,7 @@ namespace Gamma.ViewModels
                               PlaceID = p.PlaceID
                           }
                           ).ToList<Place>();
+            SelectedPlaces = new List<Object>(PlacesList);
         }
         public FindProductViewModel(FindProductMessage msg) : this()
         {
@@ -129,6 +130,9 @@ namespace Gamma.ViewModels
         private void Find()
         {
             Guid charID = SelectedCharacteristic == null ? new Guid() : SelectedCharacteristic.CharacteristicID;
+            var selectedPlaces = new List<string>();
+            if (SelectedPlaces != null)
+                selectedPlaces = SelectedPlaces.Cast<string>().ToList();
             FoundProducts = new ObservableCollection<ProductInfo>
             (
             from pinfo in DB.GammaBase.vProductsInfo
@@ -138,7 +142,9 @@ namespace Gamma.ViewModels
             (NomenclatureID == new Guid() ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
             (charID == new Guid() ? true : pinfo.C1CCharacteristicID == charID) &&
             (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count-1) &&
-            ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd))
+            ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd)) 
+            &&
+            (selectedPlaces.Contains(pinfo.Place))
             select new ProductInfo
             {
                 DocProductID = pinfo.DocID,
@@ -161,7 +167,8 @@ namespace Gamma.ViewModels
             NomenclatureID = new Guid();
             DateBegin = null;
             DateEnd = null;
-            SelectedPlaces.Clear();
+            if (SelectedPlaces != null)
+                SelectedPlaces.Clear();
         }      
         private byte _selectedProductKindIndex;
         public byte SelectedProductKindIndex
@@ -197,8 +204,8 @@ namespace Gamma.ViewModels
            public string PlaceName { get; set; }
         }
         public List<Place> PlacesList { get; set; }
-        private List<object> _selectedPlaces = new List<object>();
-        public List<object> SelectedPlaces
+        private List<Object> _selectedPlaces = new List<Object>();
+        public List<Object> SelectedPlaces // Object требует визуальный компонент
         {
             get
             {

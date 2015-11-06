@@ -15,7 +15,7 @@
         xmlns:vm="clr-namespace:Gamma.ViewModels"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.ProductionTaskView"
         mc:Ignorable="d ignore"
-        Height="500" Width="740" MinHeight="500">
+        Height="424" Width="760" MinHeight="400">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:ProductionTaskPMViewModel}">
             <v:ProductionTaskPMView/>
@@ -31,29 +31,23 @@
             <RowDefinition Height="32" />
         </Grid.RowDefinitions>
         <ToolBar>
-            <Button Content="Создать новый продукт" Command="{Binding CreateNewProductCommand}"/>
+            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}"/>
         </ToolBar>
         <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
             <dx:DXTabItem Header="Параметры задания">
                 <Grid Background="Transparent">
                     <dxlc:LayoutControl Header="Header" UseLayoutRounding="True" Margin="0,0,0,0" Orientation="Vertical">
-                        <i:Interaction.Behaviors>
-                            <g:UIAuthBehavior/>
-                        </i:Interaction.Behaviors>
                         <dxlc:LayoutGroup>
-                            <dxlc:LayoutGroup Header="LayoutGroup" View="GroupBox" Margin="0,-2,0,2" Orientation="Vertical" Width="280">
+                            <dxlc:LayoutGroup Header="Общие параметры задания" View="GroupBox" Margin="0,-2,0,2" Orientation="Vertical" Width="280">
                                 <dxlc:LayoutItem Label="Номер">
-                                    <dxe:TextEdit Width="150" Text="{Binding Number}"/>
+                                    <dxe:TextEdit Width="150" Text="{Binding Number}" IsReadOnly="True"/>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Дата">
-                                    <dxe:DateEdit Width="150" EditValue="{Binding Date, ValidatesOnDataErrors=True}"/>
+                                    <dxe:DateEdit Width="150" EditValue="{Binding Date, ValidatesOnDataErrors=True}" IsReadOnly="True"/>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Дата начала">
                                     <dxe:DateEdit MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm" Width="150"
 										DisplayFormatString="dd-MMM-yyyy HH:mm" EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}">
-                                        <dxe:DateEdit.StyleSettings>
-                                            <dxe:DateEditPickerStyleSettings/>
-                                        </dxe:DateEdit.StyleSettings>
                                     </dxe:DateEdit>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Дата окончания">
@@ -61,13 +55,36 @@
 										DisplayFormatString="dd-MMM-yyyy HH:mm" EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Передел">
-                                    <dxe:ComboBoxEdit Width="150" ItemsSource="{Binding Places}" SelectedItem="{Binding SelectedPlace, ValidatesOnDataErrors=True}" DisplayMember="PlaceName" ValueMember="PlaceID" />
+                                    <dxe:ComboBoxEdit Width="150" ItemsSource="{Binding Places}" IsTextEditable="False"
+                                                      EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" DisplayMember="PlaceName" ValueMember="PlaceID" />
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Состояние">
+                                    <dxe:ComboBoxEdit Width="150" IsTextEditable="False" 
+                                                      ItemsSource="{Binding TaskStates}" EditValue="{Binding ProductionTaskStateID}" 
+                                                      DisplayMember="Value" ValueMember="Key" IsReadOnly="{Binding ChangeStateEnabled}"/>
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
-                            <ContentControl Content="{Binding CurrentView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                            <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical">
+                                <dxlc:LayoutGroup>
+                                    <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" HorizontalAlignment="Stretch">
+                                        <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" IsReadOnly="True">
+                                            <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}"  />
+                                        </dxe:ButtonEdit>
+                                    </dxlc:LayoutItem>
+                                    <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
+                                        <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}" IsFloatValue="False">
+                                        </dxe:SpinEdit>
+                                    </dxlc:LayoutItem>
+                                </dxlc:LayoutGroup>
+                                <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top" Visibility="{Binding CharacteristicVisible}">
+                                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID}"
+                                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" AutoComplete="True" AllowRejectUnknownValues="True"/>
+                                </dxlc:LayoutItem>
+                                <ContentControl Content="{Binding CurrentView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                            </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutItem Label="Комментарий" LabelPosition="Top" Height="Auto" Margin="0,0,0,0" MinHeight="160" VerticalAlignment="Stretch">
-                            <dxe:TextEdit Height="Auto" Width="Auto" EditValue="{Binding Comment}" VerticalContentAlignment="Stretch"/>
+                        <dxlc:LayoutItem Label="Комментарий" LabelPosition="Top" Margin="0,0,0,0" MinHeight="80" VerticalAlignment="Bottom">
+                            <dxe:TextEdit Width="Auto" EditValue="{Binding Comment}" VerticalContentAlignment="Stretch" />
                         </dxlc:LayoutItem>
                     </dxlc:LayoutControl>
                 </Grid>
@@ -110,5 +127,8 @@
         </dx:DXTabControl>
         <Button Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="75" Height="33" Content="Отмена" Command="{Binding CloseCommand}"/>
         <Button Grid.Row="2" Content="OK" HorizontalAlignment="Right" Margin="0,0,80,0" Width="75" Command="{Binding SaveAndCloseCommand}"/>
+        <i:Interaction.Behaviors>
+            <g:UIAuthBehavior/>
+        </i:Interaction.Behaviors>
     </Grid>
 </g:MVVMWindow>

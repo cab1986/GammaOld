@@ -12,7 +12,9 @@ namespace Gamma.Views
         /// </summary>
         public DocProductSpoolView()
         {
+            var context = this.DataContext;
             InitializeComponent();
+            var context2 = this.DataContext;
         }
     }
 }

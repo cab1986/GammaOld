@@ -9,11 +9,38 @@
              DataContext="{Binding ProductionTasksRW, Source={StaticResource Locator}}">
     <Grid>
 
-        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding ProductionTasks}" SelectedItem="{Binding SelectedProductionTask}" >
-            <dxg:GridControl.Columns>
-                <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура"/>
-                <dxg:GridColumn FieldName="TaskQuantity" Header="Кол-во,тн"/>
-            </dxg:GridControl.Columns>
+        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding ProductionTasks}" 
+                         SelectedItem="{Binding SelectedProductionTask}" HorizontalAlignment="Stretch"
+                         HorizontalContentAlignment ="Stretch" 
+                         >
+            <dxg:GridControl.Bands >
+                <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center">
+                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="100"/>
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="70"/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Номенклатура и раскрой" HorizontalHeaderContentAlignment="Center">
+                    <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[0]" Header="01" dxg:BandBase.GridRow="1" AllowBestFit="True" />
+                    <dxg:GridColumn FieldName="Format[1]" Header="02" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[2]" Header="03" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[3]" Header="04" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[4]" Header="05" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[5]" Header="06" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[6]" Header="07" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[7]" Header="08" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[8]" Header="09" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[9]" Header="10" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[10]" Header="11" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[11]" Header="12" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[12]" Header="13" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[13]" Header="14" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Format[14]" Header="15" dxg:BandBase.GridRow="1" AllowBestFit="True"/>
+                </dxg:GridControlBand>
+                <dxg:GridControlBand Header="Выполнение">
+                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True"/>
+                </dxg:GridControlBand>
+            </dxg:GridControl.Bands>
             <dxg:GridControl.DetailDescriptor>
                 <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding ProductionTaskConfiguration}" >
                     <dxg:GridControl EnableSmartColumnsGeneration="True" >

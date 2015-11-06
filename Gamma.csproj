@@ -192,6 +192,7 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="Dialogs\ChangeSpoolDialog.xaml.cs">
       <DependentUpon>ChangeSpoolDialog.xaml</DependentUpon>
@@ -202,6 +203,7 @@
     <Compile Include="DMLists.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="GammaSettings.cs" />
+    <Compile Include="GridControlWithBands.cs" />
     <Compile Include="Interfaces\IBarImplemented.cs" />
     <Compile Include="Interfaces\ICheckedAccess.cs" />
     <Compile Include="Interfaces\IItemManager.cs" />
@@ -212,6 +214,9 @@
     <Compile Include="Models\C1CCharacteristics.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CEnumGroupTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CMeasureUnitQualifiers.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -219,6 +224,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CNomenclatureGroups.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CNomenclatureProperties.cs">
@@ -264,6 +272,9 @@
     <Compile Include="Models\Get1CNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetCharPropsDescriptions_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetNomenclatureFolders_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -297,22 +308,10 @@
     <Compile Include="Models\ProductGroupPacks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskConfig.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProductionTaskPM.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProductionTaskRW.cs">
+    <Compile Include="Models\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionTasks.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProductionTaskStates.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProductionTaskWR.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductPalletItems.cs">
@@ -368,6 +367,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ManageUsersViewModel.cs" />
     <Compile Include="ViewModels\PermitEditViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTasksConvertingViewModel.cs" />
     <Compile Include="ViewModels\RoleEditViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\NomenclatureViewModel.cs" />
@@ -409,6 +409,9 @@
     </Compile>
     <Compile Include="Views\PermitEditView.xaml.cs">
       <DependentUpon>PermitEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTasksConvertingView.xaml.cs">
+      <DependentUpon>ProductionTasksConvertingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RoleEditView.xaml.cs">
       <DependentUpon>RoleEditView.xaml</DependentUpon>
@@ -487,6 +490,10 @@
     </Page>
     <Page Include="Views\PermitEditView.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTasksConvertingView.xaml">
+      <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RoleEditView.xaml">
@@ -598,6 +605,7 @@
       <LastGenOutput>GammaModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -11,10 +11,12 @@ namespace Gamma
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+#if DEBUG
             PresentationTraceSources.Refresh();
             PresentationTraceSources.DataBindingSource.Listeners.Add(new ConsoleTraceListener());
             PresentationTraceSources.DataBindingSource.Listeners.Add(new DebugTraceListener());
             PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
+#endif
             base.OnStartup(e);
         }
         public static bool IsInDesignMode
@@ -34,7 +36,9 @@ namespace Gamma
 
         public override void WriteLine(string message)
         {
+#if DEBUG
             Debugger.Break();
+#endif
         }
     }
 }

@@ -26,12 +26,12 @@ namespace Gamma.ViewModels
             EditSpoolCommand = new RelayCommand(EditSpool);
             if (NewProduct)
             {
-                GetProductionTaskConfig(ID);
+                
                 UnloadSpools = new ObservableCollection<Spool>();
             }
             else
             {
-                GetProductionTaskConfig(DB.GammaBase.DocProduction.Where(dp => dp.DocID == ID).Select(dp => dp.ProductionTaskID).FirstOrDefault());
+                
                 DocProducts = new ObservableCollection<DocProducts>
                 (DB.GammaBase.DocProducts.Where(dp => dp.DocID == ID));
                 Products = new ObservableCollection<Products>
@@ -53,27 +53,7 @@ namespace Gamma.ViewModels
             }   
         }
 
-        private void GetProductionTaskConfig(Guid? ID)
-        {
-            var ProductionTaskConfigs = from p in DB.GammaBase.ProductionTaskConfig
-                                        where p.ProductionTaskID == ID
-                                        select
-                                        new
-                                        {
-                                            NomenclatureID = p.C1CNomenclatureID,
-                                            CharacteristicID = p.C1CCharacteristicID,
-                                            Quantity = p.DocProductsQuantity
-                                        };
-            NomenclatureID = ProductionTaskConfigs.FirstOrDefault().NomenclatureID;
-            foreach (var ptask in ProductionTaskConfigs)
-            {
-                ConfigurationElements.Add(new ConfigurationElement
-                {
-                    CharacteristicID = ptask.CharacteristicID,
-                    DocProductQuantity = ptask.Quantity
-                });
-            }
-        }
+        
 
 
 
@@ -104,19 +84,7 @@ namespace Gamma.ViewModels
                 ProductSpools = null;
                 Products = null;
             }
-            foreach (var conf in ConfigurationElements)
-            {
-                for (int i = 0; i < conf.DocProductQuantity; i++)
-                {
-                    UnloadSpools.Add(new Spool
-                        {
-                            ProductID = Guid.NewGuid(),
-                            CharacteristicID = conf.CharacteristicID,
-                            NomenclatureID = NomenclatureID,
-                            Nomenclature = String.Format("{0} {1}", NomenclatureName, Characteristics.Where(c => c.CharacteristicID == conf.CharacteristicID).Select(c => c.CharacteristicName).FirstOrDefault())
-                        });
-                }
-            }
+            
             Messenger.Default.Send<ParentSaveMessage>(new ParentSaveMessage());
         }
         private ObservableCollection<Spool> _unloadSpools = new ObservableCollection<Spool>();
@@ -202,19 +170,6 @@ namespace Gamma.ViewModels
                 DB.GammaBase.DocProducts.AddRange(DocProducts);
             }
             DB.GammaBase.SaveChanges();
-        }
-        private ObservableCollection<ConfigurationElement> _configurationElements = new ObservableCollection<ConfigurationElement>();
-        public ObservableCollection<ConfigurationElement> ConfigurationElements
-        {
-            get
-            {
-                return _configurationElements;
-            }
-            set
-            {
-                _configurationElements = value;
-                RaisePropertyChanged("ConfigurationElements");
-            }
         }
         private ObservableCollection<DocProducts> DocProducts { get; set; }
         private ObservableCollection<Products> Products { get; set; }

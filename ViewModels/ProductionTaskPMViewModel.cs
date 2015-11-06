@@ -27,16 +27,6 @@ namespace Gamma.ViewModels
 
         public ProductionTaskPMViewModel(Guid? ProductionTaskID) : this()
         {
-            var productionTaskPM = (from ptpm in DB.GammaBase.ProductionTaskPM
-                                    where ptpm.ProductionTaskID == ProductionTaskID
-                                    select ptpm).FirstOrDefault();
-            var productionTaskConfig = (from ptconf in DB.GammaBase.ProductionTaskConfig where ptconf.ProductionTaskID == ProductionTaskID
-                                            select ptconf).FirstOrDefault();
-            this.ProductionTaskID = ProductionTaskID;
-            NomenclatureID = productionTaskConfig.C1CNomenclatureID;
-            Characteristics = DB.GetCharacteristics(NomenclatureID);
-            SelectedCharacteristic = Characteristics.Where(ch => ch.CharacteristicID == productionTaskConfig.C1CCharacteristicID).FirstOrDefault();
-            TaskQuantity = productionTaskConfig.TaskQuantity;
         }
         [Range(1,1000000,ErrorMessage="Значение должно быть больше 0")]
         public int TaskQuantity { get; set; }
@@ -57,18 +47,7 @@ namespace Gamma.ViewModels
         public override void SaveToModel(Guid itemID)
         {
             base.SaveToModel(itemID);
-            var ProductionTaskConfig = DB.GammaBase.ProductionTaskConfig.Where(ptconf => ptconf.ProductionTaskID == itemID).FirstOrDefault();
-            if (ProductionTaskConfig == null)
-            {
-                ProductionTaskConfig = new ProductionTaskConfig();
-                ProductionTaskConfig.ProductionTaskID = itemID;
-                DB.GammaBase.ProductionTaskConfig.Add(ProductionTaskConfig);
-            }
-            ProductionTaskConfig.C1CNomenclatureID = NomenclatureID;
-            ProductionTaskConfig.C1CCharacteristicID = SelectedCharacteristic.CharacteristicID;
-            ProductionTaskConfig.TaskQuantity = TaskQuantity;
-            ProductionTaskConfig.DocProductsQuantity = 1;
-            DB.GammaBase.SaveChanges();
+          DB.GammaBase.SaveChanges();
         }
 
     }

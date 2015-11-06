@@ -12,10 +12,14 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductionTaskRW
+    public partial class ProductionTaskRWCutting
     {
+        public System.Guid ProductionTaskRWCuttingID { get; set; }
         public System.Guid ProductionTaskID { get; set; }
+        public Nullable<short> CutIndex { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
     
+        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual ProductionTasks ProductionTasks { get; set; }
     }
 }

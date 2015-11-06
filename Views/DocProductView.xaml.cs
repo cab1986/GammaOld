@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Gamma.ViewModels;
+using System;
 
 namespace Gamma.Views
 {
@@ -16,5 +17,6 @@ namespace Gamma.Views
             this.DataContext = new DocProductViewModel(msg);
             InitializeComponent();
         }
+        
     }
 }

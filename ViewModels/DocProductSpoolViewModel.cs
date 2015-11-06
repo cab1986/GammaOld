@@ -6,6 +6,7 @@ using Gamma.Models;
 using System.Linq;
 using System.Data.Entity;
 using GalaSoft.MvvmLight.Messaging;
+using Gamma.Attributes;
 
 
 namespace Gamma.ViewModels
@@ -16,7 +17,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductSpoolViewModel : DBEditItemWithNomenclatureViewModel, IBarImplemented
+    public class DocProductSpoolViewModel : DBEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the DocProductSpoolViewModel class.
@@ -30,11 +31,14 @@ namespace Gamma.ViewModels
         {
             if (NewProduct)
             {
-                var ProductionTask = (from p in DB.GammaBase.ProductionTaskConfig where p.ProductionTaskID == ID
-                                         select
-                                         new {NomenclatureID = p.C1CNomenclatureID,CharacteristicID = p.C1CCharacteristicID}).FirstOrDefault();
-                NomenclatureID = ProductionTask.NomenclatureID;
-                SelectedCharacteristic = Characteristics.Where(c => c.CharacteristicID == ProductionTask.CharacteristicID).FirstOrDefault();
+                var ptInfo = (from pt in DB.GammaBase.ProductionTasks
+                             where pt.ProductionTaskID == ID
+                             select new { NomenclatureID = pt.C1CNomenclatureID, CharacteristicID = pt.C1CCharacteristicID }).FirstOrDefault();
+                if (ptInfo != null)
+                {
+                    NomenclatureID = ptInfo.NomenclatureID;
+                    CharacteristicID = ptInfo.CharacteristicID;
+                }
             }
             else
             {
@@ -45,16 +49,19 @@ namespace Gamma.ViewModels
                 Product = DB.GammaBase.Products.Where(prod => prod.ProductID == DocProduct.ProductID).FirstOrDefault();
                 ProductSpool = DB.GammaBase.ProductSpools.Where(ps => ps.ProductID == Product.ProductID).FirstOrDefault();
                 NomenclatureID = ProductSpool.C1CNomenclatureID;
-                SelectedCharacteristic = Characteristics.Where(c => c.CharacteristicID == ProductSpool.C1CCharacteristicID).FirstOrDefault();
+                CharacteristicID = ProductSpool.C1CCharacteristicID;
                 RealFormat = ProductSpool.RealFormat;
                 RealBasisWeight = ProductSpool.RealBasisWeight;
                 Diameter = ProductSpool.Diameter;
                 Length = ProductSpool.Length;
                 BreakNumber = ProductSpool.BreakNumber;
                 Weight = ProductSpool.Weight;
+                IsConfirmed = DocProduct.IsInConfirmed ?? false;
             }
+            Bars.Add(ReportManager.GetReportBar("Spool"));
         }
-        private Characteristic _selectedCharacteristic;
+        private Guid? _characteristicID;
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public int Diameter
         {
             get
@@ -67,6 +74,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Diameter");
             }
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public int? Length
         {
             get
@@ -90,13 +98,14 @@ namespace Gamma.ViewModels
                 _docID = value;
             }
         }
-        public Characteristic SelectedCharacteristic
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public Guid? CharacteristicID
         {
-            get { return _selectedCharacteristic; }
+            get { return _characteristicID; }
             set
             {
-                _selectedCharacteristic = value;
-                RaisePropertyChanged("SelectedCharacteristic");
+                _characteristicID = value;
+                RaisePropertyChanged("CharacteristicID");
             }
         }
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)
@@ -105,6 +114,7 @@ namespace Gamma.ViewModels
             Characteristics = DB.GetCharacteristics(NomenclatureID);
         }
         private decimal? _realBasisWeight;
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal? RealBasisWeight
         {
             get { return _realBasisWeight; }
@@ -115,6 +125,7 @@ namespace Gamma.ViewModels
             }
         }
         private int? _realFormat;
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public int? RealFormat
         {
             get
@@ -128,6 +139,7 @@ namespace Gamma.ViewModels
             }
         }
         private byte? _breakNumber;
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public byte? BreakNumber
         {
             get
@@ -140,19 +152,9 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("BreakNumber");
             }
         }
-        private int _weight;
-        public string State
-        {
-            get
-            {
-                return _state;
-            }
-            set
-            {
-                _state = value;
-                RaisePropertyChanged("State");
-            }
-        }
+        private bool IsConfirmed { get; set; }
+        private int _weight;   
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public int Weight
         {
             get
@@ -167,10 +169,8 @@ namespace Gamma.ViewModels
         }
         private int? _length;
         private int _diameter;
-        private string _state;
         private Guid? _docID;
-        public RelayCommand ChangeStateCommand { get; private set; }
-        private ObservableCollection<BarViewModel> _bars;
+        private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
         public ObservableCollection<BarViewModel> Bars
         {
             get
@@ -192,30 +192,49 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             if (Product == null)
             {
-                Product = new Products();
-                Product.ProductID = Guid.NewGuid();
-                Product.ProductKindID = (int)ProductKinds.ProductSpool;
-                ProductSpool = new ProductSpools();
-                ProductSpool.ProductID = Product.ProductID;
-                DocProduct = new DocProducts();
-                DocProduct.DocID = DocID;
-                DocProduct.ProductID = Product.ProductID;
-                DocProduct.IsInConfirmed = (from doc in DB.GammaBase.Docs where doc.DocID == DocID select doc.IsConfirmed).FirstOrDefault();
+                Product = new Products() { ProductID = Guid.NewGuid(), ProductKindID = (int)ProductKinds.ProductSpool };
+                ProductSpool = new ProductSpools() { ProductID = Product.ProductID };
+                DocProduct = new DocProducts()
+                {
+                    DocID = DocID,
+                    ProductID = Product.ProductID,
+                    IsInConfirmed = (from doc in DB.GammaBase.Docs
+                                     where doc.DocID == DocID
+                                     select doc.IsConfirmed).FirstOrDefault()
+                };
                 DB.GammaBase.Products.Add(Product);
                 DB.GammaBase.ProductSpools.Add(ProductSpool);
                 DB.GammaBase.DocProducts.Add(DocProduct);
             }
             ProductSpool.C1CNomenclatureID = NomenclatureID;
-            ProductSpool.C1CCharacteristicID = SelectedCharacteristic.CharacteristicID;
+            ProductSpool.C1CCharacteristicID = CharacteristicID;
             ProductSpool.RealBasisWeight = RealBasisWeight;
             ProductSpool.RealFormat = RealFormat;
             ProductSpool.BreakNumber = BreakNumber;
             ProductSpool.Diameter = Diameter;
             ProductSpool.Length = Length;
             ProductSpool.Weight = Weight;
-            
+            DocProduct.IsInConfirmed = (from doc in DB.GammaBase.Docs
+                                        where doc.DocID == DocID
+                                        select doc.IsConfirmed).FirstOrDefault();
             DB.GammaBase.SaveChanges();
             Messenger.Default.Send<ProductChangedMessage>(new ProductChangedMessage() {ProductID = Product.ProductID});
+        }
+
+        public bool IsReadOnly
+        {
+            get 
+            {
+                return IsConfirmed || !DB.HaveWriteAccess("ProductSpools");
+            }
+        }
+        public override bool CanSaveExecute()
+        {
+            return DB.HaveWriteAccess("ProductSpools");
+        }
+        protected override bool CanChooseNomenclature()
+        {
+            return !IsConfirmed && DB.HaveWriteAccess("ProductSpools");
         }
     }
 }

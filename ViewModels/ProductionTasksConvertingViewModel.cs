@@ -1,13 +1,11 @@
-﻿using GalaSoft.MvvmLight;
-using System.Windows.Documents;
-using System.Linq;
-using System;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
+﻿using Gamma.Models;
 using GalaSoft.MvvmLight.Command;
 using Gamma.Interfaces;
+using System.Collections.ObjectModel;
+using System;
+using GalaSoft.MvvmLight;
+using System.Linq;
 using GalaSoft.MvvmLight.Messaging;
-using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -17,24 +15,23 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class ProductionTasksPMViewModel : RootViewModel,IItemManager
+    public class ProductionTasksConvertingViewModel : RootViewModel,IItemManager
     {
         /// <summary>
-        /// Initializes a new instance of the ProductionTasksPMViewModel class.
+        /// Initializes a new instance of the ProductionTasksConvertingViewModel class.
         /// </summary>
-        public ProductionTasksPMViewModel()
+        public ProductionTasksConvertingViewModel()
         {
             GetProductionTasks();
             EditItemCommand = new RelayCommand(EditItem);
             NewItemCommand = new RelayCommand(NewProductionTask);
             RefreshCommand = new RelayCommand(GetProductionTasks);
         }
-
         private void GetProductionTasks()
         {
             ProductionTasks = new ObservableCollection<ProductionTask>
                               (from pt in DB.GammaBase.ProductionTasks
-                               where pt.ProductionTaskKindID == (short)ProductionTaskKinds.ProductionTaskPM
+                               where pt.ProductionTaskKindID == (short)ProductionTaskKinds.ProductionTaskConverting
                                select new ProductionTask
                                {
                                    ProductionTaskID = pt.ProductionTaskID,
@@ -43,35 +40,30 @@ namespace Gamma.ViewModels
                                    Quantity = pt.Quantity
                                });
         }
-
-        private ObservableCollection<ProductionTask> _productiontasks;
-        public ObservableCollection<ProductionTask> ProductionTasks
-        {
-            get { return _productiontasks; }
-            private set { 
-                    _productiontasks = value;
-                    RaisePropertyChanged("ProductionTasks");
-                }
-        }
-
-        public class ProductionTask
-        {
-            public Guid ProductionTaskID {get; set; }
-            public DateTime? DateBegin { get; set; }
-            public string Nomenclature { get; set; }
-            public decimal? Quantity { get; set; }
-        }
-
         private void EditItem()
         {
-            OpenProductionTaskMessage msg = new OpenProductionTaskMessage { ProductionTaskID = SelectedProductionTask.ProductionTaskID, ProductionTaskKind = ProductionTaskKinds.ProductionTaskPM };
+            OpenProductionTaskMessage msg = new OpenProductionTaskMessage { ProductionTaskID = SelectedProductionTask.ProductionTaskID, ProductionTaskKind = ProductionTaskKinds.ProductionTaskConverting };
             MessageManager.OpenProductionTask(msg);
         }
 
         private void NewProductionTask()
         {
-            var msg = new OpenProductionTaskMessage {ProductionTaskKind = ProductionTaskKinds.ProductionTaskPM};
+            var msg = new OpenProductionTaskMessage { ProductionTaskKind = ProductionTaskKinds.ProductionTaskConverting };
             Messenger.Default.Send<OpenProductionTaskMessage>(msg);
+        }
+
+        private ObservableCollection<ProductionTask> _productionTasks;
+        public ObservableCollection<ProductionTask> ProductionTasks
+        {
+            get
+            {
+                return _productionTasks;
+            }
+            set
+            {
+            	_productionTasks = value;
+                RaisePropertyChanged("ProductionTasks");
+            }
         }
         private ProductionTask _selectedProductionTask;
         public RelayCommand NewItemCommand
@@ -108,5 +100,13 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("SelectedProductionTask");
             }
         }
+
+        public class ProductionTask
+        {
+            public Guid ProductionTaskID {get; set; }
+            public DateTime? DateBegin { get; set; }
+            public string Nomenclature { get; set; }
+            public decimal? Quantity { get; set; }
+        }        
     }
 }

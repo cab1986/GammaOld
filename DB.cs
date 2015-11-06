@@ -53,7 +53,7 @@ namespace Gamma
             return new ObservableCollection<Characteristic>
                 (
                     from chars in DB.GammaBase.C1CCharacteristics
-                    where chars.C1CNomenclatureID == nomenclatureID
+                    where chars.C1CNomenclatureID == nomenclatureID && chars.IsActive 
                     select new Characteristic { CharacteristicID = chars.C1CCharacteristicID, CharacteristicName = chars.Name }
                 );
         }
@@ -116,14 +116,21 @@ namespace Gamma
             SqlParameter[] parameters = parameterList.ToArray();
             DB.GammaBase.Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
         }
-        public static bool HaveAccess(string tableName)
+        public static bool HaveReadAccess(string tableName)
         {
-            return true;
             if (WorkSession.DBAdmin) return true;
-            var permit = DB.GammaBase.UserPermit("tableName").FirstOrDefault();
+            var permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
             if (permit == null) return false;
             else return permit > 0;
         }
+        public static bool HaveWriteAccess(string tableName)
+        {
+            if (WorkSession.DBAdmin) return true;
+            var permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
+            if (permit == null) return false;
+            else return permit == 2;
+        }
+
     }
 
     public class Characteristic

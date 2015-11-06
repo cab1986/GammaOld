@@ -20,8 +20,8 @@ namespace Gamma.Models
         public string ValueText { get; set; }
         public Nullable<decimal> ValueNumeric { get; set; }
     
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CProperties C1CProperties { get; set; }
         public virtual C1CPropertyValues C1CPropertyValues { get; set; }
+        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
     }
 }
