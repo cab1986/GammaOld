@@ -1,0 +1,70 @@
+﻿<UserControl xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.PlaceProductsView" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="700">
+    <UserControl.Resources>
+        <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:BaseEdit}">
+            <Style.Triggers>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="1">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="2">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl>
+            <dxlc:LayoutItem Label="Диапозон:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalID}" x:Name="IntervalList"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Номер:">
+                <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Дата с:">
+                <dxe:DateEdit EditValue="{Binding DateBegin}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="по:">
+                <dxe:DateEdit EditValue="{Binding DateEnd}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
+        </dxlc:LayoutControl>
+        <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
+                <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
+                <dxg:GridColumn Header="{Binding QuantityHeader}" FieldName="Quantity" FixedWidth="True" Width="60" />
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
+            </dxg:GridControl.View>
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocProductCommand}"/>
+            </dxmvvm:Interaction.Behaviors>
+        </dxg:GridControl>
+    </Grid>
+</UserControl>

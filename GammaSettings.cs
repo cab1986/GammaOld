@@ -5,8 +5,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace Gamma
@@ -29,6 +27,7 @@ namespace Gamma
         public string DbName = "";
         public string User = "";
 
+        public bool UseScanner = false;
         private static string _connectionstring;
         
         public static string ConnectionString

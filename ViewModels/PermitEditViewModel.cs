@@ -14,7 +14,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class PermitEditViewModel : DataBaseEditViewModel
+    public class PermitEditViewModel : SaveImplementedViewModel
     {
         /// <summary>
         /// Initializes a new instance of the NewPermitViewModel class.

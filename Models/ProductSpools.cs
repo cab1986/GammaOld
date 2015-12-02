@@ -32,10 +32,10 @@ namespace Gamma.Models
         public Nullable<byte> BreakNumber { get; set; }
     
         public virtual Products Products { get; set; }
+        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual ICollection<SourceSpools> SourceSpools { get; set; }
         public virtual ICollection<SourceSpools> SourceSpools1 { get; set; }
         public virtual ICollection<SourceSpools> SourceSpools2 { get; set; }
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }

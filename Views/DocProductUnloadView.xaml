@@ -13,22 +13,23 @@
                 <dxlc:LayoutItem Label="Номенклатура">
                     <dxe:TextEdit EditValue="{Binding NomenclatureName}" IsEnabled="False"/>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Конфигурация" LabelPosition="Top">
-                    <dxg:GridControl ShowBorder="False" ItemsSource="{Binding ConfigurationElements}" MaxHeight="1000">
+                <dxlc:LayoutItem Label="Раскрой" LabelPosition="Top">
+                    <dxg:GridControl ShowBorder="False" ItemsSource="{Binding Cuttings}" MaxHeight="1000">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn FieldName="CharacteristicID" Header="Характеристика">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:ComboBoxEditSettings ItemsSource="{Binding Characteristics}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="DocProductQuantity" Header="Кол-во в съеме">
+                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во в съеме" FixedWidth="True" Width="100">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:SpinEditSettings MinValue="1" MaxValue="20" Mask="d"/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.View>
-                            <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" AllowEditing="False"/>
+                            <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" AutoWidth="True"
+                                           ShowDetailButtons="False" ShowFilterPanelMode="Never" AllowEditing="False"/>
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxlc:LayoutItem>
@@ -45,12 +46,12 @@
             <dxlc:LayoutItem Label="Тамбура" LabelPosition="Top">
                 <dxg:GridControl ItemsSource="{Binding UnloadSpools}" MaxHeight="1000" MinHeight="60" SelectedItem="{Binding SelectedUnloadSpool}">
                     <dxg:GridControl.View>
-                        <dxg:TableView AllowEditing="False" ShowGroupPanel="False"/>
+                        <dxg:TableView AllowEditing="False" ShowGroupPanel="False" AutoWidth="True"/>
                     </dxg:GridControl.View>
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn FieldName="Number" Header="Номер"/>
+                        <dxg:GridColumn FieldName="Number" Header="Номер" FixedWidth="True" Width="100"/>
                         <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура"/>
-                        <dxg:GridColumn FieldName="Weight" Header="Вес, кг"/>
+                        <dxg:GridColumn FieldName="Weight" Header="Вес, кг" FixedWidth="True" Width="60"/>
                     </dxg:GridControl.Columns>
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditSpoolCommand}"/>

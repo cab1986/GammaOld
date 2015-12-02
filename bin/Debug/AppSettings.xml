@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <GammaSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <ComPort />
+  <ComPort>COM8</ComPort>
   <BaudRate>9600</BaudRate>
   <Parity>None</Parity>
   <StopBits>One</StopBits>
@@ -9,4 +9,5 @@
   <HostName>ASUTPMATT\GAMMA</HostName>
   <DbName>GAMMA</DbName>
   <User>БДМ11</User>
+  <UseScanner>true</UseScanner>
 </GammaSettings>

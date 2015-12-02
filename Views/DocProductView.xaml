@@ -9,15 +9,19 @@
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
-    x:Class="Gamma.Views.DocProductView" 
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
     xmlns:v="clr-namespace:Gamma.Views" 
     xmlns:g="clr-namespace:Gamma" 
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
+    xmlns:Dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
+    x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
-    Width="722">
+    Width="722" Background="#FFB6D0F4"
+    Title="{Binding Title}"
+    >
 
-    <Window.Resources>
+    <g:MVVMWindow.Resources>
         <DataTemplate DataType="{x:Type vm:DocProductSpoolViewModel}">
             <v:DocProductSpoolView DataContext="{Binding}"/>
         </DataTemplate>
@@ -32,21 +36,28 @@
         <DataTemplate x:Key="itemTemplate">
             <ContentControl>
                 <dxb:BarButtonItem Content="{Binding Caption}"
-                                   Glyph="{Binding SmallGlyph}"
-                                   LargeGlyph="{Binding LargeGlyph}"
-                                   GlyphAlignment="Top"
-                                   BarItemDisplayMode="ContentAndGlyph"
-                                   Command="{Binding}"
-                                   CommandParameter="{Binding CommandParameter}"/>
+        			Glyph="{Binding SmallGlyph}"
+        			LargeGlyph="{Binding LargeGlyph}"
+        			GlyphAlignment="Top"
+        			BarItemDisplayMode="ContentAndGlyph"
+        			Command="{Binding}"
+        			CommandParameter="{Binding CommandParameter}"/>
             </ContentControl>
         </DataTemplate>
-    </Window.Resources>
+    </g:MVVMWindow.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
+        <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
+        <i:Interaction.Behaviors>
+            <g:UIAuthBehavior />
+        </i:Interaction.Behaviors>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
         <dx:DXTabControl Grid.Row="1">
             <dx:DXTabItem Header="Информация о продукте">
@@ -57,7 +68,7 @@
                                 <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Дата производства" LabelPosition="Top">
-                                <dxe:DateEdit EditValue="{Binding DocDate}"/>
+                                <dxe:DateEdit EditValue="{Binding DocDate}" IsReadOnly="True"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="По заданию" LabelPosition="Top">
                                 <dxe:ButtonEdit IsReadOnly="True" AllowDefaultButton="False" EditValue="{Binding ProductionTaskInfo}">
@@ -73,13 +84,21 @@
                 </Grid>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Связи">
-                <dxg:GridControl Margin="-12,-12,-12,-12" />
+                <dxg:GridControl Margin="-12,-12,-12,-12" ItemsSource="{Binding ProductRelations}" SelectedItem="{Binding SelectedProduct}"
+                                 AutoExpandAllGroups="True" >
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn Header="Вид связи:" FieldName="RelationKind" GroupIndex="0" />
+                        <dxg:GridColumn Header="Вид изделия:" FieldName="ProductKind" GroupIndex="1" />
+                        <dxg:GridColumn Header="Номер" FieldName="Number" />
+                        <dxg:GridColumn Header="Дата" FieldName="Дата" />
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" ShowGroupPanel="False" />
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
             </dx:DXTabItem>
         </dx:DXTabControl>
         <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Height="30" Margin="0,5,85,5" Command="{Binding SaveAndCloseCommand}" />
         <Button Content="Отмена" Grid.Row="2" Height ="30" Command="{Binding CloseCommand}" Width="70" Margin="0,5,5,5" HorizontalAlignment="Right"/>
-        <i:Interaction.Behaviors>
-            <g:UIAuthBehavior />
-        </i:Interaction.Behaviors>
     </Grid>
 </g:MVVMWindow>

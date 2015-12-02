@@ -1,0 +1,42 @@
+﻿<Window xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.ComPortSettingsView"
+        Title="Настройка COM-порта" Height="270" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <dx:DXTabControl>
+            <dx:DXTabItem Header="Сканер">
+                <Grid Background="Transparent">
+                    <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
+                        <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Vertical">
+                            <dxlc:LayoutItem Label="ComPort">
+                                <dxe:ComboBoxEdit ItemsSource="{Binding ComPortsList}" EditValue="{Binding ComPort}"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="BaudRate">
+                                <dxe:ComboBoxEdit ItemsSource="{Binding BaudRatesList}" EditValue="{Binding BaudRate}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="DataBits">
+                                <dxe:ComboBoxEdit ItemsSource="{Binding DataBitsList}" EditValue="{Binding DataBits}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="StopBits">
+                                <dxe:ComboBoxEdit ItemsSource="{Binding StopBitsList}" EditValue="{Binding StopBits}" ValueMember="Key" DisplayMember="Value" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Parity">
+                                <dxe:ComboBoxEdit ItemsSource="{Binding ParityList}" EditValue="{Binding Parity}" ValueMember="Key" DisplayMember="Value"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="FlowControl">
+                                <dxe:ComboBoxEdit ItemsSource="{Binding HandShakeList}" EditValue="{Binding HandShake}" ValueMember="Key" DisplayMember="Value" />
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutGroup>
+                    </dxlc:LayoutControl>
+                </Grid>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
+        <Button Content="OK" Command="{Binding SaveAndCloseCommand}"  Grid.Row="1" HorizontalAlignment="Right" Margin="3,3,70,3"/>
+        <Button Content="Отмена" Command="{Binding CloseCommand}" Grid.Row="1" HorizontalAlignment="Right" Margin="3"/>
+    </Grid>
+</Window>

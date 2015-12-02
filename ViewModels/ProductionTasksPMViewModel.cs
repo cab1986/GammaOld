@@ -1,13 +1,10 @@
-﻿using GalaSoft.MvvmLight;
-using System.Windows.Documents;
-using System.Linq;
+﻿using System.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
 using Gamma.Interfaces;
 using GalaSoft.MvvmLight.Messaging;
-using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -32,15 +29,17 @@ namespace Gamma.ViewModels
 
         private void GetProductionTasks()
         {
+            var haveWriteAccess = DB.HaveWriteAccess("ProductionTasks");
             ProductionTasks = new ObservableCollection<ProductionTask>
-                              (from pt in DB.GammaBase.ProductionTasks
-                               where pt.ProductionTaskKindID == (short)ProductionTaskKinds.ProductionTaskPM
+                              (from pt in DB.GammaBase.GetProductionTasks((int)PlaceGroups.PM)  
                                select new ProductionTask
                                {
                                    ProductionTaskID = pt.ProductionTaskID,
                                    DateBegin = pt.DateBegin,
-                                   Nomenclature = pt.C1CNomenclature.Name + " " + pt.C1CCharacteristics.Name,
-                                   Quantity = pt.Quantity
+                                   Nomenclature = pt.Nomenclature + " " + pt.Characteristic,
+                                   Quantity = pt.Quantity,
+                                   MadeQuantity = pt.MadeQuantity,
+                                   Place = pt.Place
                                });
         }
 
@@ -54,13 +53,7 @@ namespace Gamma.ViewModels
                 }
         }
 
-        public class ProductionTask
-        {
-            public Guid ProductionTaskID {get; set; }
-            public DateTime? DateBegin { get; set; }
-            public string Nomenclature { get; set; }
-            public decimal? Quantity { get; set; }
-        }
+        
 
         private void EditItem()
         {

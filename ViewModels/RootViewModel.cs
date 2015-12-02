@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
-using System.Windows;
+
 
 namespace Gamma.ViewModels
 {
@@ -20,6 +19,7 @@ namespace Gamma.ViewModels
         {
             CloseCommand = new RelayCommand(CloseWindow);
         }
+        
         protected void CloseWindow()
         {
             DB.RollBack();
@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
         }
 
         public RelayCommand CloseCommand { get; private set; }
-
-        //protected bool IsScannerUsed = false;
+       
+        
     }
 }

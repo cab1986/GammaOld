@@ -84,7 +84,7 @@ namespace Gamma.ViewModels
             public Guid ProductionTaskID { get; set; }
             public String Nomenclature { get; set; }
             public decimal? TaskQuantity { get; set; }
-            public int MadeQuantity { get; set; }
+            public decimal? MadeQuantity { get; set; }
             public string[] Format { get; set; }
             public string Place { get; set; }
             public DateTime? DateBegin { get; set; }
@@ -93,34 +93,33 @@ namespace Gamma.ViewModels
         private void GetProductionTasks()
         {
             ProductionTasks = new ObservableCollection<ProductionTaskRW>();
-            var productionTaskInfo = DB.GammaBase.ProductionTasks.Include("C1CNomenclature").Include("ProductionTaskRWCutting").
-                Include("Places").Where(pt => pt.ProductionTaskKindID == (short)ProductionTaskKinds.ProductionTaskRW).Select(p => p);
-            foreach (var info in productionTaskInfo)
+            var tempCollection = new ObservableCollection<ProductionTaskRW>
+                (
+                    from pt in DB.GammaBase.GetProductionTasks((int)PlaceGroups.RW)
+                    select new ProductionTaskRW
+                    {
+                        DateBegin = pt.DateBegin,
+                        MadeQuantity = pt.MadeQuantity,
+                        Nomenclature = pt.Nomenclature,
+                        ProductionTaskID = pt.ProductionTaskID,
+                        TaskQuantity = pt.Quantity,
+                        Place = pt.Place,
+                        Format = new string[16]
+                    }
+                ); 
+            for (int i = 0; i < tempCollection.Count; i++)
             {
-                var prodTaskRW = new ProductionTaskRW() 
-                { 
-                    DateBegin = info.DateBegin,
-                    TaskQuantity = info.Quantity,
-                    ProductionTaskID = info.ProductionTaskID,
-                    Place = info.Places.Name,
-                    Nomenclature = info.C1CNomenclature.Name,
-                    Format = new string[15] 
-                };
-                var cutting = info.ProductionTaskRWCutting.ToArray();
+                var productionTaskID = tempCollection[i].ProductionTaskID;
+                var cutting = DB.GammaBase.ProductionTaskRWCutting.Where(p => p.ProductionTaskID == productionTaskID).Select(p => p).ToList();
                 var propsDescription = DB.GammaBase.GetCharPropsDescriptions(cutting[0].C1CCharacteristicID).FirstOrDefault();
-                prodTaskRW.Nomenclature = String.Format("{0} {1} {2} {3} {4}", 
-                    prodTaskRW.Nomenclature, propsDescription.CoreDiameter, 
+                tempCollection[i].Nomenclature = String.Format("{0} {1} {2} {3} {4}", 
+                    tempCollection[i].Nomenclature, propsDescription.CoreDiameter, 
                     propsDescription.Color, propsDescription.Diameter, propsDescription.Destination);
-                for (int i = 0; i < cutting.Count(); i++)
+                for (int k = 0; k < cutting.Count(); k++)
                 {
-                    prodTaskRW.Format[i] = DB.GammaBase.GetCharSpoolFormat(cutting[i].C1CCharacteristicID).FirstOrDefault().ToString();
+                    tempCollection[i].Format[k] = DB.GammaBase.GetCharSpoolFormat(cutting[k].C1CCharacteristicID).FirstOrDefault().ToString();
                 }
-                ProductionTasks.Add(prodTaskRW);
-            }
-            
-            foreach (var ptask in ProductionTasks)
-            {
-                
+                ProductionTasks.Add(tempCollection[i]);
             }
         }
     }

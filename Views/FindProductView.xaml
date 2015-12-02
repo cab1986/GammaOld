@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:g="clr-namespace:Gamma"
-        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="Gamma.Views.FindProductView"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.FindProductView"
         mc:Ignorable="d ignore"
-        Width="845.612" Height="539.478">
+        Width="845.612" Height="539.478"
+              Title="Поиск изделий">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
+        <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
         <Grid Background="#FFB1CEF3" VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
@@ -22,16 +28,14 @@
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup Orientation="Vertical">
-                        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
-                            <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False">
-                                <dxe:ButtonEdit.Buttons>
-                                    <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
-                                </dxe:ButtonEdit.Buttons>
-                            </dxe:ButtonEdit>
-                        </dxlc:LayoutItem>
-                        <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
-                            <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
-                        </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+                        <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False">
+                            <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                        </dxe:ButtonEdit>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
+                        <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
+                    </dxlc:LayoutItem>
                     <dxlc:LayoutGroup View="Group">
                         <dxlc:LayoutItem Label="Вид изделия" LabelPosition="Top">
                             <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" IsEnabled="{Binding ProductKindSelectEnabled}"/>
@@ -59,31 +63,35 @@
                             <Button Content="Поиск" Command="{Binding FindCommand}"/>
                             <Button Content="Сброс параметров поиска" Command="{Binding ResetSearchCommand}"/>
                         </dxlc:LayoutGroup>
-                </dxlc:LayoutGroup>
+                    </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutControl>
-            <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding FoundProducts}" SelectedItem="{Binding SelectedProduct}" VerticalAlignment="Stretch">
+            <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding FoundProducts}" 
+                             SelectedItem="{Binding SelectedProduct}" VerticalAlignment="Stretch">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
+                </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.Columns>
-                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="100"/>
-                    <dxg:GridColumn FieldName="Date" Header="Дата" Width="70">
+                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="100" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="Date" Header="Дата" Width="70" FixedWidth="True">
                         <dxg:GridColumn.EditSettings>
                             <dxe:DateEditSettings Mask="g"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" />
-                    <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="30"/>
-                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="60"/>
-                    <dxg:GridColumn FieldName="ShiftID" Header="Смена" Width="50"/>
-                    <dxg:GridColumn FieldName="State" Header="Статус"/>
+                    <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="50" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="60" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="ShiftID" Header="Смена" Width="50" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="State" Header="Статус" Width="100" FixedWidth="True"/>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
-                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False"/>
+                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True" />
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Height="35" Margin="-12,0,-12,-12">
             <StackPanel.Style>
-                <Style TargetType="StackPanel">
+                <Style TargetType="{x:Type StackPanel}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ButtonPanelVisible}" Value="False">
                             <Setter Property="Visibility" Value="Collapsed"/>

@@ -18,12 +18,13 @@
                 <dxmvvm:EventToCommand Command="{Binding EditItemCommand}" EventName="MouseDoubleClick" />
             </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.Columns>
-                <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="0" FixedWidth="True" Width="80"/>
+                <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="0" FixedWidth="True" Width="130"/>
                 <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="1" />
-                <dxg:GridColumn Binding="{Binding Quantity}" Header="Кол-во, тн" VisibleIndex="2" Width="80" FixedWidth="True"/>
+                <dxg:GridColumn Binding="{Binding Quantity}" Header="Кол-во, тн" VisibleIndex="2" Width="100" FixedWidth="True"/>
+                <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Изготовлено, тн" Width="150" FixedWidth="True" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18"/>
             </dxg:GridControl.View>
         </dxg:GridControl>
 

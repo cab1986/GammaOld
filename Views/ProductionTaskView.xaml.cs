@@ -18,17 +18,6 @@ namespace Gamma.Views
         {
             this.DataContext = new ProductionTaskViewModel(msg);
             InitializeComponent();
-            Messenger.Default.Register<OpenNomenclatureMessage>(this, OpenNomenclature);
-            Messenger.Default.Register<OpenDocProductMessage>(this, OpenDocProduct);
-        }
-
-        private void OpenNomenclature(OpenNomenclatureMessage msg)
-        {
-            new NomenclatureView().Show();
-        }
-        private void OpenDocProduct(OpenDocProductMessage msg)
-        {
-            new DocProductView(msg).Show();
         }
     }
 }

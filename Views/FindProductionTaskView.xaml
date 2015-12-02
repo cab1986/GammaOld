@@ -1,0 +1,51 @@
+﻿<Window xmlns:my="http://schemas.devexpress.com/winfx/2008/xaml/charts/rangecontrolclient"  xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.FindProductionTaskView"
+        Title="{Binding Title}" Height="300" Width="500" Background="#FFB1CEF3">
+    <Grid>
+
+        <dxlc:LayoutControl Orientation="Vertical">
+            <dxlc:LayoutGroup View="Group" Orientation="Horizontal" Margin="-5,-5,-5,0">
+                <dxlc:LayoutItem Label="Номер" LabelPosition="Top" VerticalAlignment="Center">
+                    <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" AllowNullInput="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup View="GroupBox" Header="Дата начала">
+                    <dxlc:LayoutItem Label="С даты" LabelPosition="Top">
+                        <dxe:DateEdit EditValue="{Binding DateBegin}" NullValueButtonPlacement="EditBox" />
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="По дату" LabelPosition="Top">
+                        <dxe:DateEdit EditValue="{Binding DateEnd}" NullValueButtonPlacement="EditBox" />
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup View="Group" Orientation="Horizontal" Margin="-5,-5,-5,0">
+                <dxlc:LayoutItem Label="Состояние" LabelPosition="Top">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding ProductionTaskStates}" EditValue="{Binding ProductionTaskStateID}" ValueMember="Key" DisplayMember="Value" NullValueButtonPlacement="EditBox" AllowNullInput="True" AssignNullValueOnClearingEditText="True"/>
+                </dxlc:LayoutItem>
+                <Button Content="Найти" Height="30" Width="60" Command="{Binding FindProductionTaskCommand}"/>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Результаты поиска" LabelPosition="Top" VerticalAlignment="Stretch">
+                <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" Margin="-12,-3,-12,-12" 
+                                 ItemsSource="{Binding ProductionTasks}" AutoExpandAllGroups="True" SelectedItem="{Binding SelectedProductionTask}"> 
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn Header="Передел" FieldName="Place" GroupIndex="0" />
+                        <dxg:GridColumn Header="Дата начала" FieldName="DateBegin" Width="80" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Номер" FieldName="Number" Width="100" FixedWidth="True" />
+                        <dxg:GridColumn Header="Дата" FieldName="Date" Width="80" FixedWidth="True" />
+                        <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
+                        <dxg:GridColumn Header="Состояние" FieldName="State" Width="80" FixedWidth="True" />
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" AllowEditing="False"/>
+                    </dxg:GridControl.View>
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductionTaskCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:GridControl>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutControl>
+
+
+    </Grid>
+</Window>

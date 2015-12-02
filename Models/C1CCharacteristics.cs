@@ -17,10 +17,11 @@ namespace Gamma.Models
         public C1CCharacteristics()
         {
             this.C1CCharacteristicProperties = new HashSet<C1CCharacteristicProperties>();
-            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
             this.ProductSpools = new HashSet<ProductSpools>();
+            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
+            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
         }
     
@@ -36,10 +37,11 @@ namespace Gamma.Models
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits1 { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
+        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
     }
 }

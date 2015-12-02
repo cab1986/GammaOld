@@ -14,7 +14,7 @@ namespace Gamma.Models
     
     public partial class SourceSpools
     {
-        public System.Guid PlaceID { get; set; }
+        public int PlaceID { get; set; }
         public Nullable<System.Guid> Unwinder1Spool { get; set; }
         public Nullable<bool> Unwinder1Active { get; set; }
         public Nullable<System.Guid> Unwinder2Spool { get; set; }

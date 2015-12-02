@@ -20,7 +20,6 @@ namespace Gamma.Models
         }
     
         public System.Guid ProductID { get; set; }
-        public Nullable<byte> ProductKindID { get; set; }
     
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual Products Products { get; set; }

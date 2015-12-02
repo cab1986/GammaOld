@@ -28,6 +28,7 @@ namespace Gamma
         {
             var type = en.GetType();
             var list = EnumDescriptionsToList(type);
+            if (list.Count == 0) list = new List<string>(Enum.GetNames(type));
             return list.Select((s, i) => new { s, i }).ToDictionary(t =>(byte)t.i,t => t.s);
         }
     }

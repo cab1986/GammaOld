@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DBEditItemWithNomenclatureViewModel : DataBaseEditViewModel
+    public class DBEditItemWithNomenclatureViewModel : SaveImplementedViewModel
     {
         /// <summary>
         /// Initializes a new instance of the DBEditItemWithNomenclatureViewModel class.

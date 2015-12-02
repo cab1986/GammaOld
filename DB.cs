@@ -9,6 +9,8 @@ using System.Windows;
 using System.Data.Entity;
 using GalaSoft.MvvmLight.Messaging;
 using System.Data.SqlClient;
+using System.Net;
+using System.Data.Entity.Core.Objects.DataClasses;
 
 namespace Gamma
 {
@@ -81,6 +83,10 @@ namespace Gamma
                 return GammaBase.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
             }
         }
+        public static int GetLastFormat(int placeID)
+        {
+            return GammaBase.Database.SqlQuery<int>(string.Format("SELECT dbo.GetLastFormat({0})",placeID)).AsEnumerable().First();
+        }
         public static ObservableCollection<string> BaseTables
         { 
             get
@@ -130,6 +136,16 @@ namespace Gamma
             if (permit == null) return false;
             else return permit == 2;
         }
+        [DbFunction("GammaModel.Store","GetShiftBeginTime")]
+        public static DateTime? GetShiftBeginTime(DateTime date)
+        {
+            throw new NotSupportedException("Direct calls are not supported");
+        }
+        [DbFunction("GammaModel.Store","GetShiftEndTime")]
+        public static DateTime? GetShiftEndTime(DateTime date)
+        {
+            throw new NotSupportedException("Direct calls are not supported");
+        }
 
     }
 
@@ -137,11 +153,5 @@ namespace Gamma
     {
         public Guid CharacteristicID { get; set; }
         public string CharacteristicName { get; set; }
-    }
-
-    public class Place
-    {
-        public Guid PlaceID { get; set; }
-        public string PlaceName { get; set; }
     }
 }

@@ -8,7 +8,8 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:g="clr-namespace:Gamma"
         mc:Ignorable="d ignore"
-        DataContext="{Binding Login, Source={StaticResource Locator}}" Height="319" Width="408">
+        DataContext="{Binding Login, Source={StaticResource Locator}}" Height="319" Width="408"
+    Title="Авторизация">
     <Grid>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -26,6 +27,8 @@
             <Label Height="28" Margin="9,-1,0,0" x:Name="Label1_Copy" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Grid.ColumnSpan="2" Content="Хост"/>
             <Label Height="28" HorizontalAlignment="Left" Margin="9,60,0,0" x:Name="Label2_Copy" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Content="База"/>
             <TextBox Text="{Binding DataBase, ValidatesOnExceptions=True, NotifyOnValidationError=True,ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Margin="9,88,10,0" x:Name="edtHost_Copy" Height="23" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+            <CheckBox Content="Использовать сканер" IsChecked="{Binding UseScanner}"
+                      HorizontalAlignment="Left" Margin="10,259,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="23" Width="151"/>
         </Grid>
         <i:Interaction.Behaviors>
             <g:ValidationExceptionBehavior />

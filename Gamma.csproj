@@ -46,6 +46,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -59,6 +61,7 @@
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Charts.v15.1.Core, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Data.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
@@ -74,6 +77,7 @@
     <Reference Include="DevExpress.Utils.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Xpf.Charts.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Core.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
@@ -98,9 +102,13 @@
     <Reference Include="DevExpress.Xpf.PropertyGrid.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Xpf.Themes.DXStyle.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Themes.Office2007Black.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.Office2007Blue.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Xpf.Themes.Office2010Blue.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Themes.Seven.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
@@ -153,6 +161,7 @@
     </Reference>
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
@@ -192,6 +201,8 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Common\ProductRelation.cs" />
+    <Compile Include="Common\ViewsManager.cs" />
     <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="Dialogs\ChangeSpoolDialog.xaml.cs">
@@ -201,11 +212,13 @@
       <DependentUpon>FilterDateReportDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="DMLists.cs" />
+    <Compile Include="DocCloseShift.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="GammaSettings.cs" />
     <Compile Include="GridControlWithBands.cs" />
     <Compile Include="Interfaces\IBarImplemented.cs" />
     <Compile Include="Interfaces\ICheckedAccess.cs" />
+    <Compile Include="Interfaces\IFillClearGrid.cs" />
     <Compile Include="Interfaces\IItemManager.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
     <Compile Include="Models\C1CCharacteristicProperties.cs">
@@ -238,7 +251,16 @@
     <Compile Include="Models\C1CPropertyValues.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CRejectionReasons.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocCloseShiftRemainders.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocMovement.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocProductChangeState.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocProduction.cs">
@@ -250,7 +272,13 @@
     <Compile Include="Models\Docs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocWithdrawal.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocWithdrawalMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GammaModel.Context.cs">
@@ -275,6 +303,9 @@
     <Compile Include="Models\GetCharPropsDescriptions_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetDocCloseShiftPMSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetNomenclatureFolders_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -291,6 +322,21 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductionTaskProducts_Result3.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTasks_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTasks_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTasks_Result2.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductRelations_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetSpoolRejectionReasons_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Permits.cs">
@@ -312,6 +358,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionTasks.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductionTaskStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductPalletItems.cs">
@@ -351,15 +400,26 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="MVVMWindow.cs" />
+    <Compile Include="Place.cs" />
     <Compile Include="ProductInfo.cs" />
+    <Compile Include="ProductionTask.cs" />
+    <Compile Include="RejectionReason.cs" />
     <Compile Include="ReportManager.cs" />
+    <Compile Include="Spool.cs" />
     <Compile Include="SQLGuidUtil.cs" />
     <Compile Include="UIAuthBehavior.cs" />
     <Compile Include="ValidationExceptionBehavior.cs" />
     <Compile Include="PasswordBoxHelper.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="ViewModels\DataBaseEditViewModel.cs" />
+    <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\FindProductionTaskViewModel.cs" />
+    <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
+    <Compile Include="ViewModels\SaveImplementedViewModel.cs" />
     <Compile Include="ViewModels\DBEditItemWithNomenclatureViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftPMGridViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftPMRemainderViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftsViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftViewModel.cs" />
     <Compile Include="ViewModels\DocProductSpoolViewModel.cs" />
     <Compile Include="ViewModels\DocProductUnloadViewModel.cs" />
     <Compile Include="ViewModels\DocProductViewModel.cs" />
@@ -380,6 +440,21 @@
     <Compile Include="ViewModels\RootViewModel.cs" />
     <Compile Include="ViewModels\SourceSpoolsViewModel.cs" />
     <Compile Include="ViewModels\ValidationViewModelBase.cs" />
+    <Compile Include="Views\ComPortSettingsView.xaml.cs">
+      <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftPMGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftPMGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftPMRemainderView.xaml.cs">
+      <DependentUpon>DocCloseShiftPMRemainderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftsView.xaml.cs">
+      <DependentUpon>DocCloseShiftsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftView.xaml.cs">
+      <DependentUpon>DocCloseShiftView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocProductSpoolView.xaml.cs">
       <DependentUpon>DocProductSpoolView.xaml</DependentUpon>
     </Compile>
@@ -388,6 +463,9 @@
     </Compile>
     <Compile Include="Views\DocProductView.xaml.cs">
       <DependentUpon>DocProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FindProductionTaskView.xaml.cs">
+      <DependentUpon>FindProductionTaskView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FindProductView.xaml.cs">
       <DependentUpon>FindProductView.xaml</DependentUpon>
@@ -409,6 +487,9 @@
     </Compile>
     <Compile Include="Views\PermitEditView.xaml.cs">
       <DependentUpon>PermitEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceProductsView.xaml.cs">
+      <DependentUpon>PlaceProductsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTasksConvertingView.xaml.cs">
       <DependentUpon>ProductionTasksConvertingView.xaml</DependentUpon>
@@ -460,6 +541,26 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ComPortSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftPMGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftPMRemainderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftsView.xaml">
+      <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DocProductSpoolView.xaml">
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -470,6 +571,10 @@
     </Page>
     <Page Include="Views\DocProductView.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FindProductionTaskView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FindProductView.xaml">
@@ -489,6 +594,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PermitEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaceProductsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -605,7 +714,9 @@
       <LastGenOutput>GammaModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="SampleCode\WinFormApplicationWindowSizeValuesSampleCode.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

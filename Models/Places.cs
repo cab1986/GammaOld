@@ -18,28 +18,31 @@ namespace Gamma.Models
         {
             this.DocMovement = new HashSet<DocMovement>();
             this.DocMovement1 = new HashSet<DocMovement>();
-            this.Rests = new HashSet<Rests>();
             this.DocProduction = new HashSet<DocProduction>();
+            this.Docs = new HashSet<Docs>();
             this.DocWithdrawal = new HashSet<DocWithdrawal>();
-            this.Users = new HashSet<Users>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.Rests = new HashSet<Rests>();
+            this.Users = new HashSet<Users>();
         }
     
-        public System.Guid PlaceID { get; set; }
+        public int PlaceID { get; set; }
         public string Name { get; set; }
         public string NameEng { get; set; }
         public short DepartmentID { get; set; }
         public Nullable<short> PlaceGroupID { get; set; }
+        public Nullable<bool> IsProductionPlace { get; set; }
         public Nullable<bool> IsWarehouse { get; set; }
     
         public virtual ICollection<DocMovement> DocMovement { get; set; }
         public virtual ICollection<DocMovement> DocMovement1 { get; set; }
-        public virtual ICollection<Rests> Rests { get; set; }
-        public virtual PlaceGroups PlaceGroups { get; set; }
         public virtual ICollection<DocProduction> DocProduction { get; set; }
+        public virtual ICollection<Docs> Docs { get; set; }
         public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
-        public virtual SourceSpools SourceSpools { get; set; }
-        public virtual ICollection<Users> Users { get; set; }
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual ICollection<Rests> Rests { get; set; }
+        public virtual SourceSpools SourceSpools { get; set; }
+        public virtual PlaceGroups PlaceGroups { get; set; }
+        public virtual ICollection<Users> Users { get; set; }
     }
 }

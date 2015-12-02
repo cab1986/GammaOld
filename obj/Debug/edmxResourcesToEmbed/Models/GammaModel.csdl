@@ -1,30 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="GammaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityContainer Name="GammaEntities" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="DocMovement" EntityType="GammaModel.DocMovement" />
-    <EntitySet Name="Places" EntityType="GammaModel.Places" />
-    <EntitySet Name="ProductGroupPacks" EntityType="GammaModel.ProductGroupPacks" />
     <EntitySet Name="ProductPalletItems" EntityType="GammaModel.ProductPalletItems" />
-    <EntitySet Name="ProductPallets" EntityType="GammaModel.ProductPallets" />
-    <EntitySet Name="Rests" EntityType="GammaModel.Rests" />
     <EntitySet Name="RolePermits" EntityType="GammaModel.RolePermits" />
     <EntitySet Name="Roles" EntityType="GammaModel.Roles" />
-    <AssociationSet Name="FK_DocMovement_Places" Association="GammaModel.FK_DocMovement_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="DocMovement" EntitySet="DocMovement" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocMovement_Places1" Association="GammaModel.FK_DocMovement_Places1">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="DocMovement" EntitySet="DocMovement" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Rests_Places" Association="GammaModel.FK_Rests_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="Rests" EntitySet="Rests" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductPalletItems_ProductPallets" Association="GammaModel.FK_ProductPalletItems_ProductPallets">
-      <End Role="ProductPallets" EntitySet="ProductPallets" />
-      <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
-    </AssociationSet>
     <AssociationSet Name="FK_RolePermits_Roles1" Association="GammaModel.FK_RolePermits_Roles1">
       <End Role="Roles" EntitySet="Roles" />
       <End Role="RolePermits" EntitySet="RolePermits" />
@@ -58,11 +37,6 @@
       <End Role="C1CProperties" EntitySet="C1CProperties" />
       <End Role="C1CNomenclatureProperties" EntitySet="C1CNomenclatureProperties" />
     </AssociationSet>
-    <EntitySet Name="PlaceGroups" EntityType="GammaModel.PlaceGroups" />
-    <AssociationSet Name="FK_Places_PlaceGroups" Association="GammaModel.FK_Places_PlaceGroups">
-      <End Role="PlaceGroups" EntitySet="PlaceGroups" />
-      <End Role="Places" EntitySet="Places" />
-    </AssociationSet>
     <EntitySet Name="Reports" EntityType="GammaModel.Reports" />
     <EntitySet Name="Templates" EntityType="GammaModel.Templates" />
     <AssociationSet Name="FK_Templates_Reports" Association="GammaModel.FK_Templates_Reports">
@@ -75,98 +49,24 @@
       <End Role="Products" EntitySet="Products" />
       <End Role="DocProducts" EntitySet="DocProducts" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductGroupPacks_Products" Association="GammaModel.FK_ProductGroupPacks_Products">
-      <End Role="Products" EntitySet="Products" />
-      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductPallets_Products1" Association="GammaModel.FK_ProductPallets_Products1">
-      <End Role="Products" EntitySet="Products" />
-      <End Role="ProductPallets" EntitySet="ProductPallets" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Rests_Products" Association="GammaModel.FK_Rests_Products">
-      <End Role="Products" EntitySet="Products" />
-      <End Role="Rests" EntitySet="Rests" />
-    </AssociationSet>
     <EntitySet Name="ProductSpools" EntityType="GammaModel.ProductSpools" />
     <AssociationSet Name="FK_ProductSpools_Products" Association="GammaModel.FK_ProductSpools_Products">
       <End Role="Products" EntitySet="Products" />
       <End Role="ProductSpools" EntitySet="ProductSpools" />
     </AssociationSet>
-    <EntitySet Name="DocProduction" EntityType="GammaModel.DocProduction" />
-    <EntitySet Name="DocWithdrawal" EntityType="GammaModel.DocWithdrawal" />
-    <AssociationSet Name="FK_DocProduction_Places" Association="GammaModel.FK_DocProduction_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="DocProduction" EntitySet="DocProduction" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocWithdrawal_Places" Association="GammaModel.FK_DocWithdrawal_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
-    </AssociationSet>
-    <AssociationSet Name="DocProductionWithdrawals" Association="GammaModel.DocProductionWithdrawals">
-      <End Role="DocProduction" EntitySet="DocProduction" />
-      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
-    </AssociationSet>
-    <EntitySet Name="SourceSpools" EntityType="GammaModel.SourceSpools" />
-    <AssociationSet Name="FK_SourceSpools_Places" Association="GammaModel.FK_SourceSpools_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="SourceSpools" EntitySet="SourceSpools" />
-    </AssociationSet>
-    <AssociationSet Name="FK_SourceSpools_ProductSpools" Association="GammaModel.FK_SourceSpools_ProductSpools">
-      <End Role="ProductSpools" EntitySet="ProductSpools" />
-      <End Role="SourceSpools" EntitySet="SourceSpools" />
-    </AssociationSet>
-    <AssociationSet Name="FK_SourceSpools_ProductSpools1" Association="GammaModel.FK_SourceSpools_ProductSpools1">
-      <End Role="ProductSpools" EntitySet="ProductSpools" />
-      <End Role="SourceSpools" EntitySet="SourceSpools" />
-    </AssociationSet>
-    <AssociationSet Name="FK_SourceSpools_ProductSpools2" Association="GammaModel.FK_SourceSpools_ProductSpools2">
-      <End Role="ProductSpools" EntitySet="ProductSpools" />
-      <End Role="SourceSpools" EntitySet="SourceSpools" />
-    </AssociationSet>
-    <EntitySet Name="Docs" EntityType="GammaModel.Docs" />
-    <AssociationSet Name="FK_DocMovement_Docs" Association="GammaModel.FK_DocMovement_Docs">
-      <End Role="Docs" EntitySet="Docs" />
-      <End Role="DocMovement" EntitySet="DocMovement" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocProduction_Docs" Association="GammaModel.FK_DocProduction_Docs">
-      <End Role="Docs" EntitySet="Docs" />
-      <End Role="DocProduction" EntitySet="DocProduction" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocProducts_Docs" Association="GammaModel.FK_DocProducts_Docs">
-      <End Role="Docs" EntitySet="Docs" />
-      <End Role="DocProducts" EntitySet="DocProducts" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocWithdrawal_Docs1" Association="GammaModel.FK_DocWithdrawal_Docs1">
-      <End Role="Docs" EntitySet="Docs" />
-      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
-    </AssociationSet>
     <FunctionImport Name="GetProductionTaskProducts" ReturnType="Collection(GammaModel.GetProductionTaskProducts_Result3)">
       <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
     </FunctionImport>
-    <EntitySet Name="Users" EntityType="GammaModel.Users" />
-    <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
-      <End Role="Users" EntitySet="Users" />
-      <End Role="Docs" EntitySet="Docs" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Users_Places" Association="GammaModel.FK_Users_Places">
-      <End Role="Places" EntitySet="Places" />
-      <End Role="Users" EntitySet="Users" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Users_Roles1" Association="GammaModel.FK_Users_Roles1">
-      <End Role="Roles" EntitySet="Roles" />
-      <End Role="Users" EntitySet="Users" />
-    </AssociationSet>
     <EntitySet Name="PermitTables" EntityType="GammaModel.PermitTables" />
     <AssociationSet Name="FK_PermitTables_Permits" Association="GammaModel.FK_PermitTables_Permits">
       <End Role="Permits" EntitySet="Permits" />
       <End Role="PermitTables" EntitySet="PermitTables" />
     </AssociationSet>
-    <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
     <EntitySet Name="ProductionTaskRWCutting" EntityType="GammaModel.ProductionTaskRWCutting" />
     <FunctionImport Name="GetCharPropsDescriptions" ReturnType="Collection(GammaModel.GetCharPropsDescriptions_Result)">
       <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
     </FunctionImport>
-    <FunctionImport Name="GetCharSpoolFormat" ReturnType="Collection(Decimal)">
+    <FunctionImport Name="GetCharSpoolFormat" ReturnType="Collection(Int32)">
       <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
     </FunctionImport>
     <EntitySet Name="C1CEnumGroupTypes" EntityType="GammaModel.C1CEnumGroupTypes" />
@@ -210,10 +110,6 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="GammaModel.FK_ProductGroupPacks_1CCharacteristics">
-      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
-    </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
       <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
@@ -242,10 +138,6 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="C1CNomenclatureProperties" EntitySet="C1CNomenclatureProperties" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductGroupPacks_1CNomenclature" Association="GammaModel.FK_ProductGroupPacks_1CNomenclature">
-      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
-    </AssociationSet>
     <AssociationSet Name="FK_ProductPalletItems_1CNomenclature" Association="GammaModel.FK_ProductPalletItems_1CNomenclature">
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
@@ -258,7 +150,58 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="C1CNomenclatureGroups" EntitySet="C1CNomenclatureGroups" />
     </AssociationSet>
+    <EntitySet Name="DocWithdrawalMaterials" EntityType="GammaModel.DocWithdrawalMaterials" />
+    <AssociationSet Name="FK_DocWithdrawalMaterials_1CCharacteristics" Association="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics">
+      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawalMaterials_1CNomenclature" Association="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
+    </AssociationSet>
+    <EntitySet Name="ProductPallets" EntityType="GammaModel.ProductPallets" />
+    <AssociationSet Name="FK_ProductPalletItems_ProductPallets" Association="GammaModel.FK_ProductPalletItems_ProductPallets">
+      <End Role="ProductPallets" EntitySet="ProductPallets" />
+      <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductPallets_Products1" Association="GammaModel.FK_ProductPallets_Products1">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductPallets" EntitySet="ProductPallets" />
+    </AssociationSet>
+    <EntitySet Name="ProductGroupPacks" EntityType="GammaModel.ProductGroupPacks" />
+    <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="GammaModel.FK_ProductGroupPacks_1CCharacteristics">
+      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductGroupPacks_1CNomenclature" Association="GammaModel.FK_ProductGroupPacks_1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductGroupPacks_Products" Association="GammaModel.FK_ProductGroupPacks_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <EntitySet Name="DocCloseShiftRemainders" EntityType="GammaModel.DocCloseShiftRemainders" />
+    <FunctionImport Name="GetDocCloseShiftPMSpools" ReturnType="Collection(GammaModel.GetDocCloseShiftPMSpools_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <EntitySet Name="DocTypes" EntityType="GammaModel.DocTypes" />
+    <EntitySet Name="C1CRejectionReasons" EntityType="GammaModel.C1CRejectionReasons" />
+    <EntitySet Name="DocProductChangeState" EntityType="GammaModel.DocProductChangeState" />
+    <AssociationSet Name="FK_DocProductChangeState_1CRejectionReasons" Association="GammaModel.FK_DocProductChangeState_1CRejectionReasons">
+      <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
+      <End Role="DocProductChangeState" EntitySet="DocProductChangeState" />
+    </AssociationSet>
+    <FunctionImport Name="GetSpoolRejectionReasons" ReturnType="Collection(GammaModel.GetSpoolRejectionReasons_Result)" />
+    <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
+    <EntitySet Name="DocMovement" EntityType="GammaModel.DocMovement" />
+    <EntitySet Name="DocProduction" EntityType="GammaModel.DocProduction" />
+    <EntitySet Name="Docs" EntityType="GammaModel.Docs" />
+    <EntitySet Name="DocWithdrawal" EntityType="GammaModel.DocWithdrawal" />
+    <EntitySet Name="Places" EntityType="GammaModel.Places" />
     <EntitySet Name="ProductionTasks" EntityType="GammaModel.ProductionTasks" />
+    <EntitySet Name="Rests" EntityType="GammaModel.Rests" />
+    <EntitySet Name="SourceSpools" EntityType="GammaModel.SourceSpools" />
     <AssociationSet Name="FK_ProductionTasks_1CCharacteristics" Association="GammaModel.FK_ProductionTasks_1CCharacteristics">
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
@@ -267,60 +210,135 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="GammaModel.FK_DocCloseShiftRemainders_Docs1">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Docs" Association="GammaModel.FK_DocMovement_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Places" Association="GammaModel.FK_DocMovement_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Places1" Association="GammaModel.FK_DocMovement_Places1">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProductChangeState_Docs" Association="GammaModel.FK_DocProductChangeState_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocProductChangeState" EntitySet="DocProductChangeState" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProduction_Docs" Association="GammaModel.FK_DocProduction_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocProduction" EntitySet="DocProduction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProduction_Places" Association="GammaModel.FK_DocProduction_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocProduction" EntitySet="DocProduction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProduction_ProductionTasks" Association="GammaModel.FK_DocProduction_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="DocProduction" EntitySet="DocProduction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProducts_Docs" Association="GammaModel.FK_DocProducts_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocProducts" EntitySet="DocProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Docs_DocTypes" Association="GammaModel.FK_Docs_DocTypes">
+      <End Role="DocTypes" EntitySet="DocTypes" />
+      <End Role="Docs" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Docs_Places" Association="GammaModel.FK_Docs_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="Docs" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawal_Docs1" Association="GammaModel.FK_DocWithdrawal_Docs1">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawalMaterials_Docs" Association="GammaModel.FK_DocWithdrawalMaterials_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawal_Places" Association="GammaModel.FK_DocWithdrawal_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+    </AssociationSet>
     <AssociationSet Name="FK_ProductionTasks_Places" Association="GammaModel.FK_ProductionTasks_Places">
       <End Role="Places" EntitySet="Places" />
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rests_Places" Association="GammaModel.FK_Rests_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="Rests" EntitySet="Rests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_Places" Association="GammaModel.FK_SourceSpools_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskRWCutting_ProductionTasks" Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks">
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
     </AssociationSet>
+    <AssociationSet Name="FK_Rests_Products" Association="GammaModel.FK_Rests_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="Rests" EntitySet="Rests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_ProductSpools" Association="GammaModel.FK_SourceSpools_ProductSpools">
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_ProductSpools1" Association="GammaModel.FK_SourceSpools_ProductSpools1">
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SourceSpools_ProductSpools2" Association="GammaModel.FK_SourceSpools_ProductSpools2">
+      <End Role="ProductSpools" EntitySet="ProductSpools" />
+      <End Role="SourceSpools" EntitySet="SourceSpools" />
+    </AssociationSet>
+    <AssociationSet Name="DocCloseShiftDocs" Association="GammaModel.DocCloseShiftDocs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="Docs1" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="DocProductionWithdrawals" Association="GammaModel.DocProductionWithdrawals">
+      <End Role="DocProduction" EntitySet="DocProduction" />
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+    </AssociationSet>
+    <EntitySet Name="PlaceGroups" EntityType="GammaModel.PlaceGroups" />
+    <AssociationSet Name="FK_Places_PlaceGroups1" Association="GammaModel.FK_Places_PlaceGroups1">
+      <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+      <End Role="Places" EntitySet="Places" />
+    </AssociationSet>
+    <EntitySet Name="Users" EntityType="GammaModel.Users" />
+    <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Docs" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Places" Association="GammaModel.FK_Users_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Roles1" Association="GammaModel.FK_Users_Roles1">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="ProductionTaskStates" EntityType="GammaModel.ProductionTaskStates" />
+    <AssociationSet Name="FK_ProductionTasks_ProductionTaskStates" Association="GammaModel.FK_ProductionTasks_ProductionTaskStates">
+      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+    </AssociationSet>
+    <FunctionImport Name="GetActiveSourceSpools" ReturnType="Collection(Guid)">
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetProductRelations" ReturnType="Collection(GammaModel.GetProductRelations_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="GetProductionTasks" ReturnType="Collection(GammaModel.GetProductionTasks_Result2)">
+      <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
-  <EntityType Name="DocMovement">
-    <Key>
-      <PropertyRef Name="DocID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="InPlaceID" Type="Guid" />
-    <Property Name="OutPlaceID" Type="Guid" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocMovement_Places" FromRole="DocMovement" ToRole="Places" />
-    <NavigationProperty Name="Places1" Relationship="GammaModel.FK_DocMovement_Places1" FromRole="DocMovement" ToRole="Places" />
-    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="DocMovement" ToRole="Docs" />
-  </EntityType>
-  <EntityType Name="Places">
-    <Key>
-      <PropertyRef Name="PlaceID" />
-    </Key>
-    <Property Name="PlaceID" Type="Guid" Nullable="false" />
-    <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-    <Property Name="NameEng" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
-    <Property Name="DepartmentID" Type="Int16" Nullable="false" />
-    <Property Name="PlaceGroupID" Type="Int16" />
-    <Property Name="IsWarehouse" Type="Boolean" />
-    <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Places" FromRole="Places" ToRole="DocMovement" />
-    <NavigationProperty Name="DocMovement1" Relationship="GammaModel.FK_DocMovement_Places1" FromRole="Places" ToRole="DocMovement" />
-    <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Places" FromRole="Places" ToRole="Rests" />
-    <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.FK_Places_PlaceGroups" FromRole="Places" ToRole="PlaceGroups" />
-    <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Places" FromRole="Places" ToRole="DocProduction" />
-    <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Places" FromRole="Places" ToRole="DocWithdrawal" />
-    <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_Places" FromRole="Places" ToRole="SourceSpools" />
-    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Users_Places" FromRole="Places" ToRole="Users" />
-    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="Places" ToRole="ProductionTasks" />
-  </EntityType>
-  <EntityType Name="ProductGroupPacks">
-    <Key>
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <Property Name="Weight" Type="Decimal" Precision="10" Scale="4" />
-    <Property Name="GrossWeight" Type="Decimal" Precision="10" Scale="4" />
-    <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="ProductGroupPacks" ToRole="Products" />
-    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="ProductGroupPacks" ToRole="C1CCharacteristics" />
-    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="ProductGroupPacks" ToRole="C1CNomenclature" />
-  </EntityType>
   <EntityType Name="ProductPalletItems">
     <Key>
       <PropertyRef Name="ProductPalletItemID" />
@@ -330,28 +348,9 @@
     <Property Name="C1CNomenclatureID" Type="Guid" />
     <Property Name="C1CCharacteristicID" Type="Guid" />
     <Property Name="Quantity" Type="Int32" />
-    <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPalletItems" ToRole="ProductPallets" />
     <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="ProductPalletItems" ToRole="C1CCharacteristics" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="ProductPalletItems" ToRole="C1CNomenclature" />
-  </EntityType>
-  <EntityType Name="ProductPallets">
-    <Key>
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPallets" ToRole="ProductPalletItems" />
-    <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="ProductPallets" ToRole="Products" />
-  </EntityType>
-  <EntityType Name="Rests">
-    <Key>
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="Quantity" Type="Byte" />
-    <Property Name="PlaceID" Type="Guid" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Rests_Places" FromRole="Rests" ToRole="Places" />
-    <NavigationProperty Name="Products" Relationship="GammaModel.FK_Rests_Products" FromRole="Rests" ToRole="Products" />
+    <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPalletItems" ToRole="ProductPallets" />
   </EntityType>
   <EntityType Name="RolePermits">
     <Key>
@@ -375,54 +374,6 @@
     <NavigationProperty Name="RolePermits" Relationship="GammaModel.FK_RolePermits_Roles1" FromRole="Roles" ToRole="RolePermits" />
     <NavigationProperty Name="Users" Relationship="GammaModel.FK_Users_Roles1" FromRole="Roles" ToRole="Users" />
   </EntityType>
-  <Association Name="FK_DocMovement_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
-    <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="DocMovement">
-        <PropertyRef Name="InPlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocMovement_Places1">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
-    <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="DocMovement">
-        <PropertyRef Name="OutPlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Rests_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
-    <End Type="GammaModel.Rests" Role="Rests" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="Rests">
-        <PropertyRef Name="PlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductPalletItems_ProductPallets">
-    <End Type="GammaModel.ProductPallets" Role="ProductPallets" Multiplicity="0..1" />
-    <End Type="GammaModel.ProductPalletItems" Role="ProductPalletItems" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProductPallets">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="ProductPalletItems">
-        <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_RolePermits_Roles1">
     <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -607,26 +558,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="PlaceGroups">
-    <Key>
-      <PropertyRef Name="PlaceGroupID" />
-    </Key>
-    <Property Name="PlaceGroupID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_PlaceGroups" FromRole="PlaceGroups" ToRole="Places" />
-  </EntityType>
-  <Association Name="FK_Places_PlaceGroups">
-    <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="0..1" />
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="PlaceGroups">
-        <PropertyRef Name="PlaceGroupID" />
-      </Principal>
-      <Dependent Role="Places">
-        <PropertyRef Name="PlaceGroupID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="Reports">
     <Key>
       <PropertyRef Name="ReportID" />
@@ -681,10 +612,10 @@
     <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="ProductKindID" Type="Byte" />
     <NavigationProperty Name="DocProducts" Relationship="GammaModel.FK_DocProducts_Products" FromRole="Products" ToRole="DocProducts" />
-    <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="Products" ToRole="ProductGroupPacks" />
-    <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="Products" ToRole="ProductPallets" />
-    <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Products" FromRole="Products" ToRole="Rests" />
     <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="Products" ToRole="ProductSpools" />
+    <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="Products" ToRole="ProductPallets" />
+    <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="Products" ToRole="ProductGroupPacks" />
+    <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Products" FromRole="Products" ToRole="Rests" />
   </EntityType>
   <Association Name="FK_DocProducts_Products">
     <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
@@ -694,42 +625,6 @@
         <PropertyRef Name="ProductID" />
       </Principal>
       <Dependent Role="DocProducts">
-        <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductGroupPacks_Products">
-    <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
-    <End Type="GammaModel.ProductGroupPacks" Role="ProductGroupPacks" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Products">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="ProductGroupPacks">
-        <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductPallets_Products1">
-    <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
-    <End Type="GammaModel.ProductPallets" Role="ProductPallets" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Products">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="ProductPallets">
-        <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Rests_Products">
-    <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
-    <End Type="GammaModel.Rests" Role="Rests" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Products">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="Rests">
         <PropertyRef Name="ProductID" />
       </Dependent>
     </ReferentialConstraint>
@@ -785,11 +680,11 @@
     <Property Name="RealBasisWeight" Type="Decimal" Precision="10" Scale="4" />
     <Property Name="BreakNumber" Type="Byte" />
     <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="ProductSpools" ToRole="Products" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="ProductSpools" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="ProductSpools" ToRole="C1CNomenclature" />
     <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="ProductSpools" ToRole="SourceSpools" />
     <NavigationProperty Name="SourceSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="ProductSpools" ToRole="SourceSpools" />
     <NavigationProperty Name="SourceSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="ProductSpools" ToRole="SourceSpools" />
-    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="ProductSpools" ToRole="C1CCharacteristics" />
-    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="ProductSpools" ToRole="C1CNomenclature" />
   </EntityType>
   <Association Name="FK_ProductSpools_Products">
     <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
@@ -800,184 +695,6 @@
       </Principal>
       <Dependent Role="ProductSpools">
         <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="DocProduction">
-    <Key>
-      <PropertyRef Name="DocID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ProductionTaskID" Type="Guid" />
-    <Property Name="InPlaceID" Type="Guid" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocProduction_Places" FromRole="DocProduction" ToRole="Places" />
-    <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.DocProductionWithdrawals" FromRole="DocProduction" ToRole="DocWithdrawal" />
-    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="DocProduction" ToRole="Docs" />
-  </EntityType>
-  <EntityType Name="DocWithdrawal">
-    <Key>
-      <PropertyRef Name="DocID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="OutPlaceID" Type="Guid" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocWithdrawal_Places" FromRole="DocWithdrawal" ToRole="Places" />
-    <NavigationProperty Name="DocProduction" Relationship="GammaModel.DocProductionWithdrawals" FromRole="DocWithdrawal" ToRole="DocProduction" />
-    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocWithdrawal_Docs1" FromRole="DocWithdrawal" ToRole="Docs" />
-  </EntityType>
-  <Association Name="FK_DocProduction_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
-    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="DocProduction">
-        <PropertyRef Name="InPlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocWithdrawal_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
-    <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="DocWithdrawal">
-        <PropertyRef Name="OutPlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="DocProductionWithdrawals">
-    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
-    <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
-  </Association>
-  <EntityType Name="SourceSpools">
-    <Key>
-      <PropertyRef Name="PlaceID" />
-    </Key>
-    <Property Name="PlaceID" Type="Guid" Nullable="false" />
-    <Property Name="Unwinder1Spool" Type="Guid" />
-    <Property Name="Unwinder1Active" Type="Boolean" />
-    <Property Name="Unwinder2Spool" Type="Guid" />
-    <Property Name="Unwinder2Active" Type="Boolean" />
-    <Property Name="Unwinder3Spool" Type="Guid" />
-    <Property Name="Unwinder3Active" Type="Boolean" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_SourceSpools_Places" FromRole="SourceSpools" ToRole="Places" />
-    <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="SourceSpools" ToRole="ProductSpools" />
-    <NavigationProperty Name="ProductSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="SourceSpools" ToRole="ProductSpools" />
-    <NavigationProperty Name="ProductSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="SourceSpools" ToRole="ProductSpools" />
-  </EntityType>
-  <Association Name="FK_SourceSpools_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
-    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="SourceSpools">
-        <PropertyRef Name="PlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_SourceSpools_ProductSpools">
-    <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProductSpools">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="SourceSpools">
-        <PropertyRef Name="Unwinder1Spool" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_SourceSpools_ProductSpools1">
-    <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProductSpools">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="SourceSpools">
-        <PropertyRef Name="Unwinder2Spool" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_SourceSpools_ProductSpools2">
-    <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProductSpools">
-        <PropertyRef Name="ProductID" />
-      </Principal>
-      <Dependent Role="SourceSpools">
-        <PropertyRef Name="Unwinder3Spool" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="Docs">
-    <Key>
-      <PropertyRef Name="DocID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="DocTypeID" Type="Int32" />
-    <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="IsConfirmed" Type="Boolean" />
-    <Property Name="UserID" Type="Guid" />
-    <Property Name="Date" Type="DateTime" Precision="3" />
-    <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="Docs" ToRole="DocMovement" />
-    <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />
-    <NavigationProperty Name="DocProducts" Relationship="GammaModel.FK_DocProducts_Docs" FromRole="Docs" ToRole="DocProducts" />
-    <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Docs1" FromRole="Docs" ToRole="DocWithdrawal" />
-    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
-  </EntityType>
-  <Association Name="FK_DocMovement_Docs">
-    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-    <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Docs">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocMovement">
-        <PropertyRef Name="DocID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocProduction_Docs">
-    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Docs">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocProduction">
-        <PropertyRef Name="DocID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocProducts_Docs">
-    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-    <End Type="GammaModel.DocProducts" Role="DocProducts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Docs">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocProducts">
-        <PropertyRef Name="DocID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocWithdrawal_Docs1">
-    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-    <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Docs">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocWithdrawal">
-        <PropertyRef Name="DocID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -992,61 +709,6 @@
     <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
     <Property Type="Int32" Name="Quantity" Nullable="true" />
   </ComplexType>
-  <EntityType Name="Users">
-    <Key>
-      <PropertyRef Name="UserID" />
-    </Key>
-    <Property Name="UserID" Type="Guid" Nullable="false" />
-    <Property Name="RoleID" Type="Guid" />
-    <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="Post" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="PassChange" Type="DateTime" Precision="3" />
-    <Property Name="PassMustChange" Type="Boolean" />
-    <Property Name="PlaceID" Type="Guid" Nullable="false" />
-    <Property Name="Exports" Type="Boolean" Nullable="false" />
-    <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
-    <Property Name="ShiftID" Type="Byte" />
-    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
-    <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
-  </EntityType>
-  <Association Name="FK_Docs_Users">
-    <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
-    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Users">
-        <PropertyRef Name="UserID" />
-      </Principal>
-      <Dependent Role="Docs">
-        <PropertyRef Name="UserID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Users_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
-    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Places">
-        <PropertyRef Name="PlaceID" />
-      </Principal>
-      <Dependent Role="Users">
-        <PropertyRef Name="PlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Users_Roles1">
-    <End Type="GammaModel.Roles" Role="Roles" Multiplicity="0..1" />
-    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Roles">
-        <PropertyRef Name="RoleID" />
-      </Principal>
-      <Dependent Role="Users">
-        <PropertyRef Name="RoleID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="PermitTables">
     <Key>
       <PropertyRef Name="PermitTableID" />
@@ -1071,24 +733,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="vProductsInfo">
-    <Key>
-      <PropertyRef Name="DocID" />
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Precision="3" />
-    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Quantity" Type="Int32" />
-    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-    <Property Name="ShiftID" Type="Byte" />
-  </EntityType>
   <EntityType Name="ProductionTaskRWCutting">
     <Key>
       <PropertyRef Name="ProductionTaskRWCuttingID" />
@@ -1224,10 +868,11 @@
     <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_1CCharacteristics_1CMeasureUnits" FromRole="C1CCharacteristics" ToRole="C1CMeasureUnits" />
     <NavigationProperty Name="C1CMeasureUnits1" Relationship="GammaModel.FK_1CCharacteristics_1CMeasureUnits1" FromRole="C1CCharacteristics" ToRole="C1CMeasureUnits" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CCharacteristics_1CNomenclature" FromRole="C1CCharacteristics" ToRole="C1CNomenclature" />
-    <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
     <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductPalletItems" />
     <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductSpools" />
+    <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocWithdrawalMaterials" />
+    <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTasks" />
   </EntityType>
   <EntityType Name="C1CNomenclature">
@@ -1247,10 +892,11 @@
     <NavigationProperty Name="C1CNomenclature1" Relationship="GammaModel.FK_1CNomenclature_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclature1" />
     <NavigationProperty Name="C1CNomenclature2" Relationship="GammaModel.FK_1CNomenclature_1CNomenclature" FromRole="C1CNomenclature1" ToRole="C1CNomenclature" />
     <NavigationProperty Name="C1CNomenclatureProperties" Relationship="GammaModel.FK_1CNomenclatureProperties_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclatureProperties" />
-    <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductPalletItems" />
     <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductSpools" />
     <NavigationProperty Name="C1CNomenclatureGroups" Relationship="GammaModel.C1CNomenclatureGroupNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclatureGroups" />
+    <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
+    <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
   </EntityType>
   <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
@@ -1298,18 +944,6 @@
       </Principal>
       <Dependent Role="C1CCharacteristics">
         <PropertyRef Name="C1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductGroupPacks_1CCharacteristics">
-    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-    <End Type="GammaModel.ProductGroupPacks" Role="ProductGroupPacks" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CCharacteristics">
-        <PropertyRef Name="C1CCharacteristicID" />
-      </Principal>
-      <Dependent Role="ProductGroupPacks">
-        <PropertyRef Name="C1CCharacteristicID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1397,18 +1031,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProductGroupPacks_1CNomenclature">
-    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
-    <End Type="GammaModel.ProductGroupPacks" Role="ProductGroupPacks" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CNomenclature">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Principal>
-      <Dependent Role="ProductGroupPacks">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_ProductPalletItems_1CNomenclature">
     <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
     <End Type="GammaModel.ProductPalletItems" Role="ProductPalletItems" Multiplicity="*" />
@@ -1437,19 +1059,311 @@
     <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
     <End Type="GammaModel.C1CNomenclatureGroups" Role="C1CNomenclatureGroups" Multiplicity="*" />
   </Association>
+  <EntityType Name="DocWithdrawalMaterials">
+    <Key>
+      <PropertyRef Name="DocWithdrawalMaterialID" />
+    </Key>
+    <Property Name="DocWithdrawalMaterialID" Type="Guid" Nullable="false" />
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" FromRole="DocWithdrawalMaterials" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="DocWithdrawalMaterials" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocWithdrawalMaterials_Docs" FromRole="DocWithdrawalMaterials" ToRole="Docs" />
+  </EntityType>
+  <Association Name="FK_DocWithdrawalMaterials_1CCharacteristics">
+    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+    <End Type="GammaModel.DocWithdrawalMaterials" Role="DocWithdrawalMaterials" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CCharacteristics">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="DocWithdrawalMaterials">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawalMaterials_1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+    <End Type="GammaModel.DocWithdrawalMaterials" Role="DocWithdrawalMaterials" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CNomenclature">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="DocWithdrawalMaterials">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="ProductPallets">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Guid" Nullable="false" />
+    <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPallets" ToRole="ProductPalletItems" />
+    <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="ProductPallets" ToRole="Products" />
+  </EntityType>
+  <Association Name="FK_ProductPalletItems_ProductPallets">
+    <End Type="GammaModel.ProductPallets" Role="ProductPallets" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductPalletItems" Role="ProductPalletItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductPallets">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductPalletItems">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductPallets_Products1">
+    <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+    <End Type="GammaModel.ProductPallets" Role="ProductPallets" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductPallets">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="ProductGroupPacks">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Guid" Nullable="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="Weight" Type="Decimal" Precision="10" Scale="4" />
+    <Property Name="GrossWeight" Type="Decimal" Precision="10" Scale="4" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="ProductGroupPacks" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="ProductGroupPacks" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="ProductGroupPacks" ToRole="Products" />
+  </EntityType>
+  <Association Name="FK_ProductGroupPacks_1CCharacteristics">
+    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductGroupPacks" Role="ProductGroupPacks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CCharacteristics">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="ProductGroupPacks">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductGroupPacks_1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductGroupPacks" Role="ProductGroupPacks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CNomenclature">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductGroupPacks">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductGroupPacks_Products">
+    <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+    <End Type="GammaModel.ProductGroupPacks" Role="ProductGroupPacks" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="ProductGroupPacks">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="DocCloseShiftRemainders">
+    <Key>
+      <PropertyRef Name="DocCloseShiftRemainderID" />
+    </Key>
+    <Property Name="DocCloseShiftRemainderID" Type="Guid" Nullable="false" />
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="ProductID" Type="Guid" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+  </EntityType>
+  <ComplexType Name="GetDocCloseShiftPMSpools_Result">
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+    <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+    <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+    <Property Type="Int32" Name="Weight" Nullable="false" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
+  </ComplexType>
+  <EntityType Name="DocTypes">
+    <Key>
+      <PropertyRef Name="DocTypeID" />
+    </Key>
+    <Property Name="DocTypeID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_DocTypes" FromRole="DocTypes" ToRole="Docs" />
+  </EntityType>
+  <EntityType Name="C1CRejectionReasons">
+    <Key>
+      <PropertyRef Name="C1CRejectionReasonID" />
+    </Key>
+    <Property Name="C1CRejectionReasonID" Type="Guid" Nullable="false" />
+    <Property Name="IsMarked" Type="Boolean" />
+    <Property Name="IsFolder" Type="Boolean" />
+    <Property Name="ParentID" Type="Guid" />
+    <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="FullDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="DocProductChangeState" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocProductChangeState" />
+  </EntityType>
+  <EntityType Name="DocProductChangeState">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="StateID" Type="Byte" Nullable="false" />
+    <Property Name="C1CRejectionReasonID" Type="Guid" />
+    <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="DocProductChangeState" ToRole="C1CRejectionReasons" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocProductChangeState_Docs" FromRole="DocProductChangeState" ToRole="Docs" />
+  </EntityType>
+  <Association Name="FK_DocProductChangeState_1CRejectionReasons">
+    <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="0..1" />
+    <End Type="GammaModel.DocProductChangeState" Role="DocProductChangeState" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CRejectionReasons">
+        <PropertyRef Name="C1CRejectionReasonID" />
+      </Principal>
+      <Dependent Role="DocProductChangeState">
+        <PropertyRef Name="C1CRejectionReasonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="GetSpoolRejectionReasons_Result">
+    <Property Type="Guid" Name="RejectionReasonID" Nullable="true" />
+    <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="FullDescription" Nullable="true" MaxLength="Max" />
+  </ComplexType>
+  <EntityType Name="vProductsInfo">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="Date" />
+      <PropertyRef Name="StateID" />
+      <PropertyRef Name="IsConfirmed" />
+      <PropertyRef Name="IsWrittenOff" />
+      <PropertyRef Name="State" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="ProductID" Type="Guid" Nullable="false" />
+    <Property Name="ProductKindID" Type="Byte" />
+    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="ShiftID" Type="Byte" />
+    <Property Name="StateID" Type="Byte" Nullable="false" />
+    <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="IsWrittenOff" Type="Boolean" Nullable="false" />
+    <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="PlaceID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="DocMovement">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="InPlaceID" Type="Int32" />
+    <Property Name="OutPlaceID" Type="Int32" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="DocMovement" ToRole="Docs" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocMovement_Places" FromRole="DocMovement" ToRole="Places" />
+    <NavigationProperty Name="Places1" Relationship="GammaModel.FK_DocMovement_Places1" FromRole="DocMovement" ToRole="Places" />
+  </EntityType>
+  <EntityType Name="DocProduction">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="ProductionTaskID" Type="Guid" />
+    <Property Name="InPlaceID" Type="Int32" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="DocProduction" ToRole="Docs" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocProduction_Places" FromRole="DocProduction" ToRole="Places" />
+    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_DocProduction_ProductionTasks" FromRole="DocProduction" ToRole="ProductionTasks" />
+    <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.DocProductionWithdrawals" FromRole="DocProduction" ToRole="DocWithdrawal" />
+  </EntityType>
+  <EntityType Name="Docs">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="DocTypeID" Type="Int32" />
+    <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="UserID" Type="Guid" />
+    <Property Name="PlaceID" Type="Int32" />
+    <Property Name="ShiftID" Type="Byte" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
+    <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="Docs" ToRole="DocMovement" />
+    <NavigationProperty Name="DocProductChangeState" Relationship="GammaModel.FK_DocProductChangeState_Docs" FromRole="Docs" ToRole="DocProductChangeState" />
+    <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />
+    <NavigationProperty Name="DocProducts" Relationship="GammaModel.FK_DocProducts_Docs" FromRole="Docs" ToRole="DocProducts" />
+    <NavigationProperty Name="DocTypes" Relationship="GammaModel.FK_Docs_DocTypes" FromRole="Docs" ToRole="DocTypes" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
+    <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Docs1" FromRole="Docs" ToRole="DocWithdrawal" />
+    <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_Docs" FromRole="Docs" ToRole="DocWithdrawalMaterials" />
+    <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
+    <NavigationProperty Name="Docs2" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
+    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="DocWithdrawal">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="OutPlaceID" Type="Int32" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocWithdrawal_Docs1" FromRole="DocWithdrawal" ToRole="Docs" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocWithdrawal_Places" FromRole="DocWithdrawal" ToRole="Places" />
+    <NavigationProperty Name="DocProduction" Relationship="GammaModel.DocProductionWithdrawals" FromRole="DocWithdrawal" ToRole="DocProduction" />
+  </EntityType>
+  <EntityType Name="Places">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="NameEng" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="DepartmentID" Type="Int16" Nullable="false" />
+    <Property Name="PlaceGroupID" Type="Int16" />
+    <Property Name="IsProductionPlace" Type="Boolean" />
+    <Property Name="IsWarehouse" Type="Boolean" />
+    <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Places" FromRole="Places" ToRole="DocMovement" />
+    <NavigationProperty Name="DocMovement1" Relationship="GammaModel.FK_DocMovement_Places1" FromRole="Places" ToRole="DocMovement" />
+    <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Places" FromRole="Places" ToRole="DocProduction" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Places" FromRole="Places" ToRole="Docs" />
+    <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Places" FromRole="Places" ToRole="DocWithdrawal" />
+    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="Places" ToRole="ProductionTasks" />
+    <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Places" FromRole="Places" ToRole="Rests" />
+    <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_Places" FromRole="Places" ToRole="SourceSpools" />
+    <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.FK_Places_PlaceGroups1" FromRole="Places" ToRole="PlaceGroups" />
+    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Users_Places" FromRole="Places" ToRole="Users" />
+  </EntityType>
   <EntityType Name="ProductionTasks">
     <Key>
       <PropertyRef Name="ProductionTaskID" />
     </Key>
     <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
     <Property Name="ProductionTaskKindID" Type="Int16" />
-    <Property Name="PlaceID" Type="Guid" Nullable="false" />
+    <Property Name="PlaceID" Type="Int32" />
     <Property Name="ProductionTaskStateID" Type="Byte" />
     <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
     <Property Name="C1CCharacteristicID" Type="Guid" />
     <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
     <Property Name="UserID" Type="Guid" />
-    <Property Name="Number" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="Number" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
     <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="DateBegin" Type="DateTime" Precision="3" />
     <Property Name="DateEnd" Type="DateTime" Precision="3" />
@@ -1457,8 +1371,36 @@
     <Property Name="IsInPlan" Type="Boolean" />
     <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="ProductionTasks" ToRole="C1CCharacteristics" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="ProductionTasks" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_ProductionTasks" FromRole="ProductionTasks" ToRole="DocProduction" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="ProductionTasks" ToRole="Places" />
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskRWCutting" />
+    <NavigationProperty Name="ProductionTaskStates" Relationship="GammaModel.FK_ProductionTasks_ProductionTaskStates" FromRole="ProductionTasks" ToRole="ProductionTaskStates" />
+  </EntityType>
+  <EntityType Name="Rests">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="Guid" Nullable="false" />
+    <Property Name="PlaceID" Type="Int32" />
+    <Property Name="Quantity" Type="Byte" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Rests_Places" FromRole="Rests" ToRole="Places" />
+    <NavigationProperty Name="Products" Relationship="GammaModel.FK_Rests_Products" FromRole="Rests" ToRole="Products" />
+  </EntityType>
+  <EntityType Name="SourceSpools">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="Int32" Nullable="false" />
+    <Property Name="Unwinder1Spool" Type="Guid" />
+    <Property Name="Unwinder1Active" Type="Boolean" />
+    <Property Name="Unwinder2Spool" Type="Guid" />
+    <Property Name="Unwinder2Active" Type="Boolean" />
+    <Property Name="Unwinder3Spool" Type="Guid" />
+    <Property Name="Unwinder3Active" Type="Boolean" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_SourceSpools_Places" FromRole="SourceSpools" ToRole="Places" />
+    <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="SourceSpools" ToRole="ProductSpools" />
+    <NavigationProperty Name="ProductSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="SourceSpools" ToRole="ProductSpools" />
+    <NavigationProperty Name="ProductSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="SourceSpools" ToRole="ProductSpools" />
   </EntityType>
   <Association Name="FK_ProductionTasks_1CCharacteristics">
     <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -1484,14 +1426,210 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocCloseShiftRemainders_Docs1">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocCloseShiftRemainders" Role="DocCloseShiftRemainders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftRemainders">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+    <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="InPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Places1">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+    <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="OutPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProductChangeState_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocProductChangeState" Role="DocProductChangeState" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProductChangeState">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProduction_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProduction">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProduction_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocProduction">
+        <PropertyRef Name="InPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProduction_ProductionTasks">
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="0..1" />
+    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="DocProduction">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProducts_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="GammaModel.DocProducts" Role="DocProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocProducts">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Docs_DocTypes">
+    <End Type="GammaModel.DocTypes" Role="DocTypes" Multiplicity="0..1" />
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocTypes">
+        <PropertyRef Name="DocTypeID" />
+      </Principal>
+      <Dependent Role="Docs">
+        <PropertyRef Name="DocTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Docs_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="Docs">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawal_Docs1">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocWithdrawal">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawalMaterials_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocWithdrawalMaterials" Role="DocWithdrawalMaterials" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocWithdrawalMaterials">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawal_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+    <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocWithdrawal">
+        <PropertyRef Name="OutPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ProductionTasks_Places">
-    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
     <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Places">
         <PropertyRef Name="PlaceID" />
       </Principal>
       <Dependent Role="ProductionTasks">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Rests_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+    <End Type="GammaModel.Rests" Role="Rests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="Rests">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
         <PropertyRef Name="PlaceID" />
       </Dependent>
     </ReferentialConstraint>
@@ -1508,4 +1646,189 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Rests_Products">
+    <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+    <End Type="GammaModel.Rests" Role="Rests" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="Rests">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_ProductSpools">
+    <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="Unwinder1Spool" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_ProductSpools1">
+    <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="Unwinder2Spool" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SourceSpools_ProductSpools2">
+    <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+    <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductSpools">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="SourceSpools">
+        <PropertyRef Name="Unwinder3Spool" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DocCloseShiftDocs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+    <End Type="GammaModel.Docs" Role="Docs1" Multiplicity="*" />
+  </Association>
+  <Association Name="DocProductionWithdrawals">
+    <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
+    <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
+  </Association>
+  <EntityType Name="PlaceGroups">
+    <Key>
+      <PropertyRef Name="PlaceGroupID" />
+    </Key>
+    <Property Name="PlaceGroupID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_PlaceGroups1" FromRole="PlaceGroups" ToRole="Places" />
+  </EntityType>
+  <Association Name="FK_Places_PlaceGroups1">
+    <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="0..1" />
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceGroups">
+        <PropertyRef Name="PlaceGroupID" />
+      </Principal>
+      <Dependent Role="Places">
+        <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Guid" Nullable="false" />
+    <Property Name="RoleID" Type="Guid" Nullable="false" />
+    <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Post" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PassChange" Type="DateTime" Precision="3" />
+    <Property Name="PassMustChange" Type="Boolean" />
+    <Property Name="PlaceID" Type="Int32" Nullable="false" />
+    <Property Name="Exports" Type="Boolean" Nullable="false" />
+    <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
+    <Property Name="ShiftID" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
+    <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
+  </EntityType>
+  <Association Name="FK_Docs_Users">
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Docs">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Roles1">
+    <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1" />
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="ProductionTaskStates">
+    <Key>
+      <PropertyRef Name="ProductionTaskStateID" />
+    </Key>
+    <Property Name="ProductionTaskStateID" Type="Byte" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsActual" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_ProductionTaskStates" FromRole="ProductionTaskStates" ToRole="ProductionTasks" />
+  </EntityType>
+  <Association Name="FK_ProductionTasks_ProductionTaskStates">
+    <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTaskStates">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Principal>
+      <Dependent Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="GetProductRelations_Result">
+    <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="15" />
+    <Property Type="String" Name="ProductKind" Nullable="false" MaxLength="6" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+    <Property Type="Guid" Name="DocID" Nullable="false" />
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="GetProductionTasks_Result">
+    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
+    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
+    <Property Type="Decimal" Name="MadeQuantity" Nullable="true" Precision="38" Scale="6" />
+  </ComplexType>
+  <ComplexType Name="GetProductionTasks_Result1">
+    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
+    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
+    <Property Type="Decimal" Name="MadeQuantity" Nullable="true" Precision="2" Scale="0" />
+  </ComplexType>
+  <ComplexType Name="GetProductionTasks_Result2">
+    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
+    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
+    <Property Type="Decimal" Name="MadeQuantity" Nullable="true" Precision="2" Scale="0" />
+    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
+  </ComplexType>
 </Schema>

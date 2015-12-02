@@ -17,7 +17,7 @@ namespace Gamma
         public Guid? CharacteristicID { get; set; }
         public int? Quantity { get; set; }
         public Byte? ShiftID { get; set; }
-        public ProductStatesFilter State { get; set; }
+        public string State { get; set; }
         public string Place { get; set; }
     }
 }

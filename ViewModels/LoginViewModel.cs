@@ -59,6 +59,7 @@ namespace Gamma.ViewModels
             Host = AppSettings.HostName;
             DataBase = AppSettings.DbName;
             Login = AppSettings.User;
+            UseScanner = AppSettings.UseScanner;
             LoginCommand = new RelayCommand(Authenticate, canExecute);
         }
 
@@ -75,10 +76,18 @@ namespace Gamma.ViewModels
                 MessageBox.Show("Неверный логин или пароль!");
                 return;
             }
+            if (UseScanner && !Scanner.IsReady)
+            {
+                MessageBox.Show("Не удалось подключить сканер, программа запустится без сканера",
+                "Ошибка при подключении сканера", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                GammaSettings.Get().UseScanner = false;
+            }
+            else GammaSettings.Get().UseScanner = UseScanner;
             MessageManager.OpenMain();
             CloseWindow();
         }
+        public bool UseScanner { get; set; }
 
-        }
+    }
     
 }

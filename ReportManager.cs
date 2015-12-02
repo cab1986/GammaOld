@@ -17,8 +17,8 @@ namespace Gamma
         static ReportManager()
         {
             ReportSettings.CustomSaveReport += SaveReport;
+            ReportSettings.PreviewSettings.Buttons = (PreviewButtons.Print | PreviewButtons.Save);
         }
-        
         public static BarViewModel GetReportBar(string ReportObject)
         {
             var reports = from rep in DB.GammaBase.Reports

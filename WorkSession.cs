@@ -25,10 +25,12 @@ namespace Gamma
                                  {
                                      placeID = u.PlaceID,
                                      placeGroupID = u.Places.PlaceGroupID,
+                                     ShiftID = u.ShiftID,
                                      dbAdmin = u.DBAdmin
                                  }).FirstOrDefault();
                 DBAdmin = userInfo.dbAdmin;
                 PlaceID = userInfo.placeID;
+                ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroups)userInfo.placeGroupID;
             }
         }
@@ -38,7 +40,12 @@ namespace Gamma
             set;
         }
 
-        public static Guid? PlaceID
+        public static int PlaceID
+        {
+            get;
+            set;
+        }
+        public static byte ShiftID
         {
             get;
             set;

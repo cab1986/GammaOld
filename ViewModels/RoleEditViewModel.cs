@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class RoleEditViewModel : DataBaseEditViewModel
+    public class RoleEditViewModel : SaveImplementedViewModel
     {
         /// <summary>
         /// Initializes a new instance of the RoleEditViewModel class.

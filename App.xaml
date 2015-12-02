@@ -34,6 +34,20 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="{x:Type dxe:TextEdit}" x:Key="DefaultEditStyle">
+            <Style.Triggers>
+                <Trigger Property="IsReadOnly" Value="true">
+                    <Setter Property="Background" Value="LightGray" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type dxe:DateEdit}" BasedOn="{StaticResource ResourceKey=DefaultEditStyle}" />
+        <Style TargetType="{x:Type dxe:ComboBoxEdit}" BasedOn="{StaticResource ResourceKey=DefaultEditStyle}" />
+        <Style TargetType="{x:Type dxe:ButtonEdit}" BasedOn="{StaticResource ResourceKey=DefaultEditStyle}" />
+        <Style TargetType="{x:Type dxe:PopupCalcEdit}" BasedOn="{StaticResource DefaultEditStyle}" />
+        <Style TargetType="{x:Type dxe:SpinEdit}" BasedOn="{StaticResource DefaultEditStyle}" />
+        <Style TargetType="{x:Type dxe:TextEdit}" BasedOn="{StaticResource DefaultEditStyle}" />
+
         <Style TargetType="{x:Type v:LoginView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:ProductionTaskView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:NomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
@@ -43,5 +57,7 @@
         <Style TargetType="{x:Type v:UserEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:PermitEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:RoleEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:DocCloseShiftView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:ComPortSettingsView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
     </Application.Resources>
 </Application>

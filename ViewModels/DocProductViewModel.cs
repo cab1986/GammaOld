@@ -7,6 +7,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Gamma.Interfaces;
 using Gamma.Attributes;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -16,31 +17,43 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductViewModel : DataBaseEditViewModel, ICheckedAccess
+    public class DocProductViewModel : SaveImplementedViewModel, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the DocProductViewModel class.
         /// </summary>
         public DocProductViewModel(OpenDocProductMessage msg)
         {
+            ActivatedCommand = new RelayCommand(() => IsActive = true);
+            DeactivatedCommand = new RelayCommand(() => IsActive = false);
+            Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             switch (msg.DocProductKind)
             {
                 case DocProductKinds.DocProductSpool:
+                    Title = "Тамбур";
                     CurrentViewModel = new DocProductSpoolViewModel(msg.ID,msg.IsNewProduct);
                     if (!msg.IsNewProduct)
                     {
                         Doc = (from d in DB.GammaBase.Docs where 
-                                   d.DocID == DB.GammaBase.DocProducts.Where(dp => dp.ProductID == msg.ID).
-                                   Select(dp => dp.DocID).FirstOrDefault() select d).FirstOrDefault();
+                                   DB.GammaBase.DocProducts.Where(dp => dp.ProductID == msg.ID).
+                                   Select(dp => dp.DocID).Contains(d.DocID) &&
+                                   d.DocTypeID == (byte)DocTypes.DocProduction
+                               select d).FirstOrDefault();
                         DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
+                        var product = DB.GammaBase.Products.Find(msg.ID);
+                        Number = product.Number;
+                        String.Format("{0}№ {1}", Title, Number);
                     }
                     break;
                 case DocProductKinds.DocProductUnload:
+                    Title = "Съем";
                     CurrentViewModel = new DocProductUnloadViewModel(msg.ID, msg.IsNewProduct);
                     if (!msg.IsNewProduct)
                     {
                         Doc = DB.GammaBase.Docs.Find(msg.ID);
                         DocProduction = DB.GammaBase.DocProduction.Find(msg.ID);
+                        Number = Doc.Number;
+                        Title = String.Format("{0}№ {1}", Title, Number);
                     }
                     break;
                 default:
@@ -55,7 +68,20 @@ namespace Gamma.ViewModels
             {
                 DocDate = Doc.Date;
                 ProductionTaskID = DocProduction.ProductionTaskID;
-                IsConfirmed = Doc.IsConfirmed ?? false;
+                IsConfirmed = Doc.IsConfirmed;
+                ProductRelations = new ObservableCollection<ProductRelation>
+                (
+                    from prel in DB.GammaBase.GetProductRelations(Doc.DocID)
+                    select new ProductRelation
+                    {
+                        Date = prel.Date,
+                        DocID = prel.DocID,
+                        Number = prel.Number,
+                        ProductID = prel.ProductID,
+                        ProductKind = prel.ProductKind,
+                        RelationKind = prel.RelationKind
+                    }
+                );
             }
             Bars = (CurrentViewModel as IBarImplemented).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
@@ -66,6 +92,20 @@ namespace Gamma.ViewModels
             SaveToModel();
         }
 
+        private void BarcodeReceived(BarcodeMessage msg)
+        {
+            if (!IsActive) return;
+            if (Doc == null) return;
+            if (CurrentViewModel is DocProductSpoolViewModel)
+            {
+                var productId = (from p in DB.GammaBase.Products
+                                 where p.BarCode == msg.Barcode
+                                 select p.ProductID).FirstOrDefault();
+                if (productId != new Guid()) 
+                    if (DB.GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productId).Select(d => d) != null)
+                        IsConfirmed = false;
+            }
+        }
         private void OpenProductionTask()
         {
             var msg = new OpenProductionTaskMessage() { ProductionTaskID = ProductionTaskID };
@@ -85,24 +125,36 @@ namespace Gamma.ViewModels
             }
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public DateTime? DocDate { get; set; }
+        public DateTime DocDate { get; set; }
+        private bool _isConfirmed;
+        
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public bool IsConfirmed { get; set; }
+        public bool IsConfirmed 
+        {
+            get
+            {
+                return _isConfirmed;
+            }
+            set
+            {
+            	_isConfirmed = value;
+                RaisePropertyChanged("IsConfirmed");
+            }
+        }
         public string Number { get; set; }
         private Guid DocProductID { get; set; }
-        private Guid? _productionTaskID { get; set; }
+        private Guid? _productionTaskID;
         private Guid? ProductionTaskID
         {
             get { return _productionTaskID; }
             set
             {
                 _productionTaskID = value;
+                if (value == null) return;
                 var pinfo = (from pt in DB.GammaBase.ProductionTasks
                      where pt.ProductionTaskID == value
                      select new {Number = pt.Number,Date = pt.Date}).FirstOrDefault();
                 ProductionTaskInfo = string.Format("Задание №{0} от {1}", pinfo.Number, pinfo.Date.ToString());
-                
-                    
             }
         }
         private string _productionTaskInfo;
@@ -115,8 +167,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionTaskInfo");
             }
         }
-        private DataBaseEditViewModel _currentViewModel;
-        public DataBaseEditViewModel CurrentViewModel
+        private SaveImplementedViewModel _currentViewModel;
+        public SaveImplementedViewModel CurrentViewModel
         {
             get { return _currentViewModel; }
             set
@@ -138,7 +190,15 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             if (Doc == null)
             {
-                Doc = new Docs() { DocID = Guid.NewGuid(), UserID = WorkSession.UserID, IsConfirmed = IsConfirmed };
+                Doc = new Docs() 
+                { 
+                    DocID = Guid.NewGuid(), 
+                    UserID = WorkSession.UserID, 
+                    IsConfirmed = IsConfirmed,
+                    PlaceID = WorkSession.PlaceID, 
+                    ShiftID = WorkSession.ShiftID,
+                    DocTypeID = (int)DocTypes.DocProduction
+                };
                 DocProduction = new DocProduction() { DocID = Doc.DocID, InPlaceID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ProductionTaskID).Select(p => p.PlaceID).FirstOrDefault(), ProductionTaskID = ProductionTaskID };
                 DB.GammaBase.Docs.Add(Doc);
                 DB.GammaBase.DocProduction.Add(DocProduction);
@@ -171,5 +231,23 @@ namespace Gamma.ViewModels
         {
             return CurrentViewModel.CanSaveExecute() && (DB.GammaBase.UserPermit("DocProduction").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite);
         }
+        public string Title { get; set; }
+        private bool IsActive { get; set; }
+        public RelayCommand ActivatedCommand { get; private set; }
+        public RelayCommand DeactivatedCommand { get; private set; }
+        private ObservableCollection<ProductRelation> _productRelations;
+        public ObservableCollection<ProductRelation> ProductRelations
+        {
+            get
+            {
+                return _productRelations;
+            }
+            set
+            {
+            	_productRelations = value;
+                RaisePropertyChanged("ProductRelations");
+            }
+        }
+        public ProductRelation SelectedProduct { get; set; }
     }
 }

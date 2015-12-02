@@ -22,20 +22,60 @@ namespace Gamma.ViewModels
         public ProductionTaskRWViewModel()
         {
             Initialize();
-            CuttingFormats = new ObservableCollection<Cutting>();
-            CuttingFormats.Add(new Cutting());
         }
-        public ProductionTaskRWViewModel(Guid ProductionTaskID)
+        public ProductionTaskRWViewModel(Guid productionTaskID)
         {
-
+            Initialize();
+            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting").Where(pt => pt.ProductionTaskID == productionTaskID).FirstOrDefault();
+            NomenclatureID = productionTask.C1CNomenclatureID;
+            SetCharacteristicProperties();
+            var cutting = productionTask.ProductionTaskRWCutting.First();
+            var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cutting.C1CCharacteristicID).FirstOrDefault();
+            CoreDiameter = charprops.CoreDiameter;
+            LayerNumber = charprops.LayerNumber;
+            Color = charprops.Color;
+            Diameter = charprops.Diameter;
+            Destination = charprops.Destination;
+            int i = 0;
+            foreach (var rwcutting in productionTask.ProductionTaskRWCutting)
+            {
+                CuttingFormats[0].Format[i] = DB.GammaBase.GetCharSpoolFormat(rwcutting.C1CCharacteristicID).FirstOrDefault().ToString();
+                i++;
+            }
         }
         private void Initialize()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
+            CuttingFormats = new ObservableCollection<Cutting>();
+            CuttingFormats.Add(new Cutting());
         }
         public override void SaveToModel(Guid ItemID)
         {
             base.SaveToModel(ItemID);
+            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting").Where(pt => pt.ProductionTaskID == ItemID).FirstOrDefault();
+            var prodTaskCuttings = new ObservableCollection<ProductionTaskRWCutting>();
+            for (int i = 0; i < CuttingFormats[0].Format.Count; i++)
+            {
+                var format = CuttingFormats[0].Format[i];
+            	if (format == null) continue;
+                var characteristicID = (from cp in CharacteristicProperties
+                                       where cp.Color == Color && cp.CoreDiameter == CoreDiameter
+                                           && cp.Destination == Destination && cp.Diameter == Diameter && cp.Format == format &&
+                                           cp.LayerNumber == LayerNumber
+                                       select cp.CharacteristicID).FirstOrDefault();
+                if (characteristicID != null)
+                {
+                    prodTaskCuttings.Add(new ProductionTaskRWCutting()
+                    {
+                        C1CCharacteristicID = characteristicID,
+                        CutIndex = (short)i,
+                        ProductionTaskID = ItemID,
+                        ProductionTaskRWCuttingID = SQLGuidUtil.NewSequentialId()
+                    });
+                }
+            }
+            DB.GammaBase.ProductionTaskRWCutting.RemoveRange(productionTask.ProductionTaskRWCutting);
+            DB.GammaBase.ProductionTaskRWCutting.AddRange(prodTaskCuttings);
             DB.GammaBase.SaveChanges();
         }
         public string Color
@@ -250,6 +290,11 @@ namespace Gamma.ViewModels
             Destination = null;
             ClearFormats();
             NomenclatureID = msg.Nomenclature1CID;
+            SetCharacteristicProperties();
+        }
+
+        private void SetCharacteristicProperties()
+        {
             var tempCollection = new ObservableCollection<CharacteristicProperty>();
             foreach (var characteristic in Characteristics)
             {
@@ -314,7 +359,7 @@ namespace Gamma.ViewModels
         }
         public class Cutting : ViewModelBase
         {
-            private ObservableCollection<string> _format = new ObservableCollection<string>(new string[15]);
+            private ObservableCollection<string> _format = new ObservableCollection<string>(new string[16]);
             public ObservableCollection<string> Format
             {
                 get
@@ -328,6 +373,27 @@ namespace Gamma.ViewModels
                 }
             }
             
+        }
+        public override bool IsValid
+        {
+            get
+            {
+               
+                return base.IsValid && CuttingsAreNotEmpty();
+            }
+        }
+        private bool CuttingsAreNotEmpty()
+        {
+            var result = false;
+            foreach (var format in CuttingFormats[0].Format)
+            {
+                if (format != null)
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
         }
     }
     

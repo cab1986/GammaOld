@@ -77,7 +77,8 @@ namespace Gamma.ViewModels
                 if (_selectedNomenclatureFolder != value)
                 {
                     _selectedNomenclatureFolder = value;
-                    GetNomenclature(value.Nomenclature1CFolderID);
+                    if (value != null)
+                        GetNomenclature(value.Nomenclature1CFolderID);
                     RaisePropertyChanged("SelectedNomenclatureFolder");
                 }
             }

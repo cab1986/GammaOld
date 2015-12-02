@@ -20,10 +20,10 @@ namespace Gamma.Models
         }
     
         public System.Guid DocID { get; set; }
-        public Nullable<System.Guid> OutPlaceID { get; set; }
+        public Nullable<int> OutPlaceID { get; set; }
     
+        public virtual Docs Docs { get; set; }
         public virtual Places Places { get; set; }
         public virtual ICollection<DocProduction> DocProduction { get; set; }
-        public virtual Docs Docs { get; set; }
     }
 }

@@ -24,8 +24,8 @@ namespace Gamma.ViewModels
         /// </summary>
         public ProductionTaskViewModel(OpenProductionTaskMessage msg)
         {
-            ChangeStateEnabled = (DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite) ||
-                WorkSession.DBAdmin;
+            ChangeStateReadOnly = !(DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite) &&
+                !WorkSession.DBAdmin;
             TaskStates = new ProductionTaskStates().ToDictionary();
             RefreshProductionCommand = new RelayCommand(RefreshProduction);
             ShowProductCommand = new RelayCommand(ShowProduct,() => SelectedProductionTaskProduct != null);
@@ -46,18 +46,35 @@ namespace Gamma.ViewModels
             if (msg.ProductionTaskID == null)
             {
                 Date = DB.CurrentDateTime;
+                Title = "Новое задание на производство";
+                IsActual = false;
             }
             else
             {
                 GetProductionTaskInfo((Guid)msg.ProductionTaskID);
                 RefreshProduction();
+                Title = "Задание на производство № " + Number;
             }
             ProductionTaskKind = msg.ProductionTaskKind;
-            CreateNewProductCommand = new RelayCommand(CreateNewProduct,
-                () => IsActual);
+            CreateNewProductCommand = new RelayCommand(CreateNewProduct,CanCreateNewProduct);
+            ProductionTaskStateID = 0;
         }
-        private DataBaseEditViewModel currentview;
-        public DataBaseEditViewModel CurrentView
+
+        private bool CanCreateNewProduct()
+        {
+            switch (ProductionTaskKind)
+            {
+                case ProductionTaskKinds.ProductionTaskPM:
+                    return DB.HaveWriteAccess("ProductSpools") && IsActual;
+                case ProductionTaskKinds.ProductionTaskRW:
+                    return DB.HaveWriteAccess("ProductSpools") && IsActual;
+                default:
+                    break;
+            }
+            return false;
+        }
+        private SaveImplementedViewModel currentview;
+        public SaveImplementedViewModel CurrentView
         {
             get { return currentview; }
             private set 
@@ -163,7 +180,7 @@ namespace Gamma.ViewModels
 
         private void GetProductionTaskInfo(Guid ProductionTaskID)
         {
-            var ProductionTask = (from pt in DB.GammaBase.ProductionTasks
+            var ProductionTask = (from pt in DB.GammaBase.ProductionTasks.Include("ProductionTaskStates")
                                   where pt.ProductionTaskID == ProductionTaskID
                                   select pt).FirstOrDefault();
             this.ProductionTaskID = ProductionTaskID;
@@ -175,10 +192,10 @@ namespace Gamma.ViewModels
             DateBegin = ProductionTask.DateBegin;
             DateEnd = ProductionTask.DateEnd;
             Comment = ProductionTask.Comment;
-            PlaceID = ProductionTask.PlaceID;
-            ProductionTaskStateID = ProductionTask.ProductionTaskStateID;
-//            if (ProductionTask.ProductionTaskStates != null)
-//                IsActual = ProductionTask.ProductionTaskStates.IsActual;
+            PlaceID = ProductionTask.PlaceID ?? 0;
+            ProductionTaskStateID = ProductionTask.ProductionTaskStateID ?? 0;
+            if (ProductionTask.ProductionTaskStates != null)
+                IsActual = ProductionTask.ProductionTaskStates.IsActual;
         }
         private void ChangeCurrentView(ProductionTaskKinds ProductionTaskKind)
         {
@@ -235,7 +252,6 @@ namespace Gamma.ViewModels
             ProductionTask.C1CCharacteristicID = CharacteristicID;
             ProductionTask.Quantity = TaskQuantity;
             ProductionTask.UserID = WorkSession.UserID;
-            ProductionTask.Number = "abcdef";
             ProductionTask.ProductionTaskKindID = (short)ProductionTaskKind;
             ProductionTask.ProductionTaskStateID = ProductionTaskStateID;
 
@@ -263,10 +279,10 @@ namespace Gamma.ViewModels
         }
         private bool _isActual = true;
         private ObservableCollection<Place> _places = DB.GetPlaces(PlaceGroups.PM);
-        private Guid _placeID;
+        private int _placeID;
         [Required(ErrorMessage="Необходимо выбрать передел")]
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public Guid PlaceID
+        public int PlaceID
         {
             get
             {
@@ -281,7 +297,7 @@ namespace Gamma.ViewModels
         public override bool CanSaveExecute()
         {
             return base.CanSaveExecute() && (CurrentView == null ? true : CurrentView.IsValid) &&
-                (DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite);
+                (DB.HaveWriteAccess("ProductionTasks"));
         }
         public RelayCommand RefreshProductionCommand { get; private set; }
         public RelayCommand ShowProductCommand { get; private set; }
@@ -365,11 +381,11 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("CharacteristicVisible");
             }
         }
-        [Required(ErrorMessage="Необходимо выбрать характеристику")]
+//        [Required(ErrorMessage="Необходимо выбрать характеристику")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public Guid? CharacteristicID { get; set; }
-        private byte? productionTaskStateID;
-        public byte? ProductionTaskStateID
+        private byte productionTaskStateID;
+        public byte ProductionTaskStateID
         {
             get
             {
@@ -384,9 +400,10 @@ namespace Gamma.ViewModels
         public Dictionary<byte, string> TaskStates { get; set; }
         protected override bool CanChooseNomenclature()
         {
-            return (DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite);
+            return (DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite) || WorkSession.DBAdmin;
         }
-        public bool ChangeStateEnabled { get; set; }
+        public bool ChangeStateReadOnly { get; set; }
+        public string Title { get; set; }
     }
 
 }

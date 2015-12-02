@@ -39,82 +39,87 @@
                 <dxg:GridControl.Columns>
                     <dxg:GridColumn Binding="{Binding Format[0], Mode=TwoWay}" Header="01" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" />
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"  NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[1], Mode=TwoWay}" Header="02" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[2], Mode=TwoWay}" Header="03" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[3], Mode=TwoWay}" Header="04" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[4], Mode=TwoWay}" Header="05" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[5], Mode=TwoWay}" Header="06" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[6], Mode=TwoWay}" Header="07" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[7], Mode=TwoWay}" Header="08" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[8], Mode=TwoWay}" Header="09" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[9], Mode=TwoWay}" Header="10" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[10], Mode=TwoWay}" Header="11" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[11], Mode=TwoWay}" Header="12" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[12], Mode=TwoWay}" Header="13" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[13], Mode=TwoWay}" Header="14" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[14], Mode=TwoWay}" Header="15" Width="50">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False"/>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Binding="{Binding Format[15], Mode=TwoWay}" Header="16" Width="50">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:ComboBoxEditSettings ItemsSource="{Binding Formats}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
-                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" />
+                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" AutoWidth="True"/>
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </dxlc:LayoutItem>

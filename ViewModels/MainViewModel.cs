@@ -4,6 +4,8 @@ using System.Linq;
 using Gamma.Interfaces;
 using System.Collections.Generic;
 using System;
+using Gamma.Common;
+using System.Collections.ObjectModel;
 
 namespace Gamma.ViewModels
 {
@@ -26,8 +28,9 @@ namespace Gamma.ViewModels
         /// </summary>
         public MainViewModel()
         {
+            ViewsManager.Initialize();
             var settings = GammaSettings.Get();
-            StatusText = "Сервер: " + settings.HostName + " БД: " + settings.DbName + " Пользователь: " + settings.User;
+            StatusText = String.Format("Сервер: {0} БД: {1} Пользователь: {2}", settings.HostName, settings.DbName, settings.User);
             if (IsInDesignMode)
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
@@ -45,9 +48,46 @@ namespace Gamma.ViewModels
                     () => DB.HaveReadAccess("ProductionTaskRW"));
                 FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
+                CloseShiftCommand = new RelayCommand(CloseShift);
+                OpenDocCloseShiftsCommand = new RelayCommand<PlaceGroups>((p) => MessageManager.OpenDocCloseShifts(p));
+                ConfigureComPortCommand = new RelayCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin);
+                FindProductionTaskCommand = new RelayCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
+                OpenPlaceProductsCommand = new RelayCommand<int>(OpenPlaceProducts);
             }
             if (WorkSession.PlaceGroup == PlaceGroups.PM) CurrentView = ViewModelLocator.ProductionTasksPM;
             else if (WorkSession.PlaceGroup == PlaceGroups.RW) CurrentView = ViewModelLocator.ProductionTasksRW;
+            var places = DB.GammaBase.Places.Where(p => p.IsProductionPlace == true).Select(p => p);
+            PlaceProducts = new ObservableCollection<PlaceProduct>();
+            foreach (var place in places)
+            {
+                PlaceProducts.Add(
+                    new PlaceProduct
+                    {
+                        Place = place.Name,
+                        PlaceID = place.PlaceID,
+                        Command = OpenPlaceProductsCommand
+                    }
+                    );
+            }
+        }
+        private void OpenPlaceProducts(int placeID)
+        {
+            CurrentView = new PlaceProductsViewModel(placeID);
+        }
+        private void FindProductionTask()
+        {
+            if (CurrentView is ProductionTasksPMViewModel)
+                MessageManager.FindProductionTask(PlaceGroups.PM);
+            else if (CurrentView is ProductionTasksRWViewModel)
+                MessageManager.FindProductionTask(PlaceGroups.RW);
+            else if (CurrentView is ProductionTasksConvertingViewModel)
+                MessageManager.FindProductionTask(PlaceGroups.Convertings);
+        }
+
+        private void CloseShift()
+        {
+            if (WorkSession.ShiftID == 0) return;
+            MessageManager.OpenDocCloseShift((int)WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID);
         }
 
         private void CurrentViewChanged()
@@ -66,24 +106,11 @@ namespace Gamma.ViewModels
                 DeleteItemCommand = null;
                 RefreshCommand = null;
             }
+            if (CurrentView is ProductionTasksPMViewModel || CurrentView is ProductionTasksRWViewModel || CurrentView is ProductionTasksConvertingViewModel)
+                ProductionTaskBarVisible = true;
+            else ProductionTaskBarVisible = false;
         }
-
-        private ViewModelBase _currentgridview;
-
-        public ViewModelBase CurrentGridView
-        {
-            get {return _currentgridview;}
-            set
-            {
-                _currentgridview = value;
-                RaisePropertyChanged("CurrentGridView");
-            }
-        }
-
-        private Dictionary<string, ViewModelBase> dictGridViews = new Dictionary<string, ViewModelBase>();
-
         private ViewModelBase currentView;
-
         public ViewModelBase CurrentView
         {
             get { return currentView; }
@@ -134,6 +161,19 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("RefreshCommand");
             }
         }
+        private bool _productionTaskBarVisible;
+        public bool ProductionTaskBarVisible
+        {
+            get
+            {
+                return _productionTaskBarVisible;
+            }
+            set
+            {
+            	_productionTaskBarVisible = value;
+                RaisePropertyChanged("ProductionTaskBarVisible");
+            }
+        }
         public RelayCommand ShowReportListCommand { get; private set; }
         public RelayCommand ShowProductionTasksConvertingCommand { get; private set; }
         public RelayCommand ShowProductionTasksPMCommand { get; private set; }
@@ -141,5 +181,16 @@ namespace Gamma.ViewModels
         public RelayCommand FindProductCommand { get; private set; }
         public RelayCommand ManageUsersCommand { get; set; }
         public RelayCommand ConfigureComPortCommand { get; set; }
+        public RelayCommand CloseShiftCommand { get; set; }
+        public RelayCommand<PlaceGroups> OpenDocCloseShiftsCommand { get; private set; }
+        public RelayCommand FindProductionTaskCommand { get; private set; }
+        public RelayCommand<int> OpenPlaceProductsCommand { get; private set; }
+        public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
+        public class PlaceProduct
+        {
+            public string Place { get; set; }
+            public RelayCommand<int> Command { get; set; }
+            public int PlaceID { get; set; }
+        }
     }
 }

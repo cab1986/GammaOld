@@ -24,27 +24,46 @@
                 </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>
                 <dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">
-                    <dxe:SpinEdit MinValue="0" AllowDefaultButton="False" EditValue="{Binding RealBasisWeight}" MaskUseAsDisplayFormat="True" 
-                                        EditValueType="{x:Type sys:Decimal}"/>
+                    <dxe:SpinEdit MinValue="0" AllowDefaultButton="False" EditValue="{Binding RealBasisWeight, UpdateSourceTrigger=LostFocus}" MaskUseAsDisplayFormat="True" 
+                                        EditValueType="{x:Type sys:Decimal}" ValidateOnTextInput="False" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Факт. Формат, мм" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" EditValue="{Binding RealFormat}" MaskType="RegEx" Mask="\d+" MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}"/>
+                        <dxe:PopupCalcEdit AllowDefaultButton="False" EditValue="{Binding RealFormat, UpdateSourceTrigger=LostFocus}" MaskType="RegEx" Mask="\d+" 
+                                           MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}" ValidateOnTextInput="False"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
-                    <dxe:SpinEdit  EditValue="{Binding BreakNumber}" MinValue="0" MaxValue="500" EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
+                        <dxe:SpinEdit  EditValue="{Binding BreakNumber, UpdateSourceTrigger=LostFocus}" MinValue="0" MaxValue="500" ValidateOnTextInput="False"
+                                   EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Weight}" EditValueType="{x:Type sys:Int32}"/>
+                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" ValidateOnTextInput="False"
+                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Length}" EditValueType="{x:Type sys:Int32}"/>
+                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" ValidateOnTextInput="False"
+                                           EditValue="{Binding Length, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}"/>
                     </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter}" EditValueType="{x:Type sys:Int32}"/>
+                    <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
+                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" ValidateOnTextInput="False"
+                                           EditValue="{Binding Diameter, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Orientation="Horizontal" View="Group">
+                <dxlc:LayoutItem Label="Качество" LabelPosition="Top" Width="150">
+                    <dxe:ListBoxEdit ItemsSource="{Binding States, UpdateSourceTrigger=LostFocus}" EditValue="{Binding StateID}" ValueMember="Key" DisplayMember="Value" Background="#FFB6D0F4">
+                        <dxe:ListBoxEdit.StyleSettings>
+                            <dxe:RadioListBoxEditStyleSettings HighlightedTextBackground="Yellow" HighlightedFontFamily="{x:Null}" HighlightedFontStyle="{x:Null}" HighlightedFontSize="{x:Null}" HighlightedTextForeground="Black" HighlightedFontWeight="{x:Null}"/>
+                        </dxe:ListBoxEdit.StyleSettings>
+                    </dxe:ListBoxEdit>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Причина" LabelPosition="Top">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding RejectionReasons, UpdateSourceTrigger=LostFocus}" EditValue="{Binding RejectionReasonID}" 
+                                      ValueMember="RejectionReasonID" DisplayMember="Description" 
+                                      FindMode="Always" AutoComplete="True" ImmediatePopup="True" IncrementalFiltering="True" AllowNullInput="True" AssignNullValueOnClearingEditText="True" ClearSelectionOnBackspace="True"/>
+                </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
     </Grid>

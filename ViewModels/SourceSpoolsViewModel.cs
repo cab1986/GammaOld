@@ -30,7 +30,7 @@ namespace Gamma.ViewModels
             SourceSpools = DB.GammaBase.SourceSpools.Where(s => s.PlaceID == WorkSession.PlaceID).FirstOrDefault();
             if (SourceSpools == null)
             {
-                SourceSpools = new SourceSpools() { PlaceID = (Guid)WorkSession.PlaceID };
+                SourceSpools = new SourceSpools() { PlaceID = (int)WorkSession.PlaceID };
                 DB.GammaBase.SourceSpools.Add(SourceSpools);
             }
             else

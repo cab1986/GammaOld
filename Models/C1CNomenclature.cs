@@ -20,10 +20,11 @@ namespace Gamma.Models
             this.C1CMeasureUnits = new HashSet<C1CMeasureUnits>();
             this.C1CNomenclature1 = new HashSet<C1CNomenclature>();
             this.C1CNomenclatureProperties = new HashSet<C1CNomenclatureProperties>();
-            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
             this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
+            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
+            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
         }
     
@@ -41,10 +42,11 @@ namespace Gamma.Models
         public virtual ICollection<C1CNomenclature> C1CNomenclature1 { get; set; }
         public virtual C1CNomenclature C1CNomenclature2 { get; set; }
         public virtual ICollection<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }
-        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
         public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
+        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
     }
 }

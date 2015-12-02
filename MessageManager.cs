@@ -40,6 +40,7 @@ namespace Gamma
         public bool ChooseSourceProduct;
         public ProductKinds ProductKind;
     }
+    public class ConfigureComPortMessage : MessageBase { }
     public class ChoosenSourceProductMessage : MessageBase
     {
         public Guid ProductID;
@@ -66,6 +67,21 @@ namespace Gamma
     
     public class ParentSaveMessage : MessageBase { }
     public class OpenManageUsersMessage : MessageBase { }
+    public class OpenDocCloseShiftMessage : MessageBase
+    {
+        public Guid? DocID;
+        public int? PlaceID;
+        public DateTime? CloseDate;
+        public byte? ShiftID;
+    }
+    public class OpenDocCloseShiftsMessage : MessageBase
+    {
+        public PlaceGroups? PlaceGroup;
+    }
+    public class FindProductionTaskMessage : MessageBase
+    {
+        public PlaceGroups PlaceGroup;
+    }
     public static class MessageManager
     {
         public static void EditUser()
@@ -126,5 +142,26 @@ namespace Gamma
         {
             Messenger.Default.Send<FindProductMessage>(msg);
         }
+        public static void OpenDocCloseShift(Guid docID)
+        {
+            Messenger.Default.Send<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage() {DocID = docID});
+        }
+        public static void OpenDocCloseShift(int placeID, DateTime closeDate, byte shiftID)
+        {
+            Messenger.Default.Send<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage() { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
+        }
+        public static void OpenDocCloseShifts(PlaceGroups placeGroup)
+        {
+            Messenger.Default.Send<OpenDocCloseShiftsMessage>(new OpenDocCloseShiftsMessage() { PlaceGroup = placeGroup });
+        }
+        public static void ConfigureComPort()
+        {
+            Messenger.Default.Send<ConfigureComPortMessage>(new ConfigureComPortMessage());
+        }
+        public static void FindProductionTask(PlaceGroups placeGroup)
+        {
+            Messenger.Default.Send<FindProductionTaskMessage>(new FindProductionTaskMessage() { PlaceGroup = placeGroup });
+        }
+
     }
 }

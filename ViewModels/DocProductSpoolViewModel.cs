@@ -7,6 +7,7 @@ using System.Linq;
 using System.Data.Entity;
 using GalaSoft.MvvmLight.Messaging;
 using Gamma.Attributes;
+using System.Collections.Generic;
 
 
 namespace Gamma.ViewModels
@@ -29,6 +30,15 @@ namespace Gamma.ViewModels
 
         public DocProductSpoolViewModel(Guid? ID, bool NewProduct)
         {
+            States = new ProductStates().ToDictionary();
+            RejectionReasons = new ObservableCollection<RejectionReason>
+                (from r in DB.GammaBase.GetSpoolRejectionReasons()
+                 select new RejectionReason
+                 {
+                     RejectionReasonID = (Guid)r.RejectionReasonID,
+                     Description = r.Description,
+                     FullDescription = r.FullDescription
+                 });
             if (NewProduct)
             {
                 var ptInfo = (from pt in DB.GammaBase.ProductionTasks
@@ -39,6 +49,7 @@ namespace Gamma.ViewModels
                     NomenclatureID = ptInfo.NomenclatureID;
                     CharacteristicID = ptInfo.CharacteristicID;
                 }
+                RealFormat = DB.GetLastFormat(WorkSession.PlaceID);
             }
             else
             {
@@ -57,6 +68,12 @@ namespace Gamma.ViewModels
                 BreakNumber = ProductSpool.BreakNumber;
                 Weight = ProductSpool.Weight;
                 IsConfirmed = DocProduct.IsInConfirmed ?? false;
+                StateID = (from d in DB.GammaBase.DocProducts
+                    where d.ProductID == Product.ProductID
+                    join dpc in DB.GammaBase.DocProductChangeState on d.DocID equals dpc.DocID
+                    orderby
+                    d.Docs.Date descending
+                    select dpc.StateID).Take(1).FirstOrDefault();
             }
             Bars.Add(ReportManager.GetReportBar("Spool"));
         }
@@ -192,7 +209,7 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             if (Product == null)
             {
-                Product = new Products() { ProductID = Guid.NewGuid(), ProductKindID = (int)ProductKinds.ProductSpool };
+                Product = new Products() { ProductID = SQLGuidUtil.NewSequentialId(), ProductKindID = (int)ProductKinds.ProductSpool };
                 ProductSpool = new ProductSpools() { ProductID = Product.ProductID };
                 DocProduct = new DocProducts()
                 {
@@ -205,6 +222,33 @@ namespace Gamma.ViewModels
                 DB.GammaBase.Products.Add(Product);
                 DB.GammaBase.ProductSpools.Add(ProductSpool);
                 DB.GammaBase.DocProducts.Add(DocProduct);
+                if (StateID != (byte)ProductStates.Good)
+                    DB.GammaBase.DocProductChangeState.Add(new DocProductChangeState() { DocID = DocID, StateID = StateID });
+            }
+            else
+            {
+                var stateID = (from d in DB.GammaBase.DocProducts where d.ProductID == Product.ProductID
+                               join dpc in DB.GammaBase.DocProductChangeState on d.DocID equals dpc.DocID
+                               orderby
+                               d.Docs.Date descending
+                                   select dpc.StateID).Take(1).FirstOrDefault();
+                if (stateID != StateID)
+                {
+                    var docChangeID = SQLGuidUtil.NewSequentialId();
+                    var docProducts = new Collection<DocProducts>();
+                    docProducts.Add(new DocProducts() { DocID = docChangeID, ProductID = Product.ProductID });
+                    var doc = new Docs()
+                    {
+                        DocID = docChangeID,
+                        Date = DB.CurrentDateTime,
+                        DocTypeID = (byte)DocTypes.DocChangeState,
+                        IsConfirmed = true,
+                        UserID = WorkSession.UserID,
+                        DocProductChangeState = new DocProductChangeState() { StateID = StateID, DocID = docChangeID },
+                        DocProducts = docProducts
+                    };
+                    DB.GammaBase.Docs.Add(doc);
+                }
             }
             ProductSpool.C1CNomenclatureID = NomenclatureID;
             ProductSpool.C1CCharacteristicID = CharacteristicID;
@@ -236,5 +280,24 @@ namespace Gamma.ViewModels
         {
             return !IsConfirmed && DB.HaveWriteAccess("ProductSpools");
         }
+        private byte _stateID;
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public byte StateID
+        {
+            get
+            {
+                return _stateID;
+            }
+            set
+            {
+            	_stateID = value;
+                RaisePropertyChanged("StateID");
+            }
+        }
+        public Dictionary<byte, string> States { get; set; }
+        public ObservableCollection<RejectionReason> RejectionReasons { get; set; }
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public Guid? RejectionReasonID { get; set; }
+
     }
 }

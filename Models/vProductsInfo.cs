@@ -18,7 +18,7 @@ namespace Gamma.Models
         public System.Guid ProductID { get; set; }
         public Nullable<byte> ProductKindID { get; set; }
         public string Number { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public System.DateTime Date { get; set; }
         public string BarCode { get; set; }
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
@@ -26,5 +26,10 @@ namespace Gamma.Models
         public string NomenclatureName { get; set; }
         public string Place { get; set; }
         public Nullable<byte> ShiftID { get; set; }
+        public byte StateID { get; set; }
+        public bool IsConfirmed { get; set; }
+        public bool IsWrittenOff { get; set; }
+        public string State { get; set; }
+        public Nullable<int> PlaceID { get; set; }
     }
 }

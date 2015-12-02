@@ -27,12 +27,7 @@ namespace Gamma.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<DocMovement> DocMovement { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
-        public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual DbSet<ProductPallets> ProductPallets { get; set; }
-        public virtual DbSet<Rests> Rests { get; set; }
         public virtual DbSet<RolePermits> RolePermits { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Permits> Permits { get; set; }
@@ -41,26 +36,37 @@ namespace Gamma.Models
         public virtual DbSet<C1CMeasureUnits> C1CMeasureUnits { get; set; }
         public virtual DbSet<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }
         public virtual DbSet<C1CProperties> C1CProperties { get; set; }
-        public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<Templates> Templates { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
-        public virtual DbSet<DocProduction> DocProduction { get; set; }
-        public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
-        public virtual DbSet<SourceSpools> SourceSpools { get; set; }
-        public virtual DbSet<Docs> Docs { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<PermitTables> PermitTables { get; set; }
-        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<C1CEnumGroupTypes> C1CEnumGroupTypes { get; set; }
         public virtual DbSet<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         public virtual DbSet<C1CPropertyValues> C1CPropertyValues { get; set; }
         public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
+        public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        public virtual DbSet<ProductPallets> ProductPallets { get; set; }
+        public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
+        public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
+        public virtual DbSet<DocTypes> DocTypes { get; set; }
+        public virtual DbSet<C1CRejectionReasons> C1CRejectionReasons { get; set; }
+        public virtual DbSet<DocProductChangeState> DocProductChangeState { get; set; }
+        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
+        public virtual DbSet<DocMovement> DocMovement { get; set; }
+        public virtual DbSet<DocProduction> DocProduction { get; set; }
+        public virtual DbSet<Docs> Docs { get; set; }
+        public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
+        public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
+        public virtual DbSet<Rests> Rests { get; set; }
+        public virtual DbSet<SourceSpools> SourceSpools { get; set; }
+        public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
     
         public virtual ObjectResult<Nullable<byte>> UserPermit(string tableName)
         {
@@ -103,13 +109,54 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharPropsDescriptions_Result>("GetCharPropsDescriptions", characteristicIDParameter);
         }
     
-        public virtual ObjectResult<Nullable<decimal>> GetCharSpoolFormat(Nullable<System.Guid> characteristicID)
+        public virtual ObjectResult<Nullable<int>> GetCharSpoolFormat(Nullable<System.Guid> characteristicID)
         {
             var characteristicIDParameter = characteristicID.HasValue ?
                 new ObjectParameter("CharacteristicID", characteristicID) :
                 new ObjectParameter("CharacteristicID", typeof(System.Guid));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<decimal>>("GetCharSpoolFormat", characteristicIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetCharSpoolFormat", characteristicIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocCloseShiftPMSpools_Result> GetDocCloseShiftPMSpools(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftPMSpools_Result>("GetDocCloseShiftPMSpools", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GetSpoolRejectionReasons_Result> GetSpoolRejectionReasons()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpoolRejectionReasons_Result>("GetSpoolRejectionReasons");
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> GetActiveSourceSpools(Nullable<int> placeID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("GetActiveSourceSpools", placeIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductRelations_Result> GetProductRelations(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductRelations_Result>("GetProductRelations", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTasks_Result2> GetProductionTasks(Nullable<int> placeGroupID)
+        {
+            var placeGroupIDParameter = placeGroupID.HasValue ?
+                new ObjectParameter("PlaceGroupID", placeGroupID) :
+                new ObjectParameter("PlaceGroupID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result2>("GetProductionTasks", placeGroupIDParameter);
         }
     }
 }

@@ -16,21 +16,34 @@ namespace Gamma.Models
     {
         public Docs()
         {
+            this.DocCloseShiftRemainders = new HashSet<DocCloseShiftRemainders>();
             this.DocProducts = new HashSet<DocProducts>();
+            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
+            this.DocCloseShiftDocs = new HashSet<Docs>();
+            this.Docs2 = new HashSet<Docs>();
         }
     
         public System.Guid DocID { get; set; }
         public Nullable<int> DocTypeID { get; set; }
         public string Number { get; set; }
-        public Nullable<bool> IsConfirmed { get; set; }
+        public bool IsConfirmed { get; set; }
         public Nullable<System.Guid> UserID { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public Nullable<int> PlaceID { get; set; }
+        public Nullable<byte> ShiftID { get; set; }
+        public System.DateTime Date { get; set; }
         public string Comment { get; set; }
     
+        public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DocMovement DocMovement { get; set; }
+        public virtual DocProductChangeState DocProductChangeState { get; set; }
         public virtual DocProduction DocProduction { get; set; }
         public virtual ICollection<DocProducts> DocProducts { get; set; }
+        public virtual DocTypes DocTypes { get; set; }
+        public virtual Places Places { get; set; }
         public virtual DocWithdrawal DocWithdrawal { get; set; }
+        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        public virtual ICollection<Docs> DocCloseShiftDocs { get; set; }
+        public virtual ICollection<Docs> Docs2 { get; set; }
         public virtual Users Users { get; set; }
     }
 }

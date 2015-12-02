@@ -21,10 +21,11 @@ namespace Gamma.Models
     
         public System.Guid DocID { get; set; }
         public Nullable<System.Guid> ProductionTaskID { get; set; }
-        public Nullable<System.Guid> InPlaceID { get; set; }
+        public Nullable<int> InPlaceID { get; set; }
     
-        public virtual Places Places { get; set; }
-        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual Places Places { get; set; }
+        public virtual ProductionTasks ProductionTasks { get; set; }
+        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
     }
 }

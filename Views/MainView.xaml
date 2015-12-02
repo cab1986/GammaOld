@@ -10,6 +10,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+    xmlns:g="clr-namespace:Gamma"
     x:Class="Gamma.MainView" 
     mc:Ignorable="d ignore" 
     Title="Gamma"
@@ -23,13 +24,16 @@
         <DataTemplate DataType="{x:Type vm:ProductionTasksRWViewModel}">
             <Views:ProductionTasksRWView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PlaceProductsViewModel}">
+            <Views:PlaceProductsView />
+        </DataTemplate>
     </Window.Resources>
     <Window.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}" />
     </Window.DataContext>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="LostFocus" />
-    </dxmvvm:Interaction.Behaviors>
+     </dxmvvm:Interaction.Behaviors>
     <Grid>
         <dxb:BarManager AllowCustomization="False">
             <dxb:BarManager.Bars>
@@ -40,7 +44,21 @@
                             <dxb:BarButtonItem Content="Задания на пр-во ПРС" Command="{Binding ShowProductionTasksRWCommand}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
-                    
+                    <dxb:BarSubItem Content="Документы">
+                        <dxb:BarSubItem Content="Закрытия смен">
+                            <dxb:BarButtonItem Content="Закрытие смен БДМ" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.PM}" />
+                            <dxb:BarButtonItem Content="Закрытие смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.RW}" />
+                        </dxb:BarSubItem>
+                    </dxb:BarSubItem>
+                    <dxb:BarSubItem Content="Производство" ItemLinksSource="{Binding PlaceProducts}">
+                        <dxb:BarSubItem.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl>
+                                    <dxb:BarButtonItem Content="{Binding Place}" Command="{Binding Command}" CommandParameter="{Binding PlaceID}" />
+                                </ContentControl>
+                            </DataTemplate>
+                        </dxb:BarSubItem.ItemTemplate>
+                    </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">
                             <dxb:BarButtonItem Content="Редактирование шаблонов отчетов" Command="{Binding ShowReportListCommand}" />
@@ -53,8 +71,11 @@
                     <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding NewItemCommand}" />
                     <dxb:BarButtonItem Content="Редактировать" LargeGlyph="{dx:DXImage Image=Edit_32x32.png}" Command="{Binding EditItemCommand}" />
                     <dxb:BarButtonItem Content="Обновить" LargeGlyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshCommand}" />
-                    <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" />
-
+                    <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" BarItemDisplayMode="ContentAndGlyph" />
+                    <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" Command="{Binding CloseShiftCommand}"/>
+                </dxb:Bar>
+                <dxb:Bar UseWholeRow="True" Visible="{Binding ProductionTaskBarVisible}">
+                    <dxb:BarButtonItem Content="Найти задание" BarItemDisplayMode="ContentAndGlyph" Glyph="{dx:DXImage Image=Find_16x16.png}" Command="{Binding FindProductionTaskCommand}"/>
                 </dxb:Bar>
                 <dxb:Bar Caption="StatusBar" IsStatusBar="True" ShowSizeGrip="True">
                     <dxb:Bar.DockInfo>

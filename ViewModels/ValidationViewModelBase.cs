@@ -28,10 +28,10 @@ namespace Gamma.ViewModels
             {
                 get
                 {
-                if (this.propertyGetters.ContainsKey(propertyName))
+                if (propertyGetters.ContainsKey(propertyName))
                     {
-                        var propertyValue = this.propertyGetters[propertyName](this);
-                        var errorMessages = this.validators[propertyName]
+                        var propertyValue = propertyGetters[propertyName](this);
+                        var errorMessages = validators[propertyName]
                             .Where(v => !v.IsValid(propertyValue))
                             .Select(v => v.ErrorMessage).ToArray();
 
@@ -49,9 +49,9 @@ namespace Gamma.ViewModels
         {
             get
             {
-                var errors = from validator in this.validators
+                var errors = from validator in validators
                              from attribute in validator.Value
-                             where !attribute.IsValid(this.propertyGetters[validator.Key](this))
+                             where !attribute.IsValid(propertyGetters[validator.Key](this))
                              select attribute.ErrorMessage;
 
                 return string.Join(Environment.NewLine, errors.ToArray());
@@ -65,11 +65,11 @@ namespace Gamma.ViewModels
         {
             get
             {
-                var query = from validator in this.validators
-                            where validator.Value.All(attribute => attribute.IsValid(this.propertyGetters[validator.Key](this)))
+                var query = from validator in validators
+                            where validator.Value.All(attribute => attribute.IsValid(propertyGetters[validator.Key](this)))
                             select validator;
 
-                var count = query.Count() - this.validationExceptionCount;
+                var count = query.Count() - validationExceptionCount;
                 return count;
             }
         }
@@ -81,21 +81,21 @@ namespace Gamma.ViewModels
         {
             get
             {
-                return this.validators.Count();
+                return validators.Count();
             }
         }
 
         public ValidationViewModelBase()
         {
-            this.validators = this.GetType()
+            validators = GetType()
                 .GetProperties()
-                .Where(p => this.GetValidations(p).Length != 0)
-                .ToDictionary(p => p.Name, p => this.GetValidations(p));
+                .Where(p => GetValidations(p).Length != 0)
+                .ToDictionary(p => p.Name, p => GetValidations(p));
 
-            this.propertyGetters = this.GetType()
+            propertyGetters = GetType()
                 .GetProperties()
-                .Where(p => this.GetValidations(p).Length != 0)
-                .ToDictionary(p => p.Name, p => this.GetValueGetter(p));
+                .Where(p => GetValidations(p).Length != 0)
+                .ToDictionary(p => p.Name, p => GetValueGetter(p));
         }
 
         private ValidationAttribute[] GetValidations(PropertyInfo property)
@@ -112,13 +112,13 @@ namespace Gamma.ViewModels
 
         public void ValidationExceptionsChanged(int count)
         {
-            this.validationExceptionCount = count;
-            this.RaisePropertyChanged("ValidPropertiesCount");
+            validationExceptionCount = count;
+            RaisePropertyChanged("ValidPropertiesCount");
         }
 
         public virtual bool IsValid
         {
-            get { return (this.ValidPropertiesCount == this.TotalPropertiesWithValidationCount); }
+            get { return (ValidPropertiesCount == TotalPropertiesWithValidationCount); }
         }
         
     }

@@ -12,21 +12,34 @@ namespace Gamma
         [Description("Тамбура")]
         ProductSpool, 
         [Description("Паллеты")]
-        ProductPallet
+        ProductPallet,
+        [Description("Групповые упаковки")]
+        ProductGroupPack
     }
-    public enum PlaceGroups { PM, RW, Convertings }  // Группы переделов. Привязаны к таблице в базе, менять только вместе!
-    public enum ProductStatesFilter
+    public enum PlaceGroups { PM, RW, Convertings, WR, Other }  // Группы переделов. Привязаны к таблице в базе, менять только вместе!
+    public enum ProductStates // Состояние продукции
     {
-        [Description("Не подтвержден")]
-        NotConfirmed,
         [Description("Годная")]
         Good,
         [Description("На утилизацию")]
         Broke,
         [Description("Требует решения")]
-        NeedDecision,
+        NeedsDecision,
         [Description("Ограниченная партия")]
         Limited
+    } 
+    public enum ProductStatesFilter
+    {
+        [Description("Годная")]
+        Good,
+        [Description("На утилизацию")]
+        Broke,
+        [Description("Требует решения")]
+        NeedsDecision,
+        [Description("Ограниченная партия")]
+        Limited,
+        [Description("Не подтвержден")]
+        NotConfirmed
     }
     public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder}
     
@@ -40,7 +53,9 @@ namespace Gamma
     {
         DocProduction,
         DocWithdrawal,
-        DocMovement
+        DocMovement,
+        DocCloseShift,
+        DocChangeState
     }
     public enum PermissionMark
     {

@@ -20,16 +20,16 @@ namespace Gamma.Models
         }
     
         public System.Guid UserID { get; set; }
-        public Nullable<System.Guid> RoleID { get; set; }
+        public System.Guid RoleID { get; set; }
         public string Login { get; set; }
         public string Name { get; set; }
         public string Post { get; set; }
         public Nullable<System.DateTime> PassChange { get; set; }
         public Nullable<bool> PassMustChange { get; set; }
-        public System.Guid PlaceID { get; set; }
+        public int PlaceID { get; set; }
         public bool Exports { get; set; }
         public bool DBAdmin { get; set; }
-        public Nullable<byte> ShiftID { get; set; }
+        public byte ShiftID { get; set; }
     
         public virtual ICollection<Docs> Docs { get; set; }
         public virtual Places Places { get; set; }

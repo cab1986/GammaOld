@@ -27,10 +27,15 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<BarcodeMessage>(this,BarcodeReceived);
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKinds));
             ProductKindsList.Add("Все");
-            States = Functions.EnumDescriptionsToList(typeof(ProductStatesFilter));
+            States = Functions.EnumDescriptionsToList(typeof(ProductStates));
+            States.Add("Любое");
+            SelectedStateIndex = States.Count - 1;
             ResetSearchCommand = new RelayCommand(ResetSearch);
-            FindCommand = new RelayCommand(Find);
+            FindCommand = new RelayCommand(() => Find(false));
             ChooseProductCommand = new RelayCommand(ChooseProduct, () => SelectedProduct != null);
+            ActivatedCommand = new RelayCommand(() => IsActive = true);
+            DeactivatedCommand = new RelayCommand(() => IsActive = false);
+            OpenProductCommand = new RelayCommand(OpenProduct, () => SelectedProduct != null);
             PlacesList = (from p in DB.GammaBase.Places
                           select new
                           Place
@@ -116,49 +121,77 @@ namespace Gamma.ViewModels
         }
         public void BarcodeReceived(BarcodeMessage msg)
         {
+            if (!IsActive) return;
             ResetSearch();
             Barcode = msg.Barcode;
-            Find();
+            Find(true);
             if (ButtonPanelVisible && FoundProducts.Count == 1)
             {
                 SelectedProduct = FoundProducts.First();
                 ChooseProduct();
             }
         }
-        public RelayCommand FindCommand { get; set; }
-        public RelayCommand ResetSearchCommand { get; set; }
-        private void Find()
+        public RelayCommand FindCommand { get; private set; }
+        public RelayCommand ResetSearchCommand { get; private set; }
+
+        private void Find(bool IsFromScanner)
         {
-            Guid charID = SelectedCharacteristic == null ? new Guid() : SelectedCharacteristic.CharacteristicID;
-            var selectedPlaces = new List<string>();
-            if (SelectedPlaces != null)
-                selectedPlaces = SelectedPlaces.Cast<string>().ToList();
-            FoundProducts = new ObservableCollection<ProductInfo>
-            (
-            from pinfo in DB.GammaBase.vProductsInfo
-            where 
-            (pinfo.Number == Number || Number == "") &&
-            (pinfo.BarCode == Barcode || Barcode == "") &&
-            (NomenclatureID == new Guid() ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
-            (charID == new Guid() ? true : pinfo.C1CCharacteristicID == charID) &&
-            (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count-1) &&
-            ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd)) 
-            &&
-            (selectedPlaces.Contains(pinfo.Place))
-            select new ProductInfo
+            if (IsFromScanner)
             {
-                DocProductID = pinfo.DocID,
-                ProductID = pinfo.ProductID,
-                Number = pinfo.Number,
-                CharacteristicID = pinfo.C1CCharacteristicID,
-                Date = pinfo.Date,
-                NomenclatureID = pinfo.C1CNomenclatureID,
-                NomenclatureName = pinfo.NomenclatureName,
-                ProductKind = (ProductKinds)pinfo.ProductKindID,
-                Quantity = pinfo.Quantity,
-                ShiftID = pinfo.ShiftID
+                FoundProducts = new ObservableCollection<ProductInfo>
+                (
+                from pinfo in DB.GammaBase.vProductsInfo
+                where pinfo.BarCode == Barcode
+                select new ProductInfo
+                {
+                    DocProductID = pinfo.DocID,
+                    ProductID = pinfo.ProductID,
+                    Number = pinfo.Number,
+                    CharacteristicID = pinfo.C1CCharacteristicID,
+                    Date = pinfo.Date,
+                    NomenclatureID = pinfo.C1CNomenclatureID,
+                    NomenclatureName = pinfo.NomenclatureName,
+                    ProductKind = (ProductKinds)pinfo.ProductKindID,
+                    Quantity = pinfo.Quantity,
+                    ShiftID = pinfo.ShiftID
+                }
+                );
             }
-            );
+            else
+            {
+                Guid charID = SelectedCharacteristic == null ? new Guid() : SelectedCharacteristic.CharacteristicID;
+                var selectedPlaces = new List<string>();
+                if (SelectedPlaces != null)
+                    selectedPlaces = SelectedPlaces.Cast<string>().ToList();
+                FoundProducts = new ObservableCollection<ProductInfo>
+                (
+                from pinfo in DB.GammaBase.vProductsInfo
+                where
+                (Number == null || pinfo.Number == Number || Number == "") &&
+                (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
+                (NomenclatureID == new Guid() ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
+                (charID == new Guid() ? true : pinfo.C1CCharacteristicID == charID) &&
+                (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count - 1) &&
+                ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd))
+                &&
+                (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
+                (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
+                select new ProductInfo
+                {
+                    DocProductID = pinfo.DocID,
+                    ProductID = pinfo.ProductID,
+                    Number = pinfo.Number,
+                    CharacteristicID = pinfo.C1CCharacteristicID,
+                    Date = pinfo.Date,
+                    NomenclatureID = pinfo.C1CNomenclatureID,
+                    NomenclatureName = pinfo.NomenclatureName,
+                    ProductKind = (ProductKinds)pinfo.ProductKindID,
+                    Quantity = pinfo.Quantity,
+                    ShiftID = pinfo.ShiftID,
+                    State = pinfo.State
+                }
+                );
+            }
         }
         private void ResetSearch()
         {
@@ -167,8 +200,8 @@ namespace Gamma.ViewModels
             NomenclatureID = new Guid();
             DateBegin = null;
             DateEnd = null;
-            if (SelectedPlaces != null)
-                SelectedPlaces.Clear();
+            if (SelectedPlaces != null) SelectedPlaces = null;
+            SelectedStateIndex = States.Count - 1;
         }      
         private byte _selectedProductKindIndex;
         public byte SelectedProductKindIndex
@@ -184,7 +217,7 @@ namespace Gamma.ViewModels
             }
         }
         public List<string> ProductKindsList { get; set; }
-        public IEnumerable<string> States { get; set; }
+        public List<string> States { get; set; }
         private int _selectedStateIndex;
         public int SelectedStateIndex
         {
@@ -197,11 +230,6 @@ namespace Gamma.ViewModels
                 _selectedStateIndex = value;
                 RaisePropertyChanged("SelectedStateIndex");
             }
-        }
-        public class Place
-        {
-           public Guid PlaceID { get; set; }
-           public string PlaceName { get; set; }
         }
         public List<Place> PlacesList { get; set; }
         private List<Object> _selectedPlaces = new List<Object>();
@@ -253,6 +281,19 @@ namespace Gamma.ViewModels
             if (SelectedProduct == null) return;
             Messenger.Default.Send<ChoosenSourceProductMessage>(new ChoosenSourceProductMessage { ProductID = (Guid)SelectedProduct.ProductID });
             CloseWindow();
+        }
+        public RelayCommand ActivatedCommand { get; private set; }
+        public RelayCommand DeactivatedCommand { get; private set; }
+        private bool IsActive { get; set; }
+        public RelayCommand OpenProductCommand { get; private set; }
+        private void OpenProduct()
+        {
+            MessageManager.OpenDocProduct(new OpenDocProductMessage()
+                {
+                    DocProductKind = SelectedProduct.ProductKind == ProductKinds.ProductSpool ? DocProductKinds.DocProductSpool : DocProductKinds.DocProductPallet,
+                    ID = SelectedProduct.ProductID,
+                    IsNewProduct = false
+                });
         }
     }
 }

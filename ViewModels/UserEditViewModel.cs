@@ -16,7 +16,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class UserEditViewModel : DataBaseEditViewModel
+    public class UserEditViewModel : SaveImplementedViewModel
     {
         /// <summary>
         /// Initializes a new instance of the NewUserViewModel class.
@@ -79,11 +79,11 @@ namespace Gamma.ViewModels
         [Required(ErrorMessage="Пароль не может быть пустым")]
         public string Password { get; set; }
         [Required(ErrorMessage="Не указано подразделение")]
-        public Guid PlaceID { get; set; }
+        public int PlaceID { get; set; }
         public string Post { get; set; }
         [Required(ErrorMessage = "Укажите роль доступа пользователя")]
-        public Guid? RoleID { get; set; }
-        public byte? ShiftID
+        public Guid RoleID { get; set; }
+        public byte ShiftID
         {
             get
             {
@@ -97,7 +97,7 @@ namespace Gamma.ViewModels
         private Guid UserID { get; set; }
         private string _login;
         private string _name;
-        private byte? _shiftID = 0;
+        private byte _shiftID = 0;
         private Users User { get; set; }
         
         public override void SaveToModel()

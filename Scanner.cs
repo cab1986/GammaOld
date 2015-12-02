@@ -29,7 +29,7 @@ namespace Gamma
             {
                 ComPort = new SerialPort(AppSettings.ComPort) 
                 { BaudRate = AppSettings.BaudRate, Parity = AppSettings.Parity, StopBits = AppSettings.StopBits, DataBits = AppSettings.DataBits, 
-                    Handshake = AppSettings.HandShake };
+                    Handshake = AppSettings.HandShake, NewLine = "\r" };
             }
             catch (Exception)
             {
@@ -37,7 +37,7 @@ namespace Gamma
                 return;
             }
 
-            ComPort.DataReceived += new SerialDataReceivedEventHandler(BarcodeReceive);
+            ComPort.DataReceived += BarcodeReceive;
 
             try
             {
@@ -55,7 +55,7 @@ namespace Gamma
 
         private static void BarcodeReceive(object sender, SerialDataReceivedEventArgs e)
         {
-            string received_data = ComPort.ReadExisting();
+            string received_data = ComPort.ReadLine();
             Messenger.Default.Send<BarcodeMessage>(new BarcodeMessage {Barcode = received_data});
         }
 
