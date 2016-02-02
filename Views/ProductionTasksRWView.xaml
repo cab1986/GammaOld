@@ -15,8 +15,8 @@
                          >
             <dxg:GridControl.Bands >
                 <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center">
-                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="100"/>
-                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="70"/>
+                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="120" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="100" FixedWidth="True"/>
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Номенклатура и раскрой" HorizontalHeaderContentAlignment="Center">
                     <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" AllowBestFit="True"/>
@@ -38,8 +38,8 @@
                     <dxg:GridColumn Binding="{Binding Format[15], Mode=TwoWay}" Header="16" dxg:BandBase.GridRow="1" AllowBestFit="True" Width="50" FixedWidth="True"/>
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Выполнение">
-                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True"/>
-                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" FixedWidth="True" Width="120"/>
+                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True" Width="150" FixedWidth="True" />
                 </dxg:GridControlBand>
             </dxg:GridControl.Bands>
             <dxg:GridControl.View>

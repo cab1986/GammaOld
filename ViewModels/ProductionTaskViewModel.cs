@@ -34,11 +34,13 @@ namespace Gamma.ViewModels
                 case ProductionTaskKinds.ProductionTaskPM:
                     Places = DB.GetPlaces(PlaceGroups.PM);
                     NewProductText = "Создать новый тамбур";
+                    PlaceGroupID = (int)PlaceGroups.PM;
                     break;
                 case ProductionTaskKinds.ProductionTaskRW:
                     Places = DB.GetPlaces(PlaceGroups.RW);
                     CharacteristicVisible = Visibility.Collapsed;
                     NewProductText = "Создать новый съём";
+                    PlaceGroupID = (int)PlaceGroups.RW;
                     break;
                 default:
                     break;
@@ -48,6 +50,9 @@ namespace Gamma.ViewModels
                 Date = DB.CurrentDateTime;
                 Title = "Новое задание на производство";
                 IsActual = false;
+                if (Places.Count > 0)
+                    PlaceID = Places[0].PlaceID;
+                ProductionTaskStateID = 0;
             }
             else
             {
@@ -57,7 +62,7 @@ namespace Gamma.ViewModels
             }
             ProductionTaskKind = msg.ProductionTaskKind;
             CreateNewProductCommand = new RelayCommand(CreateNewProduct,CanCreateNewProduct);
-            ProductionTaskStateID = 0;
+            
         }
 
         private bool CanCreateNewProduct()
@@ -126,7 +131,7 @@ namespace Gamma.ViewModels
         public DateTime? DateEnd { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public string Comment { get; set; }
-        public RelayCommand CreateNewProductCommand { get; private set; } 
+        public RelayCommand CreateNewProductCommand { get; private set; } // Создание нового продукта. В конструкторе привязка к CreateNewProduct();
 
         public bool IsReadOnly
         {
@@ -254,28 +259,39 @@ namespace Gamma.ViewModels
             ProductionTask.UserID = WorkSession.UserID;
             ProductionTask.ProductionTaskKindID = (short)ProductionTaskKind;
             ProductionTask.ProductionTaskStateID = ProductionTaskStateID;
-
         }
+        //Создание нового продукта
         private void CreateNewProduct()
         {
-            var msg = new OpenDocProductMessage();
+            var docProductKind = new DocProductKinds();
+            
             switch (ProductionTaskKind)
             {
                 case ProductionTaskKinds.ProductionTaskPM:
-                    msg = new OpenDocProductMessage { DocProductKind = DocProductKinds.DocProductSpool, ID = ProductionTaskID, IsNewProduct = true };
+                    docProductKind = DocProductKinds.DocProductSpool;
+                    // Проверка на наличие тамбура с предыдущей смены
+                    var docProduction = DB.GammaBase.Docs.Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == null).FirstOrDefault();
+                    //Если нашли, то устанавливаем дату, смену и открываем для редактирования
+                    if (docProduction != null)
+                    {
+                        docProduction.Date = DB.CurrentDateTime;
+                        docProduction.ShiftID = WorkSession.ShiftID;
+                        docProduction.UserID = WorkSession.UserID;
+                        var productID = DB.GammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).Select(d => d.ProductID).First();
+                        DB.GammaBase.SaveChanges();
+                        DB.GammaBase.GenerateNewNumbersForDoc(docProduction.DocID);
+                        MessageManager.OpenDocProduct(docProductKind, productID);
+                        return;
+                    }
                     break;
                 case ProductionTaskKinds.ProductionTaskRW:
-                    msg = new OpenDocProductMessage
-                    {
-                        DocProductKind = DocProductKinds.DocProductUnload,
-                        ID = ProductionTaskID,
-                        IsNewProduct = true
-                    };
+                    if (!SourceSpoolsCorrect()) return;
+                    docProductKind = DocProductKinds.DocProductUnload;
                     break;
                 default:
                     break;
             }
-            MessageManager.OpenDocProduct(msg);
+            MessageManager.CreateNewProduct(docProductKind, ProductionTaskID);
         }
         private bool _isActual = true;
         private ObservableCollection<Place> _places = DB.GetPlaces(PlaceGroups.PM);
@@ -327,17 +343,17 @@ namespace Gamma.ViewModels
         }
         private void ShowProduct()
         {
-            OpenDocProductMessage msg;
+            DocProductKinds docProductKind;
             switch (SelectedProductionTaskProduct.ProductKind)
             {
                 case ProductKinds.ProductSpool:
-                    msg = new OpenDocProductMessage() { ID = SelectedProductionTaskProduct.ProductID, DocProductKind = DocProductKinds.DocProductSpool };
+                    docProductKind = DocProductKinds.DocProductSpool;
                     break;
                 default:
-                    msg = new OpenDocProductMessage();
-                    break;
+                    MessageBox.Show("Ошибка программы, действие не предусмотрено");
+                    return;
             }
-            MessageManager.OpenDocProduct(msg);
+            MessageManager.OpenDocProduct(docProductKind, SelectedProductionTaskProduct.ProductID);
             
         }
         private ObservableCollection<ProductInfo> _productionTaskProducts;
@@ -400,10 +416,54 @@ namespace Gamma.ViewModels
         public Dictionary<byte, string> TaskStates { get; set; }
         protected override bool CanChooseNomenclature()
         {
-            return (DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite) || WorkSession.DBAdmin;
+            return DB.HaveWriteAccess("ProductionTasks") && !IsReadOnly;
         }
         public bool ChangeStateReadOnly { get; set; }
         public string Title { get; set; }
+        private bool SourceSpoolsCorrect()
+        {
+            var sourceSpools = DB.GammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
+            if (sourceSpools.Count == 0)
+            {
+                MessageBox.Show("Нет активных раскатов");
+                return false;
+            }
+            var ptCharacteristicID = (from ptrw in DB.GammaBase.ProductionTaskRWCutting
+                                    where
+                                        ptrw.ProductionTaskID == ProductionTaskID
+                                    select ptrw.C1CCharacteristicID).FirstOrDefault();
+            if (ptCharacteristicID == null)
+            {
+                MessageBox.Show("В задании не указан раскрой");
+                return false;
+            }
+            var ptCharProps = DB.GammaBase.GetCharPropsDescriptions(ptCharacteristicID).FirstOrDefault();
+            int sourceLayerNumbers = 0;
+            foreach (var spoolID in sourceSpools)
+            {
+                var nomenclatureID = DB.GammaBase.ProductSpools.Where(p => p.ProductID == spoolID).Select(p => p.C1CNomenclatureID).FirstOrDefault();
+                if (NomenclatureID != nomenclatureID)
+                {
+                    MessageBox.Show("Тамбура на раскатах не подходят для данного задания", "Не те тамбура на раскатах", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return false;
+                }
+                var characteristicID = DB.GammaBase.ProductSpools.Where(p => p.ProductID == spoolID).Select(p => p.C1CCharacteristicID).FirstOrDefault();
+                var sSpoolCharProps = DB.GammaBase.GetCharPropsDescriptions(characteristicID).FirstOrDefault();
+                if (ptCharProps.Color != sSpoolCharProps.Color)
+                {
+                    MessageBox.Show("Цвет тамбура на раскате не соответствует заданию");
+                    return false;
+                }
+                sourceLayerNumbers = sourceLayerNumbers + DB.GammaBase.GetCharSpoolLayerNumber(characteristicID).FirstOrDefault() ?? 0;
+            }
+            var ptLayerNumber = DB.GammaBase.GetCharSpoolLayerNumber(ptCharacteristicID).FirstOrDefault();
+            if (ptLayerNumber != sourceLayerNumbers)
+            {
+                MessageBox.Show("Несовпадение слойности");
+                return false;
+            }
+            return true;
+        }
     }
 
 }

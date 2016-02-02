@@ -1,8 +1,19 @@
-﻿<Window xmlns:my="http://schemas.devexpress.com/winfx/2008/xaml/charts/rangecontrolclient"  xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"  xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.FindProductionTaskView"
-        Title="{Binding Title}" Height="300" Width="500" Background="#FFB1CEF3">
+﻿<Window 
+    xmlns:my="http://schemas.devexpress.com/winfx/2008/xaml/charts/rangecontrolclient" 
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
+    x:Class="Gamma.Views.FindProductionTaskView"
+    xmlns:g="clr-namespace:Gamma"
+    Title="{Binding Title}" 
+    Height="{g:SettingBinding FindProductionTaskHeight}"
+    Width="{g:SettingBinding FindProductionTaskWidth}"
+    Left="{g:SettingBinding FindProductionTaskLeft}"
+    Top="{g:SettingBinding FindProductionTaskTop}" 
+    Background="#FFB1CEF3">
     <Grid>
 
         <dxlc:LayoutControl Orientation="Vertical">

@@ -15,12 +15,9 @@ namespace Gamma
         private const string FileName = "AppSettings.xml";
 
         // Параметры com-порта сканера
-        public string ComPort = "";
-        public int BaudRate = 9600;
-        public Parity Parity = Parity.None;
-        public StopBits StopBits = StopBits.One;
-        public int DataBits = 8;
-        public Handshake HandShake = Handshake.None;
+        public ComPort ScannerComPort = new ComPort();
+
+        public ComPort ScalesComPort = new ComPort();
 
         //Параметры подключения к бд
         public string HostName = "";
@@ -98,5 +95,16 @@ namespace Gamma
             }
         }
         public static string SQLConnectionString { get; private set; }
+        [Serializable]
+        public class ComPort
+        {
+            public string ComPortNumber = "";
+            public int BaudRate = 9600;
+            public Parity Parity = Parity.None;
+            public StopBits StopBits = StopBits.One;
+            public int DataBits = 8;
+            public Handshake HandShake = Handshake.None;
+        }
     }
+   
 }

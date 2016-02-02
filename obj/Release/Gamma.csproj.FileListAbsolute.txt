@@ -87,7 +87,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraLayout.v15.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraPrinting.v15.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.xml
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.xml
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.pdb
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.xml
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.pdb
@@ -177,3 +176,11 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductionTaskView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceProductsView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductionTaskView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceProductsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftWRGridView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceGroupsNomenclatureView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftWRGridView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductGroupPackView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceGroupsNomenclatureView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductGroupPackView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChoosePrintNameDialog.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChoosePrintNameDialog.g.cs

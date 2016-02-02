@@ -47,7 +47,7 @@ namespace Gamma.ViewModels
         public override void SaveToModel(Guid itemID)
         {
             base.SaveToModel(itemID);
-          DB.GammaBase.SaveChanges();
+            DB.GammaBase.SaveChanges();
         }
 
     }

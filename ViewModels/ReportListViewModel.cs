@@ -4,6 +4,7 @@ using Gamma.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Linq;
 
 namespace Gamma.ViewModels
 {
@@ -13,7 +14,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class ReportListViewModel : ViewModelBase
+    public class ReportListViewModel : SaveImplementedViewModel
     {
         /// <summary>
         /// Initializes a new instance of the ReportListViewModel class.
@@ -25,6 +26,7 @@ namespace Gamma.ViewModels
             NewReportFolderCommand = new RelayCommand(NewReportFolder);
             NewReportCommand = new RelayCommand(NewReport, () => SelectedReport == null ? false : !SelectedReport.IsReport);
             EditReportCommand = new RelayCommand(EditReport, () => SelectedReport == null ? false : SelectedReport.IsReport);
+            DeleteReportCommand = new RelayCommand(DeleteReport, () => SelectedReport != null);
         }
 
         private ObservableCollection<Reports> _reports;
@@ -69,10 +71,12 @@ namespace Gamma.ViewModels
         }
         private void NewReport()
         {
-            var report = new Reports();
-            report.IsReport = true;
-            report.ParentID = SelectedReport.ReportID;
-            report.ReportID = Guid.NewGuid();
+            var report = new Reports() 
+            { 
+                IsReport = true, 
+                ParentID = SelectedReport.ReportID, 
+                ReportID = Guid.NewGuid() 
+            };
             Reports.Add(report);
             SelectedReport = report;
         }
@@ -80,6 +84,24 @@ namespace Gamma.ViewModels
         {
             DB.GammaBase.SaveChanges();
             ReportManager.DesignReport(SelectedReport.ReportID);
+        }
+        private void DeleteReport()
+        {
+            if (!SelectedReport.IsReport)
+            {
+                DB.GammaBase.Templates.RemoveRange(DB.GammaBase.Templates.Where(tmpl => tmpl.Reports.ParentID == SelectedReport.ReportID).Select(tmpl => tmpl));
+                var reportsToRemove = DB.GammaBase.Reports.Where(rep => rep.ParentID == SelectedReport.ReportID).Select(rep => rep);
+                foreach (var rep in reportsToRemove)
+                {
+                    Reports.Remove(rep);
+                }
+            }
+            else
+            {
+                DB.GammaBase.Templates.Remove(DB.GammaBase.Templates.Where(tmpl => tmpl.ReportID == SelectedReport.ReportID).FirstOrDefault());
+            }
+            DB.GammaBase.Reports.Remove(SelectedReport);
+            DB.GammaBase.SaveChanges();
         }
     }
 }

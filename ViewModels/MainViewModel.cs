@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using Gamma.Common;
 using System.Collections.ObjectModel;
+using Gamma.Dialogs;
 
 namespace Gamma.ViewModels
 {
@@ -30,32 +31,54 @@ namespace Gamma.ViewModels
         {
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
-            StatusText = String.Format("Сервер: {0} БД: {1} Пользователь: {2}", settings.HostName, settings.DbName, settings.User);
+            if (WorkSession.PlaceID > 0) // Если не администрация
+            {
+                var dialog = new ChoosePrintNameDialog();
+                dialog.ShowDialog();
+                if (dialog.DialogResult == true)
+                {
+                    WorkSession.PrintName = dialog.PrintName;
+                }
+            }
+            StatusText = String.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Пользователь: {2}, Имя для печати: {3}", settings.HostName, settings.DbName, 
+                settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл");
             if (IsInDesignMode)
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
                 ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
                 ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW);
-                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
+                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct());
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers());
             }
             else
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList(),
                 () => WorkSession.DBAdmin || DB.GammaBase.UserPermit("Reports").FirstOrDefault() > 1);
-                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTaskPM"));
+                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW,
-                    () => DB.HaveReadAccess("ProductionTaskRW"));
-                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = false }));
+                    () => DB.HaveReadAccess("ProductionTasks"));
+                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct());
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
                 CloseShiftCommand = new RelayCommand(CloseShift);
                 OpenDocCloseShiftsCommand = new RelayCommand<PlaceGroups>((p) => MessageManager.OpenDocCloseShifts(p));
                 ConfigureComPortCommand = new RelayCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin);
                 FindProductionTaskCommand = new RelayCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new RelayCommand<int>(OpenPlaceProducts);
+                OpenPlaceGroupsNomenclatureCommand = new RelayCommand(() => MessageManager.OpenPlaceGroupsNomenclature()
+                    , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
             }
-            if (WorkSession.PlaceGroup == PlaceGroups.PM) CurrentView = ViewModelLocator.ProductionTasksPM;
-            else if (WorkSession.PlaceGroup == PlaceGroups.RW) CurrentView = ViewModelLocator.ProductionTasksRW;
+            switch (WorkSession.PlaceGroup)
+            {
+                case PlaceGroups.PM:
+                    CurrentView = ViewModelLocator.ProductionTasksPM;
+                    break;
+                case PlaceGroups.RW:
+                    CurrentView = ViewModelLocator.ProductionTasksRW;
+                    break;
+                case PlaceGroups.WR:
+                    OpenPlaceProducts(WorkSession.PlaceID);
+                    break;
+            }
             var places = DB.GammaBase.Places.Where(p => p.IsProductionPlace == true).Select(p => p);
             PlaceProducts = new ObservableCollection<PlaceProduct>();
             foreach (var place in places)
@@ -73,6 +96,9 @@ namespace Gamma.ViewModels
         private void OpenPlaceProducts(int placeID)
         {
             CurrentView = new PlaceProductsViewModel(placeID);
+            RefreshCommand = (CurrentView as PlaceProductsViewModel).FindCommand;
+            NewItemCommand = (CurrentView as PlaceProductsViewModel).CreateNewProductCommand;
+            EditItemCommand = (CurrentView as PlaceProductsViewModel).OpenDocProductCommand;
         }
         private void FindProductionTask()
         {
@@ -185,6 +211,7 @@ namespace Gamma.ViewModels
         public RelayCommand<PlaceGroups> OpenDocCloseShiftsCommand { get; private set; }
         public RelayCommand FindProductionTaskCommand { get; private set; }
         public RelayCommand<int> OpenPlaceProductsCommand { get; private set; }
+        public RelayCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public class PlaceProduct
         {

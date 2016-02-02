@@ -279,7 +279,7 @@ namespace Gamma.ViewModels
         private void ChooseProduct()
         {
             if (SelectedProduct == null) return;
-            Messenger.Default.Send<ChoosenSourceProductMessage>(new ChoosenSourceProductMessage { ProductID = (Guid)SelectedProduct.ProductID });
+            Messenger.Default.Send<ChoosenProductMessage>(new ChoosenProductMessage { ProductID = (Guid)SelectedProduct.ProductID });
             CloseWindow();
         }
         public RelayCommand ActivatedCommand { get; private set; }
@@ -288,12 +288,9 @@ namespace Gamma.ViewModels
         public RelayCommand OpenProductCommand { get; private set; }
         private void OpenProduct()
         {
-            MessageManager.OpenDocProduct(new OpenDocProductMessage()
-                {
-                    DocProductKind = SelectedProduct.ProductKind == ProductKinds.ProductSpool ? DocProductKinds.DocProductSpool : DocProductKinds.DocProductPallet,
-                    ID = SelectedProduct.ProductID,
-                    IsNewProduct = false
-                });
+            MessageManager.OpenDocProduct(
+                SelectedProduct.ProductKind == ProductKinds.ProductSpool ? DocProductKinds.DocProductSpool : DocProductKinds.DocProductPallet, 
+                SelectedProduct.ProductID);
         }
     }
 }

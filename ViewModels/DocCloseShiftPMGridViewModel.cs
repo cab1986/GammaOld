@@ -8,7 +8,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Gamma.ViewModels
 {
-    class DocCloseShiftPMGridViewModel : SaveImplementedViewModel, IFillClearGrid
+    class DocCloseShiftPMGridViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
         public DocCloseShiftPMGridViewModel(OpenDocCloseShiftMessage msg)
         {
@@ -21,16 +21,16 @@ namespace Gamma.ViewModels
             }
             else
             {
-                Spools = new ObservableCollection<Spool>(
+                Spools = new ObservableCollection<PaperBase>(
                     from sp in DB.GammaBase.GetDocCloseShiftPMSpools(msg.DocID)
-                    select new Spool
+                    select new PaperBase
                     {
                         CharacteristicID = (Guid)sp.CharacteristicID,
                         NomenclatureID = sp.NomenclatureID,
                         Nomenclature = sp.Nomenclature,
                         Number = sp.Number,
                         ProductID = sp.ProductID,
-                        Weight = sp.Weight
+                        Weight = (decimal)sp.Weight
                     }
                     );
                 DocCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").Where(d => d.DocID == msg.DocID).FirstOrDefault();
@@ -40,10 +40,19 @@ namespace Gamma.ViewModels
                 PlaceID = (byte)DocCloseShift.PlaceID;
             }
             ShowSpoolCommand = new RelayCommand(() =>
-                MessageManager.OpenDocProduct(new OpenDocProductMessage() 
-                {ID = SelectedSpool.ProductID,DocProductKind = DocProductKinds.DocProductSpool, IsNewProduct = false}),
+                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedSpool != null);
+            Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
         }
+        private Guid? _vmID = Guid.NewGuid();
+        public Guid? VMID
+        {
+            get
+            {
+                return _vmID;
+            }
+        }
+
         private byte ShiftID { get; set; }
         private DateTime CloseDate { get; set; }
         private int PlaceID { get; set; }
@@ -65,7 +74,7 @@ namespace Gamma.ViewModels
                         (from d in DB.GammaBase.DocProducts 
                         join ps in DB.GammaBase.ProductSpools on d.ProductID equals ps.ProductID
                         where d.DocID == doc.DocID
-                        select new Spool 
+                        select new PaperBase 
                         { 
                             CharacteristicID = (Guid)ps.C1CCharacteristicID,
                             NomenclatureID = ps.C1CNomenclatureID,
@@ -108,8 +117,8 @@ namespace Gamma.ViewModels
             }
             DB.GammaBase.SaveChanges();
         }
-        private ObservableCollection<Spool> _spools = new ObservableCollection<Spool>();
-        public ObservableCollection<Spool> Spools
+        private ObservableCollection<PaperBase> _spools = new ObservableCollection<PaperBase>();
+        public ObservableCollection<PaperBase> Spools
         {
             get
             {
@@ -121,7 +130,20 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Spools");
             }
         }
-        public Spool SelectedSpool { get; set; }
+        public PaperBase SelectedSpool { get; set; }
         public RelayCommand ShowSpoolCommand {get; private set;}
+        private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
+        public ObservableCollection<BarViewModel> Bars
+        {
+            get
+            {
+                return _bars;
+            }
+            set
+            {
+                _bars = value;
+                RaisePropertyChanged("Bars");
+            }
+        }
     }
 }

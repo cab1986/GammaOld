@@ -26,6 +26,7 @@ namespace Gamma.Models
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.PlaceGroups = new HashSet<PlaceGroups>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -48,5 +49,6 @@ namespace Gamma.Models
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual ICollection<PlaceGroups> PlaceGroups { get; set; }
     }
 }

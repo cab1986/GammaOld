@@ -26,21 +26,39 @@ namespace Gamma.ViewModels
             Intervals.Add("Поиск");
             FindCommand = new RelayCommand(Find);
             OpenDocProductCommand = new RelayCommand(OpenDocProduct, () => SelectedProduct != null);
+            CreateNewProductCommand = new RelayCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.WR);
             PlaceID = placeID;
             PlaceGroup = (PlaceGroups)DB.GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
             switch (PlaceGroup)
             {
                 case PlaceGroups.PM:
                     QuantityHeader = "Вес, кг";
+                    NewProductText = "Создать новый тамбур";
                     break;
                 case PlaceGroups.RW:
                     QuantityHeader = "Вес, кг";
+                    NewProductText = "Создать новый съем";
                     break;
                 case PlaceGroups.Convertings:
                     QuantityHeader = "Кол-во, шт";
+                    NewProductText = "Создать новую паллету";
+                    break;
+                case PlaceGroups.WR:
+                    QuantityHeader = "Вес нетто, кг";
+                    NewProductText = "Создать новую групповую упаковку";
                     break;
             }
             Find();
+        }
+
+        private void CreateNewProduct()
+        {
+            switch (PlaceGroup)
+            {
+                case PlaceGroups.WR:
+                    MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);
+                    break;
+            }
         }
 
         private void OpenDocProduct()
@@ -48,12 +66,13 @@ namespace Gamma.ViewModels
             switch (SelectedProduct.ProductKind)
             {
                 case ProductKinds.ProductSpool:
-                    MessageManager.OpenDocProduct(new OpenDocProductMessage()
-                        {
-                            DocProductKind = DocProductKinds.DocProductSpool,
-                            ID = SelectedProduct.ProductID,
-                            IsNewProduct = false
-                        });
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
+                    break;
+                case ProductKinds.ProductGroupPack:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
+                    break;
+                case ProductKinds.ProductPallet:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
                     break;
             }
         }
@@ -184,7 +203,9 @@ namespace Gamma.ViewModels
         public DateTime? DateEnd { get; set; }
         public List<string> Intervals { get; set; }
         public int IntervalID { get; set; }
+        public RelayCommand CreateNewProductCommand { get; private set; }
         public RelayCommand FindCommand { get; private set; }
         public RelayCommand OpenDocProductCommand { get; private set; }
+        public string NewProductText { get; set; }
     }
 }

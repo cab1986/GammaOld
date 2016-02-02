@@ -18,6 +18,7 @@ namespace Gamma.Models
         public System.Guid DocID { get; set; }
         public Nullable<System.Guid> ProductID { get; set; }
         public decimal Quantity { get; set; }
+        public Nullable<bool> IsSourceProduct { get; set; }
     
         public virtual Docs Docs { get; set; }
     }

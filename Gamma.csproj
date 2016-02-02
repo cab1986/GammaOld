@@ -56,6 +56,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
@@ -201,12 +202,16 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Common\Nomenclature1CFolder.cs" />
     <Compile Include="Common\ProductRelation.cs" />
     <Compile Include="Common\ViewsManager.cs" />
     <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="Dialogs\ChangeSpoolDialog.xaml.cs">
       <DependentUpon>ChangeSpoolDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ChoosePrintNameDialog.xaml.cs">
+      <DependentUpon>ChoosePrintNameDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\FilterDateReportDialog.xaml.cs">
       <DependentUpon>FilterDateReportDialog.xaml</DependentUpon>
@@ -306,7 +311,19 @@
     <Compile Include="Models\GetDocCloseShiftPMSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetDocCloseShiftWRGroupPacks_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetGroupPackSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetNomenclatureFolders1_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetNomenclatureFolders_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetNomenclatureFolders_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductionTaskProducts1_Result.cs">
@@ -405,14 +422,19 @@
     <Compile Include="ProductionTask.cs" />
     <Compile Include="RejectionReason.cs" />
     <Compile Include="ReportManager.cs" />
-    <Compile Include="Spool.cs" />
+    <Compile Include="Scales.cs" />
+    <Compile Include="PaperBase.cs" />
+    <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="SQLGuidUtil.cs" />
     <Compile Include="UIAuthBehavior.cs" />
     <Compile Include="ValidationExceptionBehavior.cs" />
     <Compile Include="PasswordBoxHelper.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
+    <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskViewModel.cs" />
+    <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\SaveImplementedViewModel.cs" />
     <Compile Include="ViewModels\DBEditItemWithNomenclatureViewModel.cs" />
@@ -455,6 +477,12 @@
     <Compile Include="Views\DocCloseShiftView.xaml.cs">
       <DependentUpon>DocCloseShiftView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DocCloseShiftWRGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftWRGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocProductGroupPackView.xaml.cs">
+      <DependentUpon>DocProductGroupPackView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocProductSpoolView.xaml.cs">
       <DependentUpon>DocProductSpoolView.xaml</DependentUpon>
     </Compile>
@@ -487,6 +515,9 @@
     </Compile>
     <Compile Include="Views\PermitEditView.xaml.cs">
       <DependentUpon>PermitEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceGroupsNomenclatureView.xaml.cs">
+      <DependentUpon>PlaceGroupsNomenclatureView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlaceProductsView.xaml.cs">
       <DependentUpon>PlaceProductsView.xaml</DependentUpon>
@@ -537,6 +568,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\ChoosePrintNameDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\FilterDateReportDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -558,6 +593,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocCloseShiftView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftWRGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocProductGroupPackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -594,6 +637,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PermitEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaceGroupsNomenclatureView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

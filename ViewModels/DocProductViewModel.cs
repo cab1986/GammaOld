@@ -4,10 +4,10 @@ using System;
 using System.Collections.ObjectModel; 
 using Gamma.Models;
 using System.Linq;
-using System.ComponentModel.DataAnnotations;
 using Gamma.Interfaces;
 using Gamma.Attributes;
 using Gamma.Common;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -26,12 +26,18 @@ namespace Gamma.ViewModels
         {
             ActivatedCommand = new RelayCommand(() => IsActive = true);
             DeactivatedCommand = new RelayCommand(() => IsActive = false);
+            OpenProductionTaskCommand = new RelayCommand(OpenProductionTask, () => ProductionTaskID != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             switch (msg.DocProductKind)
             {
                 case DocProductKinds.DocProductSpool:
                     Title = "Тамбур";
-                    CurrentViewModel = new DocProductSpoolViewModel(msg.ID,msg.IsNewProduct);
+                    if (msg.ID == null)
+                    {
+                        MessageBox.Show("Нельзя создать тамбур без задания");
+                        CloseWindow();
+                    }
+                    CurrentViewModel = new DocProductSpoolViewModel((Guid)msg.ID,msg.IsNewProduct);
                     if (!msg.IsNewProduct)
                     {
                         Doc = (from d in DB.GammaBase.Docs where 
@@ -41,23 +47,52 @@ namespace Gamma.ViewModels
                                select d).FirstOrDefault();
                         DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
                         var product = DB.GammaBase.Products.Find(msg.ID);
+                        DB.GammaBase.Entry<Products>(product).Reload();
                         Number = product.Number;
                         String.Format("{0}№ {1}", Title, Number);
                     }
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";
-                    CurrentViewModel = new DocProductUnloadViewModel(msg.ID, msg.IsNewProduct);
+                    if (msg.ID == null)
+                    {
+                        MessageBox.Show("Ошибка! Нельзя создавать съем без задания!");
+                        CloseWindow();
+                    }
+                    CurrentViewModel = new DocProductUnloadViewModel((Guid)msg.ID, msg.IsNewProduct);
                     if (!msg.IsNewProduct)
                     {
                         Doc = DB.GammaBase.Docs.Find(msg.ID);
+                        DB.GammaBase.Entry<Docs>(Doc).Reload();
                         DocProduction = DB.GammaBase.DocProduction.Find(msg.ID);
                         Number = Doc.Number;
                         Title = String.Format("{0}№ {1}", Title, Number);
                     }
                     break;
+                case DocProductKinds.DocProductGroupPack:
+                    Title = "Групповая упаковка";
+                    if (msg.ID == null)
+                        CurrentViewModel = new DocProductGroupPackViewModel();
+                    else
+                        CurrentViewModel = new DocProductGroupPackViewModel((Guid)msg.ID);
+                    if (!msg.IsNewProduct)
+                    {
+                        Doc = (from d in DB.GammaBase.Docs
+                               where
+                                   DB.GammaBase.DocProducts.Where(dp => dp.ProductID == msg.ID).
+                                   Select(dp => dp.DocID).Contains(d.DocID) &&
+                                   d.DocTypeID == (byte)DocTypes.DocProduction
+                               select d).FirstOrDefault();
+                        DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
+                        var productGroupPack = DB.GammaBase.Products.Find(msg.ID);
+                        Number = productGroupPack.Number;
+                        Title = String.Format("{0} № {1}", Title, Number); 
+                    }
+                    break;
                 default:
-                    break;      
+                    MessageBox.Show("Действие не предусмотрено програмой");
+                    CloseWindow();
+                    return;     
             }
             if (msg.IsNewProduct)
             {
@@ -141,7 +176,19 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("IsConfirmed");
             }
         }
-        public string Number { get; set; }
+        private string _number;
+        public string Number
+        {
+            get
+            {
+                return _number;
+            }
+            set
+            {
+            	_number = value;
+                RaisePropertyChanged("Number");
+            }
+        }
         private Guid DocProductID { get; set; }
         private Guid? _productionTaskID;
         private Guid? ProductionTaskID
@@ -179,12 +226,15 @@ namespace Gamma.ViewModels
         }
         public RelayCommand OpenProductionTaskCommand { get; private set; }
         private ObservableCollection<BarViewModel> _bars;
+      
         private void PrintReport(PrintReportMessage msg)
         {
+            if (msg.VMID != (CurrentViewModel as IBarImplemented).VMID) return;
             if (!IsValid) return;
             SaveToModel();
             ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }
+
         public override void SaveToModel()
         {
             base.SaveToModel();
@@ -197,7 +247,8 @@ namespace Gamma.ViewModels
                     IsConfirmed = IsConfirmed,
                     PlaceID = WorkSession.PlaceID, 
                     ShiftID = WorkSession.ShiftID,
-                    DocTypeID = (int)DocTypes.DocProduction
+                    DocTypeID = (int)DocTypes.DocProduction,
+                    PrintName = WorkSession.PrintName
                 };
                 DocProduction = new DocProduction() { DocID = Doc.DocID, InPlaceID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ProductionTaskID).Select(p => p.PlaceID).FirstOrDefault(), ProductionTaskID = ProductionTaskID };
                 DB.GammaBase.Docs.Add(Doc);

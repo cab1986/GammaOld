@@ -51,5 +51,6 @@ namespace Gamma
             set;
         }
         public static PlaceGroups PlaceGroup { get; private set; }
+        public static string PrintName { get; set; }
     }
 }

@@ -41,7 +41,7 @@
                         <dxlc:LayoutGroup>
                             <dxlc:LayoutGroup Header="Общие параметры задания" View="GroupBox" Margin="0,-2,0,2" Orientation="Vertical" Width="280">
                                 <dxlc:LayoutItem Label="Номер">
-                                    <dxe:TextEdit Width="150" Text="{Binding Number}" IsReadOnly="True"/>
+                                    <dxe:TextEdit Width="150" EditValue="{Binding Number}" IsReadOnly="True"/>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Дата">
                                     <dxe:DateEdit Width="150" EditValue="{Binding Date, ValidatesOnDataErrors=True}" IsReadOnly="True"/>
@@ -73,7 +73,7 @@
                                         </dxe:ButtonEdit>
                                     </dxlc:LayoutItem>
                                     <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
-                                        <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}" IsFloatValue="False">
+                                        <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}" IsFloatValue="False">
                                         </dxe:SpinEdit>
                                     </dxlc:LayoutItem>
                                 </dxlc:LayoutGroup>
@@ -107,14 +107,17 @@
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn FieldName="ProductID" Visible="False"/>
                             <dxg:GridColumn FieldName="Number" VisibleIndex="0" Header="Номер" ReadOnly="True" FixedWidth="True" Width="120"/>
-                            <dxg:GridColumn FieldName="Date" Header="Дата" ReadOnly="True" VisibleIndex="1" Width="80" FixedWidth="True">
+                            <dxg:GridColumn FieldName="Date" Header="Дата" ReadOnly="True" VisibleIndex="1" Width="120" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
-                                    <dxe:DateEditSettings Mask="g"/>
+                                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
                             <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="2"  Header="Номенклатура"/>
-                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="3" Width="50" FixedWidth="True"/>
+                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="3" Width="120" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                        </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
                         </dxg:GridControl.View>

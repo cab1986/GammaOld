@@ -8,6 +8,8 @@
     xmlns:v="clr-namespace:Gamma.Views"
     xmlns:dxt="http://schemas.devexpress.com/winfx/2008/xaml/core/themekeys"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxgt="http://schemas.devexpress.com/winfx/2008/xaml/grid/themekeys"
     d1p1:Ignorable="d" 
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -26,6 +28,24 @@
                             Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+        <Style x:Key="DefaultCell" TargetType="dxg:LightweightCellEditor" BasedOn="{StaticResource ResourceKey={dxgt:GridRowThemeKey ResourceKey=LightweightCellStyle}}">
+            <Style.Triggers>
+                <Trigger Property="SelectionState" Value="Selected">
+                    <Setter Property="Background" Value="Red"/>
+                </Trigger>
+                <Trigger Property="SelectionState" Value="Focused">
+                    <Setter Property="Background" Value="#6495ED"/>
+                    <Setter Property="TextBlock.Foreground" Value="Pink"/>
+                </Trigger>
+                <Trigger Property="SelectionState" Value="FocusedAndSelected">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="TextBlock.Foreground" Value="Black"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="dxg:TableView">
+            <Setter Property="CellStyle" Value="{StaticResource DefaultCell}"/>
         </Style>
         <Style TargetType="{x:Type Window}" x:Key="DefaultWindowStyle">
             <Style.Triggers>
@@ -59,5 +79,6 @@
         <Style TargetType="{x:Type v:RoleEditView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:DocCloseShiftView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:ComPortSettingsView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:PlaceGroupsNomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
     </Application.Resources>
 </Application>

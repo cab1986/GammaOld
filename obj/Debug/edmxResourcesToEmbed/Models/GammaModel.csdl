@@ -14,7 +14,6 @@
     <FunctionImport Name="Get1CNomenclature" ReturnType="Collection(GammaModel.Get1CNomenclature_Result)">
       <Parameter Name="ParentID" Mode="In" Type="Decimal" />
     </FunctionImport>
-    <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result)" />
     <EntitySet Name="Permits" EntityType="GammaModel.Permits" />
     <AssociationSet Name="FK_RolePermits_Permits" Association="GammaModel.FK_RolePermits_Permits">
       <End Role="Permits" EntitySet="Permits" />
@@ -338,6 +337,25 @@
     <FunctionImport Name="GetProductionTasks" ReturnType="Collection(GammaModel.GetProductionTasks_Result2)">
       <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result1)">
+      <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <AssociationSet Name="PlaceGroup1CNomenclature" Association="GammaModel.PlaceGroup1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+    </AssociationSet>
+    <FunctionImport Name="GetCharSpoolLayerNumber" ReturnType="Collection(Int32)">
+      <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="GetGroupPackSpools" ReturnType="Collection(GammaModel.GetGroupPackSpools_Result)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="GenerateNewNumbersForDoc">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="GetDocCloseShiftWRGroupPacks" ReturnType="Collection(GammaModel.GetDocCloseShiftWRGroupPacks_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ProductPalletItems">
     <Key>
@@ -521,6 +539,7 @@
     <NavigationProperty Name="C1CCharacteristicProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CCharacteristicProperties" />
     <NavigationProperty Name="C1CNomenclatureProperties" Relationship="GammaModel.FK_1CNomenclatureProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CNomenclatureProperties" />
     <NavigationProperty Name="C1CPropertyValues" Relationship="GammaModel.FK_1CPropertyValues_1CProperties" FromRole="C1CProperties" ToRole="C1CPropertyValues" />
+    <Property Name="Marked" Type="Boolean" />
   </EntityType>
   <Association Name="FK_1CCharacteristicProperties_1CProperties">
     <End Type="GammaModel.C1CProperties" Role="C1CProperties" Multiplicity="1" />
@@ -898,6 +917,7 @@
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
     <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
+    <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.PlaceGroup1CNomenclature" FromRole="C1CNomenclature" ToRole="PlaceGroups" />
   </EntityType>
   <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
     <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -1186,6 +1206,7 @@
     <Property Name="ProductID" Type="Guid" />
     <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
     <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+    <Property Name="IsSourceProduct" Type="Boolean" />
   </EntityType>
   <ComplexType Name="GetDocCloseShiftPMSpools_Result">
     <Property Type="Guid" Name="ProductID" Nullable="false" />
@@ -1318,6 +1339,7 @@
     <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
     <NavigationProperty Name="Docs2" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
     <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
+    <Property Name="PrintName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="DocWithdrawal">
     <Key>
@@ -1709,6 +1731,7 @@
     <Property Name="PlaceGroupID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_PlaceGroups1" FromRole="PlaceGroups" ToRole="Places" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.PlaceGroup1CNomenclature" FromRole="PlaceGroups" ToRole="C1CNomenclature" />
   </EntityType>
   <Association Name="FK_Places_PlaceGroups1">
     <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="0..1" />
@@ -1830,5 +1853,46 @@
     <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
     <Property Type="Decimal" Name="MadeQuantity" Nullable="true" Precision="2" Scale="0" />
     <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
+  </ComplexType>
+  <ComplexType Name="GetNomenclatureFolders1_Result">
+    <Property Type="Guid" Name="FolderID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+    <Property Type="Guid" Name="ParentID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="GetNomenclatureFolders_Result1">
+    <Property Type="Guid" Name="FolderID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+    <Property Type="Guid" Name="ParentID" Nullable="true" />
+  </ComplexType>
+  <Association Name="PlaceGroup1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
+    <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="*" />
+  </Association>
+  <ComplexType Name="GetGroupPackSpools_Result">
+    <Property Type="Guid" Name="DocID" Nullable="false" />
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+    <Property Type="String" Name="BarCode" Nullable="true" MaxLength="20" />
+    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="14" Scale="4" />
+    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
+    <Property Type="Int32" Name="PlaceID" Nullable="true" />
+    <Property Type="Byte" Name="ShiftID" Nullable="true" />
+    <Property Type="Byte" Name="StateID" Nullable="false" />
+    <Property Type="Boolean" Name="IsConfirmed" Nullable="false" />
+    <Property Type="Boolean" Name="IsWrittenOff" Nullable="false" />
+    <Property Type="String" Name="State" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="GetDocCloseShiftWRGroupPacks_Result">
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+    <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+    <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+    <Property Type="Decimal" Name="Weight" Nullable="true" Precision="10" Scale="4" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
   </ComplexType>
 </Schema>

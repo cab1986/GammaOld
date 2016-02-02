@@ -29,10 +29,14 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
             <RowDefinition Height="45" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <dxlc:LayoutControl>
+        <ToolBar HorizontalAlignment="Left" VerticalContentAlignment="Stretch">
+            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}"/>
+        </ToolBar>
+        <dxlc:LayoutControl Grid.Row="1">
             <dxlc:LayoutItem Label="Диапозон:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalID}" x:Name="IntervalList"/>
             </dxlc:LayoutItem>
@@ -47,7 +51,7 @@
             </dxlc:LayoutItem>
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
         </dxlc:LayoutControl>
-        <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
+        <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
                 <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
@@ -66,5 +70,6 @@
                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocProductCommand}"/>
             </dxmvvm:Interaction.Behaviors>
         </dxg:GridControl>
+        
     </Grid>
 </UserControl>

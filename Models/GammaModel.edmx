@@ -103,6 +103,7 @@
           </Key>
           <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Marked" Type="bit" />
           <Property Name="Name" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="1CPropertyValues">
@@ -147,6 +148,7 @@
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
+          <Property Name="IsSourceProduct" Type="bit" />
         </EntityType>
         <EntityType Name="DocMovement">
           <Key>
@@ -199,6 +201,7 @@
           <Property Name="Number" Type="varchar" MaxLength="50" />
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
           <Property Name="UserID" Type="uniqueidentifier" />
+          <Property Name="PrintName" Type="varchar" MaxLength="255" />
           <Property Name="PlaceID" Type="int" />
           <Property Name="ShiftID" Type="tinyint" />
           <Property Name="Date" Type="datetime" Nullable="false" />
@@ -244,6 +247,14 @@
           <Property Name="PermitID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Columns" Type="varchar" MaxLength="8000" />
+        </EntityType>
+        <EntityType Name="PlaceGroup1CNomenclature">
+          <Key>
+            <PropertyRef Name="PlaceGroupID" />
+            <PropertyRef Name="1CNomenclatureID" />
+          </Key>
+          <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="PlaceGroups">
           <Key>
@@ -442,7 +453,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <Property Name="BarCode" Type="varchar" MaxLength="20" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-          <Property Name="Quantity" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="14" Scale="4" />
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="Place" Type="varchar" MaxLength="64" />
           <Property Name="PlaceID" Type="int" />
@@ -966,6 +977,30 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="PlaceGroup1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaceGroup1CNomenclature_PlaceGroups">
+          <End Role="PlaceGroups" Type="Self.PlaceGroups" Multiplicity="1" />
+          <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlaceGroups">
+              <PropertyRef Name="PlaceGroupID" />
+            </Principal>
+            <Dependent Role="PlaceGroup1CNomenclature">
+              <PropertyRef Name="PlaceGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Places_PlaceGroups1">
           <End Role="PlaceGroups" Type="Self.PlaceGroups" Multiplicity="0..1" />
           <End Role="Places" Type="Self.Places" Multiplicity="*" />
@@ -1307,6 +1342,9 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           </ReferentialConstraint>
         </Association>
         <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
+        <Function Name="GenerateNewNumbersForDoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="GetActiveSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
         </Function>
@@ -1316,8 +1354,20 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
         <Function Name="GetCharSpoolFormat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="GetCharSpoolLayerNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="GetDocCloseShiftPMSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetDocCloseShiftWRGroupPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetGroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetProductionTaskProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
@@ -1364,6 +1414,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PermitTables" EntityType="Self.PermitTables" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlaceGroup1CNomenclature" EntityType="Self.PlaceGroup1CNomenclature" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
@@ -1570,6 +1621,14 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
             <End Role="Permits" EntitySet="Permits" />
             <End Role="PermitTables" EntitySet="PermitTables" />
           </AssociationSet>
+          <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaceGroup1CNomenclature_PlaceGroups" Association="Self.FK_PlaceGroup1CNomenclature_PlaceGroups">
+            <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+            <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
+          </AssociationSet>
           <AssociationSet Name="FK_Places_PlaceGroups1" Association="Self.FK_Places_PlaceGroups1">
             <End Role="PlaceGroups" EntitySet="PlaceGroups" />
             <End Role="Places" EntitySet="Places" />
@@ -1701,7 +1760,6 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <FunctionImport Name="Get1CNomenclature" ReturnType="Collection(GammaModel.Get1CNomenclature_Result)">
             <Parameter Name="ParentID" Mode="In" Type="Decimal" />
           </FunctionImport>
-          <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result)" />
           <EntitySet Name="Permits" EntityType="GammaModel.Permits" />
           <AssociationSet Name="FK_RolePermits_Permits" Association="GammaModel.FK_RolePermits_Permits">
             <End Role="Permits" EntitySet="Permits" />
@@ -2023,7 +2081,26 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <Parameter Name="DocID" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="GetProductionTasks" ReturnType="Collection(GammaModel.GetProductionTasks_Result2)">
-            <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+          <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result1)" >
+          <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <AssociationSet Name="PlaceGroup1CNomenclature" Association="GammaModel.PlaceGroup1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+          </AssociationSet>
+          <FunctionImport Name="GetCharSpoolLayerNumber" ReturnType="Collection(Int32)">
+          <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="GetGroupPackSpools" ReturnType="Collection(GammaModel.GetGroupPackSpools_Result)">
+          <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="GenerateNewNumbersForDoc">
+          <Parameter Name="DocID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocCloseShiftWRGroupPacks" ReturnType="Collection(GammaModel.GetDocCloseShiftWRGroupPacks_Result)">
+          <Parameter Name="DocID" Mode="In" Type="Guid" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="ProductPalletItems">
@@ -2208,6 +2285,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <NavigationProperty Name="C1CCharacteristicProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CCharacteristicProperties" />
           <NavigationProperty Name="C1CNomenclatureProperties" Relationship="GammaModel.FK_1CNomenclatureProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CNomenclatureProperties" />
           <NavigationProperty Name="C1CPropertyValues" Relationship="GammaModel.FK_1CPropertyValues_1CProperties" FromRole="C1CProperties" ToRole="C1CPropertyValues" />
+          <Property Name="Marked" Type="Boolean" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CProperties">
           <End Type="GammaModel.C1CProperties" Role="C1CProperties" Multiplicity="1" />
@@ -2585,6 +2663,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
           <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductGroupPacks" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
+          <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.PlaceGroup1CNomenclature" FromRole="C1CNomenclature" ToRole="PlaceGroups" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -2873,6 +2952,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <Property Name="ProductID" Type="Guid" />
           <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+          <Property Name="IsSourceProduct" Type="Boolean" />
         </EntityType>
         <ComplexType Name="GetDocCloseShiftPMSpools_Result">
           <Property Type="Guid" Name="ProductID" Nullable="false" />
@@ -3005,6 +3085,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
           <NavigationProperty Name="Docs2" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
           <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
+          <Property Name="PrintName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DocWithdrawal">
           <Key>
@@ -3396,6 +3477,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <Property Name="PlaceGroupID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_PlaceGroups1" FromRole="PlaceGroups" ToRole="Places" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.PlaceGroup1CNomenclature" FromRole="PlaceGroups" ToRole="C1CNomenclature" />
         </EntityType>
         <Association Name="FK_Places_PlaceGroups1">
           <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="0..1" />
@@ -3518,6 +3600,47 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <Property Type="Decimal" Name="MadeQuantity" Nullable="true" Precision="2" Scale="0" />
           <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
         </ComplexType>
+        <ComplexType Name="GetNomenclatureFolders1_Result">
+          <Property Type="Guid" Name="FolderID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetNomenclatureFolders_Result1">
+          <Property Type="Guid" Name="FolderID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+        </ComplexType>
+        <Association Name="PlaceGroup1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
+          <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="GetGroupPackSpools_Result">
+          <Property Type="Guid" Name="DocID" Nullable="false" />
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Byte" Name="ProductKindID" Nullable="true" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+          <Property Type="String" Name="BarCode" Nullable="true" MaxLength="20" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="14" Scale="4" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
+          <Property Type="Int32" Name="PlaceID" Nullable="true" />
+          <Property Type="Byte" Name="ShiftID" Nullable="true" />
+          <Property Type="Byte" Name="StateID" Nullable="false" />
+          <Property Type="Boolean" Name="IsConfirmed" Nullable="false" />
+          <Property Type="Boolean" Name="IsWrittenOff" Nullable="false" />
+          <Property Type="String" Name="State" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetDocCloseShiftWRGroupPacks_Result">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="10" Scale="4" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3611,6 +3734,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <EntitySetMapping Name="C1CProperties">
             <EntityTypeMapping TypeName="GammaModel.C1CProperties">
               <MappingFragment StoreEntitySet="1CProperties">
+                <ScalarProperty Name="Marked" ColumnName="Marked" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
                 <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
@@ -3824,6 +3948,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <EntitySetMapping Name="DocCloseShiftRemainders">
             <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRemainders">
               <MappingFragment StoreEntitySet="DocCloseShiftRemainders">
+                <ScalarProperty Name="IsSourceProduct" ColumnName="IsSourceProduct" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
@@ -3925,6 +4050,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <EntitySetMapping Name="Docs">
             <EntityTypeMapping TypeName="GammaModel.Docs">
               <MappingFragment StoreEntitySet="Docs">
+                <ScalarProperty Name="PrintName" ColumnName="PrintName" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
@@ -4073,6 +4199,60 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
                 <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
                 <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
                 <ScalarProperty Name="Place" ColumnName="Place" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetNomenclatureFolders" FunctionName="GammaModel.Store.GetNomenclatureFolders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetNomenclatureFolders_Result1">
+                <ScalarProperty Name="FolderID" ColumnName="FolderID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <AssociationSetMapping Name="PlaceGroup1CNomenclature" TypeName="GammaModel.PlaceGroup1CNomenclature" StoreEntitySet="PlaceGroup1CNomenclature">
+            <EndProperty Name="PlaceGroups">
+              <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
+            </EndProperty>
+            <EndProperty Name="C1CNomenclature">
+              <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="GetCharSpoolLayerNumber" FunctionName="GammaModel.Store.GetCharSpoolLayerNumber" />
+          <FunctionImportMapping FunctionImportName="GetGroupPackSpools" FunctionName="GammaModel.Store.GetGroupPackSpools">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetGroupPackSpools_Result">
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
+                <ScalarProperty Name="State" ColumnName="State" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GenerateNewNumbersForDoc" FunctionName="GammaModel.Store.GenerateNewNumbersForDoc" />
+          <FunctionImportMapping FunctionImportName="GetDocCloseShiftWRGroupPacks" FunctionName="GammaModel.Store.GetDocCloseShiftWRGroupPacks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftWRGroupPacks_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

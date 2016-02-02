@@ -29,7 +29,7 @@ namespace Gamma.ViewModels
             if (NewProduct)  // Если новый съем то получаем раскрой по ID задания и инициализруемколлекцию тамбуров съема
             {
                 GetProductionTaskRWInfo(ID);
-                UnloadSpools = new ObservableCollection<Spool>();
+                UnloadSpools = new ObservableCollection<PaperBase>();
                 SourceSpools = DB.GammaBase.GetActiveSourceSpools(WorkSession.PlaceID).Select(p => (Guid)p).ToList();
             }
             else // Получение данных по ID документа
@@ -38,9 +38,9 @@ namespace Gamma.ViewModels
                 (DB.GammaBase.DocProducts.Where(dp => dp.DocID == ID));
                 Products = new ObservableCollection<Products>
                 (from p in DB.GammaBase.Products where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
-                UnloadSpools = new ObservableCollection<Spool>(from dp in DocProducts
+                UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProducts
                                                          join ps in DB.GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
-                                                         select new Spool
+                                                         select new PaperBase
                                                          {
                                                              ProductID = ps.ProductID,
                                                              Number = dp.Products.Number,
@@ -121,7 +121,7 @@ namespace Gamma.ViewModels
             {
                 for (int i = 0; i < cutting.Quantity; i++)
                 {
-                    UnloadSpools.Add(new Spool
+                    UnloadSpools.Add(new PaperBase
                     {
                         CharacteristicID = cutting.CharacteristicID,
                         NomenclatureID = NomenclatureID,
@@ -132,8 +132,8 @@ namespace Gamma.ViewModels
             }
             Messenger.Default.Send<ParentSaveMessage>(new ParentSaveMessage());
         }
-        private ObservableCollection<Spool> _unloadSpools = new ObservableCollection<Spool>();
-        public ObservableCollection<Spool> UnloadSpools
+        private ObservableCollection<PaperBase> _unloadSpools = new ObservableCollection<PaperBase>();
+        public ObservableCollection<PaperBase> UnloadSpools
         {
             get
             {
@@ -213,7 +213,7 @@ namespace Gamma.ViewModels
                             ProductID = spool.ProductID,
                             Diameter = Diameter,
                             BreakNumber = BreakNumber,
-                            Weight = spool.Weight,
+                            Weight = (int)spool.Weight,
                             C1CNomenclatureID = spool.NomenclatureID,
                             C1CCharacteristicID = spool.CharacteristicID
                         });
@@ -232,6 +232,15 @@ namespace Gamma.ViewModels
         private ObservableCollection<DocProducts> DocProducts { get; set; }
         private ObservableCollection<Products> Products { get; set; }
         private ObservableCollection<ProductSpools> ProductSpools { get; set; }
+        private Guid? _vmID = Guid.NewGuid();
+        public Guid? VMID
+        {
+            get
+            {
+                return _vmID;
+            }
+        }
+
         private byte? _breakNumber;
         public byte? BreakNumber
         {
@@ -259,19 +268,14 @@ namespace Gamma.ViewModels
             }
         }
         public RelayCommand EditSpoolCommand { get; set; }
-        public Spool SelectedUnloadSpool 
+        public PaperBase SelectedUnloadSpool 
         {
             get; set;
         }
         private void EditSpool()
         {
             Messenger.Default.Register<ProductChangedMessage>(this,ProductChanged);
-            MessageManager.OpenDocProduct(new OpenDocProductMessage
-            {
-                DocProductKind = DocProductKinds.DocProductSpool,
-                ID = SelectedUnloadSpool.ProductID,
-                IsNewProduct = false
-            });
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedUnloadSpool.ProductID);
         }
         private void ProductChanged(ProductChangedMessage msg)
         {

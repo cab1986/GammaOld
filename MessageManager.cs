@@ -8,10 +8,13 @@ namespace Gamma
 {
     public class BaseReconnectedMessage : MessageBase { }
     public class OpenFilterDateMessage : MessageBase { }
+ 
     public class PrintReportMessage : MessageBase
     {
-        public Guid ReportID;
+        public Guid ReportID; // ID отчета
+        public Guid? VMID; // ID ViewModel, которая должна обработать событие
     }
+ 
     public class OpenMainMessage : MessageBase { }
     public class OpenProductionTaskMessage : MessageBase 
     {
@@ -26,10 +29,13 @@ namespace Gamma
     public class OpenDocProductMessage : MessageBase
     {
         public DocProductKinds DocProductKind;
-        public Guid ID;
+        public Guid? ID;
         public bool IsNewProduct;
     }
-    public class OpenNomenclatureMessage : MessageBase { }
+    public class OpenNomenclatureMessage : MessageBase 
+    {
+        public int PlaceGroupID;
+    }
     public class Nomenclature1CMessage : MessageBase
     {
         public Guid Nomenclature1CID;
@@ -41,7 +47,7 @@ namespace Gamma
         public ProductKinds ProductKind;
     }
     public class ConfigureComPortMessage : MessageBase { }
-    public class ChoosenSourceProductMessage : MessageBase
+    public class ChoosenProductMessage : MessageBase
     {
         public Guid ProductID;
     }
@@ -74,6 +80,7 @@ namespace Gamma
         public DateTime? CloseDate;
         public byte? ShiftID;
     }
+    public class OpenPlaceGroupsNomenclatureMessage : MessageBase { }
     public class OpenDocCloseShiftsMessage : MessageBase
     {
         public PlaceGroups? PlaceGroup;
@@ -117,30 +124,48 @@ namespace Gamma
             Messenger.Default.Send<OpenMainMessage>(new OpenMainMessage());
         }
 
-        public static void OpenNomenclature()
+        public static void OpenNomenclature(int placeGroupID)
         {
-            Messenger.Default.Send<OpenNomenclatureMessage>(new OpenNomenclatureMessage());
+            Messenger.Default.Send<OpenNomenclatureMessage>(new OpenNomenclatureMessage() {PlaceGroupID = placeGroupID });
         }
 
         public static void OpenProductionTask(OpenProductionTaskMessage msg)
         {
             Messenger.Default.Send<OpenProductionTaskMessage>(msg);
         }
-        public static void OpenDocProduct(OpenDocProductMessage msg)
+        public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
-            Messenger.Default.Send<OpenDocProductMessage>(msg);
+            Messenger.Default.Send<OpenDocProductMessage>(new OpenDocProductMessage()
+                {
+                    DocProductKind = docProductKind,
+                    ID = id,
+                    IsNewProduct = false
+                });
         }
         public static void OpenReportList()
         {
             Messenger.Default.Send<OpenReportListMessage>(new OpenReportListMessage());
         }
+        
         public static void PrintReport(PrintReportMessage msg)
         {
             Messenger.Default.Send<PrintReportMessage>(msg);
         }
-        public static void OpenFindProduct(FindProductMessage msg)
+
+        public static void OpenFindProduct()
         {
-            Messenger.Default.Send<FindProductMessage>(msg);
+            Messenger.Default.Send<FindProductMessage>(new FindProductMessage()
+                {
+                    ChooseSourceProduct = false
+                });
+        }
+        public static void OpenFindProduct(ProductKinds productKind, bool chooseSourceProduct = false)
+        {
+            Messenger.Default.Send<FindProductMessage>(new FindProductMessage()
+                {
+                    ProductKind = productKind,
+                    ChooseSourceProduct = chooseSourceProduct
+                });
         }
         public static void OpenDocCloseShift(Guid docID)
         {
@@ -161,6 +186,19 @@ namespace Gamma
         public static void FindProductionTask(PlaceGroups placeGroup)
         {
             Messenger.Default.Send<FindProductionTaskMessage>(new FindProductionTaskMessage() { PlaceGroup = placeGroup });
+        }
+        public static void OpenPlaceGroupsNomenclature()
+        {
+            Messenger.Default.Send<OpenPlaceGroupsNomenclatureMessage>(new OpenPlaceGroupsNomenclatureMessage());
+        }
+        public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null)
+        {
+            Messenger.Default.Send<OpenDocProductMessage>(new OpenDocProductMessage()
+                {
+                    DocProductKind = docProductKind,
+                    ID = id,
+                    IsNewProduct = true
+                });
         }
 
     }

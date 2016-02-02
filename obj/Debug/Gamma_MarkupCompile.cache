@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\CProjects\Gamma\Gamma\App.xaml
-28-1741683644
+321089294214
 
-1571684001963
-571888139597
-Dialogs\ChangeSpoolDialog.xaml;Dialogs\FilterDateReportDialog.xaml;Views\ComPortSettingsView.xaml;Views\DocCloseShiftPMGridView.xaml;Views\DocCloseShiftPMRemainderView.xaml;Views\DocCloseShiftsView.xaml;Views\DocCloseShiftView.xaml;Views\DocProductSpoolView.xaml;Views\DocProductUnloadView.xaml;Views\DocProductView.xaml;Views\FindProductionTaskView.xaml;Views\FindProductView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\ManageUsersView.xaml;Views\PermitEditView.xaml;Views\PlaceProductsView.xaml;Views\ProductionTasksConvertingView.xaml;Views\RoleEditView.xaml;Views\UserEditView.xaml;Views\NomenclatureView.xaml;Views\ProductionTaskPMView.xaml;Views\ProductionTaskRWView.xaml;Views\ProductionTasksPMView.xaml;Views\ProductionTasksRWView.xaml;Views\ProductionTaskView.xaml;Views\ReportListView.xaml;Views\SourceSpoolsView.xaml;
+170426353708
+571281300128
+Dialogs\ChangeSpoolDialog.xaml;Dialogs\ChoosePrintNameDialog.xaml;Dialogs\FilterDateReportDialog.xaml;Views\ComPortSettingsView.xaml;Views\DocCloseShiftPMGridView.xaml;Views\DocCloseShiftPMRemainderView.xaml;Views\DocCloseShiftsView.xaml;Views\DocCloseShiftView.xaml;Views\DocCloseShiftWRGridView.xaml;Views\DocProductGroupPackView.xaml;Views\DocProductSpoolView.xaml;Views\DocProductUnloadView.xaml;Views\DocProductView.xaml;Views\FindProductionTaskView.xaml;Views\FindProductView.xaml;Views\LoginView.xaml;Views\MainView.xaml;Views\ManageUsersView.xaml;Views\PermitEditView.xaml;Views\PlaceGroupsNomenclatureView.xaml;Views\PlaceProductsView.xaml;Views\ProductionTasksConvertingView.xaml;Views\RoleEditView.xaml;Views\UserEditView.xaml;Views\NomenclatureView.xaml;Views\ProductionTaskPMView.xaml;Views\ProductionTaskRWView.xaml;Views\ProductionTasksPMView.xaml;Views\ProductionTasksRWView.xaml;Views\ProductionTaskView.xaml;Views\ReportListView.xaml;Views\SourceSpoolsView.xaml;
 
-True
+False
 

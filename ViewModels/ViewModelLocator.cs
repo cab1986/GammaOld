@@ -82,23 +82,6 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<ProductionTasksRWViewModel>();
             }
         }
-     
-        public static NomenclatureViewModel Nomenclature
-        {
-            get
-            {
-                if (!SimpleIoc.Default.ContainsCreated<NomenclatureViewModel>())
-                {
-                    SimpleIoc.Default.Register<NomenclatureViewModel>();
-                }
-                else
-                {
-                    SimpleIoc.Default.Unregister<NomenclatureViewModel>();
-                    SimpleIoc.Default.Register<NomenclatureViewModel>();
-                }
-                return ServiceLocator.Current.GetInstance<NomenclatureViewModel>();
-            }
-        }
         public static ProductionTasksConvertingViewModel ProductionTasksConverting
         {
             get

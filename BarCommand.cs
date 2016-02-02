@@ -12,10 +12,10 @@ namespace Gamma
         public BarViewModel()
         {
             Name = "";
-            Commands = new ObservableCollection<BarCommand<Object>>();
+            Commands = new ObservableCollection<BarCommand<PrintReportMessage>>();
         }
         public string Name { get; set; }
-        public  ObservableCollection<BarCommand<Object>> Commands { get; set; }
+        public  ObservableCollection<BarCommand<PrintReportMessage>> Commands { get; set; }
         }
     public class BarCommand<T> : RelayCommand<T>
     {
@@ -23,7 +23,8 @@ namespace Gamma
         public  string Caption { get; set; }
         public  ImageSource LargeGlyph { get; set; }
         public  ImageSource SmallGlyph { get; set; }
-        public object CommandParameter { get; set; }
+        public PrintReportMessage CommandParameter { get; set; }
+        
     }
 
 }

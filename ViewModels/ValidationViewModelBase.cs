@@ -10,7 +10,7 @@ using System.Reflection;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
+    /// Класс с проверкой прав доступа
     /// <para>
     /// See http://www.galasoft.ch/mvvm
     /// </para>

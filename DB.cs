@@ -87,6 +87,18 @@ namespace Gamma
         {
             return GammaBase.Database.SqlQuery<int>(string.Format("SELECT dbo.GetLastFormat({0})",placeID)).AsEnumerable().First();
         }
+        public static decimal GetCoreWeight(Guid characteristicID)
+        {
+            return GammaBase.Database.SqlQuery<decimal>(string.Format("SELECT dbo.GetCoreWeight('{0}')", characteristicID)).AsEnumerable().First();
+        }
+        public static decimal GetSpoolCoreWeight(Guid productID)
+        {
+            return GammaBase.Database.SqlQuery<decimal>(string.Format("SELECT dbo.GetSpoolCoreWeight('{0}')", productID)).AsEnumerable().First();
+        }
+        public static int GetSpoolDiameter(Guid productID)
+        {
+            return GammaBase.Database.SqlQuery<int>(string.Format("SELECT dbo.GetSpoolDiameter('{0}')", productID)).AsEnumerable().First();
+        }
         public static ObservableCollection<string> BaseTables
         { 
             get

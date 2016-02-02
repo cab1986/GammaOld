@@ -88,6 +88,7 @@
     <EntitySetMapping Name="C1CProperties">
       <EntityTypeMapping TypeName="GammaModel.C1CProperties">
         <MappingFragment StoreEntitySet="1CProperties">
+          <ScalarProperty Name="Marked" ColumnName="Marked" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
           <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
@@ -301,6 +302,7 @@
     <EntitySetMapping Name="DocCloseShiftRemainders">
       <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRemainders">
         <MappingFragment StoreEntitySet="DocCloseShiftRemainders">
+          <ScalarProperty Name="IsSourceProduct" ColumnName="IsSourceProduct" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
@@ -402,6 +404,7 @@
     <EntitySetMapping Name="Docs">
       <EntityTypeMapping TypeName="GammaModel.Docs">
         <MappingFragment StoreEntitySet="Docs">
+          <ScalarProperty Name="PrintName" ColumnName="PrintName" />
           <ScalarProperty Name="Comment" ColumnName="Comment" />
           <ScalarProperty Name="Date" ColumnName="Date" />
           <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
@@ -537,6 +540,73 @@
           <ScalarProperty Name="Date" ColumnName="Date" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetProductionTasks" FunctionName="GammaModel.Store.GetProductionTasks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetProductionTasks_Result2">
+          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+          <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
+          <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetNomenclatureFolders" FunctionName="GammaModel.Store.GetNomenclatureFolders">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetNomenclatureFolders_Result1">
+          <ScalarProperty Name="FolderID" ColumnName="FolderID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <AssociationSetMapping Name="PlaceGroup1CNomenclature" TypeName="GammaModel.PlaceGroup1CNomenclature" StoreEntitySet="PlaceGroup1CNomenclature">
+      <EndProperty Name="PlaceGroups">
+        <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
+      </EndProperty>
+      <EndProperty Name="C1CNomenclature">
+        <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="GetCharSpoolLayerNumber" FunctionName="GammaModel.Store.GetCharSpoolLayerNumber" />
+    <FunctionImportMapping FunctionImportName="GetGroupPackSpools" FunctionName="GammaModel.Store.GetGroupPackSpools">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetGroupPackSpools_Result">
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+          <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
+          <ScalarProperty Name="State" ColumnName="State" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GenerateNewNumbersForDoc" FunctionName="GammaModel.Store.GenerateNewNumbersForDoc" />
+    <FunctionImportMapping FunctionImportName="GetDocCloseShiftWRGroupPacks" FunctionName="GammaModel.Store.GetDocCloseShiftWRGroupPacks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftWRGroupPacks_Result">
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>

@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
         public ProductionTasksPMViewModel()
         {
             GetProductionTasks();
-            EditItemCommand = new RelayCommand(EditItem);
+            EditItemCommand = new RelayCommand(EditItem, () => SelectedProductionTask != null);
             NewItemCommand = new RelayCommand(NewProductionTask);
             RefreshCommand = new RelayCommand(GetProductionTasks);
         }
@@ -31,7 +31,7 @@ namespace Gamma.ViewModels
         {
             var haveWriteAccess = DB.HaveWriteAccess("ProductionTasks");
             ProductionTasks = new ObservableCollection<ProductionTask>
-                              (from pt in DB.GammaBase.GetProductionTasks((int)PlaceGroups.PM)  
+                              (from pt in DB.GammaBase.GetProductionTasks((int)PlaceGroups.PM)
                                select new ProductionTask
                                {
                                    ProductionTaskID = pt.ProductionTaskID,

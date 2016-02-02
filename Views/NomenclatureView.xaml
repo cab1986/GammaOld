@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
-        xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="Gamma.Views.NomenclatureView"
+        xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.NomenclatureView"
         mc:Ignorable="d ignore"
-        DataContext="{Binding Nomenclature, Source={StaticResource Locator}}">
+        >
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,7 +25,7 @@
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.View>
                             <dxg:TreeListView AllowBestFit="True" BestFitArea="Rows" AllowPerPixelScrolling="True" AutoWidth="True"
-                                              ShowTotalSummary="True" KeyFieldName="Nomenclature1CFolderID" ParentFieldName="ParentFolderID" AllowEditing="False"/>
+								ShowTotalSummary="True" KeyFieldName="FolderID" ParentFieldName="ParentFolderID" AllowEditing="False"/>
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxdo:LayoutPanel>
@@ -35,13 +35,16 @@
                             <dxg:GridControl EnableSmartColumnsGeneration="True" SelectionMode="Row" ItemsSource="{Binding Nomenclature}" SelectedItem="{Binding SelectedNomenclature}" >
                                 <dxg:GridControl.Columns>
                                     <dxg:GridColumn BestFitMode="VisibleRows" AllowBestFit="True" FieldName="Name" 
-                                                    Header="Номенклатура" SortOrder="Ascending" SortIndex="0" BestFitArea="All"
-                                                    Width="500"/>
+										Header="Номенклатура" SortOrder="Ascending" SortIndex="0" BestFitArea="All"
+										Width="500"/>
                                 </dxg:GridControl.Columns>
                                 <dxg:GridControl.View>
                                     <dxg:TableView BestFitMode="AllRows" AllowBestFit="True" AllowPerPixelScrolling="True" 
-                                                   ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
+										ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
                                 </dxg:GridControl.View>
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ChooseSelectedNomenclature}"/>
+                                </dxmvvm:Interaction.Behaviors>
                             </dxg:GridControl>
                         </Grid>
                     </dxdo:DocumentPanel>

@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -18,18 +19,18 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the NomenclatureViewModel class.
         /// </summary>
-        public NomenclatureViewModel()
+        public NomenclatureViewModel(int placeGroupID)
         {
 
             Nomenclature1CFolders = new ReadOnlyObservableCollection<Nomenclature1CFolder>
                                     (new ObservableCollection<Nomenclature1CFolder>
-                                    (from nf in DB.GammaBase.C1CNomenclature where nf.IsFolder == true
+                                    (from nf in DB.GammaBase.GetNomenclatureFolders(placeGroupID)
                                     select
                                         new Nomenclature1CFolder
                                         {
-                                            Nomenclature1CFolderID = nf.C1CNomenclatureID,
+                                            FolderID = nf.FolderID,
                                             Name = nf.Name,
-                                            ParentFolderID = nf.C1CParentID
+                                            ParentFolderID = nf.ParentID
                                         })
                                     );
             ChooseSelectedNomenclature = new RelayCommand(ChooseNomenclature);
@@ -60,13 +61,7 @@ namespace Gamma.ViewModels
             public string Name { get; set; }
             public Guid Nomenclature1CID { get; set; }
         }
-        public class Nomenclature1CFolder
-        {
-            public string Name {get; set;}
-            public Guid Nomenclature1CFolderID {get; set; }
-            public Guid? ParentFolderID { get; set; }
-        }
-
+        
         private Nomenclature1CFolder _selectedNomenclatureFolder;
 
         public Nomenclature1CFolder SelectedNomenclatureFolder
@@ -78,7 +73,7 @@ namespace Gamma.ViewModels
                 {
                     _selectedNomenclatureFolder = value;
                     if (value != null)
-                        GetNomenclature(value.Nomenclature1CFolderID);
+                        GetNomenclature(value.FolderID);
                     RaisePropertyChanged("SelectedNomenclatureFolder");
                 }
             }

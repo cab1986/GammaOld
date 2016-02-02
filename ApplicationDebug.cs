@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 
 namespace Gamma
@@ -17,6 +18,19 @@ namespace Gamma
             PresentationTraceSources.DataBindingSource.Listeners.Add(new DebugTraceListener());
             PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
 #endif
+            AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs args)
+            {
+                MessageBox.Show("Exception: " + args.ExceptionObject.ToString(),
+                    "Ошибка приложения", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(0);
+                Trace.WriteLine("Global exception: " + args.ExceptionObject.ToString());
+            };
+//            Application.ThreadException += delegate(Object sender, ThreadExceptionEventArgs args)
+//           {
+//                Trace.WriteLine("Global exception: " + args.Exception.ToString());
+//               Environment.Exit(0);
+//            };
+
             base.OnStartup(e);
         }
         public static bool IsInDesignMode

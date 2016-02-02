@@ -86,11 +86,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Get1CNomenclature_Result>("Get1CNomenclature", parentIDParameter);
         }
     
-        public virtual ObjectResult<GetNomenclatureFolders_Result> GetNomenclatureFolders()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNomenclatureFolders_Result>("GetNomenclatureFolders");
-        }
-    
         public virtual ObjectResult<GetProductionTaskProducts_Result3> GetProductionTaskProducts(Nullable<System.Guid> productionTaskID)
         {
             var productionTaskIDParameter = productionTaskID.HasValue ?
@@ -157,6 +152,51 @@ namespace Gamma.Models
                 new ObjectParameter("PlaceGroupID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result2>("GetProductionTasks", placeGroupIDParameter);
+        }
+    
+        public virtual ObjectResult<GetNomenclatureFolders_Result1> GetNomenclatureFolders(Nullable<int> placeGroupID)
+        {
+            var placeGroupIDParameter = placeGroupID.HasValue ?
+                new ObjectParameter("PlaceGroupID", placeGroupID) :
+                new ObjectParameter("PlaceGroupID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNomenclatureFolders_Result1>("GetNomenclatureFolders", placeGroupIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> GetCharSpoolLayerNumber(Nullable<System.Guid> characteristicID)
+        {
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetCharSpoolLayerNumber", characteristicIDParameter);
+        }
+    
+        public virtual ObjectResult<GetGroupPackSpools_Result> GetGroupPackSpools(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetGroupPackSpools_Result>("GetGroupPackSpools", productIDParameter);
+        }
+    
+        public virtual int GenerateNewNumbersForDoc(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GenerateNewNumbersForDoc", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocCloseShiftWRGroupPacks_Result> GetDocCloseShiftWRGroupPacks(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftWRGroupPacks_Result>("GetDocCloseShiftWRGroupPacks", docIDParameter);
         }
     }
 }

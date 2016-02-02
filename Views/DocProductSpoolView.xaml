@@ -25,11 +25,12 @@
                 <dxlc:LayoutGroup>
                 <dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">
                     <dxe:SpinEdit MinValue="0" AllowDefaultButton="False" EditValue="{Binding RealBasisWeight, UpdateSourceTrigger=LostFocus}" MaskUseAsDisplayFormat="True" 
-                                        EditValueType="{x:Type sys:Decimal}" ValidateOnTextInput="False" />
+                                        EditValueType="{x:Type sys:Decimal}" ValidateOnTextInput="False" IsTextEditable="True" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Факт. Формат, мм" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" EditValue="{Binding RealFormat, UpdateSourceTrigger=LostFocus}" MaskType="RegEx" Mask="\d+" 
-                                           MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}" ValidateOnTextInput="False"/>
+                        <dxe:SpinEdit AllowDefaultButton="False" EditValue="{Binding RealFormat, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
+                                      IsFloatValue="False"
+                                           MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}" ValidateOnTextInput="False" NullText="0"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
                         <dxe:SpinEdit  EditValue="{Binding BreakNumber, UpdateSourceTrigger=LostFocus}" MinValue="0" MaxValue="500" ValidateOnTextInput="False"
@@ -38,16 +39,16 @@
             </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" ValidateOnTextInput="False"
-                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}"/>
+                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
+                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}" NullText="0" AllowNullInput="True" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" ValidateOnTextInput="False"
-                                           EditValue="{Binding Length, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}"/>
+                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="1000"
+                                           EditValue="{Binding Length, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}" NullText="0"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
-                        <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" ValidateOnTextInput="False"
-                                           EditValue="{Binding Diameter, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}"/>
+                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
+                                           EditValue="{Binding Diameter, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>

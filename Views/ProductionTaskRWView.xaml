@@ -14,28 +14,28 @@
     <dxlc:LayoutGroup Header="" View="Group" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
         <dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Гильза" LabelPosition="Top">
-                <dxe:ComboBoxEdit EditValue="{Binding CoreDiameter,UpdateSourceTrigger=PropertyChanged}" Name="Core" ItemsSource="{Binding CoreDiameters}" IsTextEditable="False"/>
+                <dxe:ComboBoxEdit EditValue="{Binding CoreDiameter,UpdateSourceTrigger=PropertyChanged}" Name="Core" ItemsSource="{Binding CoreDiameters}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Слойность" LabelPosition="Top">
                 <dxe:ComboBoxEdit EditValue="{Binding LayerNumber,UpdateSourceTrigger=PropertyChanged}" Name="Layer" ItemsSource="{Binding LayerNumbers}"
-                                  IsEnabled="{Binding ElementName=Core,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+                                  IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Цвет" LabelPosition="Top" >
                 <dxe:ComboBoxEdit EditValue="{Binding Color,UpdateSourceTrigger=PropertyChanged}" Name="Color" ItemsSource="{Binding Colors}"
-                                  IsEnabled="{Binding ElementName=Layer,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+                                  IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top">
                 <dxe:ComboBoxEdit EditValue="{Binding Diameter,UpdateSourceTrigger=PropertyChanged}" Name="Diameter" ItemsSource="{Binding Diameters}"
-                                  IsEnabled="{Binding ElementName=Color,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+                                  IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Назначение" LabelPosition="Top">
                 <dxe:ComboBoxEdit EditValue="{Binding Destination,UpdateSourceTrigger=PropertyChanged}" Name="Destination" ItemsSource="{Binding Destinations}"
-                                  IsEnabled="{Binding ElementName=Diameter,Converter={StaticResource EmptyConverter}, Path=EditValue}" IsTextEditable="False"/>
+                                  IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
+            <Button Content="Очистить" Command="{Binding ClearFilterCommand}" Height="30" Margin="5"/>
         </dxlc:LayoutGroup>
         <dxlc:LayoutItem Label="Конфигурация" LabelPosition="Top">
-            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding CuttingFormats}" Height="60" MaxHeight="100" 
-                             IsEnabled="{Binding ElementName=Destination,Converter={StaticResource EmptyConverter}, Path=EditValue}">
+            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding CuttingFormats}" Height="60" MaxHeight="100" IsEnabled="{Binding CuttingsEnabled}">
                 <dxg:GridControl.Columns>
                     <dxg:GridColumn Binding="{Binding Format[0], Mode=TwoWay}" Header="01" Width="50">
                         <dxg:GridColumn.EditSettings>
@@ -119,7 +119,7 @@
                     </dxg:GridColumn>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
-                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" AutoWidth="True"/>
+                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" AutoWidth="True" EnableImmediatePosting="True"/>
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </dxlc:LayoutItem>

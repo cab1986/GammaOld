@@ -6,15 +6,19 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <dx:DXTabControl>
             <dx:DXTabItem Header="Изготовленные тамбура">
-                <Grid Background="Transparent" Margin="-12,-12,-12,-12">
+                <Grid Background="Transparent" Margin="-12,-12,-12,-12" MaxHeight="1000">
                     <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding Spools}" SelectedItem="{Binding SelectedSpool}" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
                             <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} кг"/>
+                        </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
-                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+                                           ShowFixedTotalSummary="True"/>
                         </dxg:GridControl.View>
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowSpoolCommand}"/>

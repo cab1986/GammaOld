@@ -47,6 +47,7 @@ namespace Gamma.ViewModels
                       }
                      ).ToList<Place>();
             Places.Insert(0, new Place() { PlaceName = "Все" });
+            FindDocCloseShifts();
         }
 
         private void Initialize()
@@ -79,11 +80,12 @@ namespace Gamma.ViewModels
         public RelayCommand FindDocCloseShiftsCommand { get; private set; }
         private void FindDocCloseShifts()
         {
+            var placeIDs = Places.Select(p => p.PlaceID).ToList();
             DocCloseShifts = new ObservableCollection<DocCloseShift>
             ((
             from d in DB.GammaBase.Docs
             where d.DocTypeID == (byte)DocTypes.DocCloseShift &&
-            (PlaceID == 0 ? true : PlaceID == d.PlaceID) &&
+            (PlaceID == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceID == d.PlaceID) &&
             (DateBegin == null ? true : d.Date >= DateBegin) &&
             (DateEnd == null ? true : d.Date <= DateEnd)
             orderby d.Date descending

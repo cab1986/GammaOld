@@ -15,7 +15,8 @@
     mc:Ignorable="d ignore" 
     Title="Gamma"
     Height="716" 
-    Width="899">
+    Width="899"
+    WindowState="Maximized">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:ProductionTasksPMViewModel}">
@@ -48,6 +49,7 @@
                         <dxb:BarSubItem Content="Закрытия смен">
                             <dxb:BarButtonItem Content="Закрытие смен БДМ" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.PM}" />
                             <dxb:BarButtonItem Content="Закрытие смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.RW}" />
+                            <dxb:BarButtonItem Content="Закрытие смены Упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.WR}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Производство" ItemLinksSource="{Binding PlaceProducts}">
@@ -61,20 +63,21 @@
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">
+                            <dxb:BarButtonItem Content="Номенклатура групп переделов" Command="{Binding OpenPlaceGroupsNomenclatureCommand}" />
                             <dxb:BarButtonItem Content="Редактирование шаблонов отчетов" Command="{Binding ShowReportListCommand}" />
                             <dxb:BarButtonItem Content="Управление пользователями" Command="{Binding ManageUsersCommand}" />
                             <dxb:BarButtonItem Content="Настройка COM-порта" Command="{Binding ConfigureComPortCommand}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
                 </dxb:Bar>
-                <dxb:Bar Caption="Edit">
+                <dxb:Bar Caption="Edit" AllowHide="False" AllowQuickCustomization="False" AllowCustomizationMenu="False">
                     <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding NewItemCommand}" />
                     <dxb:BarButtonItem Content="Редактировать" LargeGlyph="{dx:DXImage Image=Edit_32x32.png}" Command="{Binding EditItemCommand}" />
                     <dxb:BarButtonItem Content="Обновить" LargeGlyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshCommand}" />
                     <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" BarItemDisplayMode="ContentAndGlyph" />
                     <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" Command="{Binding CloseShiftCommand}"/>
                 </dxb:Bar>
-                <dxb:Bar UseWholeRow="True" Visible="{Binding ProductionTaskBarVisible}">
+                <dxb:Bar UseWholeRow="True" Visible="{Binding ProductionTaskBarVisible}" AllowCustomizationMenu="False" AllowHide="False" AllowQuickCustomization="False" AllowCollapse="True">
                     <dxb:BarButtonItem Content="Найти задание" BarItemDisplayMode="ContentAndGlyph" Glyph="{dx:DXImage Image=Find_16x16.png}" Command="{Binding FindProductionTaskCommand}"/>
                 </dxb:Bar>
                 <dxb:Bar Caption="StatusBar" IsStatusBar="True" ShowSizeGrip="True">

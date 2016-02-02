@@ -19,25 +19,38 @@ namespace Gamma
             ReportSettings.CustomSaveReport += SaveReport;
             ReportSettings.PreviewSettings.Buttons = (PreviewButtons.Print | PreviewButtons.Save);
         }
-        public static BarViewModel GetReportBar(string ReportObject)
+        public static BarViewModel GetReportBar(string ReportObject, Guid? vmID = null)
         {
+            if (!DB.GammaBase.Reports.Any(rep => rep.Name == ReportObject) && DB.HaveWriteAccess("Reports"))
+            {
+                DB.GammaBase.Reports.Add(new Reports()
+                {
+                    ReportID = SQLGuidUtil.NewSequentialId(),
+                    IsReport = false,
+                    Name = ReportObject
+                });
+                DB.GammaBase.SaveChanges();
+            }
             var reports = from rep in DB.GammaBase.Reports
                           join parrep in DB.GammaBase.Reports on rep.ParentID equals parrep.ReportID where parrep.Name == ReportObject
                           select rep;
             var bar = new BarViewModel();
             foreach (Reports report in reports)
             {
-                var command = new BarCommand<Object>(ID => PrintReport((Guid)ID)) { Caption = report.Name,CommandParameter = report.ReportID };
+                var command = new BarCommand<PrintReportMessage>(msg => MessageManager.PrintReport(msg))
+                {
+                    Caption = report.Name,
+                    CommandParameter = new PrintReportMessage()
+                    {
+                        ReportID = report.ReportID,
+                        VMID = vmID
+                    }
+                };
                 bar.Commands.Add(command);
             }
             return bar;
         }
-        private void EventPrintReport(Guid reportID)
-        {
-            var msg = new PrintReportMessage() { ReportID = reportID };
-            MessageManager.PrintReport(msg);
-        }
-        public static void PrintReport(Guid reportID, Guid? ParamID = null)
+        public static void PrintReport(Guid reportID, Guid? paramID = null)
         {
             using (var report = new Report())
             {
@@ -58,7 +71,7 @@ namespace Gamma
                     }
                     else return;
                 }
-                if (ParamID != null) report.SetParameterValue("ParamID", ParamID);
+                if (paramID != null) report.SetParameterValue("ParamID", paramID);
                 report.Dictionary.Connections[0].ConnectionString = GammaSettings.SQLConnectionString;
                 report.Show();
             }
@@ -98,7 +111,8 @@ namespace Gamma
                                   select template).FirstOrDefault();
             if (reportTemplate == null)
             {
-                reportTemplate = new Models.Templates();
+                reportTemplate = new Templates();
+                reportTemplate.TemplateID = SQLGuidUtil.NewSequentialId();
                 reportTemplate.Name = e.FileName;
                 reportTemplate.ReportID = CurrentReportID;
                 DB.GammaBase.Templates.Add(reportTemplate);

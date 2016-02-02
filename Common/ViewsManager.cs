@@ -24,6 +24,12 @@ namespace Gamma.Common
             Messenger.Default.Register<RoleEditMessage>(this, RoleEdit);
             Messenger.Default.Register<UserEditMessage>(this, UserEdit);
             Messenger.Default.Register<FindProductionTaskMessage>(this, FindProductionTask);
+            Messenger.Default.Register<OpenPlaceGroupsNomenclatureMessage>(this, OpenPlaceGroupsNomenclature);
+        }
+
+        private void OpenPlaceGroupsNomenclature(OpenPlaceGroupsNomenclatureMessage obj)
+        {
+            new PlaceGroupsNomenclatureView().Show();
         }
         private static ViewsManager _viewsManager;
         public static void Initialize()
@@ -36,7 +42,7 @@ namespace Gamma.Common
         }
         private static void OpenNomenclature(OpenNomenclatureMessage msg)
         {
-            new NomenclatureView().Show();
+            new NomenclatureView(msg.PlaceGroupID).Show();
         }
         private void OpenDocProduct(OpenDocProductMessage msg)
         {

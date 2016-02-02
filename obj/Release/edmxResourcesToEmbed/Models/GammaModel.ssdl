@@ -98,6 +98,7 @@
     </Key>
     <Property Name="1CPropertyID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Marked" Type="bit" />
     <Property Name="Name" Type="varchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="1CPropertyValues">
@@ -142,6 +143,7 @@
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
+    <Property Name="IsSourceProduct" Type="bit" />
   </EntityType>
   <EntityType Name="DocMovement">
     <Key>
@@ -194,6 +196,7 @@
     <Property Name="Number" Type="varchar" MaxLength="50" />
     <Property Name="IsConfirmed" Type="bit" Nullable="false" />
     <Property Name="UserID" Type="uniqueidentifier" />
+    <Property Name="PrintName" Type="varchar" MaxLength="255" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="Date" Type="datetime" Nullable="false" />
@@ -239,6 +242,14 @@
     <Property Name="PermitID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="Columns" Type="varchar" MaxLength="8000" />
+  </EntityType>
+  <EntityType Name="PlaceGroup1CNomenclature">
+    <Key>
+      <PropertyRef Name="PlaceGroupID" />
+      <PropertyRef Name="1CNomenclatureID" />
+    </Key>
+    <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="PlaceGroups">
     <Key>
@@ -437,7 +448,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <Property Name="BarCode" Type="varchar" MaxLength="20" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-    <Property Name="Quantity" Type="int" />
+    <Property Name="Quantity" Type="decimal" Precision="14" Scale="4" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="Place" Type="varchar" MaxLength="64" />
     <Property Name="PlaceID" Type="int" />
@@ -961,6 +972,30 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="PlaceGroup1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PlaceGroup1CNomenclature_PlaceGroups">
+    <End Role="PlaceGroups" Type="Self.PlaceGroups" Multiplicity="1" />
+    <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceGroups">
+        <PropertyRef Name="PlaceGroupID" />
+      </Principal>
+      <Dependent Role="PlaceGroup1CNomenclature">
+        <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Places_PlaceGroups1">
     <End Role="PlaceGroups" Type="Self.PlaceGroups" Multiplicity="0..1" />
     <End Role="Places" Type="Self.Places" Multiplicity="*" />
@@ -1302,6 +1337,9 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     </ReferentialConstraint>
   </Association>
   <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
+  <Function Name="GenerateNewNumbersForDoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetActiveSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
   </Function>
@@ -1311,11 +1349,26 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
   <Function Name="GetCharSpoolFormat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="GetCharSpoolLayerNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetDocCloseShiftPMSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="GetDocCloseShiftWRGroupPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetGroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
+  </Function>
   <Function Name="GetProductionTaskProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
   </Function>
   <Function Name="GetProductRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
@@ -1356,6 +1409,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PermitTables" EntityType="Self.PermitTables" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PlaceGroup1CNomenclature" EntityType="Self.PlaceGroup1CNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
@@ -1561,6 +1615,14 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <AssociationSet Name="FK_PermitTables_Permits" Association="Self.FK_PermitTables_Permits">
       <End Role="Permits" EntitySet="Permits" />
       <End Role="PermitTables" EntitySet="PermitTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlaceGroup1CNomenclature_PlaceGroups" Association="Self.FK_PlaceGroup1CNomenclature_PlaceGroups">
+      <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+      <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
     </AssociationSet>
     <AssociationSet Name="FK_Places_PlaceGroups1" Association="Self.FK_Places_PlaceGroups1">
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />

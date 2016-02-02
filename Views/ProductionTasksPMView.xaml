@@ -13,18 +13,20 @@
 
     <Grid>
 
-        <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTask}">
+        <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTask}" AutoExpandAllGroups="True">
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand Command="{Binding EditItemCommand}" EventName="MouseDoubleClick" />
             </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.Columns>
+                <dxg:GridColumn Binding="{Binding Place}" Header="Передел" GroupIndex="1" Visible="False"/>
                 <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="0" FixedWidth="True" Width="130"/>
                 <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="1" />
                 <dxg:GridColumn Binding="{Binding Quantity}" Header="Кол-во, тн" VisibleIndex="2" Width="100" FixedWidth="True"/>
                 <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Изготовлено, тн" Width="150" FixedWidth="True" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18"/>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18"
+                               ShowGroupPanel="False" AllowFixedGroups="True"/>
             </dxg:GridControl.View>
         </dxg:GridControl>
 

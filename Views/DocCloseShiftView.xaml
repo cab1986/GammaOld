@@ -9,36 +9,62 @@
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMGridViewModel}">
             <v:DocCloseShiftPMGridView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftWRGridViewModel}">
+            <v:DocCloseShiftWRGridView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMRemainderViewModel}">
             <v:DocCloseShiftPMRemainderView />
+        </DataTemplate>
+        <DataTemplate x:Key="BarTemplate">
+            <ContentControl>
+                <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=itemTemplate}"/>
+            </ContentControl>
+        </DataTemplate>
+        <DataTemplate x:Key="itemTemplate">
+            <ContentControl>
+                <dxb:BarButtonItem Content="{Binding Caption}"
+        			Glyph="{Binding SmallGlyph}"
+        			LargeGlyph="{Binding LargeGlyph}"
+        			GlyphAlignment="Top"
+        			BarItemDisplayMode="ContentAndGlyph"
+        			Command="{Binding}"
+        			CommandParameter="{Binding CommandParameter}"/>
+            </ContentControl>
         </DataTemplate>
     </Window.Resources>
     <Grid Background="#FFB1CEF3">
         <Grid.RowDefinitions>
-            <RowDefinition Height="200"/>
             <RowDefinition />
             <RowDefinition Height="38" />
         </Grid.RowDefinitions>
-        <dxlc:LayoutControl Orientation="Horizontal"> 
-            <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="150" Height="150">
-                <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
-                    <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
+        <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
+            <dxlc:LayoutControl Orientation="Vertical">
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="150" Height="150">
+                        <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                            <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
+                            <dxe:DateEdit IsReadOnly="True" EditValue="{Binding Date}" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Подтвержден">
+                            <dxe:CheckEdit EditValue="{Binding IsConfirmed}" />
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutItem>
+                        <ContentControl Content="{Binding CurrentViewModelRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
+                        <Button Content="Заполнить рапорт"  Height="30" Margin="5" Command="{Binding FillGridCommand}"/>
+                        <Button Content="Очистить рапорт" Height="30" Margin="5" Command = "{Binding ClearGridCommand}"/>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutItem VerticalAlignment="Stretch">
+                    <ContentControl Content="{Binding CurrentViewModelGrid}" />
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
-                    <dxe:DateEdit IsReadOnly="True" EditValue="{Binding Date}" />
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Подтвержден">
-                    <dxe:CheckEdit EditValue="{Binding IsConfirmed}" />
-                </dxlc:LayoutItem>
-            </dxlc:LayoutGroup>
-            <ContentControl Content="{Binding CurrentViewModelRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" Height="150" VerticalAlignment="Top"/>
-            <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
-                <Button Content="Заполнить рапорт"  Height="30" Margin="5" Command="{Binding FillGridCommand}"/>
-                <Button Content="Очистить рапорт" Height="30" Margin="5" Command = "{Binding ClearGridCommand}"/>
-            </dxlc:LayoutGroup>
-        </dxlc:LayoutControl>
-        <ContentControl Content="{Binding CurrentViewModelGrid}" Grid.Row="1" />
-        <Button Content="OK" Grid.Row="2" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Margin="3,3,70,3"/>
-        <Button Content="Отмена" Grid.Row="2" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="3"/>
+            </dxlc:LayoutControl>
+        </dxb:BarManager>
+        <Button Content="OK" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Margin="3,3,70,3"/>
+        <Button Content="Отмена" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="3"/>
     </Grid>
 </Window>

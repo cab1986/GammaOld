@@ -8,6 +8,7 @@ using System.Data.Entity;
 using GalaSoft.MvvmLight.Messaging;
 using Gamma.Attributes;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Gamma.ViewModels
@@ -28,7 +29,7 @@ namespace Gamma.ViewModels
 
         }
 
-        public DocProductSpoolViewModel(Guid? ID, bool NewProduct)
+        public DocProductSpoolViewModel(Guid ID, bool NewProduct)
         {
             States = new ProductStates().ToDictionary();
             RejectionReasons = new ObservableCollection<RejectionReason>
@@ -61,10 +62,10 @@ namespace Gamma.ViewModels
                 ProductSpool = DB.GammaBase.ProductSpools.Where(ps => ps.ProductID == Product.ProductID).FirstOrDefault();
                 NomenclatureID = ProductSpool.C1CNomenclatureID;
                 CharacteristicID = ProductSpool.C1CCharacteristicID;
-                RealFormat = ProductSpool.RealFormat;
+                RealFormat = ProductSpool.RealFormat ?? 0;
                 RealBasisWeight = ProductSpool.RealBasisWeight;
                 Diameter = ProductSpool.Diameter;
-                Length = ProductSpool.Length;
+                Length = ProductSpool.Length ?? 0;
                 BreakNumber = ProductSpool.BreakNumber;
                 Weight = ProductSpool.Weight;
                 IsConfirmed = DocProduct.IsInConfirmed ?? false;
@@ -75,7 +76,7 @@ namespace Gamma.ViewModels
                     d.Docs.Date descending
                     select dpc.StateID).Take(1).FirstOrDefault();
             }
-            Bars.Add(ReportManager.GetReportBar("Spool"));
+            Bars.Add(ReportManager.GetReportBar("Spool", VMID));
         }
         private Guid? _characteristicID;
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -116,6 +117,7 @@ namespace Gamma.ViewModels
             }
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [Required(ErrorMessage="Необходимо выбрать характеристику")]
         public Guid? CharacteristicID
         {
             get { return _characteristicID; }
@@ -143,6 +145,7 @@ namespace Gamma.ViewModels
         }
         private int? _realFormat;
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [Range(100,5000,ErrorMessage="Необходимо указать реальный формат")]
         public int? RealFormat
         {
             get
@@ -172,6 +175,7 @@ namespace Gamma.ViewModels
         private bool IsConfirmed { get; set; }
         private int _weight;   
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [Range(1,10000,ErrorMessage="Укажите вес тамбура")]
         public int Weight
         {
             get
@@ -198,6 +202,14 @@ namespace Gamma.ViewModels
             {
                 _bars = value;
                 RaisePropertyChanged("Bars");
+            }
+        }
+        private Guid? _vmID = Guid.NewGuid();
+        public Guid? VMID
+        {
+            get
+            {
+                return _vmID;
             }
         }
 
@@ -274,7 +286,7 @@ namespace Gamma.ViewModels
         }
         public override bool CanSaveExecute()
         {
-            return DB.HaveWriteAccess("ProductSpools");
+            return base.CanSaveExecute() && DB.HaveWriteAccess("ProductSpools");
         }
         protected override bool CanChooseNomenclature()
         {

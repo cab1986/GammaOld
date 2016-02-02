@@ -1,12 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Xml.Serialization;
 
 namespace Gamma
 {
@@ -27,9 +23,10 @@ namespace Gamma
             var AppSettings = GammaSettings.Get();
             try
             {
-                ComPort = new SerialPort(AppSettings.ComPort) 
-                { BaudRate = AppSettings.BaudRate, Parity = AppSettings.Parity, StopBits = AppSettings.StopBits, DataBits = AppSettings.DataBits, 
-                    Handshake = AppSettings.HandShake, NewLine = "\r" };
+                ComPort = new SerialPort(AppSettings.ScannerComPort.ComPortNumber) 
+                { BaudRate = AppSettings.ScannerComPort.BaudRate, Parity = AppSettings.ScannerComPort.Parity, 
+                    StopBits = AppSettings.ScannerComPort.StopBits, DataBits = AppSettings.ScannerComPort.DataBits, 
+                    Handshake = AppSettings.ScannerComPort.HandShake, NewLine = "\r" };
             }
             catch (Exception)
             {
@@ -58,7 +55,6 @@ namespace Gamma
             string received_data = ComPort.ReadLine();
             Messenger.Default.Send<BarcodeMessage>(new BarcodeMessage {Barcode = received_data});
         }
-
         public static bool TryToOpen()
         {
             try

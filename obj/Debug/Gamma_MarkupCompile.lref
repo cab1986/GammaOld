@@ -1,8 +1,12 @@
-﻿D:\CProjects\Gamma\Gamma\obj\Debug\GeneratedInternalTypeHelper.g.cs
+﻿
 FD:\CProjects\Gamma\Gamma\App.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocProductGroupPackView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductSpoolView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\FindProductionTaskView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\FindProductView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\LoginView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\MainView.xaml;;

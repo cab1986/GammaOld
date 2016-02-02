@@ -49,13 +49,13 @@ namespace Gamma.ViewModels
         private void ChooseSpool(short unum)
         {
             CurrentUnwinder = unum;
-            Messenger.Default.Register<ChoosenSourceProductMessage>(this, SourceSpoolChanged);
-            MessageManager.OpenFindProduct(new FindProductMessage { ChooseSourceProduct = true, ProductKind = ProductKinds.ProductSpool });
+            Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
+            MessageManager.OpenFindProduct(ProductKinds.ProductSpool,true);
         }
         private short CurrentUnwinder { get; set; }
-        private void SourceSpoolChanged(ChoosenSourceProductMessage msg)
+        private void SourceSpoolChanged(ChoosenProductMessage msg)
         {
-            Messenger.Default.Unregister<ChoosenSourceProductMessage>(this);
+            Messenger.Default.Unregister<ChoosenProductMessage>(this);
             switch (CurrentUnwinder)
             {
                 case 1:

@@ -17,11 +17,13 @@ namespace Gamma.Models
         public PlaceGroups()
         {
             this.Places = new HashSet<Places>();
+            this.C1CNomenclature = new HashSet<C1CNomenclature>();
         }
     
         public short PlaceGroupID { get; set; }
         public string Name { get; set; }
     
         public virtual ICollection<Places> Places { get; set; }
+        public virtual ICollection<C1CNomenclature> C1CNomenclature { get; set; }
     }
 }

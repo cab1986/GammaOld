@@ -32,6 +32,7 @@ namespace Gamma.Models
         public Nullable<byte> ShiftID { get; set; }
         public System.DateTime Date { get; set; }
         public string Comment { get; set; }
+        public string PrintName { get; set; }
     
         public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DocMovement DocMovement { get; set; }

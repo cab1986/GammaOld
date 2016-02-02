@@ -17,37 +17,38 @@ namespace Gamma
         ProductGroupPack
     }
     public enum PlaceGroups { PM, RW, Convertings, WR, Other }  // Группы переделов. Привязаны к таблице в базе, менять только вместе!
-    public enum ProductStates // Состояние продукции
+    public enum ProductStates // Качество продукта
     {
         [Description("Годная")]
         Good,
-        [Description("На утилизацию")]
-        Broke,
         [Description("Требует решения")]
         NeedsDecision,
+        [Description("На утилизацию")]
+        Broke,
         [Description("Ограниченная партия")]
         Limited
     } 
-    public enum ProductStatesFilter
+    public enum ProductStatesFilter // Фильтр качества для поиска
     {
         [Description("Годная")]
         Good,
-        [Description("На утилизацию")]
-        Broke,
         [Description("Требует решения")]
         NeedsDecision,
+        [Description("На утилизацию")]
+        Broke,
         [Description("Ограниченная партия")]
         Limited,
         [Description("Не подтвержден")]
         NotConfirmed
     }
-    public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder}
+    public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder} // Как переработан тамбур
     
     public enum DocProductKinds
     {
         DocProductSpool,
         DocProductUnload,
-        DocProductPallet
+        DocProductPallet,
+        DocProductGroupPack
     }
     public enum DocTypes
     {

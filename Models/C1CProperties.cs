@@ -24,6 +24,7 @@ namespace Gamma.Models
         public System.Guid C1CPropertyID { get; set; }
         public string C1CCode { get; set; }
         public string Name { get; set; }
+        public Nullable<bool> Marked { get; set; }
     
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }
         public virtual ICollection<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }

@@ -22,6 +22,7 @@ namespace Gamma
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
+            Gamma.Properties.Settings.Default.Save();
             GammaSettings.Serialize();
         }
     }
