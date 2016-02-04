@@ -38,9 +38,9 @@ namespace Gamma.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("800")]
-        public string FindProductionTaskWidth {
+        public double FindProductionTaskWidth {
             get {
-                return ((string)(this["FindProductionTaskWidth"]));
+                return ((double)(this["FindProductionTaskWidth"]));
             }
             set {
                 this["FindProductionTaskWidth"] = value;
@@ -116,6 +116,54 @@ namespace Gamma.Properties {
             }
             set {
                 this["DocCloseShiftsTop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public double ProductionTaskHeight {
+            get {
+                return ((double)(this["ProductionTaskHeight"]));
+            }
+            set {
+                this["ProductionTaskHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
+        public double ProductionTaskWidth {
+            get {
+                return ((double)(this["ProductionTaskWidth"]));
+            }
+            set {
+                this["ProductionTaskWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double ProductionTaskLeft {
+            get {
+                return ((double)(this["ProductionTaskLeft"]));
+            }
+            set {
+                this["ProductionTaskLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double ProductionTaskTop {
+            get {
+                return ((double)(this["ProductionTaskTop"]));
+            }
+            set {
+                this["ProductionTaskTop"] = value;
             }
         }
     }

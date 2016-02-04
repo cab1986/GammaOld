@@ -5,7 +5,7 @@
     <Setting Name="FindProductionTaskHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">400</Value>
     </Setting>
-    <Setting Name="FindProductionTaskWidth" Type="System.String" Scope="User">
+    <Setting Name="FindProductionTaskWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">800</Value>
     </Setting>
     <Setting Name="FindProductionTaskLeft" Type="System.Double" Scope="User">
@@ -24,6 +24,18 @@
       <Value Profile="(Default)">200</Value>
     </Setting>
     <Setting Name="DocCloseShiftsTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="ProductionTaskHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="ProductionTaskWidth" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1200</Value>
+    </Setting>
+    <Setting Name="ProductionTaskLeft" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="ProductionTaskTop" Type="System.Double" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
   </Settings>

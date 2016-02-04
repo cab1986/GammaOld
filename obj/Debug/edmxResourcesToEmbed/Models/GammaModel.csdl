@@ -1763,6 +1763,7 @@
     <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
     <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
+    <Property Name="ProgramAdmin" Type="Boolean" />
   </EntityType>
   <Association Name="FK_Docs_Users">
     <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />

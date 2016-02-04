@@ -507,6 +507,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="GammaModel.Users">
         <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
           <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
           <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
           <ScalarProperty Name="Exports" ColumnName="Exports" />

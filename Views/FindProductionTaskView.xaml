@@ -34,7 +34,10 @@
                 <dxlc:LayoutItem Label="Состояние" LabelPosition="Top">
                     <dxe:ComboBoxEdit ItemsSource="{Binding ProductionTaskStates}" EditValue="{Binding ProductionTaskStateID}" ValueMember="Key" DisplayMember="Value" NullValueButtonPlacement="EditBox" AllowNullInput="True" AssignNullValueOnClearingEditText="True"/>
                 </dxlc:LayoutItem>
-                <Button Content="Найти" Height="30" Width="60" Command="{Binding FindProductionTaskCommand}"/>
+                <dxlc:LayoutItem VerticalContentAlignment="Bottom" Width="60" VerticalAlignment="Bottom">
+                    <Button Content="Найти" Height="22" Width="60" Command="{Binding FindProductionTaskCommand}" VerticalAlignment="Bottom"/>    
+                </dxlc:LayoutItem>
+                
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Результаты поиска" LabelPosition="Top" VerticalAlignment="Stretch">
                 <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" Margin="-12,-3,-12,-12" 

@@ -431,6 +431,7 @@
           <Property Name="PlaceID" Type="int" Nullable="false" />
           <Property Name="Exports" Type="bit" Nullable="false" />
           <Property Name="DBAdmin" Type="bit" Nullable="false" />
+          <Property Name="ProgramAdmin" Type="bit" />
           <Property Name="ShiftID" Type="tinyint" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -3509,6 +3510,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
           <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
+          <Property Name="ProgramAdmin" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Docs_Users">
           <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
@@ -4153,6 +4155,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="GammaModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
                 <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
                 <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
                 <ScalarProperty Name="Exports" ColumnName="Exports" />

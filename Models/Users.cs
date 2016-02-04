@@ -30,6 +30,7 @@ namespace Gamma.Models
         public bool Exports { get; set; }
         public bool DBAdmin { get; set; }
         public byte ShiftID { get; set; }
+        public Nullable<bool> ProgramAdmin { get; set; }
     
         public virtual ICollection<Docs> Docs { get; set; }
         public virtual Places Places { get; set; }

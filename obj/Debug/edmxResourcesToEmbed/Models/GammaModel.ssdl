@@ -426,6 +426,7 @@
     <Property Name="PlaceID" Type="int" Nullable="false" />
     <Property Name="Exports" Type="bit" Nullable="false" />
     <Property Name="DBAdmin" Type="bit" Nullable="false" />
+    <Property Name="ProgramAdmin" Type="bit" />
     <Property Name="ShiftID" Type="tinyint" Nullable="false" />
   </EntityType>
   <!--Errors Found During Generation:

@@ -53,7 +53,7 @@ namespace Gamma.ViewModels
             else
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList(),
-                () => WorkSession.DBAdmin || DB.GammaBase.UserPermit("Reports").FirstOrDefault() > 1);
+                () => WorkSession.DBAdmin || DB.HaveWriteAccess("Reports"));
                 ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW,
                     () => DB.HaveReadAccess("ProductionTasks"));
@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
                 CloseShiftCommand = new RelayCommand(CloseShift);
                 OpenDocCloseShiftsCommand = new RelayCommand<PlaceGroups>((p) => MessageManager.OpenDocCloseShifts(p));
-                ConfigureComPortCommand = new RelayCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin);
+                ConfigureComPortCommand = new RelayCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new RelayCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new RelayCommand<int>(OpenPlaceProducts);
                 OpenPlaceGroupsNomenclatureCommand = new RelayCommand(() => MessageManager.OpenPlaceGroupsNomenclature()

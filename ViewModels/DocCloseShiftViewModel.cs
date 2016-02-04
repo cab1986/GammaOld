@@ -98,6 +98,7 @@ namespace Gamma.ViewModels
                     PlaceID = WorkSession.PlaceID,
                     ShiftID = WorkSession.ShiftID,
                     IsConfirmed = IsConfirmed,
+                    PrintName = WorkSession.PrintName
                 };
                 DB.GammaBase.Docs.Add(Doc);
             }
