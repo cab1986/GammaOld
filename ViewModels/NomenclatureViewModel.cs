@@ -64,6 +64,18 @@ namespace Gamma.ViewModels
         
         private Nomenclature1CFolder _selectedNomenclatureFolder;
 
+        public ObservableCollection<string> NomenclatureCharacteristics
+        {
+            get
+            {
+                return _nomenclatureCharacteristics;
+            }
+            set
+            {
+                _nomenclatureCharacteristics = value;
+                RaisePropertyChanged("NomenclatureCharacteristics");
+            }
+        }
         public Nomenclature1CFolder SelectedNomenclatureFolder
         {
             get { return _selectedNomenclatureFolder; }
@@ -89,6 +101,13 @@ namespace Gamma.ViewModels
                 {
                     _selectedNomenclature = value;
                     RaisePropertyChanged("SelectedNomenclature");
+                    if (value != null)
+                    {
+                        NomenclatureCharacteristics = new ObservableCollection<string>(
+                            DB.GammaBase.C1CCharacteristics.Where(c => c.C1CNomenclatureID == value.Nomenclature1CID).
+                            Select(c => c.Name));
+                    }
+                    else NomenclatureCharacteristics = null;
                 }
             }
         }
@@ -112,5 +131,6 @@ namespace Gamma.ViewModels
             Messenger.Default.Send<Nomenclature1CMessage>(msg);
             CloseWindow();
         }
+        private ObservableCollection<string> _nomenclatureCharacteristics;
     }
 }

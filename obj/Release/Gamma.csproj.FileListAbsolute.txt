@@ -150,7 +150,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\MainView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ManageUsersView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.g.resources
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.Properties.Resources.resources
-D:\CProjects\Gamma\Gamma\obj\Release\Gamma.Views.ReportPreview.resources
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
