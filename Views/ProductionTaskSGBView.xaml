@@ -1,0 +1,35 @@
+﻿<UserControl xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:g="clr-namespace:Gamma"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.ProductionTaskSGBView" 
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="300">
+    <Grid>
+        <dxlc:LayoutGroup Header="Свойства продукции" View="GroupBox">
+            <dxlc:LayoutItem Label="Креп, %" LabelPosition="Top">
+                <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
+                              EditValue="{Binding Crepe, ValidatesOnDataErrors=True}"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top">
+                <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
+                              EditValue="{Binding Diameter, ValidatesOnDataErrors=True}"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Диаметр+" LabelPosition="Top">
+                <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
+                              EditValue="{Binding DiameterPlus,ValidatesOnDataErrors=True}"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Диаметр-" LabelPosition="Top">
+                <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
+                              EditValue="{Binding DiameterMinus, ValidatesOnDataErrors=True}"/>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
+    </Grid>
+    <i:Interaction.Behaviors>
+        <g:UIAuthBehavior/>
+    </i:Interaction.Behaviors>
+</UserControl>
