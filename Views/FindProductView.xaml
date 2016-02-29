@@ -16,9 +16,9 @@
     </dxmvvm:Interaction.Behaviors>
 
     <dxlc:LayoutControl Orientation="Vertical">
-        <Grid Background="#FFB1CEF3" VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
+        <Grid VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="190"/>
+                <RowDefinition Height="200"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,0,-12,0" Orientation="Horizontal">

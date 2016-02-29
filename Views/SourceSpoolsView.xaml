@@ -10,7 +10,7 @@
    
 
         <dxlc:LayoutControl UseLayoutRounding="True" >
-            <dxlc:LayoutGroup  View="Group" Background="#FFB1CEF3" >
+        <dxlc:LayoutGroup  View="Group" Background="#FFEBECEF" >
                 <dxlc:LayoutItem Label="Раскат 1" LabelPosition="Top">
                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder1Nomenclature}" ToolTip="{Binding Unwinder1Nomenclature}" Foreground="White">
                         <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="1"/>

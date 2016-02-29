@@ -82,7 +82,7 @@
                 </dxb:Bar>
             </dxb:BarManager.Bars>
             <DockPanel>
-                <Views:SourceSpoolsView DockPanel.Dock="Top" Background="#FFA3C3EC" Visibility="{Binding SourceSpoolsVisible}"/>
+                <Views:SourceSpoolsView DockPanel.Dock="Top" Background="#FFEBECEF" Visibility="{Binding SourceSpoolsVisible}"/>
                 <ContentControl Content="{Binding CurrentView}" DockPanel.Dock="Bottom" />
             </DockPanel>
         </dxb:BarManager>

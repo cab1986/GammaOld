@@ -17,7 +17,7 @@
     Left="{g:SettingBinding DocCloseShiftsLeft}"
     Top="{g:SettingBinding DocCloseShiftsTop}">
 
-    <Grid Background="#FFB1CEF3">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
             <RowDefinition />

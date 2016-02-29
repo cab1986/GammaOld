@@ -13,7 +13,7 @@
     Width="{g:SettingBinding FindProductionTaskWidth}"
     Left="{g:SettingBinding FindProductionTaskLeft}"
     Top="{g:SettingBinding FindProductionTaskTop}" 
-    Background="#FFB1CEF3">
+    >
     <Grid>
 
         <dxlc:LayoutControl Orientation="Vertical">

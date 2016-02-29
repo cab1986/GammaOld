@@ -603,12 +603,6 @@
     <Compile Include="Views\ReportListView.xaml.cs">
       <DependentUpon>ReportListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ReportPreview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\ReportPreview.Designer.cs">
-      <DependentUpon>ReportPreview.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\SourceSpoolsView.xaml.cs">
       <DependentUpon>SourceSpoolsView.xaml</DependentUpon>
     </Compile>
@@ -771,9 +765,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\ReportPreview.resx">
-      <DependentUpon>ReportPreview.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Models\GammaModel.Context.tt">

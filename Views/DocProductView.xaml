@@ -17,7 +17,6 @@
     xmlns:Dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
-    Background="#FFB6D0F4"
     Title="{Binding Title}"
     Height="{g:SettingBinding DocProductHeight}"
     Width="{g:SettingBinding DocProductWidth}"
