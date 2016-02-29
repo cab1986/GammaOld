@@ -25,9 +25,9 @@ namespace Gamma.Models
         public Nullable<byte> ProductKindID { get; set; }
     
         public virtual ICollection<DocProducts> DocProducts { get; set; }
-        public virtual ProductSpools ProductSpools { get; set; }
         public virtual ProductPallets ProductPallets { get; set; }
         public virtual ProductGroupPacks ProductGroupPacks { get; set; }
         public virtual Rests Rests { get; set; }
+        public virtual ProductSpools ProductSpools { get; set; }
     }
 }

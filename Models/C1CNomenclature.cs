@@ -21,12 +21,12 @@ namespace Gamma.Models
             this.C1CNomenclature1 = new HashSet<C1CNomenclature>();
             this.C1CNomenclatureProperties = new HashSet<C1CNomenclatureProperties>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
-            this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
-            this.ProductionTasks = new HashSet<ProductionTasks>();
             this.PlaceGroups = new HashSet<PlaceGroups>();
+            this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.ProductSpools = new HashSet<ProductSpools>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -36,6 +36,7 @@ namespace Gamma.Models
         public string Name { get; set; }
         public Nullable<bool> IsArchive { get; set; }
         public bool IsFolder { get; set; }
+        public Nullable<byte> NomenclatureKindID { get; set; }
     
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual C1CMeasureUnitQualifiers C1CMeasureUnitQualifiers { get; set; }
@@ -44,11 +45,11 @@ namespace Gamma.Models
         public virtual C1CNomenclature C1CNomenclature2 { get; set; }
         public virtual ICollection<C1CNomenclatureProperties> C1CNomenclatureProperties { get; set; }
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
         public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
-        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         public virtual ICollection<PlaceGroups> PlaceGroups { get; set; }
+        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
     }
 }

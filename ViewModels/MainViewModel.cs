@@ -45,8 +45,8 @@ namespace Gamma.ViewModels
             if (IsInDesignMode)
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
-                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
-                ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW);
+//                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
+                ShowProductionTasksSGBCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB);
                 FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct());
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers());
             }
@@ -54,8 +54,8 @@ namespace Gamma.ViewModels
             {
                 ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList(),
                 () => WorkSession.DBAdmin || DB.HaveWriteAccess("Reports"));
-                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
-                ShowProductionTasksRWCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksRW,
+//                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
+                ShowProductionTasksSGBCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB,
                     () => DB.HaveReadAccess("ProductionTasks"));
                 FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct());
                 ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
@@ -70,10 +70,8 @@ namespace Gamma.ViewModels
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroups.PM:
-                    CurrentView = ViewModelLocator.ProductionTasksPM;
-                    break;
                 case PlaceGroups.RW:
-                    CurrentView = ViewModelLocator.ProductionTasksRW;
+                    CurrentView = ViewModelLocator.ProductionTasksSGB;
                     break;
                 case PlaceGroups.WR:
                     OpenPlaceProducts(WorkSession.PlaceID);
@@ -102,12 +100,12 @@ namespace Gamma.ViewModels
         }
         private void FindProductionTask()
         {
-            if (CurrentView is ProductionTasksPMViewModel)
-                MessageManager.FindProductionTask(PlaceGroups.PM);
-            else if (CurrentView is ProductionTasksRWViewModel)
-                MessageManager.FindProductionTask(PlaceGroups.RW);
+//            if (CurrentView is ProductionTasksPMViewModel)
+//                MessageManager.FindProductionTaskBatch(BatchKinds.SGB);
+            if (CurrentView is ProductionTasksSGBViewModel)
+                MessageManager.FindProductionTaskBatch(BatchKinds.SGB);
             else if (CurrentView is ProductionTasksConvertingViewModel)
-                MessageManager.FindProductionTask(PlaceGroups.Convertings);
+                MessageManager.FindProductionTaskBatch(BatchKinds.SGI);
         }
 
         private void CloseShift()
@@ -132,7 +130,7 @@ namespace Gamma.ViewModels
                 DeleteItemCommand = null;
                 RefreshCommand = null;
             }
-            if (CurrentView is ProductionTasksPMViewModel || CurrentView is ProductionTasksRWViewModel || CurrentView is ProductionTasksConvertingViewModel)
+            if (CurrentView is ProductionTasksSGBViewModel || CurrentView is ProductionTasksConvertingViewModel)
                 ProductionTaskBarVisible = true;
             else ProductionTaskBarVisible = false;
         }
@@ -202,8 +200,8 @@ namespace Gamma.ViewModels
         }
         public RelayCommand ShowReportListCommand { get; private set; }
         public RelayCommand ShowProductionTasksConvertingCommand { get; private set; }
-        public RelayCommand ShowProductionTasksPMCommand { get; private set; }
-        public RelayCommand ShowProductionTasksRWCommand { get; private set; }
+//        public RelayCommand ShowProductionTasksPMCommand { get; private set; }
+        public RelayCommand ShowProductionTasksSGBCommand { get; private set; }
         public RelayCommand FindProductCommand { get; private set; }
         public RelayCommand ManageUsersCommand { get; set; }
         public RelayCommand ConfigureComPortCommand { get; set; }

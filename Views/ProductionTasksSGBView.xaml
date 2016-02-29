@@ -3,15 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.ProductionTasksRWView" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.ProductionTasksSGBView" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="1000"
-             DataContext="{Binding ProductionTasksRW, Source={StaticResource Locator}}">
+             d:DesignHeight="300" d:DesignWidth="1500"
+             DataContext="{Binding ProductionTasksSGB, Source={StaticResource Locator}}">
     <Grid>
 
-        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding ProductionTasks}" 
-                         SelectedItem="{Binding SelectedProductionTask}" HorizontalAlignment="Stretch"
-                         HorizontalContentAlignment ="Stretch" 
+        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding ProductionTaskBatchesSGB}" 
+			SelectedItem="{Binding SelectedProductionTaskBatch}" HorizontalAlignment="Stretch" 
                          >
             <dxg:GridControl.Bands >
                 <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center">
@@ -19,7 +18,13 @@
                     <dxg:GridColumn FieldName="Place" Header="Передел" Width="100" FixedWidth="True"/>
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Номенклатура и раскрой" HorizontalHeaderContentAlignment="Center">
-                    <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" AllowBestFit="True"/>
+                    <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" AllowBestFit="True">
+                        <dxg:GridColumn.CellTemplate>
+                            <DataTemplate>
+                                <dxe:TextEdit Name="PART_Editor" FontSize="24" />
+                            </DataTemplate>
+                        </dxg:GridColumn.CellTemplate>
+                    </dxg:GridColumn>
                     <dxg:GridColumn Binding="{Binding Format[0], Mode=TwoWay}" Header="01" dxg:BandBase.GridRow="1" AllowBestFit="True" Width="50" FixedWidth="True"/>
                     <dxg:GridColumn Binding="{Binding Format[1], Mode=TwoWay}" Header="02" dxg:BandBase.GridRow="1" AllowBestFit="True" Width="50" FixedWidth="True"/>
                     <dxg:GridColumn Binding="{Binding Format[2], Mode=TwoWay}" Header="03" dxg:BandBase.GridRow="1" AllowBestFit="True" Width="50" FixedWidth="True"/>
@@ -38,13 +43,25 @@
                     <dxg:GridColumn Binding="{Binding Format[15], Mode=TwoWay}" Header="16" dxg:BandBase.GridRow="1" AllowBestFit="True" Width="50" FixedWidth="True"/>
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Выполнение">
-                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" FixedWidth="True" Width="120"/>
-                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True" Width="150" FixedWidth="True" />
+                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" FixedWidth="True" Width="120">
+                        <dxg:GridColumn.CellTemplate>
+                            <DataTemplate>
+                                <dxe:TextEdit Name="PART_Editor" FontSize="24" />
+                            </DataTemplate>
+                        </dxg:GridColumn.CellTemplate>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True" Width="150" FixedWidth="True">
+                        <dxg:GridColumn.CellTemplate>
+                            <DataTemplate>
+                                <dxe:TextEdit Name="PART_Editor" FontSize="24" />
+                            </DataTemplate>
+                        </dxg:GridColumn.CellTemplate>
+                    </dxg:GridColumn>
                 </dxg:GridControlBand>
             </dxg:GridControl.Bands>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" ShowGroupPanel="False" 
-                               AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18" AllowMoveColumnToDropArea="False"/>
+					AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18" AllowMoveColumnToDropArea="False"/>
             </dxg:GridControl.View>
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}"/>

@@ -44,8 +44,8 @@ namespace Gamma.ViewModels
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
-            SimpleIoc.Default.Register<ProductionTasksPMViewModel>();
-            SimpleIoc.Default.Register<ProductionTasksRWViewModel>();
+//            SimpleIoc.Default.Register<ProductionTasksPMViewModel>();
+            SimpleIoc.Default.Register<ProductionTasksSGBViewModel>();
             SimpleIoc.Default.Register<ReportListViewModel>();
             SimpleIoc.Default.Register<SourceSpoolsViewModel>();
             SimpleIoc.Default.Register<ManageUsersViewModel>();
@@ -68,18 +68,19 @@ namespace Gamma.ViewModels
             }
         }
 
-        public static ProductionTasksPMViewModel ProductionTasksPM
+        /*public static ProductionTasksPMViewModel ProductionTasksPM
         {
             get
             {
                 return ServiceLocator.Current.GetInstance<ProductionTasksPMViewModel>();
             }
         }
-        public static ProductionTasksRWViewModel ProductionTasksRW
+         * */
+        public static ProductionTasksSGBViewModel ProductionTasksSGB
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ProductionTasksRWViewModel>();
+                return ServiceLocator.Current.GetInstance<ProductionTasksSGBViewModel>();
             }
         }
         public static ProductionTasksConvertingViewModel ProductionTasksConverting
@@ -89,11 +90,11 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<ProductionTasksConvertingViewModel>();
             }
         }
-        public static ProductionTaskViewModel ProductionTask
+        public static ProductionTaskBatchViewModel ProductionTask
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ProductionTaskViewModel>();
+                return ServiceLocator.Current.GetInstance<ProductionTaskBatchViewModel>();
             }
         }
 

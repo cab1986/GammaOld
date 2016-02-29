@@ -104,6 +104,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExpress.Xpf.Themes.DXStyle.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Themes.LightGray.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.Office2007Black.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Themes.Office2007Blue.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -202,6 +203,7 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Common\Nomenclature1C.cs" />
     <Compile Include="Common\Nomenclature1CFolder.cs" />
     <Compile Include="Common\ProductRelation.cs" />
     <Compile Include="Common\ViewsManager.cs" />
@@ -216,7 +218,7 @@
     <Compile Include="Dialogs\FilterDateReportDialog.xaml.cs">
       <DependentUpon>FilterDateReportDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DMLists.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="DocCloseShift.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="GammaSettings.cs" />
@@ -225,6 +227,8 @@
     <Compile Include="Interfaces\ICheckedAccess.cs" />
     <Compile Include="Interfaces\IFillClearGrid.cs" />
     <Compile Include="Interfaces\IItemManager.cs" />
+    <Compile Include="Interfaces\IProductionTask.cs" />
+    <Compile Include="Interfaces\IProductionTaskBatch.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
     <Compile Include="Models\C1CCharacteristicProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
@@ -286,6 +290,9 @@
     <Compile Include="Models\DocWithdrawalMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FindProductionTasks_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GammaModel.Context.cs">
       <DependentUpon>GammaModel.Context.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -317,6 +324,9 @@
     <Compile Include="Models\GetGroupPackSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetInputNomenclature_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetNomenclatureFolders1_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -324,6 +334,21 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetNomenclatureFolders_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchSGBCuttings_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchSGBProperties_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchWRProperties_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskByBatchID_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductionTaskProducts1_Result.cs">
@@ -350,6 +375,12 @@
     <Compile Include="Models\GetProductionTasks_Result2.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetProductionTasks_Result3.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTasks_Result4.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetProductRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -371,13 +402,22 @@
     <Compile Include="Models\ProductGroupPacks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductionTaskBatches.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductionTaskSGB.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductionTaskStates.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductionTaskWR.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductPalletItems.cs">
@@ -413,13 +453,16 @@
     <Compile Include="Models\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vCharacteristicSGBProperties.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="MVVMWindow.cs" />
     <Compile Include="Place.cs" />
     <Compile Include="ProductInfo.cs" />
-    <Compile Include="ProductionTask.cs" />
+    <Compile Include="Common\ProductionTaskBatch.cs" />
     <Compile Include="RejectionReason.cs" />
     <Compile Include="ReportManager.cs" />
     <Compile Include="Scales.cs" />
@@ -433,9 +476,12 @@
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
-    <Compile Include="ViewModels\FindProductionTaskViewModel.cs" />
+    <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskWRViewModel.cs" />
     <Compile Include="ViewModels\SaveImplementedViewModel.cs" />
     <Compile Include="ViewModels\DBEditItemWithNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftPMGridViewModel.cs" />
@@ -455,9 +501,8 @@
     <Compile Include="ViewModels\NomenclatureViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskPMViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskRWViewModel.cs" />
-    <Compile Include="ViewModels\ProductionTasksPMViewModel.cs" />
-    <Compile Include="ViewModels\ProductionTasksRWViewModel.cs" />
-    <Compile Include="ViewModels\ProductionTaskViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTasksSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ReportListViewModel.cs" />
     <Compile Include="ViewModels\RootViewModel.cs" />
     <Compile Include="ViewModels\SourceSpoolsViewModel.cs" />
@@ -492,8 +537,8 @@
     <Compile Include="Views\DocProductView.xaml.cs">
       <DependentUpon>DocProductView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FindProductionTaskView.xaml.cs">
-      <DependentUpon>FindProductionTaskView.xaml</DependentUpon>
+    <Compile Include="Views\FindProductionTaskBatchView.xaml.cs">
+      <DependentUpon>FindProductionTaskBatchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FindProductView.xaml.cs">
       <DependentUpon>FindProductView.xaml</DependentUpon>
@@ -522,8 +567,17 @@
     <Compile Include="Views\PlaceProductsView.xaml.cs">
       <DependentUpon>PlaceProductsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProductionTaskBatchSGBView.xaml.cs">
+      <DependentUpon>ProductionTaskBatchSGBView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProductionTasksConvertingView.xaml.cs">
       <DependentUpon>ProductionTasksConvertingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTaskSGBView.xaml.cs">
+      <DependentUpon>ProductionTaskSGBView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTaskWRView.xaml.cs">
+      <DependentUpon>ProductionTaskWRView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RoleEditView.xaml.cs">
       <DependentUpon>RoleEditView.xaml</DependentUpon>
@@ -540,14 +594,11 @@
     <Compile Include="Views\ProductionTaskRWView.xaml.cs">
       <DependentUpon>ProductionTaskRWView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProductionTasksPMView.xaml.cs">
-      <DependentUpon>ProductionTasksPMView.xaml</DependentUpon>
+    <Compile Include="Views\ProductionTasksSGBView.xaml.cs">
+      <DependentUpon>ProductionTasksSGBView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProductionTasksRWView.xaml.cs">
-      <DependentUpon>ProductionTasksRWView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ProductionTaskView.xaml.cs">
-      <DependentUpon>ProductionTaskView.xaml</DependentUpon>
+    <Compile Include="Views\ProductionTaskBatchView.xaml.cs">
+      <DependentUpon>ProductionTaskBatchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReportListView.xaml.cs">
       <DependentUpon>ReportListView.xaml</DependentUpon>
@@ -616,7 +667,7 @@
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FindProductionTaskView.xaml">
+    <Page Include="Views\FindProductionTaskBatchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -648,8 +699,20 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ProductionTaskBatchSGBView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ProductionTasksConvertingView.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTaskSGBView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTaskWRView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\RoleEditView.xaml">
@@ -672,16 +735,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProductionTasksPMView.xaml">
-      <SubType>Form</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ProductionTasksRWView.xaml">
+    <Page Include="Views\ProductionTasksSGBView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProductionTaskView.xaml">
-      <SubType>Form</SubType>
+    <Page Include="Views\ProductionTaskBatchView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ReportListView.xaml">

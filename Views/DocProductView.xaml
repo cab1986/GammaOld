@@ -17,10 +17,12 @@
     xmlns:Dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
-    Width="722" Background="#FFB6D0F4"
+    Background="#FFB6D0F4"
     Title="{Binding Title}"
-    >
-
+    Height="{g:SettingBinding DocProductHeight}"
+    Width="{g:SettingBinding DocProductWidth}"
+    Left="{g:SettingBinding DocProductLeft}"
+    Top="{g:SettingBinding DocProductTop}" >
     <g:MVVMWindow.Resources>
         <DataTemplate DataType="{x:Type vm:DocProductSpoolViewModel}">
             <v:DocProductSpoolView />

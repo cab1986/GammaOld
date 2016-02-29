@@ -36,7 +36,7 @@
                 </Trigger>
                 <Trigger Property="SelectionState" Value="Focused">
                     <Setter Property="Background" Value="#6495ED"/>
-                    <Setter Property="TextBlock.Foreground" Value="Pink"/>
+                    <Setter Property="TextBlock.Foreground" Value="White"/>
                 </Trigger>
                 <Trigger Property="SelectionState" Value="FocusedAndSelected">
                     <Setter Property="Background" Value="Gray"/>
@@ -69,7 +69,7 @@
         <Style TargetType="{x:Type dxe:TextEdit}" BasedOn="{StaticResource DefaultEditStyle}" />
 
         <Style TargetType="{x:Type v:LoginView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
-        <Style TargetType="{x:Type v:ProductionTaskView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:ProductionTaskBatchView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:NomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:DocProductView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:FindProductView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>

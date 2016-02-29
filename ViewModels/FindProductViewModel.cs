@@ -144,7 +144,7 @@ namespace Gamma.ViewModels
                 where pinfo.BarCode == Barcode
                 select new ProductInfo
                 {
-                    DocProductID = pinfo.DocID,
+                    DocID = pinfo.DocID,
                     ProductID = pinfo.ProductID,
                     Number = pinfo.Number,
                     CharacteristicID = pinfo.C1CCharacteristicID,
@@ -178,7 +178,7 @@ namespace Gamma.ViewModels
                 (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
                 select new ProductInfo
                 {
-                    DocProductID = pinfo.DocID,
+                    DocID = pinfo.DocID,
                     ProductID = pinfo.ProductID,
                     Number = pinfo.Number,
                     CharacteristicID = pinfo.C1CCharacteristicID,

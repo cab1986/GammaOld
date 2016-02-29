@@ -6,7 +6,7 @@ namespace Gamma
 {
     public class ProductInfo
     {
-        public Guid DocProductID { get; set; }
+        public Guid DocID { get; set; }
         public Guid ProductID { get; set; }
         public ProductKinds ProductKind { get; set; }
         public string Number { get; set; }

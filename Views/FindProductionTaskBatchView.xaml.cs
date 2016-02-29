@@ -17,11 +17,11 @@ namespace Gamma.Views
     /// <summary>
     /// Interaction logic for FindProductionTaskView.xaml
     /// </summary>
-    public partial class FindProductionTaskView : Window
+    public partial class FindProductionTaskBatchView : Window
     {
-        public FindProductionTaskView(PlaceGroups placeGroup)
+        public FindProductionTaskBatchView(BatchKinds batchKind)
         {
-            this.DataContext = new FindProductionTaskViewModel(placeGroup);
+            this.DataContext = new FindProductionTaskBatchViewModel(batchKind);
             InitializeComponent();
         }
     }

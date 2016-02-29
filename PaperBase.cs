@@ -22,5 +22,6 @@ namespace Gamma
                 RaisePropertyChanged("Weight");
             }
         }
+        public int Diameter { get; set; }
     }
 }

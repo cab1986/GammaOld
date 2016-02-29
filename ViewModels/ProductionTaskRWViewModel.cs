@@ -6,6 +6,10 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
+using Gamma.Interfaces;
+using Gamma.Attributes;
+using System.ComponentModel.DataAnnotations;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -15,7 +19,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class ProductionTaskRWViewModel : DBEditItemWithNomenclatureViewModel
+    public class ProductionTaskRWViewModel : DBEditItemWithNomenclatureViewModel, ICheckedAccess, IProductionTask
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskRWViewModel class.
@@ -24,32 +28,43 @@ namespace Gamma.ViewModels
         {
             Initialize();
         }
-        public ProductionTaskRWViewModel(Guid productionTaskID)
+        public ProductionTaskRWViewModel(Guid productionTaskBatchID) : this()
         {
             Initialize();
-            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting").Where(pt => pt.ProductionTaskID == productionTaskID).FirstOrDefault();
-            NomenclatureID = productionTask.C1CNomenclatureID;
-            SetCharacteristicProperties();
-            var cutting = productionTask.ProductionTaskRWCutting.First();
-            var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cutting.C1CCharacteristicID).FirstOrDefault();
-            CoreDiameter = charprops.CoreDiameter;
-            LayerNumber = charprops.LayerNumber;
-            Color = charprops.Color;
-            Diameter = charprops.Diameter;
-            Destination = charprops.Destination;
-            int i = 0;
-            foreach (var rwcutting in productionTask.ProductionTaskRWCutting)
+            ProductionTaskBatchID = productionTaskBatchID;
+            ProductionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting").Include("ProductionTaskBatches").
+                Where(pt => pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID).FirstOrDefault();
+ //           IsConfirmed = ProductionTask.ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
+            if (ProductionTask != null)
             {
-                CuttingFormats[0].Format[i] = DB.GammaBase.GetCharSpoolFormat(rwcutting.C1CCharacteristicID).FirstOrDefault().ToString();
-                i++;
+                IsConfirmed = ProductionTask.ProductionTaskBatches.FirstOrDefault().ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
+                NomenclatureID = ProductionTask.C1CNomenclatureID;
+                SetCharacteristicProperties();
+                var cutting = ProductionTask.ProductionTaskRWCutting.First();
+                var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cutting.C1CCharacteristicID).FirstOrDefault();
+                CoreDiameter = charprops.CoreDiameter;
+                LayerNumber = charprops.LayerNumber;
+                Color = charprops.Color;
+                Diameter = charprops.Diameter;
+                Destination = charprops.Destination;
+                DateBegin = ProductionTask.DateBegin;
+                DateEnd = ProductionTask.DateEnd;
+                TaskQuantity = ProductionTask.Quantity;
+                int i = 0;
+                foreach (var rwcutting in ProductionTask.ProductionTaskRWCutting)
+                {
+                    CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.
+                        Where(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID).FirstOrDefault().FormatNumeric.ToString();
+                    i++;
+                }
             }
         }
         private void Initialize()
         {
-            Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
+//            Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
             CuttingFormats = new ObservableCollection<Cutting>();
             CuttingFormats.Add(new Cutting());
-            ClearFilterCommand = new RelayCommand(ClearFilter);
+            ClearFilterCommand = new RelayCommand(ClearFilter, () => !IsReadOnly);
         }
 
         private void ClearFilter()
@@ -63,10 +78,38 @@ namespace Gamma.ViewModels
             CuttingsEnabled = false;
             FilterCharacteristics(Filters.All);
         }
-        public override void SaveToModel(Guid ItemID)
+        private ProductionTasks ProductionTask { get; set; }
+        private Guid ProductionTaskBatchID { get; set; }
+        public override void SaveToModel(Guid itemID)
         {
-            base.SaveToModel(ItemID);
-            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting").Where(pt => pt.ProductionTaskID == ItemID).FirstOrDefault();
+            base.SaveToModel(itemID);
+            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemID).FirstOrDefault();
+            if (productionTaskBatch == null)
+            {
+                MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemID, (short)PlaceGroups.RW).FirstOrDefault();
+            if (productionTaskTemp == null)
+            {
+                ProductionTaskID = SQLGuidUtil.NewSequentialId();
+                ProductionTask = new ProductionTasks()
+                {
+                    ProductionTaskID = ProductionTaskID,
+                    PlaceGroupID = (short)PlaceGroups.RW,
+                };
+                productionTaskBatch.ProductionTasks.Add(ProductionTask);
+            }
+            else
+            {
+                ProductionTaskID = productionTaskTemp.ProductionTaskID;
+                ProductionTask = DB.GammaBase.ProductionTasks.Find(ProductionTaskID);
+            }
+            ProductionTask.C1CNomenclatureID = (Guid)NomenclatureID;
+            ProductionTask.Quantity = TaskQuantity;
+            ProductionTask.DateBegin = DateBegin;
+            ProductionTask.DateEnd = DateEnd;
+            // заполняем раскрой для базы
             var prodTaskCuttings = new ObservableCollection<ProductionTaskRWCutting>();
             for (int i = 0; i < CuttingFormats[0].Format.Count; i++)
             {
@@ -81,17 +124,18 @@ namespace Gamma.ViewModels
                 {
                     prodTaskCuttings.Add(new ProductionTaskRWCutting()
                     {
-                        C1CCharacteristicID = characteristicID,
+                        C1CCharacteristicID = (Guid)characteristicID,
                         CutIndex = (short)i,
-                        ProductionTaskID = ItemID,
+                        ProductionTaskID = ProductionTaskID,
                         ProductionTaskRWCuttingID = SQLGuidUtil.NewSequentialId()
                     });
                 }
             }
-            DB.GammaBase.ProductionTaskRWCutting.RemoveRange(productionTask.ProductionTaskRWCutting);
+            DB.GammaBase.ProductionTaskRWCutting.RemoveRange(ProductionTask.ProductionTaskRWCutting);
             DB.GammaBase.ProductionTaskRWCutting.AddRange(prodTaskCuttings);
             DB.GammaBase.SaveChanges();
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public string Color
         {
             get
@@ -156,6 +200,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Colors");
             }
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public string CoreDiameter
         {
             get
@@ -194,6 +239,37 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("CuttingFormats");
             }
         }
+        private DateTime? _dateBegin;
+        [Required(ErrorMessage = "Необходимо указать дату начала")]
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public DateTime? DateBegin
+        {
+            get
+            {
+                return _dateBegin;
+            }
+            set
+            {
+                _dateBegin = value;
+                RaisePropertyChanged("DateBegin");
+            }
+        }
+        private DateTime? _dateEnd;
+        [Required(ErrorMessage = "Необходимо указать дату окончания")]
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public DateTime? DateEnd
+        {
+            get
+            {
+                return _dateEnd;
+            }
+            set
+            {
+                _dateEnd = value;
+                RaisePropertyChanged("DateEnd");
+            }
+        }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public string Destination
         {
             get
@@ -232,6 +308,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Diameters");
             }
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public string Diameter
         {
             get
@@ -258,6 +335,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Formats");
             }
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public string LayerNumber
         {
             get
@@ -290,6 +368,10 @@ namespace Gamma.ViewModels
             ClearFilter();
             NomenclatureID = msg.Nomenclature1CID;
             SetCharacteristicProperties();
+            if (NomenclatureID != null)
+            {
+                MessageManager.ProductionTaskRWNomenclatureChanged(ProductionTaskBatchID, (Guid)NomenclatureID);
+            }
         }
 
         private void SetCharacteristicProperties()
@@ -302,7 +384,8 @@ namespace Gamma.ViewModels
                     (new CharacteristicProperty()
                     {
                         CharacteristicID = charprops.C1CCharacteristicID,
-                        Format = ((int)DB.GammaBase.GetCharSpoolFormat(charprops.C1CCharacteristicID).FirstOrDefault()).ToString(),
+                        Format = ((int)DB.GammaBase.vCharacteristicSGBProperties.
+                            Where(p => p.C1CCharacteristicID == charprops.C1CCharacteristicID).FirstOrDefault().FormatNumeric).ToString(),
                         Diameter = charprops.Diameter,
                         LayerNumber = charprops.LayerNumber,
                         Destination = charprops.Destination,
@@ -312,7 +395,21 @@ namespace Gamma.ViewModels
             }
             CharacteristicProperties = tempCollection;
         }
-
+        private decimal _taskQuantity;
+        [Range(1,1000000000,ErrorMessage="Задание должно быть больше 0")]
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public decimal TaskQuantity
+        {
+            get
+            {
+                return _taskQuantity;
+            }
+            set
+            {
+            	_taskQuantity = value;
+                RaisePropertyChanged("TaskQuantity");
+            }
+        }
         private void ClearFormats()
         {
             for (int i = 0; i < CuttingFormats[0].Format.Count; i++)
@@ -320,6 +417,7 @@ namespace Gamma.ViewModels
                 CuttingFormats[0].Format[i] = null;
             }
         }
+        private bool IsConfirmed { get; set; }
         private ObservableCollection<string> _coreDiameters;
         private ObservableCollection<string> _layerNumbers;
         private ObservableCollection<string> _colors;
@@ -398,6 +496,7 @@ namespace Gamma.ViewModels
         {
             get
             {
+                if (IsReadOnly) return false;
                 return _cuttingsEnabled;
             }
             set
@@ -408,5 +507,19 @@ namespace Gamma.ViewModels
         }
         public RelayCommand ClearFilterCommand { get; private set; }
         private enum Filters { All, Color, Diameter, CoreDiameter, LayerNumber, Destination }
+
+        public bool IsReadOnly
+        {
+            get 
+            {
+                return IsConfirmed || !DB.HaveWriteAccess("ProductionTasks");
+            }
+        }
+
+        public Guid ProductionTaskID
+        {
+            get;
+            set;
+        }
     }
 }

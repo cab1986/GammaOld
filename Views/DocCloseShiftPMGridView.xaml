@@ -13,6 +13,10 @@
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
                             <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:d} шт" />
+                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
+                        </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} кг"/>
                         </dxg:GridControl.TotalSummary>

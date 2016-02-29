@@ -10,7 +10,8 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Name="LoginWindow" x:Class="Gamma.Views.LoginView"
         mc:Ignorable="d ignore"
         DataContext="{Binding Login, Source={StaticResource Locator}}" Height="319" Width="408"
-    Title="Авторизация">
+        WindowStartupLocation="CenterScreen"
+        Title="Авторизация">
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding LoginCommand}"/>
     </dxmvvm:Interaction.Behaviors>

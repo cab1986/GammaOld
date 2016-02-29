@@ -27,7 +27,7 @@ namespace Gamma
         {
             if (MessageBox.Show("Хотите закончить работу с программой?", "Завершение работы", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 e.Cancel = true;
-            DXSerializer.Serialize(this, "testLayout.xml", "Gamma", null);
+ //           DXSerializer.Serialize(this, "testLayout.xml", "Gamma", null);
             base.OnClosing(e);
         }
         protected override void OnClosed(System.EventArgs e)

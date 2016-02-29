@@ -18,10 +18,10 @@
     <dxlc:LayoutControl Orientation="Vertical">
         <Grid Background="#FFB1CEF3" VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="170"/>
+                <RowDefinition Height="190"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,-12,-12,-12" Orientation="Horizontal">
+            <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,0,-12,0" Orientation="Horizontal">
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Переделы" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
                         <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceName"/>
@@ -67,7 +67,7 @@
                 </dxlc:LayoutGroup>
             </dxlc:LayoutControl>
             <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding FoundProducts}" 
-                             SelectedItem="{Binding SelectedProduct}" VerticalAlignment="Stretch">
+                             SelectedItem="{Binding SelectedProduct}" VerticalAlignment="Stretch" Margin="0,12,0,-12">
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
                 </dxmvvm:Interaction.Behaviors>
@@ -89,7 +89,7 @@
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Height="35" Margin="-12,0,-12,-12">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Height="35" Margin="0,12,0,-12">
             <StackPanel.Style>
                 <Style TargetType="{x:Type StackPanel}">
                     <Style.Triggers>

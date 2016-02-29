@@ -50,8 +50,9 @@ namespace Gamma
                                               || e.State == EntityState.Modified
                                               || e.State == EntityState.Deleted);
         }
-        public static ObservableCollection<Characteristic> GetCharacteristics(Guid nomenclatureID)
+        public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureID)
         {
+            if (nomenclatureID == null) return new ObservableCollection<Characteristic>();
             return new ObservableCollection<Characteristic>
                 (
                     from chars in DB.GammaBase.C1CCharacteristics
@@ -67,6 +68,11 @@ namespace Gamma
              where places.PlaceGroupID == (short)placeGroup
              select new Place { PlaceID = places.PlaceID, PlaceName = places.Name }
             );
+        }
+        public static string CheckSourceSpools(int placeID, Guid productionTaskID)
+        {
+            return GammaBase.Database.SqlQuery<string>(string.Format("SELECT dbo.CheckSourceSpools({0}, '{1}')", placeID,
+                productionTaskID)).AsEnumerable().FirstOrDefault();
         }
 
         public static DateTime CurrentDateTime

@@ -32,6 +32,7 @@ namespace Gamma.ViewModels
             {
                 SourceSpools = new SourceSpools() { PlaceID = (int)WorkSession.PlaceID };
                 DB.GammaBase.SourceSpools.Add(SourceSpools);
+                DB.GammaBase.SaveChanges();
             }
             else
             {
@@ -61,14 +62,20 @@ namespace Gamma.ViewModels
                 case 1:
                     DeleteSpool(1);
                     Unwinder1ProductID = msg.ProductID;
+                    SourceSpools.Unwinder1Spool = msg.ProductID;
+                    SourceSpools.Unwinder1Active = Unwinder1Active;
                     break;
                 case 2:
                     DeleteSpool(2);
                     Unwinder2ProductID = msg.ProductID;
+                    SourceSpools.Unwinder2Spool = msg.ProductID;
+                    SourceSpools.Unwinder2Active = Unwinder2Active;
                     break;
                 case 3:
                     DeleteSpool(3);
                     Unwinder3ProductID = msg.ProductID;
+                    SourceSpools.Unwinder3Spool = msg.ProductID;
+                    SourceSpools.Unwinder3Active = Unwinder3Active;
                     break;
                 default:
                     break;
@@ -329,7 +336,7 @@ namespace Gamma.ViewModels
         {
             return (from pspool in DB.GammaBase.ProductSpools
                     where pspool.ProductID == productID
-                    select pspool.C1CNomenclature.Name + " " + pspool.C1CCharacteristics.Name).FirstOrDefault();
+                    select "№" + pspool.Products.Number + " " + pspool.C1CNomenclature.Name + " " + pspool.C1CCharacteristics.Name).FirstOrDefault();
         }
         private SourceSpools SourceSpools { get; set; }
         private bool CheckSpoolIsUsed(Guid? productID)

@@ -56,6 +56,7 @@
       <PropertyRef Name="1CNomenclatureID" />
     </Key>
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="NomenclatureKindID" Type="tinyint" />
     <Property Name="1CBaseMeasureUnitQualifier" Type="uniqueidentifier" />
     <Property Name="1CCode" Type="varchar" MaxLength="11" Nullable="false" />
     <Property Name="1CParentID" Type="uniqueidentifier" />
@@ -126,6 +127,14 @@
     <Property Name="ParentID" Type="uniqueidentifier" />
     <Property Name="Description" Type="varchar" MaxLength="100" />
     <Property Name="FullDescription" Type="ntext" />
+  </EntityType>
+  <EntityType Name="BatchProductionTasks">
+    <Key>
+      <PropertyRef Name="ProductionTaskBatchID" />
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskBatchID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="DocCloseShiftDocs">
     <Key>
@@ -201,6 +210,7 @@
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="Comment" Type="varchar" MaxLength="8000" />
+    <Property Name="IsFromOldGamma" Type="bit" />
   </EntityType>
   <EntityType Name="DocTypes">
     <Key>
@@ -255,7 +265,7 @@
     <Key>
       <PropertyRef Name="PlaceGroupID" />
     </Key>
-    <Property Name="PlaceGroupID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PlaceGroupID" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Places">
@@ -269,6 +279,7 @@
     <Property Name="PlaceGroupID" Type="smallint" />
     <Property Name="IsProductionPlace" Type="bit" />
     <Property Name="IsWarehouse" Type="bit" />
+    <Property Name="1CPlaceID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="ProductGroupPacks">
     <Key>
@@ -280,33 +291,52 @@
     <Property Name="Weight" Type="decimal" Precision="10" Scale="4" />
     <Property Name="GrossWeight" Type="decimal" Precision="10" Scale="4" />
   </EntityType>
+  <EntityType Name="ProductionTaskBatches">
+    <Key>
+      <PropertyRef Name="ProductionTaskBatchID" />
+    </Key>
+    <Property Name="ProductionTaskBatchID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="BatchKindID" Type="smallint" Nullable="false" />
+    <Property Name="ProductionTaskStateID" Type="tinyint" Nullable="false" />
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Number" Type="varchar" MaxLength="255" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="Comment" Type="varchar" MaxLength="8000" />
+    <Property Name="ProcessModelID" Type="smallint" />
+    <Property Name="PartyControl" Type="bit" />
+  </EntityType>
   <EntityType Name="ProductionTaskRWCutting">
     <Key>
       <PropertyRef Name="ProductionTaskRWCuttingID" />
+      <PropertyRef Name="CutIndex" />
     </Key>
     <Property Name="ProductionTaskRWCuttingID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="CutIndex" Type="smallint" />
-    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="CutIndex" Type="smallint" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="ProductionTasks">
     <Key>
       <PropertyRef Name="ProductionTaskID" />
     </Key>
     <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ProductionTaskKindID" Type="smallint" />
     <Property Name="PlaceID" Type="int" />
-    <Property Name="ProductionTaskStateID" Type="tinyint" />
+    <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-    <Property Name="UserID" Type="uniqueidentifier" />
-    <Property Name="Number" Type="varchar" MaxLength="64" />
-    <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="DateBegin" Type="datetime" />
     <Property Name="DateEnd" Type="datetime" />
-    <Property Name="Comment" Type="varchar" MaxLength="8000" />
-    <Property Name="IsInPlan" Type="bit" />
+  </EntityType>
+  <EntityType Name="ProductionTaskSGB">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Diameter" Type="int" />
+    <Property Name="DiameterPlus" Type="int" />
+    <Property Name="DiameterMinus" Type="int" />
+    <Property Name="Crepe" Type="int" />
   </EntityType>
   <EntityType Name="ProductionTaskStates">
     <Key>
@@ -315,6 +345,16 @@
     <Property Name="ProductionTaskStateID" Type="tinyint" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="IsActual" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ProductionTaskWR">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="NumFilmLayers" Type="tinyint" />
+    <Property Name="IsWithCarton" Type="bit" />
+    <Property Name="IsEndProtected" Type="bit" />
+    <Property Name="GroupPackConfig" Type="varchar" MaxLength="8000" />
   </EntityType>
   <EntityType Name="ProductPalletItems">
     <Key>
@@ -351,7 +391,7 @@
     <Property Name="RealFormat" Type="int" />
     <Property Name="Diameter" Type="int" Nullable="false" />
     <Property Name="Weight" Type="int" Nullable="false" />
-    <Property Name="Length" Type="int" />
+    <Property Name="Length" Type="decimal" Precision="8" Scale="2" />
     <Property Name="RealBasisWeight" Type="decimal" Precision="10" Scale="4" />
     <Property Name="BreakNumber" Type="tinyint" />
   </EntityType>
@@ -426,16 +466,33 @@
     <Property Name="PlaceID" Type="int" Nullable="false" />
     <Property Name="Exports" Type="bit" Nullable="false" />
     <Property Name="DBAdmin" Type="bit" Nullable="false" />
+    <Property Name="ProgramAdmin" Type="bit" />
     <Property Name="ShiftID" Type="tinyint" Nullable="false" />
   </EntityType>
   <!--Errors Found During Generation:
-warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vCharacteristicSGBProperties">
+    <Key>
+      <PropertyRef Name="1CCharacteristicID" />
+    </Key>
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CoreDiameter" Type="varchar" MaxLength="50" />
+    <Property Name="LayerNumber" Type="varchar" MaxLength="50" />
+    <Property Name="Diameter" Type="varchar" MaxLength="50" />
+    <Property Name="Destination" Type="varchar" MaxLength="50" />
+    <Property Name="Format" Type="varchar" MaxLength="50" />
+    <Property Name="Color" Type="varchar" MaxLength="50" />
+    <Property Name="FormatNumeric" Type="int" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="vProductsInfo">
     <Key>
       <PropertyRef Name="DocID" />
       <PropertyRef Name="ProductID" />
       <PropertyRef Name="Date" />
       <PropertyRef Name="StateID" />
+      <PropertyRef Name="RejectionReason" />
       <PropertyRef Name="IsConfirmed" />
       <PropertyRef Name="IsWrittenOff" />
       <PropertyRef Name="State" />
@@ -454,6 +511,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <Property Name="PlaceID" Type="int" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="StateID" Type="tinyint" Nullable="false" />
+    <Property Name="RejectionReason" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="IsConfirmed" Type="bit" Nullable="false" />
     <Property Name="IsWrittenOff" Type="bit" Nullable="false" />
     <Property Name="State" Type="varchar" MaxLength="50" Nullable="false" />
@@ -671,6 +729,30 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Principal>
       <Dependent Role="1CPropertyValues">
         <PropertyRef Name="1CPropertyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BatchProductionTasks_ProductionTaskBatch">
+    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="1" />
+    <End Role="BatchProductionTasks" Type="Self.BatchProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTaskBatches">
+        <PropertyRef Name="ProductionTaskBatchID" />
+      </Principal>
+      <Dependent Role="BatchProductionTasks">
+        <PropertyRef Name="ProductionTaskBatchID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BatchProductionTasks_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="BatchProductionTasks" Type="Self.BatchProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="BatchProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1044,8 +1126,32 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ProductionTaskBatch_ProductionTaskStates">
+    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="1" />
+    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTaskStates">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Principal>
+      <Dependent Role="ProductionTaskBatches">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskBatch_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="ProductionTaskBatches">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
-    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
     <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CCharacteristics">
@@ -1104,15 +1210,27 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProductionTasks_ProductionTaskStates">
-    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="0..1" />
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
+  <Association Name="FK_ProductionTaskSGB_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTaskSGB" Type="Self.ProductionTaskSGB" Multiplicity="0..1" />
     <ReferentialConstraint>
-      <Principal Role="ProductionTaskStates">
-        <PropertyRef Name="ProductionTaskStateID" />
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
       </Principal>
-      <Dependent Role="ProductionTasks">
-        <PropertyRef Name="ProductionTaskStateID" />
+      <Dependent Role="ProductionTaskSGB">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskWR_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTaskWR" Type="Self.ProductionTaskWR" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ProductionTaskWR">
+        <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1337,6 +1455,12 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     </ReferentialConstraint>
   </Association>
   <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
+  <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="BatchKindID" Type="int" Mode="In" />
+    <Parameter Name="ProductionTaskStateID" Type="tinyint" Mode="In" />
+    <Parameter Name="DateBegin" Type="datetime" Mode="In" />
+    <Parameter Name="DateEnd" Type="datetime" Mode="In" />
+  </Function>
   <Function Name="GenerateNewNumbersForDoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -1344,9 +1468,6 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <Parameter Name="PlaceID" Type="int" Mode="In" />
   </Function>
   <Function Name="GetCharPropsDescriptions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
-  </Function>
-  <Function Name="GetCharSpoolFormat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetCharSpoolLayerNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1361,14 +1482,33 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
   <Function Name="GetGroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="GetInputNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GetProductionTaskBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetProductionTaskBatchSGBCuttings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetProductionTaskBatchSGBProperties" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetProductionTaskBatchWRProperties" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetProductionTaskByBatchID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="PlaceGroupID" Type="smallint" Mode="In" />
   </Function>
   <Function Name="GetProductionTaskProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
+    <Parameter Name="BatchKindID" Type="int" Mode="In" />
   </Function>
   <Function Name="GetProductRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
@@ -1396,6 +1536,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <EntitySet Name="1CProperties" EntityType="Self.1CProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CPropertyValues" EntityType="Self.1CPropertyValues" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CRejectionReasons" EntityType="Self.1CRejectionReasons" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
@@ -1413,9 +1554,12 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductPalletItems" EntityType="Self.ProductPalletItems" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductPallets" EntityType="Self.ProductPallets" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
@@ -1427,6 +1571,18 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <EntitySet Name="SourceSpools" EntityType="Self.SourceSpools" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vCharacteristicSGBProperties].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vCharacteristicSGBProperties].[CoreDiameter] AS [CoreDiameter], 
+    [vCharacteristicSGBProperties].[LayerNumber] AS [LayerNumber], 
+    [vCharacteristicSGBProperties].[Diameter] AS [Diameter], 
+    [vCharacteristicSGBProperties].[Destination] AS [Destination], 
+    [vCharacteristicSGBProperties].[Format] AS [Format], 
+    [vCharacteristicSGBProperties].[Color] AS [Color], 
+    [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric]
+    FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="vProductsInfo" EntityType="Self.vProductsInfo" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [vProductsInfo].[DocID] AS [DocID], 
@@ -1443,6 +1599,7 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     [vProductsInfo].[PlaceID] AS [PlaceID], 
     [vProductsInfo].[ShiftID] AS [ShiftID], 
     [vProductsInfo].[StateID] AS [StateID], 
+    [vProductsInfo].[RejectionReason] AS [RejectionReason], 
     [vProductsInfo].[IsConfirmed] AS [IsConfirmed], 
     [vProductsInfo].[IsWrittenOff] AS [IsWrittenOff], 
     [vProductsInfo].[State] AS [State]
@@ -1519,6 +1676,14 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
     <AssociationSet Name="FK_1CPropertyValues_1CProperties" Association="Self.FK_1CPropertyValues_1CProperties">
       <End Role="1CProperties" EntitySet="1CProperties" />
       <End Role="1CPropertyValues" EntitySet="1CPropertyValues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BatchProductionTasks_ProductionTaskBatch" Association="Self.FK_BatchProductionTasks_ProductionTaskBatch">
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+      <End Role="BatchProductionTasks" EntitySet="BatchProductionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BatchProductionTasks_ProductionTasks" Association="Self.FK_BatchProductionTasks_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="BatchProductionTasks" EntitySet="BatchProductionTasks" />
     </AssociationSet>
     <AssociationSet Name="FK_DocCloseShiftDocs_Docs2" Association="Self.FK_DocCloseShiftDocs_Docs2">
       <End Role="Docs" EntitySet="Docs" />
@@ -1640,6 +1805,14 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       <End Role="Products" EntitySet="Products" />
       <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
     </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskBatch_ProductionTaskStates" Association="Self.FK_ProductionTaskBatch_ProductionTaskStates">
+      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskBatch_Users" Association="Self.FK_ProductionTaskBatch_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+    </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="Self.FK_ProductionTaskRWCutting_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
       <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
@@ -1660,9 +1833,13 @@ warning 6002: The table/view 'Gamma.dbo.vProductsInfo' does not have a primary k
       <End Role="Places" EntitySet="Places" />
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductionTasks_ProductionTaskStates" Association="Self.FK_ProductionTasks_ProductionTaskStates">
-      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+    <AssociationSet Name="FK_ProductionTaskSGB_ProductionTasks" Association="Self.FK_ProductionTaskSGB_ProductionTasks">
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskSGB" EntitySet="ProductionTaskSGB" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskWR_ProductionTasks" Association="Self.FK_ProductionTaskWR_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductPalletItems_1CCharacteristics" Association="Self.FK_ProductPalletItems_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />

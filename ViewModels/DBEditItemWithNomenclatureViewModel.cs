@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
+using Gamma.Attributes;
 
 namespace Gamma.ViewModels
 {
@@ -23,8 +24,10 @@ namespace Gamma.ViewModels
             ChooseNomenclatureCommand = new RelayCommand(ChooseNomenclature,CanChooseNomenclature);
         }
 
-        private Guid _nomenclatureID;
-        public Guid NomenclatureID
+        private Guid? _nomenclatureID;
+        [Required(ErrorMessage="Необходимо выбрать номенклатуру")]
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public Guid? NomenclatureID
         {
             get { return _nomenclatureID; }
             set
@@ -60,8 +63,9 @@ namespace Gamma.ViewModels
             NomenclatureID = msg.Nomenclature1CID;
         }
 
-        private void SetNomenclatureName(Guid nomenclatureID)
+        private void SetNomenclatureName(Guid? nomenclatureID)
         {
+            if (nomenclatureID == null) return;
             NomenclatureName = (from nom in DB.GammaBase.C1CNomenclature
                                 where nom.C1CNomenclatureID == nomenclatureID
                                 select nom.Name).FirstOrDefault();

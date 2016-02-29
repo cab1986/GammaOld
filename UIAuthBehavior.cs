@@ -67,24 +67,27 @@ namespace Gamma
                     if (Binding != null)
                     {
                         PropertyInfo bounded = properties.Where(x => x.Name == Binding.Path.Path).FirstOrDefault();
-                        foreach (var attr in bounded.GetCustomAttributes(true))
+                        if (bounded != null)
                         {
-                            var UIAuthAttr = attr as UIAuthAttribute;
-                            if (UIAuthAttr != null)
+                            foreach (var attr in bounded.GetCustomAttributes(true))
                             {
-                                switch (UIAuthAttr.AuthLevel)
+                                var UIAuthAttr = attr as UIAuthAttribute;
+                                if (UIAuthAttr != null)
                                 {
-                                    case UIAuthLevel.Invisible:
-                                        (frameElement as Control).Visibility = Visibility.Collapsed;
-                                        break;
-                                    case UIAuthLevel.ReadOnly:
-                                        if (frameElement is BaseEdit) (frameElement as BaseEdit).IsReadOnly = true;
-                                        else (frameElement as TextBox).IsReadOnly = true;
-                                        break;
-                                    default:
-                                        (frameElement as Control).Visibility = Visibility.Visible;
-                                        (frameElement as Control).IsEnabled = true;
-                                        break;
+                                    switch (UIAuthAttr.AuthLevel)
+                                    {
+                                        case UIAuthLevel.Invisible:
+                                            (frameElement as Control).Visibility = Visibility.Collapsed;
+                                            break;
+                                        case UIAuthLevel.ReadOnly:
+                                            if (frameElement is BaseEdit) (frameElement as BaseEdit).IsReadOnly = true;
+                                            else (frameElement as TextBox).IsReadOnly = true;
+                                            break;
+                                        default:
+                                            (frameElement as Control).Visibility = Visibility.Visible;
+                                            (frameElement as Control).IsEnabled = true;
+                                            break;
+                                    }
                                 }
                             }
                         }

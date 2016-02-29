@@ -102,7 +102,9 @@ namespace Gamma.ViewModels
                 };
                 DB.GammaBase.Docs.Add(Doc);
             }
+            Doc.IsConfirmed = IsConfirmed;
             DB.GammaBase.SaveChanges();
+            IsNewDoc = false;
             if (CurrentViewModelGrid != null)
                 CurrentViewModelGrid.SaveToModel(Doc.DocID);
             if (CurrentViewModelRemainder != null)

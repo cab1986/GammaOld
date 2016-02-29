@@ -3,10 +3,12 @@ using Gamma.Interfaces;
 using System;
 using GalaSoft.MvvmLight.Command;
 using System.Linq;
+using Gamma.Attributes;
 using Gamma.Models;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -16,28 +18,36 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductUnloadViewModel : DBEditItemWithNomenclatureViewModel, IBarImplemented
+    public class DocProductUnloadViewModel : DBEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
         /// Инициализирует новую viewmodel.
         /// Если новый, то ID = ProductionTaskID иначе ID = DocID
         /// </summary>
-        public DocProductUnloadViewModel(Guid ID, bool NewProduct) 
+        public DocProductUnloadViewModel(Guid docID, bool NewProduct) 
         {
-            CreateSpoolsCommand = new RelayCommand(CreateSpools);
-            EditSpoolCommand = new RelayCommand(EditSpool);
-            if (NewProduct)  // Если новый съем то получаем раскрой по ID задания и инициализруемколлекцию тамбуров съема
+            if (NewProduct)  // Если новый съем то получаем раскрой по из задаения DocProduction и инициализруем коллекцию тамбуров съема
             {
-                GetProductionTaskRWInfo(ID);
+                GetProductionTaskRWInfo(docID);
                 UnloadSpools = new ObservableCollection<PaperBase>();
-                SourceSpools = DB.GammaBase.GetActiveSourceSpools(WorkSession.PlaceID).Select(p => (Guid)p).ToList();
+                var sourceSpools = DB.GammaBase.GetActiveSourceSpools(WorkSession.PlaceID).Select(p => p);
+                if (sourceSpools == null)
+                {
+                    MessageBox.Show("Нет активных раскатов. Окно будет закрыто!", "Нет активных раскатов", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    CloseWindow();
+                }
+                SourceSpools = sourceSpools.OfType<Guid>().ToList();
             }
             else // Получение данных по ID документа
             {
+                IsConfirmed = DB.GammaBase.Docs.Where(d => d.DocID == docID).Select(d => d.IsConfirmed).FirstOrDefault();
+                SourceSpools = DB.GammaBase.DocProducts.Where(dp => dp.Docs.DocWithdrawal.DocProduction.
+                    Any(dprod => dprod.DocID == docID)).Select(dp => dp.ProductID).ToList();             
                 DocProducts = new ObservableCollection<DocProducts>
-                (DB.GammaBase.DocProducts.Where(dp => dp.DocID == ID));
-                Products = new ObservableCollection<Products>
-                (from p in DB.GammaBase.Products where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
+                (DB.GammaBase.DocProducts.Include("Products").Include("Products.ProductSpools").Where(dp => dp.DocID == docID));
+                Products = new ObservableCollection<Products>(DocProducts.Select(dp => dp.Products));
+//                (from p in DB.GammaBase.Products where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
                 UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProducts
                                                          join ps in DB.GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
                                                          select new PaperBase
@@ -47,19 +57,19 @@ namespace Gamma.ViewModels
                                                              Nomenclature = ps.C1CNomenclature.Name + " " + ps.C1CCharacteristics.Name,
                                                              CharacteristicID = (Guid)ps.C1CCharacteristicID,
                                                              NomenclatureID = ps.C1CNomenclatureID,
-                                                             Weight = ps.Weight
+                                                             Weight = ps.Weight,
+                                                             Diameter = ps.Diameter
                                                          }
                                     );
                 ProductSpools = new ObservableCollection<ProductSpools>
-                (from p in DB.GammaBase.ProductSpools where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
+                (DocProducts.Select(dp => dp.Products.ProductSpools));
                 if (UnloadSpools.Count == 0)
                 {
-                    var productionTaskID = DB.GammaBase.DocProduction.Where(dp => dp.DocID == ID).Select(dp => dp.ProductionTaskID).FirstOrDefault();
-                    if (productionTaskID != null)
-                        GetProductionTaskRWInfo((Guid)productionTaskID);
+                    GetProductionTaskRWInfo(docID);
                 }
                 else
                 {
+                    Diameter = UnloadSpools[0].Diameter;
                     NomenclatureID = UnloadSpools[0].NomenclatureID;
                     Cuttings = new ObservableCollection<Cutting>
                     (
@@ -72,16 +82,21 @@ namespace Gamma.ViewModels
                     }
                     );
                 }
-            }   
+            }
+            CreateSpoolsCommand = new RelayCommand(CreateSpools, () => !IsReadOnly);
+            EditSpoolCommand = new RelayCommand(EditSpool);
+            Bars.Add(ReportManager.GetReportBar("Unload",VMID));
         }
         private List<Guid> SourceSpools { get; set; }
-        private void GetProductionTaskRWInfo(Guid ID)
+        private void GetProductionTaskRWInfo(Guid docID)
         {
-            NomenclatureID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ID).Select(p => p.C1CNomenclatureID).FirstOrDefault();
+            var productionTaskID = DB.GammaBase.DocProduction.Where(d => d.DocID == docID).Select(d => d.ProductionTaskID).FirstOrDefault();
+            NomenclatureID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskID).
+                Select(p => p.C1CNomenclatureID).FirstOrDefault();
             Cuttings = new ObservableCollection<Cutting>
             (
                 from ptcut in DB.GammaBase.ProductionTaskRWCutting
-                where ptcut.ProductionTaskID == ID
+                where ptcut.ProductionTaskID == productionTaskID
                 group ptcut by ptcut.C1CCharacteristicID into grouped
                 select new Cutting
                 {
@@ -90,7 +105,7 @@ namespace Gamma.ViewModels
                 }
             );
         }
-        private ObservableCollection<BarViewModel> _bars;
+        private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
         public ObservableCollection<BarViewModel> Bars
         {
             get
@@ -124,8 +139,9 @@ namespace Gamma.ViewModels
                     UnloadSpools.Add(new PaperBase
                     {
                         CharacteristicID = cutting.CharacteristicID,
-                        NomenclatureID = NomenclatureID,
-                        Nomenclature = NomenclatureName,
+                        NomenclatureID = (Guid)NomenclatureID,
+                        Nomenclature = NomenclatureName + " " +
+                        Characteristics.Where(c => c.CharacteristicID == cutting.CharacteristicID).Select(c => c.CharacteristicName).First(),
                         ProductID = SQLGuidUtil.NewSequentialId()
                     });    
                 }
@@ -158,15 +174,25 @@ namespace Gamma.ViewModels
                 {
                     if (!DB.GammaBase.DocProducts.Any(dp => dp.ProductID == spoolID && dp.Docs.DocTypeID == (byte)DocTypes.DocWithdrawal))
                     {
+                        var docID = SQLGuidUtil.NewSequentialId();
                         var doc = new Docs()
                             {
-                                DocID = SQLGuidUtil.NewSequentialId(),
+                                DocID = docID,
                                 Date = DB.CurrentDateTime,
                                 DocTypeID = (byte)DocTypes.DocWithdrawal,
                                 IsConfirmed = true,
                                 PlaceID = WorkSession.PlaceID,
                                 UserID = WorkSession.UserID,
-                                ShiftID = WorkSession.ShiftID
+                                ShiftID = WorkSession.ShiftID,
+                                DocProducts = new ObservableCollection<DocProducts>()
+                                {
+                                    new DocProducts()
+                                    {
+                                        DocID = docID,
+                                        ProductID = spoolID,
+                                        IsOutConfirmed = true
+                                    }
+                                }
                             };
                         docs.Add(doc);
                         docWithdrawals.Add
@@ -228,6 +254,11 @@ namespace Gamma.ViewModels
                 DB.GammaBase.DocProducts.AddRange(DocProducts);
             }
             DB.GammaBase.SaveChanges();
+            foreach (var product in Products)
+            {
+                DB.GammaBase.Entry<Products>(product).Reload();
+                UnloadSpools.Where(s => s.ProductID == product.ProductID).Select(s => s).First().Number = product.Number;
+            }
         }
         private ObservableCollection<DocProducts> DocProducts { get; set; }
         private ObservableCollection<Products> Products { get; set; }
@@ -242,6 +273,7 @@ namespace Gamma.ViewModels
         }
 
         private byte? _breakNumber;
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public byte? BreakNumber
         {
             get
@@ -255,6 +287,7 @@ namespace Gamma.ViewModels
             }
         }
         private int _diameter;
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public int Diameter
         {
             get
@@ -289,6 +322,13 @@ namespace Gamma.ViewModels
             public Guid CharacteristicID { get; set; }
             public int Quantity { get; set; }
         }
-        
+        private bool IsConfirmed { get; set; }
+        public bool IsReadOnly
+        {
+            get 
+            {
+                return IsConfirmed || !DB.HaveWriteAccess("ProductSpools");
+            }
+        }
     }
 }

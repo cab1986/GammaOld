@@ -17,7 +17,7 @@
     <HandShake>None</HandShake>
   </ScalesComPort>
   <HostName>gamma</HostName>
-  <DbName>GAMMAnew</DbName>
-  <User>БДМ21</User>
+  <DbName>GAMMANEW</DbName>
+  <User>Костин</User>
   <UseScanner>false</UseScanner>
 </GammaSettings>

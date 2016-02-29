@@ -10,8 +10,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\UserEditView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskPMView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskRWView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksPMView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksRWView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ReportListView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\SourceSpoolsView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChangeSpoolDialog.g.cs
@@ -30,9 +28,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\UserEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskPMView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskRWView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksPMView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksRWView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ReportListView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\SourceSpoolsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\App.g.cs
@@ -153,7 +148,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\LoginView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\MainView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ManageUsersView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.g.resources
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.Properties.Resources.resources
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.Views.ReportPreview.resources
@@ -172,9 +166,7 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftPMRemainderView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductionTaskView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceProductsView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductionTaskView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceProductsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftWRGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceGroupsNomenclatureView.baml
@@ -184,3 +176,15 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceGroupsNomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductGroupPackView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChoosePrintNameDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChoosePrintNameDialog.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGBView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskWRView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductionTaskBatchView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchSGBView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGBView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskWRView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductionTaskBatchView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchSGBView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.g.cs

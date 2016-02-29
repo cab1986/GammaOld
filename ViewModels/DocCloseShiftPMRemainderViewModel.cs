@@ -87,7 +87,7 @@ namespace Gamma.ViewModels
                     ProductSpools = new ProductSpools()
                     {
                         C1CCharacteristicID = CharacteristicID,
-                        C1CNomenclatureID = NomenclatureID,
+                        C1CNomenclatureID = (Guid)NomenclatureID,
                         Diameter = 0,
                         Weight = 0,
                         ProductID = productID

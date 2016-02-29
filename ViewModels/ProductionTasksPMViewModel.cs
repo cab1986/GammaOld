@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
 using Gamma.Interfaces;
 using GalaSoft.MvvmLight.Messaging;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -30,11 +31,11 @@ namespace Gamma.ViewModels
         private void GetProductionTasks()
         {
             var haveWriteAccess = DB.HaveWriteAccess("ProductionTasks");
-            ProductionTasks = new ObservableCollection<ProductionTask>
+            ProductionTasks = new ObservableCollection<ProductionTaskBatch>
                               (from pt in DB.GammaBase.GetProductionTasks((int)PlaceGroups.PM)
-                               select new ProductionTask
+                               select new ProductionTaskBatch
                                {
-                                   ProductionTaskID = pt.ProductionTaskID,
+                                   ProductionTaskBatchID = pt.ProductionTaskBatchID,
                                    DateBegin = pt.DateBegin,
                                    Nomenclature = pt.Nomenclature + " " + pt.Characteristic,
                                    Quantity = pt.Quantity,
@@ -43,30 +44,27 @@ namespace Gamma.ViewModels
                                });
         }
 
-        private ObservableCollection<ProductionTask> _productiontasks;
-        public ObservableCollection<ProductionTask> ProductionTasks
+        private ObservableCollection<ProductionTaskBatch> _productiontasks;
+        public ObservableCollection<ProductionTaskBatch> ProductionTasks
         {
             get { return _productiontasks; }
             private set { 
                     _productiontasks = value;
                     RaisePropertyChanged("ProductionTasks");
                 }
-        }
-
-        
-
+        }    
         private void EditItem()
         {
-            OpenProductionTaskMessage msg = new OpenProductionTaskMessage { ProductionTaskID = SelectedProductionTask.ProductionTaskID, ProductionTaskKind = ProductionTaskKinds.ProductionTaskPM };
+            OpenProductionTaskBatchMessage msg = new OpenProductionTaskBatchMessage { ProductionTaskBatchID = SelectedProductionTask.ProductionTaskBatchID, BatchKind = BatchKinds.SGB };
             MessageManager.OpenProductionTask(msg);
         }
 
         private void NewProductionTask()
         {
-            var msg = new OpenProductionTaskMessage {ProductionTaskKind = ProductionTaskKinds.ProductionTaskPM};
-            Messenger.Default.Send<OpenProductionTaskMessage>(msg);
+            var msg = new OpenProductionTaskBatchMessage {BatchKind = BatchKinds.SGB};
+            Messenger.Default.Send<OpenProductionTaskBatchMessage>(msg);
         }
-        private ProductionTask _selectedProductionTask;
+        private ProductionTaskBatch _selectedProductionTask;
         public RelayCommand NewItemCommand
         {
             get;
@@ -89,7 +87,7 @@ namespace Gamma.ViewModels
             get;
             set;
         }
-        public ProductionTask SelectedProductionTask
+        public ProductionTaskBatch SelectedProductionTask
         {
             get
             {

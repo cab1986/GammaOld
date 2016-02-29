@@ -33,6 +33,7 @@ namespace Gamma.Models
         public System.DateTime Date { get; set; }
         public string Comment { get; set; }
         public string PrintName { get; set; }
+        public Nullable<bool> IsFromOldGamma { get; set; }
     
         public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DocMovement DocMovement { get; set; }

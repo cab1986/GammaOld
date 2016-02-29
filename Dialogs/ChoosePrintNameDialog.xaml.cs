@@ -13,7 +13,7 @@ namespace Gamma.Dialogs
         public ChoosePrintNameDialog()
         {
             InitializeComponent();
-            var printNames = (from d in DB.GammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).ToList();
+            var printNames = (from d in DB.GammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).Distinct().ToList();
             edtPrintName.ItemsSource = printNames;
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)

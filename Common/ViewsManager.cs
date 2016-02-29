@@ -13,7 +13,7 @@ namespace Gamma.Common
         {
             Messenger.Default.Register<OpenNomenclatureMessage>(this, OpenNomenclature);
             Messenger.Default.Register<OpenDocProductMessage>(this, OpenDocProduct);
-            Messenger.Default.Register<OpenProductionTaskMessage>(this, OpenProductionTask);
+            Messenger.Default.Register<OpenProductionTaskBatchMessage>(this, OpenProductionTask);
             Messenger.Default.Register<OpenReportListMessage>(this, OpenReportList);
             Messenger.Default.Register<FindProductMessage>(this, OpenFindProduct);
             Messenger.Default.Register<OpenManageUsersMessage>(this, OpenManageUsers);
@@ -23,7 +23,7 @@ namespace Gamma.Common
             Messenger.Default.Register<PermitEditMessage>(this, PermitEdit);
             Messenger.Default.Register<RoleEditMessage>(this, RoleEdit);
             Messenger.Default.Register<UserEditMessage>(this, UserEdit);
-            Messenger.Default.Register<FindProductionTaskMessage>(this, FindProductionTask);
+            Messenger.Default.Register<FindProductionTaskBatchMessage>(this, FindProductionTaskBatch);
             Messenger.Default.Register<OpenPlaceGroupsNomenclatureMessage>(this, OpenPlaceGroupsNomenclature);
         }
 
@@ -36,9 +36,9 @@ namespace Gamma.Common
         {
             if (_viewsManager == null) _viewsManager = new ViewsManager();
         }
-        private static void FindProductionTask(FindProductionTaskMessage msg)
+        private static void FindProductionTaskBatch(FindProductionTaskBatchMessage msg)
         {
-            new FindProductionTaskView(msg.PlaceGroup).Show();
+            new FindProductionTaskBatchView(msg.BatchKind).Show();
         }
         private static void OpenNomenclature(OpenNomenclatureMessage msg)
         {
@@ -73,9 +73,9 @@ namespace Gamma.Common
             var View = new ManageUsersView();
             View.Show();
         }
-        private void OpenProductionTask(OpenProductionTaskMessage msg)
+        private void OpenProductionTask(OpenProductionTaskBatchMessage msg)
         {
-            var View = new ProductionTaskView(msg);
+            var View = new ProductionTaskBatchView(msg);
             View.Show();
         }
         private void OpenReportList(OpenReportListMessage msg)

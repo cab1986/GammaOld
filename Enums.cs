@@ -6,7 +6,19 @@ using System.Text;
 
 namespace Gamma
 {
-    public enum ProductionTaskKinds { ProductionTaskPM, ProductionTaskRW, ProductionTaskWR, ProductionTaskConverting }
+    public enum ProcessModels 
+    { 
+        [Description("БДМ")]
+        PM, 
+        [Description("БДМ=>ПРС")]
+        PM_RW, 
+        [Description("БДМ=>Упаковка")]
+        PM_WR,
+        [Description("БДМ=>ПРС=>Упаковка")]
+        PM_RW_WR
+        
+    }
+    public enum BatchKinds { SGB, SGI }
     public enum ProductKinds 
     { 
         [Description("Тамбура")]

@@ -16,8 +16,8 @@
     <DataBits>8</DataBits>
     <HandShake>None</HandShake>
   </ScalesComPort>
-  <HostName>gamma</HostName>
+  <HostName>asutpmatt\sqlexpress</HostName>
   <DbName>gammanew</DbName>
-  <User>Костин</User>
+  <User>sa</User>
   <UseScanner>false</UseScanner>
 </GammaSettings>

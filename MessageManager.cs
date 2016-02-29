@@ -16,10 +16,10 @@ namespace Gamma
     }
  
     public class OpenMainMessage : MessageBase { }
-    public class OpenProductionTaskMessage : MessageBase 
+    public class OpenProductionTaskBatchMessage : MessageBase 
     {
-        public ProductionTaskKinds ProductionTaskKind;
-        public Guid? ProductionTaskID;
+        public BatchKinds BatchKind;
+        public Guid? ProductionTaskBatchID;
     }
     public class ProductChangedMessage : MessageBase
     {
@@ -35,6 +35,12 @@ namespace Gamma
     public class OpenNomenclatureMessage : MessageBase 
     {
         public int PlaceGroupID;
+    }
+    public class ProductionTaskRWMessage : MessageBase
+    {
+        public Guid ProductionTaskBatchID;
+        public Guid NomenclatureID;
+        public Guid CharacteristicID;
     }
     public class Nomenclature1CMessage : MessageBase
     {
@@ -85,9 +91,9 @@ namespace Gamma
     {
         public PlaceGroups? PlaceGroup;
     }
-    public class FindProductionTaskMessage : MessageBase
+    public class FindProductionTaskBatchMessage : MessageBase
     {
-        public PlaceGroups PlaceGroup;
+        public BatchKinds BatchKind;
     }
     public static class MessageManager
     {
@@ -115,6 +121,14 @@ namespace Gamma
         {
             Messenger.Default.Send<RoleEditMessage>(new RoleEditMessage() { RoleID = roleID });
         }
+        public static void ProductionTaskRWNomenclatureChanged(Guid productionTaskBatchID, Guid nomenclatureID)
+        {
+            Messenger.Default.Send<ProductionTaskRWMessage>(new ProductionTaskRWMessage()
+            {
+                ProductionTaskBatchID = productionTaskBatchID,
+                NomenclatureID = nomenclatureID
+            });
+        }
         public static void OpenManageUsers()
         {
             Messenger.Default.Send<OpenManageUsersMessage>(new OpenManageUsersMessage());
@@ -129,9 +143,9 @@ namespace Gamma
             Messenger.Default.Send<OpenNomenclatureMessage>(new OpenNomenclatureMessage() {PlaceGroupID = placeGroupID });
         }
 
-        public static void OpenProductionTask(OpenProductionTaskMessage msg)
+        public static void OpenProductionTask(OpenProductionTaskBatchMessage msg)
         {
-            Messenger.Default.Send<OpenProductionTaskMessage>(msg);
+            Messenger.Default.Send<OpenProductionTaskBatchMessage>(msg);
         }
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
@@ -183,9 +197,9 @@ namespace Gamma
         {
             Messenger.Default.Send<ConfigureComPortMessage>(new ConfigureComPortMessage());
         }
-        public static void FindProductionTask(PlaceGroups placeGroup)
+        public static void FindProductionTaskBatch(BatchKinds batchKind)
         {
-            Messenger.Default.Send<FindProductionTaskMessage>(new FindProductionTaskMessage() { PlaceGroup = placeGroup });
+            Messenger.Default.Send<FindProductionTaskBatchMessage>(new FindProductionTaskBatchMessage() { BatchKind =  batchKind});
         }
         public static void OpenPlaceGroupsNomenclature()
         {

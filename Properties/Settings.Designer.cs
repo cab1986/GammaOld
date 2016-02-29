@@ -122,48 +122,96 @@ namespace Gamma.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("600")]
-        public double ProductionTaskHeight {
+        public double ProductionTaskBatchHeight {
             get {
-                return ((double)(this["ProductionTaskHeight"]));
+                return ((double)(this["ProductionTaskBatchHeight"]));
             }
             set {
-                this["ProductionTaskHeight"] = value;
+                this["ProductionTaskBatchHeight"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1200")]
-        public double ProductionTaskWidth {
+        public double ProductionTaskBatchWidth {
             get {
-                return ((double)(this["ProductionTaskWidth"]));
+                return ((double)(this["ProductionTaskBatchWidth"]));
             }
             set {
-                this["ProductionTaskWidth"] = value;
+                this["ProductionTaskBatchWidth"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public double ProductionTaskLeft {
+        public double ProductionTaskBatchLeft {
             get {
-                return ((double)(this["ProductionTaskLeft"]));
+                return ((double)(this["ProductionTaskBatchLeft"]));
             }
             set {
-                this["ProductionTaskLeft"] = value;
+                this["ProductionTaskBatchLeft"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
-        public double ProductionTaskTop {
+        public double ProductionTaskBatchTop {
             get {
-                return ((double)(this["ProductionTaskTop"]));
+                return ((double)(this["ProductionTaskBatchTop"]));
             }
             set {
-                this["ProductionTaskTop"] = value;
+                this["ProductionTaskBatchTop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public double DocProductHeight {
+            get {
+                return ((double)(this["DocProductHeight"]));
+            }
+            set {
+                this["DocProductHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("900")]
+        public double DocProductWidth {
+            get {
+                return ((double)(this["DocProductWidth"]));
+            }
+            set {
+                this["DocProductWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double DocProductLeft {
+            get {
+                return ((double)(this["DocProductLeft"]));
+            }
+            set {
+                this["DocProductLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double DocProductTop {
+            get {
+                return ((double)(this["DocProductTop"]));
+            }
+            set {
+                this["DocProductTop"] = value;
             }
         }
     }

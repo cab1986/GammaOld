@@ -13,20 +13,21 @@
         xmlns:g="clr-namespace:Gamma"
         xmlns:v="clr-namespace:Gamma.Views"
         xmlns:vm="clr-namespace:Gamma.ViewModels"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.ProductionTaskView"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
+        x:Class="Gamma.Views.ProductionTaskBatchView"
         mc:Ignorable="d ignore"
         MinHeight="400"
         Title="{Binding Title}"
-        Height="{g:SettingBinding ProductionTaskHeight}"
-        Width="{g:SettingBinding ProductionTaskWidth}"
-        Left="{g:SettingBinding ProductionTaskLeft}"
-        Top="{g:SettingBinding ProductionTaskTop}" >
+        Height="{g:SettingBinding ProductionTaskBatchHeight}"
+        Width="{g:SettingBinding ProductionTaskBatchWidth}"
+        Left="{g:SettingBinding ProductionTaskBatchLeft}"
+        Top="{g:SettingBinding ProductionTaskBatchTop}" 
+        WindowState="Maximized">
     <Window.Resources>
-        <DataTemplate DataType="{x:Type vm:ProductionTaskPMViewModel}">
-            <v:ProductionTaskPMView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:ProductionTaskRWViewModel}">
-            <v:ProductionTaskRWView />
+        <DataTemplate DataType="{x:Type vm:ProductionTaskBatchSGBViewModel}">
+            <v:ProductionTaskBatchSGBView/>
         </DataTemplate>
     </Window.Resources>
     <Grid Margin="0,0,0,0">
@@ -50,45 +51,23 @@
                                 <dxlc:LayoutItem Label="Дата">
                                     <dxe:DateEdit Width="150" EditValue="{Binding Date, ValidatesOnDataErrors=True}" IsReadOnly="True"/>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Дата начала">
-                                    <dxe:DateEdit MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm" Width="150"
-										DisplayFormatString="dd-MMM-yyyy HH:mm" EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}">
-                                    </dxe:DateEdit>
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Дата окончания">
-                                    <dxe:DateEdit MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm" Width="150" 
-										DisplayFormatString="dd-MMM-yyyy HH:mm" EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Передел">
-                                    <dxe:ComboBoxEdit Width="150" ItemsSource="{Binding Places}" IsTextEditable="False"
-                                                      EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" DisplayMember="PlaceName" ValueMember="PlaceID" />
-                                </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Состояние">
                                     <dxe:ComboBoxEdit Width="150" IsTextEditable="False" 
                                                       ItemsSource="{Binding TaskStates}" EditValue="{Binding ProductionTaskStateID}" 
                                                       DisplayMember="Value" ValueMember="Key" IsReadOnly="{Binding ChangeStateReadOnly}"/>
                                 </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Модель процесса">
+                                    <dxe:ComboBoxEdit Width="150" IsTextEditable="False" EditValueType="{x:Type sys:Byte}" 
+                                                      ItemsSource="{Binding ProcessModels}" EditValue="{Binding ProcessModelID, UpdateSourceTrigger=PropertyChanged}"
+                                                      DisplayMember="Value" ValueMember="Key" Visibility="{Binding ProcessModelVisible}" AllowNullInput="True">
+                                    </dxe:ComboBoxEdit>
+                                </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                             <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical">
-                                <dxlc:LayoutGroup>
-                                    <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" HorizontalAlignment="Stretch">
-                                        <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" IsReadOnly="True">
-                                            <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}"  />
-                                        </dxe:ButtonEdit>
-                                    </dxlc:LayoutItem>
-                                    <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
-                                        <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}" IsFloatValue="False">
-                                        </dxe:SpinEdit>
-                                    </dxlc:LayoutItem>
-                                </dxlc:LayoutGroup>
-                                <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top" Visibility="{Binding CharacteristicVisible}">
-                                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID}"
-                                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" AutoComplete="True" AllowRejectUnknownValues="True"/>
-                                </dxlc:LayoutItem>
                                 <ContentControl Content="{Binding CurrentView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutItem Label="Комментарий" LabelPosition="Top" Margin="0,0,0,0" MinHeight="80" VerticalAlignment="Bottom">
+                        <dxlc:LayoutItem Label="Комментарий" LabelPosition="Top" Margin="0,0,0,0" MinHeight="100" VerticalAlignment="Bottom">
                             <dxe:TextEdit Width="Auto" EditValue="{Binding Comment}" VerticalContentAlignment="Stretch" />
                         </dxlc:LayoutItem>
                     </dxlc:LayoutControl>
@@ -109,6 +88,7 @@
                     </dxb:BarManager>
                     <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}"  SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}">
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="Place" Header="Передел" GroupIndex="0" />
                             <dxg:GridColumn FieldName="ProductID" Visible="False"/>
                             <dxg:GridColumn FieldName="Number" VisibleIndex="0" Header="Номер" ReadOnly="True" FixedWidth="True" Width="120"/>
                             <dxg:GridColumn FieldName="Date" Header="Дата" ReadOnly="True" VisibleIndex="1" Width="120" FixedWidth="True">
@@ -119,6 +99,9 @@
                             <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="2"  Header="Номенклатура"/>
                             <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="3" Width="120" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Вес: {0:d}" />
+                        </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
                         </dxg:GridControl.TotalSummary>

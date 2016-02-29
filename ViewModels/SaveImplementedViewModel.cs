@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
 
         }
 
-        public virtual void SaveToModel(Guid ItemID)
+        public virtual void SaveToModel(Guid itemID)
         {
 
         }

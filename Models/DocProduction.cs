@@ -25,7 +25,7 @@ namespace Gamma.Models
     
         public virtual Docs Docs { get; set; }
         public virtual Places Places { get; set; }
-        public virtual ProductionTasks ProductionTasks { get; set; }
         public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
+        public virtual ProductionTasks ProductionTasks { get; set; }
     }
 }

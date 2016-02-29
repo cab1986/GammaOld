@@ -31,5 +31,6 @@ namespace Gamma.Models
         public bool IsWrittenOff { get; set; }
         public string State { get; set; }
         public Nullable<int> PlaceID { get; set; }
+        public string RejectionReason { get; set; }
     }
 }

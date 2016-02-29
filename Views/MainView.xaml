@@ -19,11 +19,8 @@
     WindowState="Maximized">
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type vm:ProductionTasksPMViewModel}">
-            <Views:ProductionTasksPMView />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:ProductionTasksRWViewModel}">
-            <Views:ProductionTasksRWView />
+       <DataTemplate DataType="{x:Type vm:ProductionTasksSGBViewModel}">
+            <Views:ProductionTasksSGBView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:PlaceProductsViewModel}">
             <Views:PlaceProductsView />
@@ -39,11 +36,8 @@
         <dxb:BarManager AllowCustomization="False">
             <dxb:BarManager.Bars>
                 <dxb:Bar Caption="Файл" IsMainMenu="True">
-                    <dxb:BarSubItem Content="Операции">
-                        <dxb:BarSubItem Content="Производственные задания">
-                            <dxb:BarButtonItem Content="Задания на пр-во БДМ" Command="{Binding ShowProductionTasksPMCommand}" />
-                            <dxb:BarButtonItem Content="Задания на пр-во ПРС" Command="{Binding ShowProductionTasksRWCommand}" />
-                        </dxb:BarSubItem>
+                    <dxb:BarSubItem Content="Задания">
+                        <dxb:BarButtonItem Content="Задания на пр-во СГБ" Command="{Binding ShowProductionTasksSGBCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Документы">
                         <dxb:BarSubItem Content="Закрытия смен">

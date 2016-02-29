@@ -6,7 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
-    x:Class="Gamma.Views.FindProductionTaskView"
+    x:Class="Gamma.Views.FindProductionTaskBatchView"
     xmlns:g="clr-namespace:Gamma"
     Title="{Binding Title}" 
     Height="{g:SettingBinding FindProductionTaskHeight}"
@@ -35,13 +35,13 @@
                     <dxe:ComboBoxEdit ItemsSource="{Binding ProductionTaskStates}" EditValue="{Binding ProductionTaskStateID}" ValueMember="Key" DisplayMember="Value" NullValueButtonPlacement="EditBox" AllowNullInput="True" AssignNullValueOnClearingEditText="True"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem VerticalContentAlignment="Bottom" Width="60" VerticalAlignment="Bottom">
-                    <Button Content="Найти" Height="22" Width="60" Command="{Binding FindProductionTaskCommand}" VerticalAlignment="Bottom"/>    
+                    <Button Content="Найти" Height="22" Width="60" Command="{Binding FindProductionTaskBatchCommand}" VerticalAlignment="Bottom"/>    
                 </dxlc:LayoutItem>
                 
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Результаты поиска" LabelPosition="Top" VerticalAlignment="Stretch">
                 <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" Margin="-12,-3,-12,-12" 
-                                 ItemsSource="{Binding ProductionTasks}" AutoExpandAllGroups="True" SelectedItem="{Binding SelectedProductionTask}"> 
+                                 ItemsSource="{Binding ProductionTaskBatches}" AutoExpandAllGroups="True" SelectedItem="{Binding SelectedProductionTaskBatch}"> 
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn Header="Передел" FieldName="Place" GroupIndex="0" />
                         <dxg:GridColumn Header="Дата начала" FieldName="DateBegin" Width="80" FixedWidth="True"/>
@@ -54,7 +54,7 @@
                         <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" AllowEditing="False"/>
                     </dxg:GridControl.View>
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductionTaskCommand}"/>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductionTaskBatchCommand}"/>
                     </dxmvvm:Interaction.Behaviors>
                 </dxg:GridControl>
             </dxlc:LayoutItem>

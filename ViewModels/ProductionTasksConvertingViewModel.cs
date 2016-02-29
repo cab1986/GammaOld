@@ -29,7 +29,7 @@ namespace Gamma.ViewModels
         }
         private void GetProductionTasks()
         {
-            ProductionTasks = new ObservableCollection<ProductionTask>
+  /*          ProductionTasks = new ObservableCollection<ProductionTask>
                               (from pt in DB.GammaBase.ProductionTasks
                                where pt.ProductionTaskKindID == (short)ProductionTaskKinds.ProductionTaskConverting
                                select new ProductionTask
@@ -39,17 +39,18 @@ namespace Gamma.ViewModels
                                    Nomenclature = pt.C1CNomenclature.Name + " " + pt.C1CCharacteristics.Name,
                                    Quantity = pt.Quantity
                                });
+   * */
         }
         private void EditItem()
         {
-            OpenProductionTaskMessage msg = new OpenProductionTaskMessage { ProductionTaskID = SelectedProductionTask.ProductionTaskID, ProductionTaskKind = ProductionTaskKinds.ProductionTaskConverting };
+            OpenProductionTaskBatchMessage msg = new OpenProductionTaskBatchMessage { ProductionTaskBatchID = SelectedProductionTask.ProductionTaskID, BatchKind = BatchKinds.SGI };
             MessageManager.OpenProductionTask(msg);
         }
 
         private void NewProductionTask()
         {
-            var msg = new OpenProductionTaskMessage { ProductionTaskKind = ProductionTaskKinds.ProductionTaskConverting };
-            Messenger.Default.Send<OpenProductionTaskMessage>(msg);
+            var msg = new OpenProductionTaskBatchMessage { BatchKind = BatchKinds.SGI };
+            Messenger.Default.Send<OpenProductionTaskBatchMessage>(msg);
         }
 
         private ObservableCollection<ProductionTask> _productionTasks;

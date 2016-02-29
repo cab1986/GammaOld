@@ -34,18 +34,22 @@ namespace Gamma.ViewModels
                 case PlaceGroups.PM:
                     QuantityHeader = "Вес, кг";
                     NewProductText = "Создать новый тамбур";
+                    DeleteProductText = "Удалить тамбур";
                     break;
                 case PlaceGroups.RW:
                     QuantityHeader = "Вес, кг";
                     NewProductText = "Создать новый съем";
+                    DeleteProductText = "Удалить съем";
                     break;
                 case PlaceGroups.Convertings:
                     QuantityHeader = "Кол-во, шт";
                     NewProductText = "Создать новую паллету";
+                    DeleteProductText = "Удалить паллету";
                     break;
                 case PlaceGroups.WR:
                     QuantityHeader = "Вес нетто, кг";
                     NewProductText = "Создать новую групповую упаковку";
+                    DeleteProductText = "Удалить групповую упаковку";
                     break;
             }
             Find();
@@ -66,7 +70,12 @@ namespace Gamma.ViewModels
             switch (SelectedProduct.ProductKind)
             {
                 case ProductKinds.ProductSpool:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
+                    var placeGroupID = DB.GammaBase.Docs.Where(d => d.DocID == SelectedProduct.DocID).
+                        Select(d => d.Places.PlaceGroupID).FirstOrDefault();
+                    if (placeGroupID == (byte)PlaceGroups.PM)
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
+                    else
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, SelectedProduct.DocID);
                     break;
                 case ProductKinds.ProductGroupPack:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
@@ -92,7 +101,7 @@ namespace Gamma.ViewModels
                         {
                             CharacteristicID = vpi.C1CCharacteristicID,
                             Date = vpi.Date,
-                            DocProductID = vpi.DocID,
+                            DocID = vpi.DocID,
                             NomenclatureID = vpi.C1CNomenclatureID,
                             NomenclatureName = vpi.NomenclatureName,
                             Number = vpi.Number,
@@ -116,7 +125,7 @@ namespace Gamma.ViewModels
                         {
                             CharacteristicID = vpi.C1CCharacteristicID,
                             Date = vpi.Date,
-                            DocProductID = vpi.DocID,
+                            DocID = vpi.DocID,
                             NomenclatureID = vpi.C1CNomenclatureID,
                             NomenclatureName = vpi.NomenclatureName,
                             Number = vpi.Number,
@@ -142,7 +151,7 @@ namespace Gamma.ViewModels
                         {
                             CharacteristicID = vpi.C1CCharacteristicID,
                             Date = vpi.Date,
-                            DocProductID = vpi.DocID,
+                            DocID = vpi.DocID,
                             NomenclatureID = vpi.C1CNomenclatureID,
                             NomenclatureName = vpi.NomenclatureName,
                             Number = vpi.Number,
@@ -168,7 +177,7 @@ namespace Gamma.ViewModels
                         {
                             CharacteristicID = vpi.C1CCharacteristicID,
                             Date = vpi.Date,
-                            DocProductID = vpi.DocID,
+                            DocID = vpi.DocID,
                             NomenclatureID = vpi.C1CNomenclatureID,
                             NomenclatureName = vpi.NomenclatureName,
                             Number = vpi.Number,
@@ -206,6 +215,7 @@ namespace Gamma.ViewModels
         public RelayCommand CreateNewProductCommand { get; private set; }
         public RelayCommand FindCommand { get; private set; }
         public RelayCommand OpenDocProductCommand { get; private set; }
+        public string DeleteProductText { get; set; }
         public string NewProductText { get; set; }
     }
 }

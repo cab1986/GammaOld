@@ -40,9 +40,7 @@ namespace Gamma.Models
         public virtual DbSet<Templates> Templates { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<Products> Products { get; set; }
-        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<PermitTables> PermitTables { get; set; }
-        public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<C1CEnumGroupTypes> C1CEnumGroupTypes { get; set; }
         public virtual DbSet<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         public virtual DbSet<C1CPropertyValues> C1CPropertyValues { get; set; }
@@ -61,12 +59,18 @@ namespace Gamma.Models
         public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual DbSet<Places> Places { get; set; }
-        public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
         public virtual DbSet<SourceSpools> SourceSpools { get; set; }
         public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
+        public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
+        public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
+        public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
+        public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
+        public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
+        public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
+        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
     
         public virtual ObjectResult<Nullable<byte>> UserPermit(string tableName)
         {
@@ -104,15 +108,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharPropsDescriptions_Result>("GetCharPropsDescriptions", characteristicIDParameter);
         }
     
-        public virtual ObjectResult<Nullable<int>> GetCharSpoolFormat(Nullable<System.Guid> characteristicID)
-        {
-            var characteristicIDParameter = characteristicID.HasValue ?
-                new ObjectParameter("CharacteristicID", characteristicID) :
-                new ObjectParameter("CharacteristicID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetCharSpoolFormat", characteristicIDParameter);
-        }
-    
         public virtual ObjectResult<GetDocCloseShiftPMSpools_Result> GetDocCloseShiftPMSpools(Nullable<System.Guid> docID)
         {
             var docIDParameter = docID.HasValue ?
@@ -143,15 +138,6 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductRelations_Result>("GetProductRelations", docIDParameter);
-        }
-    
-        public virtual ObjectResult<GetProductionTasks_Result2> GetProductionTasks(Nullable<int> placeGroupID)
-        {
-            var placeGroupIDParameter = placeGroupID.HasValue ?
-                new ObjectParameter("PlaceGroupID", placeGroupID) :
-                new ObjectParameter("PlaceGroupID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result2>("GetProductionTasks", placeGroupIDParameter);
         }
     
         public virtual ObjectResult<GetNomenclatureFolders_Result1> GetNomenclatureFolders(Nullable<int> placeGroupID)
@@ -197,6 +183,94 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftWRGroupPacks_Result>("GetDocCloseShiftWRGroupPacks", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GetInputNomenclature_Result> GetInputNomenclature(Nullable<System.Guid> nomenclatureID)
+        {
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInputNomenclature_Result>("GetInputNomenclature", nomenclatureIDParameter);
+        }
+    
+        public virtual ObjectResult<FindProductionTasks_Result> FindProductionTasks(Nullable<int> batchKindID, Nullable<byte> productionTaskStateID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd)
+        {
+            var batchKindIDParameter = batchKindID.HasValue ?
+                new ObjectParameter("BatchKindID", batchKindID) :
+                new ObjectParameter("BatchKindID", typeof(int));
+    
+            var productionTaskStateIDParameter = productionTaskStateID.HasValue ?
+                new ObjectParameter("ProductionTaskStateID", productionTaskStateID) :
+                new ObjectParameter("ProductionTaskStateID", typeof(byte));
+    
+            var dateBeginParameter = dateBegin.HasValue ?
+                new ObjectParameter("DateBegin", dateBegin) :
+                new ObjectParameter("DateBegin", typeof(System.DateTime));
+    
+            var dateEndParameter = dateEnd.HasValue ?
+                new ObjectParameter("DateEnd", dateEnd) :
+                new ObjectParameter("DateEnd", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindProductionTasks_Result>("FindProductionTasks", batchKindIDParameter, productionTaskStateIDParameter, dateBeginParameter, dateEndParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTaskByBatchID_Result> GetProductionTaskByBatchID(Nullable<System.Guid> productionTaskBatchID, Nullable<short> placeGroupID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            var placeGroupIDParameter = placeGroupID.HasValue ?
+                new ObjectParameter("PlaceGroupID", placeGroupID) :
+                new ObjectParameter("PlaceGroupID", typeof(short));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskByBatchID_Result>("GetProductionTaskByBatchID", productionTaskBatchIDParameter, placeGroupIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTaskBatchSGBProperties_Result> GetProductionTaskBatchSGBProperties(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchSGBProperties_Result>("GetProductionTaskBatchSGBProperties", productionTaskBatchIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTaskBatchWRProperties_Result> GetProductionTaskBatchWRProperties(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchWRProperties_Result>("GetProductionTaskBatchWRProperties", productionTaskBatchIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTaskBatchSGBCuttings_Result> GetProductionTaskBatchSGBCuttings(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchSGBCuttings_Result>("GetProductionTaskBatchSGBCuttings", productionTaskBatchIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTasks_Result4> GetProductionTasks(Nullable<int> batchKindID)
+        {
+            var batchKindIDParameter = batchKindID.HasValue ?
+                new ObjectParameter("BatchKindID", batchKindID) :
+                new ObjectParameter("BatchKindID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result4>("GetProductionTasks", batchKindIDParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTaskBatchProducts_Result> GetProductionTaskBatchProducts(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchProducts_Result>("GetProductionTaskBatchProducts", productionTaskBatchIDParameter);
         }
     }
 }

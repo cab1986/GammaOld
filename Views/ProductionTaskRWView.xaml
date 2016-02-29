@@ -3,6 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:g="clr-namespace:Gamma"
         xmlns:conv="clr-namespace:Gamma.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" x:Class="Gamma.Views.ProductionTaskRWView"
@@ -11,8 +13,25 @@
         <conv:ElementEmptyConverter x:Key="EmptyConverter" />
     </UserControl.Resources>
 
-    <dxlc:LayoutGroup Header="" View="Group" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
+    <dxlc:LayoutGroup Header="Задание на ПРС" View="GroupBox" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
         <dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
+                <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}" Mask="g" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" HorizontalAlignment="Stretch">
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" IsReadOnly="True">
+                    <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}"  />
+                </dxe:ButtonEdit>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Кол-во" LabelPosition="Top" Width="70">
+                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+                              MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Decimal}" IsFloatValue="False"/>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
+        <dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="130">
+                <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}" Mask="g" />
+            </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Гильза" LabelPosition="Top">
                 <dxe:ComboBoxEdit EditValue="{Binding CoreDiameter,UpdateSourceTrigger=PropertyChanged}" Name="Core" ItemsSource="{Binding CoreDiameters}" IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
@@ -32,10 +51,10 @@
                 <dxe:ComboBoxEdit EditValue="{Binding Destination,UpdateSourceTrigger=PropertyChanged}" Name="Destination" ItemsSource="{Binding Destinations}"
                                   IsTextEditable="False" NullValueButtonPlacement="Popup"/>
             </dxlc:LayoutItem>
-            <Button Content="Очистить" Command="{Binding ClearFilterCommand}" Height="30" Margin="5"/>
+            <Button Content="Очистить" Command="{Binding ClearFilterCommand}" Height="40" Margin="5"/>
         </dxlc:LayoutGroup>
         <dxlc:LayoutItem Label="Конфигурация" LabelPosition="Top">
-            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding CuttingFormats}" Height="60" MaxHeight="100" IsEnabled="{Binding CuttingsEnabled}">
+            <dxg:GridControl ShowBorder="False" ItemsSource="{Binding CuttingFormats}" Height="60" MaxHeight="100" >
                 <dxg:GridControl.Columns>
                     <dxg:GridColumn Binding="{Binding Format[0], Mode=TwoWay}" Header="01" Width="50">
                         <dxg:GridColumn.EditSettings>
@@ -119,10 +138,13 @@
                     </dxg:GridColumn>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
-                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" AutoWidth="True" EnableImmediatePosting="True"/>
+                    <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" ShowDetailButtons="False" ShowFilterPanelMode="Never" AutoWidth="True" 
+                                   EnableImmediatePosting="True" AllowEditing="{Binding CuttingsEnabled}"/>
                 </dxg:GridControl.View>
             </dxg:GridControl>
         </dxlc:LayoutItem>
     </dxlc:LayoutGroup>
-
+    <i:Interaction.Behaviors>
+        <g:UIAuthBehavior/>
+    </i:Interaction.Behaviors>
 </UserControl>

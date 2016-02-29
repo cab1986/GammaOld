@@ -16,13 +16,13 @@ namespace Gamma.Models
     {
         public ProductionTaskStates()
         {
-            this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
         }
     
         public byte ProductionTaskStateID { get; set; }
         public string Name { get; set; }
         public bool IsActual { get; set; }
     
-        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
     }
 }

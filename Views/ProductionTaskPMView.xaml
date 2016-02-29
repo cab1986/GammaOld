@@ -4,27 +4,56 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:g="clr-namespace:Gamma"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.ProductionTaskPMView"
         mc:Ignorable="d ignore">
-
-    
-    
-       <dxlc:LayoutGroup Header="" View="GroupBox" Orientation="Vertical" >
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVis" />
+    </UserControl.Resources>
+    <dxlc:LayoutGroup Header="Задание БДМ" View="GroupBox" Orientation="Vertical" >
         <dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="100">
+                <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="80">
+                <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" 
+                                  ValueMember="PlaceID" DisplayMember="PlaceName" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding IsForRW, Converter={StaticResource BoolVis}}" Name="comboNom">
+                <dxe:ComboBoxEdit EditValue="{Binding NomenclatureID, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpecificationNomenclature}"
+                                  ValueMember="NomenclatureID" DisplayMember="Name"/>
+            </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+                <dxlc:LayoutItem.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=comboNom, Path=Visibility}" Value="Visible">
+                                <Setter Property="dxlc:LayoutControl.Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </dxlc:LayoutItem.Style>
                 <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" IsReadOnly="True">
                     <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}" />
                 </dxe:ButtonEdit>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="70">
-                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Int32}"/>
+        </dxlc:LayoutGroup>
+        <dxlc:LayoutGroup Orientation="Horizontal">
+            <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="100">
+                <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="80">
+                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" 
+                              EditValueType="{x:Type sys:Decimal}"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
-        <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
-                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic, ValidatesOnDataErrors=True}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
-                </dxlc:LayoutItem>
-            </dxlc:LayoutGroup>
-    
-    
+    </dxlc:LayoutGroup>
+    <i:Interaction.Behaviors>
+        <g:UIAuthBehavior/>
+    </i:Interaction.Behaviors>
 </UserControl>

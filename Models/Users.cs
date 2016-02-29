@@ -17,6 +17,7 @@ namespace Gamma.Models
         public Users()
         {
             this.Docs = new HashSet<Docs>();
+            this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
         }
     
         public System.Guid UserID { get; set; }
@@ -35,5 +36,6 @@ namespace Gamma.Models
         public virtual ICollection<Docs> Docs { get; set; }
         public virtual Places Places { get; set; }
         public virtual Roles Roles { get; set; }
+        public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
     }
 }

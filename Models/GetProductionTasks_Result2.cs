@@ -14,11 +14,11 @@ namespace Gamma.Models
     public partial class GetProductionTasks_Result2
     {
         public Nullable<System.DateTime> DateBegin { get; set; }
-        public System.Guid ProductionTaskID { get; set; }
         public decimal Quantity { get; set; }
         public string Nomenclature { get; set; }
         public string Characteristic { get; set; }
         public Nullable<decimal> MadeQuantity { get; set; }
         public string Place { get; set; }
+        public System.Guid ProductionTaskBatchID { get; set; }
     }
 }

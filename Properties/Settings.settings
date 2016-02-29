@@ -26,16 +26,28 @@
     <Setting Name="DocCloseShiftsTop" Type="System.Double" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
-    <Setting Name="ProductionTaskHeight" Type="System.Double" Scope="User">
+    <Setting Name="ProductionTaskBatchHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">600</Value>
     </Setting>
-    <Setting Name="ProductionTaskWidth" Type="System.Double" Scope="User">
+    <Setting Name="ProductionTaskBatchWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">1200</Value>
     </Setting>
-    <Setting Name="ProductionTaskLeft" Type="System.Double" Scope="User">
+    <Setting Name="ProductionTaskBatchLeft" Type="System.Double" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
-    <Setting Name="ProductionTaskTop" Type="System.Double" Scope="User">
+    <Setting Name="ProductionTaskBatchTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="DocProductHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="DocProductWidth" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">900</Value>
+    </Setting>
+    <Setting Name="DocProductLeft" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="DocProductTop" Type="System.Double" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
   </Settings>

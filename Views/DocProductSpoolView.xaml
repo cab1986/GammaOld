@@ -44,17 +44,18 @@
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="1000"
-                                           EditValue="{Binding Length, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}" NullText="0"/>
+                                           EditValue="{Binding Length, UpdateSourceTrigger=LostFocus}" 
+                                           EditValueType="{x:Type sys:Decimal}" NullText="0"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
-                                           EditValue="{Binding Diameter, UpdateSourceTrigger=LostFocus}" EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
+                                           EditValue="{Binding Diameter, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Horizontal" View="Group">
                 <dxlc:LayoutItem Label="Качество" LabelPosition="Top" Width="150">
-                    <dxe:ListBoxEdit ItemsSource="{Binding States, UpdateSourceTrigger=LostFocus}" EditValue="{Binding StateID}" ValueMember="Key" DisplayMember="Value" Background="#FFB6D0F4">
+                    <dxe:ListBoxEdit ItemsSource="{Binding States, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValue="{Binding StateID}" ValueMember="Key" DisplayMember="Value" Background="#FFB6D0F4">
                         <dxe:ListBoxEdit.StyleSettings>
                             <dxe:RadioListBoxEditStyleSettings HighlightedTextBackground="Yellow" HighlightedFontFamily="{x:Null}" HighlightedFontStyle="{x:Null}" HighlightedFontSize="{x:Null}" HighlightedTextForeground="Black" HighlightedFontWeight="{x:Null}"/>
                         </dxe:ListBoxEdit.StyleSettings>

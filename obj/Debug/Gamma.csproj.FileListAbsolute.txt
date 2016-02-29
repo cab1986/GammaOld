@@ -31,12 +31,8 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksPMView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksPMView.g.cs
 D:\CProjects\Gamma\Gamma\bin\Debug\Microsoft.Expression.Interactions.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\Microsoft.Expression.Interactions.xml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskPMView.baml
@@ -51,9 +47,7 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.Views.ReportPreview.resources
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\FilterDateReportDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\FilterDateReportDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksRWView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksRWView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductUnloadView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\SourceSpoolsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductUnloadView.g.cs
@@ -171,8 +165,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ComPortSettingsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ComPortSettingsView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductionTaskView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductionTaskView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PlaceProductsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PlaceProductsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
@@ -184,3 +176,15 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftWRGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftWRGridView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\ChoosePrintNameDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\ChoosePrintNameDialog.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGBView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskWRView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGBView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskWRView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductionTaskBatchView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductionTaskBatchView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchSGBView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchSGBView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.g.cs

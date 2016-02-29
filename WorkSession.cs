@@ -8,8 +8,8 @@ namespace Gamma
     public static class WorkSession
     {
         public static Guid ParamID { get; set; }
-        private static Guid? _userID;
-        public static Guid? UserID
+        private static Guid _userID;
+        public static Guid UserID
         {
             get
             {

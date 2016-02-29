@@ -18,28 +18,25 @@ namespace Gamma.Models
         {
             this.DocProduction = new HashSet<DocProduction>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
+            this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
-        public Nullable<short> ProductionTaskKindID { get; set; }
         public Nullable<int> PlaceID { get; set; }
-        public Nullable<byte> ProductionTaskStateID { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public decimal Quantity { get; set; }
-        public Nullable<System.Guid> UserID { get; set; }
-        public string Number { get; set; }
-        public System.DateTime Date { get; set; }
         public Nullable<System.DateTime> DateBegin { get; set; }
         public Nullable<System.DateTime> DateEnd { get; set; }
-        public string Comment { get; set; }
-        public Nullable<bool> IsInPlan { get; set; }
+        public short PlaceGroupID { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual ICollection<DocProduction> DocProduction { get; set; }
         public virtual Places Places { get; set; }
+        public virtual ProductionTaskSGB ProductionTaskSGB { get; set; }
+        public virtual ProductionTaskWR ProductionTaskWR { get; set; }
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
-        public virtual ProductionTaskStates ProductionTaskStates { get; set; }
+        public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
     }
 }
