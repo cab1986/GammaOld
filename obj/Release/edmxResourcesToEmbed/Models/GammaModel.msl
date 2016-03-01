@@ -600,21 +600,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="FindProductionTasks" FunctionName="GammaModel.Store.FindProductionTasks">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.FindProductionTasks_Result">
-          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
-          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
-          <ScalarProperty Name="ProductionTaskState" ColumnName="ProductionTaskState" />
-          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="BatchKindID" ColumnName="BatchKindID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <EntitySetMapping Name="ProductionTaskRWCutting">
       <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
         <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
@@ -760,5 +745,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="FindProductionTasks" FunctionName="GammaModel.Store.FindProductionTasks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.FindProductionTasks_Result1">
+          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+          <ScalarProperty Name="ProductionTaskState" ColumnName="ProductionTaskState" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="BatchKindID" ColumnName="BatchKindID" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

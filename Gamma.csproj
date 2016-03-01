@@ -296,6 +296,9 @@
     <Compile Include="Models\FindProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FindProductionTasks_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GammaModel.Context.cs">
       <DependentUpon>GammaModel.Context.tt</DependentUpon>
       <DesignTime>True</DesignTime>

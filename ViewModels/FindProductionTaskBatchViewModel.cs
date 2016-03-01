@@ -46,7 +46,7 @@ namespace Gamma.ViewModels
             ProductionTaskBatches = new ObservableCollection<ProductionTaskBatch>
             (
                 from pt in DB.GammaBase.FindProductionTasks((int)BatchKind, ProductionTaskStateID,
-                    DateBegin, DateEnd)
+                    DateBegin, DateEnd, Number)
                 select new ProductionTaskBatch() 
                 { 
                     ProductionTaskBatchID = pt.ProductionTaskBatchID,
@@ -56,7 +56,8 @@ namespace Gamma.ViewModels
                     Date = pt.Date,
                     DateBegin = pt.DateBegin,
                     Quantity = pt.Quantity,
-                    Nomenclature = pt.Nomenclature
+                    Nomenclature = pt.Nomenclature,
+                    Place = pt.Place
                 }
             );
         }

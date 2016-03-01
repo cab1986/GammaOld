@@ -11,7 +11,7 @@ namespace Gamma.Models
 {
     using System;
     
-    public partial class FindProductionTasks_Result
+    public partial class FindProductionTasks_Result1
     {
         public System.Guid ProductionTaskBatchID { get; set; }
         public string Number { get; set; }

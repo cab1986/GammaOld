@@ -325,12 +325,6 @@
     <FunctionImport Name="GetInputNomenclature" ReturnType="Collection(GammaModel.GetInputNomenclature_Result)">
       <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
     </FunctionImport>
-    <FunctionImport Name="FindProductionTasks" ReturnType="Collection(GammaModel.FindProductionTasks_Result)">
-      <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
-      <Parameter Name="ProductionTaskStateID" Mode="In" Type="Byte" />
-      <Parameter Name="DateBegin" Mode="In" Type="DateTime" />
-      <Parameter Name="DateEnd" Mode="In" Type="DateTime" />
-    </FunctionImport>
     <EntitySet Name="ProductionTaskRWCutting" EntityType="GammaModel.ProductionTaskRWCutting" />
     <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -398,6 +392,13 @@
       <End Role="ProductSpools" EntitySet="ProductSpools" />
       <End Role="SourceSpools" EntitySet="SourceSpools" />
     </AssociationSet>
+    <FunctionImport Name="FindProductionTasks" ReturnType="Collection(GammaModel.FindProductionTasks_Result1)">
+      <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
+      <Parameter Name="ProductionTaskStateID" Mode="In" Type="Byte" />
+      <Parameter Name="DateBegin" Mode="In" Type="DateTime" />
+      <Parameter Name="DateEnd" Mode="In" Type="DateTime" />
+      <Parameter Name="Number" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ProductPalletItems">
     <Key>
@@ -1861,6 +1862,7 @@
     <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
     <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
     <Property Type="Int32" Name="BatchKindID" Nullable="true" />
+    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
   </ComplexType>
   <EntityType Name="ProductionTaskRWCutting">
     <Key>
@@ -2116,4 +2118,16 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="FindProductionTasks_Result1">
+    <Property Type="Guid" Name="ProductionTaskBatchID" Nullable="false" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="255" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="DateEnd" Nullable="true" Precision="23" />
+    <Property Type="String" Name="ProductionTaskState" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
+    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="Int32" Name="BatchKindID" Nullable="true" />
+    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
+  </ComplexType>
 </Schema>

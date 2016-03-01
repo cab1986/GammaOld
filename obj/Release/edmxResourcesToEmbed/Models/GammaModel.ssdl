@@ -1460,6 +1460,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
     <Parameter Name="ProductionTaskStateID" Type="tinyint" Mode="In" />
     <Parameter Name="DateBegin" Type="datetime" Mode="In" />
     <Parameter Name="DateEnd" Type="datetime" Mode="In" />
+    <Parameter Name="Number" Type="varchar" Mode="In" />
   </Function>
   <Function Name="GenerateNewNumbersForDoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />

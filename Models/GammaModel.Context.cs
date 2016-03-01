@@ -194,27 +194,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInputNomenclature_Result>("GetInputNomenclature", nomenclatureIDParameter);
         }
     
-        public virtual ObjectResult<FindProductionTasks_Result> FindProductionTasks(Nullable<int> batchKindID, Nullable<byte> productionTaskStateID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd)
-        {
-            var batchKindIDParameter = batchKindID.HasValue ?
-                new ObjectParameter("BatchKindID", batchKindID) :
-                new ObjectParameter("BatchKindID", typeof(int));
-    
-            var productionTaskStateIDParameter = productionTaskStateID.HasValue ?
-                new ObjectParameter("ProductionTaskStateID", productionTaskStateID) :
-                new ObjectParameter("ProductionTaskStateID", typeof(byte));
-    
-            var dateBeginParameter = dateBegin.HasValue ?
-                new ObjectParameter("DateBegin", dateBegin) :
-                new ObjectParameter("DateBegin", typeof(System.DateTime));
-    
-            var dateEndParameter = dateEnd.HasValue ?
-                new ObjectParameter("DateEnd", dateEnd) :
-                new ObjectParameter("DateEnd", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindProductionTasks_Result>("FindProductionTasks", batchKindIDParameter, productionTaskStateIDParameter, dateBeginParameter, dateEndParameter);
-        }
-    
         public virtual ObjectResult<GetProductionTaskByBatchID_Result> GetProductionTaskByBatchID(Nullable<System.Guid> productionTaskBatchID, Nullable<short> placeGroupID)
         {
             var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
@@ -271,6 +250,31 @@ namespace Gamma.Models
                 new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchProducts_Result>("GetProductionTaskBatchProducts", productionTaskBatchIDParameter);
+        }
+    
+        public virtual ObjectResult<FindProductionTasks_Result1> FindProductionTasks(Nullable<int> batchKindID, Nullable<byte> productionTaskStateID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd, string number)
+        {
+            var batchKindIDParameter = batchKindID.HasValue ?
+                new ObjectParameter("BatchKindID", batchKindID) :
+                new ObjectParameter("BatchKindID", typeof(int));
+    
+            var productionTaskStateIDParameter = productionTaskStateID.HasValue ?
+                new ObjectParameter("ProductionTaskStateID", productionTaskStateID) :
+                new ObjectParameter("ProductionTaskStateID", typeof(byte));
+    
+            var dateBeginParameter = dateBegin.HasValue ?
+                new ObjectParameter("DateBegin", dateBegin) :
+                new ObjectParameter("DateBegin", typeof(System.DateTime));
+    
+            var dateEndParameter = dateEnd.HasValue ?
+                new ObjectParameter("DateEnd", dateEnd) :
+                new ObjectParameter("DateEnd", typeof(System.DateTime));
+    
+            var numberParameter = number != null ?
+                new ObjectParameter("Number", number) :
+                new ObjectParameter("Number", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindProductionTasks_Result1>("FindProductionTasks", batchKindIDParameter, productionTaskStateIDParameter, dateBeginParameter, dateEndParameter, numberParameter);
         }
     }
 }
