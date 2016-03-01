@@ -187,3 +187,4 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.g.cs
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Themes.DXStyle.v15.1.dll

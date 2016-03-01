@@ -32,31 +32,41 @@ namespace Gamma.ViewModels
         {
             Initialize();
             ProductionTaskBatchID = productionTaskBatchID;
-            ProductionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting").Include("ProductionTaskBatches").
-                Where(pt => pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID).FirstOrDefault();
- //           IsConfirmed = ProductionTask.ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
-            if (ProductionTask != null)
+            var productionTask = DB.GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.RW).FirstOrDefault();
+//            ProductionTask = DB.GammaBase.ProductionTasks.
+//                Include("ProductionTaskRWCutting").Include("ProductionTaskBatches").Include("ProductionTaskSGB").
+//                Where(pt => pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID).FirstOrDefault();
+//           IsConfirmed = ProductionTask.ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
+            if (productionTask != null)
             {
-                IsConfirmed = ProductionTask.ProductionTaskBatches.FirstOrDefault().ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
-                NomenclatureID = ProductionTask.C1CNomenclatureID;
+                DateBegin = productionTask.DateBegin;
+                DateEnd = productionTask.DateEnd;
+                TaskQuantity = productionTask.Quantity;
+                IsConfirmed = productionTask.IsActual;
+                NomenclatureID = productionTask.C1CNomenclatureID;
                 SetCharacteristicProperties();
-                var cutting = ProductionTask.ProductionTaskRWCutting.First();
-                var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cutting.C1CCharacteristicID).FirstOrDefault();
-                CoreDiameter = charprops.CoreDiameter;
-                LayerNumber = charprops.LayerNumber;
-                Color = charprops.Color;
-                Diameter = charprops.Diameter;
-                Destination = charprops.Destination;
-                DateBegin = ProductionTask.DateBegin;
-                DateEnd = ProductionTask.DateEnd;
-                TaskQuantity = ProductionTask.Quantity;
+                ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
+                var cuttings = DB.GammaBase.ProductionTaskRWCutting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID).ToList();
+                if (cuttings != null)
+                {
+                    var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cuttings[0].C1CCharacteristicID).FirstOrDefault();
+                    CoreDiameter = charprops.CoreDiameter;
+                    LayerNumber = charprops.LayerNumber;
+                    Color = charprops.Color;
+                    Diameter = charprops.Diameter;
+                    Destination = charprops.Destination;
+                }
                 int i = 0;
-                foreach (var rwcutting in ProductionTask.ProductionTaskRWCutting)
+                foreach (var rwcutting in cuttings)
                 {
                     CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.
-                        Where(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID).FirstOrDefault().FormatNumeric.ToString();
+                        Where(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID).FirstOrDefault().FormatNumeric ?? 0;
                     i++;
                 }
+            }
+            else
+            {
+                ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel();
             }
         }
         private void Initialize()
@@ -64,6 +74,7 @@ namespace Gamma.ViewModels
 //            Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
             CuttingFormats = new ObservableCollection<Cutting>();
             CuttingFormats.Add(new Cutting());
+            MainCutting = CuttingFormats[0];
             ClearFilterCommand = new RelayCommand(ClearFilter, () => !IsReadOnly);
         }
 
@@ -78,9 +89,21 @@ namespace Gamma.ViewModels
             CuttingsEnabled = false;
             FilterCharacteristics(Filters.All);
         }
+        private Cutting _mainCutting;
+        public Cutting MainCutting
+        {
+            get
+            {
+                return _mainCutting;
+            }
+            set
+            {
+            	_mainCutting = value;
+            }
+        }
         private ProductionTasks ProductionTask { get; set; }
         private Guid ProductionTaskBatchID { get; set; }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
         {
             base.SaveToModel(itemID);
             var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemID).FirstOrDefault();
@@ -103,7 +126,8 @@ namespace Gamma.ViewModels
             else
             {
                 ProductionTaskID = productionTaskTemp.ProductionTaskID;
-                ProductionTask = DB.GammaBase.ProductionTasks.Find(ProductionTaskID);
+                ProductionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting")
+                    .Where(p => p.ProductionTaskID == ProductionTaskID).First();
             }
             ProductionTask.C1CNomenclatureID = (Guid)NomenclatureID;
             ProductionTask.Quantity = TaskQuantity;
@@ -134,6 +158,7 @@ namespace Gamma.ViewModels
             DB.GammaBase.ProductionTaskRWCutting.RemoveRange(ProductionTask.ProductionTaskRWCutting);
             DB.GammaBase.ProductionTaskRWCutting.AddRange(prodTaskCuttings);
             DB.GammaBase.SaveChanges();
+            ProductionTaskSGBViewModel.SaveToModel(ProductionTaskID);
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public string Color
@@ -171,7 +196,7 @@ namespace Gamma.ViewModels
                 Destinations = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Destination).Distinct());
             if (filter != Filters.Diameter)
                 Diameters = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Diameter).Distinct());
-            Formats = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Format).Distinct());
+            Formats = new ObservableCollection<int>(filteredCharacteristics.Select(c => c.Format).Distinct());
             var charsWithoutFormat = (from fc in filteredCharacteristics
                                       select new
                                       {
@@ -323,7 +348,7 @@ namespace Gamma.ViewModels
                 if (value != null) FilterCharacteristics(Filters.Diameter);
             }
         }
-        public ObservableCollection<string> Formats
+        public ObservableCollection<int> Formats
         {
             get
             {
@@ -385,7 +410,7 @@ namespace Gamma.ViewModels
                     {
                         CharacteristicID = charprops.C1CCharacteristicID,
                         Format = ((int)DB.GammaBase.vCharacteristicSGBProperties.
-                            Where(p => p.C1CCharacteristicID == charprops.C1CCharacteristicID).FirstOrDefault().FormatNumeric).ToString(),
+                            Where(p => p.C1CCharacteristicID == charprops.C1CCharacteristicID).FirstOrDefault().FormatNumeric),
                         Diameter = charprops.Diameter,
                         LayerNumber = charprops.LayerNumber,
                         Destination = charprops.Destination,
@@ -423,7 +448,7 @@ namespace Gamma.ViewModels
         private ObservableCollection<string> _colors;
         private ObservableCollection<string> _diameters;
         private ObservableCollection<string> _destinations;
-        private ObservableCollection<string> _formats;
+        private ObservableCollection<int> _formats;
         private ObservableCollection<Cutting> _cuttingFormats;
         private string _coreDiameter;
         private string _layerNumber;
@@ -451,13 +476,26 @@ namespace Gamma.ViewModels
             public string LayerNumber { get; set; }
             public string Diameter { get; set; }
             public string Destination { get; set; }
-            public string Format { get; set; }
+            public int Format { get; set; }
             public string Color { get; set; }
         }
         public class Cutting : ViewModelBase
         {
-            private ObservableCollection<string> _format = new ObservableCollection<string>(new string[16]);
-            public ObservableCollection<string> Format
+            private ObservableCollection<int?> _format;
+            public Cutting()
+            {
+                Format = new ObservableCollection<int?>(new int?[16]);
+                Format.CollectionChanged += Format_CollectionChanged;
+            }
+            private void Format_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+            {
+                TotalFormat = 0;
+                foreach (var format in Format)
+                {
+                    TotalFormat += format ?? 0;
+                }
+            }                                                                                                     
+            public ObservableCollection<int?> Format
             {
                 get
                 {
@@ -469,7 +507,19 @@ namespace Gamma.ViewModels
                     RaisePropertyChanged("Format");
                 }
             }
-            
+            private int _totalFormat;
+            public int TotalFormat
+            {
+                get
+                {
+                    return _totalFormat;
+                }
+                set
+                {
+                	_totalFormat = value;
+                    RaisePropertyChanged("TotalFormat");
+                }
+            }
         }
         public override bool IsValid
         {
@@ -520,6 +570,20 @@ namespace Gamma.ViewModels
         {
             get;
             set;
+        }
+        public ProductionTaskSGBViewModel ProductionTaskSGBViewModel { get; private set; }
+        private string _totalFormat;
+        public string TotalFormat
+        {
+            get
+            {
+                return _totalFormat;
+            }
+            set
+            {
+            	_totalFormat = value;
+                RaisePropertyChanged("TotalFormat");
+            }
         }
     }
 }

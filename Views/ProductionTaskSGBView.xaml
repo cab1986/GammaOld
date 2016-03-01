@@ -8,24 +8,24 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.ProductionTaskSGBView" 
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="300">
+             d:DesignHeight="150" d:DesignWidth="230">
     <Grid>
-        <dxlc:LayoutGroup Header="Свойства продукции" View="GroupBox">
-            <dxlc:LayoutItem Label="Креп, %" LabelPosition="Top">
+        <dxlc:LayoutGroup Header="Свойства продукции" View="Group">
+            <dxlc:LayoutItem Label="Креп, %" LabelPosition="Top" Width="45">
                 <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
-                              EditValue="{Binding Crepe, ValidatesOnDataErrors=True}"/>
+                              EditValue="{Binding Crepe, ValidatesOnDataErrors=True}" IsFloatValue="False"/>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top">
+            <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top" Width="60">
                 <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
-                              EditValue="{Binding Diameter, ValidatesOnDataErrors=True}"/>
+                              EditValue="{Binding Diameter, ValidatesOnDataErrors=True}" IsFloatValue="False"/>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Диаметр+" LabelPosition="Top">
+            <dxlc:LayoutItem Label="Диаметр+" LabelPosition="Top" Width="55">
                 <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
-                              EditValue="{Binding DiameterPlus,ValidatesOnDataErrors=True}"/>
+                              EditValue="{Binding DiameterPlus,ValidatesOnDataErrors=True}" IsFloatValue="False"/>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Диаметр-" LabelPosition="Top">
+            <dxlc:LayoutItem Label="Диаметр-" LabelPosition="Top" Width="55">
                 <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
-                              EditValue="{Binding DiameterMinus, ValidatesOnDataErrors=True}"/>
+                              EditValue="{Binding DiameterMinus, ValidatesOnDataErrors=True}" IsFloatValue="False"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
     </Grid>

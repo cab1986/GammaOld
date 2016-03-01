@@ -24,12 +24,12 @@ namespace Gamma.ViewModels
             if (productionTaskBatch == null)
             {
                 ProcessModelID = 0;
-                ProductionTaskSGBView = new ProductionTaskSGBViewModel();
+//                ProductionTaskSGBView = new ProductionTaskSGBViewModel();
             }
             else
             {
                 ProcessModelID = productionTaskBatch.ProcessModelID ?? 0;
-                ProductionTaskSGBView = new ProductionTaskSGBViewModel(ProductionTaskBatchID);
+//                ProductionTaskSGBView = new ProductionTaskSGBViewModel(ProductionTaskBatchID);
             }             
         }
         public override bool IsValid
@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
                 return
                     (FirstView == null ? true : FirstView.IsValid) &&
                     (SecondView == null ? true : SecondView.IsValid) &&
-                    (ProductionTaskSGBView == null ? true : ProductionTaskSGBView.IsValid) &&
+//                    (ProductionTaskSGBView == null ? true : ProductionTaskSGBView.IsValid) &&
                     (ProductionTaskWRView == null ? true : ProductionTaskWRView.IsValid);
             }
         }
@@ -120,7 +120,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("FirstView");
             }
         }
-        private SaveImplementedViewModel _productionTaskSGBView;
+/*        private SaveImplementedViewModel _productionTaskSGBView;
         public SaveImplementedViewModel ProductionTaskSGBView
         {
             get
@@ -133,6 +133,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionTaskSGBView");
             }
         }
+ * */
         private SaveImplementedViewModel _secondView;
         public SaveImplementedViewModel SecondView
         {
@@ -165,7 +166,7 @@ namespace Gamma.ViewModels
             if (FirstView != null) FirstView.SaveToModel(itemID);
             if (SecondView != null) SecondView.SaveToModel(itemID);
             var productionTaskID = (FirstView as IProductionTask).ProductionTaskID;
-            if (ProductionTaskSGBView != null) ProductionTaskSGBView.SaveToModel(productionTaskID);
+//            if (ProductionTaskSGBView != null) ProductionTaskSGBView.SaveToModel(productionTaskID);
             if (ProductionTaskWRView != null) ProductionTaskWRView.SaveToModel(productionTaskID);
         }
         

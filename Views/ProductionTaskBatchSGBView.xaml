@@ -27,10 +27,7 @@
             <dxlc:LayoutItem>
                 <ContentControl Content="{Binding FirstView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>    
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem>
-                <ContentControl Content="{Binding ProductionTaskSGBView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem>
+             <dxlc:LayoutItem>
                 <ContentControl Content="{Binding SecondView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem>

@@ -19,7 +19,7 @@
     <Grid>
         <dxlc:LayoutControl Orientation="Vertical" Margin="0,0,0,0" >
             <dxlc:LayoutGroup Orientation="Horizontal" Height="40">
-                <Button Content="Вес нетто" Command="{Binding GetWeightCommand}" Width="80"/>
+                <Button Content="Вес нетто" Command="{Binding GetWeightCommand}" Width="90"/>
                 <dxlc:LayoutItem Label="Вес нетто" LabelPosition="Top" Width="150">
                     <dxe:PopupCalcEdit EditValue="{Binding Weight}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
@@ -28,7 +28,7 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Horizontal" Height="40">
-                <Button Content="Вес брутто" Command="{Binding GetGrossWeightCommand}" Width="80"/>
+                <Button Content="Вес брутто" Command="{Binding GetGrossWeightCommand}" Width="90"/>
                 <dxlc:LayoutItem Label="Вес брутто" LabelPosition="Top" Width="150">
                     <dxe:PopupCalcEdit EditValue="{Binding GrossWeight}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>

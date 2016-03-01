@@ -48,6 +48,11 @@ namespace Gamma.ViewModels
                 NomenclatureID = productionTask.C1CNomenclatureID;
                 CharacteristicID = (Guid)productionTask.C1CCharacteristicID;
                 IsConfirmed = productionTask.IsActual;
+                ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
+            }
+            else
+            {
+                ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel();
             }
             if (isForRW)
             {
@@ -133,6 +138,8 @@ namespace Gamma.ViewModels
             }
         }
         public Guid ProductionTaskID { get; set; }
+        public ProductionTaskSGBViewModel ProductionTaskSGBViewModel { get; private set; }
+
         private ObservableCollection<Nomenclature1C> _specificationNomenclature;
         public ObservableCollection<Nomenclature1C> SpecificationNomenclature
         {
@@ -209,7 +216,7 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
         {
             base.SaveToModel(itemID);
             var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemID).FirstOrDefault();
@@ -242,6 +249,7 @@ namespace Gamma.ViewModels
             productionTask.DateBegin = DateBegin;
             productionTask.DateEnd = DateEnd;
             DB.GammaBase.SaveChanges();
+            ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
         }
         [Range(1, 1000000, ErrorMessage = "Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]

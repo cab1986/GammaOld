@@ -219,6 +219,7 @@ namespace Gamma.ViewModels
             var productionTaskBatch = (from pt in DB.GammaBase.ProductionTaskBatches.Include("ProductionTaskStates")
                                   where pt.ProductionTaskBatchID == productionTaskBatchID
                                   select pt).FirstOrDefault();
+            DB.GammaBase.Entry(productionTaskBatch).Reload();
             ProductionTaskBatchID = productionTaskBatchID;
             Number = productionTaskBatch.Number;
             Date = productionTaskBatch.Date;         

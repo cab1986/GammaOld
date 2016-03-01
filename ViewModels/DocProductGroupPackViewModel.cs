@@ -44,7 +44,7 @@ namespace Gamma.ViewModels
                         ProductID = groupPackSpool.ProductID,
                         NomenclatureID = (Guid)groupPackSpool.C1CNomenclatureID,
                         CharacteristicID = (Guid)groupPackSpool.C1CCharacteristicID,
-                        Number = groupPackSpool.Number + " от " + groupPackSpool.Date,
+                        Number = String.Format("{0} от {1}", groupPackSpool.Number, groupPackSpool.Date),
                         Weight = Convert.ToInt32(groupPackSpool.Quantity),
                         Nomenclature = groupPackSpool.NomenclatureName,
                     });

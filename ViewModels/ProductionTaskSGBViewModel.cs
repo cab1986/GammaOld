@@ -6,6 +6,7 @@ using System;
 using Gamma.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
@@ -23,12 +24,14 @@ namespace Gamma.ViewModels
         public ProductionTaskSGBViewModel()
         {
         }
-        public ProductionTaskSGBViewModel(Guid productionTaskBatchID)
+        public ProductionTaskSGBViewModel(Guid productionTaskID)
         {
-            var productionTaskSGB = DB.GammaBase.GetProductionTaskBatchSGBProperties(productionTaskBatchID).FirstOrDefault();
+            var productionTaskSGB = DB.GammaBase.ProductionTaskSGB.Include(pt => pt.ProductionTasks.ProductionTaskBatches).
+                Where(pt => pt.ProductionTaskID == productionTaskID).FirstOrDefault();
             if (productionTaskSGB != null)
             {
-                IsConfirmed = productionTaskSGB.IsActual;
+                IsConfirmed = productionTaskSGB.ProductionTasks.ProductionTaskBatches.FirstOrDefault() == null ? false :
+                    productionTaskSGB.ProductionTasks.ProductionTaskBatches.First().ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
                 Crepe = productionTaskSGB.Crepe ?? 0;
                 Diameter = productionTaskSGB.Diameter ?? 0;
                 DiameterMinus = productionTaskSGB.DiameterMinus ?? 0;

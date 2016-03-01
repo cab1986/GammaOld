@@ -63,7 +63,7 @@
                                     </dxe:ComboBoxEdit>
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
-                            <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical">
+                            <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                 <ContentControl Content="{Binding CurrentView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
