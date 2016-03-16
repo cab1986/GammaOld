@@ -214,5 +214,113 @@ namespace Gamma.Properties {
                 this["DocProductTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("900")]
+        public double NomenclatureHeight {
+            get {
+                return ((double)(this["NomenclatureHeight"]));
+            }
+            set {
+                this["NomenclatureHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
+        public double NomenclatureWidth {
+            get {
+                return ((double)(this["NomenclatureWidth"]));
+            }
+            set {
+                this["NomenclatureWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public double NomenclatureLeft {
+            get {
+                return ((double)(this["NomenclatureLeft"]));
+            }
+            set {
+                this["NomenclatureLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double NomenclatureTop {
+            get {
+                return ((double)(this["NomenclatureTop"]));
+            }
+            set {
+                this["NomenclatureTop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Maximized")]
+        public string NomenclatureWState {
+            get {
+                return ((string)(this["NomenclatureWState"]));
+            }
+            set {
+                this["NomenclatureWState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public double FindProductHeight {
+            get {
+                return ((double)(this["FindProductHeight"]));
+            }
+            set {
+                this["FindProductHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1200")]
+        public double FindProductWidth {
+            get {
+                return ((double)(this["FindProductWidth"]));
+            }
+            set {
+                this["FindProductWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double FindProductLeft {
+            get {
+                return ((double)(this["FindProductLeft"]));
+            }
+            set {
+                this["FindProductLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public double FindProductTop {
+            get {
+                return ((double)(this["FindProductTop"]));
+            }
+            set {
+                this["FindProductTop"] = value;
+            }
+        }
     }
 }

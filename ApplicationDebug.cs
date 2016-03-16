@@ -20,9 +20,18 @@ namespace Gamma
 #endif
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs args)
             {
-                MessageBox.Show("Exception: " + args.ExceptionObject.ToString(),
-                    "Ошибка приложения", MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(0);
+                var exception = args.ExceptionObject as Exception;
+                if (exception == null)
+                {
+                    MessageBox.Show("Exception: " + args.ExceptionObject.ToString(),
+                        "Ошибка приложения", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show(exception.InnerException != null ? exception.InnerException.ToString() : exception.ToString(), 
+                        "Ошибка приложения", MessageBoxButton.OKCancel, MessageBoxImage.Error);
+                }
+//                Environment.Exit(0);
                 Trace.WriteLine("Global exception: " + args.ExceptionObject.ToString());
             };
 //            Application.ThreadException += delegate(Object sender, ThreadExceptionEventArgs args)

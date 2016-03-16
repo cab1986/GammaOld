@@ -43,7 +43,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductSpoolView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ReportListView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ReportListView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.Views.ReportPreview.resources
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\FilterDateReportDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\FilterDateReportDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.baml
@@ -188,3 +187,4 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchSGBView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.g.cs
+D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.Themes.DXStyle.v15.1.dll

@@ -18,6 +18,7 @@ namespace Gamma
         {
             ReportSettings.CustomSaveReport += SaveReport;
             ReportSettings.PreviewSettings.Buttons = (PreviewButtons.Print | PreviewButtons.Save);
+            ReportSettings.PreviewSettings.ShowInTaskbar = true;
         }
         public static BarViewModel GetReportBar(string ReportObject, Guid? vmID = null)
         {
@@ -74,6 +75,16 @@ namespace Gamma
                 if (paramID != null) report.SetParameterValue("ParamID", paramID);
                 report.Dictionary.Connections[0].ConnectionString = GammaSettings.SQLConnectionString;
                 report.Show();
+            }
+        }
+        public static void PrintReport(string reportName, string reportFolder = null, Guid? paramID = null)
+        {
+            var parentID = DB.GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
+            var reports = DB.GammaBase.Reports.Where(r => r.Name == reportName && (parentID == null || r.ParentID == parentID)).
+                Select(r => r.ReportID).ToList();
+            if (reports.Count == 1)
+            {
+                PrintReport(reports[0], paramID);
             }
         }
         public static void DesignReport(Guid reportID)

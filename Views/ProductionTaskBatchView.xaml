@@ -62,6 +62,9 @@
                                                       DisplayMember="Value" ValueMember="Key" Visibility="{Binding ProcessModelVisible}" AllowNullInput="True">
                                     </dxe:ComboBoxEdit>
                                 </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Контроль партии">
+                                    <dxe:CheckEdit EditValue="{Binding PartyControl}" />
+                                </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                             <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                 <ContentControl Content="{Binding CurrentView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
@@ -100,10 +103,10 @@
                             <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="3" Width="120" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Вес: {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Вес: {0:d} кг" />
                         </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>

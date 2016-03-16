@@ -133,13 +133,19 @@
       <HintPath>packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FastReport, Version=2015.2.16.0, Culture=neutral, PublicKeyToken=417583d16d08abed">
+    <Reference Include="FastReport, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\FastReports\FastReport.Net Trial\Framework 4.0\FastReport.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FastReport.Bars, Version=2015.2.16.0, Culture=neutral, PublicKeyToken=417583d16d08abed">
+    <Reference Include="FastReport.Bars, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\FastReports\FastReport.Net Trial\Framework 4.0\FastReport.Bars.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FastReport.Editor, Version=2015.2.16.0, Culture=neutral, PublicKeyToken=417583d16d08abed">
+    <Reference Include="FastReport.Editor, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\FastReports\FastReport.Net Trial\Framework 4.0\FastReport.Editor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.1.1.35051, Culture=neutral, PublicKeyToken=0e453835af4ee6ce, processorArchitecture=MSIL">
@@ -205,10 +211,12 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Common\Nomenclature1C.cs" />
     <Compile Include="Common\Nomenclature1CFolder.cs" />
     <Compile Include="Common\ProductRelation.cs" />
+    <Compile Include="Common\UIServices.cs" />
     <Compile Include="Common\ViewsManager.cs" />
     <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
@@ -266,13 +274,13 @@
     <Compile Include="Models\C1CRejectionReasons.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocChangeStateProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocCloseShiftRemainders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocMovement.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DocProductChangeState.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocProduction.cs">
@@ -282,9 +290,6 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Docs.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DocTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocWithdrawal.cs">
@@ -331,6 +336,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetInputNomenclature_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetInputNomenclature_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetNomenclatureFolders1_Result.cs">

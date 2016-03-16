@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.ObjectModel;
@@ -127,6 +126,7 @@ namespace Gamma.ViewModels
         public RelayCommand ChooseSelectedNomenclature { get; private set; }
         private void ChooseNomenclature()
         {
+            UIServices.SetBusyState();
             var msg = new Nomenclature1CMessage {Nomenclature1CID = SelectedNomenclature.Nomenclature1CID};
             Messenger.Default.Send<Nomenclature1CMessage>(msg);
             CloseWindow();

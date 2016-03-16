@@ -4,10 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:g="clr-namespace:Gamma"
         xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.NomenclatureView"
         mc:Ignorable="d ignore"
+        Height="{g:SettingBinding NomenclatureHeight}"
+        Width="{g:SettingBinding NomenclatureWidth}"
+        Left="{g:SettingBinding NomenclatureLeft}"
+        Top="{g:SettingBinding NomenclatureTop}"
+        WindowState="{g:SettingBinding NomenclatureWState}"
         >
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0" />
@@ -52,8 +57,8 @@
                             </dxg:GridControl>
                             <dxlc:LayoutControl Grid.Row="1" VerticalAlignment="Stretch">
                                 <dxlc:LayoutGroup VerticalAlignment="Stretch" Margin="-12">
-                                    <dxlc:LayoutItem Label="Характеристики номенклатуры" LabelPosition="Top" VerticalAlignment="Stretch">
-                                        <dxe:ListBoxEdit ItemsSource="{Binding NomenclatureCharacteristics}" IsReadOnly="True" IsEnabled="False" />
+                                    <dxlc:LayoutItem Label="Доступные характеристики номенклатуры" LabelPosition="Top" VerticalAlignment="Stretch">
+                                        <dxe:ListBoxEdit ItemsSource="{Binding NomenclatureCharacteristics}" IsReadOnly="True" IsTabStop="False" Focusable="False" />
                                     </dxlc:LayoutItem>
                                 </dxlc:LayoutGroup>
                             </dxlc:LayoutControl>

@@ -58,7 +58,7 @@
                 <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" 
                                   DisplayMember="CharacteristicName" ValueMember="CharacteristicID" MinWidth="200"/>
             </dxlc:LayoutItem>
-            <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="230" />
+            <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="230" HorizontalAlignment="Right" />
         </dxlc:LayoutGroup>
     </dxlc:LayoutGroup>
     <i:Interaction.Behaviors>

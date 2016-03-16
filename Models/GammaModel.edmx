@@ -141,6 +141,17 @@
           <Property Name="ProductionTaskBatchID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="DocChangeStateProducts">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="StateID" Type="tinyint" Nullable="false" />
+          <Property Name="1CRejectionReasonID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="DocCloseShiftDocs">
           <Key>
             <PropertyRef Name="DocCloseShiftID" />
@@ -166,14 +177,6 @@
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="InPlaceID" Type="int" />
           <Property Name="OutPlaceID" Type="int" />
-        </EntityType>
-        <EntityType Name="DocProductChangeState">
-          <Key>
-            <PropertyRef Name="DocID" />
-          </Key>
-          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="StateID" Type="tinyint" Nullable="false" />
-          <Property Name="1CRejectionReasonID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocProduction">
           <Key>
@@ -216,13 +219,6 @@
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Comment" Type="varchar" MaxLength="8000" />
           <Property Name="IsFromOldGamma" Type="bit" />
-        </EntityType>
-        <EntityType Name="DocTypes">
-          <Key>
-            <PropertyRef Name="DocTypeID" />
-          </Key>
-          <Property Name="DocTypeID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="DocWithdrawal">
           <Key>
@@ -278,6 +274,7 @@
             <PropertyRef Name="PlaceID" />
           </Key>
           <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="BranchID" Type="int" />
           <Property Name="Name" Type="varchar" MaxLength="64" />
           <Property Name="NameEng" Type="varchar" MaxLength="16" />
           <Property Name="DepartmentID" Type="smallint" Nullable="false" />
@@ -457,6 +454,14 @@
           <Property Name="Template" Type="image" />
           <Property Name="Version" Type="varchar" MaxLength="30" />
         </EntityType>
+        <EntityType Name="UserPlaces">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserID" />
@@ -468,7 +473,6 @@
           <Property Name="Post" Type="varchar" MaxLength="200" />
           <Property Name="PassChange" Type="datetime" />
           <Property Name="PassMustChange" Type="bit" />
-          <Property Name="PlaceID" Type="int" Nullable="false" />
           <Property Name="Exports" Type="bit" Nullable="false" />
           <Property Name="DBAdmin" Type="bit" Nullable="false" />
           <Property Name="ProgramAdmin" Type="bit" />
@@ -761,6 +765,30 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocChangeStateProducts_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocChangeStateProducts" Type="Self.DocChangeStateProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocChangeStateProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocChangeStateProducts_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="DocChangeStateProducts" Type="Self.DocChangeStateProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocChangeStateProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocCloseShiftDocs_Docs2">
           <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
           <End Role="DocCloseShiftDocs" Type="Self.DocCloseShiftDocs" Multiplicity="*" />
@@ -835,25 +863,13 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
         </Association>
         <Association Name="FK_DocProductChangeState_1CRejectionReasons">
           <End Role="1CRejectionReasons" Type="Self.1CRejectionReasons" Multiplicity="0..1" />
-          <End Role="DocProductChangeState" Type="Self.DocProductChangeState" Multiplicity="*" />
+          <End Role="DocChangeStateProducts" Type="Self.DocChangeStateProducts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="1CRejectionReasons">
               <PropertyRef Name="1CRejectionReasonID" />
             </Principal>
-            <Dependent Role="DocProductChangeState">
+            <Dependent Role="DocChangeStateProducts">
               <PropertyRef Name="1CRejectionReasonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocProductChangeState_Docs">
-          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
-          <End Role="DocProductChangeState" Type="Self.DocProductChangeState" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Docs">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocProductChangeState">
-              <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -946,18 +962,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Principal>
             <Dependent Role="DocProducts">
               <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Docs_DocTypes">
-          <End Role="DocTypes" Type="Self.DocTypes" Multiplicity="0..1" />
-          <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocTypes">
-              <PropertyRef Name="DocTypeID" />
-            </Principal>
-            <Dependent Role="Docs">
-              <PropertyRef Name="DocTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1435,15 +1439,27 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Users_Places">
+        <Association Name="FK_UserPlaces_Places">
           <End Role="Places" Type="Self.Places" Multiplicity="1" />
-          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <End Role="UserPlaces" Type="Self.UserPlaces" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Places">
               <PropertyRef Name="PlaceID" />
             </Principal>
-            <Dependent Role="Users">
+            <Dependent Role="UserPlaces">
               <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPlaces_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserPlaces" Type="Self.UserPlaces" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserPlaces">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1459,6 +1475,21 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CreateDocChangeStateForProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Quantity" Type="decimal" Mode="In" />
+          <Parameter Name="StateID" Type="smallint" Mode="In" />
+          <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PrintName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CreateRemainderSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ParentProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Quantity" Type="int" Mode="In" />
+          <Parameter Name="PrintName" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
         <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="BatchKindID" Type="int" Mode="In" />
@@ -1490,6 +1521,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
         </Function>
         <Function Name="GetInputNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
@@ -1543,15 +1575,14 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <EntitySet Name="1CPropertyValues" EntityType="Self.1CPropertyValues" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CRejectionReasons" EntityType="Self.1CRejectionReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DocProductChangeState" EntityType="Self.DocProductChangeState" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocProduction" EntityType="Self.DocProduction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
@@ -1576,6 +1607,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SourceSpools" EntityType="Self.SourceSpools" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Templates" EntityType="Self.Templates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPlaces" EntityType="Self.UserPlaces" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1691,6 +1723,14 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="BatchProductionTasks" EntitySet="BatchProductionTasks" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocChangeStateProducts_Docs" Association="Self.FK_DocChangeStateProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocChangeStateProducts_Products" Association="Self.FK_DocChangeStateProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftDocs_Docs2" Association="Self.FK_DocCloseShiftDocs_Docs2">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
@@ -1717,11 +1757,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           </AssociationSet>
           <AssociationSet Name="FK_DocProductChangeState_1CRejectionReasons" Association="Self.FK_DocProductChangeState_1CRejectionReasons">
             <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
-            <End Role="DocProductChangeState" EntitySet="DocProductChangeState" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocProductChangeState_Docs" Association="Self.FK_DocProductChangeState_Docs">
-            <End Role="Docs" EntitySet="Docs" />
-            <End Role="DocProductChangeState" EntitySet="DocProductChangeState" />
+            <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_DocProduction_Docs" Association="Self.FK_DocProduction_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -1750,10 +1786,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <AssociationSet Name="FK_DocProducts_Products" Association="Self.FK_DocProducts_Products">
             <End Role="Products" EntitySet="Products" />
             <End Role="DocProducts" EntitySet="DocProducts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Docs_DocTypes" Association="Self.FK_Docs_DocTypes">
-            <End Role="DocTypes" EntitySet="DocTypes" />
-            <End Role="Docs" EntitySet="Docs" />
           </AssociationSet>
           <AssociationSet Name="FK_Docs_Places" Association="Self.FK_Docs_Places">
             <End Role="Places" EntitySet="Places" />
@@ -1911,9 +1943,13 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             <End Role="Reports" EntitySet="Reports" />
             <End Role="Templates" EntitySet="Templates" />
           </AssociationSet>
-          <AssociationSet Name="FK_Users_Places" Association="Self.FK_Users_Places">
+          <AssociationSet Name="FK_UserPlaces_Places" Association="Self.FK_UserPlaces_Places">
             <End Role="Places" EntitySet="Places" />
+            <End Role="UserPlaces" EntitySet="UserPlaces" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPlaces_Users" Association="Self.FK_UserPlaces_Users">
             <End Role="Users" EntitySet="Users" />
+            <End Role="UserPlaces" EntitySet="UserPlaces" />
           </AssociationSet>
           <AssociationSet Name="FK_Users_Roles1" Association="Self.FK_Users_Roles1">
             <End Role="Roles" EntitySet="Roles" />
@@ -2087,13 +2123,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <FunctionImport Name="GetDocCloseShiftPMSpools" ReturnType="Collection(GammaModel.GetDocCloseShiftPMSpools_Result)">
           <Parameter Name="DocID" Mode="In" Type="Guid" />
           </FunctionImport>
-          <EntitySet Name="DocTypes" EntityType="GammaModel.DocTypes" />
           <EntitySet Name="C1CRejectionReasons" EntityType="GammaModel.C1CRejectionReasons" />
-          <EntitySet Name="DocProductChangeState" EntityType="GammaModel.DocProductChangeState" />
-          <AssociationSet Name="FK_DocProductChangeState_1CRejectionReasons" Association="GammaModel.FK_DocProductChangeState_1CRejectionReasons">
-            <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
-            <End Role="DocProductChangeState" EntitySet="DocProductChangeState" />
-          </AssociationSet>
           <FunctionImport Name="GetSpoolRejectionReasons" ReturnType="Collection(GammaModel.GetSpoolRejectionReasons_Result)" />
           <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
           <EntitySet Name="DocMovement" EntityType="GammaModel.DocMovement" />
@@ -2119,10 +2149,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             <End Role="Places" EntitySet="Places" />
             <End Role="DocMovement" EntitySet="DocMovement" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocProductChangeState_Docs" Association="GammaModel.FK_DocProductChangeState_Docs">
-            <End Role="Docs" EntitySet="Docs" />
-            <End Role="DocProductChangeState" EntitySet="DocProductChangeState" />
-          </AssociationSet>
           <AssociationSet Name="FK_DocProduction_Docs" Association="GammaModel.FK_DocProduction_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocProduction" EntitySet="DocProduction" />
@@ -2134,10 +2160,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <AssociationSet Name="FK_DocProducts_Docs" Association="GammaModel.FK_DocProducts_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocProducts" EntitySet="DocProducts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Docs_DocTypes" Association="GammaModel.FK_Docs_DocTypes">
-            <End Role="DocTypes" EntitySet="DocTypes" />
-            <End Role="Docs" EntitySet="Docs" />
           </AssociationSet>
           <AssociationSet Name="FK_Docs_Places" Association="GammaModel.FK_Docs_Places">
             <End Role="Places" EntitySet="Places" />
@@ -2179,19 +2201,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <AssociationSet Name="FK_Places_PlaceGroups1" Association="GammaModel.FK_Places_PlaceGroups1">
             <End Role="PlaceGroups" EntitySet="PlaceGroups" />
             <End Role="Places" EntitySet="Places" />
-          </AssociationSet>
-          <EntitySet Name="Users" EntityType="GammaModel.Users" />
-          <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Docs" EntitySet="Docs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Places" Association="GammaModel.FK_Users_Places">
-            <End Role="Places" EntitySet="Places" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Users_Roles1" Association="GammaModel.FK_Users_Roles1">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <EntitySet Name="ProductionTaskStates" EntityType="GammaModel.ProductionTaskStates" />
           <FunctionImport Name="GetActiveSourceSpools" ReturnType="Collection(Guid)">
@@ -2246,9 +2255,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
           </AssociationSet>
-          <FunctionImport Name="GetInputNomenclature" ReturnType="Collection(GammaModel.GetInputNomenclature_Result)">
-          <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
-          </FunctionImport>
           <EntitySet Name="ProductionTaskRWCutting" EntityType="GammaModel.ProductionTaskRWCutting" />
           <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -2261,10 +2267,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <EntitySet Name="ProductionTaskBatches" EntityType="GammaModel.ProductionTaskBatches" />
           <AssociationSet Name="FK_ProductionTaskBatch_ProductionTaskStates" Association="GammaModel.FK_ProductionTaskBatch_ProductionTaskStates">
             <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
-            <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionTaskBatch_Users" Association="GammaModel.FK_ProductionTaskBatch_Users">
-            <End Role="Users" EntitySet="Users" />
             <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
           </AssociationSet>
           <AssociationSet Name="BatchProductionTasks" Association="GammaModel.BatchProductionTasks">
@@ -2323,6 +2325,55 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             <Parameter Name="DateEnd" Mode="In" Type="DateTime" />
             <Parameter Name="Number" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="GetInputNomenclature" ReturnType="Collection(GammaModel.GetInputNomenclature_Result1)">
+            <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
+            <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CreateDocChangeStateForProduct">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+            <Parameter Name="Quantity" Mode="In" Type="Decimal" />
+            <Parameter Name="StateID" Mode="In" Type="Int16" />
+            <Parameter Name="RejectionReasonID" Mode="In" Type="Guid" />
+            <Parameter Name="PrintName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="DocChangeStateProducts" EntityType="GammaModel.DocChangeStateProducts" />
+          <AssociationSet Name="FK_DocProductChangeState_1CRejectionReasons" Association="GammaModel.FK_DocProductChangeState_1CRejectionReasons">
+            <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
+            <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocChangeStateProducts_Docs" Association="GammaModel.FK_DocChangeStateProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocChangeStateProducts_Products" Association="GammaModel.FK_DocChangeStateProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
+          </AssociationSet>
+          <FunctionImport Name="CreateRemainderSpool">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+            <Parameter Name="ParentProductID" Mode="In" Type="Guid" />
+            <Parameter Name="Quantity" Mode="In" Type="Int32" />
+            <Parameter Name="PrintName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Users" EntityType="GammaModel.Users" />
+          <AssociationSet Name="FK_Docs_Users" Association="GammaModel.FK_Docs_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Docs" EntitySet="Docs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskBatch_Users" Association="GammaModel.FK_ProductionTaskBatch_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Roles1" Association="GammaModel.FK_Users_Roles1">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserPlaces" Association="GammaModel.UserPlaces">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="ProductPalletItems">
           <Key>
@@ -2602,6 +2653,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="Products" ToRole="ProductGroupPacks" />
           <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Products" FromRole="Products" ToRole="Rests" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="Products" ToRole="ProductSpools" />
+          <NavigationProperty Name="DocChangeStateProducts" Relationship="GammaModel.FK_DocChangeStateProducts_Products" FromRole="Products" ToRole="DocChangeStateProducts" />
         </EntityType>
         <Association Name="FK_DocProducts_Products">
           <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
@@ -3105,14 +3157,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
           <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
         </ComplexType>
-        <EntityType Name="DocTypes">
-          <Key>
-            <PropertyRef Name="DocTypeID" />
-          </Key>
-          <Property Name="DocTypeID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_DocTypes" FromRole="DocTypes" ToRole="Docs" />
-        </EntityType>
         <EntityType Name="C1CRejectionReasons">
           <Key>
             <PropertyRef Name="C1CRejectionReasonID" />
@@ -3123,30 +3167,8 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="ParentID" Type="Guid" />
           <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FullDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DocProductChangeState" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocProductChangeState" />
+          <NavigationProperty Name="DocChangeStateProducts" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocChangeStateProducts" />
         </EntityType>
-        <EntityType Name="DocProductChangeState">
-          <Key>
-            <PropertyRef Name="DocID" />
-          </Key>
-          <Property Name="DocID" Type="Guid" Nullable="false" />
-          <Property Name="StateID" Type="Byte" Nullable="false" />
-          <Property Name="C1CRejectionReasonID" Type="Guid" />
-          <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="DocProductChangeState" ToRole="C1CRejectionReasons" />
-          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocProductChangeState_Docs" FromRole="DocProductChangeState" ToRole="Docs" />
-        </EntityType>
-        <Association Name="FK_DocProductChangeState_1CRejectionReasons">
-          <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="0..1" />
-          <End Type="GammaModel.DocProductChangeState" Role="DocProductChangeState" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CRejectionReasons">
-              <PropertyRef Name="C1CRejectionReasonID" />
-            </Principal>
-            <Dependent Role="DocProductChangeState">
-              <PropertyRef Name="C1CRejectionReasonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="GetSpoolRejectionReasons_Result">
           <Property Type="Guid" Name="RejectionReasonID" Nullable="true" />
           <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
@@ -3220,18 +3242,17 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="Docs" ToRole="DocMovement" />
-          <NavigationProperty Name="DocProductChangeState" Relationship="GammaModel.FK_DocProductChangeState_Docs" FromRole="Docs" ToRole="DocProductChangeState" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />
           <NavigationProperty Name="DocProducts" Relationship="GammaModel.FK_DocProducts_Docs" FromRole="Docs" ToRole="DocProducts" />
-          <NavigationProperty Name="DocTypes" Relationship="GammaModel.FK_Docs_DocTypes" FromRole="Docs" ToRole="DocTypes" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
           <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Docs1" FromRole="Docs" ToRole="DocWithdrawal" />
           <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_Docs" FromRole="Docs" ToRole="DocWithdrawalMaterials" />
           <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
           <NavigationProperty Name="Docs2" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
-          <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
           <Property Name="PrintName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="IsFromOldGamma" Type="Boolean" />
+          <NavigationProperty Name="DocChangeStateProducts" Relationship="GammaModel.FK_DocChangeStateProducts_Docs" FromRole="Docs" ToRole="DocChangeStateProducts" />
+          <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
         </EntityType>
         <EntityType Name="DocWithdrawal">
           <Key>
@@ -3262,9 +3283,10 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Places" FromRole="Places" ToRole="Rests" />
           <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_Places" FromRole="Places" ToRole="SourceSpools" />
           <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.FK_Places_PlaceGroups1" FromRole="Places" ToRole="PlaceGroups" />
-          <NavigationProperty Name="Users" Relationship="GammaModel.FK_Users_Places" FromRole="Places" ToRole="Users" />
           <Property Name="C1CPlaceID" Type="Guid" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="Places" ToRole="ProductionTasks" />
+          <Property Name="BranchID" Type="Int32" />
+          <NavigationProperty Name="Users" Relationship="GammaModel.UserPlaces" FromRole="Places" ToRole="Users" />
         </EntityType>
         <EntityType Name="Rests">
           <Key>
@@ -3340,18 +3362,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocProductChangeState_Docs">
-          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-          <End Type="GammaModel.DocProductChangeState" Role="DocProductChangeState" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Docs">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocProductChangeState">
-              <PropertyRef Name="DocID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DocProduction_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -3389,18 +3399,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Principal>
             <Dependent Role="DocProducts">
               <PropertyRef Name="DocID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Docs_DocTypes">
-          <End Type="GammaModel.DocTypes" Role="DocTypes" Multiplicity="0..1" />
-          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocTypes">
-              <PropertyRef Name="DocTypeID" />
-            </Principal>
-            <Dependent Role="Docs">
-              <PropertyRef Name="DocTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3517,63 +3515,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="UserID" Type="Guid" Nullable="false" />
-          <Property Name="RoleID" Type="Guid" Nullable="false" />
-          <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Post" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="PassChange" Type="DateTime" Precision="3" />
-          <Property Name="PassMustChange" Type="Boolean" />
-          <Property Name="PlaceID" Type="Int32" Nullable="false" />
-          <Property Name="Exports" Type="Boolean" Nullable="false" />
-          <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
-          <Property Name="ShiftID" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
-          <NavigationProperty Name="Places" Relationship="GammaModel.FK_Users_Places" FromRole="Users" ToRole="Places" />
-          <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
-          <Property Name="ProgramAdmin" Type="Boolean" />
-          <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.FK_ProductionTaskBatch_Users" FromRole="Users" ToRole="ProductionTaskBatches" />
-        </EntityType>
-        <Association Name="FK_Docs_Users">
-          <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
-          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Docs">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_Places">
-          <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
-          <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Places">
-              <PropertyRef Name="PlaceID" />
-            </Principal>
-            <Dependent Role="Users">
-              <PropertyRef Name="PlaceID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Users_Roles1">
-          <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1" />
-          <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="RoleID" />
-            </Principal>
-            <Dependent Role="Users">
-              <PropertyRef Name="RoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ProductionTaskStates">
           <Key>
             <PropertyRef Name="ProductionTaskStateID" />
@@ -3656,6 +3597,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Type="Decimal" Name="Weight" Nullable="true" Precision="10" Scale="4" />
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
           <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
         </ComplexType>
         <EntityType Name="ProductionTaskWR">
           <Key>
@@ -3838,8 +3780,8 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="ProcessModelID" Type="Int16" />
           <Property Name="PartyControl" Type="Boolean" />
           <NavigationProperty Name="ProductionTaskStates" Relationship="GammaModel.FK_ProductionTaskBatch_ProductionTaskStates" FromRole="ProductionTaskBatches" ToRole="ProductionTaskStates" />
-          <NavigationProperty Name="Users" Relationship="GammaModel.FK_ProductionTaskBatch_Users" FromRole="ProductionTaskBatches" ToRole="Users" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTaskBatches" ToRole="ProductionTasks" />
+          <NavigationProperty Name="Users" Relationship="GammaModel.FK_ProductionTaskBatch_Users" FromRole="ProductionTaskBatches" ToRole="Users" />
         </EntityType>
         <Association Name="FK_ProductionTaskBatch_ProductionTaskStates">
           <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates" Multiplicity="1" />
@@ -3850,18 +3792,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             </Principal>
             <Dependent Role="ProductionTaskBatches">
               <PropertyRef Name="ProductionTaskStateID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductionTaskBatch_Users">
-          <End Type="GammaModel.Users" Role="Users" Multiplicity="1" />
-          <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="ProductionTaskBatches">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4054,6 +3984,120 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Type="Int32" Name="BatchKindID" Nullable="true" />
           <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
         </ComplexType>
+        <ComplexType Name="GetInputNomenclature_Result1">
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <EntityType Name="DocChangeStateProducts">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="StateID" Type="Byte" Nullable="false" />
+          <Property Name="C1CRejectionReasonID" Type="Guid" />
+          <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="DocChangeStateProducts" ToRole="C1CRejectionReasons" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocChangeStateProducts_Docs" FromRole="DocChangeStateProducts" ToRole="Docs" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocChangeStateProducts_Products" FromRole="DocChangeStateProducts" ToRole="Products" />
+        </EntityType>
+        <Association Name="FK_DocProductChangeState_1CRejectionReasons">
+          <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="0..1" />
+          <End Type="GammaModel.DocChangeStateProducts" Role="DocChangeStateProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CRejectionReasons">
+              <PropertyRef Name="C1CRejectionReasonID" />
+            </Principal>
+            <Dependent Role="DocChangeStateProducts">
+              <PropertyRef Name="C1CRejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocChangeStateProducts_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocChangeStateProducts" Role="DocChangeStateProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocChangeStateProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocChangeStateProducts_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.DocChangeStateProducts" Role="DocChangeStateProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocChangeStateProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="RoleID" Type="Guid" Nullable="false" />
+          <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Post" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PassChange" Type="DateTime" Precision="3" />
+          <Property Name="PassMustChange" Type="Boolean" />
+          <Property Name="Exports" Type="Boolean" Nullable="false" />
+          <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
+          <Property Name="ProgramAdmin" Type="Boolean" />
+          <Property Name="ShiftID" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
+          <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.FK_ProductionTaskBatch_Users" FromRole="Users" ToRole="ProductionTaskBatches" />
+          <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
+        </EntityType>
+        <Association Name="FK_Docs_Users">
+          <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Docs">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskBatch_Users">
+          <End Type="GammaModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ProductionTaskBatches">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Roles1">
+          <End Type="GammaModel.Roles" Role="Roles" Multiplicity="1" />
+          <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserPlaces">
+          <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
+          <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4356,14 +4400,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="DocTypes">
-            <EntityTypeMapping TypeName="GammaModel.DocTypes">
-              <MappingFragment StoreEntitySet="DocTypes">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="C1CRejectionReasons">
             <EntityTypeMapping TypeName="GammaModel.C1CRejectionReasons">
               <MappingFragment StoreEntitySet="1CRejectionReasons">
@@ -4373,15 +4409,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
                 <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
                 <ScalarProperty Name="IsMarked" ColumnName="IsMarked" />
                 <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DocProductChangeState">
-            <EntityTypeMapping TypeName="GammaModel.DocProductChangeState">
-              <MappingFragment StoreEntitySet="DocProductChangeState">
-                <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
-                <ScalarProperty Name="StateID" ColumnName="StateID" />
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4464,6 +4491,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
                 <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
                 <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
                 <ScalarProperty Name="IsProductionPlace" ColumnName="IsProductionPlace" />
@@ -4518,24 +4546,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
               <MappingFragment StoreEntitySet="PlaceGroups">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="GammaModel.Users">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
-                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-                <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
-                <ScalarProperty Name="Exports" ColumnName="Exports" />
-                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-                <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
-                <ScalarProperty Name="PassChange" ColumnName="PassChange" />
-                <ScalarProperty Name="Post" ColumnName="Post" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Login" ColumnName="Login" />
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -4612,6 +4622,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -4651,14 +4662,6 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetInputNomenclature" FunctionName="GammaModel.Store.GetInputNomenclature">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.GetInputNomenclature_Result">
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="ProductionTaskRWCutting">
             <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
               <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
@@ -4820,6 +4823,52 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetInputNomenclature" FunctionName="GammaModel.Store.GetInputNomenclature">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetInputNomenclature_Result1">
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CreateDocChangeStateForProduct" FunctionName="GammaModel.Store.CreateDocChangeStateForProduct" />
+          <EntitySetMapping Name="DocChangeStateProducts">
+            <EntityTypeMapping TypeName="GammaModel.DocChangeStateProducts">
+              <MappingFragment StoreEntitySet="DocChangeStateProducts">
+                <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateRemainderSpool" FunctionName="GammaModel.Store.CreateRemainderSpool" />
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="GammaModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
+                <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
+                <ScalarProperty Name="Exports" ColumnName="Exports" />
+                <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
+                <ScalarProperty Name="PassChange" ColumnName="PassChange" />
+                <ScalarProperty Name="Post" ColumnName="Post" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="UserPlaces" TypeName="GammaModel.UserPlaces" StoreEntitySet="UserPlaces">
+            <EndProperty Name="Users">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+            <EndProperty Name="Places">
+              <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

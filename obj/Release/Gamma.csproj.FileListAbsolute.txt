@@ -56,9 +56,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraLayout.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraPrinting.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.dll
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.dll
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Bars.dll
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.dll
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Editor.dll
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.dll
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.dll
 D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Expression.Interactions.dll
@@ -188,3 +185,7 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.g.cs
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Themes.DXStyle.v15.1.dll
+D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Bars.dll
+D:\CProjects\Gamma\Gamma\bin\Release\FastReport.dll
+D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Editor.dll
+D:\CProjects\Gamma\Gamma\bin\Release\FastReport.xml

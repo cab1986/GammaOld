@@ -28,17 +28,21 @@ namespace Gamma.ViewModels
             //  выгрузкой документа из базы для получения номера
             if (msg.IsNewProduct) 
             {
-                if (msg.ID == null)
+                if (msg.ID == null && (msg.DocProductKind == DocProductKinds.DocProductSpool || 
+                    msg.DocProductKind == DocProductKinds.DocProductUnload ||
+                    msg.DocProductKind == DocProductKinds.DocProductPallet))
                 {
+                    string productKind = "";
                     switch (msg.DocProductKind)
                     {
                         case DocProductKinds.DocProductSpool:
-                            MessageBox.Show("Нельзя создать тамбур без задания!");
+                            productKind = "Тамбур";
                             break;
                         case DocProductKinds.DocProductUnload:
-                            MessageBox.Show("Нельзя создать съем без задания!");
+                            productKind = "Съем";
                             break;
                     }
+                    MessageBox.Show(String.Format("Нельзя создать {0} без задания!", productKind));
                     CloseWindow();
                     return;
                 }
@@ -129,7 +133,9 @@ namespace Gamma.ViewModels
                     CloseWindow();
                     return;
             }
-            ProductionTaskID = DocProduction.ProductionTaskID;
+            var productionTaskBatch = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == DocProduction.ProductionTaskID).
+                Select(p => p.ProductionTaskBatches.FirstOrDefault()).FirstOrDefault();
+            if (productionTaskBatch != null) ProductionTaskBatchID = productionTaskBatch.ProductionTaskBatchID;
             DocDate = Doc.Date;
             IsConfirmed = Doc.IsConfirmed;
             ProductRelations = new ObservableCollection<ProductRelation>
@@ -150,14 +156,13 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
             ActivatedCommand = new RelayCommand(() => IsActive = true);
             DeactivatedCommand = new RelayCommand(() => IsActive = false);
-            OpenProductionTaskCommand = new RelayCommand(OpenProductionTask, () => ProductionTaskID != null);
+            OpenProductionTaskCommand = new RelayCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
         }
         private void SaveToModel(ParentSaveMessage msg)
         {
             SaveToModel();
         }
-
         private void BarcodeReceived(BarcodeMessage msg)
         {
             if (!IsActive) return;
@@ -171,11 +176,15 @@ namespace Gamma.ViewModels
                     if (DB.GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productId).Select(d => d) != null)
                         IsConfirmed = false;
             }
+            else if (CurrentViewModel is DocProductGroupPackViewModel)
+            {
+                (CurrentViewModel as DocProductGroupPackViewModel).AddSpool(msg.Barcode);
+            }
         }
         private bool IsNewDoc { get; set; }
         private void OpenProductionTask()
         {
-            var msg = new OpenProductionTaskBatchMessage() { ProductionTaskBatchID = ProductionTaskID };
+            var msg = new OpenProductionTaskBatchMessage() { ProductionTaskBatchID = ProductionTaskBatchID };
             if (CurrentViewModel is DocProductSpoolViewModel) msg.BatchKind = BatchKinds.SGB;
             MessageManager.OpenProductionTask(msg);
         }
@@ -222,22 +231,23 @@ namespace Gamma.ViewModels
             }
         }
         private Guid DocProductID { get; set; }
-        private Guid? _productionTaskID;
-        private Guid? ProductionTaskID
+        private Guid? _productionTaskBatchID;
+        private Guid? ProductionTaskBatchID
         {
-            get { return _productionTaskID; }
+            get { return _productionTaskBatchID; }
             set
             {
-                _productionTaskID = value;
+                _productionTaskBatchID = value;
                 if (value == null) return;
-                var pinfo = (from pt in DB.GammaBase.ProductionTasks
-                     where pt.ProductionTaskID == value
+                var pinfo = (from pt in DB.GammaBase.ProductionTaskBatches
+                     where pt.ProductionTaskBatchID == value
                      select new 
                      {
-                         Number = pt.ProductionTaskBatches.FirstOrDefault().Number,
-                         Date = pt.ProductionTaskBatches.FirstOrDefault().Date
+                         Number = pt.Number,
+                         Date = pt.Date 
                      }).FirstOrDefault();
-                ProductionTaskInfo = string.Format("Задание №{0} от {1}", pinfo.Number, pinfo.Date);
+                if (pinfo != null)
+                    ProductionTaskInfo = string.Format("Задание №{0} от {1}", pinfo.Number, pinfo.Date);
             }
         }
         private string _productionTaskInfo;
@@ -266,13 +276,14 @@ namespace Gamma.ViewModels
         private void PrintReport(PrintReportMessage msg)
         {
             if (msg.VMID != (CurrentViewModel as IBarImplemented).VMID) return;
-            if (!IsValid) return;
+//            if (!IsValid) return;
             SaveToModel();
             ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }
 
         public override void SaveToModel()
         {
+            if (!DB.HaveWriteAccess("Docs")) return;
             base.SaveToModel();
 /*            if (Doc == null)
             {
@@ -291,7 +302,7 @@ namespace Gamma.ViewModels
                 DB.GammaBase.DocProduction.Add(DocProduction);
             }
  */
-            Doc.Number = Number;
+//           Doc.Number = Number;
             Doc.Date = DocDate;
             Doc.IsConfirmed = IsConfirmed;
             DB.GammaBase.SaveChanges();

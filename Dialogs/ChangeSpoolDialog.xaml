@@ -2,39 +2,44 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Dialogs.ChangeSpoolDialog"
-        Title="ChangeSpoolDialog" Height="285" Width="483">
+        Title="ChangeSpoolDialog" Height="320" Width="483">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        <dxlc:LayoutControl Header="Header" UseLayoutRounding="True" Background="#FFB1CEF3" Orientation="Vertical">
+        <dxlc:LayoutControl Header="Header" UseLayoutRounding="True" Orientation="Vertical">
             <dxlc:LayoutItem>
                 <RadioButton Content="Полностью переработан" GroupName="State" VerticalAlignment="Top" Name="RadioCompletly" Checked="RadioCompletly_Checked"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem HorizontalContentAlignment="Stretch">
                 <RadioButton GroupName="State" HorizontalContentAlignment="Stretch"  Name="RadioBroke" Checked="RadioBroke_Checked">
                     <dxlc:LayoutControl>
-                        <Label Content="Переработан с браком" DockPanel.Dock="Right"/>
+                        <Label Content="Переработан с браком" DockPanel.Dock="Right" VerticalAlignment="Center" Width="150"/>
                         <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
                             <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
-                                <dxe:TextEdit HorizontalContentAlignment="Stretch" Name="edtBrokeWeight"/>
+                                <dxe:SpinEdit AllowDefaultButton="False" HorizontalContentAlignment="Stretch" Name="edtBrokeWeight"
+                                              IsFloatValue="False"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Причина брака" LabelPosition="Top">
-                                <dxe:TextEdit Name="edtBrokeReason"/>
+                                <dxe:ComboBoxEdit Name="lkpBrokeReason" FindMode="Always" AutoComplete="True" 
+                                                  ValueMember="RejectionReasonID" DisplayMember="Description"
+                                                  ImmediatePopup="True" IncrementalFiltering="True" AllowNullInput="True" 
+                                                  AssignNullValueOnClearingEditText="True" ClearSelectionOnBackspace="True"/>
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                     </dxlc:LayoutControl>
                 </RadioButton>
             </dxlc:LayoutItem>
-            <RadioButton GroupName="State" VerticalAlignment="Top" Name="RadioReminder" Checked="RadioReminder_Checked">
-                <dxlc:LayoutItem Label="Переработан с остатком:" LabelPosition="Left">
-                    <dxlc:LayoutGroup Orientation="Vertical" View="Group">
-                        <dxlc:LayoutItem Label="Вес" LabelPosition="Top">
-                            <dxe:TextEdit Name="edtRemainderWeight"/>
-                        </dxlc:LayoutItem>
-                    </dxlc:LayoutGroup>
-                </dxlc:LayoutItem>
+            <RadioButton GroupName="State" VerticalAlignment="Top" Name="RadioReminder" HorizontalContentAlignment="Stretch" Checked="RadioReminder_Checked">
+                <dxlc:LayoutControl >
+                    <Label Content="Переработан с остатком:" VerticalAlignment="Center" DockPanel.Dock="Right" Width="150"/>
+                    <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
+                            <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
+                                <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="edtRemainderWeight" HorizontalContentAlignment="Stretch"/>
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutGroup>
+                </dxlc:LayoutControl>
             </RadioButton>
         </dxlc:LayoutControl>
         <Button Content="OK" Name="btnOK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,95,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>

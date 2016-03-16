@@ -47,7 +47,7 @@ namespace Gamma.ViewModels
                 SetCharacteristicProperties();
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
                 var cuttings = DB.GammaBase.ProductionTaskRWCutting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID).ToList();
-                if (cuttings != null)
+                if (cuttings.Count > 0)
                 {
                     var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cuttings[0].C1CCharacteristicID).FirstOrDefault();
                     CoreDiameter = charprops.CoreDiameter;
@@ -101,6 +101,7 @@ namespace Gamma.ViewModels
             	_mainCutting = value;
             }
         }
+        private Properties MandatoryProperties { get; set; }
         private ProductionTasks ProductionTask { get; set; }
         private Guid ProductionTaskBatchID { get; set; }
         public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
@@ -172,19 +173,37 @@ namespace Gamma.ViewModels
                 if (_color == value) return;
                 _color = value;
                 RaisePropertyChanged("Color");
-                if (value != null) FilterCharacteristics(Filters.Color);
+                if (value != null)
+                {
+                    FilledProperties |= Properties.PropColor;
+                    FilterCharacteristics(Filters.Color);
+                }
+                else FilledProperties &= ~Properties.PropColor;
             }
         }
-
+        private Properties _filledProperties;
+        private Properties FilledProperties 
+        {
+            get
+            {
+                return _filledProperties;
+            }
+            set
+            {
+            	_filledProperties = value;
+                if (MandatoryProperties != Properties.None && (value & MandatoryProperties) == MandatoryProperties) CuttingsEnabled = true;
+                else CuttingsEnabled = false;
+            }
+        }
         private void FilterCharacteristics(Filters filter)
         {
             if (CharacteristicProperties == null) return;
             var filteredCharacteristics = CharacteristicProperties.Where(c =>
-                    (Color == null || c.Color == Color) &&
-                    (LayerNumber == null || c.LayerNumber == LayerNumber) &&
-                    (CoreDiameter == null || c.CoreDiameter == CoreDiameter) &&
-                    (Destination == null || c.Destination == Destination) &&
-                    (Diameter == null || c.Diameter == Diameter)
+                    (Color == null || c.Color == null || c.Color == Color) &&
+                    (LayerNumber == null || c.LayerNumber == null || c.LayerNumber == LayerNumber) &&
+                    (CoreDiameter == null || c.CoreDiameter == null || c.CoreDiameter == CoreDiameter) &&
+                    (Destination == null || c.Destination == null || c.Destination == Destination) &&
+                    (Diameter == null || c.Diameter == null || c.Diameter == Diameter)
                 ).Distinct();
             if (filter != Filters.Color)
                 Colors = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Color).Distinct());
@@ -196,8 +215,8 @@ namespace Gamma.ViewModels
                 Destinations = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Destination).Distinct());
             if (filter != Filters.Diameter)
                 Diameters = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Diameter).Distinct());
-            Formats = new ObservableCollection<int>(filteredCharacteristics.Select(c => c.Format).Distinct());
-            var charsWithoutFormat = (from fc in filteredCharacteristics
+            Formats = new ObservableCollection<int>(filteredCharacteristics.Select(c => c.Format).OrderBy(f => f).Distinct());
+/*            var charsWithoutFormat = (from fc in filteredCharacteristics
                                       select new
                                       {
                                           Color = fc.Color,
@@ -207,6 +226,7 @@ namespace Gamma.ViewModels
                                           Diameter = fc.Diameter
                                       }).Distinct().ToList();
             if (charsWithoutFormat.Count == 1) CuttingsEnabled = true; else CuttingsEnabled = false;
+ * */
             if (Colors.Count == 1) Color = Colors[0];
             if (LayerNumbers.Count == 1) LayerNumber = LayerNumbers[0];
             if (CoreDiameters.Count == 1) CoreDiameter = CoreDiameters[0];
@@ -237,7 +257,12 @@ namespace Gamma.ViewModels
                 if (_coreDiameter == value) return;
                 _coreDiameter = value;
                 RaisePropertyChanged("CoreDiameter");
-                if (value != null) FilterCharacteristics(Filters.CoreDiameter);
+                if (value != null)
+                {
+                    FilledProperties |= Properties.PropCoreDiameter;
+                    FilterCharacteristics(Filters.CoreDiameter);
+                }
+                else FilledProperties &= ~Properties.PropCoreDiameter;
             }
         }
         public ObservableCollection<string> CoreDiameters
@@ -306,7 +331,12 @@ namespace Gamma.ViewModels
                 if (_destination == value) return;
                 _destination = value;
                 RaisePropertyChanged("Destination");
-                if (value != null) FilterCharacteristics(Filters.Destination);
+                if (value != null)
+                {
+                    FilledProperties |= Properties.PropDestination;
+                    FilterCharacteristics(Filters.Destination);
+                }
+                else FilledProperties &= ~Properties.PropDestination;
             }
         }
         public ObservableCollection<string> Destinations
@@ -318,6 +348,7 @@ namespace Gamma.ViewModels
             set
             {
                 _destinations = value;
+                if (Destinations.Count == 1) Destination = Destinations[0];
                 RaisePropertyChanged("Destinations");
             }
         }
@@ -345,7 +376,12 @@ namespace Gamma.ViewModels
                 if (_diameter == value) return;
                 _diameter = value;
                 RaisePropertyChanged("Diameter");
-                if (value != null) FilterCharacteristics(Filters.Diameter);
+                if (value != null)
+                {
+                    FilledProperties |= Properties.PropDiameter;
+                    FilterCharacteristics(Filters.Diameter);
+                }
+                else FilledProperties &= ~Properties.PropDiameter;
             }
         }
         public ObservableCollection<int> Formats
@@ -372,7 +408,12 @@ namespace Gamma.ViewModels
                 if (_layerNumber == value) return;
                 _layerNumber = value;
                 RaisePropertyChanged("LayerNumber");
-                if (value != null) FilterCharacteristics(Filters.LayerNumber);
+                if (value != null)
+                {
+                    FilledProperties |= Properties.PropLayerNumber;
+                    FilterCharacteristics(Filters.LayerNumber);
+                }
+                else FilledProperties &= ~Properties.PropLayerNumber;
             }
         }
         public ObservableCollection<string> LayerNumbers
@@ -419,6 +460,27 @@ namespace Gamma.ViewModels
                     });
             }
             CharacteristicProperties = tempCollection;
+            MandatoryProperties = Properties.None;
+            if (!CharacteristicProperties.Any(c => c.CoreDiameter == null))
+            {
+                MandatoryProperties |= Properties.PropCoreDiameter;
+            }
+            if (!CharacteristicProperties.Any(c => c.LayerNumber == null))
+            {
+                MandatoryProperties |= Properties.PropLayerNumber;
+            }
+            if (!CharacteristicProperties.Any(c => c.Color == null))
+            {
+                MandatoryProperties |= Properties.PropColor;
+            }
+            if (!CharacteristicProperties.Any(c => c.Diameter == null))
+            {
+                MandatoryProperties |= Properties.PropDiameter;
+            }
+            if (!CharacteristicProperties.Any(c => c.Destination == null))
+            {
+                MandatoryProperties |= Properties.PropDestination;
+            }
         }
         private decimal _taskQuantity;
         [Range(1,1000000000,ErrorMessage="Задание должно быть больше 0")]
@@ -584,6 +646,16 @@ namespace Gamma.ViewModels
             	_totalFormat = value;
                 RaisePropertyChanged("TotalFormat");
             }
+        }
+        [Flags]
+        private enum Properties
+        {
+            None = 0,
+            PropCoreDiameter = 1,
+            PropLayerNumber = 2,
+            PropColor = 4,
+            PropDiameter = 8,
+            PropDestination = 16
         }
     }
 }

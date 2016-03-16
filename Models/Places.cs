@@ -22,8 +22,8 @@ namespace Gamma.Models
             this.Docs = new HashSet<Docs>();
             this.DocWithdrawal = new HashSet<DocWithdrawal>();
             this.Rests = new HashSet<Rests>();
-            this.Users = new HashSet<Users>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.Users = new HashSet<Users>();
         }
     
         public int PlaceID { get; set; }
@@ -34,6 +34,7 @@ namespace Gamma.Models
         public Nullable<bool> IsProductionPlace { get; set; }
         public Nullable<bool> IsWarehouse { get; set; }
         public Nullable<System.Guid> C1CPlaceID { get; set; }
+        public Nullable<int> BranchID { get; set; }
     
         public virtual ICollection<DocMovement> DocMovement { get; set; }
         public virtual ICollection<DocMovement> DocMovement1 { get; set; }
@@ -43,7 +44,7 @@ namespace Gamma.Models
         public virtual ICollection<Rests> Rests { get; set; }
         public virtual SourceSpools SourceSpools { get; set; }
         public virtual PlaceGroups PlaceGroups { get; set; }
-        public virtual ICollection<Users> Users { get; set; }
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual ICollection<Users> Users { get; set; }
     }
 }

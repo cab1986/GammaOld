@@ -7,14 +7,15 @@
         xmlns:g="clr-namespace:Gamma"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.FindProductView"
         mc:Ignorable="d ignore"
-        Width="845.612" Height="539.478"
-              Title="Поиск изделий">
-
+        Title="Поиск изделий"
+        Height="{g:SettingBinding FindProductHeight}"
+        Width="{g:SettingBinding FindProductWidth}"
+        Left="{g:SettingBinding FindProductLeft}"
+        Top="{g:SettingBinding FindProductTop}" >
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
-
     <dxlc:LayoutControl Orientation="Vertical">
         <Grid VerticalAlignment="Stretch" DockPanel.Dock="Top" Margin="-12,-12,-12,0">
             <Grid.RowDefinitions>

@@ -174,6 +174,21 @@ namespace Gamma.ViewModels
             }
         }
         private byte? _processModeID;
+
+        private bool _partyControl;
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public bool PartyControl
+        {
+            get
+            {
+                return _partyControl;
+            }
+            set
+            {
+            	_partyControl = value;
+                RaisePropertyChanged("PartyControl");
+            }
+        }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public byte? ProcessModelID
         {
@@ -221,6 +236,7 @@ namespace Gamma.ViewModels
                                   select pt).FirstOrDefault();
             DB.GammaBase.Entry(productionTaskBatch).Reload();
             ProductionTaskBatchID = productionTaskBatchID;
+            PartyControl = productionTaskBatch.PartyControl ?? false;
             Number = productionTaskBatch.Number;
             Date = productionTaskBatch.Date;         
             Comment = productionTaskBatch.Comment;
@@ -258,6 +274,7 @@ namespace Gamma.ViewModels
             productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID;
             productionTaskBatch.Date = Date;
             productionTaskBatch.Comment = Comment;
+            productionTaskBatch.PartyControl = PartyControl;
             DB.GammaBase.SaveChanges();
             if (CurrentView != null)
                 CurrentView.SaveToModel(ProductionTaskBatchID);
@@ -275,6 +292,9 @@ namespace Gamma.ViewModels
         private void CreateNewProduct()
         {
             var docProductKind = new DocProductKinds();
+            var productionTaskID = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
+                    Select(p => p.ProductionTasks.Where(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).FirstOrDefault().ProductionTaskID).
+                    FirstOrDefault();
             switch (BatchKind)
             {
                 case BatchKinds.SGB:
@@ -323,15 +343,19 @@ namespace Gamma.ViewModels
                                 MessageManager.OpenDocProduct(docProductKind, notConfirmedDocUnload.DocID);
                                 return;
                             }
+                            var checkResult = DB.CheckSourceSpools(WorkSession.PlaceID, productionTaskID);
+                            if (checkResult != "")
+                            {
+                                var dlgResult = MessageBox.Show(checkResult + "Вы уверены, что хотите продолжить?", "Проверка тамбуров", 
+                                    MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                                if (dlgResult == MessageBoxResult.No) return;
+                            }
                             break;
                     }    
                     break;                  
                 default:
                     break;
             }
-            var productionTaskID = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
-                    Select(p => p.ProductionTasks.Where(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).FirstOrDefault().ProductionTaskID).
-                    FirstOrDefault();
             MessageManager.CreateNewProduct(docProductKind, productionTaskID);
         }
         private bool _isActual = true;

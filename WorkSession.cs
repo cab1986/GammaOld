@@ -23,8 +23,8 @@ namespace Gamma
                                      u.UserID == _userID
                                  select new
                                  {
-                                     placeID = u.PlaceID,
-                                     placeGroupID = u.Places.PlaceGroupID,
+                                     placeID = u.Places.FirstOrDefault().PlaceID,
+                                     placeGroupID = u.Places.FirstOrDefault().PlaceGroupID,
                                      ShiftID = u.ShiftID,
                                      dbAdmin = u.DBAdmin,
                                      programAdmin = u.ProgramAdmin

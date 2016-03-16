@@ -1,10 +1,7 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using GalaSoft.MvvmLight.Command;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
-using Gamma.Attributes;
-using Gamma.Interfaces;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -65,11 +62,12 @@ namespace Gamma.ViewModels
 
         private bool canExecute()
         {
-            return this.IsValid;
+            return IsValid;
         }
 
         private void Authenticate()
         {
+            UIServices.SetBusyState();
             GammaSettings.SetConnectionString(Host, DataBase, Login, Password);
             if (!DB.Initialize())
             {

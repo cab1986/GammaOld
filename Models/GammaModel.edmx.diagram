@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5beec2456f6f4de08722c2d987f01b3c" Name="Diagram1" ZoomLevel="82">
+      <Diagram DiagramId="5beec2456f6f4de08722c2d987f01b3c" Name="Diagram1" ZoomLevel="106">
         <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="6" PointY="18.75" />
         <EntityTypeShape EntityType="GammaModel.RolePermits" Width="1.5" PointX="15.5" PointY="10.125" />
         <EntityTypeShape EntityType="GammaModel.Roles" Width="1.5" PointX="13.25" PointY="13.875" />
@@ -59,10 +59,7 @@
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_Products" />
         <EntityTypeShape EntityType="GammaModel.DocCloseShiftRemainders" Width="1.5" PointX="20" PointY="21.25" />
-        <EntityTypeShape EntityType="GammaModel.DocTypes" Width="1.5" PointX="15.5" PointY="20.125" />
         <EntityTypeShape EntityType="GammaModel.C1CRejectionReasons" Width="1.5" PointX="20.75" PointY="23.875" />
-        <EntityTypeShape EntityType="GammaModel.DocProductChangeState" Width="1.5" PointX="23" PointY="19.125" />
-        <AssociationConnector Association="GammaModel.FK_DocProductChangeState_1CRejectionReasons" />
         <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="20" PointY="15.375" />
         <EntityTypeShape EntityType="GammaModel.DocProduction" Width="1.5" PointX="34.625" PointY="13.875" />
@@ -75,11 +72,9 @@
         <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocMovement_Places" />
         <AssociationConnector Association="GammaModel.FK_DocMovement_Places1" />
-        <AssociationConnector Association="GammaModel.FK_DocProductChangeState_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Places" />
         <AssociationConnector Association="GammaModel.FK_DocProducts_Docs" />
-        <AssociationConnector Association="GammaModel.FK_Docs_DocTypes" />
         <AssociationConnector Association="GammaModel.FK_Docs_Places" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs1" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_Docs" />
@@ -91,10 +86,6 @@
         <AssociationConnector Association="GammaModel.DocProductionWithdrawals" />
         <EntityTypeShape EntityType="GammaModel.PlaceGroups" Width="1.5" PointX="10.25" PointY="18.75" />
         <AssociationConnector Association="GammaModel.FK_Places_PlaceGroups1" />
-        <EntityTypeShape EntityType="GammaModel.Users" Width="1.5" PointX="15.5" PointY="16" />
-        <AssociationConnector Association="GammaModel.FK_Docs_Users" />
-        <AssociationConnector Association="GammaModel.FK_Users_Places" />
-        <AssociationConnector Association="GammaModel.FK_Users_Roles1" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskStates" Width="1.5" PointX="3.375" PointY="3.875" />
         <AssociationConnector Association="GammaModel.PlaceGroup1CNomenclature" />
         <AssociationConnector Association="GammaModel.PlaceGroup1CNomenclature1" />
@@ -112,7 +103,6 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskBatches" Width="1.5" PointX="17.75" PointY="10.375" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatch_ProductionTaskStates" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatch_Users" />
         <AssociationConnector Association="GammaModel.BatchProductionTasks" />
         <EntityTypeShape EntityType="GammaModel.vCharacteristicSGBProperties" Width="1.5" PointX="5.375" PointY="3.75" />
         <EntityTypeShape EntityType="GammaModel.ProductSpools" Width="1.5" PointX="32.375" PointY="16.875" />
@@ -122,6 +112,15 @@
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools1" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools2" />
+        <EntityTypeShape EntityType="GammaModel.DocChangeStateProducts" Width="1.5" PointX="23" PointY="20.375" />
+        <AssociationConnector Association="GammaModel.FK_DocProductChangeState_1CRejectionReasons" />
+        <AssociationConnector Association="GammaModel.FK_DocChangeStateProducts_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocChangeStateProducts_Products" />
+        <EntityTypeShape EntityType="GammaModel.Users" Width="1.5" PointX="15.5" PointY="16.125" />
+        <AssociationConnector Association="GammaModel.FK_Docs_Users" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatch_Users" />
+        <AssociationConnector Association="GammaModel.FK_Users_Roles1" />
+        <AssociationConnector Association="GammaModel.UserPlaces" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

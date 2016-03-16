@@ -49,6 +49,7 @@ namespace Gamma.ViewModels
                 CharacteristicID = (Guid)productionTask.C1CCharacteristicID;
                 IsConfirmed = productionTask.IsActual;
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
+                PlaceID = productionTask.PlaceID ?? PlaceID;
             }
             else
             {
@@ -60,7 +61,7 @@ namespace Gamma.ViewModels
                 if (productionTaskRW != null)
                 {
                     SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                        DB.GammaBase.GetInputNomenclature(productionTaskRW.C1CNomenclatureID).Select(n => new Nomenclature1C()
+                        DB.GammaBase.GetInputNomenclature(productionTaskRW.C1CNomenclatureID, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
                         {
                             Name = n.Name,
                             NomenclatureID = (Guid)n.C1CNomenclatureID
@@ -124,7 +125,7 @@ namespace Gamma.ViewModels
             if (msg.ProductionTaskBatchID == ProductionTaskBatchID)
             {
                 SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                    DB.GammaBase.GetInputNomenclature(msg.NomenclatureID).Select(n => new Nomenclature1C()
+                    DB.GammaBase.GetInputNomenclature(msg.NomenclatureID, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
                     {
                         Name = n.Name,
                         NomenclatureID = (Guid)n.C1CNomenclatureID

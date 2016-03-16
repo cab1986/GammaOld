@@ -55,9 +55,11 @@ namespace Gamma
             if (nomenclatureID == null) return new ObservableCollection<Characteristic>();
             return new ObservableCollection<Characteristic>
                 (
+                (
                     from chars in DB.GammaBase.C1CCharacteristics
                     where chars.C1CNomenclatureID == nomenclatureID && chars.IsActive 
                     select new Characteristic { CharacteristicID = chars.C1CCharacteristicID, CharacteristicName = chars.Name }
+                ).OrderBy(c => c.CharacteristicName)
                 );
         }
 
@@ -140,19 +142,69 @@ namespace Gamma
             SqlParameter[] parameters = parameterList.ToArray();
             DB.GammaBase.Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
         }
+        private class TablePermission
+        {
+            public string TableName { get; set; }
+            public byte Permit { get; set; }
+        }
+        private static List<TablePermission> tablePermissions = new List<TablePermission>();
+        private static byte? GetCachedPermission(string tableName)
+        {
+            var tablePermission = tablePermissions.Where(tp => tp.TableName == tableName).ToList();
+            if (tablePermission.Count == 0)
+                return null;
+            else
+                return tablePermission[0].Permit;
+        }
         public static bool HaveReadAccess(string tableName)
         {
             if (WorkSession.DBAdmin) return true;
-            var permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
-            if (permit == null) return false;
-            else return permit > 0;
+            var permit = GetCachedPermission(tableName);
+            if (permit != null) return permit > 0;
+            permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
+            if (permit == null)
+            {
+                tablePermissions.Add(new TablePermission()
+                    {
+                        TableName = tableName,
+                        Permit = 0
+                    });
+                return false;
+            }
+            else
+            {
+                tablePermissions.Add(new TablePermission()
+                {
+                    TableName = tableName,
+                    Permit = (byte)permit
+                });
+                return permit > 0;
+            }
         }
         public static bool HaveWriteAccess(string tableName)
         {
             if (WorkSession.DBAdmin) return true;
-            var permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
-            if (permit == null) return false;
-            else return permit == 2;
+            var permit = GetCachedPermission(tableName);
+            if (permit != null) return permit == 2;
+            permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
+            if (permit == null)
+            {
+                tablePermissions.Add(new TablePermission()
+                {
+                    TableName = tableName,
+                    Permit = 0
+                });
+                return false;
+            }
+            else
+            {
+                tablePermissions.Add(new TablePermission()
+                {
+                    TableName = tableName,
+                    Permit = (byte)permit
+                });
+                return permit == 2;
+            }
         }
         [DbFunction("GammaModel.Store","GetShiftBeginTime")]
         public static DateTime? GetShiftBeginTime(DateTime date)

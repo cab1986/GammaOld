@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -53,7 +54,7 @@ namespace Gamma.ViewModels
             report.IsReport = false;
             report.ReportID = Guid.NewGuid();
             Reports.Add(report);
-            DB.GammaBase.Reports.Add(report);
+//            DB.GammaBase.Reports.Add(report);
             SelectedReport = report;
         }
         private Reports _selectedReport;
@@ -75,9 +76,11 @@ namespace Gamma.ViewModels
             { 
                 IsReport = true, 
                 ParentID = SelectedReport.ReportID, 
-                ReportID = Guid.NewGuid() 
+                ReportID = SQLGuidUtil.NewSequentialId(),
+                Name = ""
             };
             Reports.Add(report);
+//            DB.GammaBase.SaveChanges();
             SelectedReport = report;
         }
         private void EditReport()
@@ -87,6 +90,8 @@ namespace Gamma.ViewModels
         }
         private void DeleteReport()
         {
+            var msgResult = MessageBox.Show("Вы уверены, что хотите удалить данный рапорт?", "Удаление рапорта", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (msgResult != MessageBoxResult.Yes) return;
             if (!SelectedReport.IsReport)
             {
                 DB.GammaBase.Templates.RemoveRange(DB.GammaBase.Templates.Where(tmpl => tmpl.Reports.ParentID == SelectedReport.ReportID).Select(tmpl => tmpl));

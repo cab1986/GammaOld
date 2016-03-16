@@ -19,5 +19,6 @@ namespace Gamma.Models
         public Nullable<decimal> Weight { get; set; }
         public string Number { get; set; }
         public string Nomenclature { get; set; }
+        public System.DateTime Date { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace Gamma.Models
         {
             this.Docs = new HashSet<Docs>();
             this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
+            this.Places = new HashSet<Places>();
         }
     
         public System.Guid UserID { get; set; }
@@ -27,15 +28,14 @@ namespace Gamma.Models
         public string Post { get; set; }
         public Nullable<System.DateTime> PassChange { get; set; }
         public Nullable<bool> PassMustChange { get; set; }
-        public int PlaceID { get; set; }
         public bool Exports { get; set; }
         public bool DBAdmin { get; set; }
-        public byte ShiftID { get; set; }
         public Nullable<bool> ProgramAdmin { get; set; }
+        public byte ShiftID { get; set; }
     
         public virtual ICollection<Docs> Docs { get; set; }
-        public virtual Places Places { get; set; }
-        public virtual Roles Roles { get; set; }
         public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
+        public virtual Roles Roles { get; set; }
+        public virtual ICollection<Places> Places { get; set; }
     }
 }

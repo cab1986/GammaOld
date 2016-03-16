@@ -77,7 +77,11 @@ namespace Gamma.ViewModels
             {
                 DocProduct = (from dp in DB.GammaBase.DocProducts.Include(a => a.Docs) where dp.DocID == docID
                                   select dp).FirstOrDefault();
-                Product = DB.GammaBase.Products.Where(prod => prod.DocProducts.FirstOrDefault().DocID == docID).FirstOrDefault();
+                Product = (from prod in DB.GammaBase.Products
+                           where DB.GammaBase.DocProducts.Where(d => d.DocID == docID).
+                           Select(dp => dp.ProductID).Contains(prod.ProductID)
+                           select prod).FirstOrDefault();
+//                    DB.GammaBase.Products.Where(prod => prod.DocProducts.FirstOrDefault().DocID == docID).FirstOrDefault();
                 DB.GammaBase.Entry<Products>(Product).Reload();
                 ProductSpool = DB.GammaBase.ProductSpools.Where(ps => ps.ProductID == Product.ProductID).FirstOrDefault();
                 DB.GammaBase.Entry<ProductSpools>(ProductSpool).Reload();
@@ -88,15 +92,14 @@ namespace Gamma.ViewModels
                 BreakNumber = ProductSpool.BreakNumber;
                 Weight = ProductSpool.Weight;
                 IsConfirmed = DocProduct.Docs.IsConfirmed;
-                var stateInfo = (from d in DB.GammaBase.DocProducts
+                var stateInfo = (from d in DB.GammaBase.DocChangeStateProducts
                     where d.ProductID == Product.ProductID
-                    join dpc in DB.GammaBase.DocProductChangeState on d.DocID equals dpc.DocID
                     orderby
                     d.Docs.Date descending
                     select new 
                     { 
-                        StateID = dpc.StateID,
-                        RejectionReasonID = dpc.C1CRejectionReasonID
+                        StateID = d.StateID,
+                        RejectionReasonID = d.C1CRejectionReasonID
                     }).Take(1).FirstOrDefault();
                 if (stateInfo != null)
                 {
@@ -253,6 +256,7 @@ namespace Gamma.ViewModels
         private ProductSpools ProductSpool { get; set; }
         public override void SaveToModel(Guid DocID)
         {
+            if (!DB.HaveWriteAccess("ProductSpools")) return;
             base.SaveToModel();
   /*          if (Product == null)
             {
@@ -274,16 +278,22 @@ namespace Gamma.ViewModels
             }
             else
  */
-            var stateID = (from d in DB.GammaBase.DocProducts where d.ProductID == Product.ProductID
-                               join dpc in DB.GammaBase.DocProductChangeState on d.DocID equals dpc.DocID
+            var stateID = (from d in DB.GammaBase.DocChangeStateProducts where d.ProductID == Product.ProductID
                                orderby
                                d.Docs.Date descending
-                                   select dpc.StateID).Take(1).FirstOrDefault();
+                                   select d.StateID).Take(1).FirstOrDefault();
             if (stateID != StateID)
             {
                  var docChangeID = SQLGuidUtil.NewSequentialId();
-                 var docProducts = new Collection<DocProducts>();
-                    docProducts.Add(new DocProducts() { DocID = docChangeID, ProductID = Product.ProductID });
+                 var docChangeStateProducts = new Collection<DocChangeStateProducts>();
+                 docChangeStateProducts.Add(new DocChangeStateProducts() 
+                 { 
+                     DocID = docChangeID, 
+                     ProductID = Product.ProductID,
+                     StateID = (Byte)StateID,
+                     C1CRejectionReasonID = RejectionReasonID,
+                     Quantity = Weight
+                 });
                     var doc = new Docs()
                     {
                         DocID = docChangeID,
@@ -291,13 +301,7 @@ namespace Gamma.ViewModels
                         DocTypeID = (byte)DocTypes.DocChangeState,
                         IsConfirmed = true,
                         UserID = WorkSession.UserID,
-                        DocProductChangeState = new DocProductChangeState() 
-                        { 
-                            StateID = (Byte)StateID, 
-                            DocID = docChangeID,
-                            C1CRejectionReasonID = RejectionReasonID
-                        },
-                        DocProducts = docProducts
+                        DocChangeStateProducts = docChangeStateProducts
                     };
                     DB.GammaBase.Docs.Add(doc);
             }
@@ -315,7 +319,6 @@ namespace Gamma.ViewModels
             DB.GammaBase.SaveChanges();
             Messenger.Default.Send<ProductChangedMessage>(new ProductChangedMessage() {ProductID = Product.ProductID});
         }
-
         public bool IsReadOnly
         {
             get 

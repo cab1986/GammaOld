@@ -50,9 +50,7 @@ namespace Gamma.Models
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
-        public virtual DbSet<DocTypes> DocTypes { get; set; }
         public virtual DbSet<C1CRejectionReasons> C1CRejectionReasons { get; set; }
-        public virtual DbSet<DocProductChangeState> DocProductChangeState { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<DocProduction> DocProduction { get; set; }
@@ -62,7 +60,6 @@ namespace Gamma.Models
         public virtual DbSet<Rests> Rests { get; set; }
         public virtual DbSet<SourceSpools> SourceSpools { get; set; }
         public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
@@ -71,6 +68,8 @@ namespace Gamma.Models
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
         public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
+        public virtual DbSet<DocChangeStateProducts> DocChangeStateProducts { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     
         public virtual ObjectResult<Nullable<byte>> UserPermit(string tableName)
         {
@@ -185,15 +184,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftWRGroupPacks_Result>("GetDocCloseShiftWRGroupPacks", docIDParameter);
         }
     
-        public virtual ObjectResult<GetInputNomenclature_Result> GetInputNomenclature(Nullable<System.Guid> nomenclatureID)
-        {
-            var nomenclatureIDParameter = nomenclatureID.HasValue ?
-                new ObjectParameter("NomenclatureID", nomenclatureID) :
-                new ObjectParameter("NomenclatureID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInputNomenclature_Result>("GetInputNomenclature", nomenclatureIDParameter);
-        }
-    
         public virtual ObjectResult<GetProductionTaskByBatchID_Result> GetProductionTaskByBatchID(Nullable<System.Guid> productionTaskBatchID, Nullable<short> placeGroupID)
         {
             var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
@@ -275,6 +265,73 @@ namespace Gamma.Models
                 new ObjectParameter("Number", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindProductionTasks_Result1>("FindProductionTasks", batchKindIDParameter, productionTaskStateIDParameter, dateBeginParameter, dateEndParameter, numberParameter);
+        }
+    
+        public virtual ObjectResult<GetInputNomenclature_Result1> GetInputNomenclature(Nullable<System.Guid> nomenclatureID, Nullable<int> placeGroupID)
+        {
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            var placeGroupIDParameter = placeGroupID.HasValue ?
+                new ObjectParameter("PlaceGroupID", placeGroupID) :
+                new ObjectParameter("PlaceGroupID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInputNomenclature_Result1>("GetInputNomenclature", nomenclatureIDParameter, placeGroupIDParameter);
+        }
+    
+        public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var quantityParameter = quantity.HasValue ?
+                new ObjectParameter("Quantity", quantity) :
+                new ObjectParameter("Quantity", typeof(decimal));
+    
+            var stateIDParameter = stateID.HasValue ?
+                new ObjectParameter("StateID", stateID) :
+                new ObjectParameter("StateID", typeof(short));
+    
+            var rejectionReasonIDParameter = rejectionReasonID.HasValue ?
+                new ObjectParameter("RejectionReasonID", rejectionReasonID) :
+                new ObjectParameter("RejectionReasonID", typeof(System.Guid));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocChangeStateForProduct", docIDParameter, productIDParameter, quantityParameter, stateIDParameter, rejectionReasonIDParameter, printNameParameter);
+        }
+    
+        public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var parentProductIDParameter = parentProductID.HasValue ?
+                new ObjectParameter("ParentProductID", parentProductID) :
+                new ObjectParameter("ParentProductID", typeof(System.Guid));
+    
+            var quantityParameter = quantity.HasValue ?
+                new ObjectParameter("Quantity", quantity) :
+                new ObjectParameter("Quantity", typeof(int));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateRemainderSpool", docIDParameter, productIDParameter, parentProductIDParameter, quantityParameter, printNameParameter);
         }
     }
 }

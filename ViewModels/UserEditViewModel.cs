@@ -6,6 +6,7 @@ using System.Linq;
 using Gamma.Models;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 
 
 namespace Gamma.ViewModels
@@ -32,10 +33,10 @@ namespace Gamma.ViewModels
         {
             ChangePassEnabled = true;
             UserID = userID;
-            User = DB.GammaBase.Users.Where(u => u.UserID == userID).FirstOrDefault();
+            User = DB.GammaBase.Users.Include(u => u.Places).Where(u => u.UserID == userID).FirstOrDefault();
             Login = User.Login;
             Name = User.Name;
-            PlaceID = User.PlaceID;
+            PlaceID = User.Places.First().PlaceID;
             Post = User.Post;
             RoleID = User.RoleID;
             IsDBAdmin = User.DBAdmin;
@@ -105,7 +106,8 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             User.Login = Login;
             User.Name = Name;
-            User.PlaceID = PlaceID;
+            User.Places.Clear();
+            User.Places.Add(DB.GammaBase.Places.Find(PlaceID));
             User.RoleID = RoleID;
             User.ShiftID = ShiftID;
             User.Post = Post;

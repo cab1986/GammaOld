@@ -169,10 +169,11 @@ namespace Gamma.ViewModels
                 where
                 (Number == null || pinfo.Number == Number || Number == "") &&
                 (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
-                (NomenclatureID == new Guid() ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
+                (NomenclatureID == null ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
                 (charID == new Guid() ? true : pinfo.C1CCharacteristicID == charID) &&
                 (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count - 1) &&
-                ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd))
+                ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd)) &&
+                ((ButtonPanelVisible && !pinfo.IsWrittenOff) || !ButtonPanelVisible)
                 &&
                 (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
                 (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
@@ -197,7 +198,7 @@ namespace Gamma.ViewModels
         {
             Number = "";
             Barcode = "";
-            NomenclatureID = new Guid();
+            NomenclatureID = null;
             DateBegin = null;
             DateEnd = null;
             if (SelectedPlaces != null) SelectedPlaces = null;

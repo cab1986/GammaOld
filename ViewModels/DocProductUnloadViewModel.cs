@@ -9,6 +9,8 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight;
 using System.Collections.Generic;
 using System.Windows;
+using System.Data.Entity;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -26,7 +28,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public DocProductUnloadViewModel(Guid docID, bool NewProduct) 
         {
-            if (NewProduct)  // Если новый съем то получаем раскрой по из задаения DocProduction и инициализруем коллекцию тамбуров съема
+            if (NewProduct)  // Если новый съем то получаем раскрой по из задания DocProduction и инициализруем коллекцию тамбуров съема
             {
                 GetProductionTaskRWInfo(docID);
                 UnloadSpools = new ObservableCollection<PaperBase>();
@@ -49,7 +51,8 @@ namespace Gamma.ViewModels
                 Products = new ObservableCollection<Products>(DocProducts.Select(dp => dp.Products));
 //                (from p in DB.GammaBase.Products where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
                 UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProducts
-                                                         join ps in DB.GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
+                                                         join ps in DB.GammaBase.ProductSpools.Include(p => p.C1CNomenclature)
+                                                                   .Include(p => p.C1CCharacteristics) on dp.ProductID equals ps.ProductID
                                                          select new PaperBase
                                                          {
                                                              ProductID = ps.ProductID,
@@ -122,6 +125,7 @@ namespace Gamma.ViewModels
         
         private void CreateSpools()
         {
+            UIServices.SetBusyState();
             if (UnloadSpools.Count > 0) 
             {
                 UnloadSpools.Clear();

@@ -7,6 +7,6 @@ namespace Gamma.Interfaces
 {
     interface ICheckedAccess
     {
-        bool IsReadOnly {get;}
+        bool IsReadOnly { get;}
     }
 }

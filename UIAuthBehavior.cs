@@ -11,6 +11,7 @@ using DevExpress.Xpf.Editors;
 using System.Reflection;
 using Gamma.Attributes;
 using System.Windows.Media;
+using System.ComponentModel;
 
 namespace Gamma
 {
@@ -22,7 +23,12 @@ namespace Gamma
             if (this.AssociatedObject.DataContext == null)
                 this.AssociatedObject.DataContextChanged += AssociatedObject_DataContextChanged;
             else
+            {
+ //               (this.AssociatedObject.DataContext as INotifyPropertyChanged).PropertyChanged += UIAuthBehavior_PropertyChanged;
                 SetReadStatus();
+            }
+                
+                
         }
 
         void AssociatedObject_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -30,8 +36,14 @@ namespace Gamma
             if (this.AssociatedObject.DataContext != null)
             {
                 SetReadStatus();
+ //               (this.AssociatedObject.DataContext as INotifyPropertyChanged).PropertyChanged += UIAuthBehavior_PropertyChanged;
                 this.AssociatedObject.DataContextChanged -= AssociatedObject_DataContextChanged;
             }
+        }
+
+        private void UIAuthBehavior_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsReadOnly") SetReadStatus();
         }
 
         private void SetReadStatus()

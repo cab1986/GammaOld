@@ -118,8 +118,8 @@ namespace Gamma.ViewModels
                     continue;
                 }
                 var cutting = cuttingList[0];
-                tempCollection[i].Nomenclature = String.Format("{0} {1} {2} {3} {4}", 
-                    tempCollection[i].Nomenclature, cutting.CoreDiameter, 
+                tempCollection[i].Nomenclature = String.Format("{0} {1} {2} {3} {4} {5}", 
+                    tempCollection[i].Nomenclature, cutting.CoreDiameter, cutting.LayerNumber,  
                     cutting.Color, cutting.Diameter, cutting.Destination);
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {

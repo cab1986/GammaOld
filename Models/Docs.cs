@@ -21,6 +21,7 @@ namespace Gamma.Models
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.DocCloseShiftDocs = new HashSet<Docs>();
             this.Docs2 = new HashSet<Docs>();
+            this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
         }
     
         public System.Guid DocID { get; set; }
@@ -37,15 +38,14 @@ namespace Gamma.Models
     
         public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DocMovement DocMovement { get; set; }
-        public virtual DocProductChangeState DocProductChangeState { get; set; }
         public virtual DocProduction DocProduction { get; set; }
         public virtual ICollection<DocProducts> DocProducts { get; set; }
-        public virtual DocTypes DocTypes { get; set; }
         public virtual Places Places { get; set; }
         public virtual DocWithdrawal DocWithdrawal { get; set; }
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual ICollection<Docs> DocCloseShiftDocs { get; set; }
         public virtual ICollection<Docs> Docs2 { get; set; }
+        public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }
         public virtual Users Users { get; set; }
     }
 }

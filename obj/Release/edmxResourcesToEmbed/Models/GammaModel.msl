@@ -297,14 +297,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <EntitySetMapping Name="DocTypes">
-      <EntityTypeMapping TypeName="GammaModel.DocTypes">
-        <MappingFragment StoreEntitySet="DocTypes">
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="C1CRejectionReasons">
       <EntityTypeMapping TypeName="GammaModel.C1CRejectionReasons">
         <MappingFragment StoreEntitySet="1CRejectionReasons">
@@ -314,15 +306,6 @@
           <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
           <ScalarProperty Name="IsMarked" ColumnName="IsMarked" />
           <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DocProductChangeState">
-      <EntityTypeMapping TypeName="GammaModel.DocProductChangeState">
-        <MappingFragment StoreEntitySet="DocProductChangeState">
-          <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
-          <ScalarProperty Name="StateID" ColumnName="StateID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -405,6 +388,7 @@
     <EntitySetMapping Name="Places">
       <EntityTypeMapping TypeName="GammaModel.Places">
         <MappingFragment StoreEntitySet="Places">
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
           <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
           <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
           <ScalarProperty Name="IsProductionPlace" ColumnName="IsProductionPlace" />
@@ -459,24 +443,6 @@
         <MappingFragment StoreEntitySet="PlaceGroups">
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="GammaModel.Users">
-        <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
-          <ScalarProperty Name="Exports" ColumnName="Exports" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
-          <ScalarProperty Name="PassChange" ColumnName="PassChange" />
-          <ScalarProperty Name="Post" ColumnName="Post" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Login" ColumnName="Login" />
-          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-          <ScalarProperty Name="UserID" ColumnName="UserID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -553,6 +519,7 @@
           <ScalarProperty Name="Weight" ColumnName="Weight" />
           <ScalarProperty Name="Number" ColumnName="Number" />
           <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
@@ -592,14 +559,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetInputNomenclature" FunctionName="GammaModel.Store.GetInputNomenclature">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetInputNomenclature_Result">
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <EntitySetMapping Name="ProductionTaskRWCutting">
       <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
         <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
@@ -761,5 +720,51 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetInputNomenclature" FunctionName="GammaModel.Store.GetInputNomenclature">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetInputNomenclature_Result1">
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="CreateDocChangeStateForProduct" FunctionName="GammaModel.Store.CreateDocChangeStateForProduct" />
+    <EntitySetMapping Name="DocChangeStateProducts">
+      <EntityTypeMapping TypeName="GammaModel.DocChangeStateProducts">
+        <MappingFragment StoreEntitySet="DocChangeStateProducts">
+          <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="CreateRemainderSpool" FunctionName="GammaModel.Store.CreateRemainderSpool" />
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="GammaModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
+          <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
+          <ScalarProperty Name="Exports" ColumnName="Exports" />
+          <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
+          <ScalarProperty Name="PassChange" ColumnName="PassChange" />
+          <ScalarProperty Name="Post" ColumnName="Post" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UserPlaces" TypeName="GammaModel.UserPlaces" StoreEntitySet="UserPlaces">
+      <EndProperty Name="Users">
+        <ScalarProperty Name="UserID" ColumnName="UserID" />
+      </EndProperty>
+      <EndProperty Name="Places">
+        <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+      </EndProperty>
+    </AssociationSetMapping>
   </EntityContainerMapping>
 </Mapping>

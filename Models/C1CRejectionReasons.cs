@@ -16,7 +16,7 @@ namespace Gamma.Models
     {
         public C1CRejectionReasons()
         {
-            this.DocProductChangeState = new HashSet<DocProductChangeState>();
+            this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
         }
     
         public System.Guid C1CRejectionReasonID { get; set; }
@@ -26,6 +26,6 @@ namespace Gamma.Models
         public string Description { get; set; }
         public string FullDescription { get; set; }
     
-        public virtual ICollection<DocProductChangeState> DocProductChangeState { get; set; }
+        public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace Gamma.Models
         public Products()
         {
             this.DocProducts = new HashSet<DocProducts>();
+            this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
         }
     
         public System.Guid ProductID { get; set; }
@@ -29,5 +30,6 @@ namespace Gamma.Models
         public virtual ProductGroupPacks ProductGroupPacks { get; set; }
         public virtual Rests Rests { get; set; }
         public virtual ProductSpools ProductSpools { get; set; }
+        public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }
     }
 }

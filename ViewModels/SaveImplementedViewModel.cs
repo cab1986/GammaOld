@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Gamma.Common;
 using System;
 
 namespace Gamma.ViewModels
@@ -28,7 +29,7 @@ namespace Gamma.ViewModels
 
         public virtual void SaveToModel(Guid itemID)
         {
-
+            UIServices.SetBusyState();
         }
 
         protected void SaveToModelAndClose()

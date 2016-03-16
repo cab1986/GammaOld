@@ -30,7 +30,7 @@ namespace Gamma.Models
         public Nullable<bool> PartyControl { get; set; }
     
         public virtual ProductionTaskStates ProductionTaskStates { get; set; }
-        public virtual Users Users { get; set; }
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual Users Users { get; set; }
     }
 }

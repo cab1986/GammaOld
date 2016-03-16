@@ -6,13 +6,15 @@ using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using Gamma.Models;
 using GalaSoft.MvvmLight.Command;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
-    class DocCloseShiftWRGridViewModel : SaveImplementedViewModel, IFillClearGrid
+    class DocCloseShiftWRGridViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
         public DocCloseShiftWRGridViewModel(OpenDocCloseShiftMessage msg)
         {
+            Bars.Add(ReportManager.GetReportBar("DocCloseShiftWR", VMID));
             if (msg.DocID == null)
             {
                 PlaceID = (int)msg.PlaceID;
@@ -28,6 +30,7 @@ namespace Gamma.ViewModels
                     select new PaperBase
                     {
                         CharacteristicID = (Guid)sp.CharacteristicID,
+                        Date = sp.Date,
                         NomenclatureID = (Guid)sp.NomenclatureID,
                         Nomenclature = sp.Nomenclature,
                         Number = sp.Number,
@@ -35,11 +38,11 @@ namespace Gamma.ViewModels
                         Weight = Convert.ToInt32(sp.Weight)
                     }
                     );
-                DocCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").Where(d => d.DocID == msg.DocID).FirstOrDefault();
-                DocCloseShiftDocs = new ObservableCollection<Docs>(DocCloseShift.DocCloseShiftDocs);
-                CloseDate = DocCloseShift.Date;
-                ShiftID = (byte)DocCloseShift.ShiftID;
-                PlaceID = (byte)DocCloseShift.PlaceID;
+                var docCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").Where(d => d.DocID == msg.DocID).FirstOrDefault();
+                DocCloseShiftDocs = new ObservableCollection<Docs>(docCloseShift.DocCloseShiftDocs);
+                CloseDate = docCloseShift.Date;
+                ShiftID = (byte)docCloseShift.ShiftID;
+                PlaceID = (byte)docCloseShift.PlaceID;
             }
             ShowGroupPackCommand = new RelayCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.ProductID),
@@ -51,7 +54,8 @@ namespace Gamma.ViewModels
             DocCloseShiftDocs = new ObservableCollection<Docs>(DB.GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID &&
                     d.Date >= DB.GetShiftBeginTime(CloseDate) && d.Date <= DB.GetShiftEndTime(CloseDate) &&
-                    (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).Select(d => d));
+                    (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)
+                    && d.DocProducts.Count > 0).Select(d => d));
             foreach (var doc in DocCloseShiftDocs)
             {
                 if (doc.DocTypeID == (byte)DocTypes.DocProduction)
@@ -64,6 +68,7 @@ namespace Gamma.ViewModels
                          select new PaperBase
                          {
                              CharacteristicID = (Guid)ps.C1CCharacteristicID,
+                             Date = doc.Date,
                              NomenclatureID = (Guid)ps.C1CNomenclatureID,
                              Nomenclature = string.Concat(ps.C1CNomenclature.Name, " ", ps.C1CCharacteristics.Name),
                              Number = d.Docs.Number,
@@ -76,37 +81,28 @@ namespace Gamma.ViewModels
         }
         public void ClearGrid()
         {
-            if (DocCloseShift != null)
-            {
-                DocCloseShiftDocs.Clear();
-                GroupPacks.Clear();
-            }
+            DocCloseShiftDocs.Clear();
+            GroupPacks.Clear();
         }
-        public override void SaveToModel(Guid ItemID)
+        public override void SaveToModel(Guid itemID)
         {
-            base.SaveToModel(ItemID);
-            if (DocCloseShift == null)
+            if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return;
+            base.SaveToModel(itemID);
+            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Where(d => d.DocID == itemID).First();
+            if (doc.DocCloseShiftDocs == null)
             {
-                DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == ItemID).Select(d => d).FirstOrDefault();
-                foreach (var doc in DocCloseShiftDocs)
-                {
-                    DocCloseShift.DocCloseShiftDocs.Add(doc);
-                }
+                doc.DocCloseShiftDocs = new ObservableCollection<Docs>();
             }
-            else
-            {
-                DocCloseShift.DocCloseShiftDocs.Clear();
-                foreach (var doc in DocCloseShiftDocs)
+            doc.DocCloseShiftDocs.Clear();
+            foreach (var docCloseShiftDoc in DocCloseShiftDocs)
                 {
-                    DocCloseShift.DocCloseShiftDocs.Add(doc);
+                    doc.DocCloseShiftDocs.Add(docCloseShiftDoc);
                 }
-            }
             DB.GammaBase.SaveChanges();
         }
         private int PlaceID { get; set; }
         private byte ShiftID { get; set; }
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
-        private Docs DocCloseShift { get; set; }
         private DateTime CloseDate { get; set; }
         public RelayCommand ShowGroupPackCommand { get; private set; }
         public PaperBase SelectedGroupPack { get; set; }
@@ -122,6 +118,25 @@ namespace Gamma.ViewModels
             	_groupPacks = value;
                 RaisePropertyChanged("GroupPacks");
             }
+        }
+        private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
+        public ObservableCollection<BarViewModel> Bars
+        {
+            get
+            {
+                return _bars;
+            }
+            set
+            {
+                _bars = value;
+                RaisePropertyChanged("Bars");
+            }
+        }
+ 
+        private Guid? _vmId = Guid.NewGuid();
+        public Guid? VMID
+        {
+            get { return _vmId; }
         }
     }
     

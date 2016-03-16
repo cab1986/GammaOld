@@ -10,17 +10,17 @@
 
         <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding GroupPacks}" AllowColumnMRUFilterList="False">
             <dxg:GridControl.TotalSummary>
-                <dxg:GridSummaryItem FieldName="Weight" ShowInColumn="Weight"/>
+                <dxg:GridSummaryItem FieldName="Weight" ShowInColumn="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг"/>
             </dxg:GridControl.TotalSummary>
             <dxg:GridControl.Columns>
-                <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" Width="80" />
-                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="100" Name="Weight">
+                <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" Width="120" />
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="100">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="60"/>
+                <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="80"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
