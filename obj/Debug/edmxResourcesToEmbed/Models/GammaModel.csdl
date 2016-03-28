@@ -414,6 +414,21 @@
       <End Role="Places" EntitySet="Places" />
       <End Role="Users" EntitySet="Users" />
     </AssociationSet>
+    <FunctionImport Name="DeleteSpool" ReturnType="Collection(String)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="DeleteUnload" ReturnType="Collection(String)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="WriteSpoolInstallLog">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+      <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+      <Parameter Name="UnwinderID" Mode="In" Type="Byte" />
+    </FunctionImport>
+    <FunctionImport Name="DeleteGroupPack" ReturnType="Collection(String)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ProductPalletItems">
     <Key>
@@ -1141,6 +1156,7 @@
     <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="ProductGroupPacks" ToRole="C1CCharacteristics" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="ProductGroupPacks" ToRole="C1CNomenclature" />
     <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="ProductGroupPacks" ToRole="Products" />
+    <Property Name="Diameter" Type="Int16" />
   </EntityType>
   <Association Name="FK_ProductGroupPacks_1CCharacteristics">
     <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -1637,6 +1653,7 @@
     <Property Type="Decimal" Name="Weight" Nullable="true" Precision="10" Scale="4" />
     <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
     <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
   </ComplexType>
   <EntityType Name="ProductionTaskWR">
     <Key>
@@ -1906,6 +1923,7 @@
     <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
     <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
     <Property Type="String" Name="MadeQuantity" Nullable="true" MaxLength="8000" />
+    <Property Type="Int32" Name="EnumColor" Nullable="true" />
   </ComplexType>
   <ComplexType Name="GetProductionTaskBatchProducts_Result">
     <Property Type="Guid" Name="DocID" Nullable="false" />

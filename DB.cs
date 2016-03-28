@@ -103,9 +103,9 @@ namespace Gamma
         {
             return GammaBase.Database.SqlQuery<decimal>(string.Format("SELECT dbo.GetSpoolCoreWeight('{0}')", productID)).AsEnumerable().First();
         }
-        public static int GetSpoolDiameter(Guid productID)
+        public static short GetSpoolDiameter(Guid productID)
         {
-            return GammaBase.Database.SqlQuery<int>(string.Format("SELECT dbo.GetSpoolDiameter('{0}')", productID)).AsEnumerable().First();
+            return GammaBase.Database.SqlQuery<short>(string.Format("SELECT dbo.GetSpoolDiameter('{0}')", productID)).AsEnumerable().First();
         }
         public static ObservableCollection<string> BaseTables
         { 

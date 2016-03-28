@@ -1,8 +1,10 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Gamma.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -27,6 +29,7 @@ namespace Gamma.ViewModels
             FindCommand = new RelayCommand(Find);
             OpenDocProductCommand = new RelayCommand(OpenDocProduct, () => SelectedProduct != null);
             CreateNewProductCommand = new RelayCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.WR);
+            DeleteProductCommand = new RelayCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
             PlaceGroup = (PlaceGroups)DB.GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
             switch (PlaceGroup)
@@ -55,6 +58,92 @@ namespace Gamma.ViewModels
             Find();
         }
 
+        private bool CanDeleteExecute()
+        {
+            if (SelectedProduct == null) return false;
+            switch (PlaceGroup)
+            {
+                case PlaceGroups.PM:
+                case PlaceGroups.RW:
+                    return DB.HaveWriteAccess("ProductSpools") 
+                        && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
+                case PlaceGroups.WR:
+                    return DB.HaveWriteAccess("ProductGroupPacks")
+                        && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
+                default:
+                    return false;
+            }
+        }
+
+        private void DeleteProduct()
+        {
+            if (SelectedProduct == null) return;
+            switch (SelectedProduct.PlaceGroup)
+            {
+                case PlaceGroups.RW:
+                    var dlgResult = MessageBox.Show("Хотите удалить съем целиком?", "Удаление продукта",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    switch (dlgResult)
+                    {
+                        case MessageBoxResult.Yes:
+                            DeleteUnload();
+                            return;
+                        case MessageBoxResult.No:
+                            DeleteSpool();
+                            return;
+                        default:
+                            return;
+                    }
+                case PlaceGroups.PM:
+                    DeleteSpool();
+                    break;
+                case PlaceGroups.WR:
+                    DeleteGroupPack();
+                    break;
+            };
+        }
+        private void DeleteGroupPack()
+        {
+            var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить упаковку № " + SelectedProduct.Number + " ?", "Удаление тамбура",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (dlgResult == MessageBoxResult.No) return;
+            var delResult = DB.GammaBase.DeleteGroupPack(SelectedProduct.ProductID).FirstOrDefault();
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+                Products.Remove(SelectedProduct);
+        }
+        private void DeleteSpool()
+        {
+            var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить тамбур № " + SelectedProduct.Number + " ?", "Удаление тамбура",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (dlgResult == MessageBoxResult.No) return;
+            var delResult = DB.GammaBase.DeleteSpool(SelectedProduct.ProductID).FirstOrDefault();
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+                Products.Remove(SelectedProduct);
+        }
+        private void DeleteUnload()
+        {
+            var delResult = DB.GammaBase.DeleteUnload(SelectedProduct.DocID).FirstOrDefault();
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+            {
+                var productsToRemove = Products.Where(p => p.DocID == SelectedProduct.DocID).ToList();
+                foreach (var product in productsToRemove)
+                {
+                    Products.Remove(product);
+                }
+            }
+        }
         private void CreateNewProduct()
         {
             switch (PlaceGroup)
@@ -89,6 +178,7 @@ namespace Gamma.ViewModels
         private PlaceGroups PlaceGroup { get; set; }
         private void Find()
         {
+            UIServices.SetBusyState();
             switch (IntervalID)
             {
                 case 0:
@@ -110,7 +200,8 @@ namespace Gamma.ViewModels
                             ProductKind = (ProductKinds)vpi.ProductKindID,
                             Quantity = vpi.Quantity,
                             ShiftID = vpi.ShiftID,
-                            State = vpi.State
+                            State = vpi.State,
+                            PlaceID = vpi.PlaceID
                         }
                     ).Take(500));
                     break;
@@ -134,7 +225,8 @@ namespace Gamma.ViewModels
                             ProductKind = (ProductKinds)vpi.ProductKindID,
                             Quantity = vpi.Quantity,
                             ShiftID = vpi.ShiftID,
-                            State = vpi.State
+                            State = vpi.State,
+                            PlaceID = vpi.PlaceID
                         }
                     );
                     break;
@@ -160,7 +252,8 @@ namespace Gamma.ViewModels
                             ProductKind = (ProductKinds)vpi.ProductKindID,
                             Quantity = vpi.Quantity,
                             ShiftID = vpi.ShiftID,
-                            State = vpi.State
+                            State = vpi.State,
+                            PlaceID = vpi.PlaceID
                         }
                     );
                     break;
@@ -186,7 +279,8 @@ namespace Gamma.ViewModels
                             ProductKind = (ProductKinds)vpi.ProductKindID,
                             Quantity = vpi.Quantity,
                             ShiftID = vpi.ShiftID,
-                            State = vpi.State
+                            State = vpi.State,
+                            PlaceID = vpi.PlaceID
                         }
                     );
                     break;
@@ -212,6 +306,7 @@ namespace Gamma.ViewModels
         public DateTime? DateEnd { get; set; }
         public List<string> Intervals { get; set; }
         public int IntervalID { get; set; }
+        public RelayCommand DeleteProductCommand { get; private set; }
         public RelayCommand CreateNewProductCommand { get; private set; }
         public RelayCommand FindCommand { get; private set; }
         public RelayCommand OpenDocProductCommand { get; private set; }

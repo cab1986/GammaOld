@@ -51,7 +51,7 @@
             </dxlc:LayoutItem>
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
         </dxlc:LayoutControl>
-        <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}">
+        <dxg:GridControl EnableSmartColumnsGeneration="False" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
                 <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >

@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -89,10 +90,12 @@ namespace Gamma.ViewModels
             public string[] Format { get; set; }
             public string Place { get; set; }
             public DateTime? DateBegin { get; set; }
+            public byte EnumColor { get; set; }
         }
         
         private void GetProductionTasks()
         {
+            UIServices.SetBusyState();
             ProductionTaskBatchesSGB = new ObservableCollection<ProductionTaskBatchSGB>();
             var tempCollection = new ObservableCollection<ProductionTaskBatchSGB>
                 (
@@ -105,6 +108,7 @@ namespace Gamma.ViewModels
                         ProductionTaskBatchID = pt.ProductionTaskBatchID,
                         TaskQuantity = pt.Quantity,
                         Place = pt.Place,
+                        EnumColor = (byte?)pt.EnumColor ?? 0,
                         Format = new string[16]
                     }
                 ); 

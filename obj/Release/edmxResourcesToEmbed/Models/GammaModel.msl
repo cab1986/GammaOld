@@ -266,6 +266,7 @@
     <EntitySetMapping Name="ProductGroupPacks">
       <EntityTypeMapping TypeName="GammaModel.ProductGroupPacks">
         <MappingFragment StoreEntitySet="ProductGroupPacks">
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
           <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
           <ScalarProperty Name="Weight" ColumnName="Weight" />
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
@@ -670,6 +671,7 @@
           <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
           <ScalarProperty Name="Place" ColumnName="Place" />
           <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+          <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
@@ -766,5 +768,9 @@
         <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
       </EndProperty>
     </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="DeleteSpool" FunctionName="GammaModel.Store.DeleteSpool" />
+    <FunctionImportMapping FunctionImportName="DeleteUnload" FunctionName="GammaModel.Store.DeleteUnload" />
+    <FunctionImportMapping FunctionImportName="WriteSpoolInstallLog" FunctionName="GammaModel.Store.WriteSpoolInstallLog" />
+    <FunctionImportMapping FunctionImportName="DeleteGroupPack" FunctionName="GammaModel.Store.DeleteGroupPack" />
   </EntityContainerMapping>
 </Mapping>

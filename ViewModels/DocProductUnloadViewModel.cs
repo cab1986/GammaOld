@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Data.Entity;
 using Gamma.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gamma.ViewModels
 {
@@ -86,7 +87,7 @@ namespace Gamma.ViewModels
                     );
                 }
             }
-            CreateSpoolsCommand = new RelayCommand(CreateSpools, () => !IsReadOnly);
+            CreateSpoolsCommand = new RelayCommand(CreateSpools, () => !IsReadOnly && IsValid);
             EditSpoolCommand = new RelayCommand(EditSpool);
             Bars.Add(ReportManager.GetReportBar("Unload",VMID));
         }
@@ -96,6 +97,7 @@ namespace Gamma.ViewModels
             var productionTaskID = DB.GammaBase.DocProduction.Where(d => d.DocID == docID).Select(d => d.ProductionTaskID).FirstOrDefault();
             NomenclatureID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskID).
                 Select(p => p.C1CNomenclatureID).FirstOrDefault();
+            Diameter = DB.GammaBase.ProductionTaskSGB.Where(p => p.ProductionTaskID == productionTaskID).Select(p => p.Diameter).FirstOrDefault() ?? 0;
             Cuttings = new ObservableCollection<Cutting>
             (
                 from ptcut in DB.GammaBase.ProductionTaskRWCutting
@@ -150,8 +152,10 @@ namespace Gamma.ViewModels
                     });    
                 }
             }
+            UnloadSpoolsSaved = false;
             Messenger.Default.Send<ParentSaveMessage>(new ParentSaveMessage());
         }
+        private bool UnloadSpoolsSaved { get; set; }
         private ObservableCollection<PaperBase> _unloadSpools = new ObservableCollection<PaperBase>();
         public ObservableCollection<PaperBase> UnloadSpools
         {
@@ -169,7 +173,8 @@ namespace Gamma.ViewModels
         public override void SaveToModel(Guid ItemID)
         {
             base.SaveToModel(ItemID);
-            if (DocProducts == null)
+            if (UnloadSpoolsSaved) return;
+            if (DocProducts == null || DocProducts.Count == 0)
             {
                 var docProduction = DB.GammaBase.DocProduction.Find(ItemID);
                 var docs = new List<Docs>();
@@ -258,6 +263,7 @@ namespace Gamma.ViewModels
                 DB.GammaBase.DocProducts.AddRange(DocProducts);
             }
             DB.GammaBase.SaveChanges();
+            UnloadSpoolsSaved = true;
             foreach (var product in Products)
             {
                 DB.GammaBase.Entry<Products>(product).Reload();
@@ -292,6 +298,7 @@ namespace Gamma.ViewModels
         }
         private int _diameter;
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [Range(1,10000,ErrorMessage="Необходимо указать диаметр")]
         public int Diameter
         {
             get

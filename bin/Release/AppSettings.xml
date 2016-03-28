@@ -16,8 +16,8 @@
     <DataBits>8</DataBits>
     <HandShake>None</HandShake>
   </ScalesComPort>
-  <HostName>192.168.0.78</HostName>
+  <HostName>gamma</HostName>
   <DbName>gammanew</DbName>
-  <User>sa</User>
+  <User>matt</User>
   <UseScanner>true</UseScanner>
 </GammaSettings>

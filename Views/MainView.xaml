@@ -67,9 +67,10 @@
                 <dxb:Bar Caption="Edit" AllowHide="False" AllowQuickCustomization="False" AllowCustomizationMenu="False">
                     <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding NewItemCommand}" />
                     <dxb:BarButtonItem Content="Редактировать" LargeGlyph="{dx:DXImage Image=Edit_32x32.png}" Command="{Binding EditItemCommand}" />
+                    <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_32x32.png}" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" Command="{Binding DeleteItemCommand}"/>
                     <dxb:BarButtonItem Content="Обновить" LargeGlyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshCommand}" />
                     <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" BarItemDisplayMode="ContentAndGlyph" />
-                    <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" Command="{Binding CloseShiftCommand}"/>
+                    <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" Command="{Binding CloseShiftCommand}"/>                   
                 </dxb:Bar>
                 <dxb:Bar UseWholeRow="True" Visible="{Binding ProductionTaskBarVisible}" AllowCustomizationMenu="False" AllowHide="False" AllowQuickCustomization="False" AllowCollapse="True">
                     <dxb:BarButtonItem Content="Найти задание" BarItemDisplayMode="ContentAndGlyph" Glyph="{dx:DXImage Image=Find_16x16.png}" Command="{Binding FindProductionTaskCommand}"/>

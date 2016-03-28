@@ -10,7 +10,7 @@
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.DocProductUnloadView"
              mc:Ignorable="d">
     <Grid>
-        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" Background="#FFB1CEF3">
+        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup View="Group" Orientation="Vertical">
                 <dxlc:LayoutItem Label="Номенклатура">
                     <dxe:TextEdit EditValue="{Binding NomenclatureName}" IsReadOnly="True"/>
@@ -41,14 +41,14 @@
                     <dxe:SpinEdit EditValue="{Binding BreakNumber}" EditValueType="{x:Type sys:Byte}" MinValue="0" MaxValue="100" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
-                    <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter}" EditValueType="{x:Type sys:Int32}"/>
+                    <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
-                <Button Content="Создать тамбура" Command="{Binding CreateSpoolsCommand}" />
+                <Button Content="Создать продукцию" Command="{Binding CreateSpoolsCommand}" />
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Тамбура" LabelPosition="Top">
-                <dxg:GridControl ItemsSource="{Binding UnloadSpools}" MaxHeight="1000" MinHeight="60" SelectedItem="{Binding SelectedUnloadSpool}">
+                <dxg:GridControl ItemsSource="{Binding UnloadSpools}" MaxHeight="1000" MinHeight="60" SelectedItem="{Binding SelectedUnloadSpool}" AllowLiveDataShaping="False" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" IsFilterEnabled="False" ShowAllTableValuesInCheckedFilterPopup="False">
                     <dxg:GridControl.View>
-                        <dxg:TableView AllowEditing="False" ShowGroupPanel="False" AutoWidth="True"/>
+                        <dxg:TableView AllowEditing="False" ShowGroupPanel="False" AutoWidth="True" AllowFilterEditor="False" AllowGrouping="False"/>
                     </dxg:GridControl.View>
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn FieldName="Number" Header="Номер" FixedWidth="True" Width="100"/>

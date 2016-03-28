@@ -18,5 +18,16 @@ namespace Gamma
         public Byte? ShiftID { get; set; }
         public string State { get; set; }
         public string Place { get; set; }
+        private int? _placeID;
+        public int? PlaceID 
+        {
+            get { return _placeID; } 
+            set
+            {
+            	_placeID = value;
+                PlaceGroup = (PlaceGroups)DB.GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.PlaceGroupID).FirstOrDefault();
+            }
+        }
+        public PlaceGroups PlaceGroup { get; set; }
     }
 }

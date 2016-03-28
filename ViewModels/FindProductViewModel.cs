@@ -167,7 +167,7 @@ namespace Gamma.ViewModels
                 (
                 from pinfo in DB.GammaBase.vProductsInfo
                 where
-                (Number == null || pinfo.Number == Number || Number == "") &&
+                (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
                 (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
                 (NomenclatureID == null ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
                 (charID == new Guid() ? true : pinfo.C1CCharacteristicID == charID) &&

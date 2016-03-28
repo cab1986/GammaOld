@@ -19,6 +19,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<decimal> Weight { get; set; }
         public Nullable<decimal> GrossWeight { get; set; }
+        public Nullable<short> Diameter { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }

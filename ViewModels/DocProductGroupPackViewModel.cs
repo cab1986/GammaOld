@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Gamma.Interfaces;
 using GalaSoft.MvvmLight.Command;
@@ -118,10 +117,9 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("GrossWeight");
             }
         }
-        private int _diameter;
-        [Range(1, 1000000, ErrorMessage = "Значение должно быть больше 0")]
+        private short _diameter;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public int Diameter
+        public short Diameter
         {
             get
             {
@@ -286,6 +284,7 @@ namespace Gamma.ViewModels
             product.ProductGroupPacks.C1CCharacteristicID = CharacteristicID;
             product.ProductGroupPacks.Weight = Weight;
             product.ProductGroupPacks.GrossWeight = GrossWeight;
+            product.ProductGroupPacks.Diameter = Diameter;
             Docs docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)
             {

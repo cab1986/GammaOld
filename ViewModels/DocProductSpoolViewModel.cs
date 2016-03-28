@@ -91,7 +91,6 @@ namespace Gamma.ViewModels
                 Length = ProductSpool.Length ?? 0;
                 BreakNumber = ProductSpool.BreakNumber;
                 Weight = ProductSpool.Weight;
-                IsConfirmed = DocProduct.Docs.IsConfirmed;
                 var stateInfo = (from d in DB.GammaBase.DocChangeStateProducts
                     where d.ProductID == Product.ProductID
                     orderby
@@ -115,6 +114,7 @@ namespace Gamma.ViewModels
             CharacteristicID = ProductSpool.C1CCharacteristicID;
             RealFormat = ProductSpool.RealFormat ?? 0;
             Bars.Add(ReportManager.GetReportBar("Spool", VMID));
+            IsConfirmed = DocProduct.Docs.IsConfirmed && IsValid;
         }
         private Guid? _characteristicID;
         [UIAuth(UIAuthLevel.ReadOnly)]

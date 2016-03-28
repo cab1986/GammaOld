@@ -203,7 +203,7 @@ namespace Gamma.ViewModels
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime DocDate { get; set; }
         private bool _isConfirmed;
-        
+        private bool HaveChanges { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public bool IsConfirmed 
         {
@@ -213,7 +213,10 @@ namespace Gamma.ViewModels
             }
             set
             {
-            	_isConfirmed = value;
+                if (value && !IsValid)
+                    _isConfirmed = false;
+                else
+            	    _isConfirmed = value;
                 RaisePropertyChanged("IsConfirmed");
             }
         }
@@ -230,7 +233,6 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Number");
             }
         }
-        private Guid DocProductID { get; set; }
         private Guid? _productionTaskBatchID;
         private Guid? ProductionTaskBatchID
         {
@@ -301,11 +303,12 @@ namespace Gamma.ViewModels
                 DB.GammaBase.Docs.Add(Doc);
                 DB.GammaBase.DocProduction.Add(DocProduction);
             }
- */
-//           Doc.Number = Number;
+             */
+            //           Doc.Number = Number;
             Doc.Date = DocDate;
             Doc.IsConfirmed = IsConfirmed;
             DB.GammaBase.SaveChanges();
+            HaveChanges = false;
             CurrentViewModel.SaveToModel(Doc.DocID);
         }
         private Docs Doc { get; set; }

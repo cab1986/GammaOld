@@ -287,6 +287,7 @@
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Weight" Type="decimal" Precision="10" Scale="4" />
     <Property Name="GrossWeight" Type="decimal" Precision="10" Scale="4" />
+    <Property Name="Diameter" Type="smallint" />
   </EntityType>
   <EntityType Name="ProductionTaskBatches">
     <Key>
@@ -1486,6 +1487,15 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
     <Parameter Name="PrintName" Type="varchar" Mode="In" />
   </Function>
   <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
+  <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="DeleteSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="DeleteUnload" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="BatchKindID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskStateID" Type="tinyint" Mode="In" />
@@ -1555,6 +1565,12 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
   <Function Name="GetSpoolRejectionReasons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="TableName" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+    <Parameter Name="ShiftID" Type="int" Mode="In" />
+    <Parameter Name="UnwinderID" Type="tinyint" Mode="In" />
   </Function>
   <EntityContainer Name="GammaModelStoreContainer">
     <EntitySet Name="1CCharacteristicProperties" EntityType="Self.1CCharacteristicProperties" Schema="dbo" store:Type="Tables" />

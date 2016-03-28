@@ -30,9 +30,9 @@ namespace Gamma.ViewModels
             } 
             if (WorkSession.PlaceGroup == PlaceGroups.RW || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
             else SourceSpoolsVisible = Visibility.Collapsed;
-            ChangeUnwinderActiveCommand = new RelayCommand<short>(ChangeUnwinderActive);
-            DeleteSpoolCommand = new RelayCommand<short>(DeleteSpool);
-            ChooseSpoolCommand = new RelayCommand<short>(ChooseSpool);
+            ChangeUnwinderActiveCommand = new RelayCommand<byte>(ChangeUnwinderActive);
+            DeleteSpoolCommand = new RelayCommand<byte>(DeleteSpool);
+            ChooseSpoolCommand = new RelayCommand<byte>(ChooseSpool);
             SourceSpools = DB.GammaBase.SourceSpools.Where(s => s.PlaceID == WorkSession.PlaceID).FirstOrDefault();
             if (SourceSpools == null)
             {
@@ -50,10 +50,10 @@ namespace Gamma.ViewModels
                 Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
             }
         }
-        public RelayCommand<short> ChooseSpoolCommand {get; set;}
-        public RelayCommand<short> DeleteSpoolCommand {get; set;}
-        public RelayCommand<short> ChangeUnwinderActiveCommand { get; set; }
-        private void ChooseSpool(short unum)
+        public RelayCommand<byte> ChooseSpoolCommand {get; set;}
+        public RelayCommand<byte> DeleteSpoolCommand {get; set;}
+        public RelayCommand<byte> ChangeUnwinderActiveCommand { get; set; }
+        private void ChooseSpool(byte unum)
         {
             CurrentUnwinder = unum;
             Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
@@ -67,7 +67,7 @@ namespace Gamma.ViewModels
             DB.GammaBase.CreateRemainderSpool(docID, productID, parentProductId, weight, WorkSession.PrintName);
             ReportManager.PrintReport("Амбалаж", "Spool", docID);
         }
-        private short CurrentUnwinder { get; set; }
+        private byte CurrentUnwinder { get; set; }
         private void SourceSpoolChanged(ChoosenProductMessage msg)
         {
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
@@ -108,9 +108,10 @@ namespace Gamma.ViewModels
                 default:
                     break;
             }
+            DB.GammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
             DB.GammaBase.SaveChanges();
         }
-        private void DeleteSpool(short unum)
+        private void DeleteSpool(byte unum)
         {
             switch (unum)
             {
@@ -190,7 +191,7 @@ namespace Gamma.ViewModels
                 .Select(d => d.DocID).FirstOrDefault();
             ReportManager.PrintReport("Амбалаж", "Spool", docProductionID);
         }
-        private void ChangeUnwinderActive(short unum)
+        private void ChangeUnwinderActive(byte unum)
         {
             switch (unum)
             {

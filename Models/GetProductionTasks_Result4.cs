@@ -20,5 +20,6 @@ namespace Gamma.Models
         public string Characteristic { get; set; }
         public string Place { get; set; }
         public string MadeQuantity { get; set; }
+        public Nullable<int> EnumColor { get; set; }
     }
 }

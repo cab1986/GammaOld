@@ -93,10 +93,12 @@ namespace Gamma.ViewModels
         }
         private void OpenPlaceProducts(int placeID)
         {
+            UIServices.SetBusyState();
             CurrentView = new PlaceProductsViewModel(placeID);
             RefreshCommand = (CurrentView as PlaceProductsViewModel).FindCommand;
             NewItemCommand = (CurrentView as PlaceProductsViewModel).CreateNewProductCommand;
             EditItemCommand = (CurrentView as PlaceProductsViewModel).OpenDocProductCommand;
+            DeleteItemCommand = (CurrentView as PlaceProductsViewModel).DeleteProductCommand;
         }
         private void FindProductionTask()
         {

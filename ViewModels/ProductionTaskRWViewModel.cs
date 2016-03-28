@@ -1,5 +1,4 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
 using System;
 using Gamma.Models;
 using System.Linq;
@@ -459,28 +458,28 @@ namespace Gamma.ViewModels
                         CoreDiameter = charprops.CoreDiameter
                     });
             }
-            CharacteristicProperties = tempCollection;
             MandatoryProperties = Properties.None;
-            if (!CharacteristicProperties.Any(c => c.CoreDiameter == null))
+            if (!tempCollection.Any(c => c.CoreDiameter == null))
             {
                 MandatoryProperties |= Properties.PropCoreDiameter;
             }
-            if (!CharacteristicProperties.Any(c => c.LayerNumber == null))
+            if (!tempCollection.Any(c => c.LayerNumber == null))
             {
                 MandatoryProperties |= Properties.PropLayerNumber;
             }
-            if (!CharacteristicProperties.Any(c => c.Color == null))
+            if (!tempCollection.Any(c => c.Color == null))
             {
                 MandatoryProperties |= Properties.PropColor;
             }
-            if (!CharacteristicProperties.Any(c => c.Diameter == null))
+            if (!tempCollection.Any(c => c.Diameter == null))
             {
                 MandatoryProperties |= Properties.PropDiameter;
             }
-            if (!CharacteristicProperties.Any(c => c.Destination == null))
+            if (!tempCollection.Any(c => c.Destination == null))
             {
                 MandatoryProperties |= Properties.PropDestination;
             }
+            CharacteristicProperties = tempCollection;
         }
         private decimal _taskQuantity;
         [Range(1,1000000000,ErrorMessage="Задание должно быть больше 0")]

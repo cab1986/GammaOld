@@ -333,5 +333,53 @@ namespace Gamma.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateRemainderSpool", docIDParameter, productIDParameter, parentProductIDParameter, quantityParameter, printNameParameter);
         }
+    
+        public virtual ObjectResult<string> DeleteSpool(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteSpool", productIDParameter);
+        }
+    
+        public virtual ObjectResult<string> DeleteUnload(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteUnload", docIDParameter);
+        }
+    
+        public virtual int WriteSpoolInstallLog(Nullable<System.Guid> productID, Nullable<int> placeID, Nullable<int> shiftID, Nullable<byte> unwinderID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var unwinderIDParameter = unwinderID.HasValue ?
+                new ObjectParameter("UnwinderID", unwinderID) :
+                new ObjectParameter("UnwinderID", typeof(byte));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("WriteSpoolInstallLog", productIDParameter, placeIDParameter, shiftIDParameter, unwinderIDParameter);
+        }
+    
+        public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteGroupPack", productIDParameter);
+        }
     }
 }

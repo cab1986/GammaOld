@@ -292,6 +292,7 @@
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="Weight" Type="decimal" Precision="10" Scale="4" />
           <Property Name="GrossWeight" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="Diameter" Type="smallint" />
         </EntityType>
         <EntityType Name="ProductionTaskBatches">
           <Key>
@@ -1491,6 +1492,15 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
         </Function>
         <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
+        <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="DeleteSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="DeleteUnload" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="BatchKindID" Type="int" Mode="In" />
           <Parameter Name="ProductionTaskStateID" Type="tinyint" Mode="In" />
@@ -1560,6 +1570,12 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
         <Function Name="GetSpoolRejectionReasons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TableName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="UnwinderID" Type="tinyint" Mode="In" />
         </Function>
         <EntityContainer Name="GammaModelStoreContainer">
           <EntitySet Name="1CCharacteristicProperties" EntityType="Self.1CCharacteristicProperties" Schema="dbo" store:Type="Tables" />
@@ -2374,6 +2390,21 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             <End Role="Places" EntitySet="Places" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
+          <FunctionImport Name="DeleteSpool" ReturnType="Collection(String)">
+          <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteUnload" ReturnType="Collection(String)">
+          <Parameter Name="DocID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="WriteSpoolInstallLog">
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="UnwinderID" Mode="In" Type="Byte" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteGroupPack" ReturnType="Collection(String)">
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="ProductPalletItems">
           <Key>
@@ -3101,6 +3132,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="ProductGroupPacks" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="ProductGroupPacks" ToRole="C1CNomenclature" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductGroupPacks_Products" FromRole="ProductGroupPacks" ToRole="Products" />
+          <Property Name="Diameter" Type="Int16" />
         </EntityType>
         <Association Name="FK_ProductGroupPacks_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -3867,6 +3899,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
           <Property Type="String" Name="MadeQuantity" Nullable="true" MaxLength="8000" />
+          <Property Type="Int32" Name="EnumColor" Nullable="true" />
         </ComplexType>
         <ComplexType Name="GetProductionTaskBatchProducts_Result">
           <Property Type="Guid" Name="DocID" Nullable="false" />
@@ -4369,6 +4402,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <EntitySetMapping Name="ProductGroupPacks">
             <EntityTypeMapping TypeName="GammaModel.ProductGroupPacks">
               <MappingFragment StoreEntitySet="ProductGroupPacks">
+                <ScalarProperty Name="Diameter" ColumnName="Diameter" />
                 <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
@@ -4773,6 +4807,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
                 <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
                 <ScalarProperty Name="Place" ColumnName="Place" />
                 <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+                <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -4869,6 +4904,10 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
               <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="DeleteSpool" FunctionName="GammaModel.Store.DeleteSpool" />
+          <FunctionImportMapping FunctionImportName="DeleteUnload" FunctionName="GammaModel.Store.DeleteUnload" />
+          <FunctionImportMapping FunctionImportName="WriteSpoolInstallLog" FunctionName="GammaModel.Store.WriteSpoolInstallLog" />
+          <FunctionImportMapping FunctionImportName="DeleteGroupPack" FunctionName="GammaModel.Store.DeleteGroupPack" />
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
