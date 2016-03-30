@@ -6,7 +6,6 @@ using System.Linq;
 using Gamma.Attributes;
 using Gamma.Models;
 using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight;
 using System.Collections.Generic;
 using System.Windows;
 using System.Data.Entity;
