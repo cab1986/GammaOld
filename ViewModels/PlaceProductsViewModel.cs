@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
@@ -149,7 +150,16 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.WR:
-                    MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);
+                    var notConfirmedGroupPack = DB.GammaBase.Docs.Include(d => d.DocProducts)
+                        .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
+                        .OrderByDescending(d => d.Date)
+                        .FirstOrDefault();
+                    if (notConfirmedGroupPack != null && !notConfirmedGroupPack.IsConfirmed)
+                    {
+                        MessageBox.Show("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, notConfirmedGroupPack.DocID);
+                    }
+                    else MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);
                     break;
             }
         }
@@ -162,15 +172,15 @@ namespace Gamma.ViewModels
                     var placeGroupID = DB.GammaBase.Docs.Where(d => d.DocID == SelectedProduct.DocID).
                         Select(d => d.Places.PlaceGroupID).FirstOrDefault();
                     if (placeGroupID == (byte)PlaceGroups.PM)
-                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.DocID);
                     else
                         MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, SelectedProduct.DocID);
                     break;
                 case ProductKinds.ProductGroupPack:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.DocID);
                     break;
                 case ProductKinds.ProductPallet:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);
                     break;
             }
         }
@@ -198,7 +208,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = vpi.Quantity,
+                            Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID
@@ -223,7 +233,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = vpi.Quantity,
+                            Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID
@@ -250,7 +260,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = vpi.Quantity,
+                            Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID
@@ -277,7 +287,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = vpi.Quantity,
+                            Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID

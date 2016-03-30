@@ -79,16 +79,11 @@ namespace Gamma.ViewModels
                     if (!msg.IsNewProduct) // Если не новый продукт, то находим Doc, DocProduction, 
                                             //Product и обновляем в кэше с помощью Reload()
                     {
-                        Doc = (from d in DB.GammaBase.Docs
-                               where
-                                   DB.GammaBase.DocProducts.Where(dp => dp.ProductID == msg.ID).
-                                   Select(dp => dp.DocID).Contains(d.DocID) &&
-                                   d.DocTypeID == (byte)DocTypes.DocProduction
-                               select d).FirstOrDefault();
+                        Doc = DB.GammaBase.Docs.FirstOrDefault(d => d.DocID == msg.ID);
                         DB.GammaBase.Entry<Docs>(Doc).Reload();
                         DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
                         DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
-                        var product = DB.GammaBase.Products.Find(msg.ID);
+                        var product = DB.GammaBase.Products.Where(p => p.DocProducts.Select(d => d.DocID).Contains(Doc.DocID)).FirstOrDefault();
                         DB.GammaBase.Entry<Products>(product).Reload();
                         Number = product.Number;
                         Title = String.Format("{0} № {1}", Title, Number);
@@ -110,23 +105,15 @@ namespace Gamma.ViewModels
                     break;
                 case DocProductKinds.DocProductGroupPack:
                     Title = "Групповая упаковка";
-                    if (msg.ID == null)
-                        CurrentViewModel = new DocProductGroupPackViewModel();
-                    else
-                        CurrentViewModel = new DocProductGroupPackViewModel((Guid)msg.ID);
                     if (!msg.IsNewProduct)
                     {
-                        Doc = (from d in DB.GammaBase.Docs
-                               where
-                                   DB.GammaBase.DocProducts.Where(dp => dp.ProductID == msg.ID).
-                                   Select(dp => dp.DocID).Contains(d.DocID) &&
-                                   d.DocTypeID == (byte)DocTypes.DocProduction
-                               select d).FirstOrDefault();
+                        Doc = DB.GammaBase.Docs.FirstOrDefault(d => d.DocID == msg.ID);
                         DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
-                        var productGroupPack = DB.GammaBase.Products.Find(msg.ID);
-                        Number = productGroupPack.Number;
+                        Number = Doc.Number;
                         Title = String.Format("{0} № {1}", Title, Number);
+                        CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);
                     }
+                    else CurrentViewModel = new DocProductGroupPackViewModel();
                     break;
                 default:
                     MessageBox.Show("Действие не предусмотрено програмой");
@@ -325,13 +312,12 @@ namespace Gamma.ViewModels
         {
             get 
             {
-                return IsConfirmed || ((DB.GammaBase.UserPermit("DocProduction").FirstOrDefault() != (byte)PermissionMark.ReadAndWrite) && 
-                    !WorkSession.DBAdmin);
+                return IsConfirmed || (!DB.HaveWriteAccess("DocProduction") && !WorkSession.DBAdmin);
             }
         }
         public override bool CanSaveExecute()
         {
-            return CurrentViewModel.CanSaveExecute() && (DB.GammaBase.UserPermit("DocProduction").FirstOrDefault() == (byte)PermissionMark.ReadAndWrite);
+            return CurrentViewModel.CanSaveExecute() && DB.HaveWriteAccess("DocProduction");
         }
         public string Title { get; set; }
         private bool IsActive { get; set; }

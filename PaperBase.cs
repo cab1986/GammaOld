@@ -9,6 +9,7 @@ namespace Gamma
     {
         public int? PlaceProductionID { get; set; }
         public DateTime Date { get; set; }
+        public Guid DocID { get; set; }
         public Guid ProductID { get; set; }
         public Guid CharacteristicID { get; set; }
         public Guid NomenclatureID { get; set; }

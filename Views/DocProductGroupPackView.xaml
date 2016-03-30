@@ -13,9 +13,7 @@
     xmlns:g="clr-namespace:Gamma"
     x:Class="Gamma.Views.DocProductGroupPackView" 
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    mc:Ignorable="d" 
-    d:DesignHeight="300" 
-    d:DesignWidth="500">
+    mc:Ignorable="d">
     <Grid>
         <dxlc:LayoutControl Orientation="Vertical" Margin="0,0,0,0" >
             <dxlc:LayoutGroup Orientation="Horizontal" Height="40">
@@ -47,18 +45,18 @@
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
                     <dxg:GridControl EnableSmartColumnsGeneration="True" VerticalAlignment="Stretch"
-						ItemsSource="{Binding Spools}" SelectedItem="{Binding SelectedSpool}" AllowLiveDataShaping="True">
+						ItemsSource="{Binding Spools}" SelectedItem="{Binding SelectedSpool}" AllowLiveDataShaping="True" FontSize="20" FontWeight="Medium">
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" Width="100"/>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" Width="200"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="60"/>
+                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="80"/>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem SummaryType="Sum" FieldName="Weight" DisplayFormat="{}{0:f0}"/>
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" 
-								AutoWidth="True" ShowGroupPanel="False" AllowEditing="False"/>
+								AutoWidth="True" ShowGroupPanel="False" AllowEditing="False" />
                         </dxg:GridControl.View>
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenSpoolCommand}"/>

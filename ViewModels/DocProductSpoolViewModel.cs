@@ -118,6 +118,7 @@ namespace Gamma.ViewModels
         }
         private Guid? _characteristicID;
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [Range(1,5000,ErrorMessage = "Необходимо указать диаметр")]
         public int Diameter
         {
             get

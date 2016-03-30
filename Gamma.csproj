@@ -245,6 +245,9 @@
     <Compile Include="Interfaces\IProductionTask.cs" />
     <Compile Include="Interfaces\IProductionTaskBatch.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
+    <Compile Include="Models\Branches.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CCharacteristicProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -272,10 +275,25 @@
     <Compile Include="Models\C1CProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CPropertyValueGammaPropertyValue.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CPropertyValues.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CQuality.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CRejectionReasons.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CSpecificationInputNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CSpecificationOutputNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Departments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocChangeStateProducts.cs">
@@ -296,16 +314,19 @@
     <Compile Include="Models\Docs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocWithdrawal.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocWithdrawalMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FindProductionTasks_Result.cs">
+    <Compile Include="Models\Enterprises.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FindProductionTasks_Result1.cs">
+    <Compile Include="Models\FindProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GammaModel.Context.cs">
@@ -324,7 +345,7 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Models\GammaModelManualConstructor.cs" />
-    <Compile Include="Models\Get1CNomenclature_Result.cs">
+    <Compile Include="Models\GammaProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetCharPropsDescriptions_Result.cs">
@@ -339,19 +360,13 @@
     <Compile Include="Models\GetGroupPackSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetGroupPackSpools_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetInputNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetInputNomenclature_Result1.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetNomenclatureFolders1_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GetNomenclatureFolders_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetNomenclatureFolders_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductionTaskBatchProducts_Result.cs">
@@ -369,34 +384,10 @@
     <Compile Include="Models\GetProductionTaskByBatchID_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts1_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GetProductionTaskProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result1.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result2.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result3.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GetProductionTasks_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetProductionTasks_Result1.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetProductionTasks_Result2.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetProductionTasks_Result3.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GetProductionTasks_Result4.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductRelations_Result.cs">
@@ -415,6 +406,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Places.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProcessModels.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductGroupPacks.cs">
@@ -438,6 +432,9 @@
     <Compile Include="Models\ProductionTaskWR.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductKinds.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductPalletItems.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -448,6 +445,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductSpools.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Reports.cs">
@@ -465,13 +465,37 @@
     <Compile Include="Models\SourceSpools.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SpoolInstallLog.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Templates.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserPrintNames.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vCharacteristicSGBProperties.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vGroupPackSpools.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vProductionTaskBatches.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vProductionTaskProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vProductsInfo.cs">
@@ -827,9 +851,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>GammaModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="SampleCode\WinFormApplicationWindowSizeValuesSampleCode.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

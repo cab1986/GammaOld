@@ -319,7 +319,7 @@ namespace Gamma.ViewModels
         private void EditSpool()
         {
             Messenger.Default.Register<ProductChangedMessage>(this,ProductChanged);
-            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedUnloadSpool.ProductID);
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedUnloadSpool.DocID);
         }
         private void ProductChanged(ProductChangedMessage msg)
         {

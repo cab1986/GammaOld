@@ -1,9 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
-using System.ComponentModel;
-using System.Windows.Documents;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -140,21 +137,23 @@ namespace Gamma.ViewModels
             {
                 FoundProducts = new ObservableCollection<ProductInfo>
                 (
-                from pinfo in DB.GammaBase.vProductsInfo
-                where pinfo.BarCode == Barcode
-                select new ProductInfo
-                {
-                    DocID = pinfo.DocID,
-                    ProductID = pinfo.ProductID,
-                    Number = pinfo.Number,
-                    CharacteristicID = pinfo.C1CCharacteristicID,
-                    Date = pinfo.Date,
-                    NomenclatureID = pinfo.C1CNomenclatureID,
-                    NomenclatureName = pinfo.NomenclatureName,
-                    ProductKind = (ProductKinds)pinfo.ProductKindID,
-                    Quantity = pinfo.Quantity,
-                    ShiftID = pinfo.ShiftID
-                }
+                    (
+                        from pinfo in DB.GammaBase.vProductsInfo
+                        where pinfo.BarCode == Barcode
+                        select new ProductInfo
+                        {
+                            DocID = pinfo.DocID,
+                            ProductID = pinfo.ProductID,
+                            Number = pinfo.Number,
+                            CharacteristicID = pinfo.C1CCharacteristicID,
+                            Date = pinfo.Date,
+                            NomenclatureID = pinfo.C1CNomenclatureID,
+                            NomenclatureName = pinfo.NomenclatureName,
+                            ProductKind = (ProductKinds)pinfo.ProductKindID,
+                            Quantity = (int)pinfo.Quantity,
+                            ShiftID = pinfo.ShiftID
+                        }
+                    ).OrderByDescending(p => p.Date)
                 );
             }
             else
@@ -187,7 +186,7 @@ namespace Gamma.ViewModels
                     NomenclatureID = pinfo.C1CNomenclatureID,
                     NomenclatureName = pinfo.NomenclatureName,
                     ProductKind = (ProductKinds)pinfo.ProductKindID,
-                    Quantity = pinfo.Quantity,
+                    Quantity = (int)pinfo.Quantity,
                     ShiftID = pinfo.ShiftID,
                     State = pinfo.State
                 }
@@ -289,9 +288,20 @@ namespace Gamma.ViewModels
         public RelayCommand OpenProductCommand { get; private set; }
         private void OpenProduct()
         {
-            MessageManager.OpenDocProduct(
-                SelectedProduct.ProductKind == ProductKinds.ProductSpool ? DocProductKinds.DocProductSpool : DocProductKinds.DocProductPallet, 
-                SelectedProduct.ProductID);
+            switch (SelectedProduct.ProductKind)
+            {
+                case (ProductKinds.ProductSpool):
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.DocID);
+                    break;
+                case (ProductKinds.ProductGroupPack):
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.DocID);
+                    break;
+                case (ProductKinds.ProductPallet):
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

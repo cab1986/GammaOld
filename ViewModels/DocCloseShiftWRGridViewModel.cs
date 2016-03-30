@@ -45,7 +45,7 @@ namespace Gamma.ViewModels
                 PlaceID = (byte)docCloseShift.PlaceID;
             }
             ShowGroupPackCommand = new RelayCommand(() =>
-                MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.ProductID),
+                MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.DocID),
                 () => SelectedGroupPack != null);
         }
         public void FillGrid()
@@ -69,6 +69,7 @@ namespace Gamma.ViewModels
                          {
                              CharacteristicID = (Guid)ps.C1CCharacteristicID,
                              Date = doc.Date,
+                             DocID = doc.DocID,
                              NomenclatureID = (Guid)ps.C1CNomenclatureID,
                              Nomenclature = string.Concat(ps.C1CNomenclature.Name, " ", ps.C1CCharacteristics.Name),
                              Number = d.Docs.Number,

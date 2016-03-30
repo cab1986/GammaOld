@@ -26,38 +26,44 @@ namespace Gamma.ViewModels
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
         }
-        public DocProductGroupPackViewModel(Guid productID) : this() 
+        public DocProductGroupPackViewModel(Guid docID) : this() 
         {
-            var doc = DB.GammaBase.Docs.Where(d => d.DocProducts.Select(dp => dp.ProductID).Contains(productID) &&
-                d.DocTypeID == (byte)DocTypes.DocProduction).First();
+            var doc = DB.GammaBase.Docs.Include(d => d.DocProducts).Where(d => d.DocID == docID).First();
             IsConfirmed = doc.IsConfirmed;
             IsNewGroupPack = false;
-            var productGroupPack = DB.GammaBase.ProductGroupPacks.Where(p => p.ProductID == productID).Select(p => p).First();
-            NomenclatureID = (Guid)productGroupPack.C1CNomenclatureID;
-            CharacteristicID = (Guid)productGroupPack.C1CCharacteristicID;
-            Weight = Convert.ToInt32(productGroupPack.Weight);
-            GrossWeight = Convert.ToInt32(productGroupPack.GrossWeight);
-            var groupPackSpools = DB.GammaBase.GetGroupPackSpools(productID).ToList();
+            if (doc.DocProducts.Count > 0)
+            {
+                var productID = doc.DocProducts.Select(d => d.ProductID).First();
+                var productGroupPack = DB.GammaBase.ProductGroupPacks.Where(p => p.ProductID == productID).Select(p => p).FirstOrDefault();
+                Weight = Convert.ToInt32(productGroupPack.Weight);
+                GrossWeight = Convert.ToInt32(productGroupPack.GrossWeight);
+            }
+            var groupPackSpools = DB.GammaBase.GetGroupPackSpools(docID).ToList();
             if (groupPackSpools.Count() > 0)
             {
                 BaseCoreWeight = DB.GetSpoolCoreWeight(groupPackSpools[0].ProductID);
             }
             if (groupPackSpools.Count > 0)
-                PlaceProductionID = groupPackSpools[0].PlaceID;
-            foreach (var groupPackSpool in groupPackSpools)
             {
-                Spools.Add(new PaperBase()
+                PlaceProductionID = groupPackSpools[0].PlaceID;
+                foreach (var groupPackSpool in groupPackSpools)
+                {
+                    Spools.Add(new PaperBase()
                     {
                         ProductID = groupPackSpool.ProductID,
+                        DocID = groupPackSpool.DocID,
                         NomenclatureID = (Guid)groupPackSpool.C1CNomenclatureID,
                         CharacteristicID = (Guid)groupPackSpool.C1CCharacteristicID,
                         Number = String.Format("{0} от {1}", groupPackSpool.Number, groupPackSpool.Date),
                         Weight = Convert.ToInt32(groupPackSpool.Quantity),
                         Nomenclature = groupPackSpool.NomenclatureName,
                     });
+                }
+                NomenclatureID = Spools[0].NomenclatureID;
+                CharacteristicID = Spools[0].CharacteristicID;
+                Diameter = DB.GetSpoolDiameter(Spools[0].ProductID);
+                CoreWeight = BaseCoreWeight * Spools.Count;
             }
-            Diameter = DB.GetSpoolDiameter(Spools[0].ProductID);
-            CoreWeight = BaseCoreWeight * Spools.Count;
         }
         private int Format { get; set; }
         private bool IsNewGroupPack { get; set; }
@@ -75,7 +81,7 @@ namespace Gamma.ViewModels
         {
             get 
             {
-                return (!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed);
+                return ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
             }
         }
         private Guid? _vmID = Guid.NewGuid();
@@ -165,6 +171,7 @@ namespace Gamma.ViewModels
                              select p).ToList().Select( p => new PaperBase()
                              {
                                  PlaceProductionID = p.PlaceID,
+                                 DocID = p.DocID,
                                  CharacteristicID = (Guid)p.C1CCharacteristicID,
                                  NomenclatureID = (Guid)p.C1CNomenclatureID,
                                  Nomenclature = p.NomenclatureName,
@@ -188,6 +195,7 @@ namespace Gamma.ViewModels
             var spool = new PaperBase()
                              {
                                  PlaceProductionID = p.PlaceID,
+                                 DocID = p.DocID,
                                  CharacteristicID = (Guid)p.C1CCharacteristicID,
                                  NomenclatureID = (Guid)p.C1CNomenclatureID,
                                  Nomenclature = p.NomenclatureName,
@@ -218,20 +226,20 @@ namespace Gamma.ViewModels
                         "Рулон другого передела", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
-                if (!Spools.Select(s => s.ProductID).Contains(spool.ProductID))
-                {
-                    Spools.Add(spool);
-                    CoreWeight = BaseCoreWeight * Spools.Count;
-                }
-                else
-                {
-                    MessageBox.Show("Данный рулон уже занесен");
-                    return;
-                }
                 if (spool.NomenclatureID != NomenclatureID || spool.CharacteristicID != CharacteristicID)
                 {
                     MessageBox.Show("Номенклатура тамбура не совпадает с номенклатурой ГУ");
                     return;
+                }
+                if (Spools.Select(s => s.ProductID).Contains(spool.ProductID))
+                {
+                    MessageBox.Show("Данный рулон уже занесен");
+                    return;
+                }
+                else
+                {
+                    Spools.Add(spool);
+                    CoreWeight = BaseCoreWeight * Spools.Count;
                 }
             }
         }
@@ -253,7 +261,7 @@ namespace Gamma.ViewModels
         }
         public override void SaveToModel(Guid itemID)
         {
-            if (!DB.HaveWriteAccess("ProductGroupPacks")) return;
+            if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return;
             var doc = DB.GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal)
                 .Where(d => d.DocID == itemID).Select(d => d).First();
             if (doc.DocProduction == null)
@@ -280,6 +288,7 @@ namespace Gamma.ViewModels
                 });
 //                DB.GammaBase.Products.Add(product);
             }
+            if (product.ProductGroupPacks == null) product.ProductGroupPacks = new ProductGroupPacks() { ProductID = product.ProductID };
             product.ProductGroupPacks.C1CNomenclatureID = NomenclatureID;
             product.ProductGroupPacks.C1CCharacteristicID = CharacteristicID;
             product.ProductGroupPacks.Weight = Weight;
@@ -344,7 +353,7 @@ namespace Gamma.ViewModels
         private void OpenSpool()
         {
             if (SelectedSpool == null) return;
-            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID);
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.DocID);  
         }
         public override bool IsValid
         {

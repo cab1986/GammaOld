@@ -49,7 +49,7 @@
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
-                                           EditValue="{Binding Diameter, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
+                                           EditValue="{Binding Diameter, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>

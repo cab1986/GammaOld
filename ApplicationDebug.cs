@@ -18,6 +18,7 @@ namespace Gamma
             PresentationTraceSources.DataBindingSource.Listeners.Add(new DebugTraceListener());
             PresentationTraceSources.DataBindingSource.Switch.Level = SourceLevels.Warning | SourceLevels.Error;
 #endif
+#if (!DEBUG)
             AppDomain.CurrentDomain.UnhandledException += delegate(object sender, UnhandledExceptionEventArgs args)
             {
                 var exception = args.ExceptionObject as Exception;
@@ -34,6 +35,7 @@ namespace Gamma
 //                Environment.Exit(0);
                 Trace.WriteLine("Global exception: " + args.ExceptionObject.ToString());
             };
+#endif
 //            Application.ThreadException += delegate(Object sender, ThreadExceptionEventArgs args)
 //           {
 //                Trace.WriteLine("Global exception: " + args.Exception.ToString());

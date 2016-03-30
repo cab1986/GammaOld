@@ -41,7 +41,7 @@ namespace Gamma.ViewModels
                 PlaceID = (byte)DocCloseShift.PlaceID;
             }
             ShowSpoolCommand = new RelayCommand(() =>
-                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
+                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.DocID),   /// Переделать на DocID
                 () => SelectedSpool != null);
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
         }

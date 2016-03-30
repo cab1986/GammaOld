@@ -100,8 +100,8 @@ namespace Gamma.ViewModels
             }
         }
 
-        private DateTime date;
-        public DateTime Date
+        private DateTime? date;
+        public DateTime? Date
         {
             get { return date; }
             set 
@@ -140,11 +140,9 @@ namespace Gamma.ViewModels
         public bool IsReadOnly
         {
             get
-            {
-                var access = DB.GammaBase.UserPermit("ProductionTasks").FirstOrDefault();
-
+            {             
                 return 
-                    ((access == null ? true : access != (byte)PermissionMark.ReadAndWrite) && !WorkSession.DBAdmin) || 
+                    (!DB.HaveWriteAccess("ProductionTasks") && !WorkSession.DBAdmin) || 
                     ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
             }
             
@@ -331,7 +329,7 @@ namespace Gamma.ViewModels
                                 }
                                 DB.GammaBase.SaveChanges();
                                 DB.GammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
-                                MessageManager.OpenDocProduct(docProductKind, productID);
+                                MessageManager.OpenDocProduct(docProductKind, docProduction.DocID);
                                 return;
                             }
                             
@@ -344,9 +342,7 @@ namespace Gamma.ViewModels
                             if (docProduction != null && docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                             {
                                 MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
-                                var productID = DB.GammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).
-                                    Select(d => d.ProductID).First();
-                                MessageManager.OpenDocProduct(docProductKind, productID);
+                                MessageManager.OpenDocProduct(docProductKind, docProduction.DocID);
                                 return;
                             }                  
                             break;
@@ -445,7 +441,7 @@ namespace Gamma.ViewModels
                     MessageBox.Show("Ошибка программы, действие не предусмотрено");
                     return;
             }
-            MessageManager.OpenDocProduct(docProductKind, SelectedProductionTaskProduct.ProductID);
+            MessageManager.OpenDocProduct(docProductKind, SelectedProductionTaskProduct.DocID);
             
         }
         private ObservableCollection<ProductInfo> _productionTaskProducts;
@@ -479,8 +475,8 @@ namespace Gamma.ViewModels
 /*        [UIAuth(UIAuthLevel.ReadOnly)]
         public Guid? CharacteristicID { get; set; }
  * */
-        private byte _productionTaskStateID;
-        public byte ProductionTaskStateID
+        private byte? _productionTaskStateID;
+        public byte? ProductionTaskStateID
         {
             get
             {

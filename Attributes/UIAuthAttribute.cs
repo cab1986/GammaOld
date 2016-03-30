@@ -17,8 +17,6 @@ namespace Gamma.Attributes
         public UIAuthAttribute(UIAuthLevel AuthLevel)
         {
             this.AuthLevel = AuthLevel;
-            // TODO: Implement code here
-            //throw new NotImplementedException();
         }
 
         // This is a named argument
