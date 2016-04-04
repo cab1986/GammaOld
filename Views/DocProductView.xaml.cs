@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using Gamma.ViewModels;
-using System;
+﻿using Gamma.ViewModels;
 
 namespace Gamma.Views
 {

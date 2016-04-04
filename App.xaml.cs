@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
-using Gamma.Views;
-using System.IO;
+﻿using System.Windows;
 
 namespace Gamma
 {
@@ -24,6 +17,20 @@ namespace Gamma
         {
             Gamma.Properties.Settings.Default.Save();
             GammaSettings.Serialize();
+        }
+        private void Application_DispatcherUnhandledException(object sender,
+                       System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+                //Handling the exception within the UnhandledException handler.
+            var message = "";
+            if (e.Exception.InnerException != null) message = e.Exception.InnerException.ToString();
+            else
+            {
+                message = e.Exception.ToString();
+            }
+                MessageBox.Show(message, "Exception Caught",
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
+                e.Handled = true;
         }
     }
 }

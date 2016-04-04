@@ -1,7 +1,5 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Gamma.Attributes;
 using System.Linq;
 using Gamma.Models;
 using GalaSoft.MvvmLight.Command;

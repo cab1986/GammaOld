@@ -2,7 +2,6 @@
 using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using Gamma;
 using System.Linq;
 
 namespace Gamma.ViewModels

@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using Gamma.ViewModels;
-using GalaSoft.MvvmLight.Messaging;
+﻿using Gamma.ViewModels;
 
 namespace Gamma.Views
 

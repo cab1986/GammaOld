@@ -3,7 +3,6 @@ using System;
 using Gamma.Models;
 using System.Linq;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
 using Gamma.Interfaces;
 using Gamma.Attributes;
@@ -103,16 +102,16 @@ namespace Gamma.ViewModels
         private Properties MandatoryProperties { get; set; }
         private ProductionTasks ProductionTask { get; set; }
         private Guid ProductionTaskBatchID { get; set; }
-        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemId) // itemID = ProductionTaskBatchID
         {
-            base.SaveToModel(itemID);
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemID).FirstOrDefault();
+            base.SaveToModel(itemId);
+            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemId).FirstOrDefault();
             if (productionTaskBatch == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemID, (short)PlaceGroups.RW).FirstOrDefault();
+            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemId, (short)PlaceGroups.RW).FirstOrDefault();
             if (productionTaskTemp == null)
             {
                 ProductionTaskID = SQLGuidUtil.NewSequentialId();

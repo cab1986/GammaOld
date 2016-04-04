@@ -1,10 +1,7 @@
-﻿using Gamma.Models;
-using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight.Command;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using System;
-using GalaSoft.MvvmLight;
-using System.Linq;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace Gamma.ViewModels

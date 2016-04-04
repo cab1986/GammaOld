@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Gamma.Models;
 using Gamma.Common;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Command;

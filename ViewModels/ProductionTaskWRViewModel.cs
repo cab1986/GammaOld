@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using Gamma.Interfaces;
+﻿using Gamma.Interfaces;
 using System;
 using Gamma.Models;
 using System.Linq;
@@ -87,10 +86,10 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("GroupPackConfig");
             }
         }
-        public override void SaveToModel(Guid itemID) // Сохранение по ProductionTaskID
+        public override void SaveToModel(Guid itemId) // Сохранение по ProductionTaskID
         {
-            base.SaveToModel(itemID);
-            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").Where(p => p.ProductionTaskID == itemID).FirstOrDefault();
+            base.SaveToModel(itemId);
+            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").Where(p => p.ProductionTaskID == itemId).FirstOrDefault();
             if (productionTask == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -1,6 +1,5 @@
 ﻿using Gamma.Attributes;
 using GalaSoft.MvvmLight.Command;
-using System.ComponentModel.DataAnnotations;
 using System;
 using Gamma.Interfaces;
 using System.Linq;
@@ -8,7 +7,6 @@ using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Collections.Generic;
-using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -329,7 +327,7 @@ namespace Gamma.ViewModels
                                 }
                                 DB.GammaBase.SaveChanges();
                                 DB.GammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
-                                MessageManager.OpenDocProduct(docProductKind, docProduction.DocID);
+                                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productID);
                                 return;
                             }
                             
@@ -342,11 +340,11 @@ namespace Gamma.ViewModels
                             if (docProduction != null && docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                             {
                                 MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
-                                MessageManager.OpenDocProduct(docProductKind, docProduction.DocID);
+                                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, docProduction.DocID);
                                 return;
                             }                  
                             break;
-                        case PlaceGroups.RW:                            
+                        case PlaceGroups.RW:
                             docProductKind = DocProductKinds.DocProductUnload;
                             // Проверка на наличие неподтвержденного съема
                             var notConfirmedDocUnload = DB.GammaBase.Docs.Where(d => d.PlaceID == WorkSession.PlaceID &&
@@ -354,7 +352,7 @@ namespace Gamma.ViewModels
                             if (notConfirmedDocUnload != null && !notConfirmedDocUnload.IsConfirmed)
                             {
                                 MessageBox.Show("Предыдущий съем не подтвержден. Он будет открыт для редактирования");
-                                MessageManager.OpenDocProduct(docProductKind, notConfirmedDocUnload.DocID);
+                                MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, notConfirmedDocUnload.DocID);
                                 return;
                             }
                             if (!SourceSpoolsCorrect()) return;
@@ -494,51 +492,19 @@ namespace Gamma.ViewModels
         public string Title { get; set; }
         private bool SourceSpoolsCorrect()
         {
-/*
- * var ptCharProps = DB.GammaBase.GetCharPropsDescriptions(ptCharacteristicID).FirstOrDefault();
-            int sourceLayerNumbers = 0;
-            foreach (var spoolID in sourceSpools)
-            {
-                var nomenclatureID = DB.GammaBase.ProductSpools.Where(p => p.ProductID == spoolID).Select(p => p.C1CNomenclatureID).FirstOrDefault();
-                if (NomenclatureID != nomenclatureID)
-                {
-                    MessageBox.Show("Тамбура на раскатах не подходят для данного задания", "Не те тамбура на раскатах", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return false;
-                }
-                var characteristicID = DB.GammaBase.ProductSpools.Where(p => p.ProductID == spoolID).Select(p => p.C1CCharacteristicID).FirstOrDefault();
-                var sSpoolCharProps = DB.GammaBase.GetCharPropsDescriptions(characteristicID).FirstOrDefault();
-                if (ptCharProps.Color != sSpoolCharProps.Color)
-                {
-                    MessageBox.Show("Цвет тамбура на раскате не соответствует заданию");
-                    return false;
-                }
-                sourceLayerNumbers = sourceLayerNumbers + DB.GammaBase.GetCharSpoolLayerNumber(characteristicID).FirstOrDefault() ?? 0;
-            }
-            var ptLayerNumber = DB.GammaBase.GetCharSpoolLayerNumber(ptCharacteristicID).FirstOrDefault();
-            if (ptLayerNumber != sourceLayerNumbers)
-            {
-                MessageBox.Show("Несовпадение слойности");
-                return false;
-            }
-            return true;
- * */
             var sourceSpools = DB.GammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
             if (sourceSpools.Count == 0)
             {
                 MessageBox.Show("Нет активных раскатов");
                 return false;
             }
-            var ptCharacteristicID = (from ptrw in DB.GammaBase.ProductionTaskRWCutting
-                                      where
-                                          ptrw.ProductionTaskID == ProductionTaskBatchID
-                                      select ptrw.C1CCharacteristicID).FirstOrDefault();
-            if (ptCharacteristicID == null)
+            if (!DB.GammaBase.ProductionTaskRWCutting.Any(ptrw => ptrw.ProductionTasks.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == ProductionTaskBatchID))
             {
                 MessageBox.Show("В задании не указан раскрой");
                 return false;
             }
             var result = DB.CheckSourceSpools(WorkSession.PlaceID, ProductionTaskBatchID);
-            if (result == "" || result == null) return true;
+            if (string.IsNullOrEmpty(result)) return true;
             var dialogResult = MessageBox.Show(result, "Проверка исходных тамбуров", MessageBoxButton.YesNo,MessageBoxImage.Warning);
             if (dialogResult == MessageBoxResult.Yes)
                 return true;

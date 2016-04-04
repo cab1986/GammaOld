@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
 using Gamma.Interfaces;
 using System.Linq;
 
@@ -160,11 +159,11 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionTaskWRView");
             }
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemId)
         {
-            base.SaveToModel(itemID);
-            if (FirstView != null) FirstView.SaveToModel(itemID);
-            if (SecondView != null) SecondView.SaveToModel(itemID);
+            base.SaveToModel(itemId);
+            if (FirstView != null) FirstView.SaveToModel(itemId);
+            if (SecondView != null) SecondView.SaveToModel(itemId);
             var productionTaskID = (FirstView as IProductionTask).ProductionTaskID;
 //            if (ProductionTaskSGBView != null) ProductionTaskSGBView.SaveToModel(productionTaskID);
             if (ProductionTaskWRView != null) ProductionTaskWRView.SaveToModel(productionTaskID);

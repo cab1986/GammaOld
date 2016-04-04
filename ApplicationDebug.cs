@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using System.Windows;
 
 namespace Gamma
@@ -34,6 +31,7 @@ namespace Gamma
                 }
 //                Environment.Exit(0);
                 Trace.WriteLine("Global exception: " + args.ExceptionObject.ToString());
+                
             };
 #endif
 //            Application.ThreadException += delegate(Object sender, ThreadExceptionEventArgs args)
@@ -44,13 +42,14 @@ namespace Gamma
 
             base.OnStartup(e);
         }
-        public static bool IsInDesignMode
+/*        public static bool IsInDesignMode
         {
             get
             {
                 return (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
             }
         }
+        */
     }
 
     public class DebugTraceListener : TraceListener

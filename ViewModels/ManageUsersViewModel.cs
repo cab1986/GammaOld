@@ -1,8 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using Gamma.Models;
+﻿using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System;
 using System.Collections.Generic;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;

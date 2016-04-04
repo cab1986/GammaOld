@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Models;
@@ -37,19 +36,23 @@ namespace Gamma.ViewModels
             {
                 case (short)PlaceGroups.PM:
                     CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
-                    if (msg.DocID == null)
-                        CurrentViewModelRemainder = new DocCloseShiftPMRemainderViewModel();
-                    else
-                        CurrentViewModelRemainder = new DocCloseShiftPMRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftPMRemainderViewModel() : new DocCloseShiftPMRemainderViewModel((Guid)msg.DocID);
                     break;
                 case (short)PlaceGroups.WR:
                     CurrentViewModelGrid = new DocCloseShiftWRGridViewModel(msg);
                     break;
+                case (short)PlaceGroups.RW:
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRWRemainderViewModel(PlaceID) : new DocCloseShiftRWRemainderViewModel((Guid)msg.DocID);
+                    break;
                 default:
                     break;
             }
-            FillGridCommand = new RelayCommand((CurrentViewModelGrid as IFillClearGrid).FillGrid, () => !IsConfirmed);
-            ClearGridCommand = new RelayCommand((CurrentViewModelGrid as IFillClearGrid).ClearGrid, () => !IsConfirmed);
+            if (CurrentViewModelGrid is IFillClearGrid)
+            {
+                FillGridCommand = new RelayCommand(((IFillClearGrid) CurrentViewModelGrid).FillGrid, () => !IsConfirmed);
+                ClearGridCommand = new RelayCommand(((IFillClearGrid) CurrentViewModelGrid).ClearGrid,
+                    () => !IsConfirmed);
+            }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
         private void PrintReport(PrintReportMessage msg)

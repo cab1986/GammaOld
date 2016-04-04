@@ -15,7 +15,8 @@
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     ShutdownMode="OnLastWindowClose" 
     Startup="Application_Startup" 
-    Exit="Application_Exit">
+    Exit="Application_Exit"
+    DispatcherUnhandledException="Application_DispatcherUnhandledException">
   <Application.Resources>
         <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Gamma.ViewModels" />
         <Style TargetType="{x:Type TextBox}">

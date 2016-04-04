@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Gamma.Interfaces;
 using System;
 using System.Collections.Generic;

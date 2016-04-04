@@ -1,6 +1,4 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using System.Windows;
-using Gamma.ViewModels;
 
 namespace Gamma.Views
 {

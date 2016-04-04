@@ -1,46 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="GammaModelStoreContainer" CdmEntityContainer="GammaEntities">
-    <EntitySetMapping Name="ProductPalletItems">
-      <EntityTypeMapping TypeName="GammaModel.ProductPalletItems">
-        <MappingFragment StoreEntitySet="ProductPalletItems">
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="ProductPalletItemID" ColumnName="ProductPalletItemID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="RolePermits">
-      <EntityTypeMapping TypeName="GammaModel.RolePermits">
-        <MappingFragment StoreEntitySet="RolePermits">
-          <ScalarProperty Name="Mark" ColumnName="Mark" />
-          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
-          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Roles">
-      <EntityTypeMapping TypeName="GammaModel.Roles">
-        <MappingFragment StoreEntitySet="Roles">
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="Comment" ColumnName="Comment" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="UserPermit" FunctionName="GammaModel.Store.msp_UserPermit" />
-    <EntitySetMapping Name="Permits">
-      <EntityTypeMapping TypeName="GammaModel.Permits">
-        <MappingFragment StoreEntitySet="Permits">
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="GroupNumber" ColumnName="GroupNumber" />
-          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="C1CCharacteristicProperties">
       <EntityTypeMapping TypeName="GammaModel.C1CCharacteristicProperties">
         <MappingFragment StoreEntitySet="1CCharacteristicProperties">
@@ -49,6 +9,15 @@
           <ScalarProperty Name="C1CPropertyValueID" ColumnName="1CPropertyValueID" />
           <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="C1CEnumGroupTypes">
+      <EntityTypeMapping TypeName="GammaModel.C1CEnumGroupTypes">
+        <MappingFragment StoreEntitySet="1CEnumGroupTypes">
+          <ScalarProperty Name="Alias" ColumnName="Alias" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C1CEnumGroupTypeID" ColumnName="1CEnumGroupTypeID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -74,6 +43,17 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="C1CNomenclatureGroups">
+      <EntityTypeMapping TypeName="GammaModel.C1CNomenclatureGroups">
+        <MappingFragment StoreEntitySet="1CNomenclatureGroups">
+          <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="C1CEnumGroupTypeID" ColumnName="1CEnumGroupTypeID" />
+          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+          <ScalarProperty Name="C1CNomenclatureGroupID" ColumnName="1CNomenclatureGroupID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="C1CNomenclatureProperties">
       <EntityTypeMapping TypeName="GammaModel.C1CNomenclatureProperties">
         <MappingFragment StoreEntitySet="1CNomenclatureProperties">
@@ -88,109 +68,19 @@
     <EntitySetMapping Name="C1CProperties">
       <EntityTypeMapping TypeName="GammaModel.C1CProperties">
         <MappingFragment StoreEntitySet="1CProperties">
-          <ScalarProperty Name="Marked" ColumnName="Marked" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Marked" ColumnName="Marked" />
           <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
           <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Reports">
-      <EntityTypeMapping TypeName="GammaModel.Reports">
-        <MappingFragment StoreEntitySet="Reports">
-          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-          <ScalarProperty Name="IsReport" ColumnName="IsReport" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ReportID" ColumnName="ReportID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Templates">
-      <EntityTypeMapping TypeName="GammaModel.Templates">
-        <MappingFragment StoreEntitySet="Templates">
-          <ScalarProperty Name="Version" ColumnName="Version" />
-          <ScalarProperty Name="Template" ColumnName="Template" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ReportID" ColumnName="ReportID" />
-          <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DocProducts">
-      <EntityTypeMapping TypeName="GammaModel.DocProducts">
-        <MappingFragment StoreEntitySet="DocProducts">
-          <ScalarProperty Name="IsOutConfirmed" ColumnName="IsOutConfirmed" />
-          <ScalarProperty Name="IsInConfirmed" ColumnName="IsInConfirmed" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Products">
-      <EntityTypeMapping TypeName="GammaModel.Products">
-        <MappingFragment StoreEntitySet="Products">
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetProductionTaskProducts" FunctionName="GammaModel.Store.GetProductionTaskProducts">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskProducts_Result3">
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
-          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <EntitySetMapping Name="PermitTables">
-      <EntityTypeMapping TypeName="GammaModel.PermitTables">
-        <MappingFragment StoreEntitySet="PermitTables">
-          <ScalarProperty Name="Columns" ColumnName="Columns" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
-          <ScalarProperty Name="PermitTableID" ColumnName="PermitTableID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetCharPropsDescriptions" FunctionName="GammaModel.Store.GetCharPropsDescriptions">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetCharPropsDescriptions_Result">
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
-          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="Destination" ColumnName="Destination" />
-          <ScalarProperty Name="Format" ColumnName="Format" />
-          <ScalarProperty Name="Color" ColumnName="Color" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <EntitySetMapping Name="C1CEnumGroupTypes">
-      <EntityTypeMapping TypeName="GammaModel.C1CEnumGroupTypes">
-        <MappingFragment StoreEntitySet="1CEnumGroupTypes">
-          <ScalarProperty Name="Alias" ColumnName="Alias" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="C1CEnumGroupTypeID" ColumnName="1CEnumGroupTypeID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="C1CNomenclatureGroups">
-      <EntityTypeMapping TypeName="GammaModel.C1CNomenclatureGroups">
-        <MappingFragment StoreEntitySet="1CNomenclatureGroups">
-          <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="C1CEnumGroupTypeID" ColumnName="1CEnumGroupTypeID" />
-          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
-          <ScalarProperty Name="C1CNomenclatureGroupID" ColumnName="1CNomenclatureGroupID" />
+    <EntitySetMapping Name="C1CPropertyValueGammaPropertyValue">
+      <EntityTypeMapping TypeName="GammaModel.C1CPropertyValueGammaPropertyValue">
+        <MappingFragment StoreEntitySet="1CPropertyValueGammaPropertyValue">
+          <ScalarProperty Name="ValueNumeric" ColumnName="ValueNumeric" />
+          <ScalarProperty Name="GammaPropertyID" ColumnName="GammaPropertyID" />
+          <ScalarProperty Name="C1CPropertyValueID" ColumnName="1CPropertyValueID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -210,94 +100,18 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="C1CCharacteristics">
-      <EntityTypeMapping TypeName="GammaModel.C1CCharacteristics">
-        <MappingFragment StoreEntitySet="1CCharacteristics">
-          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="MeasureUnitPallet" ColumnName="MeasureUnitPallet" />
-          <ScalarProperty Name="MeasureUnitPackage" ColumnName="MeasureUnitPackage" />
-          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="C1CNomenclature">
-      <EntityTypeMapping TypeName="GammaModel.C1CNomenclature">
-        <MappingFragment StoreEntitySet="1CNomenclature">
-          <ScalarProperty Name="NomenclatureKindID" ColumnName="NomenclatureKindID" />
+    <EntitySetMapping Name="C1CQuality">
+      <EntityTypeMapping TypeName="GammaModel.C1CQuality">
+        <MappingFragment StoreEntitySet="1CQuality">
+          <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
-          <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="C1CParentID" ColumnName="1CParentID" />
+          <ScalarProperty Name="Marked" ColumnName="Marked" />
           <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
-          <ScalarProperty Name="C1CBaseMeasureUnitQualifier" ColumnName="1CBaseMeasureUnitQualifier" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="C1CNomenclatureGroupNomenclature" TypeName="GammaModel.C1CNomenclatureGroupNomenclature" StoreEntitySet="1CNomenclatureGroupNomenclature">
-      <EndProperty Name="C1CNomenclatureGroups">
-        <ScalarProperty Name="C1CNomenclatureGroupID" ColumnName="1CNomenclatureGroupID" />
-      </EndProperty>
-      <EndProperty Name="C1CNomenclature">
-        <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <EntitySetMapping Name="DocWithdrawalMaterials">
-      <EntityTypeMapping TypeName="GammaModel.DocWithdrawalMaterials">
-        <MappingFragment StoreEntitySet="DocWithdrawalMaterials">
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="DocWithdrawalMaterialID" ColumnName="DocWithdrawalMaterialID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ProductPallets">
-      <EntityTypeMapping TypeName="GammaModel.ProductPallets">
-        <MappingFragment StoreEntitySet="ProductPallets">
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ProductGroupPacks">
-      <EntityTypeMapping TypeName="GammaModel.ProductGroupPacks">
-        <MappingFragment StoreEntitySet="ProductGroupPacks">
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
-          <ScalarProperty Name="Weight" ColumnName="Weight" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DocCloseShiftRemainders">
-      <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRemainders">
-        <MappingFragment StoreEntitySet="DocCloseShiftRemainders">
-          <ScalarProperty Name="IsSourceProduct" ColumnName="IsSourceProduct" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="DocCloseShiftRemainderID" ColumnName="DocCloseShiftRemainderID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetDocCloseShiftPMSpools" FunctionName="GammaModel.Store.GetDocCloseShiftPMSpools">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftPMSpools_Result">
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
-          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
-          <ScalarProperty Name="Weight" ColumnName="Weight" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <EntitySetMapping Name="C1CRejectionReasons">
       <EntityTypeMapping TypeName="GammaModel.C1CRejectionReasons">
         <MappingFragment StoreEntitySet="1CRejectionReasons">
@@ -310,36 +124,69 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetSpoolRejectionReasons" FunctionName="GammaModel.Store.GetSpoolRejectionReasons">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetSpoolRejectionReasons_Result">
-          <ScalarProperty Name="RejectionReasonID" ColumnName="RejectionReasonID" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <EntitySetMapping Name="vProductsInfo">
-      <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
-        <MappingFragment StoreEntitySet="vProductsInfo">
-          <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="State" ColumnName="State" />
-          <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
-          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-          <ScalarProperty Name="StateID" ColumnName="StateID" />
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="Place" ColumnName="Place" />
-          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+    <EntitySetMapping Name="C1CSpecificationInputNomenclature">
+      <EntityTypeMapping TypeName="GammaModel.C1CSpecificationInputNomenclature">
+        <MappingFragment StoreEntitySet="1CSpecificationInputNomenclature">
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
           <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+          <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+          <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="C1CSpecificationOutputNomenclature">
+      <EntityTypeMapping TypeName="GammaModel.C1CSpecificationOutputNomenclature">
+        <MappingFragment StoreEntitySet="1CSpecificationOutputNomenclature">
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+          <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Branches">
+      <EntityTypeMapping TypeName="GammaModel.Branches">
+        <MappingFragment StoreEntitySet="Branches">
+          <ScalarProperty Name="QualityContacts" ColumnName="QualityContacts" />
+          <ScalarProperty Name="WebInfo" ColumnName="WebInfo" />
+          <ScalarProperty Name="Phones" ColumnName="Phones" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EnterpriseID" ColumnName="EnterpriseID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Departments">
+      <EntityTypeMapping TypeName="GammaModel.Departments">
+        <MappingFragment StoreEntitySet="Departments">
+          <ScalarProperty Name="NameEng" ColumnName="NameEng" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocChangeStateProducts">
+      <EntityTypeMapping TypeName="GammaModel.DocChangeStateProducts">
+        <MappingFragment StoreEntitySet="DocChangeStateProducts">
+          <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocCloseShiftRemainders">
+      <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRemainders">
+        <MappingFragment StoreEntitySet="DocCloseShiftRemainders">
+          <ScalarProperty Name="IsSourceProduct" ColumnName="IsSourceProduct" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="DocCloseShiftRemainderID" ColumnName="DocCloseShiftRemainderID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -361,20 +208,38 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="DocProducts">
+      <EntityTypeMapping TypeName="GammaModel.DocProducts">
+        <MappingFragment StoreEntitySet="DocProducts">
+          <ScalarProperty Name="IsOutConfirmed" ColumnName="IsOutConfirmed" />
+          <ScalarProperty Name="IsInConfirmed" ColumnName="IsInConfirmed" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Docs">
       <EntityTypeMapping TypeName="GammaModel.Docs">
         <MappingFragment StoreEntitySet="Docs">
           <ScalarProperty Name="IsFromOldGamma" ColumnName="IsFromOldGamma" />
-          <ScalarProperty Name="PrintName" ColumnName="PrintName" />
           <ScalarProperty Name="Comment" ColumnName="Comment" />
           <ScalarProperty Name="Date" ColumnName="Date" />
           <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
           <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="PrintName" ColumnName="PrintName" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
           <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
           <ScalarProperty Name="Number" ColumnName="Number" />
           <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocTypes">
+      <EntityTypeMapping TypeName="GammaModel.DocTypes">
+        <MappingFragment StoreEntitySet="DocTypes">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -386,59 +251,56 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Places">
-      <EntityTypeMapping TypeName="GammaModel.Places">
-        <MappingFragment StoreEntitySet="Places">
-          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
-          <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
-          <ScalarProperty Name="IsProductionPlace" ColumnName="IsProductionPlace" />
-          <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
-          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-          <ScalarProperty Name="NameEng" ColumnName="NameEng" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Rests">
-      <EntityTypeMapping TypeName="GammaModel.Rests">
-        <MappingFragment StoreEntitySet="Rests">
+    <EntitySetMapping Name="DocWithdrawalMaterials">
+      <EntityTypeMapping TypeName="GammaModel.DocWithdrawalMaterials">
+        <MappingFragment StoreEntitySet="DocWithdrawalMaterials">
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="DocWithdrawalMaterialID" ColumnName="DocWithdrawalMaterialID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="SourceSpools">
-      <EntityTypeMapping TypeName="GammaModel.SourceSpools">
-        <MappingFragment StoreEntitySet="SourceSpools">
-          <ScalarProperty Name="Unwinder3Active" ColumnName="Unwinder3Active" />
-          <ScalarProperty Name="Unwinder3Spool" ColumnName="Unwinder3Spool" />
-          <ScalarProperty Name="Unwinder2Active" ColumnName="Unwinder2Active" />
-          <ScalarProperty Name="Unwinder2Spool" ColumnName="Unwinder2Spool" />
-          <ScalarProperty Name="Unwinder1Active" ColumnName="Unwinder1Active" />
-          <ScalarProperty Name="Unwinder1Spool" ColumnName="Unwinder1Spool" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+    <EntitySetMapping Name="Enterprises">
+      <EntityTypeMapping TypeName="GammaModel.Enterprises">
+        <MappingFragment StoreEntitySet="Enterprises">
+          <ScalarProperty Name="QualityContacts" ColumnName="QualityContacts" />
+          <ScalarProperty Name="WebInfo" ColumnName="WebInfo" />
+          <ScalarProperty Name="Phones" ColumnName="Phones" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EnterpriseID" ColumnName="EnterpriseID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="DocCloseShiftDocs" TypeName="GammaModel.DocCloseShiftDocs" StoreEntitySet="DocCloseShiftDocs">
-      <EndProperty Name="Docs1">
-        <ScalarProperty Name="DocID" ColumnName="DocID" />
-      </EndProperty>
-      <EndProperty Name="Docs">
-        <ScalarProperty Name="DocID" ColumnName="DocCloseShiftID" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="DocProductionWithdrawals" TypeName="GammaModel.DocProductionWithdrawals" StoreEntitySet="DocProductionWithdrawals">
-      <EndProperty Name="DocWithdrawal">
-        <ScalarProperty Name="DocID" ColumnName="DocWithdrawalID" />
-      </EndProperty>
-      <EndProperty Name="DocProduction">
-        <ScalarProperty Name="DocID" ColumnName="DocProductionID" />
-      </EndProperty>
-    </AssociationSetMapping>
+    <EntitySetMapping Name="GammaProperties">
+      <EntityTypeMapping TypeName="GammaModel.GammaProperties">
+        <MappingFragment StoreEntitySet="GammaProperties">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="GammaPropertyID" ColumnName="GammaPropertyID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Permits">
+      <EntityTypeMapping TypeName="GammaModel.Permits">
+        <MappingFragment StoreEntitySet="Permits">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="GroupNumber" ColumnName="GroupNumber" />
+          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PermitTables">
+      <EntityTypeMapping TypeName="GammaModel.PermitTables">
+        <MappingFragment StoreEntitySet="PermitTables">
+          <ScalarProperty Name="Columns" ColumnName="Columns" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
+          <ScalarProperty Name="PermitTableID" ColumnName="PermitTableID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="PlaceGroups">
       <EntityTypeMapping TypeName="GammaModel.PlaceGroups">
         <MappingFragment StoreEntitySet="PlaceGroups">
@@ -447,126 +309,38 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ProductionTaskStates">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTaskStates">
-        <MappingFragment StoreEntitySet="ProductionTaskStates">
-          <ScalarProperty Name="IsActual" ColumnName="IsActual" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ProductionTaskStateID" ColumnName="ProductionTaskStateID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetActiveSourceSpools" FunctionName="GammaModel.Store.GetActiveSourceSpools" />
-    <FunctionImportMapping FunctionImportName="GetProductRelations" FunctionName="GammaModel.Store.GetProductRelations">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductRelations_Result">
-          <ScalarProperty Name="RelationKind" ColumnName="RelationKind" />
-          <ScalarProperty Name="ProductKind" ColumnName="ProductKind" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="GetNomenclatureFolders" FunctionName="GammaModel.Store.GetNomenclatureFolders">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetNomenclatureFolders_Result1">
-          <ScalarProperty Name="FolderID" ColumnName="FolderID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <AssociationSetMapping Name="PlaceGroup1CNomenclature" TypeName="GammaModel.PlaceGroup1CNomenclature" StoreEntitySet="PlaceGroup1CNomenclature">
-      <EndProperty Name="PlaceGroups">
-        <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
-      </EndProperty>
-      <EndProperty Name="C1CNomenclature">
-        <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <FunctionImportMapping FunctionImportName="GetCharSpoolLayerNumber" FunctionName="GammaModel.Store.GetCharSpoolLayerNumber" />
-    <FunctionImportMapping FunctionImportName="GetGroupPackSpools" FunctionName="GammaModel.Store.GetGroupPackSpools">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetGroupPackSpools_Result">
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-          <ScalarProperty Name="Place" ColumnName="Place" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="StateID" ColumnName="StateID" />
-          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-          <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
-          <ScalarProperty Name="State" ColumnName="State" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="GenerateNewNumbersForDoc" FunctionName="GammaModel.Store.GenerateNewNumbersForDoc" />
-    <FunctionImportMapping FunctionImportName="GetDocCloseShiftWRGroupPacks" FunctionName="GammaModel.Store.GetDocCloseShiftWRGroupPacks">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftWRGroupPacks_Result">
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
-          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
-          <ScalarProperty Name="Weight" ColumnName="Weight" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <EntitySetMapping Name="ProductionTaskWR">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTaskWR">
-        <MappingFragment StoreEntitySet="ProductionTaskWR">
-          <ScalarProperty Name="GroupPackConfig" ColumnName="GroupPackConfig" />
-          <ScalarProperty Name="IsEndProtected" ColumnName="IsEndProtected" />
-          <ScalarProperty Name="IsWithCarton" ColumnName="IsWithCarton" />
-          <ScalarProperty Name="NumFilmLayers" ColumnName="NumFilmLayers" />
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ProductionTaskSGB">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTaskSGB">
-        <MappingFragment StoreEntitySet="ProductionTaskSGB">
-          <ScalarProperty Name="Crepe" ColumnName="Crepe" />
-          <ScalarProperty Name="DiameterMinus" ColumnName="DiameterMinus" />
-          <ScalarProperty Name="DiameterPlus" ColumnName="DiameterPlus" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ProductionTasks">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTasks">
-        <MappingFragment StoreEntitySet="ProductionTasks">
+    <EntitySetMapping Name="Places">
+      <EntityTypeMapping TypeName="GammaModel.Places">
+        <MappingFragment StoreEntitySet="Places">
+          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+          <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
+          <ScalarProperty Name="IsProductionPlace" ColumnName="IsProductionPlace" />
           <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
-          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
-          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+          <ScalarProperty Name="NameEng" ColumnName="NameEng" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
           <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ProductionTaskRWCutting">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
-        <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
+    <EntitySetMapping Name="ProcessModels">
+      <EntityTypeMapping TypeName="GammaModel.ProcessModels">
+        <MappingFragment StoreEntitySet="ProcessModels">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ProcessModelID" ColumnName="ProcessModelID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductGroupPacks">
+      <EntityTypeMapping TypeName="GammaModel.ProductGroupPacks">
+        <MappingFragment StoreEntitySet="ProductGroupPacks">
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="GrossWeight" ColumnName="GrossWeight" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-          <ScalarProperty Name="ProductionTaskRWCuttingID" ColumnName="ProductionTaskRWCuttingID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -585,6 +359,276 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTaskRWCutting">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
+        <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+          <ScalarProperty Name="ProductionTaskRWCuttingID" ColumnName="ProductionTaskRWCuttingID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTasks">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTasks">
+        <MappingFragment StoreEntitySet="ProductionTasks">
+          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTaskSGB">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTaskSGB">
+        <MappingFragment StoreEntitySet="ProductionTaskSGB">
+          <ScalarProperty Name="Crepe" ColumnName="Crepe" />
+          <ScalarProperty Name="DiameterMinus" ColumnName="DiameterMinus" />
+          <ScalarProperty Name="DiameterPlus" ColumnName="DiameterPlus" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTaskStates">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTaskStates">
+        <MappingFragment StoreEntitySet="ProductionTaskStates">
+          <ScalarProperty Name="IsActual" ColumnName="IsActual" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ProductionTaskStateID" ColumnName="ProductionTaskStateID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTaskWR">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTaskWR">
+        <MappingFragment StoreEntitySet="ProductionTaskWR">
+          <ScalarProperty Name="GroupPackConfig" ColumnName="GroupPackConfig" />
+          <ScalarProperty Name="IsEndProtected" ColumnName="IsEndProtected" />
+          <ScalarProperty Name="IsWithCarton" ColumnName="IsWithCarton" />
+          <ScalarProperty Name="NumFilmLayers" ColumnName="NumFilmLayers" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductKinds">
+      <EntityTypeMapping TypeName="GammaModel.ProductKinds">
+        <MappingFragment StoreEntitySet="ProductKinds">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductPalletItems">
+      <EntityTypeMapping TypeName="GammaModel.ProductPalletItems">
+        <MappingFragment StoreEntitySet="ProductPalletItems">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductPalletItemID" ColumnName="ProductPalletItemID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductPallets">
+      <EntityTypeMapping TypeName="GammaModel.ProductPallets">
+        <MappingFragment StoreEntitySet="ProductPallets">
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Products">
+      <EntityTypeMapping TypeName="GammaModel.Products">
+        <MappingFragment StoreEntitySet="Products">
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductSpools">
+      <EntityTypeMapping TypeName="GammaModel.ProductSpools">
+        <MappingFragment StoreEntitySet="ProductSpools">
+          <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
+          <ScalarProperty Name="RealBasisWeight" ColumnName="RealBasisWeight" />
+          <ScalarProperty Name="Length" ColumnName="Length" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="RealFormat" ColumnName="RealFormat" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductStates">
+      <EntityTypeMapping TypeName="GammaModel.ProductStates">
+        <MappingFragment StoreEntitySet="ProductStates">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reports">
+      <EntityTypeMapping TypeName="GammaModel.Reports">
+        <MappingFragment StoreEntitySet="Reports">
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="IsReport" ColumnName="IsReport" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ReportID" ColumnName="ReportID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Rests">
+      <EntityTypeMapping TypeName="GammaModel.Rests">
+        <MappingFragment StoreEntitySet="Rests">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RolePermits">
+      <EntityTypeMapping TypeName="GammaModel.RolePermits">
+        <MappingFragment StoreEntitySet="RolePermits">
+          <ScalarProperty Name="Mark" ColumnName="Mark" />
+          <ScalarProperty Name="PermitID" ColumnName="PermitID" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="GammaModel.Roles">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SourceSpools">
+      <EntityTypeMapping TypeName="GammaModel.SourceSpools">
+        <MappingFragment StoreEntitySet="SourceSpools">
+          <ScalarProperty Name="Unwinder3Active" ColumnName="Unwinder3Active" />
+          <ScalarProperty Name="Unwinder3Spool" ColumnName="Unwinder3Spool" />
+          <ScalarProperty Name="Unwinder2Active" ColumnName="Unwinder2Active" />
+          <ScalarProperty Name="Unwinder2Spool" ColumnName="Unwinder2Spool" />
+          <ScalarProperty Name="Unwinder1Active" ColumnName="Unwinder1Active" />
+          <ScalarProperty Name="Unwinder1Spool" ColumnName="Unwinder1Spool" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SpoolInstallLog">
+      <EntityTypeMapping TypeName="GammaModel.SpoolInstallLog">
+        <MappingFragment StoreEntitySet="SpoolInstallLog">
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="UnwinderID" ColumnName="UnwinderID" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="SpoolInstallLogID" ColumnName="SpoolInstallLogID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Templates">
+      <EntityTypeMapping TypeName="GammaModel.Templates">
+        <MappingFragment StoreEntitySet="Templates">
+          <ScalarProperty Name="Version" ColumnName="Version" />
+          <ScalarProperty Name="Template" ColumnName="Template" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ReportID" ColumnName="ReportID" />
+          <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserPrintNames">
+      <EntityTypeMapping TypeName="GammaModel.UserPrintNames">
+        <MappingFragment StoreEntitySet="UserPrintNames">
+          <ScalarProperty Name="PrintName" ColumnName="PrintName" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="UserPrintNameID" ColumnName="UserPrintNameID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="GammaModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
+          <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
+          <ScalarProperty Name="Exports" ColumnName="Exports" />
+          <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
+          <ScalarProperty Name="PassChange" ColumnName="PassChange" />
+          <ScalarProperty Name="Post" ColumnName="Post" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vCharacteristicSGBProperties">
+      <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
+        <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
+          <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+          <ScalarProperty Name="Format" ColumnName="Format" />
+          <ScalarProperty Name="Destination" ColumnName="Destination" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
+          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vGroupPackSpools">
+      <EntityTypeMapping TypeName="GammaModel.vGroupPackSpools">
+        <MappingFragment StoreEntitySet="vGroupPackSpools">
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductGroupPackID" ColumnName="ProductGroupPackID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vProductionTaskBatches">
+      <EntityTypeMapping TypeName="GammaModel.vProductionTaskBatches">
+        <MappingFragment StoreEntitySet="vProductionTaskBatches">
+          <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
+          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vProductionTaskProducts">
+      <EntityTypeMapping TypeName="GammaModel.vProductionTaskProducts">
+        <MappingFragment StoreEntitySet="vProductionTaskProducts">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="C1CPropertyGammaProperties" TypeName="GammaModel.C1CPropertyGammaProperties" StoreEntitySet="1CPropertyGammaProperties">
+      <EndProperty Name="GammaProperties">
+        <ScalarProperty Name="GammaPropertyID" ColumnName="GammaPropertyID" />
+      </EndProperty>
+      <EndProperty Name="C1CProperties">
+        <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
+      </EndProperty>
+    </AssociationSetMapping>
     <AssociationSetMapping Name="BatchProductionTasks" TypeName="GammaModel.BatchProductionTasks" StoreEntitySet="BatchProductionTasks">
       <EndProperty Name="ProductionTasks">
         <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
@@ -593,17 +637,140 @@
         <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
       </EndProperty>
     </AssociationSetMapping>
-    <FunctionImportMapping FunctionImportName="GetProductionTaskByBatchID" FunctionName="GammaModel.Store.GetProductionTaskByBatchID">
+    <AssociationSetMapping Name="DocCloseShiftDocs" TypeName="GammaModel.DocCloseShiftDocs" StoreEntitySet="DocCloseShiftDocs">
+      <EndProperty Name="Docs1">
+        <ScalarProperty Name="DocID" ColumnName="DocID" />
+      </EndProperty>
+      <EndProperty Name="Docs">
+        <ScalarProperty Name="DocID" ColumnName="DocCloseShiftID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DocProductionWithdrawals" TypeName="GammaModel.DocProductionWithdrawals" StoreEntitySet="DocProductionWithdrawals">
+      <EndProperty Name="DocWithdrawal">
+        <ScalarProperty Name="DocID" ColumnName="DocWithdrawalID" />
+      </EndProperty>
+      <EndProperty Name="DocProduction">
+        <ScalarProperty Name="DocID" ColumnName="DocProductionID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserPlaces" TypeName="GammaModel.UserPlaces" StoreEntitySet="UserPlaces">
+      <EndProperty Name="Users">
+        <ScalarProperty Name="UserID" ColumnName="UserID" />
+      </EndProperty>
+      <EndProperty Name="Places">
+        <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="BackupGammaNew" FunctionName="GammaModel.Store.BackupGammaNew" />
+    <FunctionImportMapping FunctionImportName="CreateDocChangeStateForProduct" FunctionName="GammaModel.Store.CreateDocChangeStateForProduct" />
+    <FunctionImportMapping FunctionImportName="CreateRemainderSpool" FunctionName="GammaModel.Store.CreateRemainderSpool" />
+    <FunctionImportMapping FunctionImportName="DeleteGroupPack" FunctionName="GammaModel.Store.DeleteGroupPack" />
+    <FunctionImportMapping FunctionImportName="DeleteSpool" FunctionName="GammaModel.Store.DeleteSpool" />
+    <FunctionImportMapping FunctionImportName="DeleteUnload" FunctionName="GammaModel.Store.DeleteUnload" />
+    <FunctionImportMapping FunctionImportName="FindProductionTasks" FunctionName="GammaModel.Store.FindProductionTasks">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskByBatchID_Result">
+        <ComplexTypeMapping TypeName="GammaModel.FindProductionTasks_Result">
+          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
           <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
           <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+          <ScalarProperty Name="ProductionTaskState" ColumnName="ProductionTaskState" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="BatchKindID" ColumnName="BatchKindID" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GenerateNewNumbersForDoc" FunctionName="GammaModel.Store.GenerateNewNumbersForDoc" />
+    <FunctionImportMapping FunctionImportName="Get1CNomenclature" FunctionName="GammaModel.Store.Get1CNomenclature" />
+    <FunctionImportMapping FunctionImportName="GetActiveSourceSpools" FunctionName="GammaModel.Store.GetActiveSourceSpools" />
+    <FunctionImportMapping FunctionImportName="GetCharPropsDescriptions" FunctionName="GammaModel.Store.GetCharPropsDescriptions">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetCharPropsDescriptions_Result">
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
+          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="Destination" ColumnName="Destination" />
+          <ScalarProperty Name="Format" ColumnName="Format" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetCharSpoolLayerNumber" FunctionName="GammaModel.Store.GetCharSpoolLayerNumber" />
+    <FunctionImportMapping FunctionImportName="GetDocCloseShiftPMSpools" FunctionName="GammaModel.Store.GetDocCloseShiftPMSpools">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftPMSpools_Result">
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDocCloseShiftWRGroupPacks" FunctionName="GammaModel.Store.GetDocCloseShiftWRGroupPacks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftWRGroupPacks_Result">
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetInputNomenclature" FunctionName="GammaModel.Store.GetInputNomenclature">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetInputNomenclature_Result">
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetNomenclatureFolders" FunctionName="GammaModel.Store.GetNomenclatureFolders">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetNomenclatureFolders_Result">
+          <ScalarProperty Name="FolderID" ColumnName="FolderID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetProductionTaskBatchProducts" FunctionName="GammaModel.Store.GetProductionTaskBatchProducts">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskBatchProducts_Result">
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+          <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetProductionTaskBatchSGBCuttings" FunctionName="GammaModel.Store.GetProductionTaskBatchSGBCuttings">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskBatchSGBCuttings_Result">
           <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-          <ScalarProperty Name="IsActual" ColumnName="IsActual" />
+          <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
+          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
+          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="Destination" ColumnName="Destination" />
+          <ScalarProperty Name="Format" ColumnName="Format" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+          <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
@@ -631,59 +798,28 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="GetProductionTaskBatchSGBCuttings" FunctionName="GammaModel.Store.GetProductionTaskBatchSGBCuttings">
+    <FunctionImportMapping FunctionImportName="GetProductionTaskByBatchID" FunctionName="GammaModel.Store.GetProductionTaskByBatchID">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskBatchSGBCuttings_Result">
+        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskByBatchID_Result">
+          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
-          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
-          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="Destination" ColumnName="Destination" />
-          <ScalarProperty Name="Format" ColumnName="Format" />
-          <ScalarProperty Name="Color" ColumnName="Color" />
-          <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+          <ScalarProperty Name="IsActual" ColumnName="IsActual" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <EntitySetMapping Name="vCharacteristicSGBProperties">
-      <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
-        <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
-          <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
-          <ScalarProperty Name="Color" ColumnName="Color" />
-          <ScalarProperty Name="Format" ColumnName="Format" />
-          <ScalarProperty Name="Destination" ColumnName="Destination" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
-          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="GetProductionTasks" FunctionName="GammaModel.Store.GetProductionTasks">
+    <FunctionImportMapping FunctionImportName="GetProductionTaskProducts" FunctionName="GammaModel.Store.GetProductionTaskProducts">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductionTasks_Result4">
-          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
-          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
-          <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
-          <ScalarProperty Name="Place" ColumnName="Place" />
-          <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
-          <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="GetProductionTaskBatchProducts" FunctionName="GammaModel.Store.GetProductionTaskBatchProducts">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskBatchProducts_Result">
+        <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskProducts_Result">
           <ScalarProperty Name="DocID" ColumnName="DocID" />
           <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
           <ScalarProperty Name="Number" ColumnName="Number" />
           <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="Place" ColumnName="Place" />
           <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
           <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
           <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
@@ -691,86 +827,175 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <EntitySetMapping Name="ProductSpools">
-      <EntityTypeMapping TypeName="GammaModel.ProductSpools">
-        <MappingFragment StoreEntitySet="ProductSpools">
-          <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
-          <ScalarProperty Name="RealBasisWeight" ColumnName="RealBasisWeight" />
-          <ScalarProperty Name="Length" ColumnName="Length" />
-          <ScalarProperty Name="Weight" ColumnName="Weight" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="RealFormat" ColumnName="RealFormat" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+    <FunctionImportMapping FunctionImportName="GetProductionTasks" FunctionName="GammaModel.Store.GetProductionTasks">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetProductionTasks_Result">
+          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+          <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
+          <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetSpoolRejectionReasons" FunctionName="GammaModel.Store.GetSpoolRejectionReasons">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetSpoolRejectionReasons_Result">
+          <ScalarProperty Name="RejectionReasonID" ColumnName="RejectionReasonID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="UserPermit" FunctionName="GammaModel.Store.msp_UserPermit" />
+    <FunctionImportMapping FunctionImportName="mxp_RecreateRolePermits" FunctionName="GammaModel.Store.mxp_RecreateRolePermits" />
+    <FunctionImportMapping FunctionImportName="RecreateUser" FunctionName="GammaModel.Store.RecreateUser" />
+    <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="GammaModel.Store.sp_alterdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="GammaModel.Store.sp_creatediagram" />
+    <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="GammaModel.Store.sp_dropdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="GammaModel.Store.sp_helpdiagramdefinition">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.sp_helpdiagramdefinition_Result">
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="GammaModel.Store.sp_helpdiagrams">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.sp_helpdiagrams_Result">
+          <ScalarProperty Name="Database" ColumnName="Database" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Owner" ColumnName="Owner" />
+          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="GammaModel.Store.sp_renamediagram" />
+    <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="GammaModel.Store.sp_upgraddiagrams" />
+    <FunctionImportMapping FunctionImportName="WriteSpoolInstallLog" FunctionName="GammaModel.Store.WriteSpoolInstallLog" />
+    <EntitySetMapping Name="C1CCharacteristics">
+      <EntityTypeMapping TypeName="GammaModel.C1CCharacteristics">
+        <MappingFragment StoreEntitySet="1CCharacteristics">
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="MeasureUnitPallet" ColumnName="MeasureUnitPallet" />
+          <ScalarProperty Name="MeasureUnitPackage" ColumnName="MeasureUnitPackage" />
+          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
           <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="FindProductionTasks" FunctionName="GammaModel.Store.FindProductionTasks">
+    <EntitySetMapping Name="C1CNomenclature">
+      <EntityTypeMapping TypeName="GammaModel.C1CNomenclature">
+        <MappingFragment StoreEntitySet="1CNomenclature">
+          <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
+          <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C1CParentID" ColumnName="1CParentID" />
+          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+          <ScalarProperty Name="C1CBaseMeasureUnitQualifier" ColumnName="1CBaseMeasureUnitQualifier" />
+          <ScalarProperty Name="NomenclatureKindID" ColumnName="NomenclatureKindID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="PlaceGroup1CNomenclature" TypeName="GammaModel.PlaceGroup1CNomenclature" StoreEntitySet="PlaceGroup1CNomenclature">
+      <EndProperty Name="PlaceGroups">
+        <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
+      </EndProperty>
+      <EndProperty Name="C1CNomenclature">
+        <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="GetGroupPackSpools" FunctionName="GammaModel.Store.GetGroupPackSpools">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.FindProductionTasks_Result1">
-          <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
+        <ComplexTypeMapping TypeName="GammaModel.GetGroupPackSpools_Result1">
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
           <ScalarProperty Name="Number" ColumnName="Number" />
           <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
-          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
-          <ScalarProperty Name="ProductionTaskState" ColumnName="ProductionTaskState" />
-          <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="BatchKindID" ColumnName="BatchKindID" />
-          <ScalarProperty Name="Place" ColumnName="Place" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="GetInputNomenclature" FunctionName="GammaModel.Store.GetInputNomenclature">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetInputNomenclature_Result1">
+          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
           <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="StateID" ColumnName="StateID" />
+          <ScalarProperty Name="ChangeStateQuantity" ColumnName="ChangeStateQuantity" />
+          <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
+          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+          <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
+          <ScalarProperty Name="State" ColumnName="State" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="CreateDocChangeStateForProduct" FunctionName="GammaModel.Store.CreateDocChangeStateForProduct" />
-    <EntitySetMapping Name="DocChangeStateProducts">
-      <EntityTypeMapping TypeName="GammaModel.DocChangeStateProducts">
-        <MappingFragment StoreEntitySet="DocChangeStateProducts">
-          <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
+    <EntitySetMapping Name="vProductsInfo">
+      <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
+        <MappingFragment StoreEntitySet="vProductsInfo">
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
+          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+          <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
+          <ScalarProperty Name="ChangeStateQuantity" ColumnName="ChangeStateQuantity" />
           <ScalarProperty Name="StateID" ColumnName="StateID" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="CreateRemainderSpool" FunctionName="GammaModel.Store.CreateRemainderSpool" />
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="GammaModel.Users">
-        <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
-          <ScalarProperty Name="DBAdmin" ColumnName="DBAdmin" />
-          <ScalarProperty Name="Exports" ColumnName="Exports" />
-          <ScalarProperty Name="PassMustChange" ColumnName="PassMustChange" />
-          <ScalarProperty Name="PassChange" ColumnName="PassChange" />
-          <ScalarProperty Name="Post" ColumnName="Post" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Login" ColumnName="Login" />
-          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-          <ScalarProperty Name="UserID" ColumnName="UserID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <AssociationSetMapping Name="UserPlaces" TypeName="GammaModel.UserPlaces" StoreEntitySet="UserPlaces">
-      <EndProperty Name="Users">
-        <ScalarProperty Name="UserID" ColumnName="UserID" />
-      </EndProperty>
-      <EndProperty Name="Places">
-        <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <FunctionImportMapping FunctionImportName="DeleteSpool" FunctionName="GammaModel.Store.DeleteSpool" />
-    <FunctionImportMapping FunctionImportName="DeleteUnload" FunctionName="GammaModel.Store.DeleteUnload" />
-    <FunctionImportMapping FunctionImportName="WriteSpoolInstallLog" FunctionName="GammaModel.Store.WriteSpoolInstallLog" />
-    <FunctionImportMapping FunctionImportName="DeleteGroupPack" FunctionName="GammaModel.Store.DeleteGroupPack" />
+    <FunctionImportMapping FunctionImportName="CreateUnloadSpools" FunctionName="GammaModel.Store.CreateUnloadSpools">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.CreateUnloadSpools_Result">
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="DocRelations" FunctionName="GammaModel.Store.DocRelations">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.DocRelations_Result">
+          <ScalarProperty Name="RelationKind" ColumnName="RelationKind" />
+          <ScalarProperty Name="ProductKind" ColumnName="ProductKind" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="ProductRelations" FunctionName="GammaModel.Store.ProductRelations">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.ProductRelations_Result">
+          <ScalarProperty Name="RelationKind" ColumnName="RelationKind" />
+          <ScalarProperty Name="ProductKind" ColumnName="ProductKind" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.IO;
 using System.IO.Ports;
-using System.Linq;
 using System.Xml.Serialization;
 
 namespace Gamma

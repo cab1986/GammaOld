@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Gamma.Models;
 using System.Collections.ObjectModel;
-using System.Data.Entity.Infrastructure;
-using System.Windows;
 using System.Data.Entity;
-using GalaSoft.MvvmLight.Messaging;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
-using System.Net;
-using System.Data.Entity.Core.Objects.DataClasses;
+using System.Linq;
+using System.Windows;
+using GalaSoft.MvvmLight.Messaging;
+using Gamma.Models;
 
 namespace Gamma
 {
@@ -40,7 +37,7 @@ namespace Gamma
             GammaBase.Dispose();
             GammaBase = new GammaEntities(GammaSettings.ConnectionString);
             GammaBase.Database.Connection.Open();
-            Messenger.Default.Send<BaseReconnectedMessage>(new BaseReconnectedMessage());
+            Messenger.Default.Send(new BaseReconnectedMessage());
         }
         public static bool HaveChanges()
         {
@@ -56,7 +53,7 @@ namespace Gamma
             return new ObservableCollection<Characteristic>
                 (
                 (
-                    from chars in DB.GammaBase.C1CCharacteristics
+                    from chars in GammaBase.C1CCharacteristics
                     where chars.C1CNomenclatureID == nomenclatureID && chars.IsActive 
                     select new Characteristic { CharacteristicID = chars.C1CCharacteristicID, CharacteristicName = chars.Name }
                 ).OrderBy(c => c.CharacteristicName)
@@ -66,7 +63,7 @@ namespace Gamma
         public static ObservableCollection<Place> GetPlaces(PlaceGroups placeGroup)
         {
             return new ObservableCollection<Place>
-            (from places in DB.GammaBase.Places
+            (from places in GammaBase.Places
              where places.PlaceGroupID == (short)placeGroup
              select new Place { PlaceID = places.PlaceID, PlaceName = places.Name }
             );
@@ -81,7 +78,7 @@ namespace Gamma
         {
             get 
             {
-                return ((IObjectContextAdapter)DB.GammaBase).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
+                return ((IObjectContextAdapter)GammaBase).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
             }
         }
         public static Guid CurrentUserID
@@ -116,7 +113,7 @@ namespace Gamma
         }
         public static void ChangeUserPassword(Guid UserID,string password)
         {
-            var login = DB.GammaBase.Users.Where(u => u.UserID == UserID).Select(u => u.Login).FirstOrDefault();
+            var login = GammaBase.Users.Where(u => u.UserID == UserID).Select(u => u.Login).FirstOrDefault();
             try
             {
                 string sql = String.Format("ALTER LOGIN {0} WITH PASSWORD = '{1}'", login, password);
@@ -133,14 +130,14 @@ namespace Gamma
             parameterList.Add(new SqlParameter("UserID",userID));
             parameterList.Add(new SqlParameter("Password",password));
             SqlParameter[] parameters = parameterList.ToArray();
-            DB.GammaBase.Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
+            GammaBase.Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
         }
         public static void RecreateRolePermits(Guid roleID)
         {
             List<SqlParameter> parameterList = new List<SqlParameter>();
             parameterList.Add(new SqlParameter("RoleID",roleID));
             SqlParameter[] parameters = parameterList.ToArray();
-            DB.GammaBase.Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
+            GammaBase.Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
         }
         private class TablePermission
         {
@@ -153,58 +150,51 @@ namespace Gamma
             var tablePermission = tablePermissions.Where(tp => tp.TableName == tableName).ToList();
             if (tablePermission.Count == 0)
                 return null;
-            else
-                return tablePermission[0].Permit;
+            return tablePermission[0].Permit;
         }
         public static bool HaveReadAccess(string tableName)
         {
             if (WorkSession.DBAdmin) return true;
             var permit = GetCachedPermission(tableName);
             if (permit != null) return permit > 0;
-            permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
+            permit = GammaBase.UserPermit(tableName).FirstOrDefault();
             if (permit == null)
             {
-                tablePermissions.Add(new TablePermission()
-                    {
+                tablePermissions.Add(new TablePermission
+                {
                         TableName = tableName,
                         Permit = 0
                     });
                 return false;
             }
-            else
+            tablePermissions.Add(new TablePermission
             {
-                tablePermissions.Add(new TablePermission()
-                {
-                    TableName = tableName,
-                    Permit = (byte)permit
-                });
-                return permit > 0;
-            }
+                TableName = tableName,
+                Permit = (byte)permit
+            });
+            return permit > 0;
         }
         public static bool HaveWriteAccess(string tableName)
         {
             if (WorkSession.DBAdmin) return true;
             var permit = GetCachedPermission(tableName);
             if (permit != null) return permit == 2;
-            permit = DB.GammaBase.UserPermit(tableName).FirstOrDefault();
+            permit = GammaBase.UserPermit(tableName).FirstOrDefault();
             if (permit == null)
             {
-                tablePermissions.Add(new TablePermission()
+                tablePermissions.Add(new TablePermission
                 {
                     TableName = tableName,
                     Permit = 0
                 });
                 return false;
             }
-            else
+            tablePermissions.Add(new TablePermission
             {
-                tablePermissions.Add(new TablePermission()
-                {
-                    TableName = tableName,
-                    Permit = (byte)permit
-                });
-                return permit == 2;
-            }
+                TableName = tableName,
+                Permit = (byte)permit
+            });
+            return permit == 2;
         }
         [DbFunction("GammaModel.Store","GetShiftBeginTime")]
         public static DateTime? GetShiftBeginTime(DateTime date)

@@ -1,9 +1,7 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
 using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Data.Entity;
 using GalaSoft.MvvmLight.Command;
 
 namespace Gamma.ViewModels

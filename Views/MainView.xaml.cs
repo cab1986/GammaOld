@@ -1,8 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using System.Windows;
-using Gamma.Views;
-using Gamma.ViewModels;
-using DevExpress.Xpf.Core.Serialization;
 
 namespace Gamma
 {

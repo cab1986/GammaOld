@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
@@ -41,7 +40,7 @@ namespace Gamma.ViewModels
                 PlaceID = (byte)DocCloseShift.PlaceID;
             }
             ShowSpoolCommand = new RelayCommand(() =>
-                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.DocID),   /// Переделать на DocID
+                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedSpool != null);
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
         }
@@ -98,12 +97,12 @@ namespace Gamma.ViewModels
                 Spools.Clear();
             }
         }
-        public override void SaveToModel(Guid ItemID)
+        public override void SaveToModel(Guid itemId)
         {
-            base.SaveToModel(ItemID);
+            base.SaveToModel(itemId);
             if (DocCloseShift == null)
             {
-                DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == ItemID).Select(d => d).FirstOrDefault();
+                DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == itemId).Select(d => d).FirstOrDefault();
                 foreach (var doc in DocCloseShiftDocs)
                 {
                     DocCloseShift.DocCloseShiftDocs.Add(doc);
