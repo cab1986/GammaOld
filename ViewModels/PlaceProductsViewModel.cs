@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -172,7 +173,7 @@ namespace Gamma.ViewModels
                     var placeGroupID = DB.GammaBase.Docs.Where(d => d.DocID == SelectedProduct.DocID).
                         Select(d => d.Places.PlaceGroupID).FirstOrDefault();
                     if (placeGroupID == (byte)PlaceGroups.PM)
-                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.DocID);
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
                     else
                         MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, SelectedProduct.DocID);
                     break;
@@ -220,7 +221,7 @@ namespace Gamma.ViewModels
                     (
                         from vpi in DB.GammaBase.vProductsInfo
                         where vpi.PlaceID == PlaceID && vpi.ShiftID == WorkSession.ShiftID &&
-                        vpi.Date >= DB.GetShiftBeginTime(DB.CurrentDateTime) && vpi.Date <= DB.GetShiftEndTime(DB.CurrentDateTime)
+                        vpi.Date >= SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(DB.CurrentDateTime)) && vpi.Date <= SqlFunctions.DateAdd("hh",1,DB.GetShiftEndTime(DB.CurrentDateTime))
                         orderby vpi.Date descending
                         select new ProductInfo
                         {
@@ -315,7 +316,18 @@ namespace Gamma.ViewModels
         public DateTime? DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
         public List<string> Intervals { get; set; }
-        public int IntervalID { get; set; }
+        private int _intervalId;
+
+        public int IntervalID
+        {
+            get { return _intervalId; }
+            set
+            {
+                if (_intervalId == value) return;
+                _intervalId = value;
+                if (_intervalId < 3) Find();
+            }
+        }
         public RelayCommand DeleteProductCommand { get; private set; }
         public RelayCommand CreateNewProductCommand { get; private set; }
         public RelayCommand FindCommand { get; private set; }

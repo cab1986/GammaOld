@@ -217,17 +217,17 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemId) // itemID = ProductionTaskBatchID
         {
-            base.SaveToModel(itemID);
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemID).FirstOrDefault();
+            base.SaveToModel(itemId);
+            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemId).FirstOrDefault();
             ProductionTasks productionTask;
             if (productionTaskBatch == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemID, (short)PlaceGroups.PM).FirstOrDefault();
+            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemId, (short)PlaceGroups.PM).FirstOrDefault();
             if (productionTaskTemp == null)
             {
                 ProductionTaskID = SQLGuidUtil.NewSequentialId();

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="700">
     <UserControl.Resources>
-        <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:BaseEdit}">
+        <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:TextEdit}">
             <Style.Triggers>
                 <DataTrigger 
     				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
@@ -52,6 +52,10 @@
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
         </dxlc:LayoutControl>
         <dxg:GridControl EnableSmartColumnsGeneration="False" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False">
+            <dxg:GridControl.TotalSummary>
+                <dxg:GridSummaryItem FieldName="Quantity" SummaryType ="Sum" ShowInColumn="Quantity" DisplayFormat="Всего: {0:d}"/>
+                <dxg:GridSummaryItem SummaryType="Count" ShowInColumn="Number" />
+            </dxg:GridControl.TotalSummary>
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
                 <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
@@ -61,7 +65,7 @@
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
                 <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
-                <dxg:GridColumn Header="{Binding QuantityHeader}" FieldName="Quantity" FixedWidth="True" Width="60" />
+                <dxg:GridColumn Header="{Binding QuantityHeader}" FieldName="Quantity" FixedWidth="True" Width="100" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>

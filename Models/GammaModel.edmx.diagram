@@ -56,7 +56,6 @@
         <EntityTypeShape EntityType="GammaModel.Roles" Width="1.5" PointX="10.5" PointY="51.75" />
         <EntityTypeShape EntityType="GammaModel.SourceSpools" Width="1.5" PointX="21" PointY="32.5" />
         <EntityTypeShape EntityType="GammaModel.SpoolInstallLog" Width="1.5" PointX="9.75" PointY="44.625" />
-        <EntityTypeShape EntityType="GammaModel.sysdiagrams" Width="1.5" PointX="2.75" PointY="5.75" />
         <EntityTypeShape EntityType="GammaModel.Templates" Width="1.5" PointX="8" PointY="0.875" />
         <EntityTypeShape EntityType="GammaModel.UserPrintNames" Width="1.5" PointX="15" PointY="50" />
         <EntityTypeShape EntityType="GammaModel.Users" Width="1.5" PointX="12.75" PointY="43.875" />

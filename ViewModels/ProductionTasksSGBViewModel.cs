@@ -84,7 +84,7 @@ namespace Gamma.ViewModels
         public class ProductionTaskBatchSGB
         {
             public Guid ProductionTaskBatchID { get; set; }
-            public String Nomenclature { get; set; }
+            public string Nomenclature { get; set; }
             public decimal? TaskQuantity { get; set; }
             public string MadeQuantity { get; set; }
             public string[] Format { get; set; }
@@ -122,9 +122,9 @@ namespace Gamma.ViewModels
                     continue;
                 }
                 var cutting = cuttingList[0];
-                tempCollection[i].Nomenclature = String.Format("{0} {1} {2} {3} {4} {5}", 
+                tempCollection[i].Nomenclature = String.Format("{0} \r\n{1} {2} {3} {4}", 
                     tempCollection[i].Nomenclature, cutting.CoreDiameter, cutting.LayerNumber,  
-                    cutting.Color, cutting.Diameter, cutting.Destination);
+                    cutting.Color, cutting.Destination);
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {
                     tempCollection[i].Format[k] = cuttingList[k].FormatNumeric.ToString();

@@ -151,14 +151,16 @@ namespace Gamma.ViewModels
                             NomenclatureName = pinfo.NomenclatureName,
                             ProductKind = (ProductKinds)pinfo.ProductKindID,
                             Quantity = (int)pinfo.Quantity,
-                            ShiftID = pinfo.ShiftID
+                            ShiftID = pinfo.ShiftID,
+                            Place = pinfo.Place,
+                            State = pinfo.State
                         }
                     ).OrderByDescending(p => p.Date)
                 );
             }
             else
             {
-                Guid charID = SelectedCharacteristic == null ? new Guid() : SelectedCharacteristic.CharacteristicID;
+                Guid charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
                 var selectedPlaces = new List<string>();
                 if (SelectedPlaces != null)
                     selectedPlaces = SelectedPlaces.Cast<string>().ToList();
@@ -168,10 +170,10 @@ namespace Gamma.ViewModels
                 where
                 (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
                 (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
-                (NomenclatureID == null ? true : pinfo.C1CNomenclatureID == NomenclatureID) &&
-                (charID == new Guid() ? true : pinfo.C1CCharacteristicID == charID) &&
+                (NomenclatureID == null || pinfo.C1CNomenclatureID == NomenclatureID) &&
+                (charId == new Guid() || pinfo.C1CCharacteristicID == charId) &&
                 (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count - 1) &&
-                ((DateBegin == null ? true : pinfo.Date >= DateBegin) && (DateEnd == null ? true : pinfo.Date <= DateEnd)) &&
+                ((DateBegin == null || pinfo.Date >= DateBegin) && (DateEnd == null || pinfo.Date <= DateEnd)) &&
                 ((ButtonPanelVisible && !pinfo.IsWrittenOff) || !ButtonPanelVisible)
                 &&
                 (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
@@ -188,7 +190,8 @@ namespace Gamma.ViewModels
                     ProductKind = (ProductKinds)pinfo.ProductKindID,
                     Quantity = (int)pinfo.Quantity,
                     ShiftID = pinfo.ShiftID,
-                    State = pinfo.State
+                    State = pinfo.State,
+                    Place = pinfo.Place
                 }
                 );
             }
@@ -291,7 +294,7 @@ namespace Gamma.ViewModels
             switch (SelectedProduct.ProductKind)
             {
                 case (ProductKinds.ProductSpool):
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.DocID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
                     break;
                 case (ProductKinds.ProductGroupPack):
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.DocID);

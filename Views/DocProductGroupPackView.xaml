@@ -19,7 +19,7 @@
             <dxlc:LayoutGroup Orientation="Horizontal" Height="40">
                 <Button Content="Вес нетто" Command="{Binding GetWeightCommand}" Width="90" Visibility="Collapsed"/>
                 <dxlc:LayoutItem Label="Вес нетто" LabelPosition="Top" Width="150">
-                    <dxe:PopupCalcEdit EditValue="{Binding Weight}" EditValueType="{x:Type sys:Int32}"/>
+                    <dxe:PopupCalcEdit EditValue="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" Precision="2" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Диаметр" LabelPosition="Top" Width="150" Margin="10,0,5,0">
                     <dxe:PopupCalcEdit EditValue="{Binding Diameter}" EditValueType="{x:Type sys:Int32}" IsReadOnly="True"/>
@@ -28,7 +28,7 @@
             <dxlc:LayoutGroup Orientation="Horizontal" Height="40">
                 <Button Content="Вес брутто" Command="{Binding GetGrossWeightCommand}" Width="90" Visibility="Collapsed"/>
                 <dxlc:LayoutItem Label="Вес брутто" LabelPosition="Top" Width="150">
-                    <dxe:PopupCalcEdit EditValue="{Binding GrossWeight}" EditValueType="{x:Type sys:Int32}"/>
+                    <dxe:PopupCalcEdit EditValue="{Binding GrossWeight, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Вес гильзы" LabelPosition="Top" Width="150" Margin="10,0,0,0">
                     <dxe:PopupCalcEdit EditValue="{Binding CoreWeight}" Precision="0" IsReadOnly="True"/>

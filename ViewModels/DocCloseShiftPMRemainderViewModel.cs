@@ -73,10 +73,10 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
         }
-        public override void SaveToModel(Guid ItemID)
+        public override void SaveToModel(Guid itemId)
         {
             base.SaveToModel();
-            var doc = DB.GammaBase.Docs.Where(d => d.DocID == ItemID).First();
+            var doc = DB.GammaBase.Docs.Where(d => d.DocID == itemId).First();
             if (DocCloseShiftRemainder == null && Quantity > 0)
             {
                 var productID = SQLGuidUtil.NewSequentialId();
@@ -119,7 +119,7 @@ namespace Gamma.ViewModels
                 DocCloseShiftRemainder = new DocCloseShiftRemainders()
                 {
                     DocCloseShiftRemainderID = SQLGuidUtil.NewSequentialId(),
-                    DocID = ItemID,
+                    DocID = itemId,
                     ProductID = productID,
                     Quantity = Quantity,
                     IsSourceProduct = false

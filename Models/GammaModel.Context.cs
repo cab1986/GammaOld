@@ -77,7 +77,6 @@ namespace Gamma.Models
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SourceSpools> SourceSpools { get; set; }
         public virtual DbSet<SpoolInstallLog> SpoolInstallLog { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Templates> Templates { get; set; }
         public virtual DbSet<UserPrintNames> UserPrintNames { get; set; }
         public virtual DbSet<Users> Users { get; set; }
@@ -352,15 +351,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result>("GetProductionTasks", batchKindIDParameter);
         }
     
-        public virtual ObjectResult<GetProductRelations_Result> GetProductRelations(Nullable<System.Guid> docID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductRelations_Result>("GetProductRelations", docIDParameter);
-        }
-    
         public virtual ObjectResult<GetSpoolRejectionReasons_Result> GetSpoolRejectionReasons()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpoolRejectionReasons_Result>("GetSpoolRejectionReasons");
@@ -528,6 +518,45 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetGroupPackSpools_Result1>("GetGroupPackSpools", docIDParameter);
+        }
+    
+        public virtual ObjectResult<CreateUnloadSpools_Result> CreateUnloadSpools(Nullable<System.Guid> docID, Nullable<System.Guid> productionTaskID, Nullable<int> diameter, Nullable<int> breakNumber)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            var diameterParameter = diameter.HasValue ?
+                new ObjectParameter("Diameter", diameter) :
+                new ObjectParameter("Diameter", typeof(int));
+    
+            var breakNumberParameter = breakNumber.HasValue ?
+                new ObjectParameter("BreakNumber", breakNumber) :
+                new ObjectParameter("BreakNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CreateUnloadSpools_Result>("CreateUnloadSpools", docIDParameter, productionTaskIDParameter, diameterParameter, breakNumberParameter);
+        }
+    
+        public virtual ObjectResult<DocRelations_Result> DocRelations(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DocRelations_Result>("DocRelations", docIDParameter);
+        }
+    
+        public virtual ObjectResult<ProductRelations_Result> ProductRelations(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ProductRelations_Result>("ProductRelations", productIDParameter);
         }
     }
 }

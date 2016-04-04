@@ -28,7 +28,7 @@ namespace Gamma.ViewModels
         }
         public DocProductGroupPackViewModel(Guid docID) : this() 
         {
-            var doc = DB.GammaBase.Docs.Include(d => d.DocProducts).Where(d => d.DocID == docID).First();
+            var doc = DB.GammaBase.Docs.Include(d => d.DocProducts).First(d => d.DocID == docID);
             IsConfirmed = doc.IsConfirmed;
             IsNewGroupPack = false;
             if (doc.DocProducts.Count > 0)
@@ -39,12 +39,9 @@ namespace Gamma.ViewModels
                 GrossWeight = Convert.ToInt32(productGroupPack.GrossWeight);
             }
             var groupPackSpools = DB.GammaBase.GetGroupPackSpools(docID).ToList();
-            if (groupPackSpools.Count() > 0)
-            {
-                BaseCoreWeight = DB.GetSpoolCoreWeight(groupPackSpools[0].ProductID);
-            }
             if (groupPackSpools.Count > 0)
             {
+                BaseCoreWeight = DB.GetSpoolCoreWeight(groupPackSpools[0].ProductID);
                 PlaceProductionID = groupPackSpools[0].PlaceID;
                 foreach (var groupPackSpool in groupPackSpools)
                 {
@@ -259,18 +256,18 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Spools");
             }
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemId)
         {
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return;
             var doc = DB.GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal)
-                .Where(d => d.DocID == itemID).Select(d => d).First();
+                .Where(d => d.DocID == itemId).Select(d => d).First();
             if (doc.DocProduction == null)
                 doc.DocProduction = new DocProduction()
                 {
                     DocID = doc.DocID,
                     InPlaceID = doc.PlaceID
                 };
-            var product = DB.GammaBase.Products.Include(p => p.ProductGroupPacks).Where(p => p.DocProducts.FirstOrDefault().DocID == itemID).FirstOrDefault();
+            var product = DB.GammaBase.Products.Include(p => p.ProductGroupPacks).Where(p => p.DocProducts.FirstOrDefault().DocID == itemId).FirstOrDefault();
             if (product == null)
             {
                 var productID = SQLGuidUtil.NewSequentialId();
@@ -353,7 +350,7 @@ namespace Gamma.ViewModels
         private void OpenSpool()
         {
             if (SelectedSpool == null) return;
-            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.DocID);  
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID);  
         }
         public override bool IsValid
         {

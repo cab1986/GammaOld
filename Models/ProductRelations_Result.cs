@@ -10,14 +10,14 @@
 namespace Gamma.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class sysdiagrams
+    public partial class ProductRelations_Result
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public string RelationKind { get; set; }
+        public string ProductKind { get; set; }
+        public string Number { get; set; }
+        public System.DateTime Date { get; set; }
+        public System.Guid DocID { get; set; }
+        public System.Guid ProductID { get; set; }
     }
 }

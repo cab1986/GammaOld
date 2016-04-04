@@ -8,6 +8,7 @@ using Gamma.Interfaces;
 using Gamma.Attributes;
 using Gamma.Common;
 using System.Windows;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
@@ -70,36 +71,66 @@ namespace Gamma.ViewModels
                 DB.GammaBase.Entry<Docs>(Doc).Reload();
                 Number = Doc.Number;
             }
-            
             // Создаем дочернюю viewmodel в зависимости от типа изделия
             switch (msg.DocProductKind)
             {
                 case DocProductKinds.DocProductSpool:
                     Title = "Тамбур";
                     if (!msg.IsNewProduct) // Если не новый продукт, то находим Doc, DocProduction, 
-                                            //Product и обновляем в кэше с помощью Reload()
+                        //Product и обновляем в кэше с помощью Reload()
                     {
-                        Doc = DB.GammaBase.Docs.FirstOrDefault(d => d.DocID == msg.ID);
-                        DB.GammaBase.Entry<Docs>(Doc).Reload();
-                        DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
-                        DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
-                        var product = DB.GammaBase.Products.Where(p => p.DocProducts.Select(d => d.DocID).Contains(Doc.DocID)).FirstOrDefault();
+                        Doc =
+                            DB.GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
+                                    d.DocTypeID == (byte) DocTypes.DocProduction);
+//                        DB.GammaBase.Entry<Docs>(Doc).Reload();
+                        DocProduction = Doc.DocProduction;
+//                        DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
+                        var product =
+                            DB.GammaBase.Products
+                                .First(p => p.ProductID == msg.ID);
                         DB.GammaBase.Entry<Products>(product).Reload();
                         Number = product.Number;
                         Title = String.Format("{0} № {1}", Title, Number);
+                        CurrentViewModel = new DocProductSpoolViewModel(product.ProductID, false);
+                        ProductRelations = new ObservableCollection<ProductRelation>
+                            (
+                                from prel in DB.GammaBase.ProductRelations(product.ProductID)
+                                select new ProductRelation
+                                {
+                                    Date = prel.Date,
+                                    DocID = prel.DocID,
+                                    Number = prel.Number,
+                                    ProductID = prel.ProductID,
+                                    ProductKind = prel.ProductKind,
+                                    RelationKind = prel.RelationKind
+                                }
+                            );
                     }
-                    CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID, IsNewDoc);
+                    else CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID, true);
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";
                     if (!msg.IsNewProduct)
                     {
-                        Doc = DB.GammaBase.Docs.Find(msg.ID);
-                        DB.GammaBase.Entry<Docs>(Doc).Reload();
-                        DocProduction = DB.GammaBase.DocProduction.Find(msg.ID);
-                        DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
+                        Doc = DB.GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
+                        //DB.GammaBase.Entry<Docs>(Doc).Reload();
+                        DocProduction = Doc.DocProduction;
+//                        DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
                         Number = Doc.Number;
                         Title = String.Format("{0} № {1}", Title, Number);
+                        ProductRelations = new ObservableCollection<ProductRelation>
+                            (
+                                from prel in DB.GammaBase.DocRelations(Doc.DocID)
+                                select new ProductRelation
+                                {
+                                    Date = prel.Date,
+                                    DocID = prel.DocID,
+                                    Number = prel.Number,
+                                    ProductID = prel.ProductID,
+                                    ProductKind = prel.ProductKind,
+                                    RelationKind = prel.RelationKind
+                                }
+                            );
                     }
                     CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
                     break;
@@ -107,11 +138,24 @@ namespace Gamma.ViewModels
                     Title = "Групповая упаковка";
                     if (!msg.IsNewProduct)
                     {
-                        Doc = DB.GammaBase.Docs.FirstOrDefault(d => d.DocID == msg.ID);
-                        DocProduction = DB.GammaBase.DocProduction.Find(Doc.DocID);
+                        Doc = DB.GammaBase.Docs.Include(d => d.DocProduction).FirstOrDefault(d => d.DocID == msg.ID);
+                        DocProduction = Doc.DocProduction;
                         Number = Doc.Number;
                         Title = String.Format("{0} № {1}", Title, Number);
                         CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);
+                        ProductRelations = new ObservableCollection<ProductRelation>
+                            (
+                                from prel in DB.GammaBase.DocRelations(Doc.DocID)
+                                select new ProductRelation
+                                {
+                                    Date = prel.Date,
+                                    DocID = prel.DocID,
+                                    Number = prel.Number,
+                                    ProductID = prel.ProductID,
+                                    ProductKind = prel.ProductKind,
+                                    RelationKind = prel.RelationKind
+                                }
+                            );
                     }
                     else CurrentViewModel = new DocProductGroupPackViewModel();
                     break;
@@ -125,19 +169,6 @@ namespace Gamma.ViewModels
             if (productionTaskBatch != null) ProductionTaskBatchID = productionTaskBatch.ProductionTaskBatchID;
             DocDate = Doc.Date;
             IsConfirmed = Doc.IsConfirmed;
-            ProductRelations = new ObservableCollection<ProductRelation>
-                (
-                    from prel in DB.GammaBase.GetProductRelations(Doc.DocID)
-                    select new ProductRelation
-                    {
-                        Date = prel.Date,
-                        DocID = prel.DocID,
-                        Number = prel.Number,
-                        ProductID = prel.ProductID,
-                        ProductKind = prel.ProductKind,
-                        RelationKind = prel.RelationKind
-                    }
-                );
             Bars = (CurrentViewModel as IBarImplemented).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);

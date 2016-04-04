@@ -27,7 +27,7 @@ namespace Gamma.ViewModels
 
         }
 
-        public virtual void SaveToModel(Guid itemID)
+        public virtual void SaveToModel(Guid itemId)
         {
             UIServices.SetBusyState();
         }

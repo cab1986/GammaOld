@@ -51,7 +51,6 @@
     <EntitySet Name="Roles" EntityType="GammaModel.Roles" />
     <EntitySet Name="SourceSpools" EntityType="GammaModel.SourceSpools" />
     <EntitySet Name="SpoolInstallLog" EntityType="GammaModel.SpoolInstallLog" />
-    <EntitySet Name="sysdiagrams" EntityType="GammaModel.sysdiagrams" />
     <EntitySet Name="Templates" EntityType="GammaModel.Templates" />
     <EntitySet Name="UserPrintNames" EntityType="GammaModel.UserPrintNames" />
     <EntitySet Name="Users" EntityType="GammaModel.Users" />
@@ -393,9 +392,6 @@
     <FunctionImport Name="GetProductionTasks" ReturnType="Collection(GammaModel.GetProductionTasks_Result)">
       <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
     </FunctionImport>
-    <FunctionImport Name="GetProductRelations" ReturnType="Collection(GammaModel.GetProductRelations_Result)">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-    </FunctionImport>
     <FunctionImport Name="GetSpoolRejectionReasons" ReturnType="Collection(GammaModel.GetSpoolRejectionReasons_Result)" />
     <FunctionImport Name="UserPermit" ReturnType="Collection(Byte)">
       <Parameter Name="TableName" Mode="In" Type="String" />
@@ -545,6 +541,18 @@
       <Parameter Name="DocID" Mode="In" Type="Guid" />
     </FunctionImport>
     <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
+    <FunctionImport Name="CreateUnloadSpools" ReturnType="Collection(GammaModel.CreateUnloadSpools_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+      <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+      <Parameter Name="Diameter" Mode="In" Type="Int32" />
+      <Parameter Name="BreakNumber" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="DocRelations" ReturnType="Collection(GammaModel.DocRelations_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="ProductRelations" ReturnType="Collection(GammaModel.ProductRelations_Result)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="C1CCharacteristicProperties">
     <Key>
@@ -1181,16 +1189,6 @@
     <Property Name="Date" Type="DateTime" Precision="3" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_SpoolInstallLog_Places" FromRole="SpoolInstallLog" ToRole="Places" />
     <NavigationProperty Name="Products" Relationship="GammaModel.FK_SpoolInstallLog_Products" FromRole="SpoolInstallLog" ToRole="Products" />
-  </EntityType>
-  <EntityType Name="sysdiagrams">
-    <Key>
-      <PropertyRef Name="diagram_id" />
-    </Key>
-    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-    <Property Name="principal_id" Type="Int32" Nullable="false" />
-    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="version" Type="Int32" />
-    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
   </EntityType>
   <EntityType Name="Templates">
     <Key>
@@ -2554,4 +2552,26 @@
     <Property Name="IsWrittenOff" Type="Boolean" Nullable="false" />
     <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
+  <ComplexType Name="CreateUnloadSpools_Result">
+    <Property Type="Guid" Name="DocID" Nullable="true" />
+    <Property Type="Guid" Name="ProductID" Nullable="true" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+  </ComplexType>
+  <ComplexType Name="DocRelations_Result">
+    <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="15" />
+    <Property Type="String" Name="ProductKind" Nullable="false" MaxLength="6" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+    <Property Type="Guid" Name="DocID" Nullable="false" />
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ProductRelations_Result">
+    <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="18" />
+    <Property Type="String" Name="ProductKind" Nullable="true" MaxLength="18" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+    <Property Type="Guid" Name="DocID" Nullable="false" />
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+  </ComplexType>
 </Schema>

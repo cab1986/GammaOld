@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <GammaSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ScannerComPort>
-    <ComPortNumber>COM6</ComPortNumber>
+    <ComPortNumber />
     <BaudRate>9600</BaudRate>
     <Parity>None</Parity>
     <StopBits>One</StopBits>
@@ -18,6 +18,6 @@
   </ScalesComPort>
   <HostName>gamma</HostName>
   <DbName>gammanew</DbName>
-  <User>ПЛ23</User>
-  <UseScanner>true</UseScanner>
+  <User>ПРС21</User>
+  <UseScanner>false</UseScanner>
 </GammaSettings>
