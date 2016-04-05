@@ -111,17 +111,8 @@ namespace Gamma.ViewModels
 
         private string number;
         public string NewProductText { get; set; }
-        private bool IsActual
-        {
-            get
-            {
-                return _isActual;
-            }
-            set
-            {
-                _isActual = value;
-            }
-        }
+        private bool IsActual { get; set; } = true;
+
         public string Number
         {
             get { return number; }
@@ -202,16 +193,9 @@ namespace Gamma.ViewModels
                 }
             }
         }
-        private Visibility _processModelVisible = Visibility.Hidden;
-        public Visibility ProcessModelVisible
-        {
-            get { return _processModelVisible; }
-            private set
-            {
-                _processModelVisible = value;
-            }
 
-        }
+        public Visibility ProcessModelVisible { get; private set; } = Visibility.Hidden;
+
         private Guid _productionTaskBatchID;
         public Guid ProductionTaskBatchID
         {
@@ -272,11 +256,12 @@ namespace Gamma.ViewModels
             productionTaskBatch.Date = Date;
             productionTaskBatch.Comment = Comment;
             productionTaskBatch.PartyControl = PartyControl;
+            productionTaskBatch.BatchKindID = (short)BatchKind;
             DB.GammaBase.SaveChanges();
-            if (CurrentView != null)
-                CurrentView.SaveToModel(ProductionTaskBatchID);
+            CurrentView?.SaveToModel(ProductionTaskBatchID);
         }
 
+/*
         private void SetProductionTaskProperties(ProductionTaskBatches productionTaskBatch)
         {
             productionTaskBatch.Date = Date;
@@ -285,6 +270,7 @@ namespace Gamma.ViewModels
             productionTaskBatch.BatchKindID = (short)BatchKind;
             productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID;
         }
+*/
         //Создание нового продукта
         private void CreateNewProduct()
         {
@@ -337,7 +323,7 @@ namespace Gamma.ViewModels
                                 OrderByDescending(d => d.Date).Take(1).FirstOrDefault();
                              * */
                             //если предыдущий тамбур этой смены и не подтвержден, то открываем для редактирования
-                            if (docProduction != null && docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
+                            if (docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                             {
                                 MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
                                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, docProduction.DocID);
@@ -371,7 +357,7 @@ namespace Gamma.ViewModels
             }
             MessageManager.CreateNewProduct(docProductKind, productionTaskID);
         }
-        private bool _isActual = true;
+
 //        private ObservableCollection<Place> _places = DB.GetPlaces(PlaceGroups.PM);
 //        private int _placeID;
 /*        [Required(ErrorMessage="Необходимо выбрать передел")]
@@ -411,7 +397,6 @@ namespace Gamma.ViewModels
         }
         private void RefreshProduction()
         {
-            if (ProductionTaskBatchID == null) return;
             ProductionTaskProducts = new ObservableCollection<ProductInfo>(from taskProducts in 
                                                                                DB.GammaBase.GetProductionTaskBatchProducts(ProductionTaskBatchID)
                                                                            select new ProductInfo { 

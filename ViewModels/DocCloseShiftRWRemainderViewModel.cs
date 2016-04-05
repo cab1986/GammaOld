@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Gamma.Models;
-using  System.Data.Entity;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using GalaSoft.MvvmLight.Command;
+using Gamma.Interfaces;
+using Gamma.Attributes;
 
 namespace Gamma.ViewModels
 {
-    public class DocCloseShiftRWRemainderViewModel : SaveImplementedViewModel
+    public class DocCloseShiftRWRemainderViewModel : SaveImplementedViewModel, ICheckedAccess
     {
         public DocCloseShiftRWRemainderViewModel(int placeId) // Конструктор для нового закрытия смены
         {
+            ShowProductCommand = new RelayCommand<int>(ShowProduct);
             var sourceSpools = DB.GammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeId);
             if (sourceSpools == null) return;
             SpoolRemainders[0].ProductId = sourceSpools.Unwinder1Spool;
@@ -20,10 +25,14 @@ namespace Gamma.ViewModels
             SpoolRemainders[1].Weight = SpoolRemainders[1].MaxWeight;
             SpoolRemainders[2].Weight = SpoolRemainders[2].MaxWeight;
         }
-        // Конструктор для существующего закрытия смены
+        //<Summary>
+        //Конструктор для существующего закрытия смены
+        //</Summary>
         public DocCloseShiftRWRemainderViewModel(Guid docId)
         {
-            var remainders = DB.GammaBase.DocCloseShiftRemainders.Where(d => d.DocID == docId).ToList();
+            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docId);
+            IsConfirmed = doc.IsConfirmed;
+            var remainders = doc.DocCloseShiftRemainders.ToList();
             for (int i = 0; i < remainders.Count; i++)
             {
                 SpoolRemainders[i].ProductId = remainders[i].ProductID;
@@ -54,7 +63,29 @@ namespace Gamma.ViewModels
             DB.GammaBase.SaveChanges();
         }
 
-        public SpoolRemainder[] SpoolRemainders { get; set; } = new SpoolRemainder[3];
+        public SpoolRemainder[] SpoolRemainders { get; set; } = {new SpoolRemainder(), new SpoolRemainder(), new SpoolRemainder()};
+
+        public RelayCommand<int> ShowProductCommand { get; set; }
+
+
+        private void ShowProduct(int i)
+        {
+            switch (i)
+            {
+                case 1:
+                    if (SpoolRemainders[0].ProductId == null) return;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[0].ProductId);
+                    break;
+                case 2:
+                    if (SpoolRemainders[1].ProductId == null) return;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[1].ProductId);
+                    break;
+                case 3:
+                    if (SpoolRemainders[2].ProductId == null) return;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[2].ProductId);
+                    break;
+            }
+        }
 
         public class SpoolRemainder
         {
@@ -71,6 +102,7 @@ namespace Gamma.ViewModels
                 }
             }
             public string Nomenclature { get; set; }
+            [UIAuth(UIAuthLevel.ReadOnly)]
             public int Weight { get; set; }
             public int MaxWeight { get; set; }
             private string GetProductSpoolNomenclature(Guid productId)
@@ -78,7 +110,7 @@ namespace Gamma.ViewModels
                 return
                     DB.GammaBase.ProductSpools.Where(p => p.ProductID == productId)
                         .Select(p => "№ " + p.Products.Number + " " + p.C1CNomenclature.Name + " " +
-                                     p.C1CCharacteristics.Name + " Масса: " + p.Weight.ToString() + " кг").First();
+                                     p.C1CCharacteristics.Name + " Масса: " + SqlFunctions.StringConvert((double)p.Weight) + " кг").First();
             }
 
             private int GetRemainderMaxWeight(Guid productId)
@@ -86,5 +118,8 @@ namespace Gamma.ViewModels
                 return DB.GammaBase.ProductSpools.First(ps => ps.ProductID == productId).Weight;
             }
         }
+
+        private bool IsConfirmed { get; set; }
+        public bool IsReadOnly => !((DB.HaveWriteAccess("DocCloseShiftRemainders") || WorkSession.DBAdmin) && !IsConfirmed);
     }
 }

@@ -88,6 +88,7 @@ namespace Gamma.ViewModels
             public decimal? TaskQuantity { get; set; }
             public string MadeQuantity { get; set; }
             public string[] Format { get; set; }
+            public int TotalFormat { get; set; }
             public string Place { get; set; }
             public DateTime? DateBegin { get; set; }
             public byte EnumColor { get; set; }
@@ -125,9 +126,11 @@ namespace Gamma.ViewModels
                 tempCollection[i].Nomenclature = String.Format("{0} \r\n{1} {2} {3} {4}", 
                     tempCollection[i].Nomenclature, cutting.CoreDiameter, cutting.LayerNumber,  
                     cutting.Color, cutting.Destination);
+                tempCollection[i].TotalFormat = 0;
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {
                     tempCollection[i].Format[k] = cuttingList[k].FormatNumeric.ToString();
+                    tempCollection[i].TotalFormat += cuttingList[k].FormatNumeric ?? 0;
                 }
                 ProductionTaskBatchesSGB.Add(tempCollection[i]);
             }

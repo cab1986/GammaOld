@@ -5,6 +5,7 @@ using Gamma.Interfaces;
 using Gamma.Models;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Messaging;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Gamma.ViewModels
 {
@@ -57,7 +58,7 @@ namespace Gamma.ViewModels
         }
         private void PrintReport(PrintReportMessage msg)
         {
-            if (msg.VMID != (CurrentViewModelGrid as IBarImplemented).VMID) return;
+            if (msg.VMID != (CurrentViewModelGrid as IBarImplemented)?.VMID) return;
             if (!IsValid) return;
             if (CanSaveExecute())
                 SaveToModel();
@@ -88,6 +89,7 @@ namespace Gamma.ViewModels
         public RelayCommand ClearGridCommand { get; set; }
         public override void SaveToModel()
         {
+            if (!CanSaveExecute()) return;
             base.SaveToModel();
             if (IsNewDoc)
             {
@@ -107,10 +109,8 @@ namespace Gamma.ViewModels
             Doc.IsConfirmed = IsConfirmed;
             DB.GammaBase.SaveChanges();
             IsNewDoc = false;
-            if (CurrentViewModelGrid != null)
-                CurrentViewModelGrid.SaveToModel(Doc.DocID);
-            if (CurrentViewModelRemainder != null)
-                CurrentViewModelRemainder.SaveToModel(Doc.DocID);
+            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
+            CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
         }
         private ObservableCollection<BarViewModel> _bars;
         public ObservableCollection<BarViewModel> Bars

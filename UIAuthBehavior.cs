@@ -75,7 +75,18 @@ namespace Gamma
                     }
                     if (Binding != null)
                     {
-                        PropertyInfo bounded = properties.Where(x => x.Name == Binding.Path.Path).FirstOrDefault();
+                        PropertyInfo bounded;
+                        var path = Binding.Path.Path;
+                        if (path.Contains("[") && path.Contains("]"))
+                        {
+                            var tempPath = path.Substring(0, path.IndexOf("["));
+                            var arrayProperty =
+                                properties.FirstOrDefault(p => p.PropertyType.IsArray && p.Name.StartsWith(tempPath));
+                            if (arrayProperty == null) return;
+                            tempPath = path.Substring(path.IndexOf(".")+1, path.Length - path.IndexOf(".")-1);
+                            bounded = arrayProperty.PropertyType.GetElementType().GetProperty(tempPath);
+                        }
+                        else bounded = properties.FirstOrDefault(x => x.Name == path);
                         if (bounded != null)
                         {
                             foreach (var attr in bounded.GetCustomAttributes(true))

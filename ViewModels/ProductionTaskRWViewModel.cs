@@ -57,8 +57,7 @@ namespace Gamma.ViewModels
                 int i = 0;
                 foreach (var rwcutting in cuttings)
                 {
-                    CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.
-                        Where(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID).FirstOrDefault().FormatNumeric ?? 0;
+                    CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID).FormatNumeric ?? 0;
                     i++;
                 }
             }
@@ -87,25 +86,16 @@ namespace Gamma.ViewModels
             CuttingsEnabled = false;
             FilterCharacteristics(Filters.All);
         }
-        private Cutting _mainCutting;
-        public Cutting MainCutting
-        {
-            get
-            {
-                return _mainCutting;
-            }
-            set
-            {
-            	_mainCutting = value;
-            }
-        }
+
+        public Cutting MainCutting { get; set; }
+
         private Properties MandatoryProperties { get; set; }
         private ProductionTasks ProductionTask { get; set; }
         private Guid ProductionTaskBatchID { get; set; }
         public override void SaveToModel(Guid itemId) // itemID = ProductionTaskBatchID
         {
             base.SaveToModel(itemId);
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemId).FirstOrDefault();
+            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemId);
             if (productionTaskBatch == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -125,8 +115,8 @@ namespace Gamma.ViewModels
             else
             {
                 ProductionTaskID = productionTaskTemp.ProductionTaskID;
-                ProductionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskRWCutting")
-                    .Where(p => p.ProductionTaskID == ProductionTaskID).First();
+                ProductionTask = DB.GammaBase.ProductionTasks
+                    .Include("ProductionTaskRWCutting").First(p => p.ProductionTaskID == ProductionTaskID);
             }
             ProductionTask.C1CNomenclatureID = (Guid)NomenclatureID;
             ProductionTask.Quantity = TaskQuantity;
@@ -138,16 +128,40 @@ namespace Gamma.ViewModels
             {
                 var format = CuttingFormats[0].Format[i];
             	if (format == null) continue;
-                var characteristicID = (from cp in CharacteristicProperties
+                var characteristicIds = (from cp in CharacteristicProperties
                                        where cp.Color == Color && cp.CoreDiameter == CoreDiameter
-                                           && cp.Destination == Destination && cp.Diameter == Diameter && cp.Format == format &&
+                                           && cp.Format == format &&
                                            cp.LayerNumber == LayerNumber
-                                       select cp.CharacteristicID).FirstOrDefault();
-                if (characteristicID != null)
+                                       select cp.CharacteristicID).ToList();
+                if (characteristicIds.Count > 1)
+                {
+                    characteristicIds =
+                        CharacteristicProperties.Where(
+                            c => characteristicIds.Contains(c.CharacteristicID) && c.Destination == Destination)
+                            .Select(c => c.CharacteristicID)
+                            .ToList();
+                    if (characteristicIds.Count > 1)
+                    {
+                        characteristicIds =
+                        CharacteristicProperties.Where(
+                            c => characteristicIds.Contains(c.CharacteristicID) && c.Diameter == Diameter)
+                            .Select(c => c.CharacteristicID)
+                            .ToList();
+                    }
+                }
+                Guid? characteristicId;
+                if (characteristicIds.Count == 1) characteristicId = characteristicIds[0];
+                else
+                {
+                    MessageBox.Show("Некорректные параметры задания ПРС", "Параметры ПРС", MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return;
+                }
+                if (characteristicId != null)
                 {
                     prodTaskCuttings.Add(new ProductionTaskRWCutting()
                     {
-                        C1CCharacteristicID = (Guid)characteristicID,
+                        C1CCharacteristicID = (Guid)characteristicId,
                         CutIndex = (short)i,
                         ProductionTaskID = ProductionTaskID,
                         ProductionTaskRWCuttingID = SQLGuidUtil.NewSequentialId()
@@ -193,27 +207,65 @@ namespace Gamma.ViewModels
                 else CuttingsEnabled = false;
             }
         }
+
         private void FilterCharacteristics(Filters filter)
         {
             if (CharacteristicProperties == null) return;
-            var filteredCharacteristics = CharacteristicProperties.Where(c =>
-                    (Color == null || c.Color == null || c.Color == Color) &&
-                    (LayerNumber == null || c.LayerNumber == null || c.LayerNumber == LayerNumber) &&
-                    (CoreDiameter == null || c.CoreDiameter == null || c.CoreDiameter == CoreDiameter) &&
-                    (Destination == null || c.Destination == null || c.Destination == Destination) &&
-                    (Diameter == null || c.Diameter == null || c.Diameter == Diameter)
-                ).Distinct();
+            var filteredProperties = CharacteristicProperties.Where(c =>
+                (Color == null || c.Color == null || c.Color == Color) &&
+                (LayerNumber == null || c.LayerNumber == null || c.LayerNumber == LayerNumber) &&
+                (CoreDiameter == null || c.CoreDiameter == null || c.CoreDiameter == CoreDiameter)
+//                    &&
+//                    (Destination == null || c.Destination == null || c.Destination == Destination) &&
+//                    (Diameter == null || c.Diameter == null || c.Diameter == Diameter)
+                ).GroupBy(fc => new
+                {
+                    CoreDiameter = fc.CoreDiameter,
+                    LayerNumber = fc.LayerNumber,
+                    Color = fc.Color,
+                    Diameter = fc.Diameter,
+                    Format = fc.Format,
+                    Destination = fc.Destination
+                }, (g, r) =>
+                    new
+                    {
+                        CoreDiameter = g.CoreDiameter,
+                        LayerNumber = g.LayerNumber,
+                        Color = g.Color,
+                        Diameter = g.Diameter,
+                        Format = g.Format,
+                        Destination = g.Destination,
+                        Count = r.Count()
+                    }).Where(c => c.Count == 1 || c.Count > 1 && c.Destination == Destination)
+                    .GroupBy(fc => new
+                    {
+                        CoreDiameter = fc.CoreDiameter,
+                        LayerNumber = fc.LayerNumber,
+                        Color = fc.Color,
+                        Diameter = fc.Diameter,
+                        Format = fc.Format,
+                        Destination = fc.Destination
+                    }, (g,r) => 
+                    new {
+                        CoreDiameter = g.CoreDiameter,
+                        LayerNumber = g.LayerNumber,
+                        Color = g.Color,
+                        Diameter = g.Diameter,
+                        Format = g.Format,
+                        Destination = g.Destination,
+                        Count = r.Count()
+                    }).Where(c => c.Count == 1);
             if (filter != Filters.Color)
-                Colors = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Color).Distinct());
+                Colors = new ObservableCollection<string>(filteredProperties.Select(c => c.Color).Distinct());
             if (filter != Filters.LayerNumber)
-                LayerNumbers = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.LayerNumber).Distinct());
+                LayerNumbers = new ObservableCollection<string>(filteredProperties.Select(c => c.LayerNumber).Distinct());
             if (filter != Filters.CoreDiameter)
-                CoreDiameters = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.CoreDiameter).Distinct());
+                CoreDiameters = new ObservableCollection<string>(filteredProperties.Select(c => c.CoreDiameter).Distinct());
             if (filter != Filters.Destination)
-                Destinations = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Destination).Distinct());
+                Destinations = new ObservableCollection<string>(filteredProperties.Select(c => c.Destination).Distinct());
             if (filter != Filters.Diameter)
-                Diameters = new ObservableCollection<string>(filteredCharacteristics.Select(c => c.Diameter).Distinct());
-            Formats = new ObservableCollection<int>(filteredCharacteristics.Select(c => c.Format).OrderBy(f => f).Distinct());
+                Diameters = new ObservableCollection<string>(filteredProperties.Select(c => c.Diameter).Distinct());
+            Formats = new ObservableCollection<int>(filteredProperties.Select(c => c.Format).OrderBy(f => f).Distinct());
 /*            var charsWithoutFormat = (from fc in filteredCharacteristics
                                       select new
                                       {

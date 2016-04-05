@@ -6,11 +6,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" 
+    xmlns:g="clr-namespace:Gamma"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
     x:Class="Gamma.Views.DocCloseShiftView" 
     Title="{Binding Title}" 
-    Height="553.1" 
-    Width="800">
+    Height="{g:SettingBinding DocCloseShiftHeight}"
+    Width="{g:SettingBinding DocCloseShiftWidth}"
+    Left="{g:SettingBinding DocCloseShiftLeft}"
+    Top="{g:SettingBinding DocCloseShiftTop}"
+    WindowState="{g:SettingBinding DocCloseShiftWState}">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMGridViewModel}">
             <v:DocCloseShiftPMGridView />
@@ -20,6 +24,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMRemainderViewModel}">
             <v:DocCloseShiftPMRemainderView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftRWRemainderViewModel}">
+            <v:DocCloseShiftRWRemainderView />
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>

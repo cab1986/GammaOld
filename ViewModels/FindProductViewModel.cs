@@ -139,7 +139,7 @@ namespace Gamma.ViewModels
                 (
                     (
                         from pinfo in DB.GammaBase.vProductsInfo
-                        where pinfo.BarCode == Barcode
+                        where pinfo.BarCode == Barcode && (!ButtonPanelVisible || (ButtonPanelVisible && !pinfo.IsWrittenOff))
                         select new ProductInfo
                         {
                             DocID = pinfo.DocID,

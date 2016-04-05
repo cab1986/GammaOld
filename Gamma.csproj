@@ -527,6 +527,9 @@
     <Compile Include="Views\DocCloseShiftPMRemainderView.xaml.cs">
       <DependentUpon>DocCloseShiftPMRemainderView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DocCloseShiftRWRemainderView.xaml.cs">
+      <DependentUpon>DocCloseShiftRWRemainderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocCloseShiftsView.xaml.cs">
       <DependentUpon>DocCloseShiftsView.xaml</DependentUpon>
     </Compile>
@@ -641,6 +644,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocCloseShiftPMRemainderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftRWRemainderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -771,6 +778,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

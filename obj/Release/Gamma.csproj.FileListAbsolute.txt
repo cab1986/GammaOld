@@ -227,3 +227,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Office.v15.1.Core.resources.d
 D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Office.v15.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Images.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Themes.DXStyle.v15.1.dll
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftRWRemainderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftRWRemainderView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.licenses

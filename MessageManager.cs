@@ -144,12 +144,12 @@ namespace Gamma
         {
             Messenger.Default.Send<OpenProductionTaskBatchMessage>(msg);
         }
-        public static void OpenDocProduct(DocProductKinds docProductKind, Guid docID)
+        public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
             Messenger.Default.Send<OpenDocProductMessage>(new OpenDocProductMessage()
                 {
                     DocProductKind = docProductKind,
-                    ID = docID,
+                    ID = id,
                     IsNewProduct = false
                 });
         }

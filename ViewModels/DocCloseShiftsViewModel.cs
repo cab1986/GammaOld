@@ -84,8 +84,8 @@ namespace Gamma.ViewModels
             from d in DB.GammaBase.Docs
             where d.DocTypeID == (byte)DocTypes.DocCloseShift &&
             (PlaceID == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceID == d.PlaceID) &&
-            (DateBegin == null ? true : d.Date >= DateBegin) &&
-            (DateEnd == null ? true : d.Date <= DateEnd)
+            (DateBegin == null || d.Date >= DateBegin) &&
+            (DateEnd == null || d.Date <= DateEnd)
             orderby d.Date descending
             select new DocCloseShift
             {
