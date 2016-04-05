@@ -3,7 +3,7 @@ using System.Linq;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using Gamma.Models;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System.Data.Entity;
 
 namespace Gamma.ViewModels
@@ -42,7 +42,7 @@ namespace Gamma.ViewModels
                 ShiftID = (byte)docCloseShift.ShiftID;
                 PlaceID = (byte)docCloseShift.PlaceID;
             }
-            ShowGroupPackCommand = new RelayCommand(() =>
+            ShowGroupPackCommand = new DelegateCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.DocID),
                 () => SelectedGroupPack != null);
         }
@@ -103,7 +103,7 @@ namespace Gamma.ViewModels
         private byte ShiftID { get; set; }
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         private DateTime CloseDate { get; set; }
-        public RelayCommand ShowGroupPackCommand { get; private set; }
+        public DelegateCommand ShowGroupPackCommand { get; private set; }
         public PaperBase SelectedGroupPack { get; set; }
         private ObservableCollection<PaperBase> _groupPacks;
         public ObservableCollection<PaperBase> GroupPacks

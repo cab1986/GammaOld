@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,7 +31,7 @@ namespace Gamma.ViewModels
                                             ParentFolderID = nf.ParentID
                                         })
                                     );
-            ChooseSelectedNomenclature = new RelayCommand(ChooseNomenclature);
+            ChooseSelectedNomenclature = new DelegateCommand(ChooseNomenclature);
         }
 
         private ReadOnlyObservableCollection<Nomenclature1CFolder> _nomenclature1CFolders;
@@ -123,7 +122,7 @@ namespace Gamma.ViewModels
         }));
         }
 
-        public RelayCommand ChooseSelectedNomenclature { get; private set; }
+        public DelegateCommand ChooseSelectedNomenclature { get; private set; }
         private void ChooseNomenclature()
         {
             UIServices.SetBusyState();

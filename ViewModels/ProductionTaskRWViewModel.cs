@@ -1,9 +1,8 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
 using Gamma.Models;
 using System.Linq;
 using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using Gamma.Attributes;
 using System.ComponentModel.DataAnnotations;
@@ -72,7 +71,7 @@ namespace Gamma.ViewModels
             CuttingFormats = new ObservableCollection<Cutting>();
             CuttingFormats.Add(new Cutting());
             MainCutting = CuttingFormats[0];
-            ClearFilterCommand = new RelayCommand(ClearFilter, () => !IsReadOnly);
+            ClearFilterCommand = new DelegateCommand(ClearFilter, () => !IsReadOnly);
         }
 
         private void ClearFilter()
@@ -667,7 +666,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("CuttingsEnabled");
             }
         }
-        public RelayCommand ClearFilterCommand { get; private set; }
+        public DelegateCommand ClearFilterCommand { get; private set; }
         private enum Filters { All, Color, Diameter, CoreDiameter, LayerNumber, Destination }
 
         public bool IsReadOnly

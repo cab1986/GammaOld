@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,8 +31,8 @@ namespace Gamma.ViewModels
                     Title = "Задания на БДМ";
                     break;
             }
-            FindProductionTaskBatchCommand = new RelayCommand(FindProductionTaskBatch);
-            OpenProductionTaskBatchCommand = new RelayCommand(() => MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage()
+            FindProductionTaskBatchCommand = new DelegateCommand(FindProductionTaskBatch);
+            OpenProductionTaskBatchCommand = new DelegateCommand(() => MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage()
                 {
                     ProductionTaskBatchID = SelectedProductionTaskBatch.ProductionTaskBatchID,
                     BatchKind = (BatchKinds)SelectedProductionTaskBatch.BatchKindID
@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
             );
         }
         private BatchKinds BatchKind { get; set; }
-        public RelayCommand FindProductionTaskBatchCommand { get; set; }
+        public DelegateCommand FindProductionTaskBatchCommand { get; set; }
         public string Number { get; set; }
         public DateTime? DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
@@ -82,6 +82,6 @@ namespace Gamma.ViewModels
         }
         public string Title { get; set; }
         public ProductionTaskBatch SelectedProductionTaskBatch { get; set; }
-        public RelayCommand OpenProductionTaskBatchCommand { get; private set; }
+        public DelegateCommand OpenProductionTaskBatchCommand { get; private set; }
     }
 }

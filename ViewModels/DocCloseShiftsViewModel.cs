@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,8 +50,8 @@ namespace Gamma.ViewModels
 
         private void Initialize()
         {
-            OpenDocCloseShiftCommand = new RelayCommand(OpenDocCloseShift, () => SelectedDocCloseShift != null);
-            FindDocCloseShiftsCommand = new RelayCommand(FindDocCloseShifts);
+            OpenDocCloseShiftCommand = new DelegateCommand(OpenDocCloseShift, () => SelectedDocCloseShift != null);
+            FindDocCloseShiftsCommand = new DelegateCommand(FindDocCloseShifts);
         }
 
         public List<Place> Places { get; set; }
@@ -70,12 +70,12 @@ namespace Gamma.ViewModels
             }
         }
         public DocCloseShift SelectedDocCloseShift { get; set; }
-        public RelayCommand OpenDocCloseShiftCommand { get; set; }
+        public DelegateCommand OpenDocCloseShiftCommand { get; set; }
         private void OpenDocCloseShift()
         {
             MessageManager.OpenDocCloseShift(SelectedDocCloseShift.DocCloseShiftID);
         }
-        public RelayCommand FindDocCloseShiftsCommand { get; private set; }
+        public DelegateCommand FindDocCloseShiftsCommand { get; private set; }
         private void FindDocCloseShifts()
         {
             var placeIDs = Places.Select(p => p.PlaceID).ToList();

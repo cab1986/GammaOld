@@ -1,94 +1,94 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using System;
+﻿using System;
+using DevExpress.Mvvm;
 
 namespace Gamma
 {
-    public class BaseReconnectedMessage : MessageBase { }
-    public class OpenFilterDateMessage : MessageBase { }
+    public class BaseReconnectedMessage { }
+    public class OpenFilterDateMessage { }
  
-    public class PrintReportMessage : MessageBase
+    public class PrintReportMessage
     {
         public Guid ReportID; // ID отчета
         public Guid? VMID; // ID ViewModel, которая должна обработать событие
     }
  
-    public class OpenMainMessage : MessageBase { }
-    public class OpenProductionTaskBatchMessage : MessageBase 
+    public class OpenMainMessage { }
+    public class OpenProductionTaskBatchMessage 
     {
         public BatchKinds BatchKind;
         public Guid? ProductionTaskBatchID;
     }
-    public class ProductChangedMessage : MessageBase
+    public class ProductChangedMessage
     {
         public Guid ProductID;
     }
 
-    public class OpenDocProductMessage : MessageBase
+    public class OpenDocProductMessage
     {
         public DocProductKinds DocProductKind;
         public Guid? ID;
         public bool IsNewProduct;
     }
-    public class OpenNomenclatureMessage : MessageBase 
+    public class OpenNomenclatureMessage  
     {
         public int PlaceGroupID;
     }
-    public class ProductionTaskRWMessage : MessageBase
+    public class ProductionTaskRWMessage
     {
         public Guid ProductionTaskBatchID;
         public Guid NomenclatureID;
         public Guid CharacteristicID;
     }
-    public class Nomenclature1CMessage : MessageBase
+    public class Nomenclature1CMessage
     {
         public Guid Nomenclature1CID;
     }
-    public class OpenReportListMessage : MessageBase { }
-    public class FindProductMessage : MessageBase
+    public class OpenReportListMessage { }
+    public class FindProductMessage
     {
         public bool ChooseSourceProduct;
         public ProductKinds ProductKind;
     }
-    public class ConfigureComPortMessage : MessageBase { }
-    public class ChoosenProductMessage : MessageBase
+    public class ConfigureComPortMessage  { }
+    public class ChoosenProductMessage
     {
         public Guid ProductID;
     }
-    public class BarcodeMessage : MessageBase
+    public class BarcodeMessage
     {
         public string Barcode;
     }
-    public class PermitEditMessage : MessageBase 
+    public class PermitEditMessage
     {
         public Guid? PermitID;
     }
-    public class RoleEditMessage : MessageBase
+    public class RoleEditMessage
     {
         public Guid? RoleID;
     }
-    public class UserEditMessage : MessageBase
+    public class UserEditMessage
     {
         public Guid? UserID;
     }
-    public class UserChangedMessage : MessageBase { }
-    public class PermitChangedMessage : MessageBase { }
-    public class RoleChangedMessage : MessageBase { }
+    public class UserChangedMessage  { }
+    public class PermitChangedMessage  { }
+    public class RoleChangedMessage  { }
     
-    public class ParentSaveMessage : MessageBase { }
-    public class OpenManageUsersMessage : MessageBase { }
-    public class OpenDocCloseShiftMessage : MessageBase
+    public class ParentSaveMessage { }
+    public class OpenManageUsersMessage { }
+    public class OpenDocCloseShiftMessage
     {
         public Guid? DocID;
         public int? PlaceID;
         public DateTime? CloseDate;
         public byte? ShiftID;
     }
-    public class OpenPlaceGroupsNomenclatureMessage : MessageBase { }
-    public class OpenDocCloseShiftsMessage : MessageBase
+    public class OpenPlaceGroupsNomenclatureMessage  { }
+    public class OpenDocCloseShiftsMessage 
     {
         public PlaceGroups? PlaceGroup;
     }
-    public class FindProductionTaskBatchMessage : MessageBase
+    public class FindProductionTaskBatchMessage
     {
         public BatchKinds BatchKind;
     }

@@ -1,12 +1,12 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 
 namespace Gamma.Interfaces
 {
     interface IItemManager
     {
-        RelayCommand NewItemCommand { get; set; }
-        RelayCommand EditItemCommand { get; set; }
-        RelayCommand DeleteItemCommand { get; set; }
-        RelayCommand RefreshCommand { get; set; }
+        DelegateCommand NewItemCommand { get; set; }
+        DelegateCommand EditItemCommand { get; set; }
+        DelegateCommand DeleteItemCommand { get; set; }
+        DelegateCommand RefreshCommand { get; set; }
     }
 }

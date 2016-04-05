@@ -1,10 +1,10 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Models;
 using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight.Messaging;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Gamma.ViewModels
@@ -50,8 +50,8 @@ namespace Gamma.ViewModels
             }
             if (CurrentViewModelGrid is IFillClearGrid)
             {
-                FillGridCommand = new RelayCommand(((IFillClearGrid) CurrentViewModelGrid).FillGrid, () => !IsConfirmed);
-                ClearGridCommand = new RelayCommand(((IFillClearGrid) CurrentViewModelGrid).ClearGrid,
+                FillGridCommand = new DelegateCommand(((IFillClearGrid) CurrentViewModelGrid).FillGrid, () => !IsConfirmed);
+                ClearGridCommand = new DelegateCommand(((IFillClearGrid) CurrentViewModelGrid).ClearGrid,
                     () => !IsConfirmed);
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
@@ -85,8 +85,8 @@ namespace Gamma.ViewModels
             }
         }
         public SaveImplementedViewModel CurrentViewModelRemainder { get; set; }
-        public RelayCommand FillGridCommand { get; set; }
-        public RelayCommand ClearGridCommand { get; set; }
+        public DelegateCommand FillGridCommand { get; set; }
+        public DelegateCommand ClearGridCommand { get; set; }
         public override void SaveToModel()
         {
             if (!CanSaveExecute()) return;

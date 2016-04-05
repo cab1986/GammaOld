@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:g="clr-namespace:Gamma"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.ProductionTaskWRView" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
@@ -29,7 +29,7 @@
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
     </Grid>
-    <i:Interaction.Behaviors>
+    <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior/>
-    </i:Interaction.Behaviors>
+    </dxmvvm:Interaction.Behaviors>
 </UserControl>

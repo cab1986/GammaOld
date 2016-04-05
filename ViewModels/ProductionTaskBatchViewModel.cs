@@ -1,5 +1,5 @@
 ﻿using Gamma.Attributes;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System;
 using Gamma.Interfaces;
 using System.Linq;
@@ -27,8 +27,8 @@ namespace Gamma.ViewModels
                 !WorkSession.DBAdmin;
             TaskStates = new ProductionTaskStates().ToDictionary();
             ProcessModels = new ProcessModels().ToDictionary();
-            RefreshProductionCommand = new RelayCommand(RefreshProduction);
-            ShowProductCommand = new RelayCommand(ShowProduct,() => SelectedProductionTaskProduct != null);
+            RefreshProductionCommand = new DelegateCommand(RefreshProduction);
+            ShowProductCommand = new DelegateCommand(ShowProduct,() => SelectedProductionTaskProduct != null);
             if (msg.ProductionTaskBatchID == null)
             {
                 Date = DB.CurrentDateTime;
@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
                     break;
             }
             BatchKind = msg.BatchKind;
-            CreateNewProductCommand = new RelayCommand(CreateNewProduct,CanCreateNewProduct);
+            CreateNewProductCommand = new DelegateCommand(CreateNewProduct,CanCreateNewProduct);
             
         }
 
@@ -124,7 +124,7 @@ namespace Gamma.ViewModels
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public string Comment { get; set; }
-        public RelayCommand CreateNewProductCommand { get; private set; } // Создание нового продукта. В конструкторе привязка к CreateNewProduct();
+        public DelegateCommand CreateNewProductCommand { get; private set; } // Создание нового продукта. В конструкторе привязка к CreateNewProduct();
 
         public bool IsReadOnly
         {
@@ -380,8 +380,8 @@ namespace Gamma.ViewModels
             return base.CanSaveExecute() && (CurrentView == null ? true : CurrentView.IsValid) &&
                 (DB.HaveWriteAccess("ProductionTasks"));
         }
-        public RelayCommand RefreshProductionCommand { get; private set; }
-        public RelayCommand ShowProductCommand { get; private set; }
+        public DelegateCommand RefreshProductionCommand { get; private set; }
+        public DelegateCommand ShowProductCommand { get; private set; }
         private ProductInfo _selectedProductionTaskProduct;
         public ProductInfo SelectedProductionTaskProduct
         {

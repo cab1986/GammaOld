@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +20,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public DBEditItemWithNomenclatureViewModel()
         {
-            ChooseNomenclatureCommand = new RelayCommand(ChooseNomenclature,CanChooseNomenclature);
+            ChooseNomenclatureCommand = new DelegateCommand(ChooseNomenclature,CanChooseNomenclature);
         }
 
         private Guid? _nomenclatureID;
@@ -50,7 +49,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public RelayCommand ChooseNomenclatureCommand { get; private set; }
+        public DelegateCommand ChooseNomenclatureCommand { get; private set; }
         private void ChooseNomenclature()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);

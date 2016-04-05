@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Gamma.Models;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using Gamma.Attributes;
 
@@ -15,7 +13,7 @@ namespace Gamma.ViewModels
     {
         public DocCloseShiftRWRemainderViewModel(int placeId) // Конструктор для нового закрытия смены
         {
-            ShowProductCommand = new RelayCommand<int>(ShowProduct);
+            ShowProductCommand = new DelegateCommand<int>(ShowProduct);
             var sourceSpools = DB.GammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeId);
             if (sourceSpools == null) return;
             SpoolRemainders[0].ProductId = sourceSpools.Unwinder1Spool;
@@ -65,7 +63,7 @@ namespace Gamma.ViewModels
 
         public SpoolRemainder[] SpoolRemainders { get; set; } = {new SpoolRemainder(), new SpoolRemainder(), new SpoolRemainder()};
 
-        public RelayCommand<int> ShowProductCommand { get; set; }
+        public DelegateCommand<int> ShowProductCommand { get; set; }
 
 
         private void ShowProduct(int i)

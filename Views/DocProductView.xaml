@@ -10,7 +10,6 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
-    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
     xmlns:v="clr-namespace:Gamma.Views" 
     xmlns:g="clr-namespace:Gamma" 
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
@@ -59,9 +58,9 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <i:Interaction.Behaviors>
+        <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior />
-        </i:Interaction.Behaviors>
+        </dxmvvm:Interaction.Behaviors>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
         <dx:DXTabControl Grid.Row="1">
             <dx:DXTabItem Header="Информация о продукте">

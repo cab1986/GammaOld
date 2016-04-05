@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight.Command;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using DevExpress.Mvvm;
 
 namespace Gamma
 {
@@ -14,7 +14,7 @@ namespace Gamma
         public string Name { get; set; }
         public  ObservableCollection<BarCommand<PrintReportMessage>> Commands { get; set; }
         }
-    public class BarCommand<T> : RelayCommand<T>
+    public class BarCommand<T> : DelegateCommand<T>
     {
         public BarCommand(Action<T> execute) : base(execute) {}
         public  string Caption { get; set; }

@@ -1,8 +1,7 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using System;
-using GalaSoft.MvvmLight.Messaging;
 
 namespace Gamma.ViewModels
 {
@@ -20,9 +19,9 @@ namespace Gamma.ViewModels
         public ProductionTasksConvertingViewModel()
         {
             GetProductionTasks();
-            EditItemCommand = new RelayCommand(EditItem);
-            NewItemCommand = new RelayCommand(NewProductionTask);
-            RefreshCommand = new RelayCommand(GetProductionTasks);
+            EditItemCommand = new DelegateCommand(EditItem);
+            NewItemCommand = new DelegateCommand(NewProductionTask);
+            RefreshCommand = new DelegateCommand(GetProductionTasks);
         }
         private void GetProductionTasks()
         {
@@ -64,24 +63,24 @@ namespace Gamma.ViewModels
             }
         }
         private ProductionTask _selectedProductionTask;
-        public RelayCommand NewItemCommand
+        public DelegateCommand NewItemCommand
         {
             get;
             set;
         }
 
-        public RelayCommand EditItemCommand
+        public DelegateCommand EditItemCommand
         {
             get;
             set;
         }
 
-        public RelayCommand DeleteItemCommand
+        public DelegateCommand DeleteItemCommand
         {
             get;
             set;
         }
-        public RelayCommand RefreshCommand
+        public DelegateCommand RefreshCommand
         {
             get;
             set;

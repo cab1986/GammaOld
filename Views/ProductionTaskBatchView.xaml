@@ -9,7 +9,6 @@
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:g="clr-namespace:Gamma"
         xmlns:v="clr-namespace:Gamma.Views"
         xmlns:vm="clr-namespace:Gamma.ViewModels"
@@ -121,8 +120,8 @@
         </dx:DXTabControl>
         <Button Grid.Row="2"  HorizontalAlignment="Right" Margin="3,3,3,3" VerticalAlignment="Bottom" Width="75" Height="25" Content="Отмена" Command="{Binding CloseCommand}"/>
         <Button Grid.Row="2"  Content="OK" HorizontalAlignment="Right" Margin="3,1,83,0" Width="75" Height="25" Command="{Binding SaveAndCloseCommand}"/>
-        <i:Interaction.Behaviors>
+        <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior/>
-        </i:Interaction.Behaviors>
+        </dxmvvm:Interaction.Behaviors>
     </Grid>
 </g:MVVMWindow>

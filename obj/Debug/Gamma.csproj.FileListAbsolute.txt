@@ -3,14 +3,11 @@ D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.pdb
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.SqlServer.dll
-D:\CProjects\Gamma\Gamma\bin\Debug\GalaSoft.MvvmLight.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\GalaSoft.MvvmLight.Extras.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\Microsoft.Practices.ServiceLocation.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\System.Windows.Interactivity.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.SqlServer.xml
-D:\CProjects\Gamma\Gamma\bin\Debug\GalaSoft.MvvmLight.pdb
-D:\CProjects\Gamma\Gamma\bin\Debug\GalaSoft.MvvmLight.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\GalaSoft.MvvmLight.Extras.pdb
 D:\CProjects\Gamma\Gamma\bin\Debug\GalaSoft.MvvmLight.Extras.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\Microsoft.Practices.ServiceLocation.pdb

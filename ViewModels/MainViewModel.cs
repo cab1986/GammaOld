@@ -1,5 +1,4 @@
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System.Linq;
 using Gamma.Interfaces;
 using System;
@@ -43,27 +42,27 @@ namespace Gamma.ViewModels
                 settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл");
             if (IsInDesignMode)
             {
-                ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList());
-//                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
-                ShowProductionTasksSGBCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB);
-                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct());
-                ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers());
+                ShowReportListCommand = new DelegateCommand(() => MessageManager.OpenReportList());
+//                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
+                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB);
+                FindProductCommand = new DelegateCommand(() => MessageManager.OpenFindProduct());
+                ManageUsersCommand = new DelegateCommand(() => MessageManager.OpenManageUsers());
             }
             else
             {
-                ShowReportListCommand = new RelayCommand(() => MessageManager.OpenReportList(),
+                ShowReportListCommand = new DelegateCommand(() => MessageManager.OpenReportList(),
                 () => WorkSession.DBAdmin || DB.HaveWriteAccess("Reports"));
-//                ShowProductionTasksPMCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
-                ShowProductionTasksSGBCommand = new RelayCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB,
+//                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
+                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB,
                     () => DB.HaveReadAccess("ProductionTasks"));
-                FindProductCommand = new RelayCommand(() => MessageManager.OpenFindProduct());
-                ManageUsersCommand = new RelayCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
-                CloseShiftCommand = new RelayCommand(CloseShift);
-                OpenDocCloseShiftsCommand = new RelayCommand<PlaceGroups>((p) => MessageManager.OpenDocCloseShifts(p));
-                ConfigureComPortCommand = new RelayCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
-                FindProductionTaskCommand = new RelayCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
-                OpenPlaceProductsCommand = new RelayCommand<int>(OpenPlaceProducts);
-                OpenPlaceGroupsNomenclatureCommand = new RelayCommand(() => MessageManager.OpenPlaceGroupsNomenclature()
+                FindProductCommand = new DelegateCommand(() => MessageManager.OpenFindProduct());
+                ManageUsersCommand = new DelegateCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
+                CloseShiftCommand = new DelegateCommand(CloseShift);
+                OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>((p) => MessageManager.OpenDocCloseShifts(p));
+                ConfigureComPortCommand = new DelegateCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
+                FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
+                OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
+                OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(() => MessageManager.OpenPlaceGroupsNomenclature()
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
             }
             switch (WorkSession.PlaceGroup)
@@ -146,8 +145,8 @@ namespace Gamma.ViewModels
             }
         }
         public string StatusText { get; set; }
-        private RelayCommand _newItemCommand;
-        public RelayCommand NewItemCommand 
+        private DelegateCommand _newItemCommand;
+        public DelegateCommand NewItemCommand 
         {
             get { return _newItemCommand; }
             private set 
@@ -156,8 +155,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("NewItemCommand");
             }
         }
-        private RelayCommand _editItemCommand;
-        public RelayCommand EditItemCommand 
+        private DelegateCommand _editItemCommand;
+        public DelegateCommand EditItemCommand 
         {
             get { return _editItemCommand; }
             private set
@@ -166,8 +165,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("EditItemCommand");
             }
         }
-        private RelayCommand _deleteItemCommand;
-        public RelayCommand DeleteItemCommand 
+        private DelegateCommand _deleteItemCommand;
+        public DelegateCommand DeleteItemCommand 
         {
             get { return _deleteItemCommand; }
             private set
@@ -176,8 +175,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("DeleteItemCommand");
             }
         }
-        private RelayCommand _refreshCommand;
-        public RelayCommand RefreshCommand 
+        private DelegateCommand _refreshCommand;
+        public DelegateCommand RefreshCommand 
         {
             get { return _refreshCommand; }
             private set
@@ -199,23 +198,23 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionTaskBarVisible");
             }
         }
-        public RelayCommand ShowReportListCommand { get; private set; }
-        public RelayCommand ShowProductionTasksConvertingCommand { get; private set; }
-//        public RelayCommand ShowProductionTasksPMCommand { get; private set; }
-        public RelayCommand ShowProductionTasksSGBCommand { get; private set; }
-        public RelayCommand FindProductCommand { get; private set; }
-        public RelayCommand ManageUsersCommand { get; set; }
-        public RelayCommand ConfigureComPortCommand { get; set; }
-        public RelayCommand CloseShiftCommand { get; set; }
-        public RelayCommand<PlaceGroups> OpenDocCloseShiftsCommand { get; private set; }
-        public RelayCommand FindProductionTaskCommand { get; private set; }
-        public RelayCommand<int> OpenPlaceProductsCommand { get; private set; }
-        public RelayCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
+        public DelegateCommand ShowReportListCommand { get; private set; }
+        public DelegateCommand ShowProductionTasksConvertingCommand { get; private set; }
+//        public DelegateCommand ShowProductionTasksPMCommand { get; private set; }
+        public DelegateCommand ShowProductionTasksSGBCommand { get; private set; }
+        public DelegateCommand FindProductCommand { get; private set; }
+        public DelegateCommand ManageUsersCommand { get; set; }
+        public DelegateCommand ConfigureComPortCommand { get; set; }
+        public DelegateCommand CloseShiftCommand { get; set; }
+        public DelegateCommand<PlaceGroups> OpenDocCloseShiftsCommand { get; private set; }
+        public DelegateCommand FindProductionTaskCommand { get; private set; }
+        public DelegateCommand<int> OpenPlaceProductsCommand { get; private set; }
+        public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public class PlaceProduct
         {
             public string Place { get; set; }
-            public RelayCommand<int> Command { get; set; }
+            public DelegateCommand<int> Command { get; set; }
             public int PlaceID { get; set; }
         }
     }

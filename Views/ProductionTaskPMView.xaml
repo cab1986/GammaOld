@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:g="clr-namespace:Gamma"
         xmlns:Views="clr-namespace:Gamma.Views" 
         xmlns:vm="clr-namespace:Gamma.ViewModels" 
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.ProductionTaskPMView"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    x:Class="Gamma.Views.ProductionTaskPMView"
         mc:Ignorable="d ignore"
         >
     <UserControl.Resources>
@@ -61,7 +62,7 @@
             <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="230" HorizontalAlignment="Right" />
         </dxlc:LayoutGroup>
     </dxlc:LayoutGroup>
-    <i:Interaction.Behaviors>
+    <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior/>
-    </i:Interaction.Behaviors>
+    </dxmvvm:Interaction.Behaviors>
 </UserControl>

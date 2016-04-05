@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using Gamma.Common;
 using System;
 using System.Collections.Generic;
@@ -28,10 +28,10 @@ namespace Gamma.ViewModels
             Intervals.Add("За мою смену");
             Intervals.Add("За последний день");
             Intervals.Add("Поиск");
-            FindCommand = new RelayCommand(Find);
-            OpenDocProductCommand = new RelayCommand(OpenDocProduct, () => SelectedProduct != null);
-            CreateNewProductCommand = new RelayCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.WR);
-            DeleteProductCommand = new RelayCommand(DeleteProduct, CanDeleteExecute);
+            FindCommand = new DelegateCommand(Find);
+            OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
+            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.WR);
+            DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
             PlaceGroup = (PlaceGroups)DB.GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
             switch (PlaceGroup)
@@ -328,10 +328,10 @@ namespace Gamma.ViewModels
                 if (_intervalId < 3) Find();
             }
         }
-        public RelayCommand DeleteProductCommand { get; private set; }
-        public RelayCommand CreateNewProductCommand { get; private set; }
-        public RelayCommand FindCommand { get; private set; }
-        public RelayCommand OpenDocProductCommand { get; private set; }
+        public DelegateCommand DeleteProductCommand { get; private set; }
+        public DelegateCommand CreateNewProductCommand { get; private set; }
+        public DelegateCommand FindCommand { get; private set; }
+        public DelegateCommand OpenDocProductCommand { get; private set; }
         public string DeleteProductText { get; set; }
         public string NewProductText { get; set; }
     }

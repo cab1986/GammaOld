@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interactivity;
 using Gamma.Interfaces;
 using System.Windows.Data;
 using DevExpress.Xpf.Editors;
 using System.Reflection;
 using Gamma.Attributes;
 using System.ComponentModel;
+using DevExpress.Mvvm.UI.Interactivity;
 
 namespace Gamma
 {

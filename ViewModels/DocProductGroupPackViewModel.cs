@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Gamma.Interfaces;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Gamma.Attributes;
-using GalaSoft.MvvmLight.Messaging;
 using System.ComponentModel.DataAnnotations;
 using Gamma.Models;
 using Gamma.Common;
@@ -18,11 +17,11 @@ namespace Gamma.ViewModels
         public DocProductGroupPackViewModel()
         {
             IsNewGroupPack = true;
-            GetGrossWeightCommand = new RelayCommand(GetGrossWeight, () => Scales.IsReady && !IsConfirmed);
-            GetWeightCommand = new RelayCommand(GetWeight, () => Scales.IsReady && !IsConfirmed);
-            AddSpoolCommand = new RelayCommand(AddSpool, () => !IsReadOnly);
-            DeleteSpoolCommand = new RelayCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly);
-            OpenSpoolCommand = new RelayCommand(OpenSpool, () => SelectedSpool != null);
+            GetGrossWeightCommand = new DelegateCommand(GetGrossWeight, () => Scales.IsReady && !IsConfirmed);
+            GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsConfirmed);
+            AddSpoolCommand = new DelegateCommand(AddSpool, () => !IsReadOnly);
+            DeleteSpoolCommand = new DelegateCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly);
+            OpenSpoolCommand = new DelegateCommand(OpenSpool, () => SelectedSpool != null);
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
         }
@@ -147,10 +146,10 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("CoreWeight");
             }
         }
-        public RelayCommand GetWeightCommand { get; private set; }
-        public RelayCommand GetGrossWeightCommand { get; private set; }
-        public RelayCommand AddSpoolCommand { get; private set; }
-        public RelayCommand DeleteSpoolCommand { get; private set; }
+        public DelegateCommand GetWeightCommand { get; private set; }
+        public DelegateCommand GetGrossWeightCommand { get; private set; }
+        public DelegateCommand AddSpoolCommand { get; private set; }
+        public DelegateCommand DeleteSpoolCommand { get; private set; }
         private void AddSpool()
         {
             MessageManager.OpenFindProduct(ProductKinds.ProductSpool, true);
@@ -346,7 +345,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
-        public RelayCommand OpenSpoolCommand { get; private set; }
+        public DelegateCommand OpenSpoolCommand { get; private set; }
         private void OpenSpool()
         {
             if (SelectedSpool == null) return;

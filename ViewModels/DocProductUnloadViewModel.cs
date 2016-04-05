@@ -1,11 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using Gamma.Interfaces;
 using System;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System.Linq;
 using Gamma.Attributes;
 using Gamma.Models;
-using GalaSoft.MvvmLight.Messaging;
 using System.Collections.Generic;
 using System.Windows;
 using System.Data.Entity;
@@ -32,8 +31,8 @@ namespace Gamma.ViewModels
             ProductionTaskId =
                     (Guid)DB.GammaBase.DocProduction.Where(d => d.DocID == docId).Select(d => d.ProductionTaskID).First();
             GetProductionTaskRWInfo(ProductionTaskId);
-            CreateSpoolsCommand = new RelayCommand(CreateSpools, () => !IsReadOnly && IsValid);
-            EditSpoolCommand = new RelayCommand(EditSpool);
+            CreateSpoolsCommand = new DelegateCommand(CreateSpools, () => !IsReadOnly && IsValid);
+            EditSpoolCommand = new DelegateCommand(EditSpool);
             Bars.Add(ReportManager.GetReportBar("Unload", VMID));
             if (newProduct)  // Если новый съем то получаем раскрой из задания DocProduction и инициализруем коллекцию тамбуров съема
             {
@@ -124,7 +123,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
-        public RelayCommand CreateSpoolsCommand { get; private set; }
+        public DelegateCommand CreateSpoolsCommand { get; private set; }
         
         private void CreateSpools()
         {
@@ -266,7 +265,7 @@ namespace Gamma.ViewModels
         }
         private Guid DocID { get; set; }
 
-        public RelayCommand EditSpoolCommand { get; set; }
+        public DelegateCommand EditSpoolCommand { get; set; }
         public PaperBase SelectedUnloadSpool 
         {
             get; set;

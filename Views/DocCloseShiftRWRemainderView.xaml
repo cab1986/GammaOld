@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Gamma.Views"
              xmlns:g="clr-namespace:Gamma"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.DocCloseShiftRWRemainderView"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -49,8 +49,8 @@
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
-        <i:Interaction.Behaviors>
+        <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior/>
-        </i:Interaction.Behaviors>
+        </dxmvvm:Interaction.Behaviors>
     </Grid>
 </UserControl>

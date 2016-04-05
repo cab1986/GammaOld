@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +6,7 @@ using Gamma.Models;
 using Gamma.Common;
 using Gamma.Interfaces;
 using System.Windows;
+using DevExpress.Mvvm;
 using Gamma.Attributes;
 
 namespace Gamma.ViewModels

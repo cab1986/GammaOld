@@ -2,7 +2,7 @@
 using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 
 namespace Gamma.ViewModels
 {
@@ -37,8 +37,8 @@ namespace Gamma.ViewModels
         {
 //            DB.GammaBase.PermitTables.Where(pt => pt.PermitID == PermitID).Load();
 //            PermitTables = DB.GammaBase.PermitTables.Local;
-            AddTableCommand = new RelayCommand(AddTable);
-            DeleteTableCommand = new RelayCommand(DeleteTable,() => SelectedPermitTable != null);
+            AddTableCommand = new DelegateCommand(AddTable);
+            DeleteTableCommand = new DelegateCommand(DeleteTable,() => SelectedPermitTable != null);
         }
         private bool IsNewPermit = false;
         private Guid PermitID { get; set; }
@@ -93,13 +93,13 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("PermitTables");
             }
         }
-        public RelayCommand AddTableCommand { get; set; }
+        public DelegateCommand AddTableCommand { get; set; }
         private void AddTable()
         {
             var permitTable = new PermitTables() { PermitTableID = SQLGuidUtil.NewSequentialId(), PermitID = Permit.PermitID };
             PermitTables.Add(permitTable);
         }
-        public RelayCommand DeleteTableCommand { get; set; }
+        public DelegateCommand DeleteTableCommand { get; set; }
         private void DeleteTable()
         {
             PermitTables.Remove(SelectedPermitTable);

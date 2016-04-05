@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamma.Common;
 using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 
 namespace Gamma.ViewModels
 {
@@ -14,8 +14,8 @@ namespace Gamma.ViewModels
             PlaceGroups = (from pg in DB.GammaBase.PlaceGroups select pg).ToList();
             _placeGroupID = PlaceGroups[0].PlaceGroupID;
             GetPlaceGroupNomenclature(PlaceGroupID);
-            MoveFromPlaceGroupNomenclatureComand = new RelayCommand(MoveFromPlaceGroupNomenclature);
-            MoveToPlaceGroupNomenclatureCommand = new RelayCommand(MoveToPlaceGroupNomenclature);
+            MoveFromPlaceGroupNomenclatureComand = new DelegateCommand(MoveFromPlaceGroupNomenclature);
+            MoveToPlaceGroupNomenclatureCommand = new DelegateCommand(MoveToPlaceGroupNomenclature);
             SelectedNomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>();
             SelectedPlaceGroupNomenclature = new ObservableCollection<Nomenclature1CFolder>();
         }
@@ -146,8 +146,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("PlaceGroupNomenclature");
             }
         }
-        public RelayCommand MoveToPlaceGroupNomenclatureCommand { get; private set; }
-        public RelayCommand MoveFromPlaceGroupNomenclatureComand { get; private set; }
+        public DelegateCommand MoveToPlaceGroupNomenclatureCommand { get; private set; }
+        public DelegateCommand MoveFromPlaceGroupNomenclatureComand { get; private set; }
         private ObservableCollection<Nomenclature1CFolder> _selectedPlaceGroupNomenclature;
 
         public ObservableCollection<Nomenclature1CFolder> SelectedPlaceGroupNomenclature

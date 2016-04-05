@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Gamma.Models;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 
@@ -43,7 +43,7 @@ namespace Gamma.ViewModels
         }
         private void InitializeFields()
         {
-            ChangePasswordCommand = new RelayCommand(ChangePassword);
+            ChangePasswordCommand = new DelegateCommand(ChangePassword);
             Places = new ObservableCollection<Places>(DB.GammaBase.Places.Select(p => p));
             Roles = new ObservableCollection<Roles>(DB.GammaBase.Roles.Select(r => r));
         }
@@ -118,7 +118,7 @@ namespace Gamma.ViewModels
             if (IsNewUser)
                 DB.RecreateUserInDB(User.UserID, Password);
         }
-        public RelayCommand ChangePasswordCommand { get; private set; }
+        public DelegateCommand ChangePasswordCommand { get; private set; }
         private void ChangePassword()
         {
             DB.ChangeUserPassword(User.UserID, Password);

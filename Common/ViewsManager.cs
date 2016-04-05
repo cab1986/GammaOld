@@ -1,5 +1,5 @@
 ﻿using Gamma.Views;
-using GalaSoft.MvvmLight.Messaging;
+using DevExpress.Mvvm;
 
 namespace Gamma.Common
 {

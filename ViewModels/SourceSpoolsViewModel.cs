@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using Gamma.Models;
@@ -30,10 +28,10 @@ namespace Gamma.ViewModels
             } 
             if (WorkSession.PlaceGroup == PlaceGroups.RW || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
             else SourceSpoolsVisible = Visibility.Collapsed;
-            ChangeUnwinderActiveCommand = new RelayCommand<byte>(ChangeUnwinderActive);
-            DeleteSpoolCommand = new RelayCommand<byte>(DeleteSpool);
-            ChooseSpoolCommand = new RelayCommand<byte>(ChooseSpool);
-            SourceSpools = DB.GammaBase.SourceSpools.Where(s => s.PlaceID == WorkSession.PlaceID).FirstOrDefault();
+            ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
+            DeleteSpoolCommand = new DelegateCommand<byte>(DeleteSpool);
+            ChooseSpoolCommand = new DelegateCommand<byte>(ChooseSpool);
+            SourceSpools = DB.GammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
             if (SourceSpools == null)
             {
                 SourceSpools = new SourceSpools() { PlaceID = (int)WorkSession.PlaceID };
@@ -50,9 +48,9 @@ namespace Gamma.ViewModels
                 Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
             }
         }
-        public RelayCommand<byte> ChooseSpoolCommand {get; set;}
-        public RelayCommand<byte> DeleteSpoolCommand {get; set;}
-        public RelayCommand<byte> ChangeUnwinderActiveCommand { get; set; }
+        public DelegateCommand<byte> ChooseSpoolCommand {get; set;}
+        public DelegateCommand<byte> DeleteSpoolCommand {get; set;}
+        public DelegateCommand<byte> ChangeUnwinderActiveCommand { get; set; }
         private void ChooseSpool(byte unum)
         {
             CurrentUnwinder = unum;

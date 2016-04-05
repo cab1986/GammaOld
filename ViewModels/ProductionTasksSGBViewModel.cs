@@ -1,5 +1,5 @@
 ﻿using Gamma.Interfaces;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,17 +21,17 @@ namespace Gamma.ViewModels
         /// </summary>
         public ProductionTasksSGBViewModel()
         {
-            NewItemCommand = new RelayCommand(NewItem);
-            EditItemCommand = new RelayCommand(EditItem,() => SelectedProductionTaskBatch != null);
-            DeleteItemCommand = new RelayCommand(DeleteItem);
-            RefreshCommand = new RelayCommand(Refresh);
+            NewItemCommand = new DelegateCommand(NewItem);
+            EditItemCommand = new DelegateCommand(EditItem,() => SelectedProductionTaskBatch != null);
+            DeleteItemCommand = new DelegateCommand(DeleteItem);
+            RefreshCommand = new DelegateCommand(Refresh);
             GetProductionTasks();
         }
 
-        public RelayCommand NewItemCommand {get; set;}
-        public RelayCommand EditItemCommand {get; set;}
-        public RelayCommand DeleteItemCommand {get; set;}
-        public RelayCommand RefreshCommand { get; set; }
+        public DelegateCommand NewItemCommand {get; set;}
+        public DelegateCommand EditItemCommand {get; set;}
+        public DelegateCommand DeleteItemCommand {get; set;}
+        public DelegateCommand RefreshCommand { get; set; }
         private void NewItem()
         {
             MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage 

@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿using DevExpress.Mvvm;
 
 namespace Gamma.Views
 {

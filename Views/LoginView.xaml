@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:g="clr-namespace:Gamma"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Name="LoginWindow" x:Class="Gamma.Views.LoginView"
         mc:Ignorable="d ignore"
@@ -16,9 +15,9 @@
         <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding LoginCommand}"/>
     </dxmvvm:Interaction.Behaviors>
     <Grid>
-        <i:Interaction.Behaviors>
+        <dxmvvm:Interaction.Behaviors>
             <g:ValidationExceptionBehavior />
-        </i:Interaction.Behaviors>
+        </dxmvvm:Interaction.Behaviors>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="56*"/>

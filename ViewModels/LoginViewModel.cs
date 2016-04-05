@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using Gamma.Common;
@@ -49,7 +49,7 @@ namespace Gamma.ViewModels
             set { _password = value; }
         }
 
-        public RelayCommand LoginCommand { get; private set; }
+        public DelegateCommand LoginCommand { get; private set; }
         public LoginViewModel()
         {
             var AppSettings = GammaSettings.Get();
@@ -57,7 +57,7 @@ namespace Gamma.ViewModels
             DataBase = AppSettings.DbName;
             Login = AppSettings.User;
             UseScanner = AppSettings.UseScanner;
-            LoginCommand = new RelayCommand(Authenticate, canExecute);
+            LoginCommand = new DelegateCommand(Authenticate, canExecute);
         }
 
         private bool canExecute()

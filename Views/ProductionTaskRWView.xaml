@@ -3,13 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:g="clr-namespace:Gamma"
         xmlns:conv="clr-namespace:Gamma.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:Views="clr-namespace:Gamma.Views" 
         xmlns:vm="clr-namespace:Gamma.ViewModels" 
-        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid" x:Class="Gamma.Views.ProductionTaskRWView"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             x:Class="Gamma.Views.ProductionTaskRWView"
         mc:Ignorable="d ignore">
     <UserControl.Resources>
         <conv:ElementEmptyConverter x:Key="EmptyConverter" />
@@ -151,7 +152,7 @@
         </dxlc:LayoutItem>
         <Label Content="{Binding MainCutting.TotalFormat}" HorizontalAlignment="Right" FontWeight="Bold" />
     </dxlc:LayoutGroup>
-    <i:Interaction.Behaviors>
+    <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior/>
-    </i:Interaction.Behaviors>
+    </dxmvvm:Interaction.Behaviors>
 </UserControl>

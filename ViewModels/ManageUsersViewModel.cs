@@ -2,8 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Collections.Generic;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+using DevExpress.Mvvm;
 
 namespace Gamma.ViewModels
 {
@@ -21,9 +20,9 @@ namespace Gamma.ViewModels
         public ManageUsersViewModel()
         {
             LoadTables();
-            EditItemCommand = new RelayCommand(EditItem,SelectedNotNull);
-            NewItemCommand = new RelayCommand(NewItem);
-            DeleteItemCommand = new RelayCommand(DeleteItem,SelectedNotNull);
+            EditItemCommand = new DelegateCommand(EditItem,SelectedNotNull);
+            NewItemCommand = new DelegateCommand(NewItem);
+            DeleteItemCommand = new DelegateCommand(DeleteItem,SelectedNotNull);
             Messenger.Default.Register<BaseReconnectedMessage>(this,LoadTables);
         }
         private bool SelectedNotNull()
@@ -173,13 +172,13 @@ namespace Gamma.ViewModels
             }
         }
         public List<string> PermissionMarks { get; set; }
-        public RelayCommand SavePermitsCommand { get; set; }
+        public DelegateCommand SavePermitsCommand { get; set; }
         private void SavePermits()
         {
             DB.GammaBase.SaveChanges();
         }
         public int TabIndex { get; set; }
-        public RelayCommand NewItemCommand { get; set; }
+        public DelegateCommand NewItemCommand { get; set; }
         private void NewItem()
         {
             switch (TabIndex)
@@ -197,7 +196,7 @@ namespace Gamma.ViewModels
                     break;
             }
         }
-        public RelayCommand EditItemCommand { get; set; }
+        public DelegateCommand EditItemCommand { get; set; }
         private void EditItem()
         {
             switch (TabIndex)
@@ -215,7 +214,7 @@ namespace Gamma.ViewModels
                     break;
             }
         }
-        public RelayCommand DeleteItemCommand { get; set; }
+        public DelegateCommand DeleteItemCommand { get; set; }
         private void DeleteItem()
         {
             switch (TabIndex)

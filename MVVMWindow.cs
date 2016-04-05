@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using System;
+﻿using System;
 using System.Windows;
+using DevExpress.Mvvm;
 
 namespace Gamma
 {

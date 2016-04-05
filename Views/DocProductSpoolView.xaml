@@ -3,11 +3,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:g="clr-namespace:Gamma"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
-        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.DocProductSpoolView"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        x:Class="Gamma.Views.DocProductSpoolView"
         mc:Ignorable="d ignore"
              DataContext="{Binding}">
     <Grid>
@@ -69,7 +70,7 @@
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
     </Grid>
-    <i:Interaction.Behaviors>
+    <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior />
-    </i:Interaction.Behaviors>
+    </dxmvvm:Interaction.Behaviors>
 </UserControl>

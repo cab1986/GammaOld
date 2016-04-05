@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.ObjectModel; 
 using Gamma.Models;
@@ -172,9 +171,9 @@ namespace Gamma.ViewModels
             Bars = (CurrentViewModel as IBarImplemented).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
-            ActivatedCommand = new RelayCommand(() => IsActive = true);
-            DeactivatedCommand = new RelayCommand(() => IsActive = false);
-            OpenProductionTaskCommand = new RelayCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
+            ActivatedCommand = new DelegateCommand(() => IsActive = true);
+            DeactivatedCommand = new DelegateCommand(() => IsActive = false);
+            OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
         }
         private void SaveToModel(ParentSaveMessage msg)
@@ -290,7 +289,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("CurrentViewModel");
             }
         }
-        public RelayCommand OpenProductionTaskCommand { get; private set; }
+        public DelegateCommand OpenProductionTaskCommand { get; private set; }
         private ObservableCollection<BarViewModel> _bars;
       
         private void PrintReport(PrintReportMessage msg)
@@ -352,8 +351,8 @@ namespace Gamma.ViewModels
         }
         public string Title { get; set; }
         private bool IsActive { get; set; }
-        public RelayCommand ActivatedCommand { get; private set; }
-        public RelayCommand DeactivatedCommand { get; private set; }
+        public DelegateCommand ActivatedCommand { get; private set; }
+        public DelegateCommand DeactivatedCommand { get; private set; }
         private ObservableCollection<ProductRelation> _productRelations;
         public ObservableCollection<ProductRelation> ProductRelations
         {

@@ -4,10 +4,10 @@ using Gamma.Interfaces;
 using Gamma.Models;
 using System.Linq;
 using System.Data.Entity;
-using GalaSoft.MvvmLight.Messaging;
 using Gamma.Attributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using DevExpress.Mvvm;
 
 
 namespace Gamma.ViewModels

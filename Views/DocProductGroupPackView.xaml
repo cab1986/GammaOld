@@ -9,7 +9,6 @@
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
-    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:g="clr-namespace:Gamma"
     x:Class="Gamma.Views.DocProductGroupPackView" 
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -65,8 +64,8 @@
                 </dxb:BarManager>
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
-        <i:Interaction.Behaviors>
+        <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior />
-        </i:Interaction.Behaviors>
+        </dxmvvm:Interaction.Behaviors>
     </Grid>
 </UserControl>

@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -38,7 +38,7 @@ namespace Gamma.ViewModels
             ScalesStopBits = (byte)settings.ScalesComPort.StopBits;
             ScalesParity = (byte)settings.ScalesComPort.Parity;
             ScalesHandShake = (byte)settings.ScalesComPort.HandShake;
-            GetWeightCommand = new RelayCommand(GetWeight);
+            GetWeightCommand = new DelegateCommand(GetWeight);
  
         }
         public List<string> ComPortsList { get; set; }
@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Weight");
             }
         }
-        public RelayCommand GetWeightCommand { get; private set; }
+        public DelegateCommand GetWeightCommand { get; private set; }
         private void GetWeight()
         {
             if (Scales.IsReady)

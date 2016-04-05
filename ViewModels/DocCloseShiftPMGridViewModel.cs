@@ -3,7 +3,7 @@ using System.Linq;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using Gamma.Models;
-using GalaSoft.MvvmLight.Command;
+using DevExpress.Mvvm;
 using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
                 ShiftID = (byte)DocCloseShift.ShiftID;
                 PlaceID = (byte)DocCloseShift.PlaceID;
             }
-            ShowSpoolCommand = new RelayCommand(() =>
+            ShowSpoolCommand = new DelegateCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedSpool != null);
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
@@ -132,7 +132,7 @@ namespace Gamma.ViewModels
             }
         }
         public PaperBase SelectedSpool { get; set; }
-        public RelayCommand ShowSpoolCommand {get; private set;}
+        public DelegateCommand ShowSpoolCommand {get; private set;}
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
         public ObservableCollection<BarViewModel> Bars
         {

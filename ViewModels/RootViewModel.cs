@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 
 
 namespace Gamma.ViewModels
@@ -17,7 +16,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public RootViewModel()
         {
-            CloseCommand = new RelayCommand(CloseWindow);
+            CloseCommand = new DelegateCommand(CloseWindow);
         }
         
         protected void CloseWindow()
@@ -32,14 +31,18 @@ namespace Gamma.ViewModels
         public bool CloseSignal
         {
             get { return closeSignal; }
-            private set { 
+            private set
+            { 
                 closeSignal = value;
                 RaisePropertyChanged("CloseSignal");
-                }
+            }
         }
 
-        public RelayCommand CloseCommand { get; private set; }
-       
-        
+        public DelegateCommand CloseCommand { get; private set; }
+
+        private void Cleanup()
+        {
+            Messenger.Default.Unregister(this);
+        }
     }
 }

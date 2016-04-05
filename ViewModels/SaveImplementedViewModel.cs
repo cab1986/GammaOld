@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using Gamma.Common;
 using System;
 
@@ -17,10 +17,10 @@ namespace Gamma.ViewModels
         /// </summary>
         public SaveImplementedViewModel()
         {
-            SaveAndCloseCommand = new RelayCommand(SaveToModelAndClose,CanSaveExecute);
+            SaveAndCloseCommand = new DelegateCommand(SaveToModelAndClose,CanSaveExecute);
         }
 
-        public RelayCommand SaveAndCloseCommand { get; private set; }
+        public DelegateCommand SaveAndCloseCommand { get; private set; }
 
         public virtual void SaveToModel()
         {

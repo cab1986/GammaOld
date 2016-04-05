@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
+using DevExpress.Mvvm;
 
 namespace Gamma
 {

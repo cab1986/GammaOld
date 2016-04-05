@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -27,12 +26,12 @@ namespace Gamma.ViewModels
             States = Functions.EnumDescriptionsToList(typeof(ProductStates));
             States.Add("Любое");
             SelectedStateIndex = States.Count - 1;
-            ResetSearchCommand = new RelayCommand(ResetSearch);
-            FindCommand = new RelayCommand(() => Find(false));
-            ChooseProductCommand = new RelayCommand(ChooseProduct, () => SelectedProduct != null);
-            ActivatedCommand = new RelayCommand(() => IsActive = true);
-            DeactivatedCommand = new RelayCommand(() => IsActive = false);
-            OpenProductCommand = new RelayCommand(OpenProduct, () => SelectedProduct != null);
+            ResetSearchCommand = new DelegateCommand(ResetSearch);
+            FindCommand = new DelegateCommand(() => Find(false));
+            ChooseProductCommand = new DelegateCommand(ChooseProduct, () => SelectedProduct != null);
+            ActivatedCommand = new DelegateCommand(() => IsActive = true);
+            DeactivatedCommand = new DelegateCommand(() => IsActive = false);
+            OpenProductCommand = new DelegateCommand(OpenProduct, () => SelectedProduct != null);
             PlacesList = (from p in DB.GammaBase.Places
                           select new
                           Place
@@ -128,8 +127,8 @@ namespace Gamma.ViewModels
                 ChooseProduct();
             }
         }
-        public RelayCommand FindCommand { get; private set; }
-        public RelayCommand ResetSearchCommand { get; private set; }
+        public DelegateCommand FindCommand { get; private set; }
+        public DelegateCommand ResetSearchCommand { get; private set; }
 
         private void Find(bool IsFromScanner)
         {
@@ -278,17 +277,17 @@ namespace Gamma.ViewModels
         }
         private DateTime? _dateBegin;
         private DateTime? _dateEnd;
-        public RelayCommand ChooseProductCommand { get; set; }
+        public DelegateCommand ChooseProductCommand { get; set; }
         private void ChooseProduct()
         {
             if (SelectedProduct == null) return;
             Messenger.Default.Send<ChoosenProductMessage>(new ChoosenProductMessage { ProductID = (Guid)SelectedProduct.ProductID });
             CloseWindow();
         }
-        public RelayCommand ActivatedCommand { get; private set; }
-        public RelayCommand DeactivatedCommand { get; private set; }
+        public DelegateCommand ActivatedCommand { get; private set; }
+        public DelegateCommand DeactivatedCommand { get; private set; }
         private bool IsActive { get; set; }
-        public RelayCommand OpenProductCommand { get; private set; }
+        public DelegateCommand OpenProductCommand { get; private set; }
         private void OpenProduct()
         {
             switch (SelectedProduct.ProductKind)

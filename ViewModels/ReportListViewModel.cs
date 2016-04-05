@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DevExpress.Mvvm;
 using Gamma.Models;
 using System;
 using System.Collections.ObjectModel;
@@ -23,10 +23,10 @@ namespace Gamma.ViewModels
         {
             DB.GammaBase.Reports.Load();
             Reports = DB.GammaBase.Reports.Local;
-            NewReportFolderCommand = new RelayCommand(NewReportFolder);
-            NewReportCommand = new RelayCommand(NewReport, () => SelectedReport == null ? false : !SelectedReport.IsReport);
-            EditReportCommand = new RelayCommand(EditReport, () => SelectedReport == null ? false : SelectedReport.IsReport);
-            DeleteReportCommand = new RelayCommand(DeleteReport, () => SelectedReport != null);
+            NewReportFolderCommand = new DelegateCommand(NewReportFolder);
+            NewReportCommand = new DelegateCommand(NewReport, () => SelectedReport == null ? false : !SelectedReport.IsReport);
+            EditReportCommand = new DelegateCommand(EditReport, () => SelectedReport == null ? false : SelectedReport.IsReport);
+            DeleteReportCommand = new DelegateCommand(DeleteReport, () => SelectedReport != null);
         }
 
         private ObservableCollection<Reports> _reports;
@@ -42,10 +42,10 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Reports");
             }
         }
-        public RelayCommand NewReportFolderCommand { get; private set; }
-        public RelayCommand NewReportCommand { get; private set; }
-        public RelayCommand EditReportCommand { get; private set; }
-        public RelayCommand DeleteReportCommand { get; private set; }
+        public DelegateCommand NewReportFolderCommand { get; private set; }
+        public DelegateCommand NewReportCommand { get; private set; }
+        public DelegateCommand EditReportCommand { get; private set; }
+        public DelegateCommand DeleteReportCommand { get; private set; }
 
         private void NewReportFolder()
         {

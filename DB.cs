@@ -6,7 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
-using GalaSoft.MvvmLight.Messaging;
+using DevExpress.Mvvm;
 using Gamma.Models;
 
 namespace Gamma

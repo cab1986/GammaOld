@@ -53,7 +53,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraLayout.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraPrinting.v15.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.dll
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.dll
-D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.dll
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.dll
 D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Practices.ServiceLocation.dll
 D:\CProjects\Gamma\Gamma\bin\Release\System.Windows.Interactivity.dll
@@ -74,8 +73,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraLayout.v15.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraPrinting.v15.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.xml
-D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.pdb
-D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.xml
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.pdb
 D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.xml
 D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Practices.ServiceLocation.pdb
