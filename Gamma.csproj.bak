@@ -46,6 +46,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,30 +56,55 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Images.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+    <Reference Include="DevExpress.Data.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Mvvm.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Printing.v14.1.Core, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Utils.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.Core.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.Docking.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.Grid.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.Grid.v14.1.Core, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.Layout.v14.1.Core, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.LayoutControl.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.Xpf.PropertyGrid.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Themes.Office2007Blue.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraEditors.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraGrid.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraLayout.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-    <Reference Include="DevExpress.XtraPrinting.v14.1, Version=14.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Images.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 15.1\Components\Bin\Framework\DevExpress.Images.v15.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Mvvm.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Charts.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Core.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Docking.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Layout.v15.1.Core, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Grid.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Grid.v15.1.Core, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.LayoutControl.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.PropertyGrid.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Themes.DXStyle.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\DevExpress 15.1\Components\Bin\Framework\DevExpress.Xpf.Themes.DXStyle.v15.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v15.1, Version=15.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.0.0\lib\net40\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -86,19 +113,13 @@
       <HintPath>packages\EntityFramework.6.0.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FastReport, Version=2015.2.16.0, Culture=neutral, PublicKeyToken=417583d16d08abed" />
-    <Reference Include="FastReport.Bars, Version=2015.2.16.0, Culture=neutral, PublicKeyToken=417583d16d08abed" />
-    <Reference Include="FastReport.Editor, Version=2015.2.16.0, Culture=neutral, PublicKeyToken=417583d16d08abed" />
-    <Reference Include="GalaSoft.MvvmLight, Version=5.1.1.35051, Culture=neutral, PublicKeyToken=0e453835af4ee6ce, processorArchitecture=MSIL">
-      <HintPath>packages\MvvmLightLibs.5.1.1.0\lib\net40\GalaSoft.MvvmLight.dll</HintPath>
+    <Reference Include="FastReport, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\FastReports\FastReport.Net Trial\Framework 4.0\FastReport.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.1.1.35049, Culture=neutral, PublicKeyToken=f46ff315b1088208, processorArchitecture=MSIL">
-      <HintPath>packages\MvvmLightLibs.5.1.1.0\lib\net40\GalaSoft.MvvmLight.Extras.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.2.0.37224, Culture=neutral, PublicKeyToken=f46ff315b1088208, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.2.0.0\lib\net40\GalaSoft.MvvmLight.Extras.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
@@ -106,18 +127,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -127,9 +148,15 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationCore">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -139,26 +166,49 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ApplicationDebug.cs" />
+    <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Common\Nomenclature1C.cs" />
+    <Compile Include="Common\Nomenclature1CFolder.cs" />
+    <Compile Include="Common\ProductRelation.cs" />
+    <Compile Include="Common\UIServices.cs" />
+    <Compile Include="Common\ViewsManager.cs" />
+    <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="Dialogs\ChangeSpoolDialog.xaml.cs">
       <DependentUpon>ChangeSpoolDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ChoosePrintNameDialog.xaml.cs">
+      <DependentUpon>ChoosePrintNameDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\FilterDateReportDialog.xaml.cs">
       <DependentUpon>FilterDateReportDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DMLists.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="DocCloseShift.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="GammaSettings.cs" />
+    <Compile Include="GridControlWithBands.cs" />
     <Compile Include="Interfaces\IBarImplemented.cs" />
     <Compile Include="Interfaces\ICheckedAccess.cs" />
+    <Compile Include="Interfaces\IFillClearGrid.cs" />
     <Compile Include="Interfaces\IItemManager.cs" />
+    <Compile Include="Interfaces\IProductionTask.cs" />
+    <Compile Include="Interfaces\IProductionTaskBatch.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
+    <Compile Include="Models\Branches.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CCharacteristicProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CCharacteristics.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CEnumGroupTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CMeasureUnitQualifiers.cs">
@@ -170,13 +220,43 @@
     <Compile Include="Models\C1CNomenclature.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CNomenclatureGroups.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CNomenclatureProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CPropertyValueGammaPropertyValue.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\C1CPropertyValues.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CQuality.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CRejectionReasons.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CSpecificationInputNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CSpecificationOutputNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CreateUnloadSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Departments.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocChangeStateProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocCloseShiftRemainders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocMovement.cs">
@@ -188,10 +268,25 @@
     <Compile Include="Models\DocProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocRelations_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Docs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocWithdrawal.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocWithdrawalMaterials.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Enterprises.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FindProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GammaModel.Context.cs">
@@ -209,25 +304,56 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Models\Get1CNomenclature_Result.cs">
+    <Compile Include="Models\GammaModelManualConstructor.cs" />
+    <Compile Include="Models\GammaProperties.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetCharPropsDescriptions_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetDocCloseShiftPMSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetDocCloseShiftWRGroupPacks_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetGroupPackSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetGroupPackSpools_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetInputNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetNomenclatureFolders_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts1_Result.cs">
+    <Compile Include="Models\GetProductionTaskBatchProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchSGBCuttings_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchSGBProperties_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskBatchWRProperties_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetProductionTaskByBatchID_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetProductionTaskProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result1.cs">
+    <Compile Include="Models\GetProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result2.cs">
+    <Compile Include="Models\GetProductRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result3.cs">
+    <Compile Include="Models\GetSpoolRejectionReasons_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Permits.cs">
@@ -242,19 +368,22 @@
     <Compile Include="Models\Places.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProcessModels.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductGroupPacks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskConfig.cs">
+    <Compile Include="Models\ProductionTaskBatches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskPM.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ProductionTaskRW.cs">
+    <Compile Include="Models\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionTasks.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductionTaskSGB.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductionTaskStates.cs">
@@ -263,19 +392,25 @@
     <Compile Include="Models\ProductionTaskWR.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductKinds.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ProductPalletItems.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductPallets.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductRelations_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Products.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductsInfo.cs">
+    <Compile Include="Models\ProductSpools.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductSpools.cs">
+    <Compile Include="Models\ProductStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Reports.cs">
@@ -293,37 +428,112 @@
     <Compile Include="Models\SourceSpools.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SpoolInstallLog.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Templates.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserPrintNames.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vCharacteristicSGBProperties.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vGroupPackSpools.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vProductionTaskBatches.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vProductionTaskProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vProductsInfo.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="MVVMWindow.cs" />
+    <Compile Include="Place.cs" />
     <Compile Include="ProductInfo.cs" />
+    <Compile Include="Common\ProductionTaskBatch.cs" />
+    <Compile Include="RejectionReason.cs" />
     <Compile Include="ReportManager.cs" />
+    <Compile Include="Scales.cs" />
+    <Compile Include="PaperBase.cs" />
+    <Compile Include="SettingBindingExtension.cs" />
+    <Compile Include="SQLGuidUtil.cs" />
     <Compile Include="UIAuthBehavior.cs" />
     <Compile Include="ValidationExceptionBehavior.cs" />
     <Compile Include="PasswordBoxHelper.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="ViewModels\DataBaseEditViewModel.cs" />
+    <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftRWRemainderViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
+    <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
+    <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
+    <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
+    <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskWRViewModel.cs" />
+    <Compile Include="ViewModels\SaveImplementedViewModel.cs" />
     <Compile Include="ViewModels\DBEditItemWithNomenclatureViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftPMGridViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftPMRemainderViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftsViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftViewModel.cs" />
     <Compile Include="ViewModels\DocProductSpoolViewModel.cs" />
     <Compile Include="ViewModels\DocProductUnloadViewModel.cs" />
     <Compile Include="ViewModels\DocProductViewModel.cs" />
     <Compile Include="ViewModels\FindProductViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ManageUsersViewModel.cs" />
+    <Compile Include="ViewModels\PermitEditViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTasksConvertingViewModel.cs" />
+    <Compile Include="ViewModels\RoleEditViewModel.cs" />
+    <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\NomenclatureViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskPMViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskRWViewModel.cs" />
-    <Compile Include="ViewModels\ProductionTasksPMViewModel.cs" />
-    <Compile Include="ViewModels\ProductionTasksRWViewModel.cs" />
-    <Compile Include="ViewModels\ProductionTaskViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTasksSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ReportListViewModel.cs" />
     <Compile Include="ViewModels\RootViewModel.cs" />
     <Compile Include="ViewModels\SourceSpoolsViewModel.cs" />
     <Compile Include="ViewModels\ValidationViewModelBase.cs" />
+    <Compile Include="Views\ComPortSettingsView.xaml.cs">
+      <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftPMGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftPMGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftPMRemainderView.xaml.cs">
+      <DependentUpon>DocCloseShiftPMRemainderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftRWRemainderView.xaml.cs">
+      <DependentUpon>DocCloseShiftRWRemainderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftsView.xaml.cs">
+      <DependentUpon>DocCloseShiftsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftView.xaml.cs">
+      <DependentUpon>DocCloseShiftView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftWRGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftWRGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocProductGroupPackView.xaml.cs">
+      <DependentUpon>DocProductGroupPackView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocProductSpoolView.xaml.cs">
       <DependentUpon>DocProductSpoolView.xaml</DependentUpon>
     </Compile>
@@ -332,6 +542,9 @@
     </Compile>
     <Compile Include="Views\DocProductView.xaml.cs">
       <DependentUpon>DocProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FindProductionTaskBatchView.xaml.cs">
+      <DependentUpon>FindProductionTaskBatchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FindProductView.xaml.cs">
       <DependentUpon>FindProductView.xaml</DependentUpon>
@@ -351,6 +564,33 @@
     <Compile Include="Views\ManageUsersView.xaml.cs">
       <DependentUpon>ManageUsersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PermitEditView.xaml.cs">
+      <DependentUpon>PermitEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceGroupsNomenclatureView.xaml.cs">
+      <DependentUpon>PlaceGroupsNomenclatureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceProductsView.xaml.cs">
+      <DependentUpon>PlaceProductsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTaskBatchSGBView.xaml.cs">
+      <DependentUpon>ProductionTaskBatchSGBView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTasksConvertingView.xaml.cs">
+      <DependentUpon>ProductionTasksConvertingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTaskSGBView.xaml.cs">
+      <DependentUpon>ProductionTaskSGBView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTaskWRView.xaml.cs">
+      <DependentUpon>ProductionTaskWRView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RoleEditView.xaml.cs">
+      <DependentUpon>RoleEditView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserEditView.xaml.cs">
+      <DependentUpon>UserEditView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NomenclatureView.xaml.cs">
       <DependentUpon>NomenclatureView.xaml</DependentUpon>
     </Compile>
@@ -360,23 +600,14 @@
     <Compile Include="Views\ProductionTaskRWView.xaml.cs">
       <DependentUpon>ProductionTaskRWView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProductionTasksPMView.xaml.cs">
-      <DependentUpon>ProductionTasksPMView.xaml</DependentUpon>
+    <Compile Include="Views\ProductionTasksSGBView.xaml.cs">
+      <DependentUpon>ProductionTasksSGBView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ProductionTasksRWView.xaml.cs">
-      <DependentUpon>ProductionTasksRWView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ProductionTaskView.xaml.cs">
-      <DependentUpon>ProductionTaskView.xaml</DependentUpon>
+    <Compile Include="Views\ProductionTaskBatchView.xaml.cs">
+      <DependentUpon>ProductionTaskBatchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ReportListView.xaml.cs">
       <DependentUpon>ReportListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ReportPreview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\ReportPreview.Designer.cs">
-      <DependentUpon>ReportPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\SourceSpoolsView.xaml.cs">
       <DependentUpon>SourceSpoolsView.xaml</DependentUpon>
@@ -388,7 +619,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\ChoosePrintNameDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\FilterDateReportDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ComPortSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftPMGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftPMRemainderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftRWRemainderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftsView.xaml">
+      <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftWRGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocProductGroupPackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -402,6 +669,10 @@
     </Page>
     <Page Include="Views\DocProductView.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FindProductionTaskBatchView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FindProductView.xaml">
@@ -420,6 +691,42 @@
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PermitEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaceGroupsNomenclatureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PlaceProductsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTaskBatchSGBView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTasksConvertingView.xaml">
+      <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTaskSGBView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTaskWRView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RoleEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\NomenclatureView.xaml">
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -432,16 +739,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProductionTasksPMView.xaml">
-      <SubType>Form</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ProductionTasksRWView.xaml">
+    <Page Include="Views\ProductionTasksSGBView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ProductionTaskView.xaml">
-      <SubType>Form</SubType>
+    <Page Include="Views\ProductionTaskBatchView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ReportListView.xaml">
@@ -472,9 +775,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\ReportPreview.resx">
-      <DependentUpon>ReportPreview.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Models\GammaModel.Context.tt">

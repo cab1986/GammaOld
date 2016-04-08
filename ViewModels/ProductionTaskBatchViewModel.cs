@@ -161,7 +161,7 @@ namespace Gamma.ViewModels
                 ChangeCurrentView(_batchKind);
             }
         }
-        private byte? _processModeID;
+        private byte? _processModelID;
 
         private bool _partyControl;
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -182,14 +182,14 @@ namespace Gamma.ViewModels
         {
             get
             {
-                return _processModeID;
+                return _processModelID;
             }
             set
             {
-                _processModeID = value;
+                _processModelID = value;
                 if (CurrentView is IProductionTaskBatch)
                 {
-                    (CurrentView as IProductionTaskBatch).ProcessModelID = _processModeID ?? 0;
+                    (CurrentView as IProductionTaskBatch).ProcessModelID = _processModelID ?? 0;
                 }
             }
         }
@@ -275,8 +275,8 @@ namespace Gamma.ViewModels
         private void CreateNewProduct()
         {
             var docProductKind = new DocProductKinds();
-            var productionTaskID = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
-                    Select(p => p.ProductionTasks.Where(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).FirstOrDefault().ProductionTaskID).
+            var productionTaskId = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
+                    Select(p => p.ProductionTasks.FirstOrDefault(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).ProductionTaskID).
                     FirstOrDefault();
             switch (BatchKind)
             {
@@ -301,10 +301,10 @@ namespace Gamma.ViewModels
                                 docProduction.ShiftID = WorkSession.ShiftID;
                                 docProduction.UserID = WorkSession.UserID;
                                 docProduction.PrintName = WorkSession.PrintName;
-                                docProduction.DocProduction.ProductionTaskID = productionTaskID;
+                                docProduction.DocProduction.ProductionTaskID = productionTaskId;
                                 var productID = DB.GammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).Select(d => d.ProductID).First();
                                 var productSpool = DB.GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == productID);
-                                var productionTaskPM = DB.GammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == productionTaskID);
+                                var productionTaskPM = DB.GammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == productionTaskId);
                                 DB.GammaBase.Entry(productSpool).Reload();
                                 if (productionTaskPM != null)
                                 {
@@ -333,8 +333,8 @@ namespace Gamma.ViewModels
                         case PlaceGroups.RW:
                             docProductKind = DocProductKinds.DocProductUnload;
                             // Проверка на наличие неподтвержденного съема
-                            var notConfirmedDocUnload = DB.GammaBase.Docs.Where(d => d.PlaceID == WorkSession.PlaceID &&
-                                d.ShiftID == WorkSession.ShiftID).OrderByDescending(d => d.Date).Take(1).FirstOrDefault();
+                            var notConfirmedDocUnload = DB.GammaBase.Docs.Where(d => d.PlaceID == WorkSession.PlaceID 
+                            && d.DocTypeID == (byte)DocTypes.DocProduction).OrderByDescending(d => d.Date).FirstOrDefault();
                             if (notConfirmedDocUnload != null && !notConfirmedDocUnload.IsConfirmed)
                             {
                                 MessageBox.Show("Предыдущий съем не подтвержден. Он будет открыт для редактирования");
@@ -355,7 +355,7 @@ namespace Gamma.ViewModels
                 default:
                     break;
             }
-            MessageManager.CreateNewProduct(docProductKind, productionTaskID);
+            MessageManager.CreateNewProduct(docProductKind, productionTaskId);
         }
 
 //        private ObservableCollection<Place> _places = DB.GetPlaces(PlaceGroups.PM);
