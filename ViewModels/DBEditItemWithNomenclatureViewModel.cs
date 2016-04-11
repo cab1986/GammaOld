@@ -70,7 +70,7 @@ namespace Gamma.ViewModels
                                 select nom.Name).FirstOrDefault();
         }
         private ObservableCollection<Characteristic> _characteristics;
-        public ObservableCollection<Characteristic> Characteristics
+        public virtual ObservableCollection<Characteristic> Characteristics
         {
             get
             {

@@ -138,6 +138,23 @@ namespace Gamma.ViewModels
                     NomenclatureID = null;
             }
         }
+
+        public override ObservableCollection<Characteristic> Characteristics
+        {
+            get { return base.Characteristics; }
+            set
+            {
+                var tempChars = new ObservableCollection<Characteristic>();
+                foreach (var characteristic in value)
+                {
+                    if (DB.GammaBase.GetCharSpoolLayerNumber(characteristic.CharacteristicID).FirstOrDefault() > 1) continue;
+                    tempChars.Add(characteristic);
+                }
+                base.Characteristics = tempChars;
+                RaisePropertiesChanged("Characteristics");
+            }
+        }
+
         public Guid ProductionTaskID { get; set; }
         public ProductionTaskSGBViewModel ProductionTaskSGBViewModel { get; private set; }
 
