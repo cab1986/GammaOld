@@ -33,7 +33,7 @@ namespace Gamma.ViewModels
                         Weight = (decimal)sp.Weight
                     }
                     );
-                DocCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").Where(d => d.DocID == msg.DocID).FirstOrDefault();
+                DocCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
                 DocCloseShiftDocs = new ObservableCollection<Docs>(DocCloseShift.DocCloseShiftDocs);
                 CloseDate = DocCloseShift.Date;
                 ShiftID = (byte)DocCloseShift.ShiftID;
@@ -44,14 +44,8 @@ namespace Gamma.ViewModels
                 () => SelectedSpool != null);
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
         }
-        private Guid? _vmID = Guid.NewGuid();
-        public Guid? VMID
-        {
-            get
-            {
-                return _vmID;
-            }
-        }
+
+        public Guid? VMID { get; } = Guid.NewGuid();
 
         private byte ShiftID { get; set; }
         private DateTime CloseDate { get; set; }
@@ -63,8 +57,8 @@ namespace Gamma.ViewModels
             ClearGrid();
             DocCloseShiftDocs = new ObservableCollection<Docs>(DB.GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && 
-                    d.Date >= SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(CloseDate)) && 
-                    d.Date <= SqlFunctions.DateAdd("hh",1, DB.GetShiftEndTime(CloseDate)) &&
+                    d.Date >= SqlFunctions.DateAdd("hh",-1,SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(CloseDate))) && 
+                    d.Date <= SqlFunctions.DateAdd("hh",1, SqlFunctions.DateAdd("hh",-1,DB.GetShiftEndTime(CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).Select(d => d));
             foreach (var doc in DocCloseShiftDocs)
             {

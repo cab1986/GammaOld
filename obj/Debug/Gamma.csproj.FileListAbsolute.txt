@@ -235,3 +235,5 @@ D:\CProjects\Gamma\Gamma\bin\Debug\es\DevExpress.Sparkline.v15.2.Core.resources.
 D:\CProjects\Gamma\Gamma\bin\Debug\ja\DevExpress.Sparkline.v15.2.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ru\DevExpress.Sparkline.v15.2.Core.resources.dll
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
+D:\CProjects\Gamma\Gamma\bin\Debug\Russian.frl
+D:\CProjects\Gamma\Gamma\bin\Debug\ngeninstall.bat
