@@ -33,11 +33,24 @@ namespace Gamma
     {
         public int PlaceGroupID;
     }
-    public class ProductionTaskRWMessage
+    public class ProductionTaskRwMessage
     {
-        public Guid ProductionTaskBatchID;
-        public Guid NomenclatureID;
-        public Guid CharacteristicID;
+        public ProductionTaskRwMessage(Guid productionTaskBatchId, Guid nomenclatureId)
+        {
+            ProductionTaskBatchId = productionTaskBatchId;
+            NomenclatureId = nomenclatureId;
+        }
+
+        public ProductionTaskRwMessage(Guid productionTaskBatchId, DateTime dateBegin)
+        {
+            ProductionTaskBatchId = productionTaskBatchId;
+            DateBegin = dateBegin;
+        }
+
+        public Guid ProductionTaskBatchId;
+        public Guid? NomenclatureId;
+        public Guid? CharacteristicId;
+        public DateTime? DateBegin;
     }
     public class Nomenclature1CMessage
     {
@@ -96,58 +109,59 @@ namespace Gamma
     {
         public static void EditUser()
         {
-            Messenger.Default.Send<UserEditMessage>(new UserEditMessage());
+            Messenger.Default.Send(new UserEditMessage());
         }
         public static void EditUser(Guid userID)
         {
-            Messenger.Default.Send<UserEditMessage>(new UserEditMessage() { UserID = userID });
+            Messenger.Default.Send(new UserEditMessage { UserID = userID });
         }
         public static void EditPermit()
         {
-            Messenger.Default.Send<PermitEditMessage>(new PermitEditMessage());
+            Messenger.Default.Send(new PermitEditMessage());
         }
         public static void EditPermit(Guid permitID)
         {
-            Messenger.Default.Send<PermitEditMessage>(new PermitEditMessage() { PermitID = permitID });
+            Messenger.Default.Send(new PermitEditMessage { PermitID = permitID });
         }
         public static void EditRole()
         {
-            Messenger.Default.Send<RoleEditMessage>(new RoleEditMessage());
+            Messenger.Default.Send(new RoleEditMessage());
         }
         public static void EditRole(Guid roleID)
         {
-            Messenger.Default.Send<RoleEditMessage>(new RoleEditMessage() { RoleID = roleID });
+            Messenger.Default.Send(new RoleEditMessage { RoleID = roleID });
         }
-        public static void ProductionTaskRWNomenclatureChanged(Guid productionTaskBatchID, Guid nomenclatureID)
+        public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchId, Guid nomenclatureId)
         {
-            Messenger.Default.Send<ProductionTaskRWMessage>(new ProductionTaskRWMessage()
-            {
-                ProductionTaskBatchID = productionTaskBatchID,
-                NomenclatureID = nomenclatureID
-            });
+            Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchId, nomenclatureId));
+        }
+
+        public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchId, DateTime dateBegin)
+        {
+            Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchId, dateBegin));
         }
         public static void OpenManageUsers()
         {
-            Messenger.Default.Send<OpenManageUsersMessage>(new OpenManageUsersMessage());
+            Messenger.Default.Send(new OpenManageUsersMessage());
         }
         public static void OpenMain()
         {
-            Messenger.Default.Send<OpenMainMessage>(new OpenMainMessage());
+            Messenger.Default.Send(new OpenMainMessage());
         }
 
         public static void OpenNomenclature(int placeGroupID)
         {
-            Messenger.Default.Send<OpenNomenclatureMessage>(new OpenNomenclatureMessage() {PlaceGroupID = placeGroupID });
+            Messenger.Default.Send(new OpenNomenclatureMessage {PlaceGroupID = placeGroupID });
         }
 
         public static void OpenProductionTask(OpenProductionTaskBatchMessage msg)
         {
-            Messenger.Default.Send<OpenProductionTaskBatchMessage>(msg);
+            Messenger.Default.Send(msg);
         }
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
-            Messenger.Default.Send<OpenDocProductMessage>(new OpenDocProductMessage()
-                {
+            Messenger.Default.Send(new OpenDocProductMessage
+            {
                     DocProductKind = docProductKind,
                     ID = id,
                     IsNewProduct = false
@@ -155,57 +169,57 @@ namespace Gamma
         }
         public static void OpenReportList()
         {
-            Messenger.Default.Send<OpenReportListMessage>(new OpenReportListMessage());
+            Messenger.Default.Send(new OpenReportListMessage());
         }
         
         public static void PrintReport(PrintReportMessage msg)
         {
-            Messenger.Default.Send<PrintReportMessage>(msg);
+            Messenger.Default.Send(msg);
         }
 
         public static void OpenFindProduct()
         {
-            Messenger.Default.Send<FindProductMessage>(new FindProductMessage()
-                {
+            Messenger.Default.Send(new FindProductMessage
+            {
                     ChooseSourceProduct = false
                 });
         }
         public static void OpenFindProduct(ProductKinds productKind, bool chooseSourceProduct = false)
         {
-            Messenger.Default.Send<FindProductMessage>(new FindProductMessage()
-                {
+            Messenger.Default.Send(new FindProductMessage
+            {
                     ProductKind = productKind,
                     ChooseSourceProduct = chooseSourceProduct
                 });
         }
         public static void OpenDocCloseShift(Guid docID)
         {
-            Messenger.Default.Send<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage() {DocID = docID});
+            Messenger.Default.Send(new OpenDocCloseShiftMessage {DocID = docID});
         }
         public static void OpenDocCloseShift(int placeID, DateTime closeDate, byte shiftID)
         {
-            Messenger.Default.Send<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage() { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
+            Messenger.Default.Send(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
         }
         public static void OpenDocCloseShifts(PlaceGroups placeGroup)
         {
-            Messenger.Default.Send<OpenDocCloseShiftsMessage>(new OpenDocCloseShiftsMessage() { PlaceGroup = placeGroup });
+            Messenger.Default.Send(new OpenDocCloseShiftsMessage { PlaceGroup = placeGroup });
         }
         public static void ConfigureComPort()
         {
-            Messenger.Default.Send<ConfigureComPortMessage>(new ConfigureComPortMessage());
+            Messenger.Default.Send(new ConfigureComPortMessage());
         }
         public static void FindProductionTaskBatch(BatchKinds batchKind)
         {
-            Messenger.Default.Send<FindProductionTaskBatchMessage>(new FindProductionTaskBatchMessage() { BatchKind =  batchKind});
+            Messenger.Default.Send(new FindProductionTaskBatchMessage { BatchKind =  batchKind});
         }
         public static void OpenPlaceGroupsNomenclature()
         {
-            Messenger.Default.Send<OpenPlaceGroupsNomenclatureMessage>(new OpenPlaceGroupsNomenclatureMessage());
+            Messenger.Default.Send(new OpenPlaceGroupsNomenclatureMessage());
         }
         public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null)
         {
-            Messenger.Default.Send<OpenDocProductMessage>(new OpenDocProductMessage()
-                {
+            Messenger.Default.Send(new OpenDocProductMessage
+            {
                     DocProductKind = docProductKind,
                     ID = id,
                     IsNewProduct = true

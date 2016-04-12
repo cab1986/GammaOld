@@ -120,22 +120,29 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
-        private void NomenclatureRWChanged(ProductionTaskRWMessage msg)
+        private void ProductionTaskRWChanged(ProductionTaskRwMessage msg)
         {
-            if (msg.ProductionTaskBatchID == ProductionTaskBatchID)
+            if (msg.ProductionTaskBatchId != ProductionTaskBatchID) return;
+            if (msg.NomenclatureId != null)
             {
                 SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                    DB.GammaBase.GetInputNomenclature(msg.NomenclatureID, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
-                    {
-                        Name = n.Name,
-                        NomenclatureID = (Guid)n.C1CNomenclatureID
-                    }));
+                    DB.GammaBase.GetInputNomenclature(msg.NomenclatureId, (byte) PlaceGroups.PM)
+                        .Select(n => new Nomenclature1C()
+                        {
+                            Name = n.Name,
+                            NomenclatureID = (Guid) n.C1CNomenclatureID
+                        }));
                 if (SpecificationNomenclature.Count == 1)
                 {
                     NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
                 }
                 else
                     NomenclatureID = null;
+            }
+            if (msg.DateBegin != null)
+            {
+                DateBegin = msg.DateBegin;
+                DateEnd = msg.DateBegin;
             }
         }
 
@@ -185,11 +192,11 @@ namespace Gamma.ViewModels
             	_isForRW = value;
                 if (IsForRW)
                 {
-                    Messenger.Default.Register<ProductionTaskRWMessage>(this, NomenclatureRWChanged);
+                    Messenger.Default.Register<ProductionTaskRwMessage>(this, ProductionTaskRWChanged);
                 }
                 else
                 {
-                    Messenger.Default.Unregister<ProductionTaskRWMessage>(this);
+                    Messenger.Default.Unregister<ProductionTaskRwMessage>(this);
                 }
                 RaisePropertyChanged("IsForRW");
             }

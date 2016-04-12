@@ -56,7 +56,7 @@ namespace Gamma.ViewModels
                 int i = 0;
                 foreach (var rwcutting in cuttings)
                 {
-                    CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID).FormatNumeric ?? 0;
+                    CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID)?.FormatNumeric ?? 0;
                     i++;
                 }
             }
@@ -339,7 +339,7 @@ namespace Gamma.ViewModels
             }
         }
         private DateTime? _dateBegin;
-        [Required(ErrorMessage = "Необходимо указать дату начала")]
+        [Required(ErrorMessage = @"Необходимо указать дату начала")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime? DateBegin
         {
@@ -350,11 +350,16 @@ namespace Gamma.ViewModels
             set
             {
                 _dateBegin = value;
+                if (value != null)
+                {
+                    DateEnd = value;
+                    MessageManager.ProductionTaskRwDateBeginChanged(ProductionTaskBatchID, (DateTime)value);
+                }
                 RaisePropertyChanged("DateBegin");
             }
         }
         private DateTime? _dateEnd;
-        [Required(ErrorMessage = "Необходимо указать дату окончания")]
+        [Required(ErrorMessage = @"Необходимо указать дату окончания")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime? DateEnd
         {
@@ -485,7 +490,7 @@ namespace Gamma.ViewModels
             SetCharacteristicProperties();
             if (NomenclatureID != null)
             {
-                MessageManager.ProductionTaskRWNomenclatureChanged(ProductionTaskBatchID, (Guid)NomenclatureID);
+                MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, (Guid)NomenclatureID);
             }
         }
 
