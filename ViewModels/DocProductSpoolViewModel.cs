@@ -85,8 +85,8 @@ namespace Gamma.ViewModels
                 };
                 DB.GammaBase.DocProducts.Add(DocProduct);
                 DB.GammaBase.SaveChanges();
-                DB.GammaBase.Entry<Products>(Product).Reload();
-                RealFormat = DB.GetLastFormat(WorkSession.PlaceID);
+                DB.GammaBase.Entry(Product).Reload();
+//                RealFormat = ProductSpool.RealFormat; //DB.GetLastFormat(WorkSession.PlaceID);
             }
             else
             {

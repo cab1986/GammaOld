@@ -7,6 +7,7 @@ using Gamma.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Collections.Generic;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
@@ -288,11 +289,12 @@ namespace Gamma.ViewModels
                             // Проверка на наличие тамбура с предыдущей смены
                             var curDate = DB.CurrentDateTime;
                             // получаем предыдущий документ в базе
-                            var docProduction = DB.GammaBase.Docs.Include("DocProduction")
+                            var docProduction = DB.GammaBase.Docs.Include(d => d.DocProduction)
                                 .Where(d => d.PlaceID == WorkSession.PlaceID // && d.ShiftID == null
                             //    && d.Date >= SqlFunctions.DateAdd("hh",-12, DB.GetShiftBeginTime(curDate))
-                                && d.DocTypeID == (Byte)DocTypes.DocProduction).OrderByDescending(d => d.Date)
+                                && d.DocTypeID == (byte)DocTypes.DocProduction).OrderByDescending(d => d.Date)
                                 .FirstOrDefault();
+                            DB.GammaBase.Entry(docProduction).Reload();
                             if (docProduction == null) break;
                             //Если не указана смена, то переходный тамбур. Устанавливаем недостающие свойства и открываем для редактирования
                             if (docProduction.ShiftID == null)
@@ -302,8 +304,8 @@ namespace Gamma.ViewModels
                                 docProduction.UserID = WorkSession.UserID;
                                 docProduction.PrintName = WorkSession.PrintName;
                                 docProduction.DocProduction.ProductionTaskID = productionTaskId;
-                                var productID = DB.GammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).Select(d => d.ProductID).First();
-                                var productSpool = DB.GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == productID);
+                                var productId = DB.GammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).Select(d => d.ProductID).First();
+                                var productSpool = DB.GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == productId);
                                 var productionTaskPM = DB.GammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == productionTaskId);
                                 DB.GammaBase.Entry(productSpool).Reload();
                                 if (productionTaskPM != null)
@@ -313,7 +315,7 @@ namespace Gamma.ViewModels
                                 }
                                 DB.GammaBase.SaveChanges();
                                 DB.GammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
-                                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productID);
+                                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                 return;
                             }
                             
@@ -326,7 +328,8 @@ namespace Gamma.ViewModels
                             if (docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                             {
                                 MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
-                                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, docProduction.DocID);
+                                var productId = DB.GammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).Select(d => d.ProductID).First();
+                                MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                 return;
                             }                  
                             break;
