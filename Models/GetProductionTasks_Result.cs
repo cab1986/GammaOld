@@ -21,5 +21,6 @@ namespace Gamma.Models
         public Nullable<int> EnumColor { get; set; }
         public string Place { get; set; }
         public string MadeQuantity { get; set; }
+        public string Number { get; set; }
     }
 }

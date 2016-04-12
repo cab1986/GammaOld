@@ -92,6 +92,7 @@ namespace Gamma.ViewModels
             public string Place { get; set; }
             public DateTime? DateBegin { get; set; }
             public byte EnumColor { get; set; }
+            public string Number { get; set; }
         }
         
         private void GetProductionTasks()
@@ -110,22 +111,22 @@ namespace Gamma.ViewModels
                         TaskQuantity = pt.Quantity,
                         Place = pt.Place,
                         EnumColor = (byte?)pt.EnumColor ?? 0,
-                        Format = new string[16]
+                        Format = new string[16],
+                        Number = pt.Number
                     }
                 ); 
             for (int i = 0; i < tempCollection.Count; i++)
             {
-                var productionTaskBatchID = tempCollection[i].ProductionTaskBatchID;
-                var cuttingList = DB.GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchID).ToList();
+                var productionTaskBatchId = tempCollection[i].ProductionTaskBatchID;
+                var cuttingList = DB.GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchId).ToList();
                 if (cuttingList.Count == 0)
                 {
-                    MessageBox.Show(String.Format("Ошибка при получении информации о задании(ID: {0})", productionTaskBatchID));
+                    MessageBox.Show($"Ошибка при получении информации о задании(ID: {productionTaskBatchId})");
                     continue;
                 }
                 var cutting = cuttingList[0];
-                tempCollection[i].Nomenclature = String.Format("{0} \r\n{1} {2} {3} {4}", 
-                    tempCollection[i].Nomenclature, cutting.CoreDiameter, cutting.LayerNumber,  
-                    cutting.Color, cutting.Destination);
+                tempCollection[i].Nomenclature =
+                    $"{tempCollection[i].Nomenclature} \r\n{cutting.CoreDiameter} {cutting.LayerNumber} {cutting.Color} {cutting.Destination}";
                 tempCollection[i].TotalFormat = 0;
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {

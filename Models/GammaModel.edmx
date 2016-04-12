@@ -4666,6 +4666,7 @@
           <Property Type="Int32" Name="EnumColor" Nullable="true" />
           <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
           <Property Type="String" Name="MadeQuantity" Nullable="true" MaxLength="8000" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="255" />
         </ComplexType>
         <ComplexType Name="GetProductRelations_Result">
           <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="15" />
@@ -5938,6 +5939,7 @@
                 <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
                 <ScalarProperty Name="Place" ColumnName="Place" />
                 <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

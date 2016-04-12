@@ -838,6 +838,7 @@
           <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
           <ScalarProperty Name="Place" ColumnName="Place" />
           <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
