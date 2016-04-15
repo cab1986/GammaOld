@@ -6,7 +6,7 @@
         WindowStartupLocation="CenterScreen">
     <Grid>
 
-        <dxe:ComboBoxEdit x:Name="edtPrintName" Margin="10,43,4,0" VerticalAlignment="Top" AutoComplete="True" FindMode="Always"/>
+        <dxe:ComboBoxEdit x:Name="EdtPrintName" Margin="10,43,4,0" VerticalAlignment="Top" AutoComplete="True" FindMode="Always"/>
         <Label Content="Имя для печати" Margin="10,10,347,0" VerticalAlignment="Top" Height="28"/>
         <Button Content="OK" Margin="0,70,93,10" IsDefault="True" HorizontalAlignment="Right" Click="BtnOK_Click" Width="78" />
         <Button Content="Отмена" IsCancel="True" Margin="0,70,10,10" HorizontalAlignment="Right" Width="78"/>

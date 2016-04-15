@@ -5,9 +5,9 @@ namespace Gamma.Views
     /// <summary>
     /// Interaction logic for DocCloseShiftWRGridView.xaml
     /// </summary>
-    public partial class DocCloseShiftWRGridView : UserControl
+    public partial class DocCloseShiftWrGridView : UserControl
     {
-        public DocCloseShiftWRGridView()
+        public DocCloseShiftWrGridView()
         {
             InitializeComponent();
         }

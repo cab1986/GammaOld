@@ -9,10 +9,7 @@ using Gamma.Common;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// ViewModel для грида заданий СГБ
     /// </summary>
     public class ProductionTasksSGBViewModel : RootViewModel,IItemManager
     {
@@ -49,7 +46,10 @@ namespace Gamma.ViewModels
         }
         private void DeleteItem()
         {
-
+            if (SelectedProductionTaskBatch == null) return;
+            var delResult = DB.GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskBatch.ProductionTaskBatchID).First();
+            if (string.IsNullOrEmpty(delResult)) return;
+            MessageBox.Show(delResult, "Не удалось удалить", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private void Refresh()
         {
@@ -97,7 +97,7 @@ namespace Gamma.ViewModels
         
         private void GetProductionTasks()
         {
-            UIServices.SetBusyState();
+            UiServices.SetBusyState();
             ProductionTaskBatchesSGB = new ObservableCollection<ProductionTaskBatchSGB>();
             var tempCollection = new ObservableCollection<ProductionTaskBatchSGB>
                 (
@@ -117,11 +117,11 @@ namespace Gamma.ViewModels
                 ); 
             for (int i = 0; i < tempCollection.Count; i++)
             {
-                var productionTaskBatchId = tempCollection[i].ProductionTaskBatchID;
-                var cuttingList = DB.GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchId).ToList();
+                var productionTaskBatchID = tempCollection[i].ProductionTaskBatchID;
+                var cuttingList = DB.GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchID).ToList();
                 if (cuttingList.Count == 0)
                 {
-                    MessageBox.Show($"Ошибка при получении информации о задании(ID: {productionTaskBatchId})");
+                    MessageBox.Show($"Ошибка при получении информации о задании(id: {productionTaskBatchID})");
                     continue;
                 }
                 var cutting = cuttingList[0];

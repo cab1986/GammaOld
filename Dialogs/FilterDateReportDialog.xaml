@@ -17,17 +17,17 @@
         <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
             <dxlc:LayoutGroup Header="" View="GroupBox" Margin="-12">
                 <dxlc:LayoutItem Label="Начальная дата" LabelPosition="Top">
-                    <dxe:DateEdit Name="edtDateBegin" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                    <dxe:DateEdit Name="EdtDateBegin" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Конечная дата" LabelPosition="Top">
-                    <dxe:DateEdit Name="edtDateEnd" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                    <dxe:DateEdit Name="EdtDateEnd" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm" />
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
-        <Button Content="OK" Name="btnOK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
-        <Button Content="Отмена" IsCancel="True" Name="btnCancel"  Grid.Row="1"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />
+        <Button Content="OK" Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="1"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />
     </Grid>
 </Window>
 

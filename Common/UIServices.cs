@@ -7,12 +7,12 @@ namespace Gamma.Common
     /// <summary>
     ///   Contains helper methods for UI, so far just one for showing a waitcursor
     /// </summary>
-    public static class UIServices
+    public static class UiServices
     {
         /// <summary>
         ///   A value indicating whether the UI is currently busy
         /// </summary>
-        private static bool IsBusy;
+        private static bool _isBusy;
 
         /// <summary>
         /// Sets the busystate as busy.
@@ -28,12 +28,12 @@ namespace Gamma.Common
         /// <param name="busy">if set to <c>true</c> the application is now busy.</param>
         private static void SetBusyState(bool busy)
         {
-            if (busy != IsBusy)
+            if (busy != _isBusy)
             {
-                IsBusy = busy;
+                _isBusy = busy;
                 Mouse.OverrideCursor = busy ? Cursors.Wait : null;
 
-                if (IsBusy)
+                if (_isBusy)
                 {
                     new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, dispatcherTimer_Tick, System.Windows.Application.Current.Dispatcher);
                 }

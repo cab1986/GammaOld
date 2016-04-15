@@ -6,7 +6,7 @@ namespace Gamma
     public class PaperBase : ViewModelBase
     {
         public byte? BreakNumber { get; set; }
-        public int? PlaceProductionID { get; set; }
+        public int? PlaceProductionid { get; set; }
         public DateTime Date { get; set; }
         public Guid DocID { get; set; }
         public Guid ProductID { get; set; }

@@ -1,0 +1,25 @@
+﻿<UserControl xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"  x:Class="Gamma.Views.ProductionTasksSGIView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        mc:Ignorable="d ignore"
+        DataContext="{Binding ProductionTasksSGI, Source={StaticResource Locator}}">
+
+    <Grid>
+        <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskSGI}" AutoExpandAllGroups="True">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn Binding="{Binding Number}" Header="Номер" VisibleIndex="0" Width="130"/>
+                <dxg:GridColumn Binding="{Binding Place}" Header="Передел" GroupIndex="0"/>
+                <dxg:GridColumn Binding="{Binding ProductionTaskBatchID}" Visible="False" />
+                <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="1" Width="110"/>
+                <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="2" AllowBestFit="True"/>
+                <dxg:GridColumn Binding="{Binding Quantity}" Header="Кол-во, рул" VisibleIndex="3" Width="100"/>
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False"/>
+            </dxg:GridControl.View>
+        </dxg:GridControl>
+    </Grid>
+</UserControl>

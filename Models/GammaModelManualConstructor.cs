@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Data.Common;
+using System.Data.Entity;
 
 namespace Gamma.Models
 {
@@ -6,6 +7,13 @@ namespace Gamma.Models
     {
         public GammaEntities(string connection)
             : base(connection)
+        {
+#if DEBUG
+            this.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));
+#endif
+        }
+        public GammaEntities(DbConnection connection)
+    : base(connection, false)
         {
 #if DEBUG
             this.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));

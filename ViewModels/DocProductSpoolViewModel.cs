@@ -18,7 +18,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductSpoolViewModel : DBEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
+    public class DocProductSpoolViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the DocProductSpoolViewModel class.
@@ -28,19 +28,19 @@ namespace Gamma.ViewModels
 
         }
 
-        public DocProductSpoolViewModel(Guid id, bool isNewProduct) // если это новое изделие, то id - Это docId иначе productId
+        public DocProductSpoolViewModel(Guid id, bool isNewProduct) // если это новое изделие, то id - Это docID иначе productid
         {
-            Guid docId;
-            Guid productId;
+            Guid docID;
+            Guid productid;
             if (isNewProduct)
             {
-                docId = id;
-                productId = SQLGuidUtil.NewSequentialId();
+                docID = id;
+                productid = SqlGuidUtil.NewSequentialid();
             }
             else
             {
-                productId = id;
-                docId =
+                productid = id;
+                docID =
                     DB.GammaBase.DocProducts.Where(
                         dp => dp.ProductID == id && dp.Docs.DocTypeID == (byte)DocTypes.DocProduction)
                         .Select(dp => dp.DocID)
@@ -59,12 +59,12 @@ namespace Gamma.ViewModels
             {
                 Product = new Products()
                 {
-                    ProductID = productId,
+                    ProductID = productid,
                     ProductKindID = (byte)ProductKinds.ProductSpool
                 };
                 DB.GammaBase.Products.Add(Product);
                 var ptInfo = (from d in DB.GammaBase.DocProduction
-                    where d.DocID == docId
+                    where d.DocID == docID
                     select new 
                     { 
                         NomenclatureID = d.ProductionTasks.C1CNomenclatureID, 
@@ -80,7 +80,7 @@ namespace Gamma.ViewModels
                 DB.GammaBase.ProductSpools.Add(ProductSpool);
                 DocProduct = new DocProducts()
                 {
-                    DocID = docId,
+                    DocID = docID,
                     ProductID = Product.ProductID
                 };
                 DB.GammaBase.DocProducts.Add(DocProduct);
@@ -90,9 +90,9 @@ namespace Gamma.ViewModels
             }
             else
             {
-                DocProduct = (from dp in DB.GammaBase.DocProducts.Include(a => a.Docs) where dp.DocID == docId
+                DocProduct = (from dp in DB.GammaBase.DocProducts.Include(a => a.Docs) where dp.DocID == docID
                                   select dp).FirstOrDefault();
-                Product = DB.GammaBase.Products.Include(p => p.ProductSpools).First(p => p.ProductID == productId);
+                Product = DB.GammaBase.Products.Include(p => p.ProductSpools).First(p => p.ProductID == productid);
 //                    DB.GammaBase.Products.Where(prod => prod.DocProducts.FirstOrDefault().DocID == docID).FirstOrDefault();
 //                DB.GammaBase.Entry<Products>(Product).Reload();  По наблюдениям Include заставляет EF выполнить запрос к базе, даже если Entity уже загружена
                 ProductSpool = Product.ProductSpools;
@@ -129,7 +129,6 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("Spool", VMID));
             IsConfirmed = DocProduct.Docs.IsConfirmed && IsValid;
         }
-        private Guid? _characteristicId;
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Range(1,5000,ErrorMessage = "Необходимо указать диаметр")]
         public int Diameter
@@ -157,28 +156,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Length");
             }
         }
-        public Guid? DocID
-        {
-            get
-            {
-                return _docID;
-            }
-            set
-            {
-                _docID = value;
-            }
-        }
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        [Required(ErrorMessage="Необходимо выбрать характеристику")]
-        public Guid? CharacteristicID
-        {
-            get { return _characteristicId; }
-            set
-            {
-                _characteristicId = value;
-                RaisePropertyChanged("CharacteristicID");
-            }
-        }
+        public Guid? DocID { get; set; }
+
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)
         {
             base.NomenclatureChanged(msg);
@@ -242,7 +221,6 @@ namespace Gamma.ViewModels
         }
         private decimal? _length;
         private int _diameter;
-        private Guid? _docID;
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
         public ObservableCollection<BarViewModel> Bars
         {
@@ -256,25 +234,25 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
-        private Guid? _vmID = Guid.NewGuid();
+        private Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
         {
             get
             {
-                return _vmID;
+                return _vmid;
             }
         }
 
         private DocProducts DocProduct { get; set; }
         private Products Product { get; set; }
         private ProductSpools ProductSpool { get; set; }
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("ProductSpools")) return;
             base.SaveToModel();
   /*          if (Product == null)
             {
-                Product = new Products() { ProductID = SQLGuidUtil.NewSequentialId(), ProductKindID = (int)ProductKinds.ProductSpool };
+                Product = new Products() { ProductID = SQLGuidUtil.NewSequentialid(), ProductKindID = (int)ProductKinds.ProductSpool };
                 ProductSpool = new ProductSpools() { ProductID = Product.ProductID };
                 DocProduct = new DocProducts()
                 {
@@ -292,17 +270,17 @@ namespace Gamma.ViewModels
             }
             else
  */
-            var stateID = (from d in DB.GammaBase.DocChangeStateProducts where d.ProductID == Product.ProductID
+            var stateid = (from d in DB.GammaBase.DocChangeStateProducts where d.ProductID == Product.ProductID
                                orderby
                                d.Docs.Date descending
                                    select d.StateID).Take(1).FirstOrDefault();
-            if (stateID != StateID)
+            if (stateid != StateID)
             {
-                 var docChangeID = SQLGuidUtil.NewSequentialId();
+                 var docChangeid = SqlGuidUtil.NewSequentialid();
                  var docChangeStateProducts = new Collection<DocChangeStateProducts>();
                  docChangeStateProducts.Add(new DocChangeStateProducts() 
                  { 
-                     DocID = docChangeID, 
+                     DocID = docChangeid, 
                      ProductID = Product.ProductID,
                      StateID = (Byte)StateID,
                      C1CRejectionReasonID = RejectionReasonID,
@@ -310,7 +288,7 @@ namespace Gamma.ViewModels
                  });
                     var doc = new Docs()
                     {
-                        DocID = docChangeID,
+                        DocID = docChangeid,
                         Date = DB.CurrentDateTime,
                         DocTypeID = (byte)DocTypes.DocChangeState,
                         IsConfirmed = true,
@@ -328,7 +306,7 @@ namespace Gamma.ViewModels
             ProductSpool.Length = Length;
             ProductSpool.Weight = Weight;
             DocProduct.IsInConfirmed = (from doc in DB.GammaBase.Docs
-                                        where doc.DocID == itemId
+                                        where doc.DocID == itemID
                                         select doc.IsConfirmed).FirstOrDefault();
             DB.GammaBase.SaveChanges();
             Messenger.Default.Send<ProductChangedMessage>(new ProductChangedMessage() {ProductID = Product.ProductID});
@@ -348,18 +326,18 @@ namespace Gamma.ViewModels
         {
             return !IsConfirmed && DB.HaveWriteAccess("ProductSpools");
         }
-        private byte? _stateID;
+        private byte? _stateid;
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Required(ErrorMessage="Необходимо выбрать качество")]
         public byte? StateID
         {
             get
             {
-                return _stateID;
+                return _stateid;
             }
             set
             {
-            	_stateID = value;
+            	_stateid = value;
                 RaisePropertyChanged("StateID");
             }
         }

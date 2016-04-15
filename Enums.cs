@@ -7,11 +7,11 @@ namespace Gamma
         [Description("БДМ")]
         PM, 
         [Description("БДМ=>ПРС")]
-        PM_RW, 
+        PMRw, 
         [Description("БДМ=>Упаковка")]
-        PM_WR,
+        PMWr,
         [Description("БДМ=>ПРС=>Упаковка")]
-        PM_RW_WR
+        PMRwWr
         
     }
     public enum BatchKinds { SGB, SGI }
@@ -24,7 +24,7 @@ namespace Gamma
         [Description("Групповые упаковки")]
         ProductGroupPack
     }
-    public enum PlaceGroups { PM, RW, Convertings, WR, Other }  // Группы переделов. Привязаны к таблице в базе, менять только вместе!
+    public enum PlaceGroups { PM, Rw, Convertings, Wr, Other }  // Группы переделов. Привязаны к таблице в базе, менять только вместе!
     public enum ProductStates // Качество продукта
     {
         [Description("Годная")]

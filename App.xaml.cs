@@ -9,7 +9,7 @@ namespace Gamma
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var AppSettings = GammaSettings.Get();
+            var appSettings = GammaSettings.Get();
             DevExpress.Xpf.Core.ApplicationThemeHelper.UpdateApplicationThemeName();
         }
 

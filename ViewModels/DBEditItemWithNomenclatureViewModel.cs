@@ -8,37 +8,41 @@ using Gamma.Attributes;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// Этот класс содержит необходимые свойства для выбора номенклатуры
+    /// <para>NomenclatureID: id Номенклатуры</para>
+    /// <para>virtual CharacteristicID: ID характеристики. При необходимости можно переопределить</para>
+    /// <para>NomenclatureName: Название номенклатуры</para>
+    /// <para>ChooseNomenclatureCommand: Комманда вызывающая окно выбора номенклатуры</para>
+    /// <para>Characteristics: Список характеристик выбранной номенклатуры</para>
+    /// <para>CanChooseNomenclature: Для переопределения. По-умолчанию всегда true</para>
+    /// <para>PlaceGroupID: Для переопределения. По-умолчанию 0</para>
     /// </summary>
-    public class DBEditItemWithNomenclatureViewModel : SaveImplementedViewModel
+    public class DbEditItemWithNomenclatureViewModel : SaveImplementedViewModel
     {
         /// <summary>
         /// Initializes a new instance of the DBEditItemWithNomenclatureViewModel class.
         /// </summary>
-        public DBEditItemWithNomenclatureViewModel()
+        public DbEditItemWithNomenclatureViewModel()
         {
             ChooseNomenclatureCommand = new DelegateCommand(ChooseNomenclature,CanChooseNomenclature);
         }
 
-        private Guid? _nomenclatureID;
-        [Required(ErrorMessage="Необходимо выбрать номенклатуру")]
+        private Guid? _nomenclatureid;
+        [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public Guid? NomenclatureID
         {
-            get { return _nomenclatureID; }
+            get { return _nomenclatureid; }
             set
             {
-                _nomenclatureID = value;
+                _nomenclatureid = value;
                 RaisePropertyChanged("NomenclatureID");
-                SetNomenclatureName(_nomenclatureID);
-                Characteristics = DB.GetCharacteristics(_nomenclatureID);
+                SetNomenclatureName(_nomenclatureid);
+                Characteristics = DB.GetCharacteristics(_nomenclatureid);
             }
         }
         private string _nomenclatureName;
-        [Required(ErrorMessage="Необходимо выбрать номенклатуру")]
+        [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
         public string NomenclatureName
         {
             get { return _nomenclatureName; }
@@ -62,11 +66,11 @@ namespace Gamma.ViewModels
             NomenclatureID = msg.Nomenclature1CID;
         }
 
-        private void SetNomenclatureName(Guid? nomenclatureID)
+        private void SetNomenclatureName(Guid? nomenclatureid)
         {
-            if (nomenclatureID == null) return;
+            if (nomenclatureid == null) return;
             NomenclatureName = (from nom in DB.GammaBase.C1CNomenclature
-                                where nom.C1CNomenclatureID == nomenclatureID
+                                where nom.C1CNomenclatureID == nomenclatureid
                                 select nom.Name).FirstOrDefault();
         }
         private ObservableCollection<Characteristic> _characteristics;
@@ -79,6 +83,8 @@ namespace Gamma.ViewModels
             set
             {
                 _characteristics = value;
+                if (Characteristics.Count == 1) CharacteristicID = Characteristics[0].CharacteristicID;
+                else CharacteristicID = null;
                 RaisePropertyChanged("Characteristics");
             }
         }
@@ -86,6 +92,23 @@ namespace Gamma.ViewModels
         {
             return true;
         }
+
+        private Guid? _characteristicID;
+        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public virtual Guid? CharacteristicID
+        {
+            get { return _characteristicID; }
+            set
+            {
+                _characteristicID = value;
+                RaisePropertiesChanged("CharacteristicID");
+            }
+        }
+
+        /// <summary>
+        /// Группа переделов для фильтрования номенклатуры
+        /// </summary>
         protected int PlaceGroupID { get; set; }
     }
 }

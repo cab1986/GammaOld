@@ -15,16 +15,16 @@ namespace Gamma
             private set { _isready = value; }
         }
 
-        private static SerialPort ComPort;
+        private static SerialPort _comPort;
         static Scanner()
         {
-            var AppSettings = GammaSettings.Get();
+            var appSettings = GammaSettings.Get();
             try
             {
-                ComPort = new SerialPort(AppSettings.ScannerComPort.ComPortNumber) 
-                { BaudRate = AppSettings.ScannerComPort.BaudRate, Parity = AppSettings.ScannerComPort.Parity, 
-                    StopBits = AppSettings.ScannerComPort.StopBits, DataBits = AppSettings.ScannerComPort.DataBits, 
-                    Handshake = AppSettings.ScannerComPort.HandShake, NewLine = "\r" };
+                _comPort = new SerialPort(appSettings.ScannerComPort.ComPortNumber) 
+                { BaudRate = appSettings.ScannerComPort.BaudRate, Parity = appSettings.ScannerComPort.Parity, 
+                    StopBits = appSettings.ScannerComPort.StopBits, DataBits = appSettings.ScannerComPort.DataBits, 
+                    Handshake = appSettings.ScannerComPort.HandShake, NewLine = "\r" };
             }
             catch (Exception)
             {
@@ -32,11 +32,11 @@ namespace Gamma
                 return;
             }
 
-            ComPort.DataReceived += BarcodeReceive;
+            _comPort.DataReceived += BarcodeReceive;
 
             try
             {
-                ComPort.Open();
+                _comPort.Open();
             }
             catch (Exception)
             {
@@ -50,14 +50,14 @@ namespace Gamma
 
         private static void BarcodeReceive(object sender, SerialDataReceivedEventArgs e)
         {
-            string received_data = ComPort.ReadLine();
-            Messenger.Default.Send<BarcodeMessage>(new BarcodeMessage {Barcode = received_data});
+            string receivedData = _comPort.ReadLine();
+            Messenger.Default.Send<BarcodeMessage>(new BarcodeMessage {Barcode = receivedData});
         }
         public static bool TryToOpen()
         {
             try
             {
-                ComPort.Open();
+                _comPort.Open();
             }
             catch (Exception)
             {

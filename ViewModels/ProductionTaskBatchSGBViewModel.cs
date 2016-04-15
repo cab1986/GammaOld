@@ -1,19 +1,18 @@
 ﻿using System;
 using Gamma.Interfaces;
 using System.Linq;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// Реализация пакета заданий СГБ
     /// </summary>
     public class ProductionTaskBatchSGBViewModel : SaveImplementedViewModel, IProductionTaskBatch
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskBatchSGBViewModel class.
+        /// <param name="productionTaskBatchID">id пакета заданий СГБ</param>
         /// </summary>
         public ProductionTaskBatchSGBViewModel(Guid productionTaskBatchID)
         {
@@ -31,77 +30,69 @@ namespace Gamma.ViewModels
 //                ProductionTaskSGBView = new ProductionTaskSGBViewModel(ProductionTaskBatchID);
             }             
         }
-        public override bool IsValid
-        {
-            get
-            {
-                return
-                    (FirstView == null ? true : FirstView.IsValid) &&
-                    (SecondView == null ? true : SecondView.IsValid) &&
+        public override bool IsValid => (FirstView?.IsValid ?? true) &&
+                                        (SecondView?.IsValid ?? true) &&
 //                    (ProductionTaskSGBView == null ? true : ProductionTaskSGBView.IsValid) &&
-                    (ProductionTaskWRView == null ? true : ProductionTaskWRView.IsValid);
-            }
-        }
-        private Guid ProductionTaskBatchID { get; set; }
-        private short _processModelID;
+                                        (ProductionTaskWrView?.IsValid ?? true);
+
+        private Guid ProductionTaskBatchID { get; }
+        private short _processModelid;
         public short ProcessModelID
         {
             get
             {
-                return _processModelID;
+                return _processModelid;
             }
             set
             {
-                _processModelID = value;
+                _processModelid = value;
                 switch (ProcessModelID)
                 {
                     case (byte)ProcessModels.PM:
                         if (SecondView is ProductionTaskPMViewModel) 
                         {
                             FirstView = SecondView;
-                            (FirstView as ProductionTaskPMViewModel).IsForRW = false;
+                            ((ProductionTaskPMViewModel) FirstView).IsForRw = false;
                         }
                         else if (!(FirstView is ProductionTaskPMViewModel))
                             FirstView = new ProductionTaskPMViewModel(ProductionTaskBatchID, false);
                         SecondView = null;
-                        ProductionTaskWRView = null;
+                        ProductionTaskWrView = null;
                         break;
-                    case (byte)ProcessModels.PM_RW:
+                    case (byte)ProcessModels.PMRw:
                         if (FirstView is ProductionTaskPMViewModel)
                         {
                             SecondView = FirstView;
-                            (SecondView as ProductionTaskPMViewModel).IsForRW = true;
+                            ((ProductionTaskPMViewModel) SecondView).IsForRw = true;
                         }
                         else if (!(SecondView is ProductionTaskPMViewModel))
                             SecondView = new ProductionTaskPMViewModel(ProductionTaskBatchID, true);
-                        if (!(FirstView is ProductionTaskRWViewModel))
-                            FirstView = new ProductionTaskRWViewModel(ProductionTaskBatchID);
-                        ProductionTaskWRView = null;
+                        if (!(FirstView is ProductionTaskRwViewModel))
+                            FirstView = new ProductionTaskRwViewModel(ProductionTaskBatchID);
+                        ProductionTaskWrView = null;
                         break;
-                    case (byte)ProcessModels.PM_RW_WR:
+                    case (byte)ProcessModels.PMRwWr:
                         if (FirstView is ProductionTaskPMViewModel)
                         {
                             SecondView = FirstView;
-                            (SecondView as ProductionTaskPMViewModel).IsForRW = true;
+                            ((ProductionTaskPMViewModel) SecondView).IsForRw = true;
                         }
                         else if (!(SecondView is ProductionTaskPMViewModel))
                             SecondView = new ProductionTaskPMViewModel(ProductionTaskBatchID, true);
-                        if (!(FirstView is ProductionTaskRWViewModel))
-                            FirstView = new ProductionTaskRWViewModel(ProductionTaskBatchID);
-                        ProductionTaskWRView = ProductionTaskWRView ?? new ProductionTaskWRViewModel(ProductionTaskBatchID);
+                        if (!(FirstView is ProductionTaskRwViewModel))
+                            FirstView = new ProductionTaskRwViewModel(ProductionTaskBatchID);
+                        ProductionTaskWrView = ProductionTaskWrView ?? new ProductionTaskWrViewModel(ProductionTaskBatchID);
                         break;
-                    case (byte)ProcessModels.PM_WR:
+                    case (byte)ProcessModels.PMWr:
                         if (SecondView is ProductionTaskPMViewModel) 
                         {
                             FirstView = SecondView;
-                            (FirstView as ProductionTaskPMViewModel).IsForRW = false;
+                            ((ProductionTaskPMViewModel) FirstView).IsForRw = false;
                         }
                         else if (!(FirstView is ProductionTaskPMViewModel))
                             FirstView = new ProductionTaskPMViewModel(ProductionTaskBatchID, false);
                         SecondView = null;
-                        ProductionTaskWRView = ProductionTaskWRView ?? new ProductionTaskWRViewModel(ProductionTaskBatchID);
-                        break;
-                    default:
+                        ProductionTaskWrView = ProductionTaskWrView ?? new ProductionTaskWrViewModel(ProductionTaskBatchID);
                         break;
                 }
             }
@@ -146,27 +137,29 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("SecondView");
             }
         }
-        private SaveImplementedViewModel _productionTaskWRView;
-        public SaveImplementedViewModel ProductionTaskWRView
+        private SaveImplementedViewModel _productionTaskWrView;
+        public SaveImplementedViewModel ProductionTaskWrView
         {
             get
             {
-                return _productionTaskWRView;
+                return _productionTaskWrView;
             }
             set
             {
-            	_productionTaskWRView = value;
+            	_productionTaskWrView = value;
                 RaisePropertyChanged("ProductionTaskWRView");
             }
         }
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
-            base.SaveToModel(itemId);
-            if (FirstView != null) FirstView.SaveToModel(itemId);
-            if (SecondView != null) SecondView.SaveToModel(itemId);
-            var productionTaskID = (FirstView as IProductionTask).ProductionTaskID;
+            base.SaveToModel(itemID);
+            FirstView?.SaveToModel(itemID);
+            SecondView?.SaveToModel(itemID);
+            var productionTask = FirstView as IProductionTask;
+            if (productionTask == null) return;
+            var productionTaskID = productionTask.ProductionTaskID;
 //            if (ProductionTaskSGBView != null) ProductionTaskSGBView.SaveToModel(productionTaskID);
-            if (ProductionTaskWRView != null) ProductionTaskWRView.SaveToModel(productionTaskID);
+            ProductionTaskWrView?.SaveToModel(productionTaskID);
         }
         
     }

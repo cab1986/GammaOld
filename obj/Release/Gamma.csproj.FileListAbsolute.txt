@@ -237,3 +237,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Sparkline.v15.2.Core.resource
 D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Sparkline.v15.2.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\Russian.frl
 D:\CProjects\Gamma\Gamma\bin\Release\ngeninstall.bat
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGIView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGIView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.licenses

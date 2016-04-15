@@ -19,18 +19,18 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductUnloadViewModel : DBEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
+    public class DocProductUnloadViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
         /// Инициализирует новую viewmodel.
-        /// Если новый, то ID = ProductionTaskID иначе ID = DocID
+        /// Если новый, то id = ProductionTaskID иначе id = DocID
         /// </summary>
-        public DocProductUnloadViewModel(Guid docId, bool newProduct) 
+        public DocProductUnloadViewModel(Guid docID, bool newProduct) 
         {
-            DocID = docId;
-            ProductionTaskId =
-                    (Guid)DB.GammaBase.DocProduction.Where(d => d.DocID == docId).Select(d => d.ProductionTaskID).First();
-            GetProductionTaskRWInfo(ProductionTaskId);
+            DocID = docID;
+            ProductionTaskID =
+                    (Guid)DB.GammaBase.DocProduction.Where(d => d.DocID == docID).Select(d => d.ProductionTaskID).First();
+            GetProductionTaskRwInfo(ProductionTaskID);
             CreateSpoolsCommand = new DelegateCommand(CreateSpools, () => !IsReadOnly && IsValid);
             EditSpoolCommand = new DelegateCommand(EditSpool);
             Bars.Add(ReportManager.GetReportBar("Unload", VMID));
@@ -46,13 +46,13 @@ namespace Gamma.ViewModels
                     CloseWindow();
                 }
             }
-            else // Получение данных по ID документа
+            else // Получение данных по id документа
             {
-                IsConfirmed = DB.GammaBase.Docs.Where(d => d.DocID == docId).Select(d => d.IsConfirmed).FirstOrDefault();
+                IsConfirmed = DB.GammaBase.Docs.Where(d => d.DocID == docID).Select(d => d.IsConfirmed).FirstOrDefault();
                 SourceSpools = DB.GammaBase.DocProducts.Where(dp => dp.Docs.DocWithdrawal.DocProduction.
-                    Any(dprod => dprod.DocID == docId)).Select(dp => dp.ProductID).ToList();             
+                    Any(dprod => dprod.DocID == docID)).Select(dp => dp.ProductID).ToList();             
                 DocProducts = new ObservableCollection<DocProducts>
-                (DB.GammaBase.DocProducts.Include("Products").Include("Products.ProductSpools").Where(dp => dp.DocID == docId));
+                (DB.GammaBase.DocProducts.Include("Products").Include("Products.ProductSpools").Where(dp => dp.DocID == docID));
                 Products = new ObservableCollection<Products>(DocProducts.Select(dp => dp.Products));
 //                (from p in DB.GammaBase.Products where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
                 UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProducts
@@ -93,15 +93,15 @@ namespace Gamma.ViewModels
             }
         }
         private List<Guid> SourceSpools { get; set; }
-        private void GetProductionTaskRWInfo(Guid productionTaskId)
+        private void GetProductionTaskRwInfo(Guid productionTaskID)
         {
-            NomenclatureID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskId).
+            NomenclatureID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskID).
                 Select(p => p.C1CNomenclatureID).FirstOrDefault();
-            Diameter = DB.GammaBase.ProductionTaskSGB.Where(p => p.ProductionTaskID == productionTaskId).Select(p => p.Diameter).FirstOrDefault() ?? 0;
+            Diameter = DB.GammaBase.ProductionTaskSGB.Where(p => p.ProductionTaskID == productionTaskID).Select(p => p.Diameter).FirstOrDefault() ?? 0;
             Cuttings = new ObservableCollection<Cutting>
             (
                 from ptcut in DB.GammaBase.ProductionTaskRWCutting
-                where ptcut.ProductionTaskID == productionTaskId
+                where ptcut.ProductionTaskID == productionTaskID
                 group ptcut by ptcut.C1CCharacteristicID into grouped
                 select new Cutting
                 {
@@ -127,10 +127,10 @@ namespace Gamma.ViewModels
         
         private void CreateSpools()
         {
-            UIServices.SetBusyState();
+            UiServices.SetBusyState();
             UnloadSpools.Clear();
             UnloadSpools =
-                new ObservableCollection<PaperBase>(from us in DB.GammaBase.CreateUnloadSpools(DocID, ProductionTaskId, Diameter, BreakNumber)
+                new ObservableCollection<PaperBase>(from us in DB.GammaBase.CreateUnloadSpools(DocID, ProductionTaskID, Diameter, BreakNumber)
                 select  new PaperBase()
                 {
                     DocID = (Guid)us.DocID,
@@ -158,7 +158,7 @@ namespace Gamma.ViewModels
                         NomenclatureID = (Guid)NomenclatureID,
                         Nomenclature = NomenclatureName + " " +
                         Characteristics.Where(c => c.CharacteristicID == cutting.CharacteristicID).Select(c => c.CharacteristicName).First(),
-                        ProductID = SQLGuidUtil.NewSequentialId()
+                        ProductID = SQLGuidUtil.NewSequentialid()
                     });    
                 }
             }
@@ -181,22 +181,22 @@ namespace Gamma.ViewModels
             }
         }
         
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
-            base.SaveToModel(itemId);
+            base.SaveToModel(itemID);
             if (UnloadSpoolsSaved) return;
-            var doc = DB.GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemId);
-            foreach (var spoolId in SourceSpools)
+            var doc = DB.GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemID);
+            foreach (var spoolid in SourceSpools)
             {
                 var docWithdrawal = DB.GammaBase.Docs.FirstOrDefault(d => d.DocTypeID == (byte) DocTypes.DocWithdrawal &&
                                                                  d.DocProducts.Select(dp => dp.ProductID)
-                                                                     .Contains(spoolId));
+                                                                     .Contains(spoolid));
                 if (docWithdrawal == null)
                 {
-                    var docId = SQLGuidUtil.NewSequentialId();
+                    var docID = SqlGuidUtil.NewSequentialid();
                     docWithdrawal = new Docs()
                     {
-                        DocID = docId,
+                        DocID = docID,
                         PlaceID = WorkSession.PlaceID,
                         ShiftID = WorkSession.ShiftID,
                         Date = DB.CurrentDateTime,
@@ -205,12 +205,12 @@ namespace Gamma.ViewModels
                         UserID = WorkSession.UserID,
                         DocProducts = new List<DocProducts>(new[] {new DocProducts()
                     {
-                        DocID = docId,
-                        ProductID = spoolId
+                        DocID = docID,
+                        ProductID = spoolid
                     }}),
                         DocWithdrawal = new DocWithdrawal()
                         {
-                            DocID = docId,
+                            DocID = docID,
                             OutPlaceID = WorkSession.PlaceID,
                         }
                     };
@@ -222,15 +222,15 @@ namespace Gamma.ViewModels
             UnloadSpoolsSaved = true;
         }
         private ObservableCollection<DocProducts> DocProducts { get; set; }
-        private Guid ProductionTaskId { get; set; }
+        private Guid ProductionTaskID { get; set; }
         private ObservableCollection<Products> Products { get; set; }
         private ObservableCollection<ProductSpools> ProductSpools { get; set; }
-        private Guid? _vmID = Guid.NewGuid();
+        private Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
         {
             get
             {
-                return _vmID;
+                return _vmid;
             }
         }
 

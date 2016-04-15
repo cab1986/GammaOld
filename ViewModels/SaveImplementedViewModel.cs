@@ -5,15 +5,12 @@ using System;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// Класс, реализующий сохранение в БД.
     /// </summary>
     public class SaveImplementedViewModel : ValidationViewModelBase
     {
         /// <summary>
-        /// Initializes a new instance of the DataBaseEditViewModel class.
+        /// Инициализация SaveImplementedViewModel
         /// </summary>
         public SaveImplementedViewModel()
         {
@@ -26,10 +23,13 @@ namespace Gamma.ViewModels
         {
 
         }
-
-        public virtual void SaveToModel(Guid itemId)
+        /// <summary>
+        /// Сохранение в БД
+        /// </summary>
+        /// <param name="itemID"></param>
+        public virtual void SaveToModel(Guid itemID)
         {
-            UIServices.SetBusyState();
+            UiServices.SetBusyState();
         }
 
         protected void SaveToModelAndClose()

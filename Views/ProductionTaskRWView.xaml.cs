@@ -5,9 +5,9 @@ namespace Gamma.Views
     /// <summary>
     /// Interaction logic for ProductionTaskRWView.xaml
     /// </summary>
-    public partial class ProductionTaskRWView : UserControl
+    public partial class ProductionTaskRwView : UserControl
     {
-        public ProductionTaskRWView()
+        public ProductionTaskRwView()
         {
             InitializeComponent();
         }

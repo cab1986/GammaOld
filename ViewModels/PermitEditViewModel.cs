@@ -21,15 +21,15 @@ namespace Gamma.ViewModels
         public PermitEditViewModel()
         {
             Permit = new Permits();
-            Permit.PermitID = SQLGuidUtil.NewSequentialId();
+            Permit.PermitID = SqlGuidUtil.NewSequentialid();
             PermitTables = new ObservableCollection<PermitTables>();
-            IsNewPermit = true;
+            _isNewPermit = true;
             InitializeFields();
         }
-        public PermitEditViewModel(Guid permitID)
+        public PermitEditViewModel(Guid permitid)
         {
-            PermitID = permitID;
-            Permit = DB.GammaBase.Permits.Include("PermitTables").Where(p => p.PermitID == permitID).FirstOrDefault();
+            PermitID = permitid;
+            Permit = DB.GammaBase.Permits.Include("PermitTables").Where(p => p.PermitID == permitid).FirstOrDefault();
             PermitTables = new ObservableCollection<PermitTables>(Permit.PermitTables.ToArray());
             InitializeFields();
         }
@@ -40,7 +40,7 @@ namespace Gamma.ViewModels
             AddTableCommand = new DelegateCommand(AddTable);
             DeleteTableCommand = new DelegateCommand(DeleteTable,() => SelectedPermitTable != null);
         }
-        private bool IsNewPermit = false;
+        private bool _isNewPermit = false;
         private Guid PermitID { get; set; }
         private string _name;
         public string Name
@@ -96,7 +96,7 @@ namespace Gamma.ViewModels
         public DelegateCommand AddTableCommand { get; set; }
         private void AddTable()
         {
-            var permitTable = new PermitTables() { PermitTableID = SQLGuidUtil.NewSequentialId(), PermitID = Permit.PermitID };
+            var permitTable = new PermitTables() { PermitTableID = SqlGuidUtil.NewSequentialid(), PermitID = Permit.PermitID };
             PermitTables.Add(permitTable);
         }
         public DelegateCommand DeleteTableCommand { get; set; }
@@ -108,7 +108,7 @@ namespace Gamma.ViewModels
         public override void SaveToModel()
         {
             base.SaveToModel();
-            if (IsNewPermit)
+            if (_isNewPermit)
             {
                 DB.GammaBase.Permits.Add(Permit);
             }

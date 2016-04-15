@@ -15,11 +15,11 @@
         <DataTemplate DataType="{x:Type vm:ProductionTaskPMViewModel}">
             <v:ProductionTaskPMView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:ProductionTaskRWViewModel}">
-            <v:ProductionTaskRWView/>
+        <DataTemplate DataType="{x:Type vm:ProductionTaskRwViewModel}">
+            <v:ProductionTaskRwView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:ProductionTaskWRViewModel}">
-            <v:ProductionTaskWRView/>
+        <DataTemplate DataType="{x:Type vm:ProductionTaskWrViewModel}">
+            <v:ProductionTaskWrView/>
         </DataTemplate>
     </UserControl.Resources>
     <Grid>

@@ -66,23 +66,23 @@ namespace Gamma.Common
         }
         private void OpenManageUsers(OpenManageUsersMessage obj)
         {
-            var View = new ManageUsersView();
-            View.Show();
+            var view = new ManageUsersView();
+            view.Show();
         }
         private void OpenProductionTask(OpenProductionTaskBatchMessage msg)
         {
-            var View = new ProductionTaskBatchView(msg);
-            View.Show();
+            var view = new ProductionTaskBatchView(msg);
+            view.Show();
         }
         private void OpenReportList(OpenReportListMessage msg)
         {
-            var View = new ReportListView();
-            View.Show();
+            var view = new ReportListView();
+            view.Show();
         }
         private void OpenFindProduct(FindProductMessage msg)
         {
-            var View = new FindProductView(msg);
-            View.Show();
+            var view = new FindProductView(msg);
+            view.Show();
         }
         private void PermitEdit(PermitEditMessage msg)
         {

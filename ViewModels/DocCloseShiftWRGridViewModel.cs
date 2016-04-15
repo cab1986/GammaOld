@@ -8,9 +8,9 @@ using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
-    class DocCloseShiftWRGridViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
+    class DocCloseShiftWrGridViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
-        public DocCloseShiftWRGridViewModel(OpenDocCloseShiftMessage msg)
+        public DocCloseShiftWrGridViewModel(OpenDocCloseShiftMessage msg)
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftWR", VMID));
             if (msg.DocID == null)
@@ -83,11 +83,11 @@ namespace Gamma.ViewModels
             DocCloseShiftDocs.Clear();
             GroupPacks.Clear();
         }
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return;
-            base.SaveToModel(itemId);
-            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Where(d => d.DocID == itemId).First();
+            base.SaveToModel(itemID);
+            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Where(d => d.DocID == itemID).First();
             if (doc.DocCloseShiftDocs == null)
             {
                 doc.DocCloseShiftDocs = new ObservableCollection<Docs>();
@@ -132,10 +132,10 @@ namespace Gamma.ViewModels
             }
         }
  
-        private Guid? _vmId = Guid.NewGuid();
+        private Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
         {
-            get { return _vmId; }
+            get { return _vmid; }
         }
     }
     

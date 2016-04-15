@@ -8,16 +8,16 @@ namespace Gamma
     {
         static Scales()
         {
-            var AppSettings = GammaSettings.Get();
+            var appSettings = GammaSettings.Get();
             try
             {
-                ComPort = new SerialPort(AppSettings.ScalesComPort.ComPortNumber)
+                _comPort = new SerialPort(appSettings.ScalesComPort.ComPortNumber)
                 {
-                    BaudRate = AppSettings.ScalesComPort.BaudRate,
-                    Parity = AppSettings.ScalesComPort.Parity,
-                    StopBits = AppSettings.ScalesComPort.StopBits,
-                    DataBits = AppSettings.ScalesComPort.DataBits,
-                    Handshake = AppSettings.ScalesComPort.HandShake,
+                    BaudRate = appSettings.ScalesComPort.BaudRate,
+                    Parity = appSettings.ScalesComPort.Parity,
+                    StopBits = appSettings.ScalesComPort.StopBits,
+                    DataBits = appSettings.ScalesComPort.DataBits,
+                    Handshake = appSettings.ScalesComPort.HandShake,
                     NewLine = "\r\n"
                 };
             }
@@ -28,7 +28,7 @@ namespace Gamma
             }
             try
             {
-                ComPort.Open();
+                _comPort.Open();
             }
             catch (Exception)
             {
@@ -47,7 +47,7 @@ namespace Gamma
             }
             private set { _isready = value; }
         }
-        private static SerialPort ComPort;
+        private static SerialPort _comPort;
         public static double GetWeight()
         {
             DateTime start = DateTime.Now;
@@ -95,7 +95,7 @@ namespace Gamma
             int i = -1;
             do
             {
-                var curByte = ComPort.ReadByte();
+                var curByte = _comPort.ReadByte();
                 if (i >= 0)
                 {
                     byteArray[i] = curByte;
@@ -109,7 +109,7 @@ namespace Gamma
         {
             try
             {
-                ComPort.Open();
+                _comPort.Open();
             }
             catch (Exception)
             {

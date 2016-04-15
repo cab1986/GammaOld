@@ -11,7 +11,7 @@
     Height="345.104">
     <Grid>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox" Background="#FFB1CEF3">
-            <dxlc:LayoutGroup x:Name="layoutGroup" Orientation="Vertical" VerticalAlignment="Stretch" View="Group">
+            <dxlc:LayoutGroup x:Name="LayoutGroup" Orientation="Vertical" VerticalAlignment="Stretch" View="Group">
                 <dxlc:LayoutItem IsRequired="True" Label="Логин:" LabelPosition="Top">
                     <dxe:TextEdit MinWidth="200" EditValue="{Binding Login,ValidatesOnDataErrors=True}"/>
                 </dxlc:LayoutItem>

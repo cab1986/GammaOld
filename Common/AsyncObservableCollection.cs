@@ -7,7 +7,7 @@ namespace Gamma.Common
 {
     public class AsyncObservableCollection<T> : ObservableCollection<T>
     {
-        private AsyncOperation asyncOp = null;
+        private AsyncOperation _asyncOp = null;
 
         public AsyncObservableCollection()
         {
@@ -23,13 +23,13 @@ namespace Gamma.Common
         private void CreateAsyncOp()
         {
             // Create the AsyncOperation to post events on the creator thread
-            asyncOp = AsyncOperationManager.CreateOperation(null);
+            _asyncOp = AsyncOperationManager.CreateOperation(null);
         }
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             // Post the CollectionChanged event on the creator thread
-            asyncOp.Post(RaiseCollectionChanged, e);
+            _asyncOp.Post(RaiseCollectionChanged, e);
         }
 
         private void RaiseCollectionChanged(object param)
@@ -41,7 +41,7 @@ namespace Gamma.Common
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             // Post the PropertyChanged event on the creator thread
-            asyncOp.Post(RaisePropertyChanged, e);
+            _asyncOp.Post(RaisePropertyChanged, e);
         }
 
         private void RaisePropertyChanged(object param)

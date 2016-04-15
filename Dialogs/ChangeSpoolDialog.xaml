@@ -18,11 +18,11 @@
                         <Label Content="Переработан с браком" DockPanel.Dock="Right" VerticalAlignment="Center" Width="150"/>
                         <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
                             <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
-                                <dxe:SpinEdit AllowDefaultButton="False" HorizontalContentAlignment="Stretch" Name="edtBrokeWeight"
+                                <dxe:SpinEdit AllowDefaultButton="False" HorizontalContentAlignment="Stretch" Name="EdtBrokeWeight"
                                               IsFloatValue="False"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Причина брака" LabelPosition="Top">
-                                <dxe:ComboBoxEdit Name="lkpBrokeReason" FindMode="Always" AutoComplete="True" 
+                                <dxe:ComboBoxEdit Name="LkpBrokeReason" FindMode="Always" AutoComplete="True" 
                                                   ValueMember="RejectionReasonID" DisplayMember="Description"
                                                   ImmediatePopup="True" IncrementalFiltering="True" AllowNullInput="True" 
                                                   AssignNullValueOnClearingEditText="True" ClearSelectionOnBackspace="True"/>
@@ -36,13 +36,13 @@
                     <Label Content="Переработан с остатком:" VerticalAlignment="Center" DockPanel.Dock="Right" Width="150"/>
                     <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
                             <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
-                                <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="edtRemainderWeight" HorizontalContentAlignment="Stretch"/>
+                                <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="EdtRemainderWeight" HorizontalContentAlignment="Stretch"/>
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                 </dxlc:LayoutControl>
             </RadioButton>
         </dxlc:LayoutControl>
-        <Button Content="OK" Name="btnOK" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,95,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
-        <Button Content="Отмена" IsCancel="True" Name="btnCancel"  Grid.Row="1"  Width="80" HorizontalAlignment="Right" Margin="0,0,10,0" />
+        <Button Content="OK" Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,95,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="1"  Width="80" HorizontalAlignment="Right" Margin="0,0,10,0" />
     </Grid>
 </Window>

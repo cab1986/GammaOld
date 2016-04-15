@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
             {
                 if (!nomenclatureTree.Contains(folder))
                     nomenclatureTree.Add(folder);
-                foreach (var childFolder in GetChildFolders(folder.FolderID, true))
+                foreach (var childFolder in GetChildFolders(folder.Folderid, true))
                 {
                     if (!nomenclatureTree.Contains(childFolder))
                         nomenclatureTree.Add(childFolder);
@@ -45,7 +45,7 @@ namespace Gamma.ViewModels
             {
                 if (!nomenclatureTree.Contains(folder))
                     nomenclatureTree.Add(folder);
-                foreach (var childFolder in GetChildFolders(folder.FolderID, false))
+                foreach (var childFolder in GetChildFolders(folder.Folderid, false))
                 {
                     if (!nomenclatureTree.Contains(childFolder))
                         nomenclatureTree.Add(childFolder);
@@ -57,19 +57,19 @@ namespace Gamma.ViewModels
                 NomenclatureFolders.Add(folder);
             }
         }
-        private ObservableCollection<Nomenclature1CFolder> GetChildFolders(Guid folderID, bool toPlaceGroup)
+        private ObservableCollection<Nomenclature1CFolder> GetChildFolders(Guid folderid, bool toPlaceGroup)
         {
             var childFolders = new ObservableCollection<Nomenclature1CFolder>();
             if (toPlaceGroup)
                 childFolders = new ObservableCollection<Nomenclature1CFolder>
-                    (NomenclatureFolders.Where(p => p.ParentFolderID == folderID).Select(p => p));
+                    (NomenclatureFolders.Where(p => p.ParentFolderid == folderid).Select(p => p));
             else
                 childFolders = new ObservableCollection<Nomenclature1CFolder>
-                    (PlaceGroupNomenclature.Where(p => p.ParentFolderID == folderID).Select(p => p));
+                    (PlaceGroupNomenclature.Where(p => p.ParentFolderid == folderid).Select(p => p));
             var tempCollection = new ObservableCollection<Nomenclature1CFolder>();
             foreach (var folder in childFolders)
             {
-                foreach (var tempFolder in GetChildFolders(folder.FolderID, toPlaceGroup))
+                foreach (var tempFolder in GetChildFolders(folder.Folderid, toPlaceGroup))
                 {
                     tempCollection.Add(tempFolder);
                 }
@@ -106,8 +106,8 @@ namespace Gamma.ViewModels
                                         (from pgn in placeGroup.C1CNomenclature
                                       select new Nomenclature1CFolder
                                       {
-                                          FolderID = pgn.C1CNomenclatureID,
-                                          ParentFolderID = pgn.C1CParentID,
+                                          Folderid = pgn.C1CNomenclatureID,
+                                          ParentFolderid = pgn.C1CParentID,
                                           Name = pgn.Name
                                       });
             NomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>(from n in DB.GammaBase.C1CNomenclature
@@ -115,8 +115,8 @@ namespace Gamma.ViewModels
                                                                                   !(from pg in n.PlaceGroups select pg.PlaceGroupID).Contains(placeGroupID)
                                                                                   select new Nomenclature1CFolder
                                                                                   {
-                                                                                      FolderID = n.C1CNomenclatureID,
-                                                                                      ParentFolderID = n.C1CParentID,
+                                                                                      Folderid = n.C1CNomenclatureID,
+                                                                                      ParentFolderid = n.C1CParentID,
                                                                                       Name = n.Name
                                                                                   });       
         }
@@ -180,8 +180,8 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             var placeGroup = DB.GammaBase.PlaceGroups.Where(p => p.PlaceGroupID == PlaceGroupID).Select(p => p).FirstOrDefault();
             placeGroup.C1CNomenclature.Clear();
-            var nomenclatureIDs = PlaceGroupNomenclature.Select(p => p.FolderID).ToList();
-            var nomenclatureTree = DB.GammaBase.C1CNomenclature.Where(n1c => nomenclatureIDs.Contains(n1c.C1CNomenclatureID)).Select(n => n);
+            var nomenclatureids = PlaceGroupNomenclature.Select(p => p.Folderid).ToList();
+            var nomenclatureTree = DB.GammaBase.C1CNomenclature.Where(n1C => nomenclatureids.Contains(n1C.C1CNomenclatureID)).Select(n => n);
             foreach (var nomenclature in nomenclatureTree)
             {
                 placeGroup.C1CNomenclature.Add(nomenclature);

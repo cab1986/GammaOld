@@ -9,16 +9,16 @@ using Gamma.Attributes;
 
 namespace Gamma.ViewModels
 {
-    public class DocCloseShiftRWRemainderViewModel : SaveImplementedViewModel, ICheckedAccess
+    public class DocCloseShiftRwRemainderViewModel : SaveImplementedViewModel, ICheckedAccess
     {
-        public DocCloseShiftRWRemainderViewModel(int placeId) // Конструктор для нового закрытия смены
+        public DocCloseShiftRwRemainderViewModel(int placeID) // Конструктор для нового закрытия смены
         {
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
-            var sourceSpools = DB.GammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeId);
+            var sourceSpools = DB.GammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeID);
             if (sourceSpools == null) return;
-            SpoolRemainders[0].ProductId = sourceSpools.Unwinder1Spool;
-            SpoolRemainders[1].ProductId = sourceSpools.Unwinder2Spool;
-            SpoolRemainders[2].ProductId = sourceSpools.Unwinder3Spool;
+            SpoolRemainders[0].ProductID = sourceSpools.Unwinder1Spool;
+            SpoolRemainders[1].ProductID = sourceSpools.Unwinder2Spool;
+            SpoolRemainders[2].ProductID = sourceSpools.Unwinder3Spool;
             SpoolRemainders[0].Weight = SpoolRemainders[0].MaxWeight;
             SpoolRemainders[1].Weight = SpoolRemainders[1].MaxWeight;
             SpoolRemainders[2].Weight = SpoolRemainders[2].MaxWeight;
@@ -26,33 +26,33 @@ namespace Gamma.ViewModels
         //<Summary>
         //Конструктор для существующего закрытия смены
         //</Summary>
-        public DocCloseShiftRWRemainderViewModel(Guid docId)
+        public DocCloseShiftRwRemainderViewModel(Guid docID)
         {
-            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docId);
+            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docID);
             IsConfirmed = doc.IsConfirmed;
             var remainders = doc.DocCloseShiftRemainders.ToList();
             for (int i = 0; i < remainders.Count; i++)
             {
-                SpoolRemainders[i].ProductId = remainders[i].ProductID;
+                SpoolRemainders[i].ProductID = remainders[i].ProductID;
                 SpoolRemainders[i].Weight = (int) remainders[i].Quantity;
             }
         }
 
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
-            base.SaveToModel(itemId);
-            var remainders = SpoolRemainders.Where(sr => sr.ProductId != null).ToList();
+            base.SaveToModel(itemID);
+            var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
             foreach (var remainder in remainders)
             {
                 var docRemainder =
-                    DB.GammaBase.DocCloseShiftRemainders.FirstOrDefault(d => d.ProductID == remainder.ProductId && d.DocID == itemId);
+                    DB.GammaBase.DocCloseShiftRemainders.FirstOrDefault(d => d.ProductID == remainder.ProductID && d.DocID == itemID);
                 if (docRemainder == null)
                 {
                     docRemainder = new DocCloseShiftRemainders()
                     {
-                        DocID = itemId,
-                        DocCloseShiftRemainderID = SQLGuidUtil.NewSequentialId(),
-                        ProductID = remainder.ProductId
+                        DocID = itemID,
+                        DocCloseShiftRemainderid = SqlGuidUtil.NewSequentialid(),
+                        ProductID = remainder.ProductID
                     };
                     DB.GammaBase.DocCloseShiftRemainders.Add(docRemainder);
                 }
@@ -71,49 +71,49 @@ namespace Gamma.ViewModels
             switch (i)
             {
                 case 1:
-                    if (SpoolRemainders[0].ProductId == null) return;
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[0].ProductId);
+                    if (SpoolRemainders[0].ProductID == null) return;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid) SpoolRemainders[0].ProductID);
                     break;
                 case 2:
-                    if (SpoolRemainders[1].ProductId == null) return;
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[1].ProductId);
+                    if (SpoolRemainders[1].ProductID == null) return;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid) SpoolRemainders[1].ProductID);
                     break;
                 case 3:
-                    if (SpoolRemainders[2].ProductId == null) return;
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[2].ProductId);
+                    if (SpoolRemainders[2].ProductID == null) return;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid) SpoolRemainders[2].ProductID);
                     break;
             }
         }
 
         public class SpoolRemainder
         {
-            private Guid? _productId;
+            private Guid? _productid;
 
-            public Guid? ProductId
+            public Guid? ProductID
             {
-                get { return _productId; }
+                get { return _productid; }
                 set
                 {
-                    _productId = value;
-                    Nomenclature = ProductId != null ? GetProductSpoolNomenclature((Guid) ProductId) : string.Empty;
-                    MaxWeight = ProductId != null ? GetRemainderMaxWeight((Guid) ProductId) : 0;
+                    _productid = value;
+                    Nomenclature = ProductID != null ? GetProductSpoolNomenclature((Guid) ProductID) : string.Empty;
+                    MaxWeight = ProductID != null ? GetRemainderMaxWeight((Guid) ProductID) : 0;
                 }
             }
             public string Nomenclature { get; set; }
             [UIAuth(UIAuthLevel.ReadOnly)]
             public int Weight { get; set; }
             public int MaxWeight { get; set; }
-            private string GetProductSpoolNomenclature(Guid productId)
+            private string GetProductSpoolNomenclature(Guid productid)
             {
                 return
-                    DB.GammaBase.ProductSpools.Where(p => p.ProductID == productId)
+                    DB.GammaBase.ProductSpools.Where(p => p.ProductID == productid)
                         .Select(p => "№ " + p.Products.Number + " " + p.C1CNomenclature.Name + " " +
                                      p.C1CCharacteristics.Name + " Масса: " + SqlFunctions.StringConvert((double)p.Weight) + " кг").First();
             }
 
-            private int GetRemainderMaxWeight(Guid productId)
+            private int GetRemainderMaxWeight(Guid productid)
             {
-                return DB.GammaBase.ProductSpools.First(ps => ps.ProductID == productId).Weight;
+                return DB.GammaBase.ProductSpools.First(ps => ps.ProductID == productid).Weight;
             }
         }
 

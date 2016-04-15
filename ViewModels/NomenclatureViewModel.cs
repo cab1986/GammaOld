@@ -26,9 +26,9 @@ namespace Gamma.ViewModels
                                     select
                                         new Nomenclature1CFolder
                                         {
-                                            FolderID = nf.FolderID,
+                                            Folderid = nf.Folderid,
                                             Name = nf.Name,
-                                            ParentFolderID = nf.ParentID
+                                            ParentFolderid = nf.ParentID
                                         })
                                     );
             ChooseSelectedNomenclature = new DelegateCommand(ChooseNomenclature);
@@ -83,7 +83,7 @@ namespace Gamma.ViewModels
                 {
                     _selectedNomenclatureFolder = value;
                     if (value != null)
-                        GetNomenclature(value.FolderID);
+                        GetNomenclature(value.Folderid);
                     RaisePropertyChanged("SelectedNomenclatureFolder");
                 }
             }
@@ -110,11 +110,11 @@ namespace Gamma.ViewModels
             }
         }
 
-        private void GetNomenclature(Guid FolderID)
+        private void GetNomenclature(Guid folderid)
         {
             Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>
             (new ObservableCollection<Nomenclature1C>(
-                from nom in DB.GammaBase.C1CNomenclature where nom.C1CParentID == FolderID && !nom.IsFolder && !(bool)nom.IsArchive
+                from nom in DB.GammaBase.C1CNomenclature where nom.C1CParentID == folderid && !nom.IsFolder && !(bool)nom.IsArchive
                 select
         new Nomenclature1C
         {
@@ -125,7 +125,7 @@ namespace Gamma.ViewModels
         public DelegateCommand ChooseSelectedNomenclature { get; private set; }
         private void ChooseNomenclature()
         {
-            UIServices.SetBusyState();
+            UiServices.SetBusyState();
             var msg = new Nomenclature1CMessage {Nomenclature1CID = SelectedNomenclature.Nomenclature1CID};
             Messenger.Default.Send<Nomenclature1CMessage>(msg);
             CloseWindow();

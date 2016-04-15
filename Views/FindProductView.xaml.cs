@@ -6,7 +6,7 @@ namespace Gamma.Views
     /// <summary>
     /// Description for FindProductView.
     /// </summary>
-    public partial class FindProductView : MVVMWindow
+    public partial class FindProductView : MvvmWindow
     {
         /// <summary>
         /// Initializes a new instance of the FindProductView class.

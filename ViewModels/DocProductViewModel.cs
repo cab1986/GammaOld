@@ -13,10 +13,7 @@ using System.Data.Entity;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// ViewModel для продукта
     /// </summary>
     public class DocProductViewModel : SaveImplementedViewModel, ICheckedAccess
     {
@@ -50,7 +47,7 @@ namespace Gamma.ViewModels
                 IsNewDoc = true;
                 Doc = new Docs()
                 {
-                    DocID = SQLGuidUtil.NewSequentialId(),
+                    DocID = SqlGuidUtil.NewSequentialid(),
                     DocTypeID = (int)DocTypes.DocProduction,
                     IsConfirmed = false,
                     PlaceID = WorkSession.PlaceID,
@@ -90,17 +87,17 @@ namespace Gamma.ViewModels
                                 .First(p => p.ProductID == msg.ID);
 /*                        if (product == null)
                         {
-                            var productId = SQLGuidUtil.NewSequentialId();
+                            var productid = SQLGuidUtil.NewSequentialid();
                             var productionTask =
                                 DB.GammaBase.ProductionTasks.First(
                                     p => p.ProductionTaskID == Doc.DocProduction.ProductionTaskID);
                             product = new Products()
                             {
-                                ProductID = productId,
+                                ProductID = productid,
                                 ProductKindID = (byte) ProductKinds.ProductSpool,
                                 ProductSpools = new ProductSpools()
                                 {
-                                    ProductID = productId,
+                                    ProductID = productid,
                                     C1CNomenclatureID = productionTask.C1CNomenclatureID,
                                     C1CCharacteristicID = productionTask.C1CCharacteristicID,
                                     Diameter = 0,
@@ -111,7 +108,7 @@ namespace Gamma.ViewModels
                                     new DocProducts()
                                     {
                                         DocID = Doc.DocID,
-                                        ProductID = productId
+                                        ProductID = productid
                                     }
                                 }
                             };
@@ -217,11 +214,11 @@ namespace Gamma.ViewModels
             if (Doc == null) return;
             if (CurrentViewModel is DocProductSpoolViewModel)
             {
-                var productId = (from p in DB.GammaBase.Products
+                var productid = (from p in DB.GammaBase.Products
                                  where p.BarCode == msg.Barcode
                                  select p.ProductID).FirstOrDefault();
-                if (productId == new Guid()) return;
-                if (DB.GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productId).Select(d => d).FirstOrDefault() != null)
+                if (productid == new Guid()) return;
+                if (DB.GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productid).Select(d => d).FirstOrDefault() != null)
                     IsConfirmed = false;
             }
             else

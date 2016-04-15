@@ -36,63 +36,63 @@ namespace Gamma
             
         }
 
-        private static GammaSettings _GammaSettings;
+        private static GammaSettings _gammaSettings;
         public static GammaSettings Get()
         {
-            if (_GammaSettings == null)
+            if (_gammaSettings == null)
             {
                 if (File.Exists(FileName))
                 {
                     var strSetting = new FileStream(FileName, FileMode.Open);
-                    var Serializer = new XmlSerializer(typeof(GammaSettings));
-                    _GammaSettings = (GammaSettings)Serializer.Deserialize(strSetting);
+                    var serializer = new XmlSerializer(typeof(GammaSettings));
+                    _gammaSettings = (GammaSettings)serializer.Deserialize(strSetting);
                 }
                 else
                 {
-                    _GammaSettings = new GammaSettings();
+                    _gammaSettings = new GammaSettings();
                 }
             }
 
-            return _GammaSettings;
+            return _gammaSettings;
         }
 
-        public static void SetConnectionString(string DataSource, string DbName, string User = "", string Password = "")
+        public static void SetConnectionString(string dataSource, string dbName, string user = "", string password = "")
         {
-            var AppSettings = GammaSettings.Get();
-            AppSettings.HostName = DataSource;
-            AppSettings.DbName = DbName;
-            AppSettings.User = User;
+            var appSettings = GammaSettings.Get();
+            appSettings.HostName = dataSource;
+            appSettings.DbName = dbName;
+            appSettings.User = user;
 
             SqlConnectionStringBuilder sqlBuilder = new SqlConnectionStringBuilder();
 
             // Set the properties for the data source.
-            sqlBuilder.DataSource = DataSource;
-            sqlBuilder.InitialCatalog = DbName;
-            sqlBuilder.UserID = User;
-            sqlBuilder.Password = Password;
+            sqlBuilder.DataSource = dataSource;
+            sqlBuilder.InitialCatalog = dbName;
+            sqlBuilder.UserID = user;
+            sqlBuilder.Password = password;
             sqlBuilder.ApplicationName = "EntityFramework";
             sqlBuilder.PersistSecurityInfo = true;
             sqlBuilder.MultipleActiveResultSets = true;
 
-            var EntityConnectionStringBuilder = new EntityConnectionStringBuilder();
-            EntityConnectionStringBuilder.Provider = "System.Data.SqlClient";
-            EntityConnectionStringBuilder.ProviderConnectionString = sqlBuilder.ToString();
-            SQLConnectionString = EntityConnectionStringBuilder.ProviderConnectionString;
-            EntityConnectionStringBuilder.Metadata = "res://*/Models.GammaModel.csdl|res://*/Models.GammaModel.ssdl|res://*/Models.GammaModel.msl";
+            var entityConnectionStringBuilder = new EntityConnectionStringBuilder();
+            entityConnectionStringBuilder.Provider = "System.Data.SqlClient";
+            entityConnectionStringBuilder.ProviderConnectionString = sqlBuilder.ToString();
+            SqlConnectionString = entityConnectionStringBuilder.ProviderConnectionString;
+            entityConnectionStringBuilder.Metadata = "res://*/Models.GammaModel.csdl|res://*/Models.GammaModel.ssdl|res://*/Models.GammaModel.msl";
 
-            ConnectionString = EntityConnectionStringBuilder.ToString();
+            ConnectionString = entityConnectionStringBuilder.ToString();
         }
 
         public static void Serialize()
         {
-            var AppSettings = GammaSettings.Get();
-            using (var AppFile = new FileStream(FileName, FileMode.Create))
+            var appSettings = GammaSettings.Get();
+            using (var appFile = new FileStream(FileName, FileMode.Create))
             {
-                var Serializer = new XmlSerializer(typeof(GammaSettings));
-                Serializer.Serialize(AppFile, AppSettings);
+                var serializer = new XmlSerializer(typeof(GammaSettings));
+                serializer.Serialize(appFile, appSettings);
             }
         }
-        public static string SQLConnectionString { get; private set; }
+        public static string SqlConnectionString { get; private set; }
         [Serializable]
         public class ComPort
         {

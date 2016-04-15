@@ -21,22 +21,22 @@ namespace Gamma.Dialogs
                      Description = r.Description,
                      FullDescription = r.FullDescription
                  }).ToList();
-            lkpBrokeReason.ItemsSource = RejectionReasons;
+            LkpBrokeReason.ItemsSource = RejectionReasons;
         }
-        public ChangeSpoolDialog(Guid productSpoolID) : this()
+        public ChangeSpoolDialog(Guid productSpoolid) : this()
         {
-            edtBrokeWeight.Value = DB.GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolID).Select(p => p.Weight).FirstOrDefault();
+            EdtBrokeWeight.Value = DB.GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.Weight).FirstOrDefault();
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
             switch (ChangeState)
             {
                 case SpoolChangeState.WithBroke:
-                    Weight = Convert.ToInt32(edtBrokeWeight.EditValue);
-                    RejectionReasonID = (Guid)lkpBrokeReason.EditValue;
+                    Weight = Convert.ToInt32(EdtBrokeWeight.EditValue);
+                    RejectionReasonID = (Guid)LkpBrokeReason.EditValue;
                     break;
                 case SpoolChangeState.WithRemainder:
-                    Weight = Convert.ToInt32(edtRemainderWeight.Text);
+                    Weight = Convert.ToInt32(EdtRemainderWeight.Text);
                     break;
                 default:
                     Weight = 0;

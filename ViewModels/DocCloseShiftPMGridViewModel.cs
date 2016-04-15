@@ -91,12 +91,12 @@ namespace Gamma.ViewModels
                 Spools.Clear();
             }
         }
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
-            base.SaveToModel(itemId);
+            base.SaveToModel(itemID);
             if (DocCloseShift == null)
             {
-                DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == itemId).Select(d => d).FirstOrDefault();
+                DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == itemID).Select(d => d).FirstOrDefault();
                 foreach (var doc in DocCloseShiftDocs)
                 {
                     DocCloseShift.DocCloseShiftDocs.Add(doc);

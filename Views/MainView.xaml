@@ -6,7 +6,7 @@
     xmlns:ignore="http://www.ignore.com" 
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
-    xmlns:Views="clr-namespace:Gamma.Views" 
+    xmlns:views="clr-namespace:Gamma.Views" 
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
@@ -20,10 +20,13 @@
 
     <Window.Resources>
        <DataTemplate DataType="{x:Type vm:ProductionTasksSGBViewModel}">
-            <Views:ProductionTasksSGBView />
+            <views:ProductionTasksSGBView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductionTasksSGIViewModel}">
+            <views:ProductionTasksSGIView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:PlaceProductsViewModel}">
-            <Views:PlaceProductsView />
+            <views:PlaceProductsView />
         </DataTemplate>
     </Window.Resources>
     <Window.DataContext>
@@ -38,12 +41,13 @@
                 <dxb:Bar Caption="Файл" IsMainMenu="True">
                     <dxb:BarSubItem Content="Задания">
                         <dxb:BarButtonItem Content="Задания на пр-во СГБ" Command="{Binding ShowProductionTasksSGBCommand}" />
+                        <dxb:BarButtonItem Content="Задания на пр-во СГИ" Command="{Binding ShowProductionTasksSGICommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Документы">
                         <dxb:BarSubItem Content="Закрытия смен">
                             <dxb:BarButtonItem Content="Закрытие смен БДМ" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.PM}" />
-                            <dxb:BarButtonItem Content="Закрытие смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.RW}" />
-                            <dxb:BarButtonItem Content="Закрытие смены Упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.WR}" />
+                            <dxb:BarButtonItem Content="Закрытие смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.Rw}" />
+                            <dxb:BarButtonItem Content="Закрытие смены Упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.Wr}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Производство" ItemLinksSource="{Binding PlaceProducts}">
@@ -83,7 +87,7 @@
                 </dxb:Bar>
             </dxb:BarManager.Bars>
             <DockPanel>
-                <Views:SourceSpoolsView DockPanel.Dock="Top" Background="#FFEBECEF" Visibility="{Binding SourceSpoolsVisible}"/>
+                <views:SourceSpoolsView DockPanel.Dock="Top" Background="#FFEBECEF" Visibility="{Binding SourceSpoolsVisible}"/>
                 <ContentControl Content="{Binding CurrentView}" DockPanel.Dock="Bottom" />
             </DockPanel>
         </dxb:BarManager>

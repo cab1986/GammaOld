@@ -22,22 +22,22 @@ namespace Gamma.ViewModels
         /// </summary>
         public UserEditViewModel()
         {
-            IsNewUser = true;
-            User = new Users() { UserID = SQLGuidUtil.NewSequentialId() };
+            _isNewUser = true;
+            User = new Users() { UserID = SqlGuidUtil.NewSequentialid() };
             ChangePassEnabled = false;
             InitializeFields();
         }
-        public UserEditViewModel(Guid userID)
+        public UserEditViewModel(Guid userid)
         {
             ChangePassEnabled = true;
-            UserID = userID;
-            User = DB.GammaBase.Users.Include(u => u.Places).Where(u => u.UserID == userID).FirstOrDefault();
+            UserID = userid;
+            User = DB.GammaBase.Users.Include(u => u.Places).Where(u => u.UserID == userid).FirstOrDefault();
             Login = User.Login;
             Name = User.Name;
             PlaceID = User.Places.First().PlaceID;
             Post = User.Post;
             RoleID = User.RoleID;
-            IsDBAdmin = User.DBAdmin;
+            IsDbAdmin = User.DBAdmin;
             ShiftID = User.ShiftID;
             InitializeFields();
         }
@@ -47,8 +47,8 @@ namespace Gamma.ViewModels
             Places = new ObservableCollection<Places>(DB.GammaBase.Places.Select(p => p));
             Roles = new ObservableCollection<Roles>(DB.GammaBase.Roles.Select(r => r));
         }
-        private bool IsNewUser = false;
-        public bool IsDBAdmin { get; set; }
+        private bool _isNewUser = false;
+        public bool IsDbAdmin { get; set; }
         [Required(ErrorMessage="Поле логин не может быть пустым")]
         public string Login
         {
@@ -109,14 +109,14 @@ namespace Gamma.ViewModels
             User.RoleID = RoleID;
             User.ShiftID = ShiftID;
             User.Post = Post;
-            User.DBAdmin = IsDBAdmin;
-            if (IsNewUser)
+            User.DBAdmin = IsDbAdmin;
+            if (_isNewUser)
             {
                 DB.GammaBase.Users.Add(User);
             }
             DB.GammaBase.SaveChanges();
-            if (IsNewUser)
-                DB.RecreateUserInDB(User.UserID, Password);
+            if (_isNewUser)
+                DB.RecreateUserInDb(User.UserID, Password);
         }
         public DelegateCommand ChangePasswordCommand { get; private set; }
         private void ChangePassword()

@@ -8,7 +8,7 @@ namespace Gamma
 {
     class ValidationExceptionBehavior : Behavior<FrameworkElement>
     {
-        private int validationExceptionCount;
+        private int _validationExceptionCount;
 
         protected override void OnAttached()
         {
@@ -26,18 +26,18 @@ namespace Gamma
 
             if (e.Action == ValidationErrorEventAction.Added)
             {
-                this.validationExceptionCount++;
+                this._validationExceptionCount++;
             }
             else
             {
-                this.validationExceptionCount--;
+                this._validationExceptionCount--;
             }
 
             if (this.AssociatedObject.DataContext is IValidationExceptionHandler)
             {
                 // transfer the information back to the viewmodel
                 var viewModel = (IValidationExceptionHandler)this.AssociatedObject.DataContext;
-                viewModel.ValidationExceptionsChanged(this.validationExceptionCount);
+                viewModel.ValidationExceptionsChanged(this._validationExceptionCount);
             }
         }
     }

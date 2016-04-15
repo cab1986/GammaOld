@@ -23,17 +23,13 @@ namespace Gamma.ViewModels
         /// </summary>
         public PlaceProductsViewModel(int placeID)
         {
-            Intervals = new List<string>();
-            Intervals.Add("Последние 500");
-            Intervals.Add("За мою смену");
-            Intervals.Add("За последний день");
-            Intervals.Add("Поиск");
+            Intervals = new List<string> {"Последние 500", "За мою смену", "За последний день", "Поиск"};
             FindCommand = new DelegateCommand(Find);
             OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
-            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.WR);
+            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.Wr);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
-            PlaceGroup = (PlaceGroups)DB.GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
+            PlaceGroup = (PlaceGroups)(DB.GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault()??0);
             switch (PlaceGroup)
             {
                 case PlaceGroups.PM:
@@ -41,7 +37,7 @@ namespace Gamma.ViewModels
                     NewProductText = "Создать новый тамбур";
                     DeleteProductText = "Удалить тамбур";
                     break;
-                case PlaceGroups.RW:
+                case PlaceGroups.Rw:
                     QuantityHeader = "Вес, кг";
                     NewProductText = "Создать новый съем";
                     DeleteProductText = "Удалить съем";
@@ -51,7 +47,7 @@ namespace Gamma.ViewModels
                     NewProductText = "Создать новую паллету";
                     DeleteProductText = "Удалить паллету";
                     break;
-                case PlaceGroups.WR:
+                case PlaceGroups.Wr:
                     QuantityHeader = "Вес нетто, кг";
                     NewProductText = "Создать новую групповую упаковку";
                     DeleteProductText = "Удалить групповую упаковку";
@@ -66,10 +62,10 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.PM:
-                case PlaceGroups.RW:
+                case PlaceGroups.Rw:
                     return DB.HaveWriteAccess("ProductSpools") 
                         && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
-                case PlaceGroups.WR:
+                case PlaceGroups.Wr:
                     return DB.HaveWriteAccess("ProductGroupPacks")
                         && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
                 default:
@@ -82,7 +78,7 @@ namespace Gamma.ViewModels
             if (SelectedProduct == null) return;
             switch (SelectedProduct.PlaceGroup)
             {
-                case PlaceGroups.RW:
+                case PlaceGroups.Rw:
                     var dlgResult = MessageBox.Show("Хотите удалить съем целиком?", "Удаление продукта",
                     MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     switch (dlgResult)
@@ -99,10 +95,10 @@ namespace Gamma.ViewModels
                 case PlaceGroups.PM:
                     DeleteSpool();
                     break;
-                case PlaceGroups.WR:
+                case PlaceGroups.Wr:
                     DeleteGroupPack();
                     break;
-            };
+            }
         }
         private void DeleteGroupPack()
         {
@@ -150,7 +146,7 @@ namespace Gamma.ViewModels
         {
             switch (PlaceGroup)
             {
-                case PlaceGroups.WR:
+                case PlaceGroups.Wr:
                     var notConfirmedGroupPack = DB.GammaBase.Docs.Include(d => d.DocProducts)
                         .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
                         .OrderByDescending(d => d.Date)
@@ -189,8 +185,8 @@ namespace Gamma.ViewModels
         private PlaceGroups PlaceGroup { get; set; }
         private void Find()
         {
-            UIServices.SetBusyState();
-            switch (IntervalID)
+            UiServices.SetBusyState();
+            switch (Intervalid)
             {
                 case 0:
                     Products = new ObservableCollection<ProductInfo>
@@ -316,16 +312,16 @@ namespace Gamma.ViewModels
         public DateTime? DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
         public List<string> Intervals { get; set; }
-        private int _intervalId;
+        private int _intervalid;
 
-        public int IntervalID
+        public int Intervalid
         {
-            get { return _intervalId; }
+            get { return _intervalid; }
             set
             {
-                if (_intervalId == value) return;
-                _intervalId = value;
-                if (_intervalId < 3) Find();
+                if (_intervalid == value) return;
+                _intervalid = value;
+                if (_intervalid < 3) Find();
             }
         }
         public DelegateCommand DeleteProductCommand { get; private set; }

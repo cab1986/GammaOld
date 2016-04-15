@@ -1,4 +1,4 @@
-﻿<g:MVVMWindow 
+﻿<g:MvvmWindow 
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
@@ -13,7 +13,7 @@
     xmlns:v="clr-namespace:Gamma.Views" 
     xmlns:g="clr-namespace:Gamma" 
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
-    xmlns:Dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
+    xmlns:dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
     Title="{Binding Title}"
@@ -21,7 +21,7 @@
     Width="{g:SettingBinding DocProductWidth}"
     Left="{g:SettingBinding DocProductLeft}"
     Top="{g:SettingBinding DocProductTop}" >
-    <g:MVVMWindow.Resources>
+    <g:MvvmWindow.Resources>
         <DataTemplate DataType="{x:Type vm:DocProductSpoolViewModel}">
             <v:DocProductSpoolView />
         </DataTemplate>
@@ -33,10 +33,10 @@
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>
-                <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=itemTemplate}"/>
+                <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>
             </ContentControl>
         </DataTemplate>
-        <DataTemplate x:Key="itemTemplate">
+        <DataTemplate x:Key="ItemTemplate">
             <ContentControl>
                 <dxb:BarButtonItem Content="{Binding Caption}"
         			Glyph="{Binding SmallGlyph}"
@@ -47,7 +47,7 @@
         			CommandParameter="{Binding CommandParameter}"/>
             </ContentControl>
         </DataTemplate>
-    </g:MVVMWindow.Resources>
+    </g:MvvmWindow.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
@@ -59,7 +59,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <dxmvvm:Interaction.Behaviors>
-            <g:UIAuthBehavior />
+            <g:UiAuthBehavior />
         </dxmvvm:Interaction.Behaviors>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
         <dx:DXTabControl Grid.Row="1">
@@ -104,4 +104,4 @@
         <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Height="30" Margin="0,5,85,5" Command="{Binding SaveAndCloseCommand}" />
         <Button Content="Отмена" Grid.Row="2" Height ="30" Command="{Binding CloseCommand}" Width="70" Margin="0,5,5,5" HorizontalAlignment="Right"/>
     </Grid>
-</g:MVVMWindow>
+</g:MvvmWindow>

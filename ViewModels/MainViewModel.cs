@@ -9,16 +9,7 @@ using Gamma.Dialogs;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// ViewModel для главного окна приложения
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
@@ -38,40 +29,42 @@ namespace Gamma.ViewModels
                     WorkSession.PrintName = dialog.PrintName;
                 }
             }
-            StatusText = String.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Пользователь: {2}, Имя для печати: {3}", settings.HostName, settings.DbName, 
+            StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Пользователь: {2}, Имя для печати: {3}", settings.HostName, settings.DbName, 
                 settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл");
             if (IsInDesignMode)
             {
-                ShowReportListCommand = new DelegateCommand(() => MessageManager.OpenReportList());
+                ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList);
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
                 ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB);
-                FindProductCommand = new DelegateCommand(() => MessageManager.OpenFindProduct());
-                ManageUsersCommand = new DelegateCommand(() => MessageManager.OpenManageUsers());
+                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGI);
+                FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
+                ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers);
             }
             else
             {
-                ShowReportListCommand = new DelegateCommand(() => MessageManager.OpenReportList(),
+                ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList,
                 () => WorkSession.DBAdmin || DB.HaveWriteAccess("Reports"));
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB,
                     () => DB.HaveReadAccess("ProductionTasks"));
-                FindProductCommand = new DelegateCommand(() => MessageManager.OpenFindProduct());
-                ManageUsersCommand = new DelegateCommand(() => MessageManager.OpenManageUsers(), () => WorkSession.DBAdmin);
+                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGI,
+                    DB.HaveReadAccess("ProductionTasks"));FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
+                ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
                 CloseShiftCommand = new DelegateCommand(CloseShift);
-                OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>((p) => MessageManager.OpenDocCloseShifts(p));
-                ConfigureComPortCommand = new DelegateCommand(() => MessageManager.ConfigureComPort(), () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
+                OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>(MessageManager.OpenDocCloseShifts);
+                ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
-                OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(() => MessageManager.OpenPlaceGroupsNomenclature()
+                OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
             }
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroups.PM:
-                case PlaceGroups.RW:
+                case PlaceGroups.Rw:
                     CurrentView = ViewModelLocator.ProductionTasksSGB;
                     break;
-                case PlaceGroups.WR:
+                case PlaceGroups.Wr:
                     OpenPlaceProducts(WorkSession.PlaceID);
                     break;
             }
@@ -91,7 +84,7 @@ namespace Gamma.ViewModels
         }
         private void OpenPlaceProducts(int placeID)
         {
-            UIServices.SetBusyState();
+            UiServices.SetBusyState();
             CurrentView = new PlaceProductsViewModel(placeID);
             RefreshCommand = (CurrentView as PlaceProductsViewModel).FindCommand;
             NewItemCommand = (CurrentView as PlaceProductsViewModel).CreateNewProductCommand;
@@ -104,24 +97,24 @@ namespace Gamma.ViewModels
 //                MessageManager.FindProductionTaskBatch(BatchKinds.SGB);
             if (CurrentView is ProductionTasksSGBViewModel)
                 MessageManager.FindProductionTaskBatch(BatchKinds.SGB);
-            else if (CurrentView is ProductionTasksConvertingViewModel)
+            else if (CurrentView is ProductionTasksSGIViewModel)
                 MessageManager.FindProductionTaskBatch(BatchKinds.SGI);
         }
 
         private void CloseShift()
         {
             if (WorkSession.ShiftID == 0) return;
-            MessageManager.OpenDocCloseShift((int)WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID);
+            MessageManager.OpenDocCloseShift(WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID);
         }
 
         private void CurrentViewChanged()
         {
             if (CurrentView != null && CurrentView.GetType().GetInterfaces().Contains(typeof(IItemManager)))
             {
-                NewItemCommand = (CurrentView as IItemManager).NewItemCommand;
-                EditItemCommand = (CurrentView as IItemManager).EditItemCommand;
-                DeleteItemCommand = (CurrentView as IItemManager).DeleteItemCommand;
-                RefreshCommand = (CurrentView as IItemManager).RefreshCommand;
+                NewItemCommand = (CurrentView as IItemManager)?.NewItemCommand;
+                EditItemCommand = (CurrentView as IItemManager)?.EditItemCommand;
+                DeleteItemCommand = (CurrentView as IItemManager)?.DeleteItemCommand;
+                RefreshCommand = (CurrentView as IItemManager)?.RefreshCommand;
             }
             else
             {
@@ -130,16 +123,16 @@ namespace Gamma.ViewModels
                 DeleteItemCommand = null;
                 RefreshCommand = null;
             }
-            if (CurrentView is ProductionTasksSGBViewModel || CurrentView is ProductionTasksConvertingViewModel)
+            if (CurrentView is ProductionTasksSGBViewModel || CurrentView is ProductionTasksSGIViewModel)
                 ProductionTaskBarVisible = true;
             else ProductionTaskBarVisible = false;
         }
-        private ViewModelBase currentView;
+        private ViewModelBase _currentView;
         public ViewModelBase CurrentView
         {
-            get { return currentView; }
+            get { return _currentView; }
             private set { 
-                currentView = value;
+                _currentView = value;
                 RaisePropertyChanged("CurrentView");
                 CurrentViewChanged();
             }
@@ -199,7 +192,7 @@ namespace Gamma.ViewModels
             }
         }
         public DelegateCommand ShowReportListCommand { get; private set; }
-        public DelegateCommand ShowProductionTasksConvertingCommand { get; private set; }
+        public DelegateCommand ShowProductionTasksSGICommand { get; private set; }
 //        public DelegateCommand ShowProductionTasksPMCommand { get; private set; }
         public DelegateCommand ShowProductionTasksSGBCommand { get; private set; }
         public DelegateCommand FindProductCommand { get; private set; }

@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
                 SourceSpoolsVisible = Visibility.Collapsed;
                 return;
             } 
-            if (WorkSession.PlaceGroup == PlaceGroups.RW || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
+            if (WorkSession.PlaceGroup == PlaceGroups.Rw || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
             else SourceSpoolsVisible = Visibility.Collapsed;
             ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
             DeleteSpoolCommand = new DelegateCommand<byte>(DeleteSpool);
@@ -57,12 +57,12 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
             MessageManager.OpenFindProduct(ProductKinds.ProductSpool,true);
         }
-        private void CreateRemainderSpool(Guid parentProductId, int weight)
+        private void CreateRemainderSpool(Guid parentProductID, int weight)
         {
-            var docID = SQLGuidUtil.NewSequentialId();
-            var productID = SQLGuidUtil.NewSequentialId();
-            UIServices.SetBusyState();
-            DB.GammaBase.CreateRemainderSpool(docID, productID, parentProductId, weight, WorkSession.PrintName);
+            var docID = SqlGuidUtil.NewSequentialid();
+            var productid = SqlGuidUtil.NewSequentialid();
+            UiServices.SetBusyState();
+            DB.GammaBase.CreateRemainderSpool(docID, productid, parentProductID, weight, WorkSession.PrintName);
             ReportManager.PrintReport("Амбалаж", "Spool", docID);
         }
         private byte CurrentUnwinder { get; set; }
@@ -179,15 +179,15 @@ namespace Gamma.ViewModels
             }
             DB.GammaBase.SaveChanges();
         }
-        private void BrokeProduct(Guid productId, int weight, Guid? rejectionReasonID)
+        private void BrokeProduct(Guid productid, int weight, Guid? rejectionReasonid)
         {
-            var docID = SQLGuidUtil.NewSequentialId();
-            DB.GammaBase.CreateDocChangeStateForProduct(docID, productId, weight, (short)ProductStates.Broke,
-                rejectionReasonID, WorkSession.PrintName);
-            var docProductionID = DB.GammaBase.DocProducts
-                .Where(d => d.ProductID == productId && d.Docs.DocTypeID == (byte)DocTypes.DocProduction)
+            var docID = SqlGuidUtil.NewSequentialid();
+            DB.GammaBase.CreateDocChangeStateForProduct(docID, productid, weight, (short)ProductStates.Broke,
+                rejectionReasonid, WorkSession.PrintName);
+            var docProductionid = DB.GammaBase.DocProducts
+                .Where(d => d.ProductID == productid && d.Docs.DocTypeID == (byte)DocTypes.DocProduction)
                 .Select(d => d.DocID).FirstOrDefault();
-            ReportManager.PrintReport("Амбалаж", "Spool", docProductionID);
+            ReportManager.PrintReport("Амбалаж", "Spool", docProductionid);
         }
         private void ChangeUnwinderActive(byte unum)
         {
@@ -354,17 +354,17 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Unwinder3Nomenclature");
             }
         }
-        private string ProductNomenclature(Guid? productID)
+        private string ProductNomenclature(Guid? productid)
         {
             return (from pspool in DB.GammaBase.ProductSpools
-                    where pspool.ProductID == productID
+                    where pspool.ProductID == productid
                     select "№" + pspool.Products.Number + " " + pspool.C1CNomenclature.Name + " " + pspool.C1CCharacteristics.Name).FirstOrDefault();
         }
         private SourceSpools SourceSpools { get; set; }
-        private bool CheckSpoolIsUsed(Guid? productID)
+        private bool CheckSpoolIsUsed(Guid? productid)
         {
             return DB.GammaBase.DocWithdrawal.Any(dw => DB.GammaBase.DocProducts.Where
-                (dp => dp.ProductID == productID).Select(dp => dp.DocID).Contains(dw.DocID));
+                (dp => dp.ProductID == productid).Select(dp => dp.DocID).Contains(dw.DocID));
         }
         private Visibility _sourceSpoolsVisible;
         public Visibility SourceSpoolsVisible

@@ -14,7 +14,7 @@ namespace Gamma
         public MainView()
         {
             InitializeComponent();
-            this.Closed += MainView_Closed;
+            Closed += MainView_Closed;
         }
         void MainView_Closed(object sender, System.EventArgs e)
         {

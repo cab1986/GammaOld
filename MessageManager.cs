@@ -8,8 +8,8 @@ namespace Gamma
  
     public class PrintReportMessage
     {
-        public Guid ReportID; // ID отчета
-        public Guid? VMID; // ID ViewModel, которая должна обработать событие
+        public Guid ReportID; // id отчета
+        public Guid? VMID; // id ViewModel, которая должна обработать событие
     }
  
     public class OpenMainMessage { }
@@ -35,21 +35,21 @@ namespace Gamma
     }
     public class ProductionTaskRwMessage
     {
-        public ProductionTaskRwMessage(Guid productionTaskBatchId, Guid nomenclatureId)
+        public ProductionTaskRwMessage(Guid productionTaskBatchID, Guid nomenclatureid)
         {
-            ProductionTaskBatchId = productionTaskBatchId;
-            NomenclatureId = nomenclatureId;
+            ProductionTaskBatchID = productionTaskBatchID;
+            NomenclatureID = nomenclatureid;
         }
 
-        public ProductionTaskRwMessage(Guid productionTaskBatchId, DateTime dateBegin)
+        public ProductionTaskRwMessage(Guid productionTaskBatchID, DateTime dateBegin)
         {
-            ProductionTaskBatchId = productionTaskBatchId;
+            ProductionTaskBatchID = productionTaskBatchID;
             DateBegin = dateBegin;
         }
 
-        public Guid ProductionTaskBatchId;
-        public Guid? NomenclatureId;
-        public Guid? CharacteristicId;
+        public Guid ProductionTaskBatchID;
+        public Guid? NomenclatureID;
+        public Guid? CharacteristicID;
         public DateTime? DateBegin;
     }
     public class Nomenclature1CMessage
@@ -111,17 +111,17 @@ namespace Gamma
         {
             Messenger.Default.Send(new UserEditMessage());
         }
-        public static void EditUser(Guid userID)
+        public static void EditUser(Guid userid)
         {
-            Messenger.Default.Send(new UserEditMessage { UserID = userID });
+            Messenger.Default.Send(new UserEditMessage { UserID = userid });
         }
         public static void EditPermit()
         {
             Messenger.Default.Send(new PermitEditMessage());
         }
-        public static void EditPermit(Guid permitID)
+        public static void EditPermit(Guid permitid)
         {
-            Messenger.Default.Send(new PermitEditMessage { PermitID = permitID });
+            Messenger.Default.Send(new PermitEditMessage { PermitID = permitid });
         }
         public static void EditRole()
         {
@@ -131,14 +131,14 @@ namespace Gamma
         {
             Messenger.Default.Send(new RoleEditMessage { RoleID = roleID });
         }
-        public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchId, Guid nomenclatureId)
+        public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchID, Guid nomenclatureid)
         {
-            Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchId, nomenclatureId));
+            Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureid));
         }
 
-        public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchId, DateTime dateBegin)
+        public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchID, DateTime dateBegin)
         {
-            Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchId, dateBegin));
+            Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, dateBegin));
         }
         public static void OpenManageUsers()
         {
@@ -182,7 +182,7 @@ namespace Gamma
             Messenger.Default.Send(new FindProductMessage
             {
                     ChooseSourceProduct = false
-                });
+            });
         }
         public static void OpenFindProduct(ProductKinds productKind, bool chooseSourceProduct = false)
         {
@@ -190,7 +190,7 @@ namespace Gamma
             {
                     ProductKind = productKind,
                     ChooseSourceProduct = chooseSourceProduct
-                });
+            });
         }
         public static void OpenDocCloseShift(Guid docID)
         {

@@ -17,7 +17,7 @@ namespace Gamma.Dialogs
             DialogResult = true;
         }
 
-        public DateTime DateBegin { get { return edtDateBegin.DateTime; } }
-        public DateTime DateEnd { get { return edtDateEnd.DateTime; } }
+        public DateTime DateBegin { get { return EdtDateBegin.DateTime; } }
+        public DateTime DateEnd { get { return EdtDateEnd.DateTime; } }
     }
 }

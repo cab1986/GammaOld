@@ -12,7 +12,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class FindProductViewModel : DBEditItemWithNomenclatureViewModel
+    public class FindProductViewModel : DbEditItemWithNomenclatureViewModel
     {
         /// <summary>
         /// Initializes a new instance of the FindProductViewModel class.
@@ -130,9 +130,9 @@ namespace Gamma.ViewModels
         public DelegateCommand FindCommand { get; private set; }
         public DelegateCommand ResetSearchCommand { get; private set; }
 
-        private void Find(bool IsFromScanner)
+        private void Find(bool isFromScanner)
         {
-            if (IsFromScanner)
+            if (isFromScanner)
             {
                 FoundProducts = new ObservableCollection<ProductInfo>
                 (
@@ -159,7 +159,7 @@ namespace Gamma.ViewModels
             }
             else
             {
-                Guid charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
+                Guid charid = SelectedCharacteristic?.CharacteristicID ?? new Guid();
                 var selectedPlaces = new List<string>();
                 if (SelectedPlaces != null)
                     selectedPlaces = SelectedPlaces.Cast<string>().ToList();
@@ -170,7 +170,7 @@ namespace Gamma.ViewModels
                 (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
                 (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
                 (NomenclatureID == null || pinfo.C1CNomenclatureID == NomenclatureID) &&
-                (charId == new Guid() || pinfo.C1CCharacteristicID == charId) &&
+                (charid == new Guid() || pinfo.C1CCharacteristicID == charid) &&
                 (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                 ((DateBegin == null || pinfo.Date >= DateBegin) && (DateEnd == null || pinfo.Date <= DateEnd)) &&
                 ((ButtonPanelVisible && !pinfo.IsWrittenOff) || !ButtonPanelVisible)

@@ -11,21 +11,21 @@ namespace Gamma.ViewModels
     /// <summary>
     /// Свойства задания для упаковщика
     /// </summary>
-    public class ProductionTaskWRViewModel : SaveImplementedViewModel, ICheckedAccess
+    public class ProductionTaskWrViewModel : SaveImplementedViewModel, ICheckedAccess
     {
-        public ProductionTaskWRViewModel()
+        public ProductionTaskWrViewModel()
         {
         }
-        public ProductionTaskWRViewModel(Guid productionTaskBatchID)
+        public ProductionTaskWrViewModel(Guid productionTaskBatchID)
         {
-            var productionTaskWR = DB.GammaBase.GetProductionTaskBatchWRProperties(productionTaskBatchID).FirstOrDefault();
-            if (productionTaskWR != null)
+            var productionTaskWr = DB.GammaBase.GetProductionTaskBatchWRProperties(productionTaskBatchID).FirstOrDefault();
+            if (productionTaskWr != null)
             {
-                NumFilmLayers = productionTaskWR.NumFilmLayers ?? 0;
-                IsEndProtected = productionTaskWR.IsEndProtected ?? false;
-                IsWithCarton = productionTaskWR.IsWithCarton ?? false;
-                GroupPackConfig = productionTaskWR.GroupPackConfig;
-                IsConfirmed = productionTaskWR.IsActual;
+                NumFilmLayers = productionTaskWr.NumFilmLayers ?? 0;
+                IsEndProtected = productionTaskWr.IsEndProtected ?? false;
+                IsWithCarton = productionTaskWr.IsWithCarton ?? false;
+                GroupPackConfig = productionTaskWr.GroupPackConfig;
+                IsConfirmed = productionTaskWr.IsActual;
             }
         }
         private bool IsConfirmed { get; set; }
@@ -86,10 +86,10 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("GroupPackConfig");
             }
         }
-        public override void SaveToModel(Guid itemId) // Сохранение по ProductionTaskID
+        public override void SaveToModel(Guid itemID) // Сохранение по ProductionTaskID
         {
-            base.SaveToModel(itemId);
-            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").Where(p => p.ProductionTaskID == itemId).FirstOrDefault();
+            base.SaveToModel(itemID);
+            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").Where(p => p.ProductionTaskID == itemID).FirstOrDefault();
             if (productionTask == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);

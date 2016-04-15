@@ -17,7 +17,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class ProductionTaskPMViewModel : DBEditItemWithNomenclatureViewModel, IProductionTask, ICheckedAccess
+    public class ProductionTaskPMViewModel : DbEditItemWithNomenclatureViewModel, IProductionTask, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskPMViewModel class.
@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
         /// 
         public ProductionTaskPMViewModel()
         {
-            Places = new ObservableCollection<Place>(DB.GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.PM).
+            Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.PM).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID,
@@ -35,11 +35,11 @@ namespace Gamma.ViewModels
                 PlaceID = Places[0].PlaceID;
         }
 
-        public ProductionTaskPMViewModel(Guid productionTaskBatchID, bool isForRW) : this()
+        public ProductionTaskPMViewModel(Guid productionTaskBatchID, bool isForRw) : this()
         {
             ProductionTaskBatchID = productionTaskBatchID;
-            IsForRW = isForRW;
-            var productionTask = DB.GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.PM).FirstOrDefault();
+            IsForRw = isForRw;
+            var productionTask = DB.GammaDb.GetProductionTaskByBatchid(productionTaskBatchID, (short)PlaceGroups.PM).FirstOrDefault();
             if (productionTask != null)
             {
                 DateBegin = productionTask.DateBegin;
@@ -55,13 +55,13 @@ namespace Gamma.ViewModels
             {
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel();
             }
-            if (isForRW)
+            if (isForRw)
             {
-                var productionTaskRW = DB.GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.RW).FirstOrDefault();
-                if (productionTaskRW != null)
+                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchid(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+                if (productionTaskRw != null)
                 {
                     SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                        DB.GammaBase.GetInputNomenclature(productionTaskRW.C1CNomenclatureID, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
+                        DB.GammaDb.GetInputNomenclature(productionTaskRw.C1CNomenclatureID, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
                         {
                             Name = n.Name,
                             NomenclatureID = (Guid)n.C1CNomenclatureID
@@ -73,24 +73,8 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && !IsReadOnly;
         }
-        private Guid? _characteristicID;
-        
-        [Required(ErrorMessage="Необходимо выбрать характеристику")]
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        public Guid? CharacteristicID
-        {
-            get
-            {
-                return _characteristicID;
-            }
-            set
-            {
-            	_characteristicID = value;
-                RaisePropertyChanged("CharacteristicID");
-            }
-        }
         private DateTime? _dateBegin;
-        [Required(ErrorMessage="Необходимо указать дату начала")]
+        [Required(ErrorMessage=@"Необходимо указать дату начала")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime? DateBegin
         {
@@ -105,7 +89,7 @@ namespace Gamma.ViewModels
             }
         }
         private DateTime? _dateEnd;
-        [Required(ErrorMessage = "Необходимо указать дату окончания")]
+        [Required(ErrorMessage = @"Необходимо указать дату окончания")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime? DateEnd
         {
@@ -120,21 +104,20 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
-        private void ProductionTaskRWChanged(ProductionTaskRwMessage msg)
+        private void ProductionTaskRwChanged(ProductionTaskRwMessage msg)
         {
-            if (msg.ProductionTaskBatchId != ProductionTaskBatchID) return;
-            if (msg.NomenclatureId != null)
+            if (msg.ProductionTaskBatchID != ProductionTaskBatchID) return;
+            if (msg.NomenclatureID != null)
             {
                 SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                    DB.GammaBase.GetInputNomenclature(msg.NomenclatureId, (byte) PlaceGroups.PM)
+                    DB.GammaDb.GetInputNomenclature(msg.NomenclatureID, (byte) PlaceGroups.PM)
                         .Select(n => new Nomenclature1C()
                         {
                             Name = n.Name,
                             NomenclatureID = (Guid) n.C1CNomenclatureID
                         }));
                 if (SpecificationNomenclature.Count == 1)
-                {
-                    NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
+                {NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
                 }
                 else
                     NomenclatureID = null;
@@ -154,7 +137,7 @@ namespace Gamma.ViewModels
                 var tempChars = new ObservableCollection<Characteristic>();
                 foreach (var characteristic in value)
                 {
-                    if (DB.GammaBase.GetCharSpoolLayerNumber(characteristic.CharacteristicID).FirstOrDefault() > 1) continue;
+                    if (DB.GammaDb.GetCharSpoolLayerNumber(characteristic.CharacteristicID).FirstOrDefault() > 1) continue;
                     tempChars.Add(characteristic);
                 }
                 base.Characteristics = tempChars;
@@ -179,20 +162,20 @@ namespace Gamma.ViewModels
             }
         }
         
-        private bool _isForRW;
-        public bool IsForRW
+        private bool _isForRw;
+        public bool IsForRw
         {
             get
             {
-                return _isForRW;
+                return _isForRw;
             }
             set
             {
-                if (_isForRW == value) return;
-            	_isForRW = value;
-                if (IsForRW)
+                if (_isForRw == value) return;
+            	_isForRw = value;
+                if (IsForRw)
                 {
-                    Messenger.Default.Register<ProductionTaskRwMessage>(this, ProductionTaskRWChanged);
+                    Messenger.Default.Register<ProductionTaskRwMessage>(this, ProductionTaskRwChanged);
                 }
                 else
                 {
@@ -241,40 +224,46 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override void SaveToModel(Guid itemId) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
         {
-            base.SaveToModel(itemId);
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == itemId).FirstOrDefault();
-            ProductionTasks productionTask;
-            if (productionTaskBatch == null)
+            base.SaveToModel(itemID);
+            using (var gammaBase = DB.GammaDb)
             {
-                MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemId, (short)PlaceGroups.PM).FirstOrDefault();
-            if (productionTaskTemp == null)
-            {
-                ProductionTaskID = SQLGuidUtil.NewSequentialId();
-                productionTask = new ProductionTasks()
+                var productionTaskBatch =
+                    gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemID);
+                ProductionTasks productionTask;
+                if (productionTaskBatch == null)
                 {
-                    ProductionTaskID = ProductionTaskID,
-                    PlaceGroupID = (short)PlaceGroups.PM
-                };
-                productionTaskBatch.ProductionTasks.Add(productionTask);
+                    MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return;
+                }
+                var productionTaskTemp =
+                    gammaBase.GetProductionTaskByBatchid(itemID, (short) PlaceGroups.PM).FirstOrDefault();
+                if (productionTaskTemp == null)
+                {
+                    ProductionTaskID = SqlGuidUtil.NewSequentialid();
+                    productionTask = new ProductionTasks()
+                    {
+                        ProductionTaskID = ProductionTaskID,
+                        PlaceGroupID = (short) PlaceGroups.PM
+                    };
+                    productionTaskBatch.ProductionTasks.Add(productionTask);
+                }
+                else
+                {
+                    ProductionTaskID = productionTaskTemp.ProductionTaskID;
+                    productionTask = gammaBase.ProductionTasks.Find(ProductionTaskID);
+                }
+                productionTask.PlaceID = PlaceID;
+                productionTask.C1CNomenclatureID = (Guid) NomenclatureID;
+                productionTask.C1CCharacteristicID = CharacteristicID;
+                productionTask.Quantity = TaskQuantity;
+                productionTask.DateBegin = DateBegin;
+                productionTask.DateEnd = DateEnd;
+                gammaBase.SaveChanges();
+                ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
             }
-            else
-            {
-                ProductionTaskID = productionTaskTemp.ProductionTaskID;
-                productionTask = DB.GammaBase.ProductionTasks.Find(ProductionTaskID);
-            }
-            productionTask.PlaceID = PlaceID;
-            productionTask.C1CNomenclatureID = (Guid)NomenclatureID;
-            productionTask.C1CCharacteristicID = CharacteristicID;
-            productionTask.Quantity = TaskQuantity;
-            productionTask.DateBegin = DateBegin;
-            productionTask.DateEnd = DateEnd;
-            DB.GammaBase.SaveChanges();
-            ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
         }
         [Range(1, 1000000, ErrorMessage = "Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]

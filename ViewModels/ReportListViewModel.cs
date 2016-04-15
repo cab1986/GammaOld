@@ -75,7 +75,7 @@ namespace Gamma.ViewModels
             { 
                 IsReport = true, 
                 ParentID = SelectedReport.ReportID, 
-                ReportID = SQLGuidUtil.NewSequentialId(),
+                ReportID = SqlGuidUtil.NewSequentialid(),
                 Name = ""
             };
             Reports.Add(report);

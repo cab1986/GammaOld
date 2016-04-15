@@ -5,7 +5,7 @@ namespace Gamma.Views
     /// <summary>
     /// Окно авторизации
     /// </summary>
-    public partial class LoginView : MVVMWindow
+    public partial class LoginView : MvvmWindow
     {
         /// <summary>
         /// Initializes a new instance of the LoginView class.
@@ -18,8 +18,8 @@ namespace Gamma.Views
 
         private void OpenMain(OpenMainMessage obj)
         {
-            var View = new MainView();
-            View.Show();
+            var view = new MainView();
+            view.Show();
         }
     }
 }

@@ -8,12 +8,12 @@ namespace Gamma.Attributes
     sealed class UIAuthAttribute : Attribute
     {
         // See the attribute guidelines at 
-        //  http://go.microsoft.com/fwlink/?LinkId=85236
+        //  http://go.microsoft.com/fwlink/?Linkid=85236
 
         // This is a positional argument
-        public UIAuthAttribute(UIAuthLevel AuthLevel)
+        public UIAuthAttribute(UIAuthLevel authLevel)
         {
-            this.AuthLevel = AuthLevel;
+            this.AuthLevel = authLevel;
         }
 
         // This is a named argument

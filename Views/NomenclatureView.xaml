@@ -30,7 +30,7 @@
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.View>
                             <dxg:TreeListView AllowBestFit="True" BestFitArea="Rows" AllowPerPixelScrolling="True" AutoWidth="True"
-								ShowTotalSummary="True" KeyFieldName="FolderID" ParentFieldName="ParentFolderID" AllowEditing="False"/>
+								ShowTotalSummary="True" KeyFieldName="Folderid" ParentFieldName="ParentFolderid" AllowEditing="False"/>
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxdo:LayoutPanel>

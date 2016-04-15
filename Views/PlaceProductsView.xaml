@@ -38,7 +38,7 @@
         </ToolBar>
         <dxlc:LayoutControl Grid.Row="1">
             <dxlc:LayoutItem Label="Диапозон:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalID}" x:Name="IntervalList"/>
+                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding Intervalid}" x:Name="IntervalList"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номер:">
                 <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
@@ -64,7 +64,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
-                <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
+                <dxg:GridColumn Header="Смена" FieldName="Shiftid" Width="40" FixedWidth="True"/>
                 <dxg:GridColumn Header="{Binding QuantityHeader}" FieldName="Quantity" FixedWidth="True" Width="100" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>

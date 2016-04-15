@@ -12,11 +12,11 @@ namespace Gamma.Dialogs
         {
             InitializeComponent();
             var printNames = (from d in DB.GammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).Distinct().ToList();
-            edtPrintName.ItemsSource = printNames;
+            EdtPrintName.ItemsSource = printNames;
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            PrintName = edtPrintName.Text;
+            PrintName = EdtPrintName.Text;
             DialogResult = true;
         }
         public string PrintName { get; set; }

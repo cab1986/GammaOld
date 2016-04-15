@@ -4,9 +4,9 @@ using DevExpress.Mvvm;
 
 namespace Gamma
 {
-    public class MVVMWindow : Window
+    public class MvvmWindow : Window
     {
-        public MVVMWindow()
+        public MvvmWindow()
         {
             this.Closed += MVVMWindow_Closed;
         }

@@ -33,12 +33,12 @@ namespace Gamma.ViewModels
             ////if (ViewModelBase.IsInDesignModeStatic)
             ////{
             ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
+            ////    SimpleIoc.Default.Register<idataService, DesignDataService>();
             ////}
             ////else
             ////{
             ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
+            ////    SimpleIoc.Default.Register<idataService, DataService>();
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
@@ -48,7 +48,7 @@ namespace Gamma.ViewModels
             SimpleIoc.Default.Register<ReportListViewModel>();
             SimpleIoc.Default.Register<SourceSpoolsViewModel>();
             SimpleIoc.Default.Register<ManageUsersViewModel>();
-            SimpleIoc.Default.Register<ProductionTasksConvertingViewModel>();
+            SimpleIoc.Default.Register<ProductionTasksSGIViewModel>();
         }
 
         public static MainViewModel Main
@@ -82,11 +82,11 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<ProductionTasksSGBViewModel>();
             }
         }
-        public static ProductionTasksConvertingViewModel ProductionTasksConverting
+        public static ProductionTasksSGIViewModel ProductionTasksSGI
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ProductionTasksConvertingViewModel>();
+                return ServiceLocator.Current.GetInstance<ProductionTasksSGIViewModel>();
             }
         }
         public static ProductionTaskBatchViewModel ProductionTask

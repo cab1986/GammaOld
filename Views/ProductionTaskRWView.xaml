@@ -6,16 +6,16 @@
         xmlns:g="clr-namespace:Gamma"
         xmlns:conv="clr-namespace:Gamma.Converters"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:Views="clr-namespace:Gamma.Views" 
+        xmlns:views="clr-namespace:Gamma.Views" 
         xmlns:vm="clr-namespace:Gamma.ViewModels" 
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxprg="http://schemas.devexpress.com/winfx/2008/xaml/propertygrid"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-             x:Class="Gamma.Views.ProductionTaskRWView"
+             x:Class="Gamma.Views.ProductionTaskRwView"
         mc:Ignorable="d ignore">
     <UserControl.Resources>
         <conv:ElementEmptyConverter x:Key="EmptyConverter" />
         <DataTemplate DataType="{x:Type vm:ProductionTaskSGBViewModel}">
-            <Views:ProductionTaskSGBView />
+            <views:ProductionTaskSGBView />
         </DataTemplate>
     </UserControl.Resources>
 
@@ -153,6 +153,6 @@
         <Label Content="{Binding MainCutting.TotalFormat}" HorizontalAlignment="Right" FontWeight="Bold" />
     </dxlc:LayoutGroup>
     <dxmvvm:Interaction.Behaviors>
-        <g:UIAuthBehavior/>
+        <g:UiAuthBehavior/>
     </dxmvvm:Interaction.Behaviors>
 </UserControl>

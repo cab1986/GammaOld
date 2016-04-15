@@ -26,14 +26,14 @@ namespace Gamma.ViewModels
             this.Cleanup();
         }
 
-        private bool closeSignal = false;
+        private bool _closeSignal = false;
 
         public bool CloseSignal
         {
-            get { return closeSignal; }
+            get { return _closeSignal; }
             private set
             { 
-                closeSignal = value;
+                _closeSignal = value;
                 RaisePropertyChanged("CloseSignal");
             }
         }

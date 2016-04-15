@@ -19,17 +19,17 @@ namespace Gamma.ViewModels
         /// </summary>
         public RoleEditViewModel()
         {
-            IsNewRole = true;
-            Role = new Roles() { RoleID = SQLGuidUtil.NewSequentialId() };
+            _isNewRole = true;
+            Role = new Roles() { RoleID = SqlGuidUtil.NewSequentialid() };
             RolePermits = new ObservableCollection<RolePermits>();
         }
         public RoleEditViewModel(Guid roleID)
         {
             Marks = new PermissionMark().ToDictionary();
-            Role = DB.GammaBase.Roles.Include("RolePermits").Where(r => r.RoleID == roleID).FirstOrDefault();
+            Role = DB.GammaBase.Roles.Include("RolePermits").FirstOrDefault(r => r.RoleID == roleID);
             RolePermits = new ObservableCollection<RolePermits>(Role.RolePermits);
         }
-        private bool IsNewRole = false;
+        private bool _isNewRole;
         private Roles _role;
         public Roles Role
         {
@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
         public override void SaveToModel()
         {
             base.SaveToModel();
-            if (IsNewRole)
+            if (_isNewRole)
             {
                 DB.GammaBase.Roles.Add(Role);
                 DB.GammaBase.RolePermits.AddRange(RolePermits);
@@ -75,7 +75,7 @@ namespace Gamma.ViewModels
                 }
             }
             DB.GammaBase.SaveChanges();
-            if (!IsNewRole) DB.RecreateRolePermits(Role.RoleID);
+            if (!_isNewRole) DB.RecreateRolePermits(Role.RoleID);
         }
         //private Dictionary<int, string> _marks = 
         public Dictionary<byte,string> Marks { get; set; }

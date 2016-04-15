@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace Gamma
 {
-    public class SQLGuidUtil
+    public class SqlGuidUtil
     {
         [DllImport("rpcrt4.dll", SetLastError = true)]
         static extern int UuidCreateSequential(out Guid guid);
-        public static Guid NewSequentialId()
+        public static Guid NewSequentialid()
         {
             Guid guid;
             UuidCreateSequential(out guid);

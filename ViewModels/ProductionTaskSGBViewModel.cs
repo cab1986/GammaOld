@@ -25,12 +25,12 @@ namespace Gamma.ViewModels
         }
         public ProductionTaskSGBViewModel(Guid productionTaskID)
         {
-            var productionTaskSGB = DB.GammaBase.ProductionTaskSGB.Include(pt => pt.ProductionTasks.ProductionTaskBatches).
-                Where(pt => pt.ProductionTaskID == productionTaskID).FirstOrDefault();
+            var productionTaskSGB = DB.GammaBase.ProductionTaskSGB.
+                Include(pt => pt.ProductionTasks.ProductionTaskBatches).FirstOrDefault(pt => pt.ProductionTaskID == productionTaskID);
             if (productionTaskSGB != null)
             {
-                IsConfirmed = productionTaskSGB.ProductionTasks.ProductionTaskBatches.FirstOrDefault() == null ? false :
-                    productionTaskSGB.ProductionTasks.ProductionTaskBatches.First().ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
+                IsConfirmed = productionTaskSGB.ProductionTasks.ProductionTaskBatches.FirstOrDefault() != null 
+                    && productionTaskSGB.ProductionTasks.ProductionTaskBatches.First().ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
                 Crepe = productionTaskSGB.Crepe ?? 0;
                 Diameter = productionTaskSGB.Diameter ?? 0;
                 DiameterMinus = productionTaskSGB.DiameterMinus ?? 0;
@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
         }
         private int _crepe;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(0,60,ErrorMessage="Креп за пределами допустимого диапозона")]
+        [Range(0,60,ErrorMessage=@"Креп за пределами допустимого диапозона")]
         public int Crepe
         {
             get
@@ -54,7 +54,7 @@ namespace Gamma.ViewModels
         }
         private int _diameter;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(0, 4000, ErrorMessage = "Диаметр за пределами допустимого диапозона")]
+        [Range(0, 4000, ErrorMessage = @"Диаметр за пределами допустимого диапозона")]
         public int Diameter
         {
             get
@@ -96,10 +96,10 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
-        public override void SaveToModel(Guid itemId) // Сохранение по ProductionTaskID
+        public override void SaveToModel(Guid itemID) // Сохранение по ProductionTaskID
         {
-            base.SaveToModel(itemId);
-            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").Where(p => p.ProductionTaskID == itemId).FirstOrDefault();
+            base.SaveToModel(itemID);
+            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
             if (productionTask == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -116,12 +116,6 @@ namespace Gamma.ViewModels
             DB.GammaBase.SaveChanges();
         }
 
-        public bool IsReadOnly
-        {
-            get 
-            {
-                return IsConfirmed || !DB.HaveWriteAccess("ProductionTaskSGB");
-            }
-        }
+        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductionTaskSGB");
     }
 }

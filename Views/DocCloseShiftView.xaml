@@ -19,21 +19,21 @@
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMGridViewModel}">
             <v:DocCloseShiftPMGridView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DocCloseShiftWRGridViewModel}">
-            <v:DocCloseShiftWRGridView />
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftWrGridViewModel}">
+            <v:DocCloseShiftWrGridView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMRemainderViewModel}">
             <v:DocCloseShiftPMRemainderView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DocCloseShiftRWRemainderViewModel}">
-            <v:DocCloseShiftRWRemainderView />
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftRwRemainderViewModel}">
+            <v:DocCloseShiftRwRemainderView />
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>
-                <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=itemTemplate}"/>
+                <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>
             </ContentControl>
         </DataTemplate>
-        <DataTemplate x:Key="itemTemplate">
+        <DataTemplate x:Key="ItemTemplate">
             <ContentControl>
                 <dxb:BarButtonItem Content="{Binding Caption}"
         			Glyph="{Binding SmallGlyph}"

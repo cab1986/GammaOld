@@ -32,8 +32,8 @@ namespace Gamma.ViewModels
             IsNewGroupPack = false;
             if (doc.DocProducts.Count > 0)
             {
-                var productID = doc.DocProducts.Select(d => d.ProductID).First();
-                var productGroupPack = DB.GammaBase.ProductGroupPacks.Where(p => p.ProductID == productID).Select(p => p).FirstOrDefault();
+                var productid = doc.DocProducts.Select(d => d.ProductID).First();
+                var productGroupPack = DB.GammaBase.ProductGroupPacks.Where(p => p.ProductID == productid).Select(p => p).FirstOrDefault();
                 Weight = Convert.ToInt32(productGroupPack.Weight);
                 GrossWeight = Convert.ToInt32(productGroupPack.GrossWeight);
             }
@@ -41,7 +41,7 @@ namespace Gamma.ViewModels
             if (groupPackSpools.Count > 0)
             {
                 BaseCoreWeight = DB.GetSpoolCoreWeight(groupPackSpools[0].ProductID);
-                PlaceProductionID = groupPackSpools[0].PlaceID;
+                PlaceProductionid = groupPackSpools[0].PlaceID;
                 foreach (var groupPackSpool in groupPackSpools)
                 {
                     Spools.Add(new PaperBase()
@@ -80,12 +80,12 @@ namespace Gamma.ViewModels
                 return ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
             }
         }
-        private Guid? _vmID = Guid.NewGuid();
+        private Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
         {
             get
             {
-                return _vmID;
+                return _vmid;
             }
         }
 
@@ -166,7 +166,7 @@ namespace Gamma.ViewModels
             var spool = (from p in DB.GammaBase.vProductsInfo where p.ProductID == msg.ProductID
                              select p).ToList().Select( p => new PaperBase()
                              {
-                                 PlaceProductionID = p.PlaceID,
+                                 PlaceProductionid = p.PlaceID,
                                  DocID = p.DocID,
                                  CharacteristicID = (Guid)p.C1CCharacteristicID,
                                  NomenclatureID = (Guid)p.C1CNomenclatureID,
@@ -190,7 +190,7 @@ namespace Gamma.ViewModels
             }
             var spool = new PaperBase()
                              {
-                                 PlaceProductionID = p.PlaceID,
+                                 PlaceProductionid = p.PlaceID,
                                  DocID = p.DocID,
                                  CharacteristicID = (Guid)p.C1CCharacteristicID,
                                  NomenclatureID = (Guid)p.C1CNomenclatureID,
@@ -206,7 +206,7 @@ namespace Gamma.ViewModels
         {
             if (Spools.Count == 0)
             {
-                PlaceProductionID = spool.PlaceProductionID;
+                PlaceProductionid = spool.PlaceProductionid;
                 NomenclatureID = spool.NomenclatureID;
                 CharacteristicID = spool.CharacteristicID;
                 BaseCoreWeight = DB.GetSpoolCoreWeight(spool.ProductID);
@@ -216,7 +216,7 @@ namespace Gamma.ViewModels
             }
             else
             {
-                if (spool.PlaceProductionID != PlaceProductionID)
+                if (spool.PlaceProductionid != PlaceProductionid)
                 {
                     MessageBox.Show("Нельзя упаковывать рулоны с разных переделов",
                         "Рулон другого передела", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -239,7 +239,7 @@ namespace Gamma.ViewModels
                 }
             }
         }
-        private int? PlaceProductionID { get; set; }
+        private int? PlaceProductionid { get; set; }
         private Guid NomenclatureID {get; set; }
         private Guid CharacteristicID { get; set; }
         private ObservableCollection<PaperBase> _spools;
@@ -255,24 +255,24 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Spools");
             }
         }
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return;
             var doc = DB.GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal)
-                .Where(d => d.DocID == itemId).Select(d => d).First();
+                .Where(d => d.DocID == itemID).Select(d => d).First();
             if (doc.DocProduction == null)
                 doc.DocProduction = new DocProduction()
                 {
                     DocID = doc.DocID,
                     InPlaceID = doc.PlaceID
                 };
-            var product = DB.GammaBase.Products.Include(p => p.ProductGroupPacks).Where(p => p.DocProducts.FirstOrDefault().DocID == itemId).FirstOrDefault();
+            var product = DB.GammaBase.Products.Include(p => p.ProductGroupPacks).Where(p => p.DocProducts.FirstOrDefault().DocID == itemID).FirstOrDefault();
             if (product == null)
             {
-                var productID = SQLGuidUtil.NewSequentialId();
+                var productid = SqlGuidUtil.NewSequentialid();
                 product = new Products()
                 {
-                    ProductID = productID,
+                    ProductID = productid,
                     ProductKindID = (byte)ProductKinds.ProductGroupPack,
                     ProductGroupPacks = new ProductGroupPacks()
                 };
@@ -293,13 +293,13 @@ namespace Gamma.ViewModels
             Docs docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)
             {
-                var docWithdrawalID = doc.DocProduction.DocWithdrawal.FirstOrDefault().DocID;
+                var docWithdrawalid = doc.DocProduction.DocWithdrawal.FirstOrDefault().DocID;
                 docWithdrawal = DB.GammaBase.Docs.Include(d => d.DocWithdrawal).Include(d => d.DocProducts)
-                    .Where(d => d.DocID == docWithdrawalID).First();
+                    .Where(d => d.DocID == docWithdrawalid).First();
             }
             else 
             {
-                docWithdrawal.DocID = SQLGuidUtil.NewSequentialId();
+                docWithdrawal.DocID = SqlGuidUtil.NewSequentialid();
                 docWithdrawal.PlaceID = WorkSession.PlaceID;
                 docWithdrawal.Date = DB.CurrentDateTime;
                 docWithdrawal.UserID = WorkSession.UserID;

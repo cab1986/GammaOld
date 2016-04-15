@@ -39,11 +39,11 @@ namespace Gamma.ViewModels
                     CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftPMRemainderViewModel() : new DocCloseShiftPMRemainderViewModel((Guid)msg.DocID);
                     break;
-                case (short)PlaceGroups.WR:
-                    CurrentViewModelGrid = new DocCloseShiftWRGridViewModel(msg);
+                case (short)PlaceGroups.Wr:
+                    CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
                     break;
-                case (short)PlaceGroups.RW:
-                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRWRemainderViewModel(PlaceID) : new DocCloseShiftRWRemainderViewModel((Guid)msg.DocID);
+                case (short)PlaceGroups.Rw:
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRwRemainderViewModel(PlaceID) : new DocCloseShiftRwRemainderViewModel((Guid)msg.DocID);
                     break;
                 default:
                     break;
@@ -95,7 +95,7 @@ namespace Gamma.ViewModels
             {
                 Doc = new Docs()
                 {
-                    DocID = SQLGuidUtil.NewSequentialId(),
+                    DocID = SqlGuidUtil.NewSequentialid(),
                     DocTypeID = (byte)DocTypes.DocCloseShift,
                     Date = Date,
                     UserID = WorkSession.UserID,

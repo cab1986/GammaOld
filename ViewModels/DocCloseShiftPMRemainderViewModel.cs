@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocCloseShiftPMRemainderViewModel : DBEditItemWithNomenclatureViewModel, ICheckedAccess
+    public class DocCloseShiftPMRemainderViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the DocCloseShiftPMRemainderViewModel class.
@@ -38,12 +38,12 @@ namespace Gamma.ViewModels
                 Select(d => d).FirstOrDefault();
             if (DocCloseShiftRemainder == null)
             {
-                var doc = DB.GammaBase.Docs.Where(d => d.DocID == docID).First();
+                var doc = DB.GammaBase.Docs.First(d => d.DocID == docID);
                 IsConfirmed = doc.IsConfirmed;
                 return;
             }
             IsConfirmed = DocCloseShiftRemainder.Docs.IsConfirmed;
-            var productSpool = DB.GammaBase.ProductSpools.Where(p => p.ProductID == DocCloseShiftRemainder.ProductID).FirstOrDefault();
+            var productSpool = DB.GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == DocCloseShiftRemainder.ProductID);
             if (productSpool != null)
             {
                 NomenclatureID = productSpool.C1CNomenclatureID;
@@ -52,20 +52,6 @@ namespace Gamma.ViewModels
             Quantity = DocCloseShiftRemainder.Quantity;
         }
         private bool IsConfirmed { get; set; }
-        private Guid? _characteristicID;
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        public Guid? CharacteristicID
-        {
-            get
-            {
-                return _characteristicID;
-            }
-            set
-            {
-            	_characteristicID = value;
-                RaisePropertyChanged("CharacteristicsID");
-            }
-        }
         private DocCloseShiftRemainders DocCloseShiftRemainder { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Quantity { get; set; }
@@ -73,16 +59,16 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
         }
-        public override void SaveToModel(Guid itemId)
+        public override void SaveToModel(Guid itemID)
         {
             base.SaveToModel();
-            var doc = DB.GammaBase.Docs.Where(d => d.DocID == itemId).First();
+            var doc = DB.GammaBase.Docs.First(d => d.DocID == itemID);
             if (DocCloseShiftRemainder == null && Quantity > 0)
             {
-                var productID = SQLGuidUtil.NewSequentialId();
+                var productid = SqlGuidUtil.NewSequentialid();
                 var product = new Products()
                 {
-                    ProductID = productID,
+                    ProductID = productid,
                     ProductKindID = (byte)ProductKinds.ProductSpool,
                     ProductSpools = new ProductSpools()
                     {
@@ -90,16 +76,16 @@ namespace Gamma.ViewModels
                         C1CNomenclatureID = (Guid)NomenclatureID,
                         Diameter = 0,
                         Weight = 0,
-                        ProductID = productID
+                        ProductID = productid
                     }
                 };
                 DB.GammaBase.Products.Add(product);
-                var docID = SQLGuidUtil.NewSequentialId();
+                var docID = SqlGuidUtil.NewSequentialid();
                 var docProducts = new ObservableCollection<DocProducts>();
                 docProducts.Add(new DocProducts()
                     {
                         DocID = docID,
-                        ProductID = productID
+                        ProductID = productid
                     }
                     );
                 var docProduction = new Docs()
@@ -118,9 +104,9 @@ namespace Gamma.ViewModels
                 DB.GammaBase.Docs.Add(docProduction);
                 DocCloseShiftRemainder = new DocCloseShiftRemainders()
                 {
-                    DocCloseShiftRemainderID = SQLGuidUtil.NewSequentialId(),
-                    DocID = itemId,
-                    ProductID = productID,
+                    DocCloseShiftRemainderid = SqlGuidUtil.NewSequentialid(),
+                    DocID = itemID,
+                    ProductID = productid,
                     Quantity = Quantity,
                     IsSourceProduct = false
                 };

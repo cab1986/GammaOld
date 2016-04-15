@@ -12,7 +12,7 @@ using DevExpress.Mvvm.UI.Interactivity;
 
 namespace Gamma
 {
-    public class UIAuthBehavior : Behavior<FrameworkElement>
+    public class UiAuthBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {
@@ -45,38 +45,38 @@ namespace Gamma
 
         private void SetReadStatus()
         {
-            var Control = this.AssociatedObject;
-            if (Control.DataContext.GetType().GetInterfaces().Contains(typeof(ICheckedAccess)))
+            var control = this.AssociatedObject;
+            if (control.DataContext.GetType().GetInterfaces().Contains(typeof(ICheckedAccess)))
             {
-                if (!(Control.DataContext as ICheckedAccess).IsReadOnly) return;
+                if (!(control.DataContext as ICheckedAccess).IsReadOnly) return;
                 object context = AssociatedObject.DataContext;
                 Type contextType = context.GetType();
                 PropertyInfo[] properties = contextType.GetProperties();
-                WalkDownLogicalTree(Control, properties);
+                WalkDownLogicalTree(control, properties);
             }
         }
-        private void WalkDownLogicalTree(FrameworkElement Control, PropertyInfo[] properties)
+        private void WalkDownLogicalTree(FrameworkElement control, PropertyInfo[] properties)
         {
-            foreach (var element in LogicalTreeHelper.GetChildren(Control))
+            foreach (var element in LogicalTreeHelper.GetChildren(control))
             {
                 var frameElement = element as FrameworkElement;
                 if (frameElement == null) continue;
                 WalkDownLogicalTree(frameElement,properties);
                 if (frameElement is TextBox || frameElement is BaseEdit)
                 {
-                    var Binding = new Binding();
+                    var binding = new Binding();
                     if (frameElement is BaseEdit)
                     {
-                        Binding = BindingOperations.GetBinding((DependencyObject)frameElement, BaseEdit.EditValueProperty);
+                        binding = BindingOperations.GetBinding((DependencyObject)frameElement, BaseEdit.EditValueProperty);
                     }
                     else
                     {
-                        Binding = BindingOperations.GetBinding((DependencyObject)frameElement, TextBox.TextProperty);
+                        binding = BindingOperations.GetBinding((DependencyObject)frameElement, TextBox.TextProperty);
                     }
-                    if (Binding != null)
+                    if (binding != null)
                     {
                         PropertyInfo bounded;
-                        var path = Binding.Path.Path;
+                        var path = binding.Path.Path;
                         if (path.Contains("[") && path.Contains("]"))
                         {
                             var tempPath = path.Substring(0, path.IndexOf("["));
@@ -91,10 +91,10 @@ namespace Gamma
                         {
                             foreach (var attr in bounded.GetCustomAttributes(true))
                             {
-                                var UIAuthAttr = attr as UIAuthAttribute;
-                                if (UIAuthAttr != null)
+                                var uiAuthAttr = attr as UIAuthAttribute;
+                                if (uiAuthAttr != null)
                                 {
-                                    switch (UIAuthAttr.AuthLevel)
+                                    switch (uiAuthAttr.AuthLevel)
                                     {
                                         case UIAuthLevel.Invisible:
                                             (frameElement as Control).Visibility = Visibility.Collapsed;

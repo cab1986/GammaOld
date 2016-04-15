@@ -1,59 +1,59 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 
 namespace Gamma
 {
     public static class WorkSession
     {
-        public static Guid ParamID { get; set; }
-        private static Guid _userID;
+        public static Guid Paramid { get; set; }
+        private static Guid _userid;
         public static Guid UserID
         {
             get
             {
-                return _userID;
+                return _userid;
             }
             set
             {
-            	_userID = value;
+            	_userid = value;
                 var userInfo = (from u in DB.GammaBase.Users
                                  where
-                                     u.UserID == _userID
+                                     u.UserID == _userid
                                  select new
                                  {
-                                     placeID = u.Places.FirstOrDefault().PlaceID,
-                                     placeGroupID = u.Places.FirstOrDefault().PlaceGroupID,
-                                     ShiftID = u.ShiftID,
-                                     dbAdmin = u.DBAdmin,
+                                     u.Places.FirstOrDefault().PlaceID,
+                                     placeGroupID = u.Places.FirstOrDefault().PlaceGroupID, u.ShiftID, u.DBAdmin,
                                      programAdmin = u.ProgramAdmin
                                  }).FirstOrDefault();
-                DBAdmin = userInfo.dbAdmin;
+                if (userInfo == null)
+                {
+                    MessageBox.Show("Не удалосьь получить информацию о пользователе");
+                    return;
+                }
+                DBAdmin = userInfo.DBAdmin;
                 ProgramAdmin = userInfo.programAdmin ?? false;
-                PlaceID = userInfo.placeID;
+                PlaceID = userInfo.PlaceID;
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroups)userInfo.placeGroupID;
             }
         }
         public static bool DBAdmin
         {
-            get;
-            set;
+            get; private set;
         }
 
         public static int PlaceID
         {
-            get;
-            set;
+            get; private set;
         }
         public static bool ProgramAdmin
         {
-            get;
-            set;
+            get; private set;
         }
         public static byte ShiftID
         {
-            get;
-            set;
+            get; private set;
         }
         public static PlaceGroups PlaceGroup { get; private set; }
         public static string PrintName { get; set; }

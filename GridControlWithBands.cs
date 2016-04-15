@@ -113,8 +113,8 @@ namespace Gamma
 
     public class MyColumnTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate template1 { get; set; }
-        public DataTemplate template2 { get; set; }
+        public DataTemplate Template1 { get; set; }
+        public DataTemplate Template2 { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             ColumnItem ci = item as ColumnItem;
@@ -122,9 +122,9 @@ namespace Gamma
             {
                 if (ci.ColumnFieldName == "Name")
                 {
-                    return template2;
+                    return Template2;
                 }
-                return template1;
+                return Template1;
             }
 
             return base.SelectTemplate(item, container);

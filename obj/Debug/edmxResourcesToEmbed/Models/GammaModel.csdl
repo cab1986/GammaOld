@@ -1,19 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="GammaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityContainer Name="GammaEntities" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="C1CCharacteristicProperties" EntityType="GammaModel.C1CCharacteristicProperties" />
     <EntitySet Name="C1CEnumGroupTypes" EntityType="GammaModel.C1CEnumGroupTypes" />
     <EntitySet Name="C1CMeasureUnitQualifiers" EntityType="GammaModel.C1CMeasureUnitQualifiers" />
     <EntitySet Name="C1CMeasureUnits" EntityType="GammaModel.C1CMeasureUnits" />
     <EntitySet Name="C1CNomenclatureGroups" EntityType="GammaModel.C1CNomenclatureGroups" />
     <EntitySet Name="C1CNomenclatureProperties" EntityType="GammaModel.C1CNomenclatureProperties" />
+    <EntitySet Name="C1CPlaces" EntityType="GammaModel.C1CPlaces" />
     <EntitySet Name="C1CProperties" EntityType="GammaModel.C1CProperties" />
     <EntitySet Name="C1CPropertyValueGammaPropertyValue" EntityType="GammaModel.C1CPropertyValueGammaPropertyValue" />
     <EntitySet Name="C1CPropertyValues" EntityType="GammaModel.C1CPropertyValues" />
     <EntitySet Name="C1CQuality" EntityType="GammaModel.C1CQuality" />
     <EntitySet Name="C1CRejectionReasons" EntityType="GammaModel.C1CRejectionReasons" />
-    <EntitySet Name="C1CSpecificationInputNomenclature" EntityType="GammaModel.C1CSpecificationInputNomenclature" />
-    <EntitySet Name="C1CSpecificationOutputNomenclature" EntityType="GammaModel.C1CSpecificationOutputNomenclature" />
     <EntitySet Name="Branches" EntityType="GammaModel.Branches" />
     <EntitySet Name="Departments" EntityType="GammaModel.Departments" />
     <EntitySet Name="DocChangeStateProducts" EntityType="GammaModel.DocChangeStateProducts" />
@@ -22,6 +20,7 @@
     <EntitySet Name="DocProduction" EntityType="GammaModel.DocProduction" />
     <EntitySet Name="DocProducts" EntityType="GammaModel.DocProducts" />
     <EntitySet Name="Docs" EntityType="GammaModel.Docs" />
+    <EntitySet Name="DocShipment" EntityType="GammaModel.DocShipment" />
     <EntitySet Name="DocTypes" EntityType="GammaModel.DocTypes" />
     <EntitySet Name="DocWithdrawal" EntityType="GammaModel.DocWithdrawal" />
     <EntitySet Name="DocWithdrawalMaterials" EntityType="GammaModel.DocWithdrawalMaterials" />
@@ -54,18 +53,6 @@
     <EntitySet Name="Templates" EntityType="GammaModel.Templates" />
     <EntitySet Name="UserPrintNames" EntityType="GammaModel.UserPrintNames" />
     <EntitySet Name="Users" EntityType="GammaModel.Users" />
-    <EntitySet Name="vCharacteristicSGBProperties" EntityType="GammaModel.vCharacteristicSGBProperties" />
-    <EntitySet Name="vGroupPackSpools" EntityType="GammaModel.vGroupPackSpools" />
-    <EntitySet Name="vProductionTaskBatches" EntityType="GammaModel.vProductionTaskBatches" />
-    <EntitySet Name="vProductionTaskProducts" EntityType="GammaModel.vProductionTaskProducts" />
-    <AssociationSet Name="FK_1CCharacteristicProperties_1CProperties" Association="GammaModel.FK_1CCharacteristicProperties_1CProperties">
-      <End Role="C1CProperties" EntitySet="C1CProperties" />
-      <End Role="C1CCharacteristicProperties" EntitySet="C1CCharacteristicProperties" />
-    </AssociationSet>
-    <AssociationSet Name="FK_1CCharacteristicProperties_1CPropertyValues" Association="GammaModel.FK_1CCharacteristicProperties_1CPropertyValues">
-      <End Role="C1CPropertyValues" EntitySet="C1CPropertyValues" />
-      <End Role="C1CCharacteristicProperties" EntitySet="C1CCharacteristicProperties" />
-    </AssociationSet>
     <AssociationSet Name="FK_1CNomenclatureGroups_1CEnumGroupTypes" Association="GammaModel.FK_1CNomenclatureGroups_1CEnumGroupTypes">
       <End Role="C1CEnumGroupTypes" EntitySet="C1CEnumGroupTypes" />
       <End Role="C1CNomenclatureGroups" EntitySet="C1CNomenclatureGroups" />
@@ -174,6 +161,10 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Docs" EntitySet="Docs" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocShipment_Docs" Association="GammaModel.FK_DocShipment_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocShipment" EntitySet="DocShipment" />
+    </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawal_Docs" Association="GammaModel.FK_DocWithdrawal_Docs">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
@@ -181,6 +172,10 @@
     <AssociationSet Name="FK_DocWithdrawalMaterials_Docs" Association="GammaModel.FK_DocWithdrawalMaterials_Docs">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocShipment_Users" Association="GammaModel.FK_DocShipment_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="DocShipment" EntitySet="DocShipment" />
     </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawal_Places" Association="GammaModel.FK_DocWithdrawal_Places">
       <End Role="Places" EntitySet="Places" />
@@ -310,139 +305,19 @@
       <End Role="Places" EntitySet="Places" />
       <End Role="Users" EntitySet="Users" />
     </AssociationSet>
-    <FunctionImport Name="BackupGammaNew">
-      <Parameter Name="Path" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="CreateDocChangeStateForProduct">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
-      <Parameter Name="Quantity" Mode="In" Type="Decimal" />
-      <Parameter Name="StateID" Mode="In" Type="Int16" />
-      <Parameter Name="RejectionReasonID" Mode="In" Type="Guid" />
-      <Parameter Name="PrintName" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="CreateRemainderSpool">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
-      <Parameter Name="ParentProductID" Mode="In" Type="Guid" />
-      <Parameter Name="Quantity" Mode="In" Type="Int32" />
-      <Parameter Name="PrintName" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="DeleteGroupPack" ReturnType="Collection(String)">
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="DeleteSpool" ReturnType="Collection(String)">
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="DeleteUnload" ReturnType="Collection(String)">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="FindProductionTasks" ReturnType="Collection(GammaModel.FindProductionTasks_Result)">
-      <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
-      <Parameter Name="ProductionTaskStateID" Mode="In" Type="Byte" />
-      <Parameter Name="DateBegin" Mode="In" Type="DateTime" />
-      <Parameter Name="DateEnd" Mode="In" Type="DateTime" />
-      <Parameter Name="Number" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="GenerateNewNumbersForDoc">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="Get1CNomenclature" />
-    <FunctionImport Name="GetActiveSourceSpools" ReturnType="Collection(Guid)">
-      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="GetCharPropsDescriptions" ReturnType="Collection(GammaModel.GetCharPropsDescriptions_Result)">
-      <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetCharSpoolLayerNumber" ReturnType="Collection(Int32)">
-      <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetDocCloseShiftPMSpools" ReturnType="Collection(GammaModel.GetDocCloseShiftPMSpools_Result)">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetDocCloseShiftWRGroupPacks" ReturnType="Collection(GammaModel.GetDocCloseShiftWRGroupPacks_Result)">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetInputNomenclature" ReturnType="Collection(GammaModel.GetInputNomenclature_Result)">
-      <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
-      <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result)">
-      <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTaskBatchProducts" ReturnType="Collection(GammaModel.GetProductionTaskBatchProducts_Result)">
-      <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTaskBatchSGBCuttings" ReturnType="Collection(GammaModel.GetProductionTaskBatchSGBCuttings_Result)">
-      <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTaskBatchSGBProperties" ReturnType="Collection(GammaModel.GetProductionTaskBatchSGBProperties_Result)">
-      <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTaskBatchWRProperties" ReturnType="Collection(GammaModel.GetProductionTaskBatchWRProperties_Result)">
-      <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTaskByBatchID" ReturnType="Collection(GammaModel.GetProductionTaskByBatchID_Result)">
-      <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
-      <Parameter Name="PlaceGroupID" Mode="In" Type="Int16" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTaskProducts" ReturnType="Collection(GammaModel.GetProductionTaskProducts_Result)">
-      <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="GetProductionTasks" ReturnType="Collection(GammaModel.GetProductionTasks_Result)">
-      <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="GetSpoolRejectionReasons" ReturnType="Collection(GammaModel.GetSpoolRejectionReasons_Result)" />
-    <FunctionImport Name="UserPermit" ReturnType="Collection(Byte)">
-      <Parameter Name="TableName" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="mxp_RecreateRolePermits">
-      <Parameter Name="RoleID" Mode="In" Type="Guid" />
-    </FunctionImport>
-    <FunctionImport Name="RecreateUser">
-      <Parameter Name="UserID" Mode="In" Type="Guid" />
-      <Parameter Name="Password" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="sp_alterdiagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-      <Parameter Name="version" Mode="In" Type="Int32" />
-      <Parameter Name="definition" Mode="In" Type="Binary" />
-    </FunctionImport>
-    <FunctionImport Name="sp_creatediagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-      <Parameter Name="version" Mode="In" Type="Int32" />
-      <Parameter Name="definition" Mode="In" Type="Binary" />
-    </FunctionImport>
-    <FunctionImport Name="sp_dropdiagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(GammaModel.sp_helpdiagramdefinition_Result)">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(GammaModel.sp_helpdiagrams_Result)">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="sp_renamediagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-      <Parameter Name="new_diagramname" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="sp_upgraddiagrams" />
-    <FunctionImport Name="WriteSpoolInstallLog">
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
-      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
-      <Parameter Name="ShiftID" Mode="In" Type="Int32" />
-      <Parameter Name="UnwinderID" Mode="In" Type="Byte" />
-    </FunctionImport>
+    <EntitySet Name="C1CCharacteristicProperties" EntityType="GammaModel.C1CCharacteristicProperties" />
     <EntitySet Name="C1CCharacteristics" EntityType="GammaModel.C1CCharacteristics" />
     <EntitySet Name="C1CNomenclature" EntityType="GammaModel.C1CNomenclature" />
     <AssociationSet Name="FK_1CCharacteristicProperties_1CCharacteristics" Association="GammaModel.FK_1CCharacteristicProperties_1CCharacteristics">
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="C1CCharacteristicProperties" EntitySet="C1CCharacteristicProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristicProperties_1CProperties" Association="GammaModel.FK_1CCharacteristicProperties_1CProperties">
+      <End Role="C1CProperties" EntitySet="C1CProperties" />
+      <End Role="C1CCharacteristicProperties" EntitySet="C1CCharacteristicProperties" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CCharacteristicProperties_1CPropertyValues" Association="GammaModel.FK_1CCharacteristicProperties_1CPropertyValues">
+      <End Role="C1CPropertyValues" EntitySet="C1CPropertyValues" />
       <End Role="C1CCharacteristicProperties" EntitySet="C1CCharacteristicProperties" />
     </AssociationSet>
     <AssociationSet Name="FK_1CCharacteristics_1CMeasureUnits" Association="GammaModel.FK_1CCharacteristics_1CMeasureUnits">
@@ -456,14 +331,6 @@
     <AssociationSet Name="FK_1CCharacteristics_1CNomenclature" Association="GammaModel.FK_1CCharacteristics_1CNomenclature">
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-    </AssociationSet>
-    <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CCharacteristics" Association="GammaModel.FK_1CSpecificationInputNomenclature_1CCharacteristics">
-      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-      <End Role="C1CSpecificationInputNomenclature" EntitySet="C1CSpecificationInputNomenclature" />
-    </AssociationSet>
-    <AssociationSet Name="FK_1CSpecificationOutputNomenclature_1CCharacteristics" Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CCharacteristics">
-      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-      <End Role="C1CSpecificationOutputNomenclature" EntitySet="C1CSpecificationOutputNomenclature" />
     </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawalMaterials_1CCharacteristics" Association="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics">
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -505,14 +372,6 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="C1CNomenclatureProperties" EntitySet="C1CNomenclatureProperties" />
     </AssociationSet>
-    <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CNomenclature" Association="GammaModel.FK_1CSpecificationInputNomenclature_1CNomenclature">
-      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-      <End Role="C1CSpecificationInputNomenclature" EntitySet="C1CSpecificationInputNomenclature" />
-    </AssociationSet>
-    <AssociationSet Name="FK_1CSpecificationOutputNomenclature_1CNomenclature" Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CNomenclature">
-      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-      <End Role="C1CSpecificationOutputNomenclature" EntitySet="C1CSpecificationOutputNomenclature" />
-    </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawalMaterials_1CNomenclature" Association="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature">
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
@@ -533,41 +392,68 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="ProductSpools" EntitySet="ProductSpools" />
     </AssociationSet>
+    <AssociationSet Name="C1CNomenclatureGroupNomenclature" Association="GammaModel.C1CNomenclatureGroupNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="C1CNomenclatureGroups" EntitySet="C1CNomenclatureGroups" />
+    </AssociationSet>
     <AssociationSet Name="PlaceGroup1CNomenclature" Association="GammaModel.PlaceGroup1CNomenclature">
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
     </AssociationSet>
-    <FunctionImport Name="GetGroupPackSpools" ReturnType="Collection(GammaModel.GetGroupPackSpools_Result1)">
+    <FunctionImport Name="CreateDocChangeStateForProduct">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+      <Parameter Name="Quantity" Mode="In" Type="Decimal" />
+      <Parameter Name="StateID" Mode="In" Type="Int16" />
+      <Parameter Name="RejectionReasonID" Mode="In" Type="Guid" />
+      <Parameter Name="PrintName" Mode="In" Type="String" />
     </FunctionImport>
-    <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
+    <FunctionImport Name="CreateRemainderSpool">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+      <Parameter Name="ParentProductID" Mode="In" Type="Guid" />
+      <Parameter Name="Quantity" Mode="In" Type="Int32" />
+      <Parameter Name="PrintName" Mode="In" Type="String" />
+    </FunctionImport>
     <FunctionImport Name="CreateUnloadSpools" ReturnType="Collection(GammaModel.CreateUnloadSpools_Result)">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
       <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
       <Parameter Name="Diameter" Mode="In" Type="Int32" />
       <Parameter Name="BreakNumber" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="DeleteGroupPack" ReturnType="Collection(String)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="DeleteProductionTaskBatch" ReturnType="Collection(String)">
+      <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="DeleteSpool" ReturnType="Collection(String)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="DeleteUnload" ReturnType="Collection(String)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
     <FunctionImport Name="DocRelations" ReturnType="Collection(GammaModel.DocRelations_Result)">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
     </FunctionImport>
-    <FunctionImport Name="ProductRelations" ReturnType="Collection(GammaModel.ProductRelations_Result)">
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    <FunctionImport Name="FindProductionTasks" ReturnType="Collection(GammaModel.FindProductionTasks_Result)">
+      <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
+      <Parameter Name="ProductionTaskStateID" Mode="In" Type="Byte" />
+      <Parameter Name="DateBegin" Mode="In" Type="DateTime" />
+      <Parameter Name="DateEnd" Mode="In" Type="DateTime" />
+      <Parameter Name="Number" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GenerateNewNumbersForDoc">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="Get1CNomenclature" />
+    <FunctionImport Name="GetActiveSourceSpools" ReturnType="Collection(Guid)">
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetCharSpoolLayerNumber" ReturnType="Collection(Int32)">
+      <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
     </FunctionImport>
   </EntityContainer>
-  <EntityType Name="C1CCharacteristicProperties">
-    <Key>
-      <PropertyRef Name="C1CCharacteristicID" />
-      <PropertyRef Name="C1CPropertyID" />
-    </Key>
-    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
-    <Property Name="C1CPropertyID" Type="Guid" Nullable="false" />
-    <Property Name="C1CPropertyValueID" Type="Guid" />
-    <Property Name="ValueText" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-    <Property Name="ValueNumeric" Type="Decimal" Precision="20" Scale="0" />
-    <NavigationProperty Name="C1CProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CProperties" FromRole="C1CCharacteristicProperties" ToRole="C1CProperties" />
-    <NavigationProperty Name="C1CPropertyValues" Relationship="GammaModel.FK_1CCharacteristicProperties_1CPropertyValues" FromRole="C1CCharacteristicProperties" ToRole="C1CPropertyValues" />
-    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CCharacteristicProperties_1CCharacteristics" FromRole="C1CCharacteristicProperties" ToRole="C1CCharacteristics" />
-  </EntityType>
   <EntityType Name="C1CEnumGroupTypes">
     <Key>
       <PropertyRef Name="C1CEnumGroupTypeID" />
@@ -615,6 +501,7 @@
     <Property Name="C1CMeasureUnitID" Type="Guid" />
     <NavigationProperty Name="C1CEnumGroupTypes" Relationship="GammaModel.FK_1CNomenclatureGroups_1CEnumGroupTypes" FromRole="C1CNomenclatureGroups" ToRole="C1CEnumGroupTypes" />
     <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_1CNomenclatureGroups_1CMeasureUnits" FromRole="C1CNomenclatureGroups" ToRole="C1CMeasureUnits" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.C1CNomenclatureGroupNomenclature" FromRole="C1CNomenclatureGroups" ToRole="C1CNomenclature" />
   </EntityType>
   <EntityType Name="C1CNomenclatureProperties">
     <Key>
@@ -630,6 +517,16 @@
     <NavigationProperty Name="C1CPropertyValues" Relationship="GammaModel.FK_1CNomenclatureProperties_1CPropertyValues" FromRole="C1CNomenclatureProperties" ToRole="C1CPropertyValues" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CNomenclatureProperties_1CNomenclature" FromRole="C1CNomenclatureProperties" ToRole="C1CNomenclature" />
   </EntityType>
+  <EntityType Name="C1CPlaces">
+    <Key>
+      <PropertyRef Name="C1CPlaceID" />
+    </Key>
+    <Property Name="C1CPlaceID" Type="Guid" Nullable="false" />
+    <Property Name="Marked" Type="Boolean" />
+    <Property Name="Folder" Type="Boolean" />
+    <Property Name="ParentID" Type="Guid" />
+    <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
   <EntityType Name="C1CProperties">
     <Key>
       <PropertyRef Name="C1CPropertyID" />
@@ -638,10 +535,10 @@
     <Property Name="C1CCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="Marked" Type="Boolean" />
     <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="C1CCharacteristicProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CCharacteristicProperties" />
     <NavigationProperty Name="C1CNomenclatureProperties" Relationship="GammaModel.FK_1CNomenclatureProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CNomenclatureProperties" />
     <NavigationProperty Name="C1CPropertyValues" Relationship="GammaModel.FK_1CPropertyValues_1CProperties" FromRole="C1CProperties" ToRole="C1CPropertyValues" />
     <NavigationProperty Name="GammaProperties" Relationship="GammaModel.C1CPropertyGammaProperties" FromRole="C1CProperties" ToRole="GammaProperties" />
+    <NavigationProperty Name="C1CCharacteristicProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CProperties" FromRole="C1CProperties" ToRole="C1CCharacteristicProperties" />
   </EntityType>
   <EntityType Name="C1CPropertyValueGammaPropertyValue">
     <Key>
@@ -668,10 +565,10 @@
     <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="PrintDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="ValueNumeric" Type="Decimal" Precision="20" Scale="5" />
-    <NavigationProperty Name="C1CCharacteristicProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CCharacteristicProperties" />
     <NavigationProperty Name="C1CNomenclatureProperties" Relationship="GammaModel.FK_1CNomenclatureProperties_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CNomenclatureProperties" />
     <NavigationProperty Name="C1CProperties" Relationship="GammaModel.FK_1CPropertyValues_1CProperties" FromRole="C1CPropertyValues" ToRole="C1CProperties" />
     <NavigationProperty Name="C1CPropertyValueGammaPropertyValue" Relationship="GammaModel.FK_1CPropertyValueGammaPropertyValue_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CPropertyValueGammaPropertyValue" />
+    <NavigationProperty Name="C1CCharacteristicProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CCharacteristicProperties" />
   </EntityType>
   <EntityType Name="C1CQuality">
     <Key>
@@ -696,32 +593,6 @@
     <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="FullDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="DocChangeStateProducts" Relationship="GammaModel.FK_DocProductChangeState_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocChangeStateProducts" />
-  </EntityType>
-  <EntityType Name="C1CSpecificationInputNomenclature">
-    <Key>
-      <PropertyRef Name="C1CSpecificationID" />
-      <PropertyRef Name="LineNumber" />
-    </Key>
-    <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
-    <Property Name="LineNumber" Type="Decimal" Nullable="false" Precision="5" Scale="0" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Amount" Type="Decimal" Precision="15" Scale="3" />
-    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CCharacteristics" FromRole="C1CSpecificationInputNomenclature" ToRole="C1CCharacteristics" />
-    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CNomenclature" FromRole="C1CSpecificationInputNomenclature" ToRole="C1CNomenclature" />
-  </EntityType>
-  <EntityType Name="C1CSpecificationOutputNomenclature">
-    <Key>
-      <PropertyRef Name="C1CSpecificationID" />
-      <PropertyRef Name="LineNumber" />
-    </Key>
-    <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
-    <Property Name="LineNumber" Type="Decimal" Nullable="false" Precision="5" Scale="0" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Amount" Type="Decimal" Precision="15" Scale="3" />
-    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CSpecificationOutputNomenclature_1CCharacteristics" FromRole="C1CSpecificationOutputNomenclature" ToRole="C1CCharacteristics" />
-    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CSpecificationOutputNomenclature_1CNomenclature" FromRole="C1CSpecificationOutputNomenclature" ToRole="C1CNomenclature" />
   </EntityType>
   <EntityType Name="Branches">
     <Key>
@@ -829,10 +700,21 @@
     <NavigationProperty Name="DocTypes" Relationship="GammaModel.FK_Docs_DocTypes" FromRole="Docs" ToRole="DocTypes" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
     <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
+    <NavigationProperty Name="DocShipment" Relationship="GammaModel.FK_DocShipment_Docs" FromRole="Docs" ToRole="DocShipment" />
     <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Docs" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_Docs" FromRole="Docs" ToRole="DocWithdrawalMaterials" />
-    <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
+    <NavigationProperty Name="Docs1" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
     <NavigationProperty Name="Docs2" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
+  </EntityType>
+  <EntityType Name="DocShipment">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="ActiveUserID" Type="Guid" />
+    <Property Name="C1CDocOrderID" Type="Guid" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocShipment_Docs" FromRole="DocShipment" ToRole="Docs" />
+    <NavigationProperty Name="Users" Relationship="GammaModel.FK_DocShipment_Users" FromRole="DocShipment" ToRole="Users" />
   </EntityType>
   <EntityType Name="DocTypes">
     <Key>
@@ -969,8 +851,8 @@
       <PropertyRef Name="ProductionTaskBatchID" />
     </Key>
     <Property Name="ProductionTaskBatchID" Type="Guid" Nullable="false" />
-    <Property Name="BatchKindID" Type="Int16" />
-    <Property Name="ProductionTaskStateID" Type="Byte" />
+    <Property Name="BatchKindID" Type="Int16" Nullable="false" />
+    <Property Name="ProductionTaskStateID" Type="Byte" Nullable="false" />
     <Property Name="UserID" Type="Guid" />
     <Property Name="Number" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
     <Property Name="Date" Type="DateTime" Precision="3" />
@@ -1224,83 +1106,14 @@
     <Property Name="Exports" Type="Boolean" Nullable="false" />
     <Property Name="DBAdmin" Type="Boolean" Nullable="false" />
     <Property Name="ProgramAdmin" Type="Boolean" />
+    <Property Name="MobileComputer" Type="Boolean" />
     <Property Name="ShiftID" Type="Byte" Nullable="false" />
     <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
+    <NavigationProperty Name="DocShipment" Relationship="GammaModel.FK_DocShipment_Users" FromRole="Users" ToRole="DocShipment" />
     <NavigationProperty Name="Roles" Relationship="GammaModel.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
     <NavigationProperty Name="UserPrintNames" Relationship="GammaModel.FK_UserPrintNames_Users" FromRole="Users" ToRole="UserPrintNames" />
     <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
   </EntityType>
-  <EntityType Name="vCharacteristicSGBProperties">
-    <Key>
-      <PropertyRef Name="C1CCharacteristicID" />
-    </Key>
-    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
-    <Property Name="CoreDiameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="LayerNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Diameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Format" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="FormatNumeric" Type="Int32" />
-  </EntityType>
-  <EntityType Name="vGroupPackSpools">
-    <Key>
-      <PropertyRef Name="ProductGroupPackID" />
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="ProductGroupPackID" Type="Guid" Nullable="false" />
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-  </EntityType>
-  <EntityType Name="vProductionTaskBatches">
-    <Key>
-      <PropertyRef Name="ProductionTaskBatchID" />
-      <PropertyRef Name="EnumColor" />
-    </Key>
-    <Property Name="ProductionTaskBatchID" Type="Guid" Nullable="false" />
-    <Property Name="EnumColor" Type="Int32" Nullable="false" />
-  </EntityType>
-  <EntityType Name="vProductionTaskProducts">
-    <Key>
-      <PropertyRef Name="DocID" />
-      <PropertyRef Name="ProductID" />
-      <PropertyRef Name="Date" />
-    </Key>
-    <Property Name="ProductionTaskID" Type="Guid" />
-    <Property Name="PlaceID" Type="Int32" />
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-    <Property Name="NomenclatureID" Type="Guid" />
-    <Property Name="CharacteristicID" Type="Guid" />
-    <Property Name="Quantity" Type="Int32" />
-  </EntityType>
-  <Association Name="FK_1CCharacteristicProperties_1CProperties">
-    <End Type="GammaModel.C1CProperties" Role="C1CProperties" Multiplicity="1" />
-    <End Type="GammaModel.C1CCharacteristicProperties" Role="C1CCharacteristicProperties" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CProperties">
-        <PropertyRef Name="C1CPropertyID" />
-      </Principal>
-      <Dependent Role="C1CCharacteristicProperties">
-        <PropertyRef Name="C1CPropertyID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_1CCharacteristicProperties_1CPropertyValues">
-    <End Type="GammaModel.C1CPropertyValues" Role="C1CPropertyValues" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CCharacteristicProperties" Role="C1CCharacteristicProperties" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CPropertyValues">
-        <PropertyRef Name="C1CPropertyValueID" />
-      </Principal>
-      <Dependent Role="C1CCharacteristicProperties">
-        <PropertyRef Name="C1CPropertyValueID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_1CNomenclatureGroups_1CEnumGroupTypes">
     <End Type="GammaModel.C1CEnumGroupTypes" Role="C1CEnumGroupTypes" Multiplicity="0..1" />
     <End Type="GammaModel.C1CNomenclatureGroups" Role="C1CNomenclatureGroups" Multiplicity="*" />
@@ -1631,6 +1444,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocShipment_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocShipment" Role="DocShipment" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocShipment">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DocWithdrawal_Docs">
     <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
     <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="0..1" />
@@ -1652,6 +1477,18 @@
       </Principal>
       <Dependent Role="DocWithdrawalMaterials">
         <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocShipment_Users">
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
+    <End Type="GammaModel.DocShipment" Role="DocShipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="DocShipment">
+        <PropertyRef Name="ActiveUserID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1780,7 +1617,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskBatches_ProductionTaskStates">
-    <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates" Multiplicity="1" />
     <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTaskStates">
@@ -1792,7 +1629,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
-    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1" />
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Type="GammaModel.ProductionTaskRWCutting" Role="ProductionTaskRWCutting" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -1804,7 +1643,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskSGB_ProductionTasks">
-    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1" />
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Type="GammaModel.ProductionTaskSGB" Role="ProductionTaskSGB" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -1816,7 +1657,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskWR_ProductionTasks">
-    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1" />
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Type="GammaModel.ProductionTaskWR" Role="ProductionTaskWR" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -2007,169 +1850,20 @@
     <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
     <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
   </Association>
-  <ComplexType Name="FindProductionTasks_Result">
-    <Property Type="Guid" Name="ProductionTaskBatchID" Nullable="false" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="255" />
-    <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
-    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
-    <Property Type="DateTime" Name="DateEnd" Nullable="true" Precision="23" />
-    <Property Type="String" Name="ProductionTaskState" Nullable="false" MaxLength="50" />
-    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
-    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
-    <Property Type="Int32" Name="BatchKindID" Nullable="true" />
-    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
-  </ComplexType>
-  <ComplexType Name="GetCharPropsDescriptions_Result">
-    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
-    <Property Type="String" Name="CoreDiameter" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="LayerNumber" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Diameter" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Destination" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Format" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Color" Nullable="true" MaxLength="50" />
-  </ComplexType>
-  <ComplexType Name="GetDocCloseShiftPMSpools_Result">
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-    <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
-    <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-    <Property Type="Int32" Name="Weight" Nullable="false" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
-  </ComplexType>
-  <ComplexType Name="GetDocCloseShiftWRGroupPacks_Result">
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-    <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
-    <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="Decimal" Name="Weight" Nullable="true" Precision="10" Scale="4" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
-  </ComplexType>
-  <ComplexType Name="GetGroupPackSpools_Result">
-    <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="String" Name="BarCode" Nullable="true" MaxLength="20" />
-    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
-    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
-    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="14" Scale="4" />
-    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
-    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
-    <Property Type="Int32" Name="PlaceID" Nullable="true" />
-    <Property Type="Byte" Name="ShiftID" Nullable="true" />
-    <Property Type="Byte" Name="StateID" Nullable="false" />
-    <Property Type="Decimal" Name="ChangeStateQuantity" Nullable="true" Precision="18" Scale="2" />
-    <Property Type="String" Name="RejectionReason" Nullable="false" MaxLength="100" />
-    <Property Type="Boolean" Name="IsConfirmed" Nullable="false" />
-    <Property Type="Boolean" Name="IsWrittenOff" Nullable="false" />
-    <Property Type="String" Name="State" Nullable="false" MaxLength="50" />
-  </ComplexType>
-  <ComplexType Name="GetInputNomenclature_Result">
-    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
-    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
-  </ComplexType>
-  <ComplexType Name="GetNomenclatureFolders_Result">
-    <Property Type="Guid" Name="FolderID" Nullable="false" />
-    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
-    <Property Type="Guid" Name="ParentID" Nullable="true" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTaskBatchProducts_Result">
-    <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
-    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
-    <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
-    <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-    <Property Type="Int32" Name="Quantity" Nullable="true" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTaskBatchSGBCuttings_Result">
-    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
-    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
-    <Property Type="Int32" Name="CutIndex" Nullable="true" />
-    <Property Type="String" Name="CoreDiameter" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="LayerNumber" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Diameter" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Destination" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Format" Nullable="true" MaxLength="50" />
-    <Property Type="String" Name="Color" Nullable="true" MaxLength="50" />
-    <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTaskBatchSGBProperties_Result">
-    <Property Type="Int32" Name="Diameter" Nullable="true" />
-    <Property Type="Int32" Name="DiameterPlus" Nullable="true" />
-    <Property Type="Int32" Name="DiameterMinus" Nullable="true" />
-    <Property Type="Int32" Name="Crepe" Nullable="true" />
-    <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
-    <Property Type="Boolean" Name="IsActual" Nullable="false" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTaskBatchWRProperties_Result">
-    <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
-    <Property Type="Byte" Name="NumFilmLayers" Nullable="true" />
-    <Property Type="Boolean" Name="IsWithCarton" Nullable="true" />
-    <Property Type="Boolean" Name="IsEndProtected" Nullable="true" />
-    <Property Type="String" Name="GroupPackConfig" Nullable="true" MaxLength="8000" />
-    <Property Type="Boolean" Name="IsActual" Nullable="false" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTaskByBatchID_Result">
-    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
-    <Property Type="DateTime" Name="DateEnd" Nullable="true" Precision="23" />
-    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
-    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
-    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
-    <Property Type="Int32" Name="PlaceID" Nullable="true" />
-    <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
-    <Property Type="Boolean" Name="IsActual" Nullable="false" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTaskProducts_Result">
-    <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
-    <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
-    <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-    <Property Type="Int32" Name="Quantity" Nullable="true" />
-  </ComplexType>
-  <ComplexType Name="GetProductionTasks_Result">
-    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
-    <Property Type="Guid" Name="ProductionTaskBatchID" Nullable="false" />
-    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
-    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
-    <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
-    <Property Type="Int32" Name="EnumColor" Nullable="true" />
-    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
-    <Property Type="String" Name="MadeQuantity" Nullable="true" MaxLength="8000" />
-  </ComplexType>
-  <ComplexType Name="GetProductRelations_Result">
-    <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="15" />
-    <Property Type="String" Name="ProductKind" Nullable="false" MaxLength="6" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-  </ComplexType>
-  <ComplexType Name="GetSpoolRejectionReasons_Result">
-    <Property Type="Guid" Name="RejectionReasonID" Nullable="true" />
-    <Property Type="String" Name="Description" Nullable="true" MaxLength="100" />
-    <Property Type="String" Name="FullDescription" Nullable="true" MaxLength="Max" />
-  </ComplexType>
-  <ComplexType Name="sp_helpdiagramdefinition_Result">
-    <Property Type="Int32" Name="version" Nullable="true" />
-    <Property Type="Binary" Name="definition" Nullable="true" />
-  </ComplexType>
-  <ComplexType Name="sp_helpdiagrams_Result">
-    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
-    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-    <Property Type="Int32" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
-    <Property Type="Int32" Name="OwnerID" Nullable="false" />
-  </ComplexType>
+  <EntityType Name="C1CCharacteristicProperties">
+    <Key>
+      <PropertyRef Name="C1CCharacteristicID" />
+      <PropertyRef Name="C1CPropertyID" />
+    </Key>
+    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+    <Property Name="C1CPropertyID" Type="Guid" Nullable="false" />
+    <Property Name="C1CPropertyValueID" Type="Guid" />
+    <Property Name="ValueText" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+    <Property Name="ValueNumeric" Type="Decimal" Precision="20" Scale="0" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CCharacteristicProperties_1CCharacteristics" FromRole="C1CCharacteristicProperties" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CProperties" Relationship="GammaModel.FK_1CCharacteristicProperties_1CProperties" FromRole="C1CCharacteristicProperties" ToRole="C1CProperties" />
+    <NavigationProperty Name="C1CPropertyValues" Relationship="GammaModel.FK_1CCharacteristicProperties_1CPropertyValues" FromRole="C1CCharacteristicProperties" ToRole="C1CPropertyValues" />
+  </EntityType>
   <EntityType Name="C1CCharacteristics">
     <Key>
       <PropertyRef Name="C1CCharacteristicID" />
@@ -2185,8 +1879,6 @@
     <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_1CCharacteristics_1CMeasureUnits" FromRole="C1CCharacteristics" ToRole="C1CMeasureUnits" />
     <NavigationProperty Name="C1CMeasureUnits1" Relationship="GammaModel.FK_1CCharacteristics_1CMeasureUnits1" FromRole="C1CCharacteristics" ToRole="C1CMeasureUnits" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CCharacteristics_1CNomenclature" FromRole="C1CCharacteristics" ToRole="C1CNomenclature" />
-    <NavigationProperty Name="C1CSpecificationInputNomenclature" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CSpecificationInputNomenclature" />
-    <NavigationProperty Name="C1CSpecificationOutputNomenclature" Relationship="GammaModel.FK_1CSpecificationOutputNomenclature_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CSpecificationOutputNomenclature" />
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocWithdrawalMaterials" />
     <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
@@ -2212,13 +1904,12 @@
     <NavigationProperty Name="C1CNomenclature1" Relationship="GammaModel.FK_1CNomenclature_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclature1" />
     <NavigationProperty Name="C1CNomenclature2" Relationship="GammaModel.FK_1CNomenclature_1CNomenclature" FromRole="C1CNomenclature1" ToRole="C1CNomenclature" />
     <NavigationProperty Name="C1CNomenclatureProperties" Relationship="GammaModel.FK_1CNomenclatureProperties_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclatureProperties" />
-    <NavigationProperty Name="C1CSpecificationInputNomenclature" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CSpecificationInputNomenclature" />
-    <NavigationProperty Name="C1CSpecificationOutputNomenclature" Relationship="GammaModel.FK_1CSpecificationOutputNomenclature_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CSpecificationOutputNomenclature" />
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
     <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductGroupPacks" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
     <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductPalletItems" />
     <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductSpools" />
+    <NavigationProperty Name="C1CNomenclatureGroups" Relationship="GammaModel.C1CNomenclatureGroupNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclatureGroups" />
     <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.PlaceGroup1CNomenclature" FromRole="C1CNomenclature" ToRole="PlaceGroups" />
   </EntityType>
   <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
@@ -2230,6 +1921,30 @@
       </Principal>
       <Dependent Role="C1CCharacteristicProperties">
         <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristicProperties_1CProperties">
+    <End Type="GammaModel.C1CProperties" Role="C1CProperties" Multiplicity="1" />
+    <End Type="GammaModel.C1CCharacteristicProperties" Role="C1CCharacteristicProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CProperties">
+        <PropertyRef Name="C1CPropertyID" />
+      </Principal>
+      <Dependent Role="C1CCharacteristicProperties">
+        <PropertyRef Name="C1CPropertyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CCharacteristicProperties_1CPropertyValues">
+    <End Type="GammaModel.C1CPropertyValues" Role="C1CPropertyValues" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CCharacteristicProperties" Role="C1CCharacteristicProperties" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CPropertyValues">
+        <PropertyRef Name="C1CPropertyValueID" />
+      </Principal>
+      <Dependent Role="C1CCharacteristicProperties">
+        <PropertyRef Name="C1CPropertyValueID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2266,30 +1981,6 @@
       </Principal>
       <Dependent Role="C1CCharacteristics">
         <PropertyRef Name="C1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_1CSpecificationInputNomenclature_1CCharacteristics">
-    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CSpecificationInputNomenclature" Role="C1CSpecificationInputNomenclature" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CCharacteristics">
-        <PropertyRef Name="C1CCharacteristicID" />
-      </Principal>
-      <Dependent Role="C1CSpecificationInputNomenclature">
-        <PropertyRef Name="C1CCharacteristicID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_1CSpecificationOutputNomenclature_1CCharacteristics">
-    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CSpecificationOutputNomenclature" Role="C1CSpecificationOutputNomenclature" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CCharacteristics">
-        <PropertyRef Name="C1CCharacteristicID" />
-      </Principal>
-      <Dependent Role="C1CSpecificationOutputNomenclature">
-        <PropertyRef Name="C1CCharacteristicID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2413,30 +2104,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_1CSpecificationInputNomenclature_1CNomenclature">
-    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CSpecificationInputNomenclature" Role="C1CSpecificationInputNomenclature" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CNomenclature">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Principal>
-      <Dependent Role="C1CSpecificationInputNomenclature">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_1CSpecificationOutputNomenclature_1CNomenclature">
-    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CSpecificationOutputNomenclature" Role="C1CSpecificationOutputNomenclature" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CNomenclature">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Principal>
-      <Dependent Role="C1CSpecificationOutputNomenclature">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_DocWithdrawalMaterials_1CNomenclature">
     <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
     <End Type="GammaModel.DocWithdrawalMaterials" Role="DocWithdrawalMaterials" Multiplicity="*" />
@@ -2497,61 +2164,14 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="C1CNomenclatureGroupNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
+    <End Type="GammaModel.C1CNomenclatureGroups" Role="C1CNomenclatureGroups" Multiplicity="*" />
+  </Association>
   <Association Name="PlaceGroup1CNomenclature">
     <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
     <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="*" />
   </Association>
-  <ComplexType Name="GetGroupPackSpools_Result1">
-    <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
-    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="String" Name="BarCode" Nullable="true" MaxLength="20" />
-    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
-    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
-    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="14" Scale="4" />
-    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
-    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
-    <Property Type="Int32" Name="PlaceID" Nullable="true" />
-    <Property Type="Byte" Name="ShiftID" Nullable="true" />
-    <Property Type="Byte" Name="StateID" Nullable="false" />
-    <Property Type="Decimal" Name="ChangeStateQuantity" Nullable="true" Precision="18" Scale="2" />
-    <Property Type="String" Name="RejectionReason" Nullable="false" MaxLength="100" />
-    <Property Type="Boolean" Name="IsConfirmed" Nullable="false" />
-    <Property Type="Boolean" Name="IsWrittenOff" Nullable="true" />
-    <Property Type="String" Name="State" Nullable="false" MaxLength="50" />
-  </ComplexType>
-  <EntityType Name="vProductsInfo">
-    <Key>
-      <PropertyRef Name="DocID" />
-      <PropertyRef Name="ProductID" />
-      <PropertyRef Name="Date" />
-      <PropertyRef Name="StateID" />
-      <PropertyRef Name="RejectionReason" />
-      <PropertyRef Name="IsConfirmed" />
-      <PropertyRef Name="State" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Quantity" Type="Decimal" Precision="14" Scale="4" />
-    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-    <Property Name="PlaceID" Type="Int32" />
-    <Property Name="ShiftID" Type="Byte" />
-    <Property Name="StateID" Type="Byte" Nullable="false" />
-    <Property Name="ChangeStateQuantity" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="RejectionReason" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-    <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
-    <Property Name="IsWrittenOff" Type="Boolean" Nullable="false" />
-    <Property Name="State" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-  </EntityType>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
     <Property Type="Guid" Name="ProductID" Nullable="true" />
@@ -2565,13 +2185,18 @@
     <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
     <Property Type="Guid" Name="DocID" Nullable="false" />
     <Property Type="Guid" Name="ProductID" Nullable="false" />
+    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
   </ComplexType>
-  <ComplexType Name="ProductRelations_Result">
-    <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="18" />
-    <Property Type="String" Name="ProductKind" Nullable="true" MaxLength="18" />
-    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
-    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
-    <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Guid" Name="ProductID" Nullable="false" />
+  <ComplexType Name="FindProductionTasks_Result">
+    <Property Type="Guid" Name="ProductionTaskBatchID" Nullable="false" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="255" />
+    <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="DateEnd" Nullable="true" Precision="23" />
+    <Property Type="String" Name="ProductionTaskState" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
+    <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="Int32" Name="BatchKindID" Nullable="true" />
+    <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
   </ComplexType>
 </Schema>

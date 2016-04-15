@@ -52,22 +52,22 @@ namespace Gamma.ViewModels
         public DelegateCommand LoginCommand { get; private set; }
         public LoginViewModel()
         {
-            var AppSettings = GammaSettings.Get();
-            Host = AppSettings.HostName;
-            DataBase = AppSettings.DbName;
-            Login = AppSettings.User;
-            UseScanner = AppSettings.UseScanner;
-            LoginCommand = new DelegateCommand(Authenticate, canExecute);
+            var appSettings = GammaSettings.Get();
+            Host = appSettings.HostName;
+            DataBase = appSettings.DbName;
+            Login = appSettings.User;
+            UseScanner = appSettings.UseScanner;
+            LoginCommand = new DelegateCommand(Authenticate, CanExecute);
         }
 
-        private bool canExecute()
+        private bool CanExecute()
         {
             return IsValid;
         }
 
         private void Authenticate()
         {
-            UIServices.SetBusyState();
+            UiServices.SetBusyState();
             GammaSettings.SetConnectionString(Host, DataBase, Login, Password);
             if (!DB.Initialize())
             {

@@ -191,7 +191,7 @@
     <PptxFile Text="Презентация PowerPoint (*.pptx)|*.pptx"/>
     <XamlFile Text="Документ XAML  (*.xaml)|*.xaml"/>
     <SvgFile Text="Документ SVG (*.svg)|*.svg"/>
-    <PpmlFile Text="Документ PPML (*.ppml)|*.ppml"/>
+    <PPMlFile Text="Документ PPML (*.pPMl)|*.pPMl"/>
     <PSFile Text="Документ PostScript (*.ps)|*.ps"/>
     <DocxFile Text="Документ Microsoft Word (*.docx)|*.docx"/>
     <SdfFile Text="База данных SQL CE (*.sdf)|*.sdf"/>
@@ -876,7 +876,7 @@
       <PaperWidth Text="Ширина бумаги:"/>
       <PaperHeight Text="Высота бумаги:"/>
       <LeftMargin Text="Левое поле:"/>
-      <TopMargin Text="Верхнее поле:"/>
+      <ToPMargin Text="Верхнее поле:"/>
       <Label Text="Параметры"/>
       <LabelWidth Text="Ширина этикетки:"/>
       <LabelHeight Text="Высота этикетки:"/>
@@ -1787,9 +1787,9 @@
     <Svg Text="Экспорт в SVG">
       <File Text="Файл SVG"/>
     </Svg>
-    <Ppml Text="Экспорт в PPML">
+    <PPMl Text="Экспорт в PPML">
       <File Text="Файл PPML"/>
-    </Ppml>
+    </PPMl>
     <PS Text="Экспорт в PostScript">
       <File Text="Файл PostScript"/>
     </PS>
@@ -1901,7 +1901,7 @@
     <Box Text="Сохранить в Box">
       <Name Text="Box"/>
       <ClientInfoDialog Text="Информация о Клиенте"/>
-      <ClientId Text="ИД Клиента:"/>
+      <Clientid Text="ИД Клиента:"/>
       <ClientSecret Text="Секрет Клиента:"/>
     </Box>
     <Dropbox Text="Сохранить в Dropbox">
@@ -1928,13 +1928,13 @@
     <GoogleDrive Text="Сохранить в Диск Google">
       <Name Text="GoogleDrive"/>
       <ClientInfoDialog Text="Информация о Клиенте"/>
-      <ClientId Text="ИД Клиента:"/>
+      <Clientid Text="ИД Клиента:"/>
       <ClientSecret Text="Секрет Клиента:"/>
     </GoogleDrive>
     <SkyDrive Text="Сохранить в OneDrive">
       <Name Text="OneDrive"/>
       <ClientInfoDialog Text="Информация о Клиенте"/>
-      <ClientId Text="ИД Клиента:"/>
+      <Clientid Text="ИД Клиента:"/>
       <ClientSecret Text="Секрет Клиента:"/>
       <File Text="Файл"/>
       <Proxy Text="Прокси"/>

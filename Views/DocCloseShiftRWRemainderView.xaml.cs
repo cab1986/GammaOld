@@ -5,9 +5,9 @@ namespace Gamma.Views
     /// <summary>
     /// Логика взаимодействия для DocCloseShiftRWRemainder.xaml
     /// </summary>
-    public partial class DocCloseShiftRWRemainderView : UserControl
+    public partial class DocCloseShiftRwRemainderView : UserControl
     {
-        public DocCloseShiftRWRemainderView()
+        public DocCloseShiftRwRemainderView()
         {
             InitializeComponent();
         }

@@ -1,4 +1,4 @@
-﻿<g:MVVMWindow
+﻿<g:MvvmWindow
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -28,15 +28,18 @@
         <DataTemplate DataType="{x:Type vm:ProductionTaskBatchSGBViewModel}">
             <v:ProductionTaskBatchSGBView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductionTaskSGIViewModel}">
+            <v:ProductionTaskSGIView />
+        </DataTemplate>
     </Window.Resources>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="40" />
             <RowDefinition />
             <RowDefinition Height="32" />
         </Grid.RowDefinitions>
         <ToolBar>
-            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}"/>
+            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" />
         </ToolBar>
         <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
             <dx:DXTabItem Header="Параметры задания">
@@ -55,14 +58,17 @@
                                                       ItemsSource="{Binding TaskStates}" EditValue="{Binding ProductionTaskStateID}" 
                                                       DisplayMember="Value" ValueMember="Key" IsReadOnly="{Binding ChangeStateReadOnly}"/>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Модель процесса">
+                                <dxlc:LayoutItem Label="Модель процесса" Visibility="{Binding ProcessModelVisible}">
                                     <dxe:ComboBoxEdit Width="150" IsTextEditable="False" EditValueType="{x:Type sys:Byte}" 
                                                       ItemsSource="{Binding ProcessModels}" EditValue="{Binding ProcessModelID, UpdateSourceTrigger=PropertyChanged}"
-                                                      DisplayMember="Value" ValueMember="Key" Visibility="{Binding ProcessModelVisible}" AllowNullInput="True">
+                                                      DisplayMember="Value" ValueMember="Key"  AllowNullInput="True">
                                     </dxe:ComboBoxEdit>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Контроль партии">
                                     <dxe:CheckEdit EditValue="{Binding PartyControl}" />
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Причина контроля" Visibility="Collapsed">
+                                    <dxe:ComboBoxEdit />
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                             <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -121,7 +127,7 @@
         <Button Grid.Row="2"  HorizontalAlignment="Right" Margin="3,3,3,3" VerticalAlignment="Bottom" Width="75" Height="25" Content="Отмена" Command="{Binding CloseCommand}"/>
         <Button Grid.Row="2"  Content="OK" HorizontalAlignment="Right" Margin="3,1,83,0" Width="75" Height="25" Command="{Binding SaveAndCloseCommand}"/>
         <dxmvvm:Interaction.Behaviors>
-            <g:UIAuthBehavior/>
+            <g:UiAuthBehavior/>
         </dxmvvm:Interaction.Behaviors>
     </Grid>
-</g:MVVMWindow>
+</g:MvvmWindow>

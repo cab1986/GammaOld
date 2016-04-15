@@ -19,8 +19,7 @@ namespace Gamma
             if (e.NewValue is bool && ((bool)e.NewValue))
             {
                 Window window = GetWindow(sender);
-                if (window != null)
-                    window.Close();
+                window?.Close();
             }
         }
         private static Window GetWindow(DependencyObject sender)
@@ -28,9 +27,7 @@ namespace Gamma
             Window window = null;
             if (sender is Window)
                 window = (Window)sender;
-            if (window == null)
-                window = Window.GetWindow(sender);
-            return window;
+            return window ?? (Window.GetWindow(sender));
         }
     }
 }

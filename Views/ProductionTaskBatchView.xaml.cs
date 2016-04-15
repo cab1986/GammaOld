@@ -5,7 +5,7 @@ namespace Gamma.Views
     /// <summary>
     /// Description for ProductionTaskView.
     /// </summary>
-    public partial class ProductionTaskBatchView : MVVMWindow
+    public partial class ProductionTaskBatchView : MvvmWindow
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskView class.

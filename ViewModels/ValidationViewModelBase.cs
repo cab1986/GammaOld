@@ -9,15 +9,12 @@ using System.Reflection;
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// Класс с проверкой прав доступа
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// Класс с валидацией свойств
     /// </summary>
     public class ValidationViewModelBase : RootViewModel, IDataErrorInfo, IValidationExceptionHandler
     {
-        private readonly Dictionary<string, Func<ValidationViewModelBase, object>> propertyGetters;
-        private readonly Dictionary<string, ValidationAttribute[]> validators;
+        private readonly Dictionary<string, Func<ValidationViewModelBase, object>> _propertyGetters;
+        private readonly Dictionary<string, ValidationAttribute[]> _validators;
 
         /// <summary>
         /// Gets the error message for the property with the given name.
@@ -27,10 +24,10 @@ namespace Gamma.ViewModels
             {
                 get
                 {
-                if (propertyGetters.ContainsKey(propertyName))
+                if (_propertyGetters.ContainsKey(propertyName))
                     {
-                        var propertyValue = propertyGetters[propertyName](this);
-                        var errorMessages = validators[propertyName]
+                        var propertyValue = _propertyGetters[propertyName](this);
+                        var errorMessages = _validators[propertyName]
                             .Where(v => !v.IsValid(propertyValue))
                             .Select(v => v.ErrorMessage).ToArray();
 
@@ -48,9 +45,9 @@ namespace Gamma.ViewModels
         {
             get
             {
-                var errors = from validator in validators
+                var errors = from validator in _validators
                              from attribute in validator.Value
-                             where !attribute.IsValid(propertyGetters[validator.Key](this))
+                             where !attribute.IsValid(_propertyGetters[validator.Key](this))
                              select attribute.ErrorMessage;
 
                 return string.Join(Environment.NewLine, errors.ToArray());
@@ -64,11 +61,11 @@ namespace Gamma.ViewModels
         {
             get
             {
-                var query = from validator in validators
-                            where validator.Value.All(attribute => attribute.IsValid(propertyGetters[validator.Key](this)))
+                var query = from validator in _validators
+                            where validator.Value.All(attribute => attribute.IsValid(_propertyGetters[validator.Key](this)))
                             select validator;
 
-                var count = query.Count() - validationExceptionCount;
+                var count = query.Count() - _validationExceptionCount;
                 return count;
             }
         }
@@ -80,18 +77,18 @@ namespace Gamma.ViewModels
         {
             get
             {
-                return validators.Count();
+                return _validators.Count();
             }
         }
 
         public ValidationViewModelBase()
         {
-            validators = GetType()
+            _validators = GetType()
                 .GetProperties()
                 .Where(p => GetValidations(p).Length != 0)
                 .ToDictionary(p => p.Name, p => GetValidations(p));
 
-            propertyGetters = GetType()
+            _propertyGetters = GetType()
                 .GetProperties()
                 .Where(p => GetValidations(p).Length != 0)
                 .ToDictionary(p => p.Name, p => GetValueGetter(p));
@@ -107,19 +104,15 @@ namespace Gamma.ViewModels
             return new Func<ValidationViewModelBase, object>(viewmodel => property.GetValue(viewmodel, null));
         }
 
-        private int validationExceptionCount;
+        private int _validationExceptionCount;
 
         public void ValidationExceptionsChanged(int count)
         {
-            validationExceptionCount = count;
+            _validationExceptionCount = count;
             RaisePropertyChanged("ValidPropertiesCount");
         }
 
-        public virtual bool IsValid
-        {
-            get { return (ValidPropertiesCount == TotalPropertiesWithValidationCount); }
-        }
-        
+        public virtual bool IsValid => (ValidPropertiesCount == TotalPropertiesWithValidationCount);
     }
         
 }

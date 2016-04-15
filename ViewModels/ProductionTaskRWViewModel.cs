@@ -1,36 +1,37 @@
 ﻿using System;
-using Gamma.Models;
-using System.Linq;
 using System.Collections.ObjectModel;
-using DevExpress.Mvvm;
-using Gamma.Interfaces;
-using Gamma.Attributes;
+using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Windows;
+using DevExpress.Mvvm;
+using Gamma.Attributes;
+using Gamma.Interfaces;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// ViewModel задания на ПРС
     /// </summary>
-    public class ProductionTaskRWViewModel : DBEditItemWithNomenclatureViewModel, ICheckedAccess, IProductionTask
+    public class ProductionTaskRwViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess, IProductionTask
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskRWViewModel class.
         /// </summary>
-        public ProductionTaskRWViewModel()
+        public ProductionTaskRwViewModel()
         {
             Initialize();
         }
-        public ProductionTaskRWViewModel(Guid productionTaskBatchID) : this()
+        /// <summary>
+        /// Открытие для редактирования задания на ПРС
+        /// </summary>
+        /// <param name="productionTaskBatchID">id пакета заданий</param>
+        public ProductionTaskRwViewModel(Guid productionTaskBatchID) : this()
         {
-            Initialize();
             ProductionTaskBatchID = productionTaskBatchID;
-            var productionTask = DB.GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.RW).FirstOrDefault();
-//            ProductionTask = DB.GammaBase.ProductionTasks.
+            var productionTask = DB.GammaDb.GetProductionTaskByBatchid(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+//            ProductionTask = gammaBase.ProductionTasks.
 //                Include("ProductionTaskRWCutting").Include("ProductionTaskBatches").Include("ProductionTaskSGB").
 //                Where(pt => pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID).FirstOrDefault();
 //           IsConfirmed = ProductionTask.ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
@@ -43,21 +44,21 @@ namespace Gamma.ViewModels
                 NomenclatureID = productionTask.C1CNomenclatureID;
                 SetCharacteristicProperties();
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
-                var cuttings = DB.GammaBase.ProductionTaskRWCutting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID).ToList();
+                var cuttings = DB.GammaDb.ProductionTaskRWCutting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID).ToList();
+                int i = 0;
+                foreach (var rwcutting in cuttings)
+                {
+                    CuttingFormats[0].Format[i] = DB.GammaDb.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID)?.FormatNumeric ?? 0;
+                    i++;
+                }
                 if (cuttings.Count > 0)
                 {
-                    var charprops = CharacteristicProperties.Where(c => c.CharacteristicID == cuttings[0].C1CCharacteristicID).FirstOrDefault();
+                    var charprops = CharacteristicProperties.FirstOrDefault(c => c.CharacteristicID == cuttings[0].C1CCharacteristicID);
                     CoreDiameter = charprops.CoreDiameter;
                     LayerNumber = charprops.LayerNumber;
                     Color = charprops.Color;
                     Diameter = charprops.Diameter;
                     Destination = charprops.Destination;
-                }
-                int i = 0;
-                foreach (var rwcutting in cuttings)
-                {
-                    CuttingFormats[0].Format[i] = DB.GammaBase.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == rwcutting.C1CCharacteristicID)?.FormatNumeric ?? 0;
-                    i++;
                 }
             }
             else
@@ -91,86 +92,92 @@ namespace Gamma.ViewModels
         private Properties MandatoryProperties { get; set; }
         private ProductionTasks ProductionTask { get; set; }
         private Guid ProductionTaskBatchID { get; set; }
-        public override void SaveToModel(Guid itemId) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
         {
-            base.SaveToModel(itemId);
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemId);
-            if (productionTaskBatch == null)
+            base.SaveToModel(itemID);
+            using (var gammaBase = DB.GammaDb)
             {
-                MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-            var productionTaskTemp = DB.GammaBase.GetProductionTaskByBatchID(itemId, (short)PlaceGroups.RW).FirstOrDefault();
-            if (productionTaskTemp == null)
-            {
-                ProductionTaskID = SQLGuidUtil.NewSequentialId();
-                ProductionTask = new ProductionTasks()
+                var productionTaskBatch =
+                    gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemID);
+                if (productionTaskBatch == null)
                 {
-                    ProductionTaskID = ProductionTaskID,
-                    PlaceGroupID = (short)PlaceGroups.RW,
-                };
-                productionTaskBatch.ProductionTasks.Add(ProductionTask);
-            }
-            else
-            {
-                ProductionTaskID = productionTaskTemp.ProductionTaskID;
-                ProductionTask = DB.GammaBase.ProductionTasks
-                    .Include("ProductionTaskRWCutting").First(p => p.ProductionTaskID == ProductionTaskID);
-            }
-            ProductionTask.C1CNomenclatureID = (Guid)NomenclatureID;
-            ProductionTask.Quantity = TaskQuantity;
-            ProductionTask.DateBegin = DateBegin;
-            ProductionTask.DateEnd = DateEnd;
-            // заполняем раскрой для базы
-            var prodTaskCuttings = new ObservableCollection<ProductionTaskRWCutting>();
-            for (int i = 0; i < CuttingFormats[0].Format.Count; i++)
-            {
-                var format = CuttingFormats[0].Format[i];
-            	if (format == null) continue;
-                var characteristicIds = (from cp in CharacteristicProperties
-                                       where cp.Color == Color && cp.CoreDiameter == CoreDiameter
-                                           && cp.Format == format &&
-                                           cp.LayerNumber == LayerNumber
-                                       select cp.CharacteristicID).ToList();
-                if (characteristicIds.Count > 1)
-                {
-                    characteristicIds =
-                        CharacteristicProperties.Where(
-                            c => characteristicIds.Contains(c.CharacteristicID) && c.Destination == Destination)
-                            .Select(c => c.CharacteristicID)
-                            .ToList();
-                    if (characteristicIds.Count > 1)
-                    {
-                        characteristicIds =
-                        CharacteristicProperties.Where(
-                            c => characteristicIds.Contains(c.CharacteristicID) && c.Diameter == Diameter)
-                            .Select(c => c.CharacteristicID)
-                            .ToList();
-                    }
-                }
-                Guid? characteristicId;
-                if (characteristicIds.Count == 1) characteristicId = characteristicIds[0];
-                else
-                {
-                    MessageBox.Show("Некорректные параметры задания ПРС", "Параметры ПРС", MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
+                    MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     return;
                 }
-                if (characteristicId != null)
+                var productionTaskTemp =
+                    gammaBase.GetProductionTaskByBatchid(itemID, (short) PlaceGroups.Rw).FirstOrDefault();
+                if (productionTaskTemp == null)
                 {
-                    prodTaskCuttings.Add(new ProductionTaskRWCutting()
+                    ProductionTaskID = SqlGuidUtil.NewSequentialid();
+                    ProductionTask = new ProductionTasks
                     {
-                        C1CCharacteristicID = (Guid)characteristicId,
-                        CutIndex = (short)i,
                         ProductionTaskID = ProductionTaskID,
-                        ProductionTaskRWCuttingID = SQLGuidUtil.NewSequentialId()
-                    });
+                        PlaceGroupID = (short) PlaceGroups.Rw
+                    };
+                    productionTaskBatch.ProductionTasks.Add(ProductionTask);
                 }
+                else
+                {
+                    ProductionTaskID = productionTaskTemp.ProductionTaskID;
+                    ProductionTask = gammaBase.ProductionTasks
+                        .Include("ProductionTaskRWCutting").First(p => p.ProductionTaskID == ProductionTaskID);
+                }
+                ProductionTask.C1CNomenclatureID = (Guid) NomenclatureID;
+                ProductionTask.Quantity = TaskQuantity;
+                ProductionTask.DateBegin = DateBegin;
+                ProductionTask.DateEnd = DateEnd;
+                // заполняем раскрой для базы
+                var prodTaskCuttings = new ObservableCollection<ProductionTaskRWCutting>();
+                for (int i = 0; i < CuttingFormats[0].Format.Count; i++)
+                {
+                    var format = CuttingFormats[0].Format[i];
+                    if (format == null) continue;
+                    var CharacteristicIDs = (from cp in CharacteristicProperties
+                        where cp.Color == Color && cp.CoreDiameter == CoreDiameter
+                              && cp.Format == format &&
+                              cp.LayerNumber == LayerNumber
+                        select cp.CharacteristicID).ToList();
+                    if (CharacteristicIDs.Count > 1)
+                    {
+                        CharacteristicIDs =
+                            CharacteristicProperties.Where(
+                                c => CharacteristicIDs.Contains(c.CharacteristicID) && c.Destination == Destination)
+                                .Select(c => c.CharacteristicID)
+                                .ToList();
+                        if (CharacteristicIDs.Count > 1)
+                        {
+                            CharacteristicIDs =
+                                CharacteristicProperties.Where(
+                                    c => CharacteristicIDs.Contains(c.CharacteristicID) && c.Diameter == Diameter)
+                                    .Select(c => c.CharacteristicID)
+                                    .ToList();
+                        }
+                    }
+                    Guid? CharacteristicID;
+                    if (CharacteristicIDs.Count == 1) CharacteristicID = CharacteristicIDs[0];
+                    else
+                    {
+                        MessageBox.Show("Некорректные параметры задания ПРС", "Параметры ПРС", MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                        return;
+                    }
+                    if (CharacteristicID != null)
+                    {
+                        prodTaskCuttings.Add(new ProductionTaskRWCutting
+                        {
+                            C1CCharacteristicID = (Guid) CharacteristicID,
+                            CutIndex = (short) i,
+                            ProductionTaskID = ProductionTaskID,
+                            ProductionTaskRWCuttingid = SqlGuidUtil.NewSequentialid()
+                        });
+                    }
+                }
+                gammaBase.ProductionTaskRWCutting.RemoveRange(ProductionTask.ProductionTaskRWCutting);
+                gammaBase.ProductionTaskRWCutting.AddRange(prodTaskCuttings);
+                gammaBase.SaveChanges();
+                ProductionTaskSGBViewModel.SaveToModel(ProductionTaskID);
             }
-            DB.GammaBase.ProductionTaskRWCutting.RemoveRange(ProductionTask.ProductionTaskRWCutting);
-            DB.GammaBase.ProductionTaskRWCutting.AddRange(prodTaskCuttings);
-            DB.GammaBase.SaveChanges();
-            ProductionTaskSGBViewModel.SaveToModel(ProductionTaskID);
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public string Color
@@ -219,39 +226,19 @@ namespace Gamma.ViewModels
 //                    (Diameter == null || c.Diameter == null || c.Diameter == Diameter)
                 ).GroupBy(fc => new
                 {
-                    CoreDiameter = fc.CoreDiameter,
-                    LayerNumber = fc.LayerNumber,
-                    Color = fc.Color,
-                    Diameter = fc.Diameter,
-                    Format = fc.Format,
-                    Destination = fc.Destination
+                    fc.CoreDiameter, fc.LayerNumber, fc.Color, fc.Diameter, fc.Format, fc.Destination
                 }, (g, r) =>
                     new
                     {
-                        CoreDiameter = g.CoreDiameter,
-                        LayerNumber = g.LayerNumber,
-                        Color = g.Color,
-                        Diameter = g.Diameter,
-                        Format = g.Format,
-                        Destination = g.Destination,
+                        g.CoreDiameter, g.LayerNumber, g.Color, g.Diameter, g.Format, g.Destination,
                         Count = r.Count()
                     }).Where(c => c.Count == 1 || c.Count > 1 && c.Destination == Destination)
                     .GroupBy(fc => new
                     {
-                        CoreDiameter = fc.CoreDiameter,
-                        LayerNumber = fc.LayerNumber,
-                        Color = fc.Color,
-                        Diameter = fc.Diameter,
-                        Format = fc.Format,
-                        Destination = fc.Destination
+                        fc.CoreDiameter, fc.LayerNumber, fc.Color, fc.Diameter, fc.Format, fc.Destination
                     }, (g,r) => 
                     new {
-                        CoreDiameter = g.CoreDiameter,
-                        LayerNumber = g.LayerNumber,
-                        Color = g.Color,
-                        Diameter = g.Diameter,
-                        Format = g.Format,
-                        Destination = g.Destination,
+                        g.CoreDiameter, g.LayerNumber, g.Color, g.Diameter, g.Format, g.Destination,
                         Count = r.Count()
                     }).Where(c => c.Count == 1);
             if (filter != Filters.Color)
@@ -499,13 +486,12 @@ namespace Gamma.ViewModels
             var tempCollection = new ObservableCollection<CharacteristicProperty>();
             foreach (var characteristic in Characteristics)
             {
-                var charprops = DB.GammaBase.GetCharPropsDescriptions(characteristic.CharacteristicID).FirstOrDefault();
+                var charprops = DB.GammaDb.GetCharPropsDescriptions(characteristic.CharacteristicID).FirstOrDefault();
                 tempCollection.Add
-                    (new CharacteristicProperty()
+                    (new CharacteristicProperty
                     {
                         CharacteristicID = charprops.C1CCharacteristicID,
-                        Format = ((int)DB.GammaBase.vCharacteristicSGBProperties.
-                            Where(p => p.C1CCharacteristicID == charprops.C1CCharacteristicID).FirstOrDefault().FormatNumeric),
+                        Format = ((int)DB.GammaDb.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == charprops.C1CCharacteristicID).FormatNumeric),
                         Diameter = charprops.Diameter,
                         LayerNumber = charprops.LayerNumber,
                         Destination = charprops.Destination,
@@ -514,30 +500,30 @@ namespace Gamma.ViewModels
                     });
             }
             MandatoryProperties = Properties.None;
-            if (!tempCollection.Any(c => c.CoreDiameter == null))
+            if (tempCollection.All(c => c.CoreDiameter != null))
             {
                 MandatoryProperties |= Properties.PropCoreDiameter;
             }
-            if (!tempCollection.Any(c => c.LayerNumber == null))
+            if (tempCollection.All(c => c.LayerNumber != null))
             {
                 MandatoryProperties |= Properties.PropLayerNumber;
             }
-            if (!tempCollection.Any(c => c.Color == null))
+            if (tempCollection.All(c => c.Color != null))
             {
                 MandatoryProperties |= Properties.PropColor;
             }
-            if (!tempCollection.Any(c => c.Diameter == null))
+            if (tempCollection.All(c => c.Diameter != null))
             {
                 MandatoryProperties |= Properties.PropDiameter;
             }
-            if (!tempCollection.Any(c => c.Destination == null))
+            if (tempCollection.All(c => c.Destination != null))
             {
                 MandatoryProperties |= Properties.PropDestination;
             }
             CharacteristicProperties = tempCollection;
         }
         private decimal _taskQuantity;
-        [Range(1,1000000000,ErrorMessage="Задание должно быть больше 0")]
+        [Range(1,1000000000,ErrorMessage=@"Задание должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal TaskQuantity
         {
@@ -603,7 +589,7 @@ namespace Gamma.ViewModels
                 Format = new ObservableCollection<int?>(new int?[16]);
                 Format.CollectionChanged += Format_CollectionChanged;
             }
-            private void Format_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+            private void Format_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
                 TotalFormat = 0;
                 foreach (var format in Format)

@@ -65,7 +65,7 @@
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
         <dxmvvm:Interaction.Behaviors>
-            <g:UIAuthBehavior />
+            <g:UiAuthBehavior />
         </dxmvvm:Interaction.Behaviors>
     </Grid>
 </UserControl>
