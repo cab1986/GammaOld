@@ -240,3 +240,4 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGIView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma_Content.g.cs

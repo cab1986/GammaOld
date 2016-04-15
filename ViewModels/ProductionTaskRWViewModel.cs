@@ -30,7 +30,7 @@ namespace Gamma.ViewModels
         public ProductionTaskRwViewModel(Guid productionTaskBatchID) : this()
         {
             ProductionTaskBatchID = productionTaskBatchID;
-            var productionTask = DB.GammaDb.GetProductionTaskByBatchid(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+            var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
 //            ProductionTask = gammaBase.ProductionTasks.
 //                Include("ProductionTaskRWCutting").Include("ProductionTaskBatches").Include("ProductionTaskSGB").
 //                Where(pt => pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID).FirstOrDefault();
@@ -106,7 +106,7 @@ namespace Gamma.ViewModels
                     return;
                 }
                 var productionTaskTemp =
-                    gammaBase.GetProductionTaskByBatchid(itemID, (short) PlaceGroups.Rw).FirstOrDefault();
+                    gammaBase.GetProductionTaskByBatchID(itemID, (short) PlaceGroups.Rw).FirstOrDefault();
                 if (productionTaskTemp == null)
                 {
                     ProductionTaskID = SqlGuidUtil.NewSequentialid();
@@ -169,7 +169,7 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = (Guid) CharacteristicID,
                             CutIndex = (short) i,
                             ProductionTaskID = ProductionTaskID,
-                            ProductionTaskRWCuttingid = SqlGuidUtil.NewSequentialid()
+                            ProductionTaskRWCuttingID = SqlGuidUtil.NewSequentialid()
                         });
                     }
                 }

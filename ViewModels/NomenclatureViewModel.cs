@@ -26,9 +26,9 @@ namespace Gamma.ViewModels
                                     select
                                         new Nomenclature1CFolder
                                         {
-                                            Folderid = nf.Folderid,
+                                            FolderID = nf.FolderID,
                                             Name = nf.Name,
-                                            ParentFolderid = nf.ParentID
+                                            ParentFolderID = nf.ParentID
                                         })
                                     );
             ChooseSelectedNomenclature = new DelegateCommand(ChooseNomenclature);
@@ -83,7 +83,7 @@ namespace Gamma.ViewModels
                 {
                     _selectedNomenclatureFolder = value;
                     if (value != null)
-                        GetNomenclature(value.Folderid);
+                        GetNomenclature(value.FolderID);
                     RaisePropertyChanged("SelectedNomenclatureFolder");
                 }
             }

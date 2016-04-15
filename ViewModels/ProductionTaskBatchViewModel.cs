@@ -159,7 +159,7 @@ namespace Gamma.ViewModels
                 ChangeCurrentView(_batchKind);
             }
         }
-        private byte? _processModelid;
+        private short? _processModelid;
 
         private bool _partyControl;
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -176,7 +176,7 @@ namespace Gamma.ViewModels
             }
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public byte? ProcessModelID
+        public short? ProcessModelID
         {
             get
             {
@@ -207,7 +207,7 @@ namespace Gamma.ViewModels
             Date = productionTaskBatch.Date;         
             Comment = productionTaskBatch.Comment;
             ProductionTaskStateID = productionTaskBatch.ProductionTaskStateID;
-            ProcessModelID = (byte)productionTaskBatch.ProcessModelID;
+            ProcessModelID = productionTaskBatch.ProcessModelID;
             if (productionTaskBatch.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
         }
@@ -352,7 +352,7 @@ namespace Gamma.ViewModels
                         {
                             var currentDateTime = DB.CurrentDateTime;
                             var productionTask =
-                                gammaBase.GetProductionTaskByBatchid(ProductionTaskBatchID,
+                                gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
                                     (short) PlaceGroups.Convertings).FirstOrDefault();
                             if (productionTask == null) return;
                             var productid = SqlGuidUtil.NewSequentialid();

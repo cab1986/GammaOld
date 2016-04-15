@@ -183,7 +183,7 @@ namespace Gamma.ViewModels
                          where pinf.BarCode == barcode
                          select pinf).FirstOrDefault();
             if (p == null) return;
-            if (p.IsWrittenOff)
+            if (p.IsWrittenOff??false)
             {
                 MessageBox.Show("Вы пытаететесь добавить списанный рулон");
                 return;

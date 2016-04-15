@@ -70,7 +70,7 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
             var isWrittenOff = DB.GammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
-            if (isWrittenOff)
+            if (isWrittenOff??false)
             {
                 MessageBox.Show("Нельзя повторно использовать списанный тамбур", "Списанный тамбур", MessageBoxButton.OK, MessageBoxImage.Hand);
                 return;

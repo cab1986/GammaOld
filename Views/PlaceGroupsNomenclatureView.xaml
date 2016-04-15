@@ -25,7 +25,7 @@
                             <dxg:GridColumn Header="Номенклатура" FieldName="Name" />
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.View>
-                            <dxg:TreeListView IsColumnChooserVisible="False" ParentFieldName="ParentFolderid" KeyFieldName="Folderid" />
+                            <dxg:TreeListView IsColumnChooserVisible="False" ParentFieldName="ParentFolderID" KeyFieldName="FolderID" />
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxlc:LayoutItem>
@@ -52,7 +52,7 @@
                             <dxg:GridColumn Header="Номенклатура" FieldName="Name" />
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.View>
-                            <dxg:TreeListView IsColumnChooserVisible="False" KeyFieldName="Folderid" ParentFieldName="ParentFolderid" />
+                            <dxg:TreeListView IsColumnChooserVisible="False" KeyFieldName="FolderID" ParentFieldName="ParentFolderID" />
                         </dxg:GridControl.View>
                     </dxg:GridControl>
                 </dxlc:LayoutItem>

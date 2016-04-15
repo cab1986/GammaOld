@@ -138,7 +138,7 @@ namespace Gamma.ViewModels
                 (
                     (
                         from pinfo in DB.GammaBase.vProductsInfo
-                        where pinfo.BarCode == Barcode && (!ButtonPanelVisible || (ButtonPanelVisible && !pinfo.IsWrittenOff))
+                        where pinfo.BarCode == Barcode && (!ButtonPanelVisible || (ButtonPanelVisible && !(pinfo.IsWrittenOff??false)))
                         select new ProductInfo
                         {
                             DocID = pinfo.DocID,
@@ -173,7 +173,7 @@ namespace Gamma.ViewModels
                 (charid == new Guid() || pinfo.C1CCharacteristicID == charid) &&
                 (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                 ((DateBegin == null || pinfo.Date >= DateBegin) && (DateEnd == null || pinfo.Date <= DateEnd)) &&
-                ((ButtonPanelVisible && !pinfo.IsWrittenOff) || !ButtonPanelVisible)
+                ((ButtonPanelVisible && !(pinfo.IsWrittenOff??false)) || !ButtonPanelVisible)
                 &&
                 (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
                 (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)

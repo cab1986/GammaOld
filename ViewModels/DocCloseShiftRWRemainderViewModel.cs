@@ -51,7 +51,7 @@ namespace Gamma.ViewModels
                     docRemainder = new DocCloseShiftRemainders()
                     {
                         DocID = itemID,
-                        DocCloseShiftRemainderid = SqlGuidUtil.NewSequentialid(),
+                        DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                         ProductID = remainder.ProductID
                     };
                     DB.GammaBase.DocCloseShiftRemainders.Add(docRemainder);

@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
         {
             ProductionTaskBatchID = productionTaskBatchID;
             IsForRw = isForRw;
-            var productionTask = DB.GammaDb.GetProductionTaskByBatchid(productionTaskBatchID, (short)PlaceGroups.PM).FirstOrDefault();
+            var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.PM).FirstOrDefault();
             if (productionTask != null)
             {
                 DateBegin = productionTask.DateBegin;
@@ -57,7 +57,7 @@ namespace Gamma.ViewModels
             }
             if (isForRw)
             {
-                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchid(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
                 if (productionTaskRw != null)
                 {
                     SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
@@ -239,7 +239,7 @@ namespace Gamma.ViewModels
                     return;
                 }
                 var productionTaskTemp =
-                    gammaBase.GetProductionTaskByBatchid(itemID, (short) PlaceGroups.PM).FirstOrDefault();
+                    gammaBase.GetProductionTaskByBatchID(itemID, (short) PlaceGroups.PM).FirstOrDefault();
                 if (productionTaskTemp == null)
                 {
                     ProductionTaskID = SqlGuidUtil.NewSequentialid();
