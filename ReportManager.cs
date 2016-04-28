@@ -75,7 +75,11 @@ namespace Gamma
                 report.Dictionary.Connections[0].ConnectionString = GammaSettings.SqlConnectionString;
                 if (showPreview)
                     report.Show();
-                else report.Print();
+                else
+                {
+                    report.PrintSettings.ShowDialog = false;
+                    report.Print();
+                }
             }
         }
         public static void PrintReport(string reportName, string reportFolder = null, Guid? paramid = null, bool showPreview = true)

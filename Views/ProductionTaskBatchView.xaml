@@ -32,6 +32,10 @@
             <v:ProductionTaskSGIView />
         </DataTemplate>
     </Window.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
+        <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -59,7 +63,7 @@
                                                       DisplayMember="Value" ValueMember="Key" IsReadOnly="{Binding ChangeStateReadOnly}"/>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Модель процесса" Visibility="{Binding ProcessModelVisible}">
-                                    <dxe:ComboBoxEdit Width="150" IsTextEditable="False" EditValueType="{x:Type sys:Byte}" 
+                                    <dxe:ComboBoxEdit Width="150" IsTextEditable="False" 
                                                       ItemsSource="{Binding ProcessModels}" EditValue="{Binding ProcessModelID, UpdateSourceTrigger=PropertyChanged}"
                                                       DisplayMember="Value" ValueMember="Key"  AllowNullInput="True">
                                     </dxe:ComboBoxEdit>
@@ -94,7 +98,8 @@
                             </dxb:Bar>
                         </dxb:BarManager.Bars>
                     </dxb:BarManager>
-                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}"  SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}">
+                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}" AutoExpandAllGroups="True"
+                                     SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn FieldName="Place" Header="Передел" GroupIndex="0" />
                             <dxg:GridColumn FieldName="ProductID" Visible="False"/>
@@ -105,7 +110,12 @@
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
                             <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="2"  Header="Номенклатура"/>
-                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="3" Width="120" FixedWidth="True"/>
+                            <dxg:GridColumn FieldName="IsConfirmed" Header="Подтвержден" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="3">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:CheckEditSettings/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="4" Width="120" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
                             <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Вес: {0:d} кг" />

@@ -13,7 +13,13 @@ namespace Gamma.Views
         /// </summary>
         public NomenclatureView(int placeGroupID)
         {
-            this.DataContext = new NomenclatureViewModel(placeGroupID);
+            DataContext = new NomenclatureViewModel(placeGroupID);
+            InitializeComponent();
+        }
+
+        public NomenclatureView(MaterialTypes materialType)
+        {
+            DataContext = new NomenclatureViewModel(materialType);
             InitializeComponent();
         }
     }

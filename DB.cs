@@ -205,12 +205,12 @@ namespace Gamma
             });
             return permit == 2;
         }
-        [DbFunction("GammaModel.Store","GetShiftBeginTime")]
+        [DbFunction("GammaDBModel", "GetShiftBeginTime")]
         public static DateTime? GetShiftBeginTime(DateTime date)
         {
             throw new NotSupportedException("Direct calls are not supported");
         }
-        [DbFunction("GammaModel.Store","GetShiftEndTime")]
+        [DbFunction("GammaDBModel", "GetShiftEndTime")]
         public static DateTime? GetShiftEndTime(DateTime date)
         {
             throw new NotSupportedException("Direct calls are not supported");

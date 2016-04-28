@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     /// <summary>
     /// ViewModel для задания на СГИ
     /// </summary>
-    public class ProductionTaskSGIViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess
+    public sealed class ProductionTaskSGIViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess
     {
         /// <summary>
         /// Инициализация ProductionTaskSGIViewModel
@@ -55,17 +55,32 @@ namespace Gamma.ViewModels
         
         public byte ProductionTaskStateID { get; set; }
 
+
+        private ObservableCollection<Place> _places;
+
         /// <summary>
         /// Список конвертингов
         /// </summary>
-        public ObservableCollection<Place> Places { get; set; }
+        public ObservableCollection<Place> Places
+        {
+            get { return _places; }
+            set
+            {
+                _places = value;
+                if (_places.Select(p => p.PlaceID).Contains(PlaceID??-1)) return;
+                if (_places.Count > 0) PlaceID = _places[0].PlaceID;
+                else PlaceID = null;
+                RaisePropertyChanged("Places");
+            }
+        }
 
-        private int _placeID;
+        private int? _placeID;
         /// <summary>
         /// id выбранного передела
         /// </summary>
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public int PlaceID
+        [Required(ErrorMessage = @"Передел не может быть пустым")]
+        public int? PlaceID
         {
             get { return _placeID; }
             set
@@ -81,13 +96,38 @@ namespace Gamma.ViewModels
         [UIAuth(UIAuthLevel.ReadOnly)]
         public int Quantity { get; set; }
 
-        public override void SaveToModel(Guid productionTaskBatchID)
+        protected override void NomenclatureChanged(Nomenclature1CMessage msg)
         {
-            base.SaveToModel();
-            using (var gammaBase = DB.GammaDb)
+            base.NomenclatureChanged(msg);
+            if (
+                GammaBase.C1CMainSpecifications.Any(
+                    ms => ms.C1CNomenclatureID == NomenclatureID && !ms.C1CPlaceID.HasValue))
             {
+                Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.Convertings
+                    && p.BranchID == WorkSession.BranchID).Select(p => new Place()
+                    {
+                        PlaceID = p.PlaceID,
+                        PlaceName = p.Name
+                    }));
+                return;
+            }
+            Places = new ObservableCollection<Place>(GammaBase.C1CMainSpecifications.Where(ms => ms.C1CNomenclatureID == NomenclatureID 
+                && ms.C1CPlaces.Places.FirstOrDefault().BranchID == WorkSession.BranchID && ms.C1CPlaces.Places.FirstOrDefault().PlaceGroupID == (short)PlaceGroups.Convertings)
+                .Select(ms => new Place()
+                {
+                    PlaceID = ms.C1CPlaces.Places.FirstOrDefault().PlaceID,
+                    PlaceName = ms.C1CPlaces.Places.FirstOrDefault().Name
+                }).Distinct());
+            if (Places.Count == 0)
+                MessageBox.Show(
+                    "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
+                    "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+        }
+        public override void SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        {
+            SaveToModel();
                 var productionTaskBatch =
-                    gammaBase.ProductionTaskBatches.Include(pt => pt.ProductionTasks)
+                    GammaBase.ProductionTaskBatches.Include(pt => pt.ProductionTasks)
                         .First(pt => pt.ProductionTaskBatchID == productionTaskBatchID);
                 if (productionTaskBatch == null)
                 {
@@ -109,14 +149,18 @@ namespace Gamma.ViewModels
                 {
                     productionTask = productionTaskBatch.ProductionTasks.First();
                 }
+            if (NomenclatureID == null)
+            {
+                MessageBox.Show("Вы попытались сохранить задание без номенклатуры. Оно не будет сохранено");
+                return;
+            }
                 productionTask.C1CNomenclatureID = (Guid)NomenclatureID;
-                productionTask.C1CCharacteristicID = (Guid)CharacteristicID;
-                productionTask.DateBegin = (DateTime)DateBegin;
-                productionTask.DateEnd = (DateTime)DateEnd;
+                productionTask.C1CCharacteristicID = CharacteristicID;
+                productionTask.DateBegin = DateBegin;
+                productionTask.DateEnd = DateEnd;
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
-                gammaBase.SaveChanges();
-            }
+                GammaBase.SaveChanges();
         }
         private int _madeQuantiy;
         /// <summary>

@@ -17,6 +17,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the NomenclatureViewModel class.
         /// </summary>
+        /// <param name="placeGroupID">ID группы переделов</param>
         public NomenclatureViewModel(int placeGroupID)
         {
 
@@ -30,6 +31,28 @@ namespace Gamma.ViewModels
                                             Name = nf.Name,
                                             ParentFolderID = nf.ParentID
                                         })
+                                    );
+            ChooseSelectedNomenclature = new DelegateCommand(ChooseNomenclature);
+        }
+
+        public NomenclatureViewModel(PlaceGroups placeGroup): this((int)placeGroup) { }
+
+        /// <summary>
+        /// Инициализация новой NomenclatureViewModel
+        /// </summary>
+        /// <param name="materialType">Материалы какого цеха</param>
+        public NomenclatureViewModel(MaterialTypes materialType)
+        {
+            Nomenclature1CFolders = new ReadOnlyObservableCollection<Nomenclature1CFolder>
+                                    (new ObservableCollection<Nomenclature1CFolder>
+                                    (from nf in DB.GammaBase.GetMaterialNomenclatureFolders((int)materialType)
+                                     select
+                                         new Nomenclature1CFolder
+                                         {
+                                             FolderID = nf.FolderID,
+                                             Name = nf.Name,
+                                             ParentFolderID = nf.ParentID
+                                         })
                                     );
             ChooseSelectedNomenclature = new DelegateCommand(ChooseNomenclature);
         }
@@ -125,9 +148,9 @@ namespace Gamma.ViewModels
         public DelegateCommand ChooseSelectedNomenclature { get; private set; }
         private void ChooseNomenclature()
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             var msg = new Nomenclature1CMessage {Nomenclature1CID = SelectedNomenclature.Nomenclature1CID};
-            Messenger.Default.Send<Nomenclature1CMessage>(msg);
+            Messenger.Default.Send(msg);
             CloseWindow();
         }
         private ObservableCollection<string> _nomenclatureCharacteristics;

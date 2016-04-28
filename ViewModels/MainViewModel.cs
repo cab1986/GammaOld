@@ -1,7 +1,6 @@
 using DevExpress.Mvvm;
 using System.Linq;
 using Gamma.Interfaces;
-using System;
 using Gamma.Common;
 using System.Collections.ObjectModel;
 using Gamma.Dialogs;
@@ -48,7 +47,8 @@ namespace Gamma.ViewModels
                 ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB,
                     () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGI,
-                    DB.HaveReadAccess("ProductionTasks"));FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
+                    DB.HaveReadAccess("ProductionTasks"));
+                FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
                 CloseShiftCommand = new DelegateCommand(CloseShift);
                 OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>(MessageManager.OpenDocCloseShifts);
@@ -57,6 +57,8 @@ namespace Gamma.ViewModels
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
+                OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
+                    () => DB.HaveWriteAccess("MaterialType1CNomenclature"));
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -66,6 +68,9 @@ namespace Gamma.ViewModels
                     break;
                 case PlaceGroups.Wr:
                     OpenPlaceProducts(WorkSession.PlaceID);
+                    break;
+                case PlaceGroups.Convertings:
+                    CurrentView = ViewModelLocator.ProductionTasksSGI;
                     break;
             }
             var places = DB.GammaBase.Places.Where(p => p.IsProductionPlace == true).Select(p => p);
@@ -84,7 +89,7 @@ namespace Gamma.ViewModels
         }
         private void OpenPlaceProducts(int placeID)
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             CurrentView = new PlaceProductsViewModel(placeID);
             RefreshCommand = (CurrentView as PlaceProductsViewModel).FindCommand;
             NewItemCommand = (CurrentView as PlaceProductsViewModel).CreateNewProductCommand;
@@ -203,6 +208,7 @@ namespace Gamma.ViewModels
         public DelegateCommand FindProductionTaskCommand { get; private set; }
         public DelegateCommand<int> OpenPlaceProductsCommand { get; private set; }
         public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
+        public DelegateCommand OpenMaterialTypesNomenclatureCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public class PlaceProduct
         {

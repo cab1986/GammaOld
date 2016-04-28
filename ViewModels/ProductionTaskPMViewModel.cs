@@ -181,7 +181,7 @@ namespace Gamma.ViewModels
                 {
                     Messenger.Default.Unregister<ProductionTaskRwMessage>(this);
                 }
-                RaisePropertyChanged("IsForRW");
+                RaisePropertyChanged("IsForRw");
             }
         }
         private int _placeID;
@@ -224,12 +224,12 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
         {
+            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return;
+            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);
-            using (var gammaBase = DB.GammaDb)
-            {
-                var productionTaskBatch =
+            var productionTaskBatch =
                     gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemID);
                 ProductionTasks productionTask;
                 if (productionTaskBatch == null)
@@ -263,7 +263,6 @@ namespace Gamma.ViewModels
                 productionTask.DateEnd = DateEnd;
                 gammaBase.SaveChanges();
                 ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
-            }
         }
         [Range(1, 1000000, ErrorMessage = "Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]

@@ -23,13 +23,18 @@ namespace Gamma.Models
             this.C1CNomenclatureProperties = new HashSet<C1CNomenclatureProperties>();
             this.C1CSpecificationInputNomenclature = new HashSet<C1CSpecificationInputNomenclature>();
             this.C1CSpecificationOutputNomenclature = new HashSet<C1CSpecificationOutputNomenclature>();
-            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
-            this.ProductPalletItems = new HashSet<ProductPalletItems>();
             this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
             this.PlaceGroups = new HashSet<PlaceGroups>();
+            this.MaterialTypes = new HashSet<MaterialTypes>();
+            this.ProductPalletItems = new HashSet<ProductPalletItems>();
+            this.C1CMainSpecifications = new HashSet<C1CMainSpecifications>();
+            this.C1CNomenclatureAnalogs = new HashSet<C1CNomenclatureAnalogs>();
+            this.C1CNomenclatureAnalogs1 = new HashSet<C1CNomenclatureAnalogs>();
+            this.C1CNomenclatureAnalogs2 = new HashSet<C1CNomenclatureAnalogs>();
+            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -56,18 +61,28 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CSpecificationOutputNomenclature> C1CSpecificationOutputNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceGroups> PlaceGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MaterialTypes> MaterialTypes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
     }
 }

@@ -1,10 +1,12 @@
 ﻿
 FD:\CProjects\Gamma\Gamma\App.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftRWRemainderView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftUnwinderRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductGroupPackView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocProductPalletView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductSpoolView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductUnloadView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductView.xaml;;

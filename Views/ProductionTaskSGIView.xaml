@@ -7,6 +7,8 @@
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:g="clr-namespace:Gamma"
              x:Class="Gamma.Views.ProductionTaskSGIView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500">
@@ -31,8 +33,8 @@
                     <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Параметры" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID,ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
-                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
+                    <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
+						DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Сделано" LabelPosition="Top" Width="130">
                     <dxe:SpinEdit EditValue="{Binding MadeQuantity}" IsReadOnly="True" AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}"/>
@@ -40,9 +42,11 @@
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="100" HorizontalAlignment="Left">
                 <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}"
-                                  DisplayMember="PlaceName" ValueMember="PlaceID" />
+					DisplayMember="PlaceName" ValueMember="PlaceID" />
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
-
+        <dxmvvm:Interaction.Behaviors>
+            <g:UiAuthBehavior />
+        </dxmvvm:Interaction.Behaviors>
     </Grid>
 </UserControl>

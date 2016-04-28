@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Data.Entity;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -83,11 +84,12 @@ namespace Gamma.ViewModels
             DocCloseShiftDocs.Clear();
             GroupPacks.Clear();
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return;
+            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);
-            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Where(d => d.DocID == itemID).First();
+            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == itemID);
             if (doc.DocCloseShiftDocs == null)
             {
                 doc.DocCloseShiftDocs = new ObservableCollection<Docs>();

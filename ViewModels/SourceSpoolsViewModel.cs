@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
         {
             var docID = SqlGuidUtil.NewSequentialid();
             var productid = SqlGuidUtil.NewSequentialid();
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             DB.GammaBase.CreateRemainderSpool(docID, productid, parentProductID, weight, WorkSession.PrintName);
             ReportManager.PrintReport("Амбалаж", "Spool", docID);
         }

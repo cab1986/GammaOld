@@ -22,6 +22,9 @@
     Left="{g:SettingBinding DocProductLeft}"
     Top="{g:SettingBinding DocProductTop}" >
     <g:MvvmWindow.Resources>
+        <DataTemplate DataType="{x:Type vm:DocProductPalletViewModel}">
+            <v:DocProductPalletView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocProductSpoolViewModel}">
             <v:DocProductSpoolView />
         </DataTemplate>
@@ -31,7 +34,7 @@
         <DataTemplate DataType="{x:Type vm:DocProductGroupPackViewModel}">
             <v:DocProductGroupPackView />
         </DataTemplate>
-        <DataTemplate x:Key="BarTemplate">
+        <DataTemplate x:Key="BarTemplate" DataType="g:BarViewModel">
             <ContentControl>
                 <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>
             </ContentControl>

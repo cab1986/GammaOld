@@ -23,5 +23,6 @@ namespace Gamma.Models
         public Nullable<System.Guid> NomenclatureID { get; set; }
         public Nullable<System.Guid> CharacteristicID { get; set; }
         public Nullable<int> Quantity { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

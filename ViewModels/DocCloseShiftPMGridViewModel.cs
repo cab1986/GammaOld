@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Data.Entity.SqlServer;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -60,13 +61,10 @@ namespace Gamma.ViewModels
                     d.Date >= SqlFunctions.DateAdd("hh",-1,SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(CloseDate))) && 
                     d.Date <= SqlFunctions.DateAdd("hh",1, SqlFunctions.DateAdd("hh",-1,DB.GetShiftEndTime(CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).Select(d => d));
-            foreach (var doc in DocCloseShiftDocs)
+            foreach (var doc in DocCloseShiftDocs.Where(doc => doc.DocTypeID == (byte)DocTypes.DocProduction))
             {
-                if (doc.DocTypeID == (byte)DocTypes.DocProduction)
-                {
-
-                    Spools.Add(
-                        (from d in DB.GammaBase.DocProducts 
+                Spools.Add(
+                    (from d in DB.GammaBase.DocProducts 
                         join ps in DB.GammaBase.ProductSpools on d.ProductID equals ps.ProductID
                         where d.DocID == doc.DocID
                         select new PaperBase 
@@ -79,7 +77,6 @@ namespace Gamma.ViewModels
                             Weight = ps.Weight
                         }).FirstOrDefault()
                     );
-                }
             }
         }
 
@@ -91,9 +88,10 @@ namespace Gamma.ViewModels
                 Spools.Clear();
             }
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            base.SaveToModel(itemID);
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(itemID, gammaBase);
             if (DocCloseShift == null)
             {
                 DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == itemID).Select(d => d).FirstOrDefault();

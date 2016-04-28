@@ -19,9 +19,12 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<decimal> Amount { get; set; }
+        public Nullable<bool> WithdrawByFact { get; set; }
+        public Nullable<System.Guid> C1CMeasureUnitID { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual C1CSpecifications C1CSpecifications { get; set; }
+        public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
     }
 }

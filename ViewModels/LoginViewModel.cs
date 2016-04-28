@@ -67,7 +67,7 @@ namespace Gamma.ViewModels
 
         private void Authenticate()
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             GammaSettings.SetConnectionString(Host, DataBase, Login, Password);
             if (!DB.Initialize())
             {

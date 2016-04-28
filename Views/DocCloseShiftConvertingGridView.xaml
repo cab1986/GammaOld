@@ -1,0 +1,64 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Views"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             x:Class="Gamma.Views.DocCloseShiftConvertingGridView"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Grid>
+        <dx:DXTabControl>
+            <dx:DXTabItem Header="Использованные материалы">
+                <dxb:BarManager>
+                    <dxb:BarManager.Bars>
+                        <dxb:Bar>
+                            <dxb:BarButtonItem Content="Добавить материал" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddWithdrawalMaterialCommand}"/>
+                            <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteWithdrawalMaterialCommand}"/>
+                        </dxb:Bar>
+                    </dxb:BarManager.Bars>
+                    <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}">
+                        <dxg:GridControl.View>
+                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True"/>
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:ComboBoxEdit x:Name="PART_Editor"   
+                                                      DisplayMember="NomenclatureName" 
+                                                      ValueMember="NomenclatureID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="Количество" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" />
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="Ед. изм." FieldName="MeasureUnit" Width="70" FixedWidth="True" ReadOnly="True"/>
+                        </dxg:GridControl.Columns>
+                    </dxg:GridControl>
+                </dxb:BarManager>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Паллеты">
+                <dxg:GridControl ItemsSource="{Binding Pallets}">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn Header="Номер" FieldName="Number" Width="150" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Наименование" FieldName="NomenclatureName"/>
+                        <dxg:GridColumn Header="Кол-во, рул" FieldName="Quantity" Width="150" FixedWidth="True"/>
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" AllowEditing="False"/>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
+    </Grid>
+</UserControl>

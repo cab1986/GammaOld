@@ -1,6 +1,8 @@
 ﻿using System;
 using Gamma.Interfaces;
 using System.Linq;
+using Gamma.Models;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Gamma.ViewModels
@@ -147,10 +149,10 @@ namespace Gamma.ViewModels
             set
             {
             	_productionTaskWrView = value;
-                RaisePropertyChanged("ProductionTaskWRView");
+                RaisePropertyChanged("ProductionTaskWrView");
             }
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             base.SaveToModel(itemID);
             FirstView?.SaveToModel(itemID);

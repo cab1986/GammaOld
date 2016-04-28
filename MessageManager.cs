@@ -1,5 +1,6 @@
 ﻿using System;
 using DevExpress.Mvvm;
+using Gamma.Common;
 
 namespace Gamma
 {
@@ -8,8 +9,8 @@ namespace Gamma
  
     public class PrintReportMessage
     {
-        public Guid ReportID; // id отчета
-        public Guid? VMID; // id ViewModel, которая должна обработать событие
+        public Guid ReportID { get; set; } // id отчета
+        public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие
     }
  
     public class OpenMainMessage { }
@@ -31,7 +32,19 @@ namespace Gamma
     }
     public class OpenNomenclatureMessage  
     {
-        public int PlaceGroupID;
+        public OpenNomenclatureMessage(int placeGroupID)
+        {
+            ID = placeGroupID;
+            IsPlaceGroupFilter = true;
+        }
+
+        public OpenNomenclatureMessage(MaterialTypes materialType)
+        {
+            ID = (int) materialType;
+        }
+
+        public int ID { get; private set; }
+        public bool IsPlaceGroupFilter { get; private set; }
     }
     public class ProductionTaskRwMessage
     {
@@ -54,7 +67,7 @@ namespace Gamma
     }
     public class Nomenclature1CMessage
     {
-        public Guid Nomenclature1CID;
+        public Guid Nomenclature1CID { get; set; }
     }
     public class OpenReportListMessage { }
     public class FindProductMessage
@@ -97,6 +110,7 @@ namespace Gamma
         public byte? ShiftID;
     }
     public class OpenPlaceGroupsNomenclatureMessage  { }
+    public class OpenMaterialTypesNomenclatureMessage { }
     public class OpenDocCloseShiftsMessage 
     {
         public PlaceGroups? PlaceGroup;
@@ -151,11 +165,17 @@ namespace Gamma
 
         public static void OpenNomenclature(int placeGroupID)
         {
-            Messenger.Default.Send(new OpenNomenclatureMessage {PlaceGroupID = placeGroupID });
+            Messenger.Default.Send(new OpenNomenclatureMessage(placeGroupID));
+        }
+
+        public static void OpenNomenclature(MaterialTypes materialType)
+        {
+            Messenger.Default.Send(new OpenNomenclatureMessage(materialType));
         }
 
         public static void OpenProductionTask(OpenProductionTaskBatchMessage msg)
         {
+            UIServices.SetBusyState();
             Messenger.Default.Send(msg);
         }
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
@@ -215,6 +235,11 @@ namespace Gamma
         public static void OpenPlaceGroupsNomenclature()
         {
             Messenger.Default.Send(new OpenPlaceGroupsNomenclatureMessage());
+        }
+
+        public static void OpenMaterialTypesNomenclature()
+        {
+            Messenger.Default.Send(new OpenMaterialTypesNomenclatureMessage());
         }
         public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null)
         {

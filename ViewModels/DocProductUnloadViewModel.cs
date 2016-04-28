@@ -127,7 +127,7 @@ namespace Gamma.ViewModels
         
         private void CreateSpools()
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             UnloadSpools.Clear();
             UnloadSpools =
                 new ObservableCollection<PaperBase>(from us in DB.GammaBase.CreateUnloadSpools(DocID, ProductionTaskID, Diameter, BreakNumber)
@@ -181,8 +181,10 @@ namespace Gamma.ViewModels
             }
         }
         
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
+            if (!DB.HaveWriteAccess("ProducSpools")) return;
+            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);
             if (UnloadSpoolsSaved) return;
             var doc = DB.GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemID);

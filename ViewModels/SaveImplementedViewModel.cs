@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using Gamma.Common;
 using System;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -19,17 +20,17 @@ namespace Gamma.ViewModels
 
         public DelegateCommand SaveAndCloseCommand { get; private set; }
 
-        public virtual void SaveToModel()
+        protected virtual void SaveToModel(GammaEntities gammaBase = null)
         {
-
         }
         /// <summary>
         /// Сохранение в БД
         /// </summary>
         /// <param name="itemID"></param>
-        public virtual void SaveToModel(Guid itemID)
+        /// <param name="gammaBase">Контекст БД</param>
+        public virtual void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
         }
 
         protected void SaveToModelAndClose()

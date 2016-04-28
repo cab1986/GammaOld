@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Windows;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -84,7 +85,8 @@ namespace Gamma.ViewModels
                 MessageBox.Show("Не удалось открыть com-port. Если параметры порта верны, то сохраните изменения и перезапустите программу");
             }
         }
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
             base.SaveToModel();
             var settings = GammaSettings.Get();

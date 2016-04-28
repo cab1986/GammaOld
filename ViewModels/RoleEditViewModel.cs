@@ -56,25 +56,27 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("RolePermits");
             }
         }
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
             if (_isNewRole)
             {
-                DB.GammaBase.Roles.Add(Role);
-                DB.GammaBase.RolePermits.AddRange(RolePermits);
+                gammaBase.Roles.Add(Role);
+                gammaBase.RolePermits.AddRange(RolePermits);
             }
             else
             {
                 if (!Role.RolePermits.SequenceEqual(RolePermits))
                 {
                     var toadd = RolePermits.Where(p => !Role.RolePermits.Contains(p));
-                    DB.GammaBase.RolePermits.AddRange(toadd);
+                    gammaBase.RolePermits.AddRange(toadd);
                     var todel = Role.RolePermits.Where(p => !RolePermits.Contains(p));
-                    DB.GammaBase.RolePermits.RemoveRange(todel);
+                    gammaBase.RolePermits.RemoveRange(todel);
                 }
             }
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
             if (!_isNewRole) DB.RecreateRolePermits(Role.RoleID);
         }
         //private Dictionary<int, string> _marks = 

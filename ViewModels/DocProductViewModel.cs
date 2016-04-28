@@ -1,6 +1,5 @@
 ﻿using DevExpress.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel; 
 using Gamma.Models;
 using System.Linq;
@@ -9,6 +8,7 @@ using Gamma.Attributes;
 using Gamma.Common;
 using System.Windows;
 using System.Data.Entity;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace Gamma.ViewModels
 {
@@ -20,8 +20,11 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the DocProductViewModel class.
         /// </summary>
-        public DocProductViewModel(OpenDocProductMessage msg)
+        /// <param name="gammaBase">Контекст бд для модели(по умолчанию Null, необходим для тестирования)</param>
+        /// <param name="msg">Сообщение, содержащее параметры</param>
+        public DocProductViewModel(OpenDocProductMessage msg, GammaEntities gammaBase = null)
         {
+            GammaBase = gammaBase ?? DB.GammaDb; // Если контекст не передан, то создаем новый
             //  Если новый продукт, то сразу создаем новый документ в базе, с последующей
             //  выгрузкой документа из базы для получения номера
             if (msg.IsNewProduct) 
@@ -56,16 +59,16 @@ namespace Gamma.ViewModels
                     Date = DB.CurrentDateTime,
                     PrintName = WorkSession.PrintName
                 };
-                DB.GammaBase.Docs.Add(Doc);
+                GammaBase.Docs.Add(Doc);
                 DocProduction = new DocProduction()
                 {
                     DocID = Doc.DocID,
                     InPlaceID = WorkSession.PlaceID,
                     ProductionTaskID = msg.ID
                 };
-                DB.GammaBase.DocProduction.Add(DocProduction);
-                DB.GammaBase.SaveChanges();
-                DB.GammaBase.Entry<Docs>(Doc).Reload();
+                GammaBase.DocProduction.Add(DocProduction);
+                GammaBase.SaveChanges(); // Сохранение в бд
+                GammaBase.Entry(Doc).Reload(); // Получение обновленного документа(с номером из базы)
                 Number = Doc.Number;
             }
             // Создаем дочернюю viewmodel в зависимости от типа изделия
@@ -74,22 +77,21 @@ namespace Gamma.ViewModels
                 case DocProductKinds.DocProductSpool:
                     Title = "Тамбур";
                     if (!msg.IsNewProduct) // Если не новый продукт, то находим Doc, DocProduction, 
-                        //Product и обновляем в кэше с помощью Reload()
                     {
                         Doc =
-                            DB.GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
+                            GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
                                     d.DocTypeID == (byte) DocTypes.DocProduction);
-//                        DB.GammaBase.Entry<Docs>(Doc).Reload();
+//                        GammaBase.Entry<Docs>(Doc).Reload();
                         DocProduction = Doc.DocProduction;
-//                        DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
+//                        GammaBase.Entry<DocProduction>(DocProduction).Reload();
                         var product =
-                            DB.GammaBase.Products
+                            GammaBase.Products
                                 .First(p => p.ProductID == msg.ID);
 /*                        if (product == null)
                         {
                             var productid = SQLGuidUtil.NewSequentialid();
                             var productionTask =
-                                DB.GammaBase.ProductionTasks.First(
+                                GammaBase.ProductionTasks.First(
                                     p => p.ProductionTaskID == Doc.DocProduction.ProductionTaskID);
                             product = new Products()
                             {
@@ -112,16 +114,16 @@ namespace Gamma.ViewModels
                                     }
                                 }
                             };
-                            DB.GammaBase.Products.Add(product);
-                            DB.GammaBase.SaveChanges();
+                            GammaBase.Products.Add(product);
+                            GammaBase.SaveChanges();
                         }*/
-                        DB.GammaBase.Entry(product).Reload();
+                        GammaBase.Entry(product).Reload();
                         Number = product.Number;
                         Title = $"{Title} № {Number}";
                         CurrentViewModel = new DocProductSpoolViewModel(product.ProductID, false);
                         ProductRelations = new ObservableCollection<ProductRelation>
                             (
-                                from prel in DB.GammaBase.ProductRelations(product.ProductID)
+                                from prel in GammaBase.ProductRelations(product.ProductID)
                                 select new ProductRelation
                                 {
                                     Date = prel.Date,
@@ -139,25 +141,13 @@ namespace Gamma.ViewModels
                     Title = "Съем";
                     if (!msg.IsNewProduct)
                     {
-                        Doc = DB.GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
-                        //DB.GammaBase.Entry<Docs>(Doc).Reload();
+                        Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
+                        //GammaBase.Entry<Docs>(Doc).Reload();
                         DocProduction = Doc.DocProduction;
-//                        DB.GammaBase.Entry<DocProduction>(DocProduction).Reload();
+//                        GammaBase.Entry<DocProduction>(DocProduction).Reload();
                         Number = Doc.Number;
                         Title = $"{Title} № {Number}";
-                        ProductRelations = new ObservableCollection<ProductRelation>
-                            (
-                                from prel in DB.GammaBase.DocRelations(Doc.DocID)
-                                select new ProductRelation
-                                {
-                                    Date = prel.Date,
-                                    DocID = prel.DocID,
-                                    Number = prel.Number,
-                                    ProductID = prel.ProductID,
-                                    ProductKind = prel.ProductKind,
-                                    RelationKind = prel.RelationKind
-                                }
-                            );
+                        GetProductRelations();
                     }
                     CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
                     break;
@@ -165,38 +155,39 @@ namespace Gamma.ViewModels
                     Title = "Групповая упаковка";
                     if (!msg.IsNewProduct)
                     {
-                        Doc = DB.GammaBase.Docs.Include(d => d.DocProduction).FirstOrDefault(d => d.DocID == msg.ID);
+                        Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
                         DocProduction = Doc.DocProduction;
                         Number = Doc.Number;
                         Title = $"{Title} № {Number}";
                         CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);
-                        ProductRelations = new ObservableCollection<ProductRelation>
-                            (
-                                from prel in DB.GammaBase.DocRelations(Doc.DocID)
-                                select new ProductRelation
-                                {
-                                    Date = prel.Date,
-                                    DocID = prel.DocID,
-                                    Number = prel.Number,
-                                    ProductID = prel.ProductID,
-                                    ProductKind = prel.ProductKind,
-                                    RelationKind = prel.RelationKind
-                                }
-                            );
+                        GetProductRelations();
                     }
                     else CurrentViewModel = new DocProductGroupPackViewModel();
+                    break;
+                case DocProductKinds.DocProductPallet:
+                    Title = "Паллета";
+                    if (!msg.IsNewProduct)
+                    {
+                        Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
+                        DocProduction = Doc.DocProduction;
+                        Number = Doc.Number;
+                        Title = $"{Title} № {Number}";
+                        CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
+                        GetProductRelations();
+                    }
+                    else CurrentViewModel = new DocProductPalletViewModel();
                     break;
                 default:
                     MessageBox.Show("Действие не предусмотрено програмой");
                     CloseWindow();
                     return;
             }
-            var productionTaskBatch = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == DocProduction.ProductionTaskID).
+            var productionTaskBatch = GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == DocProduction.ProductionTaskID).
                 Select(p => p.ProductionTaskBatches.FirstOrDefault()).FirstOrDefault();
             if (productionTaskBatch != null) ProductionTaskBatchID = productionTaskBatch.ProductionTaskBatchID;
             DocDate = Doc.Date;
             IsConfirmed = Doc.IsConfirmed;
-            Bars = (CurrentViewModel as IBarImplemented).Bars;
+            Bars = ((IBarImplemented) CurrentViewModel).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
@@ -204,6 +195,25 @@ namespace Gamma.ViewModels
             OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
         }
+
+        private void GetProductRelations()
+        {
+            ProductRelations = new ObservableCollection<ProductRelation>
+                (
+                from prel in GammaBase.DocRelations(Doc.DocID)
+                select new ProductRelation
+                {
+                    Date = prel.Date,
+                    DocID = prel.DocID,
+                    Number = prel.Number,
+                    ProductID = prel.ProductID,
+                    ProductKind = prel.ProductKind,
+                    RelationKind = prel.RelationKind
+                }
+                );
+        }
+
+        private GammaEntities GammaBase { get; set; }
         private void SaveToModel(ParentSaveMessage msg)
         {
             SaveToModel();
@@ -214,11 +224,11 @@ namespace Gamma.ViewModels
             if (Doc == null) return;
             if (CurrentViewModel is DocProductSpoolViewModel)
             {
-                var productid = (from p in DB.GammaBase.Products
+                var productid = (from p in GammaBase.Products
                                  where p.BarCode == msg.Barcode
                                  select p.ProductID).FirstOrDefault();
                 if (productid == new Guid()) return;
-                if (DB.GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productid).Select(d => d).FirstOrDefault() != null)
+                if (GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productid).Select(d => d).FirstOrDefault() != null)
                     IsConfirmed = false;
             }
             else
@@ -230,7 +240,8 @@ namespace Gamma.ViewModels
         private void OpenProductionTask()
         {
             var msg = new OpenProductionTaskBatchMessage() { ProductionTaskBatchID = ProductionTaskBatchID };
-            if (CurrentViewModel is DocProductSpoolViewModel) msg.BatchKind = BatchKinds.SGB;
+            if (CurrentViewModel is DocProductSpoolViewModel || CurrentViewModel is DocProductUnloadViewModel 
+                || CurrentViewModel is DocProductGroupPackViewModel) msg.BatchKind = BatchKinds.SGB;else if (CurrentViewModel is DocProductPalletViewModel) msg.BatchKind = BatchKinds.SGI;
             MessageManager.OpenProductionTask(msg);
         }
         public ObservableCollection<BarViewModel> Bars
@@ -286,15 +297,14 @@ namespace Gamma.ViewModels
             {
                 _productionTaskBatchID = value;
                 if (value == null) return;
-                var pinfo = (from pt in DB.GammaBase.ProductionTaskBatches
+                var pinfo = (from pt in GammaBase.ProductionTaskBatches
                      where pt.ProductionTaskBatchID == value
                      select new 
                      {
-                         Number = pt.Number,
-                         Date = pt.Date 
+                         pt.Number, pt.Date 
                      }).FirstOrDefault();
                 if (pinfo != null)
-                    ProductionTaskInfo = string.Format("Задание №{0} от {1}", pinfo.Number, pinfo.Date);
+                    ProductionTaskInfo = $"Задание №{pinfo.Number} от {pinfo.Date}";
             }
         }
         private string _productionTaskInfo;
@@ -322,16 +332,17 @@ namespace Gamma.ViewModels
       
         private void PrintReport(PrintReportMessage msg)
         {
-            if (msg.VMID != (CurrentViewModel as IBarImplemented).VMID) return;
+            if (msg.VMID != (CurrentViewModel as IBarImplemented)?.VMID) return;
 //            if (!IsValid) return;
             SaveToModel();
             ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }
 
-        public override void SaveToModel()
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("Docs")) return;
-            base.SaveToModel();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
 /*            if (Doc == null)
             {
                 Doc = new Docs() 
@@ -344,35 +355,24 @@ namespace Gamma.ViewModels
                     DocTypeID = (int)DocTypes.DocProduction,
                     PrintName = WorkSession.PrintName
                 };
-                DocProduction = new DocProduction() { DocID = Doc.DocID, InPlaceID = DB.GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ProductionTaskID).Select(p => p.PlaceID).FirstOrDefault(), ProductionTaskID = ProductionTaskID };
-                DB.GammaBase.Docs.Add(Doc);
-                DB.GammaBase.DocProduction.Add(DocProduction);
+                DocProduction = new DocProduction() { DocID = Doc.DocID, InPlaceID = GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ProductionTaskID).Select(p => p.PlaceID).FirstOrDefault(), ProductionTaskID = ProductionTaskID };
+                GammaBase.Docs.Add(Doc);
+                GammaBase.DocProduction.Add(DocProduction);
             }
              */
             //           Doc.Number = Number;
             Doc.Date = DocDate;
             Doc.IsConfirmed = IsConfirmed;
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
             HaveChanges = false;
             CurrentViewModel.SaveToModel(Doc.DocID);
         }
         private Docs Doc { get; set; }
         private DocProduction DocProduction { get; set; }
-        public override bool IsValid
-        {
-            get
-            {
-                return base.IsValid && CurrentViewModel.IsValid;
-            }
-        }
+        public override bool IsValid => base.IsValid && CurrentViewModel.IsValid;
 
-        public bool IsReadOnly
-        {
-            get 
-            {
-                return IsConfirmed || (!DB.HaveWriteAccess("DocProduction") && !WorkSession.DBAdmin);
-            }
-        }
+        public bool IsReadOnly => IsConfirmed || (!DB.HaveWriteAccess("DocProduction") && !WorkSession.DBAdmin);
+
         public override bool CanSaveExecute()
         {
             return CurrentViewModel.CanSaveExecute() && DB.HaveWriteAccess("DocProduction");

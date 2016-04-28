@@ -16,6 +16,9 @@
     Top="{g:SettingBinding DocCloseShiftTop}"
     WindowState="{g:SettingBinding DocCloseShiftWState}">
     <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftConvertingGridViewModel}">
+            <v:DocCloseShiftConvertingGridView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMGridViewModel}">
             <v:DocCloseShiftPMGridView />
         </DataTemplate>
@@ -25,8 +28,8 @@
         <DataTemplate DataType="{x:Type vm:DocCloseShiftPMRemainderViewModel}">
             <v:DocCloseShiftPMRemainderView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DocCloseShiftRwRemainderViewModel}">
-            <v:DocCloseShiftRwRemainderView />
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftUnwinderRemainderViewModel}">
+            <v:DocCloseShiftUnwinderRemainderView />
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>

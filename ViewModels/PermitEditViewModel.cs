@@ -105,25 +105,27 @@ namespace Gamma.ViewModels
             PermitTables.Remove(SelectedPermitTable);
         }
         public PermitTables SelectedPermitTable { get; set; }
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
             if (_isNewPermit)
             {
-                DB.GammaBase.Permits.Add(Permit);
+                gammaBase.Permits.Add(Permit);
             }
             else
             {
                 if (!Permit.PermitTables.SequenceEqual(PermitTables))
                 {
                     var toadd = PermitTables.Where(p => !Permit.PermitTables.Contains(p));
-                    DB.GammaBase.PermitTables.AddRange(toadd);
+                    gammaBase.PermitTables.AddRange(toadd);
                     var todel = Permit.PermitTables.Where(p => !PermitTables.Contains(p));
-                    DB.GammaBase.PermitTables.RemoveRange(todel);
+                    gammaBase.PermitTables.RemoveRange(todel);
                 }
             }
             Permit.PermitTables = PermitTables;
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
         }
     }
 }

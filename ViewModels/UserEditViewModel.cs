@@ -47,9 +47,9 @@ namespace Gamma.ViewModels
             Places = new ObservableCollection<Places>(DB.GammaBase.Places.Select(p => p));
             Roles = new ObservableCollection<Roles>(DB.GammaBase.Roles.Select(r => r));
         }
-        private bool _isNewUser = false;
+        private readonly bool _isNewUser;
         public bool IsDbAdmin { get; set; }
-        [Required(ErrorMessage="Поле логин не может быть пустым")]
+        [Required(ErrorMessage=@"Поле логин не может быть пустым")]
         public string Login
         {
             get
@@ -62,7 +62,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Login");
             }
         }
-        [Required(ErrorMessage="Поле ФИО не может быть пустым")]
+        [Required(ErrorMessage=@"Поле ФИО не может быть пустым")]
         public string Name
         {
             get
@@ -75,33 +75,24 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Name");
             }
         }
-        [Required(ErrorMessage="Пароль не может быть пустым")]
+        [Required(ErrorMessage=@"Пароль не может быть пустым")]
         public string Password { get; set; }
-        [Required(ErrorMessage="Не указано подразделение")]
+        [Required(ErrorMessage=@"Не указано подразделение")]
         public int PlaceID { get; set; }
         public string Post { get; set; }
-        [Required(ErrorMessage = "Укажите роль доступа пользователя")]
+        [Required(ErrorMessage = @"Укажите роль доступа пользователя")]
         public Guid RoleID { get; set; }
-        public byte ShiftID
-        {
-            get
-            {
-                return _shiftID;
-            }
-            set
-            {
-                _shiftID = value;
-            }
-        }
+        public byte ShiftID { get; set; }
+
         private Guid UserID { get; set; }
         private string _login;
         private string _name;
-        private byte _shiftID = 0;
         private Users User { get; set; }
-        
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
             User.Login = Login;
             User.Name = Name;
             User.Places.Clear();

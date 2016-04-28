@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -132,6 +133,7 @@ namespace Gamma.ViewModels
 
         private void Find(bool isFromScanner)
         {
+            UIServices.SetBusyState();
             if (isFromScanner)
             {
                 FoundProducts = new ObservableCollection<ProductInfo>

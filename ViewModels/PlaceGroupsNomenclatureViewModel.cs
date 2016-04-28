@@ -4,6 +4,8 @@ using System.Linq;
 using Gamma.Common;
 using System.Collections.ObjectModel;
 using DevExpress.Mvvm;
+using Gamma.Models;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
@@ -175,18 +177,22 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("SelectedNomenclatureFolders");
             }
         }
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
-            var placeGroup = DB.GammaBase.PlaceGroups.Where(p => p.PlaceGroupID == PlaceGroupID).Select(p => p).FirstOrDefault();
-            placeGroup.C1CNomenclature.Clear();
-            var nomenclatureids = PlaceGroupNomenclature.Select(p => p.FolderID).ToList();
-            var nomenclatureTree = DB.GammaBase.C1CNomenclature.Where(n1C => nomenclatureids.Contains(n1C.C1CNomenclatureID)).Select(n => n);
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
+            var placeGroup = gammaBase.PlaceGroups.Include(p => p.C1CNomenclature).First(p => p.PlaceGroupID == PlaceGroupID);
+            if (placeGroup.C1CNomenclature == null) placeGroup.C1CNomenclature = new List<C1CNomenclature>();
+            else
+                placeGroup.C1CNomenclature.Clear();
+            var nomenclatureIds = PlaceGroupNomenclature.Select(p => p.FolderID).ToList();
+            var nomenclatureTree = gammaBase.C1CNomenclature.Where(n1C => nomenclatureIds.Contains(n1C.C1CNomenclatureID)).Select(n => n);
             foreach (var nomenclature in nomenclatureTree)
             {
                 placeGroup.C1CNomenclature.Add(nomenclature);
             }
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
         }
 
     }

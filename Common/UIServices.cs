@@ -7,7 +7,7 @@ namespace Gamma.Common
     /// <summary>
     ///   Contains helper methods for UI, so far just one for showing a waitcursor
     /// </summary>
-    public static class UiServices
+    public static class UIServices
     {
         /// <summary>
         ///   A value indicating whether the UI is currently busy

@@ -20,9 +20,9 @@ namespace Gamma.Models
             this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
             this.DocCloseShiftRemainders = new HashSet<DocCloseShiftRemainders>();
             this.DocProducts = new HashSet<DocProducts>();
-            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.DocCloseShiftDocs = new HashSet<Docs>();
             this.Docs2 = new HashSet<Docs>();
+            this.DocCloseShiftWithdrawals = new HashSet<DocWithdrawal>();
         }
     
         public System.Guid DocID { get; set; }
@@ -51,10 +51,10 @@ namespace Gamma.Models
         public virtual DocShipment DocShipment { get; set; }
         public virtual DocWithdrawal DocWithdrawal { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> DocCloseShiftDocs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> Docs2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocWithdrawal> DocCloseShiftWithdrawals { get; set; }
     }
 }

@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Linq;
+using DevExpress.Mvvm;
 
 namespace Gamma
 {
-    public class ProductInfo
+    public class ProductInfo : ViewModelBase
     {
         public Guid DocID { get; set; }
+
+        private bool _isConfirmed;
+
+        public bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value; 
+                RaisePropertiesChanged("IsConfirmed");
+            }   
+        }
         public Guid ProductID { get; set; }
         public ProductKinds ProductKind { get; set; }
         public string Number { get; set; }
@@ -14,7 +27,7 @@ namespace Gamma
         public Guid? NomenclatureID { get; set; }
         public Guid? CharacteristicID { get; set; }
         public int? Quantity { get; set; }
-        public Byte? ShiftID { get; set; }
+        public byte? ShiftID { get; set; }
         public string State { get; set; }
         public string Place { get; set; }
         private int? _placeID;

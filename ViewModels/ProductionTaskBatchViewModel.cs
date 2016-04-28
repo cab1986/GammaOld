@@ -4,10 +4,10 @@ using System;
 using Gamma.Interfaces;
 using System.Linq;
 using Gamma.Models;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Collections.Generic;
 using System.Data.Entity;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -19,10 +19,12 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTaskViewModel class.
         /// </summary>
-        public ProductionTaskBatchViewModel(OpenProductionTaskBatchMessage msg)
+        public ProductionTaskBatchViewModel(OpenProductionTaskBatchMessage msg, GammaEntities gammaBase = null)
         {
-            ChangeStateReadOnly = !DB.HaveWriteAccess("ProductionTasks") &&
-                !WorkSession.DBAdmin;
+            GammaBase = gammaBase ?? DB.GammaDb;
+            ProductionTaskBatchID = msg.ProductionTaskBatchID ?? SqlGuidUtil.NewSequentialid();
+            ChangeStateReadOnly = !DB.HaveWriteAccess("ProductionTasks");
+            BatchKind = msg.BatchKind;
             TaskStates = new ProductionTaskStates().ToDictionary();
             ProcessModels = new ProcessModels().ToDictionary();
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
@@ -30,7 +32,7 @@ namespace Gamma.ViewModels
             if (msg.ProductionTaskBatchID == null)
             {
                 Date = DB.CurrentDateTime;
-                ProductionTaskBatchID = SqlGuidUtil.NewSequentialid();
+//                ProductionTaskBatchID = SqlGuidUtil.NewSequentialid();
                 Title = "Новое задание на производство";
                 IsActual = false;
 //                if (Places.Count > 0)
@@ -43,7 +45,7 @@ namespace Gamma.ViewModels
             }
             else
             {
-                GetProductionTaskInfo((Guid)msg.ProductionTaskBatchID);
+                GetProductionTaskInfo(ProductionTaskBatchID);
                 RefreshProduction();
                 Title = "Задание на производство № " + Number;
             }
@@ -71,10 +73,53 @@ namespace Gamma.ViewModels
                     break;
 
             }
-            BatchKind = msg.BatchKind;
             CreateNewProductCommand = new DelegateCommand(CreateNewProduct,CanCreateNewProduct);
-            
+            ActivatedCommand = new DelegateCommand(() => IsActive = true);
+            DeactivatedCommand = new DelegateCommand(() => IsActive = false);
+            Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
+
         }
+
+        private bool IsActive { get; set; }
+        /// <summary>
+        /// Действие при получении шк от сканера
+        /// </summary>
+        /// <param name="msg">сообщение с шк</param>
+        private void BarcodeReceived(BarcodeMessage msg)
+        {
+            if (!IsActive) return;
+            var docProducts = GammaBase.DocProducts.Include(dp => dp.Docs).Include(dp => dp.Products)
+                .FirstOrDefault(
+                    dp => dp.Docs.DocTypeID == (short) DocTypes.DocProduction && dp.Products.BarCode == msg.Barcode);
+            if (docProducts == null) return;
+            docProducts.IsInConfirmed = true;
+            docProducts.Docs.IsConfirmed = true;
+            string message;
+            switch (docProducts.Products.ProductKindID)
+            {
+                case (byte)ProductKinds.ProductSpool:
+                    message = $"Тамбур №{docProducts.Products.Number} подтвержден";
+                    break;
+                case (byte)ProductKinds.ProductPallet:
+                    message = $"Паллета №{docProducts.Products.Number} подтверждена";
+                    break;
+                case (byte)ProductKinds.ProductGroupPack:
+                    message = $"Групповая упаковка №{docProducts.Products.Number} подтверждена";
+                    break;
+                default:
+                    message = $"Продукт №{docProducts.Products.Number} подтвержден";
+                    break;
+            }
+            GammaBase.SaveChanges();
+            MessageBox.Show(message, "Подтверждение", MessageBoxButton.OK, MessageBoxImage.Information);
+            var productionTaskProduct =
+                ProductionTaskProducts.FirstOrDefault(ptp => ptp.ProductID == docProducts.ProductID);
+            if (productionTaskProduct != null) productionTaskProduct.IsConfirmed = true;
+        }
+        /// <summary>
+        /// Локальный для данного класса контекст БД
+        /// </summary>
+        private GammaEntities GammaBase { get; set; }
 
         private bool CanCreateNewProduct()
         {
@@ -159,7 +204,7 @@ namespace Gamma.ViewModels
                 ChangeCurrentView(_batchKind);
             }
         }
-        private short? _processModelid;
+        private byte? _processModelid;
 
         private bool _partyControl;
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -176,7 +221,7 @@ namespace Gamma.ViewModels
             }
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public short? ProcessModelID
+        public byte? ProcessModelID
         {
             get
             {
@@ -201,14 +246,14 @@ namespace Gamma.ViewModels
             var productionTaskBatch = (from pt in DB.GammaDb.ProductionTaskBatches.Include(pt => pt.ProductionTaskStates)
                                   where pt.ProductionTaskBatchID == productionTaskBatchID
                                   select pt).FirstOrDefault();
-            ProductionTaskBatchID = productionTaskBatchID;
+//            ProductionTaskBatchID = productionTaskBatchID;
             PartyControl = productionTaskBatch?.PartyControl ?? false;
-            Number = productionTaskBatch.Number;
-            Date = productionTaskBatch.Date;         
-            Comment = productionTaskBatch.Comment;
-            ProductionTaskStateID = productionTaskBatch.ProductionTaskStateID;
-            ProcessModelID = productionTaskBatch.ProcessModelID;
-            if (productionTaskBatch.ProductionTaskStates != null)
+            Number = productionTaskBatch?.Number;
+            Date = productionTaskBatch?.Date;         
+            Comment = productionTaskBatch?.Comment;
+            ProductionTaskStateID = productionTaskBatch?.ProductionTaskStateID;
+            ProcessModelID = (byte?)productionTaskBatch?.ProcessModelID;
+            if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
         }
         private void ChangeCurrentView(BatchKinds batchKind)
@@ -223,11 +268,12 @@ namespace Gamma.ViewModels
                     break;
             }
         }
-   
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
+            var productionTaskBatch = gammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);
             if (productionTaskBatch == null)
             {
                 productionTaskBatch = new ProductionTaskBatches()
@@ -235,7 +281,7 @@ namespace Gamma.ViewModels
                     ProductionTaskBatchID = ProductionTaskBatchID,
                     UserID = WorkSession.UserID
                 };
-                DB.GammaBase.ProductionTaskBatches.Add(productionTaskBatch);
+                gammaBase.ProductionTaskBatches.Add(productionTaskBatch);
             }
             productionTaskBatch.ProcessModelID = ProcessModelID;
             productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID ?? 0;
@@ -243,7 +289,7 @@ namespace Gamma.ViewModels
             productionTaskBatch.Comment = Comment;
             productionTaskBatch.PartyControl = PartyControl;
             productionTaskBatch.BatchKindID = (short)BatchKind;
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
             CurrentView?.SaveToModel(ProductionTaskBatchID);
         }
 
@@ -295,7 +341,7 @@ namespace Gamma.ViewModels
                                             .Select(d => d.ProductID)
                                             .First();
                                     var productSpool =
-                                        gammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == productid);
+                                        gammaBase.ProductSpools.First(p => p.ProductID == productid);
                                     var productionTaskPM =
                                         gammaBase.ProductionTasks.FirstOrDefault(
                                             p => p.ProductionTaskID == productionTaskID);
@@ -345,16 +391,29 @@ namespace Gamma.ViewModels
 //                                if (dlgResult == MessageBoxResult.No) return;
 //                            }
                             break;
-                    }    
+                    }
+                    MessageManager.CreateNewProduct(docProductKind, productionTaskID);
                     break;          
+                    // Действия для конвертингов
                     case BatchKinds.SGI:
-                        using (var gammaBase = DB.GammaDb)
-                        {
+                    var activeSourceSpools = GammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
+                    if (activeSourceSpools.Count == 0)
+                    {
+                        MessageBox.Show("Нет активных раскатов", "Не установлен тамбур", MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                        return;
+                    }
+                    using (var gammaBase = DB.GammaDb)
+                    {
                             var currentDateTime = DB.CurrentDateTime;
                             var productionTask =
                                 gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
                                     (short) PlaceGroups.Convertings).FirstOrDefault();
                             if (productionTask == null) return;
+                            var baseQuantity =
+                            (int)(gammaBase.C1CCharacteristics.Where(
+                                c => c.C1CCharacteristicID == productionTask.C1CCharacteristicID)
+                                .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First()??0);
                             var productid = SqlGuidUtil.NewSequentialid();
                             var product = new Products()
                             {
@@ -367,11 +426,10 @@ namespace Gamma.ViewModels
                                     {
                                         new ProductPalletItems()
                                         {
-                                            ProductID = productid,
+                                            ProductPalletItemID = SqlGuidUtil.NewSequentialid(),ProductID = productid,
                                             C1CNomenclatureID = productionTask.C1CNomenclatureID,
-                                            C1CCharacteristicID = productionTask.C1CCharacteristicID,
-                                            Quantity = (int)productionTask.Quantity
-                                        }
+                                            C1CCharacteristicID = (Guid)productionTask.C1CCharacteristicID,
+                                            Quantity = baseQuantity}
                                     }
                                 }
                             };
@@ -387,7 +445,7 @@ namespace Gamma.ViewModels
                                 ShiftID = WorkSession.ShiftID,
                                 UserID = WorkSession.UserID,
                                 PrintName = WorkSession.PrintName,
-                                DocProduction = new DocProduction()
+                                DocProduction = new DocProduction
                                 {
                                     DocID = docID,
                                     InPlaceID = WorkSession.PlaceID,
@@ -395,7 +453,7 @@ namespace Gamma.ViewModels
                                 },
                                 DocProducts = new List<DocProducts>
                                 {
-                                    new DocProducts()
+                                    new DocProducts
                                     {
                                         DocID = docID,
                                         ProductID = productid
@@ -404,11 +462,11 @@ namespace Gamma.ViewModels
                             };
                             gammaBase.Docs.Add(doc);
                             var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
-                            foreach (var spoolid in sourceSpools)
+                            foreach (var spoolId in sourceSpools)
                             {
                                 var docWithdrawal =
                                     gammaBase.DocWithdrawal
-                                        .FirstOrDefault(d => d.Docs.DocProducts.Select(dp => dp.ProductID).Contains((Guid) spoolid));
+                                        .FirstOrDefault(d => d.Docs.DocProducts.Select(dp => dp.ProductID).Contains((Guid) spoolId));
                                 if (docWithdrawal == null)
                                 {
                                     var docWithdrawalid = SqlGuidUtil.NewSequentialid();
@@ -428,26 +486,26 @@ namespace Gamma.ViewModels
                                             IsConfirmed = false,
                                             DocProducts = new List<DocProducts>
                                             {
-                                                new DocProducts()
+                                                new DocProducts
                                                 {
                                                     DocID = docWithdrawalid,
-                                                    ProductID = (Guid)spoolid,
+                                                    ProductID = (Guid)spoolId,
                                                     IsOutConfirmed = true
                                                 }
                                             }
                                         }
                                     };
+                                    gammaBase.DocWithdrawal.Add(docWithdrawal);
                                 }
                                 if (docWithdrawal.DocProduction == null) docWithdrawal.DocProduction = new List<DocProduction>();
                                 docWithdrawal.DocProduction.Add(doc.DocProduction);
-                                gammaBase.DocWithdrawal.Add(docWithdrawal);
-                                gammaBase.SaveChanges();
-                                ReportManager.PrintReport("Амбалаж","Pallet",productid, false); 
-                            }
                         }
-                        break;        
+                            gammaBase.SaveChanges();
+                            ReportManager.PrintReport("Амбалаж", "Pallet", productid, true);
+                            RefreshProduction();
+                    }
+                    break;        
             }
-            MessageManager.CreateNewProduct(docProductKind, productionTaskID);
         }
 
 //        private ObservableCollection<Place> _places = DB.GetPlaces(PlaceGroups.PM);
@@ -489,8 +547,8 @@ namespace Gamma.ViewModels
         }
         private void RefreshProduction()
         {
-            ProductionTaskProducts = new ObservableCollection<ProductInfo>(from taskProducts in 
-                                                                               DB.GammaBase.GetProductionTaskBatchProducts(ProductionTaskBatchID)
+            ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in 
+                                                                               GammaBase.GetProductionTaskBatchProducts(ProductionTaskBatchID)
                                                                            select new ProductInfo { 
                                                                                DocID = taskProducts.DocID,
                                                                                ProductKind = (ProductKinds)taskProducts.ProductKindID,
@@ -501,26 +559,30 @@ namespace Gamma.ViewModels
                                                                                Number = taskProducts.Number,
                                                                                Quantity = taskProducts.Quantity,
                                                                                ProductID = taskProducts.ProductID,
-                                                                               Place = taskProducts.Place
+                                                                               Place = taskProducts.Place,
+                                                                               IsConfirmed = taskProducts.IsConfirmed
                                                                            });
         }
         private void ShowProduct()
         {
-            DocProductKinds docProductKind;
             switch (SelectedProductionTaskProduct.ProductKind)
             {
                 case ProductKinds.ProductSpool:
-                    docProductKind = DocProductKinds.DocProductSpool;
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProductionTaskProduct.ProductID);
+                    break;
+                case ProductKinds.ProductGroupPack:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProductionTaskProduct.DocID);
+                    break;
+                case ProductKinds.ProductPallet:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.DocID);
                     break;
                 default:
                     MessageBox.Show("Ошибка программы, действие не предусмотрено");
                     return;
             }
-            MessageManager.OpenDocProduct(docProductKind, SelectedProductionTaskProduct.DocID);
-            
         }
-        private ObservableCollection<ProductInfo> _productionTaskProducts;
-        public ObservableCollection<ProductInfo> ProductionTaskProducts
+        private ItemsChangeObservableCollection<ProductInfo> _productionTaskProducts;
+        public ItemsChangeObservableCollection<ProductInfo> ProductionTaskProducts
         {
             get
             {
@@ -529,37 +591,52 @@ namespace Gamma.ViewModels
             set
             {
                 _productionTaskProducts = value;
+                var view = CurrentView as ProductionTaskSGIViewModel;
+                if (view != null)
+                {
+                    view.MadeQuantity =
+                        _productionTaskProducts.Sum(p => p.Quantity??0);
+                }
                 RaisePropertyChanged("ProductionTaskProducts");
             }
         }
-/*        private Visibility _characteristicVisible = Visibility.Visible;
-        public Visibility CharacteristicVisible
-        {
-            get
-            {
-                return _characteristicVisible;
-            }
-            set
-            {
-            	_characteristicVisible = value;
-                RaisePropertyChanged("CharacteristicVisible");
-            }
-        }
- * */
-//        [Required(ErrorMessage="Необходимо выбрать характеристику")]
-/*        [UIAuth(UIAuthLevel.ReadOnly)]
-        public Guid? CharacteristicID { get; set; }
- * */
-        private byte? _ProductionTaskStateID;
+        /*        private Visibility _characteristicVisible = Visibility.Visible;
+                public Visibility CharacteristicVisible
+                {
+                    get
+                    {
+                        return _characteristicVisible;
+                    }
+                    set
+                    {
+                        _characteristicVisible = value;
+                        RaisePropertyChanged("CharacteristicVisible");
+                    }
+                }
+         * */
+        //        [Required(ErrorMessage="Необходимо выбрать характеристику")]
+        /*        [UIAuth(UIAuthLevel.ReadOnly)]
+                public Guid? CharacteristicID { get; set; }
+         * */
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public DelegateCommand ActivatedCommand { get; private set; }
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public DelegateCommand DeactivatedCommand { get; private set; }
+
+        private byte? _productionTaskStateID;
+        // ReSharper disable once MemberCanBePrivate.Global
         public byte? ProductionTaskStateID
         {
             get
             {
-                return _ProductionTaskStateID;
+                return _productionTaskStateID;
             }
             set
             {
-            	_ProductionTaskStateID = value;
+            	_productionTaskStateID = value;
                 RaisePropertyChanged("ProductionTaskStateID");
             }
         }

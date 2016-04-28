@@ -92,11 +92,10 @@ namespace Gamma.ViewModels
         private Properties MandatoryProperties { get; set; }
         private ProductionTasks ProductionTask { get; set; }
         private Guid ProductionTaskBatchID { get; set; }
-        public override void SaveToModel(Guid itemID) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
         {
+            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);
-            using (var gammaBase = DB.GammaDb)
-            {
                 var productionTaskBatch =
                     gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemID);
                 if (productionTaskBatch == null)
@@ -172,7 +171,6 @@ namespace Gamma.ViewModels
                             ProductionTaskRWCuttingID = SqlGuidUtil.NewSequentialid()
                         });
                     }
-                }
                 gammaBase.ProductionTaskRWCutting.RemoveRange(ProductionTask.ProductionTaskRWCutting);
                 gammaBase.ProductionTaskRWCutting.AddRange(prodTaskCuttings);
                 gammaBase.SaveChanges();

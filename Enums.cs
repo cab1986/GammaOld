@@ -2,6 +2,24 @@
 
 namespace Gamma
 {
+    /// <summary>
+    /// Виды номенклатуры (1,2,3 соответствует 1С, не рекомендуется использовать в программе, 
+    /// лучше передавать SQL в качестве параметра)
+    /// </summary>
+    public enum NomenclatureKinds
+    {
+        Any, HalfStuff, Material, Product
+    }
+    /// <summary>
+    /// Типы материалов, применяемых в производстве. Прямая привязка к БД.
+    /// </summary>
+    public enum MaterialTypes
+    {
+        [Description("Материалы СГБ")]
+        MaterialsSGB,
+        [Description("Материалы СГИ")]
+        MaterialsSGI
+    }
     public enum ProcessModels 
     { 
         [Description("БДМ")]
@@ -24,8 +42,14 @@ namespace Gamma
         [Description("Групповые упаковки")]
         ProductGroupPack
     }
-    public enum PlaceGroups { PM, Rw, Convertings, Wr, Other }  // Группы переделов. Привязаны к таблице в базе, менять только вместе!
-    public enum ProductStates // Качество продукта
+    /// <summary>
+    /// Группы переделов. Привязаны к таблице в базе, менять только вместе!
+    /// </summary>
+    public enum PlaceGroups { PM, Rw, Convertings, Wr, Other }
+    /// <summary>
+    /// Качество продукта
+    /// </summary>
+    public enum ProductStates 
     {
         [Description("Годная")]
         Good,
@@ -35,8 +59,11 @@ namespace Gamma
         Broke,
         [Description("Ограниченная партия")]
         Limited
-    } 
-    public enum ProductStatesFilter // Фильтр качества для поиска
+    }
+    /// <summary>
+    /// Фильтр качества для поиска
+    /// </summary>
+    public enum ProductStatesFilter 
     {
         [Description("Годная")]
         Good,
@@ -49,7 +76,10 @@ namespace Gamma
         [Description("Не подтвержден")]
         NotConfirmed
     }
-    public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder} // Как переработан тамбур
+    /// <summary>
+    /// Как переработан тамбур
+    /// </summary>
+    public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder} 
     
     public enum DocProductKinds
     {
@@ -75,6 +105,9 @@ namespace Gamma
         [Description("Чтение и запись")]
         ReadAndWrite
     }
+    /// <summary>
+    /// Состояние задания на производство
+    /// </summary>
     public enum ProductionTaskStates
     {
         [Description("На рассмотрении")]

@@ -6,7 +6,7 @@ namespace Gamma
 {
     public static class WorkSession
     {
-        public static Guid Paramid { get; set; }
+        public static Guid ParamID { get; set; }
         private static Guid _userid;
         public static Guid UserID
         {
@@ -17,14 +17,15 @@ namespace Gamma
             set
             {
             	_userid = value;
-                var userInfo = (from u in DB.GammaBase.Users
+                var userInfo = (from u in DB.GammaDb.Users
                                  where
                                      u.UserID == _userid
                                  select new
                                  {
                                      u.Places.FirstOrDefault().PlaceID,
                                      placeGroupID = u.Places.FirstOrDefault().PlaceGroupID, u.ShiftID, u.DBAdmin,
-                                     programAdmin = u.ProgramAdmin
+                                     programAdmin = u.ProgramAdmin,
+                                     u.Places.FirstOrDefault().BranchID
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -34,6 +35,7 @@ namespace Gamma
                 DBAdmin = userInfo.DBAdmin;
                 ProgramAdmin = userInfo.programAdmin ?? false;
                 PlaceID = userInfo.PlaceID;
+                BranchID = userInfo.BranchID;
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroups)userInfo.placeGroupID;
             }
@@ -47,6 +49,8 @@ namespace Gamma
         {
             get; private set;
         }
+
+        public static int BranchID { get; private set; }
         public static bool ProgramAdmin
         {
             get; private set;

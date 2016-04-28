@@ -23,10 +23,10 @@ namespace Gamma.ViewModels
         {
             DB.RollBack();
             CloseSignal = true;
-            this.Cleanup();
+            Cleanup();
         }
 
-        private bool _closeSignal = false;
+        private bool _closeSignal;
 
         public bool CloseSignal
         {

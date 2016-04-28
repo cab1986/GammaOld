@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="windows-1251"?>
 <Application 
     x:Class="Gamma.App" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
@@ -13,12 +14,32 @@
     d1P1:Ignorable="d" 
     xmlns:d1P1="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     ShutdownMode="OnLastWindowClose" 
     Startup="Application_Startup" 
     Exit="Application_Exit"
     DispatcherUnhandledException="Application_DispatcherUnhandledException">
   <Application.Resources>
         <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Gamma.ViewModels" />
+        <DataTemplate x:Key="SpoolRemainderTemplate">
+            <dxlc:LayoutGroup Orientation="Horizontal">
+                <dxlc:LayoutItem Label="Вес" LabelPosition="Top" Width="80" >
+                    <dxe:SpinEdit EditValue="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" MaxValue="{Binding MaxWeight}"
+                                     EditValueType="{x:Type system:Int32}" IsFloatValue="False" MinValue="0"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label = "Тамбур" LabelPosition="Top">
+                    <dxe:ButtonEdit AllowDefaultButton="False" EditValue = "{Binding Nomenclature}" IsReadOnly="True">
+                        <dxe:ButtonInfo Content="i" Command="{Binding Path = DataContext.ShowProductCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                        CommandParameter="{Binding Index}" />
+                    </dxe:ButtonEdit>
+                </dxlc:LayoutItem>
+                <dxmvvm:Interaction.Behaviors>
+                    <g:UiAuthBehavior/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxlc:LayoutGroup>
+        </DataTemplate>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin"
                     Value="4" />
@@ -81,5 +102,6 @@
         <Style TargetType="{x:Type v:DocCloseShiftView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:ComPortSettingsView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:PlaceGroupsNomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
+        <Style TargetType="{x:Type v:MaterialTypesNomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
     </Application.Resources>
 </Application>

@@ -10,7 +10,7 @@ namespace Gamma.Views
     {
         public PlaceGroupsNomenclatureView()
         {
-            this.DataContext = new PlaceGroupsNomenclatureViewModel();
+            DataContext = new PlaceGroupsNomenclatureViewModel();
             InitializeComponent();
         }
     }

@@ -255,10 +255,11 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Spools");
             }
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return;
-            var doc = DB.GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal)
+            gammaBase = gammaBase ?? DB.GammaDb;
+            var doc = gammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal)
                 .Where(d => d.DocID == itemID).Select(d => d).First();
             if (doc.DocProduction == null)
                 doc.DocProduction = new DocProduction()
@@ -266,7 +267,7 @@ namespace Gamma.ViewModels
                     DocID = doc.DocID,
                     InPlaceID = doc.PlaceID
                 };
-            var product = DB.GammaBase.Products.Include(p => p.ProductGroupPacks).Where(p => p.DocProducts.FirstOrDefault().DocID == itemID).FirstOrDefault();
+            var product = gammaBase.Products.Include(p => p.ProductGroupPacks).FirstOrDefault(p => p.DocProducts.FirstOrDefault().DocID == itemID);
             if (product == null)
             {
                 var productid = SqlGuidUtil.NewSequentialid();
@@ -290,12 +291,12 @@ namespace Gamma.ViewModels
             product.ProductGroupPacks.Weight = Weight;
             product.ProductGroupPacks.GrossWeight = GrossWeight;
             product.ProductGroupPacks.Diameter = Diameter;
-            Docs docWithdrawal = new Docs();
+            var docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)
             {
                 var docWithdrawalid = doc.DocProduction.DocWithdrawal.FirstOrDefault().DocID;
-                docWithdrawal = DB.GammaBase.Docs.Include(d => d.DocWithdrawal).Include(d => d.DocProducts)
-                    .Where(d => d.DocID == docWithdrawalid).First();
+                docWithdrawal = gammaBase.Docs.Include(d => d.DocWithdrawal)
+                    .Include(d => d.DocProducts).First(d => d.DocID == docWithdrawalid);
             }
             else 
             {
@@ -307,8 +308,7 @@ namespace Gamma.ViewModels
                 docWithdrawal.PrintName = WorkSession.PrintName;
                 docWithdrawal.DocTypeID = (byte)DocTypes.DocWithdrawal;
                 docWithdrawal.IsConfirmed = doc.IsConfirmed;
-                var docProductions = new ObservableCollection<DocProduction>();
-                docProductions.Add(doc.DocProduction);
+                var docProductions = new ObservableCollection<DocProduction> {doc.DocProduction};
                 docWithdrawal.DocWithdrawal = new DocWithdrawal()
                 {
                     DocID = docWithdrawal.DocID,
@@ -316,7 +316,7 @@ namespace Gamma.ViewModels
                     DocProduction = docProductions
                 };
                 docWithdrawal.DocProducts = new ObservableCollection<DocProducts>();
-                DB.GammaBase.Docs.Add(docWithdrawal);
+                gammaBase.Docs.Add(docWithdrawal);
             }
             docWithdrawal.DocProducts.Clear();
             foreach (var spool in Spools)
@@ -328,7 +328,7 @@ namespace Gamma.ViewModels
                         ProductID = spool.ProductID
                     });
                 }
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
         }
         public PaperBase SelectedSpool { get; set; }
 

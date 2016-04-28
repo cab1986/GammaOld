@@ -20,6 +20,9 @@ namespace Gamma.Models
             this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
             this.C1CCharacteristics = new HashSet<C1CCharacteristics>();
             this.C1CCharacteristics1 = new HashSet<C1CCharacteristics>();
+            this.C1CNomenclatureAnalogs = new HashSet<C1CNomenclatureAnalogs>();
+            this.C1CNomenclatureAnalogs1 = new HashSet<C1CNomenclatureAnalogs>();
+            this.C1CSpecificationInputNomenclature = new HashSet<C1CSpecificationInputNomenclature>();
         }
     
         public System.Guid C1CMeasureUnitID { get; set; }
@@ -37,5 +40,11 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics1 { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CSpecificationInputNomenclature> C1CSpecificationInputNomenclature { get; set; }
     }
 }

@@ -51,7 +51,6 @@ namespace Gamma.Models
         public virtual DbSet<DocShipment> DocShipment { get; set; }
         public virtual DbSet<DocTypes> DocTypes { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
-        public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual DbSet<Enterprises> Enterprises { get; set; }
         public virtual DbSet<GammaProperties> GammaProperties { get; set; }
         public virtual DbSet<Permits> Permits { get; set; }
@@ -67,7 +66,6 @@ namespace Gamma.Models
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
-        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
@@ -88,6 +86,12 @@ namespace Gamma.Models
         public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CSpecifications> C1CSpecifications { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
+        public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
+        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
+        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        public virtual DbSet<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
+        public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
+        public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {
@@ -464,6 +468,75 @@ namespace Gamma.Models
                 new ObjectParameter("UnwinderID", typeof(byte));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("WriteSpoolInstallLog", productIDParameter, placeIDParameter, shiftIDParameter, unwinderIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocCloseShiftConvertingPallets_Result> GetDocCloseShiftConvertingPallets(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftConvertingPallets_Result>("GetDocCloseShiftConvertingPallets", docIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftConvertingPallets_Result> FillDocCloseShiftConvertingPallets(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingPallets_Result>("FillDocCloseShiftConvertingPallets", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftConvertingMaterials_Result> FillDocCloseShiftConvertingMaterials(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingMaterials_Result>("FillDocCloseShiftConvertingMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<GetMaterialNomenclatureFolders_Result> GetMaterialNomenclatureFolders(Nullable<int> materialTypeID)
+        {
+            var materialTypeIDParameter = materialTypeID.HasValue ?
+                new ObjectParameter("MaterialTypeID", materialTypeID) :
+                new ObjectParameter("MaterialTypeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMaterialNomenclatureFolders_Result>("GetMaterialNomenclatureFolders", materialTypeIDParameter);
+        }
+    
+        public virtual ObjectResult<FindNomenclatureByStringWithFilter_Result> FindNomenclatureByStringWithFilter(string @string, Nullable<int> iD, Nullable<bool> filterByPlaceGroup)
+        {
+            var stringParameter = @string != null ?
+                new ObjectParameter("String", @string) :
+                new ObjectParameter("String", typeof(string));
+    
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            var filterByPlaceGroupParameter = filterByPlaceGroup.HasValue ?
+                new ObjectParameter("FilterByPlaceGroup", filterByPlaceGroup) :
+                new ObjectParameter("FilterByPlaceGroup", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result>("FindNomenclatureByStringWithFilter", stringParameter, iDParameter, filterByPlaceGroupParameter);
         }
     }
 }

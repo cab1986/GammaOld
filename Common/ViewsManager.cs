@@ -21,6 +21,12 @@ namespace Gamma.Common
             Messenger.Default.Register<UserEditMessage>(this, UserEdit);
             Messenger.Default.Register<FindProductionTaskBatchMessage>(this, FindProductionTaskBatch);
             Messenger.Default.Register<OpenPlaceGroupsNomenclatureMessage>(this, OpenPlaceGroupsNomenclature);
+            Messenger.Default.Register<OpenMaterialTypesNomenclatureMessage>(this, OpenMaterialTypeNomenclature);
+        }
+
+        private void OpenMaterialTypeNomenclature(OpenMaterialTypesNomenclatureMessage msg)
+        {
+            new MaterialTypesNomenclatureView().Show();
         }
 
         private void OpenPlaceGroupsNomenclature(OpenPlaceGroupsNomenclatureMessage obj)
@@ -38,7 +44,10 @@ namespace Gamma.Common
         }
         private static void OpenNomenclature(OpenNomenclatureMessage msg)
         {
-            new NomenclatureView(msg.PlaceGroupID).Show();
+            if (msg.IsPlaceGroupFilter)
+                new NomenclatureView(msg.ID).Show();
+            else
+                new NomenclatureView((MaterialTypes)msg.ID).Show();
         }
         private void OpenDocProduct(OpenDocProductMessage msg)
         {

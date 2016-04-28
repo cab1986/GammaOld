@@ -246,9 +246,10 @@ namespace Gamma.ViewModels
         private DocProducts DocProduct { get; set; }
         private Products Product { get; set; }
         private ProductSpools ProductSpool { get; set; }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("ProductSpools")) return;
+            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel();
   /*          if (Product == null)
             {

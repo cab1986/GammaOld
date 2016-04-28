@@ -31,7 +31,7 @@
                 <ContentControl Content="{Binding SecondView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem>
-                <ContentControl Content="{Binding ProductionTaskWRView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
+                <ContentControl Content="{Binding ProductionTaskWrView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
             </dxlc:LayoutItem>                        
         </dxlc:LayoutControl>
     </Grid>

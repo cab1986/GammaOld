@@ -22,8 +22,8 @@ namespace Gamma.Models
     
         public System.Guid ProductID { get; set; }
     
+        public virtual Products Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual Products Products { get; set; }
     }
 }

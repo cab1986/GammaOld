@@ -97,7 +97,7 @@ namespace Gamma.ViewModels
         
         private void GetProductionTasks()
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             ProductionTaskBatchesSGB = new ObservableCollection<ProductionTaskBatchSGB>();
             var tempCollection = new ObservableCollection<ProductionTaskBatchSGB>
                 (

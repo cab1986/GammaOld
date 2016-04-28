@@ -96,10 +96,11 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
-        public override void SaveToModel(Guid itemID) // Сохранение по ProductionTaskID
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null) // Сохранение по ProductionTaskID
         {
+            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);
-            var productionTask = DB.GammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
+            var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
             if (productionTask == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -113,7 +114,7 @@ namespace Gamma.ViewModels
             productionTask.ProductionTaskSGB.DiameterMinus = DiameterMinus;
             productionTask.ProductionTaskSGB.DiameterPlus = DiameterPlus;
             productionTask.ProductionTaskSGB.Crepe = Crepe;
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
         }
 
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductionTaskSGB");

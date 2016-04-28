@@ -15,13 +15,13 @@ namespace Gamma.Models
     public partial class ProductPalletItems
     {
         public System.Guid ProductPalletItemID { get; set; }
-        public Nullable<System.Guid> ProductID { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public System.Guid ProductID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public System.Guid C1CCharacteristicID { get; set; }
         public Nullable<int> Quantity { get; set; }
     
-        public virtual ProductPallets ProductPallets { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
+        public virtual ProductPallets ProductPallets { get; set; }
     }
 }

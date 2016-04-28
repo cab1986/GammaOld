@@ -16,7 +16,7 @@ namespace Gamma.ViewModels
     public class ProductionTasksSGIViewModel : RootViewModel,IItemManager
     {
         /// <summary>
-        /// Initializes a new instance of the ProductionTasksConvertingViewModel class.
+        /// Initializes a new instance of the ProductionTasksConvertingGridViewModel class.
         /// </summary>
         public ProductionTasksSGIViewModel()
         {
@@ -35,7 +35,7 @@ namespace Gamma.ViewModels
 
         private void GetProductionTasks()
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             ProductionTasks = new ObservableCollection<ProductionTaskSGI>(
                 from pt in DB.GammaDb.GetProductionTasks((int) BatchKinds.SGI)
                 select new ProductionTaskSGI()
@@ -43,7 +43,7 @@ namespace Gamma.ViewModels
                     ProductionTaskBatchID = pt.ProductionTaskBatchID,
                     Quantity = pt.Quantity,
                     DateBegin = pt.DateBegin,
-                    Nomenclature = pt.Nomenclature + "/r/n" + pt.Characteristic,
+                    Nomenclature = pt.Nomenclature + "\r\n" + pt.Characteristic,
                     Place = pt.Place,
                     Number = pt.Number,
                     MadeQuantity = pt.MadeQuantity

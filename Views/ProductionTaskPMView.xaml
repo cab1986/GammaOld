@@ -32,9 +32,9 @@
                 <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" 
                                   ValueMember="PlaceID" DisplayMember="PlaceName" />
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding IsForRW, Converter={StaticResource BoolVis}}" Name="ComboNom">
-                <dxe:ComboBoxEdit EditValue="{Binding Nomenclatureid, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpecificationNomenclature}"
-                                  ValueMember="Nomenclatureid" DisplayMember="Name" MinWidth="300"/>
+            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding IsForRw, Converter={StaticResource BoolVis}}" Name="ComboNom">
+                <dxe:ComboBoxEdit EditValue="{Binding NomenclatureID, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpecificationNomenclature}"
+                                  ValueMember="NomenclatureID" DisplayMember="Name" MinWidth="300"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
                 <dxlc:LayoutItem.Style>

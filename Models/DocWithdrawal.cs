@@ -18,6 +18,8 @@ namespace Gamma.Models
         public DocWithdrawal()
         {
             this.DocProduction = new HashSet<DocProduction>();
+            this.DocCloseShift = new HashSet<Docs>();
+            this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
         }
     
         public System.Guid DocID { get; set; }
@@ -27,5 +29,9 @@ namespace Gamma.Models
         public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Docs> DocCloseShift { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
     }
 }

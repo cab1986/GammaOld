@@ -185,7 +185,7 @@ namespace Gamma.ViewModels
         private PlaceGroups PlaceGroup { get; set; }
         private void Find()
         {
-            UiServices.SetBusyState();
+            UIServices.SetBusyState();
             switch (Intervalid)
             {
                 case 0:

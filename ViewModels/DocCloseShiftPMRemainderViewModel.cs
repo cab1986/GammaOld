@@ -59,9 +59,10 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
         }
-        public override void SaveToModel(Guid itemID)
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(itemID, gammaBase);
             var doc = DB.GammaBase.Docs.First(d => d.DocID == itemID);
             if (DocCloseShiftRemainder == null && Quantity > 0)
             {

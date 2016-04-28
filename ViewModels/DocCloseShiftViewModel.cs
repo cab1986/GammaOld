@@ -11,8 +11,9 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftViewModel : SaveImplementedViewModel
     {
-        public DocCloseShiftViewModel(OpenDocCloseShiftMessage msg)
+        public DocCloseShiftViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null)
         {
+            //gammaBase = gammaBase ?? DB.GammaDb;
             if (msg.DocID == null)
             {
                 Date = (DateTime)msg.CloseDate;
@@ -43,9 +44,13 @@ namespace Gamma.ViewModels
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
                     break;
                 case (short)PlaceGroups.Rw:
-                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRwRemainderViewModel(PlaceID) : new DocCloseShiftRwRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     break;
-                default:
+                case (short)PlaceGroups.Convertings:
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelGrid = msg.DocID == null
+                        ? new DocCloseShiftConvertingGridViewModel()
+                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
                     break;
             }
             if (CurrentViewModelGrid is IFillClearGrid)
@@ -87,10 +92,12 @@ namespace Gamma.ViewModels
         public SaveImplementedViewModel CurrentViewModelRemainder { get; set; }
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
-        public override void SaveToModel()
+
+        protected override void SaveToModel(GammaEntities gammaBase = null)
         {
             if (!CanSaveExecute()) return;
-            base.SaveToModel();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            base.SaveToModel(gammaBase);
             if (IsNewDoc)
             {
                 Doc = new Docs()
