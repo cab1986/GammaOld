@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace Gamma.Views
+﻿namespace Gamma.Views
 {
     /// <summary>
     /// Description for ProductionTasksConvertingGridView.
     /// </summary>
-    public partial class ProductionTasksSGIView : UserControl
+    public partial class ProductionTasksSGIView
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTasksConvertingGridView class.

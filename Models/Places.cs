@@ -30,15 +30,17 @@ namespace Gamma.Models
     
         public int PlaceID { get; set; }
         public int BranchID { get; set; }
+        public Nullable<int> BranchUnitID { get; set; }
         public string Name { get; set; }
         public string NameEng { get; set; }
         public short DepartmentID { get; set; }
         public Nullable<short> PlaceGroupID { get; set; }
         public Nullable<bool> IsProductionPlace { get; set; }
         public Nullable<bool> IsWarehouse { get; set; }
+        public Nullable<int> UnwindersCount { get; set; }
         public Nullable<System.Guid> C1CPlaceID { get; set; }
-        public Nullable<int> BranchUnitID { get; set; }
     
+        public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual Branches Branches { get; set; }
         public virtual Departments Departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -61,6 +63,5 @@ namespace Gamma.Models
         public virtual ICollection<SpoolInstallLog> SpoolInstallLog { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
-        public virtual C1CPlaces C1CPlaces { get; set; }
     }
 }

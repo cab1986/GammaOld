@@ -1,15 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Text;
 using Gamma.Attributes;
 using Gamma.Interfaces;
+using Gamma.Models;
 
 namespace Gamma.Common
 {
     public class SpoolRemainder: ICheckedAccess
     {
+        public SpoolRemainder(GammaEntities gammaBase = null)
+        {
+            GammaBase = gammaBase ?? DB.GammaDb;
+        }
+        private GammaEntities GammaBase { get; }
         public int Index { get; set; }
         private Guid? _productid;
 
@@ -34,7 +38,7 @@ namespace Gamma.Common
         private string GetProductSpoolNomenclature(Guid productid)
         {
             return
-                DB.GammaBase.ProductSpools.Where(p => p.ProductID == productid)
+                GammaBase.ProductSpools.Where(p => p.ProductID == productid)
                     .Select(p => "№ " + p.Products.Number + " " + p.C1CNomenclature.Name + " " +
                                  p.C1CCharacteristics.Name + " Масса: " +
                                  SqlFunctions.StringConvert((double)p.Weight) + " кг").First();
@@ -42,7 +46,7 @@ namespace Gamma.Common
 
         private int GetRemainderMaxWeight(Guid productid)
         {
-            return DB.GammaBase.ProductSpools.First(ps => ps.ProductID == productid).Weight;
+            return GammaBase.ProductSpools.First(ps => ps.ProductID == productid).Weight;
         }
 
         public bool IsReadOnly { get; set; }

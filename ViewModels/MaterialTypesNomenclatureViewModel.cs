@@ -12,9 +12,8 @@ namespace Gamma.ViewModels
 {
     public class MaterialTypesNomenclatureViewModel: SaveImplementedViewModel
     {
-        public MaterialTypesNomenclatureViewModel(GammaEntities gammaBase = null)
-        {
-            GammaBase = gammaBase ?? DB.GammaDb;
+        public MaterialTypesNomenclatureViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        {        
             MaterialTypes = GammaBase.MaterialTypes.ToList();
             _materialTypeId = MaterialTypes[0].MaterialTypeID;
             GetMaterialTypeNomenclature(MaterialTypeId);
@@ -23,7 +22,7 @@ namespace Gamma.ViewModels
             SelectedNomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>();
             SelectedMaterialTypeNomenclature = new ObservableCollection<Nomenclature1CFolder>();
         }
-        private GammaEntities GammaBase { get; set; }
+        
         private void MoveToMaterialTypeNomenclature()
         {
             var nomenclatureTree = new ObservableCollection<Nomenclature1CFolder>();
@@ -115,7 +114,7 @@ namespace Gamma.ViewModels
                                              ParentFolderID = pgn.C1CParentID,
                                              Name = pgn.Name
                                          });
-            NomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>(from n in DB.GammaBase.C1CNomenclature
+            NomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>(from n in GammaBase.C1CNomenclature
                                                                                  where n.IsFolder &&
                                                                                  !(from mt in n.MaterialTypes select mt.MaterialTypeID).Contains(materialTypeId)
                                                                                  select new Nomenclature1CFolder

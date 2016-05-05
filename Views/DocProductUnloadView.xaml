@@ -42,9 +42,9 @@
                 <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
                     <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
-                <Button Content="Создать продукцию" Command="{Binding CreateSpoolsCommand}" />
+                <Button Content="Создать рулоны" Command="{Binding CreateSpoolsCommand}" />
             </dxlc:LayoutGroup>
-            <dxlc:LayoutItem Label="Тамбура" LabelPosition="Top">
+            <dxlc:LayoutItem Label="Рулоны" LabelPosition="Top">
                 <dxg:GridControl ItemsSource="{Binding UnloadSpools}" MaxHeight="1000" MinHeight="60" SelectedItem="{Binding SelectedUnloadSpool}" AllowLiveDataShaping="False" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" IsFilterEnabled="False" ShowAllTableValuesInCheckedFilterPopup="False">
                     <dxg:GridControl.View>
                         <dxg:TableView AllowEditing="False" ShowGroupPanel="False" AutoWidth="True" AllowFilterEditor="False" AllowGrouping="False"/>

@@ -12,15 +12,14 @@
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
     xmlns:v="clr-namespace:Gamma.Views" 
     xmlns:g="clr-namespace:Gamma" 
+    xmlns:gc="clr-namespace:Gamma.Common"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
     xmlns:dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
     Title="{Binding Title}"
-    Height="{g:SettingBinding DocProductHeight}"
-    Width="{g:SettingBinding DocProductWidth}"
-    Left="{g:SettingBinding DocProductLeft}"
-    Top="{g:SettingBinding DocProductTop}" >
+    Height ="600" Width="1200" 
+    gc:WindowSettings.Save="True">
     <g:MvvmWindow.Resources>
         <DataTemplate DataType="{x:Type vm:DocProductPalletViewModel}">
             <v:DocProductPalletView />

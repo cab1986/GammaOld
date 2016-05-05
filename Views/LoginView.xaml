@@ -8,7 +8,7 @@
         xmlns:g="clr-namespace:Gamma"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Name="LoginWindow" x:Class="Gamma.Views.LoginView"
         mc:Ignorable="d ignore"
-        DataContext="{Binding Login, Source={StaticResource Locator}}" Height="319" Width="408"
+        Height="319" Width="408"
         WindowStartupLocation="CenterScreen"
         Title="Авторизация">
     <dxmvvm:Interaction.Behaviors>

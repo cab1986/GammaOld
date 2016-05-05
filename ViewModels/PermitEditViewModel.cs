@@ -18,29 +18,28 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the NewPermitViewModel class.
         /// </summary>
 
-        public PermitEditViewModel()
+        public PermitEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
-            Permit = new Permits();
-            Permit.PermitID = SqlGuidUtil.NewSequentialid();
+            Permit = new Permits {PermitID = SqlGuidUtil.NewSequentialid()};
             PermitTables = new ObservableCollection<PermitTables>();
             _isNewPermit = true;
             InitializeFields();
         }
-        public PermitEditViewModel(Guid permitid)
+        public PermitEditViewModel(Guid permitId, GammaEntities gammaBase = null): base(gammaBase)
         {
-            PermitID = permitid;
-            Permit = DB.GammaBase.Permits.Include("PermitTables").Where(p => p.PermitID == permitid).FirstOrDefault();
+            PermitID = permitId;
+            Permit = GammaBase.Permits.Include("PermitTables").FirstOrDefault(p => p.PermitID == permitId);
             PermitTables = new ObservableCollection<PermitTables>(Permit.PermitTables.ToArray());
             InitializeFields();
         }
         private void InitializeFields()
         {
-//            DB.GammaBase.PermitTables.Where(pt => pt.PermitID == PermitID).Load();
-//            PermitTables = DB.GammaBase.PermitTables.Local;
+//            GammaBase.PermitTables.Where(pt => pt.PermitID == PermitID).Load();
+//            PermitTables = GammaBase.PermitTables.Local;
             AddTableCommand = new DelegateCommand(AddTable);
             DeleteTableCommand = new DelegateCommand(DeleteTable,() => SelectedPermitTable != null);
         }
-        private bool _isNewPermit = false;
+        private bool _isNewPermit;
         private Guid PermitID { get; set; }
         private string _name;
         public string Name

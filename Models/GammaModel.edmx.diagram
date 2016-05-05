@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="94">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="39">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="12.75" PointY="38" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="5.25" PointY="36.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="37.375" IsExpanded="true" />
@@ -34,7 +34,6 @@
         <EntityTypeShape EntityType="GammaModel.Permits" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.PermitTables" Width="1.5" PointX="3" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.PlaceGroups" Width="1.5" PointX="5.25" PointY="44.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="GammaModel.Places" Width="1.5" PointX="7.5" PointY="45" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProcessModels" Width="1.5" PointX="14.25" PointY="53.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductGroupPacks" Width="1.5" PointX="18.75" PointY="38.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskBatches" Width="1.5" PointX="16.5" PointY="54.25" IsExpanded="true" />
@@ -73,33 +72,21 @@
         <AssociationConnector Association="GammaModel.FK_ProductStates_1CQuality" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProductChangeState_1CRejectionReasons" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Branches_Enterprises" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_Places_Branches" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_Places_Departments" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProductChangeState_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProductChangeState_ProductStates" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Docs1" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_DocMovement_Places" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_DocMovement_Places1" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Docs" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_DocProduction_Places" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_ProductionTasks" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProducts_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProducts_Products" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Docs_DocTypes" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_Docs_Places" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Docs_Users" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocShipment_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocShipment_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Places" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_PermitTables_Permits" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_RolePermits_Permits" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_Places_PlaceGroups1" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTasks_Places" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_Rests_Places" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_SourceSpools_Places" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_SpoolInstallLog_Places" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProcessModels" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_Products" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" ManuallyRouted="false" />
@@ -122,7 +109,6 @@
         <AssociationConnector Association="GammaModel.BatchProductionTasks" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocCloseShiftDocs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocProductionWithdrawals" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.UserPlaces" ManuallyRouted="false" />
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristics" Width="2.25" PointX="10.5" PointY="39.875" />
         <EntityTypeShape EntityType="GammaModel.C1CNomenclature" Width="1.5" PointX="3" PointY="35.75" />
         <EntityTypeShape EntityType="GammaModel.C1CSpecifications" Width="1.5" PointX="13.5" PointY="26" />
@@ -171,7 +157,6 @@
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CSpecifications" />
         <EntityTypeShape EntityType="GammaModel.C1CPlaces" Width="1.5" PointX="7.375" PointY="9" />
         <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
-        <AssociationConnector Association="GammaModel.FK_Places_1CPlaces" />
         <EntityTypeShape EntityType="GammaModel.DocWithdrawalMaterials" Width="1.5" PointX="28.5" PointY="41" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" />
@@ -179,6 +164,21 @@
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CMeasureUnits1" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CMeasureUnits" />
+        <EntityTypeShape EntityType="GammaModel.Places" Width="1.5" PointX="16.625" PointY="22.25" />
+        <AssociationConnector Association="GammaModel.FK_Places_1CPlaces" />
+        <AssociationConnector Association="GammaModel.FK_Places_Branches" />
+        <AssociationConnector Association="GammaModel.FK_Places_Departments" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_Places" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_Places1" />
+        <AssociationConnector Association="GammaModel.FK_DocProduction_Places" />
+        <AssociationConnector Association="GammaModel.FK_Docs_Places" />
+        <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Places" />
+        <AssociationConnector Association="GammaModel.FK_Places_PlaceGroups1" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTasks_Places" />
+        <AssociationConnector Association="GammaModel.FK_Rests_Places" />
+        <AssociationConnector Association="GammaModel.FK_SourceSpools_Places" />
+        <AssociationConnector Association="GammaModel.FK_SpoolInstallLog_Places" />
+        <AssociationConnector Association="GammaModel.UserPlaces" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

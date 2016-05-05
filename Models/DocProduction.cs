@@ -25,9 +25,9 @@ namespace Gamma.Models
         public Nullable<int> InPlaceID { get; set; }
     
         public virtual Docs Docs { get; set; }
-        public virtual Places Places { get; set; }
         public virtual ProductionTasks ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

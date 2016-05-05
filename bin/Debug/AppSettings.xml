@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <GammaSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ScannerComPort>
-    <ComPortNumber />
+    <ComPortNumber>COM6</ComPortNumber>
     <BaudRate>9600</BaudRate>
     <Parity>None</Parity>
     <StopBits>One</StopBits>
@@ -18,6 +18,6 @@
   </ScalesComPort>
   <HostName>asutpmatt\sqlexpress</HostName>
   <DbName>gammanew</DbName>
-  <User>s41</User>
-  <UseScanner>false</UseScanner>
+  <User>ПЛ21</User>
+  <UseScanner>true</UseScanner>
 </GammaSettings>

@@ -41,16 +41,17 @@ namespace Gamma.ViewModels
             ////    SimpleIoc.Default.Register<idataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<LoginViewModel>();
+//            SimpleIoc.Default.Register<MainViewModel>();
+//            SimpleIoc.Default.Register<LoginViewModel>();
 //            SimpleIoc.Default.Register<ProductionTasksPMViewModel>();
-            SimpleIoc.Default.Register<ProductionTasksSGBViewModel>();
+//            SimpleIoc.Default.Register<ProductionTasksSGBViewModel>();
             SimpleIoc.Default.Register<ReportListViewModel>();
             SimpleIoc.Default.Register<SourceSpoolsViewModel>();
             SimpleIoc.Default.Register<ManageUsersViewModel>();
             SimpleIoc.Default.Register<ProductionTasksSGIViewModel>();
         }
 
+/*
         public static MainViewModel Main
         {
             get
@@ -58,7 +59,9 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
+*/
 
+/*
         public static LoginViewModel Login
         {
             get
@@ -66,6 +69,7 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<LoginViewModel>();
             }
         }
+*/
 
         /*public static ProductionTasksPMViewModel ProductionTasksPM
         {
@@ -89,6 +93,7 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<ProductionTasksSGIViewModel>();
             }
         }
+/*
         public static ProductionTaskBatchViewModel ProductionTask
         {
             get
@@ -96,6 +101,7 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<ProductionTaskBatchViewModel>();
             }
         }
+*/
 
         public static ReportListViewModel ReportList
         {
@@ -118,9 +124,11 @@ namespace Gamma.ViewModels
                 return ServiceLocator.Current.GetInstance<ManageUsersViewModel>();
             }
         }
+/*
        public static void Cleanup()
         {
-            // TODO Clear the ViewModels
+            
         }
+*/
     }
 }

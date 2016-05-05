@@ -21,7 +21,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> ProductID { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     
-        public virtual Places Places { get; set; }
         public virtual Products Products { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

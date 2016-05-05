@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System;
 using System.Linq;
 using Gamma.Common;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -18,7 +19,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTasksConvertingGridViewModel class.
         /// </summary>
-        public ProductionTasksSGIViewModel()
+        public ProductionTasksSGIViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             GetProductionTasks();
             EditItemCommand = new DelegateCommand(EditItem);

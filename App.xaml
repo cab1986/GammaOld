@@ -21,8 +21,7 @@
     Startup="Application_Startup" 
     Exit="Application_Exit"
     DispatcherUnhandledException="Application_DispatcherUnhandledException">
-  <Application.Resources>
-        <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Gamma.ViewModels" />
+    <Application.Resources>
         <DataTemplate x:Key="SpoolRemainderTemplate">
             <dxlc:LayoutGroup Orientation="Horizontal">
                 <dxlc:LayoutItem Label="Вес" LabelPosition="Top" Width="80" >

@@ -5,9 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="Gamma.Views.ReportListView"
-        mc:Ignorable="d ignore"
-        DataContext="{Binding ReportList, Source={StaticResource Locator}}">
-
+        mc:Ignorable="d ignore">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

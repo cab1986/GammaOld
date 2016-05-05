@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -21,7 +22,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the PlaceProductsViewModel class.
         /// </summary>
-        public PlaceProductsViewModel(int placeID)
+        public PlaceProductsViewModel(int placeID, GammaEntities gammaBase = null): base(gammaBase)
         {
             Intervals = new List<string> {"Последние 500", "За мою смену", "За последний день", "Поиск"};
             FindCommand = new DelegateCommand(Find);
@@ -29,7 +30,7 @@ namespace Gamma.ViewModels
             CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.Wr);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
-            PlaceGroup = (PlaceGroups)(DB.GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault()??0);
+            PlaceGroup = (PlaceGroups)(GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault()??0);
             switch (PlaceGroup)
             {
                 case PlaceGroups.PM:
@@ -105,7 +106,7 @@ namespace Gamma.ViewModels
             var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить упаковку № " + SelectedProduct.Number + " ?", "Удаление тамбура",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (dlgResult == MessageBoxResult.No) return;
-            var delResult = DB.GammaBase.DeleteGroupPack(SelectedProduct.ProductID).FirstOrDefault();
+            var delResult = GammaBase.DeleteGroupPack(SelectedProduct.ProductID).FirstOrDefault();
             if (delResult != "")
             {
                 MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -118,7 +119,7 @@ namespace Gamma.ViewModels
             var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить тамбур № " + SelectedProduct.Number + " ?", "Удаление тамбура",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (dlgResult == MessageBoxResult.No) return;
-            var delResult = DB.GammaBase.DeleteSpool(SelectedProduct.ProductID).FirstOrDefault();
+            var delResult = GammaBase.DeleteSpool(SelectedProduct.ProductID).FirstOrDefault();
             if (delResult != "")
             {
                 MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -128,7 +129,7 @@ namespace Gamma.ViewModels
         }
         private void DeleteUnload()
         {
-            var delResult = DB.GammaBase.DeleteUnload(SelectedProduct.DocID).FirstOrDefault();
+            var delResult = GammaBase.DeleteUnload(SelectedProduct.DocID).FirstOrDefault();
             if (delResult != "")
             {
                 MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -147,7 +148,7 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.Wr:
-                    var notConfirmedGroupPack = DB.GammaBase.Docs.Include(d => d.DocProducts)
+                    var notConfirmedGroupPack = GammaBase.Docs.Include(d => d.DocProducts)
                         .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
@@ -166,7 +167,7 @@ namespace Gamma.ViewModels
             switch (SelectedProduct.ProductKind)
             {
                 case ProductKinds.ProductSpool:
-                    var placeGroupID = DB.GammaBase.Docs.Where(d => d.DocID == SelectedProduct.DocID).
+                    var placeGroupID = GammaBase.Docs.Where(d => d.DocID == SelectedProduct.DocID).
                         Select(d => d.Places.PlaceGroupID).FirstOrDefault();
                     if (placeGroupID == (byte)PlaceGroups.PM)
                         MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
@@ -191,7 +192,7 @@ namespace Gamma.ViewModels
                 case 0:
                     Products = new ObservableCollection<ProductInfo>
                     ((
-                        from vpi in DB.GammaBase.vProductsInfo
+                        from vpi in GammaBase.vProductsInfo
                         where vpi.PlaceID == PlaceID
                         orderby vpi.Date descending
                         select new ProductInfo
@@ -215,7 +216,7 @@ namespace Gamma.ViewModels
                 case 1:
                     Products = new ObservableCollection<ProductInfo>
                     (
-                        from vpi in DB.GammaBase.vProductsInfo
+                        from vpi in GammaBase.vProductsInfo
                         where vpi.PlaceID == PlaceID && vpi.ShiftID == WorkSession.ShiftID &&
                         vpi.Date >= SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(DB.CurrentDateTime)) && vpi.Date <= SqlFunctions.DateAdd("hh",1,DB.GetShiftEndTime(DB.CurrentDateTime))
                         orderby vpi.Date descending
@@ -242,7 +243,7 @@ namespace Gamma.ViewModels
                     var beginTime = endTime.AddDays(-1);
                     Products = new ObservableCollection<ProductInfo>
                     (
-                        from vpi in DB.GammaBase.vProductsInfo
+                        from vpi in GammaBase.vProductsInfo
                         where vpi.PlaceID == PlaceID && 
                         vpi.Date >= beginTime && vpi.Date <= endTime
                         orderby vpi.Date descending
@@ -267,7 +268,7 @@ namespace Gamma.ViewModels
                 default:
                     Products = new ObservableCollection<ProductInfo>
                     (
-                        from vpi in DB.GammaBase.vProductsInfo
+                        from vpi in GammaBase.vProductsInfo
                         where vpi.PlaceID == PlaceID && 
                         (Number == null || Number == "" || vpi.Number == Number) &&
                         (DateBegin == null || vpi.Date >= DateBegin) &&

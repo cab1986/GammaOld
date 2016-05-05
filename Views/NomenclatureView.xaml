@@ -15,11 +15,21 @@
         >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0" />
+            <RowDefinition Height="75" />
             <RowDefinition Height="5" />
             <RowDefinition Height="*" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
+        <dxlc:LayoutControl Grid.Row="0" VerticalAlignment="Stretch">
+            <dxlc:LayoutGroup Height="50">
+                <dxlc:LayoutItem LabelPosition="Top" Label="Наименование содержит">
+                    <dxe:TextEdit EditValue="{Binding SearchString}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem VerticalAlignment="Stretch" Width="80">
+                    <Button Content="Найти" VerticalAlignment="Center" Margin="5,10,0,0" Command="{Binding FindNomenclatureByStringCommand}"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" ResizeDirection="Rows"/>
         <dxdo:DockLayoutManager Grid.Row="2">
             <dxdo:LayoutGroup>

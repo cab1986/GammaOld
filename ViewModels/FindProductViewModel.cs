@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Gamma.Common;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -19,7 +20,7 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the FindProductViewModel class.
         /// </summary>
         
-        private FindProductViewModel()
+        private FindProductViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
             Messenger.Default.Register<BarcodeMessage>(this,BarcodeReceived);
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKinds));
@@ -33,7 +34,7 @@ namespace Gamma.ViewModels
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductCommand = new DelegateCommand(OpenProduct, () => SelectedProduct != null);
-            PlacesList = (from p in DB.GammaBase.Places
+            PlacesList = (from p in GammaBase.Places
                           select new
                           Place
                           {
@@ -139,7 +140,7 @@ namespace Gamma.ViewModels
                 FoundProducts = new ObservableCollection<ProductInfo>
                 (
                     (
-                        from pinfo in DB.GammaBase.vProductsInfo
+                        from pinfo in GammaBase.vProductsInfo
                         where pinfo.BarCode == Barcode && (!ButtonPanelVisible || (ButtonPanelVisible && !(pinfo.IsWrittenOff??false)))
                         select new ProductInfo
                         {
@@ -161,18 +162,18 @@ namespace Gamma.ViewModels
             }
             else
             {
-                Guid charid = SelectedCharacteristic?.CharacteristicID ?? new Guid();
+                var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
                 var selectedPlaces = new List<string>();
                 if (SelectedPlaces != null)
                     selectedPlaces = SelectedPlaces.Cast<string>().ToList();
                 FoundProducts = new ObservableCollection<ProductInfo>
                 (
-                from pinfo in DB.GammaBase.vProductsInfo
+                from pinfo in GammaBase.vProductsInfo
                 where
                 (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
                 (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
                 (NomenclatureID == null || pinfo.C1CNomenclatureID == NomenclatureID) &&
-                (charid == new Guid() || pinfo.C1CCharacteristicID == charid) &&
+                (charId == new Guid() || pinfo.C1CCharacteristicID == charId) &&
                 (pinfo.ProductKindID == SelectedProductKindIndex || SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                 ((DateBegin == null || pinfo.Date >= DateBegin) && (DateEnd == null || pinfo.Date <= DateEnd)) &&
                 ((ButtonPanelVisible && !(pinfo.IsWrittenOff??false)) || !ButtonPanelVisible)

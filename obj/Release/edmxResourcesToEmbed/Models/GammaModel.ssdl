@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="GammaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="GammaDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="1CCharacteristicProperties">
     <Key>
       <PropertyRef Name="1CCharacteristicID" />
@@ -30,6 +30,17 @@
     <Property Name="1CEnumGroupTypeID" Type="int" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="40" />
     <Property Name="Alias" Type="varchar" MaxLength="120" />
+  </EntityType>
+  <EntityType Name="1CMainSpecifications">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Period" Type="datetime" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CSpecificationID" Type="uniqueidentifier" />
+    <Property Name="1CPlaceID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="1CMeasureUnitQualifiers">
     <Key>
@@ -64,6 +75,32 @@
     <Property Name="IsArchive" Type="bit" />
     <Property Name="IsFolder" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="1CNomenclatureAnalogs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CNomenclatureAnalogID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicAnalogID" Type="uniqueidentifier" />
+    <Property Name="1COutputNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1COutputCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CSpecificationID" Type="uniqueidentifier" />
+    <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+    <Property Name="Amount" Type="decimal" Precision="15" Scale="3" />
+    <Property Name="1CMeasureUnitAnalogID" Type="uniqueidentifier" />
+    <Property Name="AmountAnalog" Type="decimal" Precision="15" Scale="3" />
+    <Property Name="Priority" Type="decimal" Precision="5" Scale="0" />
+  </EntityType>
+  <EntityType Name="1CNomenclatureGroupNomenclature">
+    <Key>
+      <PropertyRef Name="1CNomenclatureGroupID" />
+      <PropertyRef Name="1CNomenclatureID" />
+    </Key>
+    <Property Name="1CNomenclatureGroupID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
   <EntityType Name="1CNomenclatureGroups">
     <Key>
       <PropertyRef Name="1CNomenclatureGroupID" />
@@ -84,6 +121,16 @@
     <Property Name="1CPropertyValueID" Type="uniqueidentifier" />
     <Property Name="ValueText" Type="varchar" MaxLength="8000" />
     <Property Name="ValueNumeric" Type="decimal" Precision="20" Scale="0" />
+  </EntityType>
+  <EntityType Name="1CPlaces">
+    <Key>
+      <PropertyRef Name="1CPlaceID" />
+    </Key>
+    <Property Name="1CPlaceID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Marked" Type="bit" />
+    <Property Name="Folder" Type="bit" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Description" Type="nvarchar" MaxLength="100" />
   </EntityType>
   <EntityType Name="1CProperties">
     <Key>
@@ -157,7 +204,9 @@
     <Property Name="LineNumber" Type="decimal" Precision="5" Scale="0" Nullable="false" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
     <Property Name="Amount" Type="decimal" Precision="15" Scale="3" />
+    <Property Name="WithdrawByFact" Type="bit" />
   </EntityType>
   <EntityType Name="1CSpecificationOutputNomenclature">
     <Key>
@@ -169,6 +218,17 @@
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Amount" Type="decimal" Precision="15" Scale="3" />
+  </EntityType>
+  <EntityType Name="1CSpecifications">
+    <Key>
+      <PropertyRef Name="1CSpecificationID" />
+    </Key>
+    <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="100" />
+    <Property Name="ParentID" Type="uniqueidentifier" />
+    <Property Name="Marked" Type="bit" />
+    <Property Name="Folder" Type="bit" />
+    <Property Name="SpecificationType" Type="tinyint" />
   </EntityType>
   <EntityType Name="BatchProductionTasks">
     <Key>
@@ -227,6 +287,14 @@
     <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
     <Property Name="IsSourceProduct" Type="bit" />
   </EntityType>
+  <EntityType Name="DocCloseShiftWithdrawals">
+    <Key>
+      <PropertyRef Name="DocCloseShiftID" />
+      <PropertyRef Name="DocWithdrawalID" />
+    </Key>
+    <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocWithdrawalID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
   <EntityType Name="DocMovement">
     <Key>
       <PropertyRef Name="DocID" />
@@ -277,6 +345,14 @@
     <Property Name="Comment" Type="varchar" MaxLength="8000" />
     <Property Name="IsFromOldGamma" Type="bit" />
   </EntityType>
+  <EntityType Name="DocShipment">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ActiveUserID" Type="uniqueidentifier" />
+    <Property Name="1CDocOrderID" Type="uniqueidentifier" />
+  </EntityType>
   <EntityType Name="DocTypes">
     <Key>
       <PropertyRef Name="DocTypeID" />
@@ -298,7 +374,8 @@
     <Property Name="DocWithdrawalMaterialID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="WithdrawByFact" Type="bit" />
     <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
   </EntityType>
   <EntityType Name="Enterprises">
@@ -318,6 +395,21 @@
     </Key>
     <Property Name="GammaPropertyID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MaterialType1CNomenclature">
+    <Key>
+      <PropertyRef Name="MaterialTypeID" />
+      <PropertyRef Name="1CNomenclatureID" />
+    </Key>
+    <Property Name="MaterialTypeID" Type="int" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MaterialTypes">
+    <Key>
+      <PropertyRef Name="MaterialTypeID" />
+    </Key>
+    <Property Name="MaterialTypeID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="1000" />
   </EntityType>
   <EntityType Name="Permits">
     <Key>
@@ -357,12 +449,14 @@
     </Key>
     <Property Name="PlaceID" Type="int" Nullable="false" />
     <Property Name="BranchID" Type="int" Nullable="false" />
+    <Property Name="BranchUnitID" Type="int" />
     <Property Name="Name" Type="varchar" MaxLength="64" />
     <Property Name="NameEng" Type="varchar" MaxLength="16" />
     <Property Name="DepartmentID" Type="smallint" Nullable="false" />
     <Property Name="PlaceGroupID" Type="smallint" />
     <Property Name="IsProductionPlace" Type="bit" />
     <Property Name="IsWarehouse" Type="bit" />
+    <Property Name="UnwindersCount" Type="int" />
     <Property Name="1CPlaceID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="ProcessModels">
@@ -388,8 +482,8 @@
       <PropertyRef Name="ProductionTaskBatchID" />
     </Key>
     <Property Name="ProductionTaskBatchID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="BatchKindID" Type="smallint" />
-    <Property Name="ProductionTaskStateID" Type="tinyint" />
+    <Property Name="BatchKindID" Type="smallint" Nullable="false" />
+    <Property Name="ProductionTaskStateID" Type="tinyint" Nullable="false" />
     <Property Name="UserID" Type="uniqueidentifier" />
     <Property Name="Number" Type="varchar" MaxLength="255" />
     <Property Name="Date" Type="datetime" />
@@ -459,9 +553,9 @@
       <PropertyRef Name="ProductPalletItemID" />
     </Key>
     <Property Name="ProductPalletItemID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ProductID" Type="uniqueidentifier" />
-    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
-    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Quantity" Type="int" />
   </EntityType>
   <EntityType Name="ProductPallets">
@@ -599,6 +693,7 @@
     <Property Name="Exports" Type="bit" Nullable="false" />
     <Property Name="DBAdmin" Type="bit" Nullable="false" />
     <Property Name="ProgramAdmin" Type="bit" />
+    <Property Name="MobileComputer" Type="bit" />
     <Property Name="ShiftID" Type="tinyint" Nullable="false" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
@@ -615,16 +710,6 @@
     <Property Name="Format" Type="varchar" MaxLength="50" />
     <Property Name="Color" Type="varchar" MaxLength="50" />
     <Property Name="FormatNumeric" Type="int" />
-  </EntityType>
-  <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vGroupPackSpools" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-  <EntityType Name="vGroupPackSpools">
-    <Key>
-      <PropertyRef Name="ProductGroupPackID" />
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="ProductGroupPackID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -662,17 +747,12 @@
     <Key>
       <PropertyRef Name="DocID" />
       <PropertyRef Name="ProductID" />
-      <PropertyRef Name="Date" />
-      <PropertyRef Name="StateID" />
-      <PropertyRef Name="RejectionReason" />
-      <PropertyRef Name="IsConfirmed" />
-      <PropertyRef Name="State" />
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductKindID" Type="tinyint" />
     <Property Name="Number" Type="varchar" MaxLength="20" />
-    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="Date" Type="datetime" />
     <Property Name="BarCode" Type="varchar" MaxLength="20" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
@@ -681,12 +761,12 @@
     <Property Name="Place" Type="varchar" MaxLength="64" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="ShiftID" Type="tinyint" />
-    <Property Name="StateID" Type="tinyint" Nullable="false" />
+    <Property Name="StateID" Type="tinyint" />
     <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="2" />
-    <Property Name="RejectionReason" Type="varchar" MaxLength="100" Nullable="false" />
-    <Property Name="IsConfirmed" Type="bit" Nullable="false" />
+    <Property Name="RejectionReason" Type="varchar" MaxLength="100" />
+    <Property Name="IsConfirmed" Type="bit" />
     <Property Name="IsWrittenOff" Type="bit" />
-    <Property Name="State" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="State" Type="varchar" MaxLength="50" />
   </EntityType>
   <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
     <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
@@ -760,6 +840,54 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_1CMainSpecifications_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="1CMainSpecifications">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMainSpecifications_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CMainSpecifications">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMainSpecifications_1CPlaces">
+    <End Role="1CPlaces" Type="Self.1CPlaces" Multiplicity="0..1" />
+    <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CPlaces">
+        <PropertyRef Name="1CPlaceID" />
+      </Principal>
+      <Dependent Role="1CMainSpecifications">
+        <PropertyRef Name="1CPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMainSpecifications_1CSpecifications">
+    <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="0..1" />
+    <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CSpecifications">
+        <PropertyRef Name="1CSpecificationID" />
+      </Principal>
+      <Dependent Role="1CMainSpecifications">
+        <PropertyRef Name="1CSpecificationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_1CMeasureUnits_1CMeasureUnitQualifiers">
     <End Role="1CMeasureUnitQualifiers" Type="Self.1CMeasureUnitQualifiers" Multiplicity="0..1" />
     <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="*" />
@@ -805,6 +933,138 @@
       </Principal>
       <Dependent Role="1CNomenclature1">
         <PropertyRef Name="1CParentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CCharacteristics1">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CCharacteristicAnalogID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CCharacteristics2">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1COutputCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CMeasureUnits">
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CMeasureUnits1">
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CMeasureUnitAnalogID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CNomenclature1">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CNomenclatureAnalogID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CNomenclature2">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1COutputNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureAnalogs_1CSpecifications">
+    <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="0..1" />
+    <End Role="1CNomenclatureAnalogs" Type="Self.1CNomenclatureAnalogs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CSpecifications">
+        <PropertyRef Name="1CSpecificationID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureAnalogs">
+        <PropertyRef Name="1CSpecificationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureGroupNomenclature_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="1CNomenclatureGroupNomenclature" Type="Self.1CNomenclatureGroupNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureGroupNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CNomenclatureGroupNomenclature_1CNomenclatureGroups">
+    <End Role="1CNomenclatureGroups" Type="Self.1CNomenclatureGroups" Multiplicity="1" />
+    <End Role="1CNomenclatureGroupNomenclature" Type="Self.1CNomenclatureGroupNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclatureGroups">
+        <PropertyRef Name="1CNomenclatureGroupID" />
+      </Principal>
+      <Dependent Role="1CNomenclatureGroupNomenclature">
+        <PropertyRef Name="1CNomenclatureGroupID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -940,6 +1200,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_1CSpecificationInputNomenclature_1CMeasureUnits">
+    <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+    <End Role="1CSpecificationInputNomenclature" Type="Self.1CSpecificationInputNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CMeasureUnits">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="1CSpecificationInputNomenclature">
+        <PropertyRef Name="1CMeasureUnitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_1CSpecificationInputNomenclature_1CNomenclature">
     <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
     <End Role="1CSpecificationInputNomenclature" Type="Self.1CSpecificationInputNomenclature" Multiplicity="*" />
@@ -949,6 +1221,18 @@
       </Principal>
       <Dependent Role="1CSpecificationInputNomenclature">
         <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CSpecificationInputNomenclature_1CSpecifications1">
+    <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="1" />
+    <End Role="1CSpecificationInputNomenclature" Type="Self.1CSpecificationInputNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CSpecifications">
+        <PropertyRef Name="1CSpecificationID" />
+      </Principal>
+      <Dependent Role="1CSpecificationInputNomenclature">
+        <PropertyRef Name="1CSpecificationID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -976,8 +1260,22 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_1CSpecificationOutputNomenclature_1CSpecifications1">
+    <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="1" />
+    <End Role="1CSpecificationOutputNomenclature" Type="Self.1CSpecificationOutputNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CSpecifications">
+        <PropertyRef Name="1CSpecificationID" />
+      </Principal>
+      <Dependent Role="1CSpecificationOutputNomenclature">
+        <PropertyRef Name="1CSpecificationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_BatchProductionTasks_ProductionTaskBatches">
-    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="1" />
+    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="BatchProductionTasks" Type="Self.BatchProductionTasks" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTaskBatches">
@@ -989,7 +1287,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_BatchProductionTasks_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="BatchProductionTasks" Type="Self.BatchProductionTasks" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -1045,6 +1345,30 @@
       </Principal>
       <Dependent Role="DocCloseShiftRemainders">
         <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftWithdrawals_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocCloseShiftWithdrawals" Type="Self.DocCloseShiftWithdrawals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftWithdrawals">
+        <PropertyRef Name="DocCloseShiftID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftWithdrawals_DocWithdrawal">
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
+    <End Role="DocCloseShiftWithdrawals" Type="Self.DocCloseShiftWithdrawals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocWithdrawal">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftWithdrawals">
+        <PropertyRef Name="DocWithdrawalID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1250,6 +1574,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocShipment_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocShipment" Type="Self.DocShipment" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocShipment">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocShipment_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="DocShipment" Type="Self.DocShipment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="DocShipment">
+        <PropertyRef Name="ActiveUserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DocWithdrawal_Docs">
     <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
     <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="0..1" />
@@ -1275,7 +1623,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_DocWithdrawalMaterials_1CCharacteristics">
-    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
     <End Role="DocWithdrawalMaterials" Type="Self.DocWithdrawalMaterials" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CCharacteristics">
@@ -1298,15 +1646,39 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocWithdrawalMaterials_Docs">
-    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+  <Association Name="FK_DocWithdrawalMaterials_DocWithdrawal">
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
     <End Role="DocWithdrawalMaterials" Type="Self.DocWithdrawalMaterials" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Docs">
+      <Principal Role="DocWithdrawal">
         <PropertyRef Name="DocID" />
       </Principal>
       <Dependent Role="DocWithdrawalMaterials">
         <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MaterialType1CNomenclature_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="MaterialType1CNomenclature" Type="Self.MaterialType1CNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="MaterialType1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MaterialType1CNomenclature_MaterialTypes">
+    <End Role="MaterialTypes" Type="Self.MaterialTypes" Multiplicity="1" />
+    <End Role="MaterialType1CNomenclature" Type="Self.MaterialType1CNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MaterialTypes">
+        <PropertyRef Name="MaterialTypeID" />
+      </Principal>
+      <Dependent Role="MaterialType1CNomenclature">
+        <PropertyRef Name="MaterialTypeID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1345,6 +1717,18 @@
       </Principal>
       <Dependent Role="PlaceGroup1CNomenclature">
         <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Places_1CPlaces">
+    <End Role="1CPlaces" Type="Self.1CPlaces" Multiplicity="0..1" />
+    <End Role="Places" Type="Self.Places" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CPlaces">
+        <PropertyRef Name="1CPlaceID" />
+      </Principal>
+      <Dependent Role="Places">
+        <PropertyRef Name="1CPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1433,7 +1817,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskBatches_ProductionTaskStates">
-    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="0..1" />
+    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="1" />
     <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTaskStates">
@@ -1457,7 +1841,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -1505,7 +1891,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskSGB_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="ProductionTaskSGB" Type="Self.ProductionTaskSGB" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -1517,7 +1905,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTaskWR_ProductionTasks">
-    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="ProductionTaskWR" Type="Self.ProductionTaskWR" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="ProductionTasks">
@@ -1529,7 +1919,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductPalletItems_1CCharacteristics">
-    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
     <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CCharacteristics">
@@ -1541,7 +1931,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductPalletItems_1CNomenclature">
-    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
     <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CNomenclature">
@@ -1553,7 +1943,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductPalletItems_ProductPallets">
-    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="0..1" />
+    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="1" />
     <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductPallets">
@@ -1822,9 +2212,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Function Name="BackupGammaNew" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="Path" Type="varchar" Mode="In" />
-  </Function>
   <Function Name="BranchInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
     <Parameter Name="BranchID" Type="int" Mode="In" />
   </Function>
@@ -1860,6 +2247,9 @@
   <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="DeleteProductionTaskBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="DeleteSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -1869,6 +2259,21 @@
   <Function Name="DocRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="FillDocCloseShiftConvertingMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+    <Parameter Name="ShiftID" Type="int" Mode="In" />
+    <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="FillDocCloseShiftConvertingPallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+    <Parameter Name="ShiftID" Type="int" Mode="In" />
+    <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="String" Type="varchar" Mode="In" />
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="FilterByPlaceGroup" Type="bit" Mode="In" />
+  </Function>
   <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="BatchKindID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskStateID" Type="tinyint" Mode="In" />
@@ -1876,7 +2281,6 @@
     <Parameter Name="DateEnd" Type="datetime" Mode="In" />
     <Parameter Name="Number" Type="varchar" Mode="In" />
   </Function>
-  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
   <Function Name="GenerateNewNumbersForDoc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -1900,6 +2304,9 @@
   <Function Name="GetDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="GetDocCloseShiftConvertingPallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetDocCloseShiftPMSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -1921,6 +2328,9 @@
   </Function>
   <Function Name="GetLastFormat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GetMaterialNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="MaterialTypeID" Type="int" Mode="In" />
   </Function>
   <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
@@ -1953,6 +2363,12 @@
   <Function Name="GetProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="BatchKindID" Type="int" Mode="In" />
   </Function>
+  <Function Name="GetProductionTaskSGIMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+    <Parameter Name="ProductionTaskBatchId" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetProductRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetShiftBeginTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
     <Parameter Name="Date" Type="datetime" Mode="In" />
   </Function>
@@ -1966,6 +2382,9 @@
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetSpoolRejectionReasons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="GetUnwindersCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
   <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="TableName" Type="varchar" Mode="In" />
   </Function>
@@ -1979,51 +2398,25 @@
     <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="Password" Type="varchar" Mode="In" />
   </Function>
-  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-    <Parameter Name="version" Type="int" Mode="In" />
-    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
-  </Function>
-  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-    <Parameter Name="version" Type="int" Mode="In" />
-    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
-  </Function>
-  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-  </Function>
-  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-  </Function>
-  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-  </Function>
-  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
-  </Function>
-  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ShiftID" Type="int" Mode="In" />
     <Parameter Name="UnwinderID" Type="tinyint" Mode="In" />
   </Function>
-  <EntityContainer Name="GammaModelStoreContainer">
+  <EntityContainer Name="GammaDBModelContainer">
     <EntitySet Name="1CCharacteristicProperties" EntityType="Self.1CCharacteristicProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CCharacteristics" EntityType="Self.1CCharacteristics" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CEnumGroupTypes" EntityType="Self.1CEnumGroupTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CMainSpecifications" EntityType="Self.1CMainSpecifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CMeasureUnitQualifiers" EntityType="Self.1CMeasureUnitQualifiers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CMeasureUnits" EntityType="Self.1CMeasureUnits" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CNomenclature" EntityType="Self.1CNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CNomenclatureAnalogs" EntityType="Self.1CNomenclatureAnalogs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CNomenclatureGroupNomenclature" EntityType="Self.1CNomenclatureGroupNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CNomenclatureGroups" EntityType="Self.1CNomenclatureGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CNomenclatureProperties" EntityType="Self.1CNomenclatureProperties" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CPlaces" EntityType="Self.1CPlaces" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CProperties" EntityType="Self.1CProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CPropertyGammaProperties" EntityType="Self.1CPropertyGammaProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CPropertyValueGammaPropertyValue" EntityType="Self.1CPropertyValueGammaPropertyValue" Schema="dbo" store:Type="Tables" />
@@ -2032,22 +2425,27 @@
     <EntitySet Name="1CRejectionReasons" EntityType="Self.1CRejectionReasons" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CSpecificationInputNomenclature" EntityType="Self.1CSpecificationInputNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CSpecificationOutputNomenclature" EntityType="Self.1CSpecificationOutputNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CSpecifications" EntityType="Self.1CSpecifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProduction" EntityType="Self.DocProduction" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocShipment" EntityType="Self.DocShipment" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Enterprises" EntityType="Self.Enterprises" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GammaProperties" EntityType="Self.GammaProperties" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MaterialType1CNomenclature" EntityType="Self.MaterialType1CNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MaterialTypes" EntityType="Self.MaterialTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PermitTables" EntityType="Self.PermitTables" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PlaceGroup1CNomenclature" EntityType="Self.PlaceGroup1CNomenclature" Schema="dbo" store:Type="Tables" />
@@ -2088,12 +2486,6 @@
     [vCharacteristicSGBProperties].[Color] AS [Color], 
     [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric]
     FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
-      <DefiningQuery>SELECT 
-    [vGroupPackSpools].[ProductGroupPackID] AS [ProductGroupPackID], 
-    [vGroupPackSpools].[ProductID] AS [ProductID]
-    FROM [dbo].[vGroupPackSpools] AS [vGroupPackSpools]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
@@ -2163,6 +2555,22 @@
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
     </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CCharacteristics" Association="Self.FK_1CMainSpecifications_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="1CMainSpecifications" EntitySet="1CMainSpecifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CNomenclature" Association="Self.FK_1CMainSpecifications_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CMainSpecifications" EntitySet="1CMainSpecifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CPlaces" Association="Self.FK_1CMainSpecifications_1CPlaces">
+      <End Role="1CPlaces" EntitySet="1CPlaces" />
+      <End Role="1CMainSpecifications" EntitySet="1CMainSpecifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CSpecifications" Association="Self.FK_1CMainSpecifications_1CSpecifications">
+      <End Role="1CSpecifications" EntitySet="1CSpecifications" />
+      <End Role="1CMainSpecifications" EntitySet="1CMainSpecifications" />
+    </AssociationSet>
     <AssociationSet Name="FK_1CMeasureUnits_1CMeasureUnitQualifiers" Association="Self.FK_1CMeasureUnits_1CMeasureUnitQualifiers">
       <End Role="1CMeasureUnitQualifiers" EntitySet="1CMeasureUnitQualifiers" />
       <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
@@ -2178,6 +2586,50 @@
     <AssociationSet Name="FK_1CNomenclature_1CNomenclature" Association="Self.FK_1CNomenclature_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="1CNomenclature1" EntitySet="1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CCharacteristics" Association="Self.FK_1CNomenclatureAnalogs_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CCharacteristics1" Association="Self.FK_1CNomenclatureAnalogs_1CCharacteristics1">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CCharacteristics2" Association="Self.FK_1CNomenclatureAnalogs_1CCharacteristics2">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CMeasureUnits" Association="Self.FK_1CNomenclatureAnalogs_1CMeasureUnits">
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CMeasureUnits1" Association="Self.FK_1CNomenclatureAnalogs_1CMeasureUnits1">
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CNomenclature" Association="Self.FK_1CNomenclatureAnalogs_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CNomenclature1" Association="Self.FK_1CNomenclatureAnalogs_1CNomenclature1">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CNomenclature2" Association="Self.FK_1CNomenclatureAnalogs_1CNomenclature2">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureAnalogs_1CSpecifications" Association="Self.FK_1CNomenclatureAnalogs_1CSpecifications">
+      <End Role="1CSpecifications" EntitySet="1CSpecifications" />
+      <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureGroupNomenclature_1CNomenclature" Association="Self.FK_1CNomenclatureGroupNomenclature_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CNomenclatureGroupNomenclature" EntitySet="1CNomenclatureGroupNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CNomenclatureGroupNomenclature_1CNomenclatureGroups" Association="Self.FK_1CNomenclatureGroupNomenclature_1CNomenclatureGroups">
+      <End Role="1CNomenclatureGroups" EntitySet="1CNomenclatureGroups" />
+      <End Role="1CNomenclatureGroupNomenclature" EntitySet="1CNomenclatureGroupNomenclature" />
     </AssociationSet>
     <AssociationSet Name="FK_1CNomenclatureGroups_1CEnumGroupTypes" Association="Self.FK_1CNomenclatureGroups_1CEnumGroupTypes">
       <End Role="1CEnumGroupTypes" EntitySet="1CEnumGroupTypes" />
@@ -2223,8 +2675,16 @@
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
       <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
     </AssociationSet>
+    <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CMeasureUnits" Association="Self.FK_1CSpecificationInputNomenclature_1CMeasureUnits">
+      <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+      <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
+    </AssociationSet>
     <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CNomenclature" Association="Self.FK_1CSpecificationInputNomenclature_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CSpecifications1" Association="Self.FK_1CSpecificationInputNomenclature_1CSpecifications1">
+      <End Role="1CSpecifications" EntitySet="1CSpecifications" />
       <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
     </AssociationSet>
     <AssociationSet Name="FK_1CSpecificationOutputNomenclature_1CCharacteristics" Association="Self.FK_1CSpecificationOutputNomenclature_1CCharacteristics">
@@ -2233,6 +2693,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_1CSpecificationOutputNomenclature_1CNomenclature" Association="Self.FK_1CSpecificationOutputNomenclature_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="1CSpecificationOutputNomenclature" EntitySet="1CSpecificationOutputNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CSpecificationOutputNomenclature_1CSpecifications1" Association="Self.FK_1CSpecificationOutputNomenclature_1CSpecifications1">
+      <End Role="1CSpecifications" EntitySet="1CSpecifications" />
       <End Role="1CSpecificationOutputNomenclature" EntitySet="1CSpecificationOutputNomenclature" />
     </AssociationSet>
     <AssociationSet Name="FK_BatchProductionTasks_ProductionTaskBatches" Association="Self.FK_BatchProductionTasks_ProductionTaskBatches">
@@ -2258,6 +2722,14 @@
     <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="Self.FK_DocCloseShiftRemainders_Docs1">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftWithdrawals_Docs" Association="Self.FK_DocCloseShiftWithdrawals_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocCloseShiftWithdrawals" EntitySet="DocCloseShiftWithdrawals" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftWithdrawals_DocWithdrawal" Association="Self.FK_DocCloseShiftWithdrawals_DocWithdrawal">
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+      <End Role="DocCloseShiftWithdrawals" EntitySet="DocCloseShiftWithdrawals" />
     </AssociationSet>
     <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
       <End Role="Docs" EntitySet="Docs" />
@@ -2323,6 +2795,14 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Docs" EntitySet="Docs" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocShipment_Docs" Association="Self.FK_DocShipment_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocShipment" EntitySet="DocShipment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocShipment_Users" Association="Self.FK_DocShipment_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="DocShipment" EntitySet="DocShipment" />
+    </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawal_Docs" Association="Self.FK_DocWithdrawal_Docs">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
@@ -2339,9 +2819,17 @@
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocWithdrawalMaterials_Docs" Association="Self.FK_DocWithdrawalMaterials_Docs">
-      <End Role="Docs" EntitySet="Docs" />
+    <AssociationSet Name="FK_DocWithdrawalMaterials_DocWithdrawal" Association="Self.FK_DocWithdrawalMaterials_DocWithdrawal">
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
       <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MaterialType1CNomenclature_1CNomenclature" Association="Self.FK_MaterialType1CNomenclature_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="MaterialType1CNomenclature" EntitySet="MaterialType1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MaterialType1CNomenclature_MaterialTypes" Association="Self.FK_MaterialType1CNomenclature_MaterialTypes">
+      <End Role="MaterialTypes" EntitySet="MaterialTypes" />
+      <End Role="MaterialType1CNomenclature" EntitySet="MaterialType1CNomenclature" />
     </AssociationSet>
     <AssociationSet Name="FK_PermitTables_Permits" Association="Self.FK_PermitTables_Permits">
       <End Role="Permits" EntitySet="Permits" />
@@ -2354,6 +2842,10 @@
     <AssociationSet Name="FK_PlaceGroup1CNomenclature_PlaceGroups" Association="Self.FK_PlaceGroup1CNomenclature_PlaceGroups">
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Places_1CPlaces" Association="Self.FK_Places_1CPlaces">
+      <End Role="1CPlaces" EntitySet="1CPlaces" />
+      <End Role="Places" EntitySet="Places" />
     </AssociationSet>
     <AssociationSet Name="FK_Places_Branches" Association="Self.FK_Places_Branches">
       <End Role="Branches" EntitySet="Branches" />

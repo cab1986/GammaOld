@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using DevExpress.Mvvm;
+using Gamma.Models;
+using Gamma.ViewModels;
 
 namespace Gamma
 {
@@ -11,8 +13,9 @@ namespace Gamma
         /// <summary>
         /// Initializes a new instance of the MainView class.
         /// </summary>
-        public MainView()
+        public MainView(GammaEntities gammaBase = null)
         {
+            DataContext = new MainViewModel(gammaBase);
             InitializeComponent();
             Closed += MainView_Closed;
         }

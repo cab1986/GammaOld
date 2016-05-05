@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using Gamma.Models;
 
 namespace Gamma.Dialogs
 {
@@ -10,11 +11,12 @@ namespace Gamma.Dialogs
     /// </summary>
     public partial class ChangeSpoolDialog : Window
     {
-        public ChangeSpoolDialog()
+        public ChangeSpoolDialog(GammaEntities gammaBase = null)
         {
+            GammaBase = gammaBase ?? DB.GammaDb;
             InitializeComponent();
             RadioCompletly.IsChecked = true;
-            RejectionReasons = (from r in DB.GammaBase.GetSpoolRejectionReasons()
+            RejectionReasons = (from r in GammaBase.GetSpoolRejectionReasons()
                  select new RejectionReason
                  {
                      RejectionReasonID = (Guid)r.RejectionReasonID,
@@ -23,9 +25,10 @@ namespace Gamma.Dialogs
                  }).ToList();
             LkpBrokeReason.ItemsSource = RejectionReasons;
         }
+        private GammaEntities GammaBase { get; set; }
         public ChangeSpoolDialog(Guid productSpoolid) : this()
         {
-            EdtBrokeWeight.Value = DB.GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.Weight).FirstOrDefault();
+            EdtBrokeWeight.Value = GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.Weight).FirstOrDefault();
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {

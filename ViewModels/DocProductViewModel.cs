@@ -213,7 +213,6 @@ namespace Gamma.ViewModels
                 );
         }
 
-        private GammaEntities GammaBase { get; set; }
         private void SaveToModel(ParentSaveMessage msg)
         {
             SaveToModel();

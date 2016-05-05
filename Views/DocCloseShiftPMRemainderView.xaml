@@ -13,7 +13,7 @@
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Vertical">
                 <dxlc:LayoutItem Label="Номенклатура остатка" LabelPosition="Top">
-                    <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False">
+                    <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False" IsReadOnly="True">
                         <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}" />
                     </dxe:ButtonEdit>
                 </dxlc:LayoutItem>

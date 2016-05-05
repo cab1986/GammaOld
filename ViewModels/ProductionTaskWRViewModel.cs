@@ -16,9 +16,9 @@ namespace Gamma.ViewModels
         public ProductionTaskWrViewModel()
         {
         }
-        public ProductionTaskWrViewModel(Guid productionTaskBatchID)
+        public ProductionTaskWrViewModel(Guid productionTaskBatchID, GammaEntities gammaBase = null) : base(gammaBase)
         {
-            var productionTaskWr = DB.GammaBase.GetProductionTaskBatchWRProperties(productionTaskBatchID).FirstOrDefault();
+            var productionTaskWr = GammaBase.GetProductionTaskBatchWRProperties(productionTaskBatchID).FirstOrDefault();
             if (productionTaskWr != null)
             {
                 NumFilmLayers = productionTaskWr.NumFilmLayers ?? 0;

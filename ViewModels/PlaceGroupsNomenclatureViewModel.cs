@@ -11,9 +11,9 @@ namespace Gamma.ViewModels
 {
     class PlaceGroupsNomenclatureViewModel : SaveImplementedViewModel
     {
-        public PlaceGroupsNomenclatureViewModel()
+        public PlaceGroupsNomenclatureViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
-            PlaceGroups = (from pg in DB.GammaBase.PlaceGroups select pg).ToList();
+            PlaceGroups = (from pg in GammaBase.PlaceGroups select pg).ToList();
             _placeGroupID = PlaceGroups[0].PlaceGroupID;
             GetPlaceGroupNomenclature(PlaceGroupID);
             MoveFromPlaceGroupNomenclatureComand = new DelegateCommand(MoveFromPlaceGroupNomenclature);
@@ -84,8 +84,8 @@ namespace Gamma.ViewModels
         }
         
         public List<Models.PlaceGroups> PlaceGroups { get; set; }
-        private Int16 _placeGroupID;
-        public Int16 PlaceGroupID
+        private short _placeGroupID;
+        public short PlaceGroupID
         {
             get
             {
@@ -101,9 +101,9 @@ namespace Gamma.ViewModels
             }
         }
 
-        private void GetPlaceGroupNomenclature(Int16 placeGroupID)
+        private void GetPlaceGroupNomenclature(short placeGroupID)
         {
-            var placeGroup = DB.GammaBase.PlaceGroups.Include("C1CNomenclature").Where(pg => pg.PlaceGroupID == placeGroupID).Select(pg => pg).FirstOrDefault();
+            var placeGroup = GammaBase.PlaceGroups.Include("C1CNomenclature").Where(pg => pg.PlaceGroupID == placeGroupID).Select(pg => pg).FirstOrDefault();
             PlaceGroupNomenclature = new ObservableCollection<Nomenclature1CFolder>
                                         (from pgn in placeGroup.C1CNomenclature
                                       select new Nomenclature1CFolder
@@ -112,7 +112,7 @@ namespace Gamma.ViewModels
                                           ParentFolderID = pgn.C1CParentID,
                                           Name = pgn.Name
                                       });
-            NomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>(from n in DB.GammaBase.C1CNomenclature
+            NomenclatureFolders = new ObservableCollection<Nomenclature1CFolder>(from n in GammaBase.C1CNomenclature
                                                                                   where n.IsFolder &&
                                                                                   !(from pg in n.PlaceGroups select pg.PlaceGroupID).Contains(placeGroupID)
                                                                                   select new Nomenclature1CFolder

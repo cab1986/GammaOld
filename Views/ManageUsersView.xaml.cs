@@ -1,15 +1,18 @@
-﻿namespace Gamma.Views
+﻿using Gamma.ViewModels;
+
+namespace Gamma.Views
 {
     /// <summary>
     /// Description for ManageUsersView.
     /// </summary>
-    public partial class ManageUsersView : MvvmWindow
+    public partial class ManageUsersView
     {
         /// <summary>
         /// Initializes a new instance of the ManageUsersView class.
         /// </summary>
         public ManageUsersView()
         {
+            DataContext = new ManageUsersViewModel(DB.GammaDb);
             InitializeComponent();
         }        
     }

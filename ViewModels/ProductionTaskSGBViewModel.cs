@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
         }
         public ProductionTaskSGBViewModel(Guid productionTaskID)
         {
-            var productionTaskSGB = DB.GammaBase.ProductionTaskSGB.
+            var productionTaskSGB = DB.GammaDb.ProductionTaskSGB.
                 Include(pt => pt.ProductionTasks.ProductionTaskBatches).FirstOrDefault(pt => pt.ProductionTaskID == productionTaskID);
             if (productionTaskSGB != null)
             {

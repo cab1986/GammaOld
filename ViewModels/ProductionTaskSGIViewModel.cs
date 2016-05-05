@@ -51,7 +51,6 @@ namespace Gamma.ViewModels
                     .FirstOrDefault();
             IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
         }
-        private GammaEntities GammaBase { get; set; }
         
         public byte ProductionTaskStateID { get; set; }
 

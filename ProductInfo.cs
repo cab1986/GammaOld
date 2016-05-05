@@ -37,7 +37,7 @@ namespace Gamma
             set
             {
             	_placeID = value;
-                PlaceGroup = (PlaceGroups)DB.GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.PlaceGroupID).FirstOrDefault();
+                PlaceGroup = (PlaceGroups)DB.GammaDb.Places.Where(p => p.PlaceID == value).Select(p => p.PlaceGroupID).FirstOrDefault();
             }
         }
         public PlaceGroups PlaceGroup { get; set; }

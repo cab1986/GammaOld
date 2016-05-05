@@ -29,9 +29,6 @@
             <views:PlaceProductsView />
         </DataTemplate>
     </Window.Resources>
-    <Window.DataContext>
-        <Binding Path="Main" Source="{StaticResource Locator}" />
-    </Window.DataContext>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="LostFocus" />
      </dxmvvm:Interaction.Behaviors>

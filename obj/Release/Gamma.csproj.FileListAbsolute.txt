@@ -4,7 +4,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\FilterDateReportDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductSpoolView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductUnloadView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PermitEditView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksConvertingView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\RoleEditView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\UserEditView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureView.baml
@@ -22,7 +21,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\LoginView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\MainView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ManageUsersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PermitEditView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksConvertingView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\RoleEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\UserEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureView.g.cs
@@ -38,16 +36,8 @@ D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.pdb
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.dll
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.dll
-D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.dll
-D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Practices.ServiceLocation.dll
-D:\CProjects\Gamma\Gamma\bin\Release\System.Windows.Interactivity.dll
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.xml
-D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.pdb
-D:\CProjects\Gamma\Gamma\bin\Release\GalaSoft.MvvmLight.Extras.xml
-D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Practices.ServiceLocation.pdb
-D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Practices.ServiceLocation.xml
-D:\CProjects\Gamma\Gamma\bin\Release\System.Windows.Interactivity.xml
 D:\CProjects\Gamma\Gamma\obj\Release\App.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\FindProductView.baml
@@ -96,8 +86,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Bars.dll
 D:\CProjects\Gamma\Gamma\bin\Release\FastReport.dll
 D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Editor.dll
 D:\CProjects\Gamma\Gamma\bin\Release\FastReport.xml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftRWRemainderView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftRWRemainderView.baml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v15.2.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Images.v15.2.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Mvvm.v15.2.dll
@@ -240,3 +228,14 @@ D:\CProjects\Gamma\Gamma\bin\Release\ngeninstall.bat
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGIView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.licenses
+D:\CProjects\Gamma\Gamma\obj\Release\Views\MaterialTypesNomenclatureView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGIView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftConvertingGridView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftUnwinderRemainderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductPalletView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\MaterialTypesNomenclatureView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGIView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma_Content.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftConvertingGridView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftUnwinderRemainderView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductPalletView.baml

@@ -18,6 +18,11 @@ namespace Gamma.ViewModels
             SaveAndCloseCommand = new DelegateCommand(SaveToModelAndClose,CanSaveExecute);
         }
 
+        protected SaveImplementedViewModel(GammaEntities gammaBase = null) : this()
+        {
+            GammaBase = gammaBase ?? DB.GammaDb;
+        }
+
         public DelegateCommand SaveAndCloseCommand { get; private set; }
 
         protected virtual void SaveToModel(GammaEntities gammaBase = null)

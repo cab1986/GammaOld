@@ -16,10 +16,10 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the ProductionTaskBatchSGBViewModel class.
         /// <param name="productionTaskBatchID">id пакета заданий СГБ</param>
         /// </summary>
-        public ProductionTaskBatchSGBViewModel(Guid productionTaskBatchID)
+        public ProductionTaskBatchSGBViewModel(Guid productionTaskBatchID, GammaEntities gammaBase = null) : base(gammaBase)
         {
             ProductionTaskBatchID = productionTaskBatchID;
-            var productionTaskBatch = DB.GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID).
+            var productionTaskBatch = GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID).
                 Select(p => p).FirstOrDefault();
             if (productionTaskBatch == null)
             {

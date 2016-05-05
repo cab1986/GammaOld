@@ -6,15 +6,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" 
-    xmlns:g="clr-namespace:Gamma"
+    xmlns:gc="clr-namespace:Gamma.Common"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars" 
     x:Class="Gamma.Views.DocCloseShiftView" 
     Title="{Binding Title}" 
-    Height="{g:SettingBinding DocCloseShiftHeight}"
-    Width="{g:SettingBinding DocCloseShiftWidth}"
-    Left="{g:SettingBinding DocCloseShiftLeft}"
-    Top="{g:SettingBinding DocCloseShiftTop}"
-    WindowState="{g:SettingBinding DocCloseShiftWState}">
+    Height="800"
+    Width="1200" 
+    gc:WindowSettings.Save="True">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftConvertingGridViewModel}">
             <v:DocCloseShiftConvertingGridView />

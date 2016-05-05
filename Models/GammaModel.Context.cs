@@ -56,7 +56,6 @@ namespace Gamma.Models
         public virtual DbSet<Permits> Permits { get; set; }
         public virtual DbSet<PermitTables> PermitTables { get; set; }
         public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<ProcessModels> ProcessModels { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
@@ -92,6 +91,7 @@ namespace Gamma.Models
         public virtual DbSet<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        public virtual DbSet<Places> Places { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

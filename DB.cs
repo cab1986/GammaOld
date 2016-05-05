@@ -14,7 +14,7 @@ namespace Gamma
 {
     public static class DB
     {
-        public static GammaEntities GammaBase;
+        private static GammaEntities GammaBase { get; set; }
 
         private static EntityConnection Connection { get; set; }
 
@@ -61,19 +61,21 @@ namespace Gamma
                                               || e.State == EntityState.Modified
                                               || e.State == EntityState.Deleted);
         }
-        public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid)
+        public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid, GammaEntities gammaBase = null)
         {
+            gammaBase = gammaBase ?? GammaDb;
             if (nomenclatureid == null) return new ObservableCollection<Characteristic>();
             return new ObservableCollection<Characteristic>
                 (
                 (
-                    from chars in GammaBase.C1CCharacteristics
+                    from chars in gammaBase.C1CCharacteristics
                     where chars.C1CNomenclatureID == nomenclatureid && chars.IsActive 
                     select new Characteristic { CharacteristicID = chars.C1CCharacteristicID, CharacteristicName = chars.Name }
                 ).OrderBy(c => c.CharacteristicName)
                 );
         }
 
+/*
         public static ObservableCollection<Place> GetPlaces(PlaceGroups placeGroup)
         {
             return new ObservableCollection<Place>
@@ -82,57 +84,60 @@ namespace Gamma
              select new Place { PlaceID = places.PlaceID, PlaceName = places.Name }
             );
         }
-        public static string CheckSourceSpools(int placeID, Guid productionTaskID)
+*/
+        public static string CheckSourceSpools(int placeID, Guid productionTaskID, GammaEntities gammaBase = null)
         {
-            return GammaBase.Database.SqlQuery<string>($"SELECT dbo.CheckSourceSpools({placeID}, '{productionTaskID}')").AsEnumerable().FirstOrDefault();
+            return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.CheckSourceSpools({placeID}, '{productionTaskID}')").AsEnumerable().FirstOrDefault();
         }
 
-        public static DateTime CurrentDateTime
-        {
-            get 
-            {
-                return ((IObjectContextAdapter)GammaBase).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
-            }
-        }
-        public static Guid CurrentUserID => GammaBase.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
+        public static DateTime CurrentDateTime => ((IObjectContextAdapter)GammaDb).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
 
-        public static int GetLastFormat(int placeID)
+        public static Guid CurrentUserID => GammaDb.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
+
+        public static int GetLastFormat(int placeID, GammaEntities gammaBase = null)
         {
-            return GammaBase.Database.SqlQuery<int>($"SELECT dbo.GetLastFormat({placeID})").AsEnumerable().First();
+            return (gammaBase??GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetLastFormat({placeID})").AsEnumerable().First();
         }
-        public static decimal GetCoreWeight(Guid CharacteristicID)
+
+        public static int GetUnwindersCount(int placeID, GammaEntities gammaBase = null)
         {
-            return GammaBase.Database.SqlQuery<decimal>($"SELECT dbo.GetCoreWeight('{CharacteristicID}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetUnwindersCount({placeID})").AsEnumerable().First();
         }
-        public static decimal GetSpoolCoreWeight(Guid productid)
+        public static decimal GetCoreWeight(Guid characteristicID, GammaEntities gammaBase = null)
         {
-            return GammaBase.Database.SqlQuery<decimal>($"SELECT dbo.GetSpoolCoreWeight('{productid}')").AsEnumerable().First();
+            return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetCoreWeight('{characteristicID}')").AsEnumerable().First();
         }
-        public static short GetSpoolDiameter(Guid productid)
+        public static decimal GetSpoolCoreWeight(Guid productid, GammaEntities gammaBase = null)
         {
-            return GammaBase.Database.SqlQuery<short>($"SELECT dbo.GetSpoolDiameter('{productid}')").AsEnumerable().First();
+            return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetSpoolCoreWeight('{productid}')").AsEnumerable().First();
+        }
+        public static short GetSpoolDiameter(Guid productid, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetSpoolDiameter('{productid}')").AsEnumerable().First();
         }
         public static ObservableCollection<string> BaseTables
         { 
             get
             {
-                return new ObservableCollection<string>(GammaBase.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
+                return new ObservableCollection<string>(GammaDb.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
             }
         }
-        public static void ChangeUserPassword(Guid userid,string password)
+        public static void ChangeUserPassword(Guid userid,string password, GammaEntities gammaBase = null)
         {
-            var login = GammaBase.Users.Where(u => u.UserID == userid).Select(u => u.Login).FirstOrDefault();
+            gammaBase = gammaBase ?? GammaDb;
+            var login = gammaBase.Users.Where(u => u.UserID == userid).Select(u => u.Login).FirstOrDefault();
             try
             {
                 string sql = $"ALTER LOGIN {login} WITH PASSWORD = '{password}'";
-                GammaBase.Database.ExecuteSqlCommand(sql);
+                gammaBase.Database.ExecuteSqlCommand(sql);
             }
             catch (Exception)
             {
                 MessageBox.Show("Смена пароля не удалась", "Неудачная смена пароля", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            gammaBase.Dispose();
         }
-        public static void RecreateUserInDb(Guid userid,string password)
+        public static void RecreateUserInDb(Guid userid,string password, GammaEntities gammaBase = null)
         {
             var parameterList = new List<SqlParameter>
             {
@@ -140,13 +145,15 @@ namespace Gamma
                 new SqlParameter("Password", password)
             };
             var parameters = parameterList.ToArray();
-            GammaBase.Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
+            // ReSharper disable once CoVariantArrayConversion
+            (gammaBase ?? GammaDb).Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
         }
-        public static void RecreateRolePermits(Guid roleID)
+        public static void RecreateRolePermits(Guid roleID, GammaEntities gammaBase = null)
         {
             var parameterList = new List<SqlParameter> {new SqlParameter("RoleID", roleID)};
             var parameters = parameterList.ToArray();
-            GammaBase.Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
+            // ReSharper disable once CoVariantArrayConversion
+            (gammaBase ?? GammaDb).Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
         }
         private class TablePermission
         {
@@ -161,12 +168,12 @@ namespace Gamma
                 return null;
             return tablePermission[0].Permit;
         }
-        public static bool HaveReadAccess(string tableName)
+        public static bool HaveReadAccess(string tableName, GammaEntities gammaBase = null)
         {
             if (WorkSession.DBAdmin) return true;
             var permit = GetCachedPermission(tableName);
             if (permit != null) return permit > 0;
-            permit = GammaBase.UserPermit(tableName).FirstOrDefault();
+            permit = (gammaBase ?? GammaDb).UserPermit(tableName).FirstOrDefault();
             if (permit == null)
             {
                 _tablePermissions.Add(new TablePermission
@@ -183,12 +190,13 @@ namespace Gamma
             });
             return permit > 0;
         }
-        public static bool HaveWriteAccess(string tableName)
+        public static bool HaveWriteAccess(string tableName, GammaEntities gammaBase = null)
         {
+            gammaBase = gammaBase??GammaDb;
             if (WorkSession.DBAdmin) return true;
             var permit = GetCachedPermission(tableName);
             if (permit != null) return permit == 2;
-            permit = GammaBase.UserPermit(tableName).FirstOrDefault();
+            permit = gammaBase.UserPermit(tableName).FirstOrDefault();
             if (permit == null)
             {
                 _tablePermissions.Add(new TablePermission

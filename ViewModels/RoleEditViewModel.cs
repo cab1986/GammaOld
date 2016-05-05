@@ -17,19 +17,21 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the RoleEditViewModel class.
         /// </summary>
-        public RoleEditViewModel()
+        public RoleEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             _isNewRole = true;
             Role = new Roles() { RoleID = SqlGuidUtil.NewSequentialid() };
             RolePermits = new ObservableCollection<RolePermits>();
+            Permits = new ObservableCollection<Permits>(GammaBase.Permits.Select(p => p));
         }
-        public RoleEditViewModel(Guid roleID)
+        public RoleEditViewModel(Guid roleID, GammaEntities gammaBase = null): base(gammaBase)
         {
             Marks = new PermissionMark().ToDictionary();
-            Role = DB.GammaBase.Roles.Include("RolePermits").FirstOrDefault(r => r.RoleID == roleID);
+            Role = GammaBase.Roles.Include("RolePermits").FirstOrDefault(r => r.RoleID == roleID);
             RolePermits = new ObservableCollection<RolePermits>(Role.RolePermits);
+            Permits = new ObservableCollection<Permits>(GammaBase.Permits.Select(p => p));
         }
-        private bool _isNewRole;
+        private readonly bool _isNewRole;
         private Roles _role;
         public Roles Role
         {
@@ -81,17 +83,6 @@ namespace Gamma.ViewModels
         }
         //private Dictionary<int, string> _marks = 
         public Dictionary<byte,string> Marks { get; set; }
-        private ObservableCollection<Permits> _permits = new ObservableCollection<Permits>(DB.GammaBase.Permits.Select(p => p));
-        public ObservableCollection<Permits> Permits
-        {
-            get
-            {
-                return _permits;
-            }
-            set
-            {
-            	_permits = value;
-            }
-        }
+        public ObservableCollection<Permits> Permits { get; set; } 
     }
 }

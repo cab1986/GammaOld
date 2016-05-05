@@ -20,35 +20,35 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the NewUserViewModel class.
         /// </summary>
-        public UserEditViewModel()
+        public UserEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             _isNewUser = true;
             User = new Users() { UserID = SqlGuidUtil.NewSequentialid() };
             ChangePassEnabled = false;
             InitializeFields();
         }
-        public UserEditViewModel(Guid userid)
+        public UserEditViewModel(Guid userid, GammaEntities gammaBase = null): base(gammaBase)
         {
             ChangePassEnabled = true;
             UserID = userid;
-            User = DB.GammaBase.Users.Include(u => u.Places).Where(u => u.UserID == userid).FirstOrDefault();
+            User = GammaBase.Users.Include(u => u.Places).FirstOrDefault(u => u.UserID == userid);
             Login = User.Login;
             Name = User.Name;
             PlaceID = User.Places.First().PlaceID;
             Post = User.Post;
             RoleID = User.RoleID;
-            IsDbAdmin = User.DBAdmin;
+            IsDBAdmin = User.DBAdmin;
             ShiftID = User.ShiftID;
             InitializeFields();
         }
         private void InitializeFields()
         {
             ChangePasswordCommand = new DelegateCommand(ChangePassword);
-            Places = new ObservableCollection<Places>(DB.GammaBase.Places.Select(p => p));
-            Roles = new ObservableCollection<Roles>(DB.GammaBase.Roles.Select(r => r));
+            Places = new ObservableCollection<Places>(GammaBase.Places);
+            Roles = new ObservableCollection<Roles>(GammaBase.Roles);
         }
         private readonly bool _isNewUser;
-        public bool IsDbAdmin { get; set; }
+        public bool IsDBAdmin { get; set; }
         [Required(ErrorMessage=@"Поле логин не может быть пустым")]
         public string Login
         {
@@ -96,16 +96,16 @@ namespace Gamma.ViewModels
             User.Login = Login;
             User.Name = Name;
             User.Places.Clear();
-            User.Places.Add(DB.GammaBase.Places.Find(PlaceID));
+            User.Places.Add(GammaBase.Places.Find(PlaceID));
             User.RoleID = RoleID;
             User.ShiftID = ShiftID;
             User.Post = Post;
-            User.DBAdmin = IsDbAdmin;
+            User.DBAdmin = IsDBAdmin;
             if (_isNewUser)
             {
-                DB.GammaBase.Users.Add(User);
+                GammaBase.Users.Add(User);
             }
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
             if (_isNewUser)
                 DB.RecreateUserInDb(User.UserID, Password);
         }

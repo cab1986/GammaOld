@@ -18,12 +18,13 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the DocCloseShiftPMRemainderViewModel class.
         /// </summary>
-        public DocCloseShiftPMRemainderViewModel()
+        public DocCloseShiftPMRemainderViewModel(GammaEntities gammaBase = null)
         {
-            var productSpool = (from d in DB.GammaBase.Docs
+            GammaBase = gammaBase ?? DB.GammaDb;
+            var productSpool = (from d in GammaBase.Docs
                                 where d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID
-                                join dp in DB.GammaBase.DocProducts on d.DocID equals dp.DocID
-                                join ps in DB.GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
+                                join dp in GammaBase.DocProducts on d.DocID equals dp.DocID
+                                join ps in GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
                                 orderby d.Date descending
                                 select ps).FirstOrDefault();
             if (productSpool != null)
@@ -32,18 +33,20 @@ namespace Gamma.ViewModels
                 CharacteristicID = productSpool.C1CCharacteristicID;
             }
         }
-        public DocCloseShiftPMRemainderViewModel(Guid docID)
+
+        public DocCloseShiftPMRemainderViewModel(Guid docID, GammaEntities gammaBase = null)
         {
-            DocCloseShiftRemainder = DB.GammaBase.DocCloseShiftRemainders.Include("Docs").Where(d => d.DocID == docID).
+            GammaBase = gammaBase ?? DB.GammaDb;
+            DocCloseShiftRemainder = GammaBase.DocCloseShiftRemainders.Include("Docs").Where(d => d.DocID == docID).
                 Select(d => d).FirstOrDefault();
             if (DocCloseShiftRemainder == null)
             {
-                var doc = DB.GammaBase.Docs.First(d => d.DocID == docID);
+                var doc = GammaBase.Docs.First(d => d.DocID == docID);
                 IsConfirmed = doc.IsConfirmed;
                 return;
             }
             IsConfirmed = DocCloseShiftRemainder.Docs.IsConfirmed;
-            var productSpool = DB.GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == DocCloseShiftRemainder.ProductID);
+            var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == DocCloseShiftRemainder.ProductID);
             if (productSpool != null)
             {
                 NomenclatureID = productSpool.C1CNomenclatureID;
@@ -63,7 +66,7 @@ namespace Gamma.ViewModels
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID, gammaBase);
-            var doc = DB.GammaBase.Docs.First(d => d.DocID == itemID);
+            var doc = gammaBase.Docs.First(d => d.DocID == itemID);
             if (DocCloseShiftRemainder == null && Quantity > 0)
             {
                 var productid = SqlGuidUtil.NewSequentialid();
@@ -80,15 +83,16 @@ namespace Gamma.ViewModels
                         ProductID = productid
                     }
                 };
-                DB.GammaBase.Products.Add(product);
+                gammaBase.Products.Add(product);
                 var docID = SqlGuidUtil.NewSequentialid();
-                var docProducts = new ObservableCollection<DocProducts>();
-                docProducts.Add(new DocProducts()
+                var docProducts = new ObservableCollection<DocProducts>
+                {
+                    new DocProducts()
                     {
                         DocID = docID,
                         ProductID = productid
                     }
-                    );
+                };
                 var docProduction = new Docs()
                 {
                     DocID = docID,
@@ -102,7 +106,7 @@ namespace Gamma.ViewModels
                     },
                     DocProducts = docProducts
                 };
-                DB.GammaBase.Docs.Add(docProduction);
+                gammaBase.Docs.Add(docProduction);
                 DocCloseShiftRemainder = new DocCloseShiftRemainders()
                 {
                     DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
@@ -111,13 +115,13 @@ namespace Gamma.ViewModels
                     Quantity = Quantity,
                     IsSourceProduct = false
                 };
-                DB.GammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
+                gammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
             }
             else if (DocCloseShiftRemainder != null)
             {
                 DocCloseShiftRemainder.Quantity = Quantity;
             } 
-            DB.GammaBase.SaveChanges();
+            gammaBase.SaveChanges();
         }
         public bool IsReadOnly
         {

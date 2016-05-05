@@ -456,6 +456,7 @@
     <Property Name="PlaceGroupID" Type="smallint" />
     <Property Name="IsProductionPlace" Type="bit" />
     <Property Name="IsWarehouse" Type="bit" />
+    <Property Name="UnwindersCount" Type="int" />
     <Property Name="1CPlaceID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="ProcessModels">
@@ -2268,6 +2269,11 @@
     <Parameter Name="ShiftID" Type="int" Mode="In" />
     <Parameter Name="CloseDate" Type="datetime" Mode="In" />
   </Function>
+  <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="String" Type="varchar" Mode="In" />
+    <Parameter Name="ID" Type="int" Mode="In" />
+    <Parameter Name="FilterByPlaceGroup" Type="bit" Mode="In" />
+  </Function>
   <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="BatchKindID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskStateID" Type="tinyint" Mode="In" />
@@ -2376,6 +2382,9 @@
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetSpoolRejectionReasons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="GetUnwindersCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
   <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="TableName" Type="varchar" Mode="In" />
   </Function>

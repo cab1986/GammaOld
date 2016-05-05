@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -18,24 +20,26 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the DocCloseShiftsViewModel class.
         /// </summary>
         /// 
-        public DocCloseShiftsViewModel()
+        public DocCloseShiftsViewModel(GammaEntities gammaBase = null)
         {
+            GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();
-            Places = (from p in DB.GammaBase.Places where p.IsProductionPlace ?? false
+            Places = (from p in GammaBase.Places where p.IsProductionPlace ?? false
                       select new
                       Place
                       {
                           PlaceName = p.Name,
                           PlaceID = p.PlaceID
                       }
-                     ).ToList<Place>();
+                     ).ToList();
             Places.Insert(0, new Place() { PlaceName = "Все" });
             FindDocCloseShifts();
         }
-        public DocCloseShiftsViewModel(PlaceGroups placeGroup)
+        public DocCloseShiftsViewModel(PlaceGroups placeGroup, GammaEntities gammaBase = null)
         {
+            GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();
-            Places = (from p in DB.GammaBase.Places
+            Places = (from p in GammaBase.Places
                       where p.PlaceGroupID == (byte)placeGroup && (p.IsProductionPlace ?? false)
                       select new
                       Place
@@ -43,7 +47,7 @@ namespace Gamma.ViewModels
                           PlaceName = p.Name,
                           PlaceID = p.PlaceID
                       }
-                     ).ToList<Place>();
+                     ).ToList();
             Places.Insert(0, new Place() { PlaceName = "Все" });
             FindDocCloseShifts();
         }
@@ -75,13 +79,15 @@ namespace Gamma.ViewModels
         {
             MessageManager.OpenDocCloseShift(SelectedDocCloseShift.DocCloseShiftID);
         }
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public DelegateCommand FindDocCloseShiftsCommand { get; private set; }
         private void FindDocCloseShifts()
         {
             var placeIDs = Places.Select(p => p.PlaceID).ToList();
             DocCloseShifts = new ObservableCollection<DocCloseShift>
             ((
-            from d in DB.GammaBase.Docs
+            from d in GammaBase.Docs
             where d.DocTypeID == (byte)DocTypes.DocCloseShift &&
             (PlaceID == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceID == d.PlaceID) &&
             (DateBegin == null || d.Date >= DateBegin) &&

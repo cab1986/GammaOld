@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using Gamma.Common;
 
@@ -7,48 +8,31 @@ namespace Gamma.ViewModels
 {
     /// <summary>
     /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
     /// </summary>
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public class LoginViewModel : ValidationViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the LoginViewModel class.
-        /// </summary>
-        /// 
+        [Required(ErrorMessage=@"Поле не может быть пустым")]
+        public string Login { get; set; }
 
-        private string _login;
-        [Required(ErrorMessage="Поле не может быть пустым")]
-        public string Login
-        {
-            get { return _login; }
-            set
-            {
-                _login = value;
-            }
-        }
-        
-        [Required(ErrorMessage = "Поле не может быть пустым")]
-        
+        [Required(ErrorMessage = @"Поле не может быть пустым")]
         public string Host
         {
             get;
             set;
         }
 
-        [Required(ErrorMessage = "Поле не может быть пустым")]
+        [Required(ErrorMessage = @"Поле не может быть пустым")]
+        // ReSharper disable once MemberCanBePrivate.Global
         public string DataBase { get; set; }
 
-        private string _password;
+        [Required(ErrorMessage = @"Поле не может быть пустым")]
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public string Password { get; set; }
 
-        [Required(ErrorMessage = "Поле не может быть пустым")]
-        public string Password
-        {
-            get { return _password; }
-            set { _password = value; }
-        }
-
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DelegateCommand LoginCommand { get; private set; }
         public LoginViewModel()
         {

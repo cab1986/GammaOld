@@ -5,11 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" x:Class="Gamma.Views.SourceSpoolsView" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             DataContext="{Binding SourceSpools, Source={StaticResource Locator}}">
-   
-
-        <dxlc:LayoutControl UseLayoutRounding="True" >
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+    </UserControl.Resources>
+    <dxlc:LayoutControl UseLayoutRounding="True" >
         <dxlc:LayoutGroup  View="Group" Background="#FFEBECEF" >
                 <dxlc:LayoutItem Label="Раскат 1" LabelPosition="Top">
                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder1Nomenclature}" ToolTip="{Binding Unwinder1Nomenclature}" Foreground="White" FontSize="16">
@@ -28,7 +28,7 @@
                         </dxe:ButtonEdit.Style>
                     </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Раскат 2" LabelPosition="Top">
+                <dxlc:LayoutItem Label="Раскат 2" LabelPosition="Top" Visibility="{Binding Unwinder2Visible, Converter={StaticResource BooleanToVisibility}}">
                 <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder2Nomenclature}" ToolTip="{Binding Unwinder2Nomenclature}" Foreground="White" FontSize="16">
                         <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="2"/>
                         <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="2"/>
@@ -45,7 +45,7 @@
                         </dxe:ButtonEdit.Style>
                     </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Раскат 3" LabelPosition="Top">
+            <dxlc:LayoutItem Label="Раскат 3" LabelPosition="Top" Visibility="{Binding Unwinder3Visible, Converter={StaticResource BooleanToVisibility}}">
                 <dxlc:LayoutItem.Style>
                     <Style TargetType="dxlc:LayoutItem">
                         <Style.Triggers>

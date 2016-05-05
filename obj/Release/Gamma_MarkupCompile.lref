@@ -1,10 +1,12 @@
 ﻿
 FD:\CProjects\Gamma\Gamma\App.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftRWRemainderView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftUnwinderRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductGroupPackView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocProductPalletView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductSpoolView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductUnloadView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductView.xaml;;
@@ -15,10 +17,10 @@ FD:\CProjects\Gamma\Gamma\Views\MainView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ManageUsersView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchSGBView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskSGBView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\ProductionTaskSGIView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskWRView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\NomenclatureView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskPMView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskRWView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\ProductionTaskSGIView.xaml;;
 

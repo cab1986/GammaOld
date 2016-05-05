@@ -8,7 +8,7 @@ namespace Gamma
     {
         public MvvmWindow()
         {
-            this.Closed += MVVMWindow_Closed;
+            Closed += MVVMWindow_Closed;
         }
 
         void MVVMWindow_Closed(object sender, EventArgs e)

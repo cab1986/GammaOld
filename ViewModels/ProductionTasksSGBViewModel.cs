@@ -2,9 +2,11 @@
 using DevExpress.Mvvm;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using Gamma.Common;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -16,8 +18,9 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTasksRWViewModel class.
         /// </summary>
-        public ProductionTasksSGBViewModel()
+        public ProductionTasksSGBViewModel(GammaEntities gammaBase = null)
         {
+            GammaBase = gammaBase ?? DB.GammaDb;
             NewItemCommand = new DelegateCommand(NewItem);
             EditItemCommand = new DelegateCommand(EditItem,() => SelectedProductionTaskBatch != null);
             DeleteItemCommand = new DelegateCommand(DeleteItem);
@@ -47,7 +50,7 @@ namespace Gamma.ViewModels
         private void DeleteItem()
         {
             if (SelectedProductionTaskBatch == null) return;
-            var delResult = DB.GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskBatch.ProductionTaskBatchID).First();
+            var delResult = GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskBatch.ProductionTaskBatchID).First();
             if (string.IsNullOrEmpty(delResult)) return;
             MessageBox.Show(delResult, "Не удалось удалить", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -81,6 +84,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionTaskBatchesSGB");
             }
         }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public class ProductionTaskBatchSGB
         {
             public Guid ProductionTaskBatchID { get; set; }
@@ -101,7 +106,7 @@ namespace Gamma.ViewModels
             ProductionTaskBatchesSGB = new ObservableCollection<ProductionTaskBatchSGB>();
             var tempCollection = new ObservableCollection<ProductionTaskBatchSGB>
                 (
-                    from pt in DB.GammaBase.GetProductionTasks((int)BatchKinds.SGB)
+                    from pt in GammaBase.GetProductionTasks((int)BatchKinds.SGB)
                     select new ProductionTaskBatchSGB
                     {
                         DateBegin = pt.DateBegin,
@@ -115,25 +120,25 @@ namespace Gamma.ViewModels
                         Number = pt.Number
                     }
                 ); 
-            for (int i = 0; i < tempCollection.Count; i++)
+            foreach (ProductionTaskBatchSGB t in tempCollection)
             {
-                var productionTaskBatchID = tempCollection[i].ProductionTaskBatchID;
-                var cuttingList = DB.GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchID).ToList();
+                var productionTaskBatchID = t.ProductionTaskBatchID;
+                var cuttingList = GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchID).ToList();
                 if (cuttingList.Count == 0)
                 {
                     MessageBox.Show($"Ошибка при получении информации о задании(id: {productionTaskBatchID})");
                     continue;
                 }
                 var cutting = cuttingList[0];
-                tempCollection[i].Nomenclature =
-                    $"{tempCollection[i].Nomenclature} \r\n{cutting.CoreDiameter} {cutting.LayerNumber} {cutting.Color} {cutting.Destination}";
-                tempCollection[i].TotalFormat = 0;
+                t.Nomenclature =
+                    $"{t.Nomenclature} \r\n{cutting.CoreDiameter} {cutting.LayerNumber} {cutting.Color} {cutting.Destination}";
+                t.TotalFormat = 0;
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {
-                    tempCollection[i].Format[k] = cuttingList[k].FormatNumeric.ToString();
-                    tempCollection[i].TotalFormat += cuttingList[k].FormatNumeric ?? 0;
+                    t.Format[k] = cuttingList[k].FormatNumeric.ToString();
+                    t.TotalFormat += cuttingList[k].FormatNumeric ?? 0;
                 }
-                ProductionTaskBatchesSGB.Add(tempCollection[i]);
+                ProductionTaskBatchesSGB.Add(t);
             }
         }
     }

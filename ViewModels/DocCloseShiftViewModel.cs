@@ -11,7 +11,7 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftViewModel : SaveImplementedViewModel
     {
-        public DocCloseShiftViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null)
+        public DocCloseShiftViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null) : base(gammaBase)
         {
             //gammaBase = gammaBase ?? DB.GammaDb;
             if (msg.DocID == null)
@@ -24,8 +24,8 @@ namespace Gamma.ViewModels
             }
             else
             {
-                Doc = (from d in DB.GammaBase.Docs.Include("Places") where d.DocID == msg.DocID select d).FirstOrDefault();
-                DB.GammaBase.Entry<Docs>(Doc).Reload();
+                Doc = (from d in GammaBase.Docs.Include("Places") where d.DocID == msg.DocID select d).FirstOrDefault();
+//                GammaBase.Entry(Doc).Reload();
                 Date = Doc.Date;
                 Number = Doc.Number;
                 IsConfirmed = Doc.IsConfirmed;
@@ -33,7 +33,7 @@ namespace Gamma.ViewModels
                 IsNewDoc = false;
                 Title = "Закрытие смены №" + Doc.Number;
             }
-            var placeGroupID = DB.GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
+            var placeGroupID = GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
             switch (placeGroupID)
             {
                 case (short)PlaceGroups.PM:
@@ -96,8 +96,8 @@ namespace Gamma.ViewModels
         protected override void SaveToModel(GammaEntities gammaBase = null)
         {
             if (!CanSaveExecute()) return;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(gammaBase);
+//            gammaBase = gammaBase ?? DB.GammaDb;
+//            base.SaveToModel(gammaBase);
             if (IsNewDoc)
             {
                 Doc = new Docs()
@@ -111,10 +111,10 @@ namespace Gamma.ViewModels
                     IsConfirmed = IsConfirmed,
                     PrintName = WorkSession.PrintName
                 };
-                DB.GammaBase.Docs.Add(Doc);
+                GammaBase.Docs.Add(Doc);
             }
             Doc.IsConfirmed = IsConfirmed;
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
             IsNewDoc = false;
             CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);

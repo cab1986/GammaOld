@@ -15,24 +15,26 @@ namespace Gamma
     {          
         static ReportManager()
         {
+            GammaBase = DB.GammaDb;
             _reportSettings.CustomSaveReport += SaveReport;
             _reportSettings.PreviewSettings.Buttons = (PreviewButtons.Print | PreviewButtons.Save);
             _reportSettings.PreviewSettings.ShowInTaskbar = true;
         }
+        private static GammaEntities GammaBase { get; set; }
         public static BarViewModel GetReportBar(string reportObject, Guid? vmid = null)
         {
-            if (!DB.GammaBase.Reports.Any(rep => rep.Name == reportObject) && DB.HaveWriteAccess("Reports"))
+            if (!GammaBase.Reports.Any(rep => rep.Name == reportObject) && DB.HaveWriteAccess("Reports"))
             {
-                DB.GammaBase.Reports.Add(new Reports()
+                GammaBase.Reports.Add(new Reports()
                 {
                     ReportID = SqlGuidUtil.NewSequentialid(),
                     IsReport = false,
                     Name = reportObject
                 });
-                DB.GammaBase.SaveChanges();
+                GammaBase.SaveChanges();
             }
-            var reports = from rep in DB.GammaBase.Reports
-                          join parrep in DB.GammaBase.Reports on rep.ParentID equals parrep.ReportID where parrep.Name == reportObject
+            var reports = from rep in GammaBase.Reports
+                          join parrep in GammaBase.Reports on rep.ParentID equals parrep.ReportID where parrep.Name == reportObject
                           select rep;
             var bar = new BarViewModel();
             foreach (Reports report in reports)
@@ -50,11 +52,11 @@ namespace Gamma
             }
             return bar;
         }
-        public static void PrintReport(Guid reportid, Guid? paramid = null, bool showPreview = true)
+        public static void PrintReport(Guid reportid, Guid? paramId = null, bool showPreview = true)
         {
             using (var report = new Report())
             {
-                var reportTemplate = (from rep in DB.GammaBase.Templates where rep.ReportID == reportid select rep.Template).FirstOrDefault();
+                var reportTemplate = (from rep in GammaBase.Templates where rep.ReportID == reportid select rep.Template).FirstOrDefault();
                 if (reportTemplate == null) return;
                 var stream = new MemoryStream(reportTemplate);                
                 report.Load(stream);
@@ -71,7 +73,7 @@ namespace Gamma
                     }
                     else return;
                 }
-                if (paramid != null) report.SetParameterValue("Paramid", paramid);
+                if (paramId != null) report.SetParameterValue("ParamID", paramId);
                 report.Dictionary.Connections[0].ConnectionString = GammaSettings.SqlConnectionString;
                 if (showPreview)
                     report.Show();
@@ -84,8 +86,8 @@ namespace Gamma
         }
         public static void PrintReport(string reportName, string reportFolder = null, Guid? paramid = null, bool showPreview = true)
         {
-            var parentid = DB.GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
-            var reports = DB.GammaBase.Reports.Where(r => r.Name == reportName && (parentid == null || r.ParentID == parentid)).
+            var parentid = GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
+            var reports = GammaBase.Reports.Where(r => r.Name == reportName && (parentid == null || r.ParentID == parentid)).
                 Select(r => r.ReportID).ToList();
             if (reports.Count == 1)
             {
@@ -95,18 +97,18 @@ namespace Gamma
         public static void DesignReport(Guid reportid)
         {
             CurrentReportID = reportid;
-            var repTemplate = (from rep in DB.GammaBase.Templates where rep.ReportID == reportid select rep.Template).FirstOrDefault();
+            var repTemplate = (from rep in GammaBase.Templates where rep.ReportID == reportid select rep.Template).FirstOrDefault();
             using (var report = new Report())
             {
                 if (repTemplate != null)
                 {
                     report.Load(new MemoryStream(repTemplate));
-                    report.FileName = (from rep in DB.GammaBase.Reports where rep.ReportID == reportid select rep.Name).FirstOrDefault();
+                    report.FileName = (from rep in GammaBase.Reports where rep.ReportID == reportid select rep.Name).FirstOrDefault();
                     report.Dictionary.Connections[0].ConnectionString = GammaSettings.SqlConnectionString;
                 }
                 else
                 {
-                    report.FileName = (from rep in DB.GammaBase.Reports where rep.ReportID == reportid select rep.Name).FirstOrDefault();
+                    report.FileName = (from rep in GammaBase.Reports where rep.ReportID == reportid select rep.Name).FirstOrDefault();
                     var conn = new MsSqlDataConnection
                     {
                         Name = "GammaConnection",
@@ -123,7 +125,7 @@ namespace Gamma
         private static EnvironmentSettings _reportSettings = new EnvironmentSettings();
         private static void SaveReport(object sender, OpenSaveReportEventArgs e)
         {
-            var reportTemplate = (from template in DB.GammaBase.Templates
+            var reportTemplate = (from template in GammaBase.Templates
                                   where template.ReportID == CurrentReportID
                                   select template).FirstOrDefault();
             if (reportTemplate == null)
@@ -132,7 +134,7 @@ namespace Gamma
                 reportTemplate.TemplateID = SqlGuidUtil.NewSequentialid();
                 reportTemplate.Name = e.FileName;
                 reportTemplate.ReportID = CurrentReportID;
-                DB.GammaBase.Templates.Add(reportTemplate);
+                GammaBase.Templates.Add(reportTemplate);
             }
             using (var stream = new MemoryStream())
                 {
@@ -143,7 +145,7 @@ namespace Gamma
                         reportTemplate.Version = Encoding.Default.GetString(md5.ComputeHash(stream));
                     }
                 }
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
         }
         private static Guid CurrentReportID { get; set; }
         

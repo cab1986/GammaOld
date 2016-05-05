@@ -11,7 +11,7 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftWrGridViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
-        public DocCloseShiftWrGridViewModel(OpenDocCloseShiftMessage msg)
+        public DocCloseShiftWrGridViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null): base(gammaBase)
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftWR", VMID));
             if (msg.DocID == null)
@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
             else
             {
                 GroupPacks = new ObservableCollection<PaperBase>(
-                    from sp in DB.GammaBase.GetDocCloseShiftWRGroupPacks(msg.DocID)
+                    from sp in GammaBase.GetDocCloseShiftWRGroupPacks(msg.DocID)
                     select new PaperBase
                     {
                         CharacteristicID = (Guid)sp.CharacteristicID,
@@ -37,7 +37,7 @@ namespace Gamma.ViewModels
                         Weight = Convert.ToInt32(sp.Weight)
                     }
                     );
-                var docCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").Where(d => d.DocID == msg.DocID).FirstOrDefault();
+                var docCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
                 DocCloseShiftDocs = new ObservableCollection<Docs>(docCloseShift.DocCloseShiftDocs);
                 CloseDate = docCloseShift.Date;
                 ShiftID = (byte)docCloseShift.ShiftID;
@@ -50,7 +50,7 @@ namespace Gamma.ViewModels
         public void FillGrid()
         {
             ClearGrid();
-            DocCloseShiftDocs = new ObservableCollection<Docs>(DB.GammaBase.Docs.
+            DocCloseShiftDocs = new ObservableCollection<Docs>(GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID &&
                     d.Date >= DB.GetShiftBeginTime(CloseDate) && d.Date <= DB.GetShiftEndTime(CloseDate) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)
@@ -61,8 +61,8 @@ namespace Gamma.ViewModels
                 {
 
                     GroupPacks.Add(
-                        (from d in DB.GammaBase.DocProducts
-                         join ps in DB.GammaBase.ProductGroupPacks on d.ProductID equals ps.ProductID
+                        (from d in GammaBase.DocProducts
+                         join ps in GammaBase.ProductGroupPacks on d.ProductID equals ps.ProductID
                          where d.DocID == doc.DocID
                          select new PaperBase
                          {
@@ -89,7 +89,7 @@ namespace Gamma.ViewModels
             if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return;
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);
-            var doc = DB.GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == itemID);
+            var doc = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == itemID);
             if (doc.DocCloseShiftDocs == null)
             {
                 doc.DocCloseShiftDocs = new ObservableCollection<Docs>();
@@ -99,7 +99,7 @@ namespace Gamma.ViewModels
                 {
                     doc.DocCloseShiftDocs.Add(docCloseShiftDoc);
                 }
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
         }
         private int PlaceID { get; set; }
         private byte ShiftID { get; set; }

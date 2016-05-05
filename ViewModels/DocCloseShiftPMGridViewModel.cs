@@ -11,8 +11,9 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftPMGridViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
-        public DocCloseShiftPMGridViewModel(OpenDocCloseShiftMessage msg)
+        public DocCloseShiftPMGridViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null)
         {
+            GammaBase = gammaBase ?? DB.GammaDb;
             if (msg.DocID == null)
             {
                 PlaceID = (int)msg.PlaceID;
@@ -23,7 +24,7 @@ namespace Gamma.ViewModels
             else
             {
                 Spools = new ObservableCollection<PaperBase>(
-                    from sp in DB.GammaBase.GetDocCloseShiftPMSpools(msg.DocID)
+                    from sp in GammaBase.GetDocCloseShiftPMSpools(msg.DocID)
                     select new PaperBase
                     {
                         CharacteristicID = (Guid)sp.CharacteristicID,
@@ -34,7 +35,7 @@ namespace Gamma.ViewModels
                         Weight = (decimal)sp.Weight
                     }
                     );
-                DocCloseShift = DB.GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
+                DocCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
                 DocCloseShiftDocs = new ObservableCollection<Docs>(DocCloseShift.DocCloseShiftDocs);
                 CloseDate = DocCloseShift.Date;
                 ShiftID = (byte)DocCloseShift.ShiftID;
@@ -56,7 +57,7 @@ namespace Gamma.ViewModels
         public void FillGrid()
         {
             ClearGrid();
-            DocCloseShiftDocs = new ObservableCollection<Docs>(DB.GammaBase.Docs.
+            DocCloseShiftDocs = new ObservableCollection<Docs>(GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && 
                     d.Date >= SqlFunctions.DateAdd("hh",-1,SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(CloseDate))) && 
                     d.Date <= SqlFunctions.DateAdd("hh",1, SqlFunctions.DateAdd("hh",-1,DB.GetShiftEndTime(CloseDate))) &&
@@ -64,8 +65,8 @@ namespace Gamma.ViewModels
             foreach (var doc in DocCloseShiftDocs.Where(doc => doc.DocTypeID == (byte)DocTypes.DocProduction))
             {
                 Spools.Add(
-                    (from d in DB.GammaBase.DocProducts 
-                        join ps in DB.GammaBase.ProductSpools on d.ProductID equals ps.ProductID
+                    (from d in GammaBase.DocProducts 
+                        join ps in GammaBase.ProductSpools on d.ProductID equals ps.ProductID
                         where d.DocID == doc.DocID
                         select new PaperBase 
                         { 
@@ -94,7 +95,7 @@ namespace Gamma.ViewModels
             base.SaveToModel(itemID, gammaBase);
             if (DocCloseShift == null)
             {
-                DocCloseShift = DB.GammaBase.Docs.Where(d => d.DocID == itemID).Select(d => d).FirstOrDefault();
+                DocCloseShift = GammaBase.Docs.Where(d => d.DocID == itemID).Select(d => d).FirstOrDefault();
                 foreach (var doc in DocCloseShiftDocs)
                 {
                     DocCloseShift.DocCloseShiftDocs.Add(doc);
@@ -108,7 +109,7 @@ namespace Gamma.ViewModels
                     DocCloseShift.DocCloseShiftDocs.Add(doc);
                 }
             }
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
         }
         private ObservableCollection<PaperBase> _spools = new ObservableCollection<PaperBase>();
         public ObservableCollection<PaperBase> Spools

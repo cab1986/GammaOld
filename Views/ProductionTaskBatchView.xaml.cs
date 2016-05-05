@@ -5,7 +5,7 @@ namespace Gamma.Views
     /// <summary>
     /// Description for ProductionTaskView.
     /// </summary>
-    public partial class ProductionTaskBatchView : MvvmWindow
+    public partial class ProductionTaskBatchView
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskView class.
@@ -13,7 +13,7 @@ namespace Gamma.Views
 
         public ProductionTaskBatchView(OpenProductionTaskBatchMessage msg)
         {
-            this.DataContext = new ProductionTaskBatchViewModel(msg);
+            DataContext = new ProductionTaskBatchViewModel(msg);
             InitializeComponent();
         }
     }

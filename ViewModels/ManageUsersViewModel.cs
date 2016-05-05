@@ -17,7 +17,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ManageUsersViewModel class.
         /// </summary>
-        public ManageUsersViewModel()
+        public ManageUsersViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             LoadTables();
             EditItemCommand = new DelegateCommand(EditItem,SelectedNotNull);
@@ -45,12 +45,12 @@ namespace Gamma.ViewModels
         }
         private void LoadTables()
         {
-            DB.GammaBase.Users.Include("Places").Load();
-            DB.GammaBase.Roles.Load();
-            DB.GammaBase.Permits.Load();
-            Users = DB.GammaBase.Users.Local;
-            Roles = DB.GammaBase.Roles.Local;
-            Permits = DB.GammaBase.Permits.Local;
+            GammaBase.Users.Include("Places").Load();
+            GammaBase.Roles.Load();
+            GammaBase.Permits.Load();
+            Users = GammaBase.Users.Local;
+            Roles = GammaBase.Roles.Local;
+            Permits = GammaBase.Permits.Local;
         }
 
          
@@ -175,7 +175,7 @@ namespace Gamma.ViewModels
         public DelegateCommand SavePermitsCommand { get; set; }
         private void SavePermits()
         {
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
         }
         public int TabIndex { get; set; }
         public DelegateCommand NewItemCommand { get; set; }
@@ -231,7 +231,7 @@ namespace Gamma.ViewModels
                 default:
                     break;
             }
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
         }
     }
 }

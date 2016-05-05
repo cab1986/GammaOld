@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Gamma.Common;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -11,19 +12,25 @@ namespace Gamma.ViewModels
     /// <para>
     /// See http://www.galasoft.ch/mvvm
     /// </para>
-    /// </summary>
+    ///  </summary>
     public class NomenclatureViewModel : RootViewModel
     {
+        private NomenclatureViewModel(GammaEntities gammaBase = null)
+        {
+            GammaBase = gammaBase ?? DB.GammaDb;
+            FindNomenclatureByStringCommand = new DelegateCommand(FindNomenclatureByString);
+        }
         /// <summary>
         /// Initializes a new instance of the NomenclatureViewModel class.
         /// </summary>
         /// <param name="placeGroupID">ID группы переделов</param>
-        public NomenclatureViewModel(int placeGroupID)
+        public NomenclatureViewModel(int placeGroupID, GammaEntities gammaBase = null): this(gammaBase)
         {
-
+            FilterID = placeGroupID;
+            FilterByPlaceGroup = true;
             Nomenclature1CFolders = new ReadOnlyObservableCollection<Nomenclature1CFolder>
                                     (new ObservableCollection<Nomenclature1CFolder>
-                                    (from nf in DB.GammaBase.GetNomenclatureFolders(placeGroupID)
+                                    (from nf in GammaBase.GetNomenclatureFolders(placeGroupID)
                                     select
                                         new Nomenclature1CFolder
                                         {
@@ -41,11 +48,12 @@ namespace Gamma.ViewModels
         /// Инициализация новой NomenclatureViewModel
         /// </summary>
         /// <param name="materialType">Материалы какого цеха</param>
-        public NomenclatureViewModel(MaterialTypes materialType)
+        public NomenclatureViewModel(MaterialTypes materialType, GammaEntities gammaBase = null): this(gammaBase)
         {
+            FilterID = (int) materialType;
             Nomenclature1CFolders = new ReadOnlyObservableCollection<Nomenclature1CFolder>
                                     (new ObservableCollection<Nomenclature1CFolder>
-                                    (from nf in DB.GammaBase.GetMaterialNomenclatureFolders((int)materialType)
+                                    (from nf in GammaBase.GetMaterialNomenclatureFolders((int)materialType)
                                      select
                                          new Nomenclature1CFolder
                                          {
@@ -97,7 +105,11 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("NomenclatureCharacteristics");
             }
         }
-        public Nomenclature1CFolder SelectedNomenclatureFolder
+        /// <summary>
+        /// Используется во вьюхе. Выбранная папка номенклатуры
+        /// </summary>
+        // ReSharper disable once UnusedMember.Global 
+        public Nomenclature1CFolder SelectedNomenclatureFolder 
         {
             get { return _selectedNomenclatureFolder; }
             set
@@ -125,7 +137,7 @@ namespace Gamma.ViewModels
                     if (value != null)
                     {
                         NomenclatureCharacteristics = new ObservableCollection<string>(
-                            DB.GammaBase.C1CCharacteristics.Where(c => c.C1CNomenclatureID == value.Nomenclature1CID).
+                            GammaBase.C1CCharacteristics.Where(c => c.C1CNomenclatureID == value.Nomenclature1CID).
                             Select(c => c.Name));
                     }
                     else NomenclatureCharacteristics = null;
@@ -133,11 +145,42 @@ namespace Gamma.ViewModels
             }
         }
 
+        public DelegateCommand FindNomenclatureByStringCommand { get; private set; }
+
+        private int FilterID { get; set; }
+        private bool FilterByPlaceGroup { get; set; }
+
+        private void FindNomenclatureByString()
+        {
+            if (SearchString == string.Empty) return;
+            Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>(
+                new ObservableCollection<Nomenclature1C>(
+                    GammaBase.FindNomenclatureByStringWithFilter(SearchString, FilterID, FilterByPlaceGroup)
+                    .Select(n => new Nomenclature1C
+                    {
+                        Nomenclature1CID = n.C1CNomenclatureID,
+                        Name = n.Name
+                    })
+                    ));
+        }
+
+        private string _searchString;
+
+        public string SearchString
+        {
+            get { return _searchString; }
+            set
+            {
+                _searchString = value;
+                RaisePropertiesChanged("SearchString");
+            }
+        }
+
         private void GetNomenclature(Guid folderid)
         {
             Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>
             (new ObservableCollection<Nomenclature1C>(
-                from nom in DB.GammaBase.C1CNomenclature where nom.C1CParentID == folderid && !nom.IsFolder && !(bool)nom.IsArchive
+                from nom in GammaBase.C1CNomenclature where nom.C1CParentID == folderid && !nom.IsFolder && !(bool)nom.IsArchive
                 select
         new Nomenclature1C
         {

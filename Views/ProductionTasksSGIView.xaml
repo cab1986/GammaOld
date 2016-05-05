@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  x:Class="Gamma.Views.ProductionTasksSGIView"
-        mc:Ignorable="d ignore"
-        DataContext="{Binding ProductionTasksSGI, Source={StaticResource Locator}}">
+        mc:Ignorable="d ignore">
 
     <Grid>
         <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskSGI}" AutoExpandAllGroups="True"

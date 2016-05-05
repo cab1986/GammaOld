@@ -10,6 +10,7 @@
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
         xmlns:g="clr-namespace:Gamma"
+        xmlns:gc="clr-namespace:Gamma.Common"
         xmlns:v="clr-namespace:Gamma.Views"
         xmlns:vm="clr-namespace:Gamma.ViewModels"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
@@ -19,10 +20,9 @@
         mc:Ignorable="d ignore"
         MinHeight="400"
         Title="{Binding Title}"
-        Height="{g:SettingBinding ProductionTaskBatchHeight}"
-        Width="{g:SettingBinding ProductionTaskBatchWidth}"
-        Left="{g:SettingBinding ProductionTaskBatchLeft}"
-        Top="{g:SettingBinding ProductionTaskBatchTop}" 
+        Height="800"
+        Width="1200"
+        gc:WindowSettings.Save="True"
         WindowState="Maximized">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:ProductionTaskBatchSGBViewModel}">
@@ -118,10 +118,10 @@
                             <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="4" Width="120" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Вес: {0:d} кг" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
                         </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>

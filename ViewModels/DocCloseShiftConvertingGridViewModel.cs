@@ -90,7 +90,6 @@ namespace Gamma.ViewModels
             }
 */
         }
-        private GammaEntities GammaBase { get; set; }
         private bool IsConfirmed { get; set; }
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || IsConfirmed;

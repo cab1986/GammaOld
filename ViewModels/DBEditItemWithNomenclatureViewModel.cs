@@ -3,7 +3,9 @@ using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Gamma.Attributes;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -22,14 +24,14 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the DBEditItemWithNomenclatureViewModel class.
         /// </summary>
-        public DbEditItemWithNomenclatureViewModel()
+        protected DbEditItemWithNomenclatureViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
             ChooseNomenclatureCommand = new DelegateCommand(ChooseNomenclature,CanChooseNomenclature);
         }
-
         private Guid? _nomenclatureid;
         [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public Guid? NomenclatureID
         {
             get { return _nomenclatureid; }
@@ -43,6 +45,8 @@ namespace Gamma.ViewModels
         }
         private string _nomenclatureName;
         [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string NomenclatureName
         {
             get { return _nomenclatureName; }
@@ -53,6 +57,8 @@ namespace Gamma.ViewModels
             }
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DelegateCommand ChooseNomenclatureCommand { get; private set; }
         private void ChooseNomenclature()
         {
@@ -69,7 +75,7 @@ namespace Gamma.ViewModels
         private void SetNomenclatureName(Guid? nomenclatureid)
         {
             if (nomenclatureid == null) return;
-            NomenclatureName = (from nom in DB.GammaBase.C1CNomenclature
+            NomenclatureName = (from nom in GammaBase.C1CNomenclature
                                 where nom.C1CNomenclatureID == nomenclatureid
                                 select nom.Name).FirstOrDefault();
         }
@@ -94,7 +100,7 @@ namespace Gamma.ViewModels
         }
 
         private Guid? _characteristicID;
-        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
+//        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public virtual Guid? CharacteristicID
         {

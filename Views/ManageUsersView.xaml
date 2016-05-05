@@ -12,7 +12,6 @@
         xmlns:g="clr-namespace:Gamma"
     x:Class="Gamma.Views.ManageUsersView" 
     mc:Ignorable="d ignore" 
-    DataContext="{Binding ManageUsers, Source={StaticResource Locator}}" 
     Width="893.373">
     <Grid>
         <dxb:BarManager>

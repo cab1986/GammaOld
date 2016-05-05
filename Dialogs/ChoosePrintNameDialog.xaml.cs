@@ -1,17 +1,19 @@
 ﻿using System.Linq;
 using System.Windows;
+using Gamma.Models;
 
 namespace Gamma.Dialogs
 {
     /// <summary>
     /// Interaction logic for ChoosePrintNameDialog.xaml
     /// </summary>
-    public partial class ChoosePrintNameDialog : Window
+    public partial class ChoosePrintNameDialog
     {
-        public ChoosePrintNameDialog()
+        public ChoosePrintNameDialog(GammaEntities gammaBase = null)
         {
             InitializeComponent();
-            var printNames = (from d in DB.GammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).Distinct().ToList();
+            gammaBase = gammaBase ?? DB.GammaDb;
+            var printNames = (from d in gammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).Distinct().ToList();
             EdtPrintName.ItemsSource = printNames;
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
@@ -19,6 +21,6 @@ namespace Gamma.Dialogs
             PrintName = EdtPrintName.Text;
             DialogResult = true;
         }
-        public string PrintName { get; set; }
+        public string PrintName { get; private set; }
     }
 }

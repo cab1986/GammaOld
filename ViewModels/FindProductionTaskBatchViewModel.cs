@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Gamma.Common;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -18,7 +19,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the FindProductionTaskViewModel class.
         /// </summary>
-        public FindProductionTaskBatchViewModel(BatchKinds batchKind)
+        public FindProductionTaskBatchViewModel(BatchKinds batchKind, GammaEntities gammaBase = null) : base(gammaBase)
         {
             ProductionTaskStates = new ProductionTaskStates().ToDictionary();
             BatchKind = batchKind;
@@ -40,11 +41,13 @@ namespace Gamma.ViewModels
                     , () => SelectedProductionTaskBatch != null);
         }
 
+
+
         private void FindProductionTaskBatch()
         {
             ProductionTaskBatches = new ObservableCollection<ProductionTaskBatch>
             (
-                from pt in DB.GammaBase.FindProductionTasks((int)BatchKind, ProductionTaskStateID,
+                from pt in GammaBase.FindProductionTasks((int)BatchKind, ProductionTaskStateID,
                     DateBegin, DateEnd, Number)
                 select new ProductionTaskBatch() 
                 { 

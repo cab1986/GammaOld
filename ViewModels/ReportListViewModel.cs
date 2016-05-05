@@ -19,13 +19,13 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ReportListViewModel class.
         /// </summary>
-        public ReportListViewModel()
+        public ReportListViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
-            DB.GammaBase.Reports.Load();
-            Reports = DB.GammaBase.Reports.Local;
+            GammaBase.Reports.Load();
+            Reports = GammaBase.Reports.Local;
             NewReportFolderCommand = new DelegateCommand(NewReportFolder);
-            NewReportCommand = new DelegateCommand(NewReport, () => SelectedReport == null ? false : !SelectedReport.IsReport);
-            EditReportCommand = new DelegateCommand(EditReport, () => SelectedReport == null ? false : SelectedReport.IsReport);
+            NewReportCommand = new DelegateCommand(NewReport, () => !SelectedReport?.IsReport ?? false);
+            EditReportCommand = new DelegateCommand(EditReport, () => SelectedReport?.IsReport ?? false);
             DeleteReportCommand = new DelegateCommand(DeleteReport, () => SelectedReport != null);
         }
 
@@ -53,7 +53,7 @@ namespace Gamma.ViewModels
             report.IsReport = false;
             report.ReportID = Guid.NewGuid();
             Reports.Add(report);
-//            DB.GammaBase.Reports.Add(report);
+//            GammaBase.Reports.Add(report);
             SelectedReport = report;
         }
         private Reports _selectedReport;
@@ -79,12 +79,12 @@ namespace Gamma.ViewModels
                 Name = ""
             };
             Reports.Add(report);
-//            DB.GammaBase.SaveChanges();
+//            GammaBase.SaveChanges();
             SelectedReport = report;
         }
         private void EditReport()
         {
-            DB.GammaBase.SaveChanges();
+            GammaBase.SaveChanges();
             ReportManager.DesignReport(SelectedReport.ReportID);
         }
         private void DeleteReport()
@@ -93,8 +93,8 @@ namespace Gamma.ViewModels
             if (msgResult != MessageBoxResult.Yes) return;
             if (!SelectedReport.IsReport)
             {
-                DB.GammaBase.Templates.RemoveRange(DB.GammaBase.Templates.Where(tmpl => tmpl.Reports.ParentID == SelectedReport.ReportID).Select(tmpl => tmpl));
-                var reportsToRemove = DB.GammaBase.Reports.Where(rep => rep.ParentID == SelectedReport.ReportID).Select(rep => rep);
+                GammaBase.Templates.RemoveRange(GammaBase.Templates.Where(tmpl => tmpl.Reports.ParentID == SelectedReport.ReportID).Select(tmpl => tmpl));
+                var reportsToRemove = GammaBase.Reports.Where(rep => rep.ParentID == SelectedReport.ReportID).Select(rep => rep);
                 foreach (var rep in reportsToRemove)
                 {
                     Reports.Remove(rep);
@@ -102,10 +102,10 @@ namespace Gamma.ViewModels
             }
             else
             {
-                DB.GammaBase.Templates.Remove(DB.GammaBase.Templates.Where(tmpl => tmpl.ReportID == SelectedReport.ReportID).FirstOrDefault());
+                GammaBase.Templates.Remove(GammaBase.Templates.FirstOrDefault(tmpl => tmpl.ReportID == SelectedReport.ReportID));
             }
-            DB.GammaBase.Reports.Remove(SelectedReport);
-            DB.GammaBase.SaveChanges();
+            GammaBase.Reports.Remove(SelectedReport);
+            GammaBase.SaveChanges();
         }
     }
 }

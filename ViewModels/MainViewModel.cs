@@ -4,18 +4,19 @@ using Gamma.Interfaces;
 using Gamma.Common;
 using System.Collections.ObjectModel;
 using Gamma.Dialogs;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
     /// <summary>
     /// ViewModel для главного окна приложения
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : RootViewModel
     {
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel()
+        public MainViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
@@ -34,8 +35,8 @@ namespace Gamma.ViewModels
             {
                 ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList);
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
-                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB);
-                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGI);
+                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb));
+                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb));
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers);
             }
@@ -44,9 +45,9 @@ namespace Gamma.ViewModels
                 ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList,
                 () => WorkSession.DBAdmin || DB.HaveWriteAccess("Reports"));
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
-                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGB,
+                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb),
                     () => DB.HaveReadAccess("ProductionTasks"));
-                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksSGI,
+                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb),
                     DB.HaveReadAccess("ProductionTasks"));
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
@@ -64,16 +65,16 @@ namespace Gamma.ViewModels
             {
                 case PlaceGroups.PM:
                 case PlaceGroups.Rw:
-                    CurrentView = ViewModelLocator.ProductionTasksSGB;
+                    CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb);
                     break;
                 case PlaceGroups.Wr:
                     OpenPlaceProducts(WorkSession.PlaceID);
                     break;
                 case PlaceGroups.Convertings:
-                    CurrentView = ViewModelLocator.ProductionTasksSGI;
+                    CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb);
                     break;
             }
-            var places = DB.GammaBase.Places.Where(p => p.IsProductionPlace == true).Select(p => p);
+            var places = GammaBase.Places.Where(p => p.IsProductionPlace == true).Select(p => p);
             PlaceProducts = new ObservableCollection<PlaceProduct>();
             foreach (var place in places)
             {
