@@ -18,6 +18,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public MainViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
+            Messenger.Default.Register<CloseMessage>(this, msg => CloseSignal = true);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
             if (WorkSession.PlaceID > 0) // Если не администрация

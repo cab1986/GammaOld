@@ -12,6 +12,8 @@ namespace Gamma
         public Guid ReportID { get; set; } // id отчета
         public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие
     }
+
+    public class CloseMessage { }
  
     public class OpenMainMessage { }
     public class OpenProductionTaskBatchMessage 

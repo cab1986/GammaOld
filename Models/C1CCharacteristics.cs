@@ -30,6 +30,7 @@ namespace Gamma.Models
             this.C1CNomenclatureAnalogs1 = new HashSet<C1CNomenclatureAnalogs>();
             this.C1CNomenclatureAnalogs2 = new HashSet<C1CNomenclatureAnalogs>();
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
+            this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -69,5 +70,7 @@ namespace Gamma.Models
         public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
     }
 }

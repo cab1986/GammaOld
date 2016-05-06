@@ -132,10 +132,17 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Title { get; set; }
         public override bool CanSaveExecute()
         {
             return base.CanSaveExecute() && DB.HaveWriteAccess("DocCloseShiftDocs");
+        }
+
+        protected override void SaveToModelAndClose()
+        {
+            base.SaveToModelAndClose();
+            Messenger.Default.Send(new CloseMessage());
         }
     }
 }

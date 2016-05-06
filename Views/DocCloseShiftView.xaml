@@ -54,7 +54,7 @@
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
             <dxlc:LayoutControl Orientation="Vertical">
                 <dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="150" Height="150">
+                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="170" Height="170">
                         <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
                         </dxlc:LayoutItem>
@@ -69,8 +69,8 @@
                         <ContentControl Content="{Binding CurrentViewModelRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
-                        <Button Content="Заполнить рапорт"  Height="30" Margin="5" Command="{Binding FillGridCommand}"/>
-                        <Button Content="Очистить рапорт" Height="30" Margin="5" Command = "{Binding ClearGridCommand}"/>
+                        <Button Content="Заполнить рапорт"  Height="30" Margin="10,15" Command="{Binding FillGridCommand}"/>
+                        <Button Content="Очистить рапорт" Height="30" Margin="10" Command = "{Binding ClearGridCommand}"/>
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem VerticalAlignment="Stretch">
@@ -78,7 +78,7 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutControl>
         </dxb:BarManager>
-        <Button Content="OK" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Margin="3,3,70,3"/>
-        <Button Content="Отмена" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="3"/>
+        <Button Content="OK" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Margin="5,5,120,5"/>
+        <Button Content="Отмена" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="5,5,15,5" Width="90"/>
     </Grid>
 </Window>

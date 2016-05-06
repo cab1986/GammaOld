@@ -8,6 +8,8 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:common="clr-namespace:Gamma.Common"
              x:Class="Gamma.Views.DocCloseShiftConvertingGridView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="800">
@@ -23,7 +25,7 @@
                     </dxb:BarManager.Bars>
                     <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}">
                         <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True"/>
+                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False"/>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
@@ -47,15 +49,39 @@
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>
+            <dx:DXTabItem Header="Отобранные образцы">
+                <dxg:GridControl ItemsSource="{Binding Samples}">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Вид продукции"/>
+                        <dxg:GridColumn FieldName="Quantity" Width="120" FixedWidth="True" Header="Кол-во групповых упаковок" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:SpinEditSettings MinValue="0" Mask="f0" MaskUseAsDisplayFormat="True" IsFloatValue="False"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" AllowGrouping="False" ShowGroupPanel="False" EnableImmediatePosting="True">
+                            <dxg:TableView.ColumnHeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </dxg:TableView.ColumnHeaderTemplate>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dx:DXTabItem>
             <dx:DXTabItem Header="Паллеты">
-                <dxg:GridControl ItemsSource="{Binding Pallets}">
+                <dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type common:Pallet}">
+                    <dxg:GridControl.TotalSummary>
+                        <dxg:GridSummaryItem Alignment="Right" FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}"/>
+                    </dxg:GridControl.TotalSummary>
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn Header="Номер" FieldName="Number" Width="150" FixedWidth="True"/>
                         <dxg:GridColumn Header="Наименование" FieldName="NomenclatureName"/>
                         <dxg:GridColumn Header="Кол-во, рул" FieldName="Quantity" Width="150" FixedWidth="True"/>
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
-                        <dxg:TableView AutoWidth="True" AllowEditing="False"/>
+                        <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False" ShowFixedTotalSummary="True"/>
                     </dxg:GridControl.View>
                 </dxg:GridControl>
             </dx:DXTabItem>

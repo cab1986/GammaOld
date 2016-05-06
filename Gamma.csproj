@@ -271,6 +271,9 @@
     <Compile Include="Models\DocCloseShiftRemainders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocCloseShiftSamples.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocMovement.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>

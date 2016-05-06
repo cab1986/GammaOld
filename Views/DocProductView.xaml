@@ -58,7 +58,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <dxmvvm:Interaction.Behaviors>
             <g:UiAuthBehavior />
@@ -103,7 +103,7 @@
                 </dxg:GridControl>
             </dx:DXTabItem>
         </dx:DXTabControl>
-        <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Height="30" Margin="0,5,85,5" Command="{Binding SaveAndCloseCommand}" />
-        <Button Content="Отмена" Grid.Row="2" Height ="30" Command="{Binding CloseCommand}" Width="70" Margin="0,5,5,5" HorizontalAlignment="Right"/>
+        <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Height="30" Margin="0,8,115,8" Command="{Binding SaveAndCloseCommand}" />
+        <Button Content="Отмена" Grid.Row="2" Height ="30" Command="{Binding CloseCommand}" Width="90" Margin="0,8,10,8" HorizontalAlignment="Right"/>
     </Grid>
 </g:MvvmWindow>

@@ -289,6 +289,7 @@
     <NavigationProperty Name="Docs2" Relationship="Self.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
     <NavigationProperty Name="DocCloseShiftWithdrawals" Relationship="GammaModel.DocCloseShiftWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
+    <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_Docs" FromRole="Docs" ToRole="DocCloseShiftSamples" />
   </EntityType>
   <EntityType Name="DocShipment">
     <Key>
@@ -1914,6 +1915,19 @@
       <End Role="Places" EntitySet="Places" />
       <End Role="Users" EntitySet="Users" />
     </AssociationSet>
+    <EntitySet Name="DocCloseShiftSamples" EntityType="GammaModel.DocCloseShiftSamples" />
+    <AssociationSet Name="FK_DocCloseShiftSamples_1CCharacteristics" Association="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics">
+      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftSamples_1CNomenclature" Association="GammaModel.FK_DocCloseShiftSamples_1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftSamples_Docs" Association="GammaModel.FK_DocCloseShiftSamples_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -2120,6 +2134,7 @@
     <NavigationProperty Name="C1CNomenclatureAnalogs1" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CCharacteristics1" FromRole="C1CCharacteristics" ToRole="C1CNomenclatureAnalogs" />
     <NavigationProperty Name="C1CNomenclatureAnalogs2" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CCharacteristics2" FromRole="C1CCharacteristics" ToRole="C1CNomenclatureAnalogs" />
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocWithdrawalMaterials" />
+    <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftSamples" />
   </EntityType>
   <EntityType Name="C1CNomenclature">
     <Key>
@@ -2153,6 +2168,7 @@
     <NavigationProperty Name="C1CNomenclatureAnalogs1" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature1" FromRole="C1CNomenclature" ToRole="C1CNomenclatureAnalogs" />
     <NavigationProperty Name="C1CNomenclatureAnalogs2" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature2" FromRole="C1CNomenclature" ToRole="C1CNomenclatureAnalogs" />
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
+    <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftSamples" />
   </EntityType>
   <EntityType Name="C1CSpecifications">
     <Key>
@@ -3015,5 +3031,54 @@
   <Association Name="UserPlaces">
     <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
     <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+  </Association>
+  <EntityType Name="DocCloseShiftSamples">
+    <Key>
+      <PropertyRef Name="DocCloseShiftSampleID" />
+    </Key>
+    <Property Name="DocCloseShiftSampleID" Type="Guid" Nullable="false" />
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="C1CnomenclatureID" Type="Guid" Nullable="false" />
+    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+    <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics" FromRole="DocCloseShiftSamples" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" FromRole="DocCloseShiftSamples" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftSamples_Docs" FromRole="DocCloseShiftSamples" ToRole="Docs" />
+  </EntityType>
+  <Association Name="FK_DocCloseShiftSamples_1CCharacteristics">
+    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+    <End Type="GammaModel.DocCloseShiftSamples" Role="DocCloseShiftSamples" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CCharacteristics">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftSamples">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftSamples_1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+    <End Type="GammaModel.DocCloseShiftSamples" Role="DocCloseShiftSamples" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CNomenclature">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftSamples">
+        <PropertyRef Name="C1CnomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftSamples_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocCloseShiftSamples" Role="DocCloseShiftSamples" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftSamples">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
   </Association>
 </Schema>

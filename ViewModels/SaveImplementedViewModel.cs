@@ -38,7 +38,7 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
         }
 
-        protected void SaveToModelAndClose()
+        protected virtual void SaveToModelAndClose()
         {
             SaveToModel();
             CloseWindow();

@@ -287,6 +287,16 @@
     <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
     <Property Name="IsSourceProduct" Type="bit" />
   </EntityType>
+  <EntityType Name="DocCloseShiftSamples">
+    <Key>
+      <PropertyRef Name="DocCloseShiftSampleID" />
+    </Key>
+    <Property Name="DocCloseShiftSampleID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CnomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
+  </EntityType>
   <EntityType Name="DocCloseShiftWithdrawals">
     <Key>
       <PropertyRef Name="DocCloseShiftID" />
@@ -1344,6 +1354,42 @@
         <PropertyRef Name="DocID" />
       </Principal>
       <Dependent Role="DocCloseShiftRemainders">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftSamples_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+    <End Role="DocCloseShiftSamples" Type="Self.DocCloseShiftSamples" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftSamples">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftSamples_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="DocCloseShiftSamples" Type="Self.DocCloseShiftSamples" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftSamples">
+        <PropertyRef Name="1CnomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocCloseShiftSamples_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocCloseShiftSamples" Type="Self.DocCloseShiftSamples" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocCloseShiftSamples">
         <PropertyRef Name="DocID" />
       </Dependent>
     </ReferentialConstraint>
@@ -2432,6 +2478,7 @@
     <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocCloseShiftSamples" EntityType="Self.DocCloseShiftSamples" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProduction" EntityType="Self.DocProduction" Schema="dbo" store:Type="Tables" />
@@ -2722,6 +2769,18 @@
     <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="Self.FK_DocCloseShiftRemainders_Docs1">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftSamples_1CCharacteristics" Association="Self.FK_DocCloseShiftSamples_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftSamples_1CNomenclature" Association="Self.FK_DocCloseShiftSamples_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocCloseShiftSamples_Docs" Association="Self.FK_DocCloseShiftSamples_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
     </AssociationSet>
     <AssociationSet Name="FK_DocCloseShiftWithdrawals_Docs" Association="Self.FK_DocCloseShiftWithdrawals_Docs">
       <End Role="Docs" EntitySet="Docs" />

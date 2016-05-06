@@ -84,14 +84,14 @@ namespace Gamma
                 }
             }
         }
-        public static void PrintReport(string reportName, string reportFolder = null, Guid? paramid = null, bool showPreview = true)
+        public static void PrintReport(string reportName, string reportFolder = null, Guid? ParamID = null, bool showPreview = true)
         {
             var parentid = GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
             var reports = GammaBase.Reports.Where(r => r.Name == reportName && (parentid == null || r.ParentID == parentid)).
                 Select(r => r.ReportID).ToList();
             if (reports.Count == 1)
             {
-                PrintReport(reports[0], paramid, showPreview);
+                PrintReport(reports[0], ParamID, showPreview);
             }
         }
         public static void DesignReport(Guid reportid)
@@ -115,8 +115,8 @@ namespace Gamma
                         ConnectionString = GammaSettings.SqlConnectionString
                     };
                     report.Dictionary.Connections.Add(conn);
-                    var paramid = new Parameter("Paramid") {DataType = typeof (Guid)};
-                    report.Parameters.Add(paramid);
+                    var ParamID = new Parameter("Paramid") {DataType = typeof (Guid)};
+                    report.Parameters.Add(ParamID);
                 }
                 report.Design();
             }

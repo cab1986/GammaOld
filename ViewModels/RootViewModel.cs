@@ -34,7 +34,7 @@ namespace Gamma.ViewModels
         public bool CloseSignal
         {
             get { return _closeSignal; }
-            private set
+            protected set
             { 
                 _closeSignal = value;
                 RaisePropertyChanged("CloseSignal");

@@ -89,6 +89,7 @@
         <Style TargetType="{x:Type dxe:SpinEdit}" BasedOn="{StaticResource DefaultEditStyle}" />
         <Style TargetType="{x:Type dxe:TextEdit}" BasedOn="{StaticResource DefaultEditStyle}" />
 
+        <Style TargetType="{x:Type g:MainView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:LoginView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:ProductionTaskBatchView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:NomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>

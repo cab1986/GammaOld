@@ -16,10 +16,9 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Создает новый экземпляр модели для грида закрытия смены конвертингов
         /// </summary>
-        public DocCloseShiftConvertingGridViewModel(GammaEntities gammaBase = null)
+        public DocCloseShiftConvertingGridViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
-            Bars.Add(ReportManager.GetReportBar("DocCloseShiftConverting"));
+            Bars.Add(ReportManager.GetReportBar("DocCloseShiftConverting", VMID));
             PlaceID = WorkSession.PlaceID;
             ShiftID = WorkSession.ShiftID;
             CloseDate = DB.CurrentDateTime;
@@ -69,30 +68,19 @@ namespace Gamma.ViewModels
                     */
                     QuantityIsReadOnly = !d.WithdrawByFact??true
             }));
- /*           foreach (var material in WithdrawalMaterials)
-            {
-                var analogs =
-                    GammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == material.NomenclatureID)
-                        .Select(a => new
-                        {
-                            NomenclatureId = a.C1CNomenclatureAnalogID,
-                            IsMarked = a.C1CNomenclature.IsArchive ?? false
-                        })
-                        .ToList();
-                foreach (var analog in analogs)
+            // Получение количества образцов
+            Samples = new ObservableCollection<Sample>(GammaBase.DocCloseShiftSamples.Where(ds => ds.DocID == docId)
+                .Select(ds => new Sample
                 {
-                    material.AvailableNomenclatures.Add(new WithdrawalMaterial.NomenclatureAnalog()
-                    {
-                        NomenclatureID = (Guid)analog.NomenclatureId,
-                        IsMarked = analog.IsMarked
-                    });
-                }
-            }
-*/
+                    NomenclatureID = ds.C1CnomenclatureID,
+                    CharacteristicID = ds.C1CCharacteristicID,
+                    Quantity = ds.Quantity/ds.C1CCharacteristics.C1CMeasureUnitsPackage.Coefficient??1,
+                    NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name
+                }));
         }
         private bool IsConfirmed { get; set; }
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
-        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || IsConfirmed;
+        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || !DB.HaveWriteAccess("DocCloseShiftSamples") || IsConfirmed;
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
         public void FillGrid()
@@ -114,6 +102,14 @@ namespace Gamma.ViewModels
                 NomenclatureName = p.NomenclatureName,
                 Number = p.Number
             }));
+            Samples = new ObservableCollection<Sample>(Pallets
+                .Select(p => new Sample
+                {
+                    NomenclatureID = p.NomenclatureID,
+                    CharacteristicID = p.CharacteristicID,
+                    Quantity = 0,
+                    NomenclatureName = p.NomenclatureName,
+                }).Distinct());
             WithdrawalMaterials =
                 new ItemsChangeObservableCollection<WithdrawalMaterial>(
                     GammaBase.FillDocCloseShiftConvertingMaterials(PlaceID, ShiftID, CloseDate)
@@ -193,6 +189,7 @@ namespace Gamma.ViewModels
             Pallets?.Clear();
             DocCloseShiftDocs?.Clear();
             WithdrawalMaterials?.Clear();
+            Samples?.Clear();
         }
 
         private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();
@@ -206,6 +203,19 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("WithdrawalMaterials");
             }
         }
+
+        private ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
+
+        public ObservableCollection<Sample> Samples
+        {
+            get { return _samples; }
+            set
+            {
+                _samples = value;
+                RaisePropertiesChanged("Samples");
+            }
+        }
+
         private ObservableCollection<Pallet> _pallets = new ObservableCollection<Pallet>();
         
         public ObservableCollection<Pallet> Pallets
@@ -226,11 +236,15 @@ namespace Gamma.ViewModels
         {
             if (IsReadOnly) return;
             base.SaveToModel(docId, gammaBase);
-            var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftWithdrawals).First(d => d.DocID == docId);
+            var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftWithdrawals)
+                .Include(d => d.DocCloseShiftSamples)
+                .First(d => d.DocID == docId);
             if (docCloseShift.DocCloseShiftDocs == null) docCloseShift.DocCloseShiftDocs = new List<Docs>();
             Guid docWithdrawalId;
             if (docCloseShift.DocCloseShiftWithdrawals == null)
                 docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
+            if (docCloseShift.DocCloseShiftSamples == null)
+                docCloseShift.DocCloseShiftSamples = new List<DocCloseShiftSamples>();
             if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
             {
                 docWithdrawalId = SqlGuidUtil.NewSequentialid();
@@ -254,6 +268,19 @@ namespace Gamma.ViewModels
                     }
                 );
             }
+            GammaBase.DocCloseShiftSamples.RemoveRange(docCloseShift.DocCloseShiftSamples);
+            foreach (var sample in Samples)
+            {
+                docCloseShift.DocCloseShiftSamples.Add(new DocCloseShiftSamples
+                {
+                    DocID = docId,
+                    C1CnomenclatureID = sample.NomenclatureID,
+                    C1CCharacteristicID = sample.CharacteristicID,
+                    DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
+                    Quantity = sample.Quantity*GammaBase.C1CCharacteristics
+                        .FirstOrDefault(c => c.C1CCharacteristicID == sample.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient??1
+                });
+            }
             docCloseShift.DocCloseShiftDocs.Clear();
             docCloseShift.DocCloseShiftDocs = DocCloseShiftDocs;
             GammaBase.DocWithdrawalMaterials.RemoveRange(
@@ -274,6 +301,34 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
         }
 
+        public class Sample
+        {
+            public Guid NomenclatureID { get; set; }
+            public Guid CharacteristicID { get; set; }
+            public string NomenclatureName { get; set; }
+            public decimal Quantity { get; set; }
+
+            protected bool Equals(Sample other)
+            {
+                return NomenclatureID.Equals(other.NomenclatureID) && CharacteristicID.Equals(other.CharacteristicID);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((Sample) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (NomenclatureID.GetHashCode()*397) ^ CharacteristicID.GetHashCode();
+                }
+            }
+        }
 
 
     }

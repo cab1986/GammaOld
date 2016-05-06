@@ -1137,5 +1137,16 @@
         <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
       </EndProperty>
     </AssociationSetMapping>
+    <EntitySetMapping Name="DocCloseShiftSamples">
+      <EntityTypeMapping TypeName="GammaModel.DocCloseShiftSamples">
+        <MappingFragment StoreEntitySet="DocCloseShiftSamples">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CnomenclatureID" ColumnName="1CnomenclatureID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="DocCloseShiftSampleID" ColumnName="DocCloseShiftSampleID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

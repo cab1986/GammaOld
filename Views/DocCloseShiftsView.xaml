@@ -7,16 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:ignore="http://www.galasoft.ch/ignore" 
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
-    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
-    xmlns:g="clr-namespace:Gamma"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:gc="clr-namespace:Gamma.Common"
     x:Class="Gamma.Views.DocCloseShiftsView" 
     mc:Ignorable="d ignore" 
     Title="Закрытия смен" 
-    Height="{g:SettingBinding DocCloseShiftsHeight}" 
-    Width="{g:SettingBinding DocCloseShiftsWidth}"
-    Left="{g:SettingBinding DocCloseShiftsLeft}"
-    Top="{g:SettingBinding DocCloseShiftsTop}">
-
+    Height="1200" 
+    Width="600"
+    gc:WindowSettings.Save="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
@@ -36,7 +34,7 @@
                     <dxe:ComboBoxEdit ItemsSource="{Binding Places}" EditValue="{Binding PlaceID}" DisplayMember="PlaceName" ValueMember="PlaceID"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
-            <Button Content="Найти" Command="{Binding FindDocCloseShiftsCommand}" Height="40" Width="80"/>
+            <Button Content="Найти" Command="{Binding FindDocCloseShiftsCommand}" Height="25" Width="80" VerticalAlignment="Bottom"/>
         </dxlc:LayoutControl>
         <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocCloseShifts}" EnableSmartColumnsGeneration="True" 
                          SelectedItem="{Binding SelectedDocCloseShift}" AutoExpandAllGroups="True">
