@@ -171,6 +171,7 @@
     <Compile Include="Common\Nomenclature1CFolder.cs" />
     <Compile Include="Common\Pallet.cs" />
     <Compile Include="Common\ProductRelation.cs" />
+    <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Common\SpoolRemainder.cs" />
     <Compile Include="Common\UIServices.cs" />
     <Compile Include="Common\ViewsManager.cs" />

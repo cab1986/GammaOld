@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Windows;
 using Gamma.ViewModels;
 namespace Gamma.Views
 {
     /// <summary>
-    /// Interaction logic for RoleEditView.xaml
+    /// Logic fo RoleEidtView Window
     /// </summary>
-    public partial class RoleEditView : Window
+    public partial class RoleEditView
     {
         public RoleEditView(RoleEditMessage msg)
         {
-            RoleEditViewModel viewModel;
-            if (msg.RoleID == null) viewModel = new RoleEditViewModel();
-            else viewModel = new RoleEditViewModel((Guid)msg.RoleID);
-            this.DataContext = viewModel;
+            var viewModel = msg.RoleID == null ? new RoleEditViewModel(msg.GammaBase) : new RoleEditViewModel((Guid)msg.RoleID, msg.GammaBase);
+            DataContext = viewModel;
             InitializeComponent();
         }
     }

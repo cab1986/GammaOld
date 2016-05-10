@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Windows;
 using Gamma.ViewModels;
 
 namespace Gamma.Views
 {
     /// <summary>
-    /// Interaction logic for NewUserView.xaml
+    /// CodeBehind для UserEditViewWindow
     /// </summary>
-    public partial class UserEditView : Window
+    public partial class UserEditView
     {
         public UserEditView(UserEditMessage msg)
         {
-            UserEditViewModel viewModel;
-            if (msg.UserID == null) viewModel = new UserEditViewModel();
-            else viewModel = new UserEditViewModel((Guid)msg.UserID);
-            this.DataContext = viewModel;
+            var viewModel = msg.UserID == null ? new UserEditViewModel(msg.GammaBase) : new UserEditViewModel((Guid)msg.UserID, msg.GammaBase);
+            DataContext = viewModel;
             InitializeComponent();
         }
     }

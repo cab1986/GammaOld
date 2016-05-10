@@ -5,6 +5,7 @@ using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using Gamma.Common;
 
 
 namespace Gamma.ViewModels
@@ -23,7 +24,7 @@ namespace Gamma.ViewModels
         public UserEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             _isNewUser = true;
-            User = new Users() { UserID = SqlGuidUtil.NewSequentialid() };
+            User = new Users { UserID = SqlGuidUtil.NewSequentialid() };
             ChangePassEnabled = false;
             InitializeFields();
         }
@@ -31,10 +32,13 @@ namespace Gamma.ViewModels
         {
             ChangePassEnabled = true;
             UserID = userid;
-            User = GammaBase.Users.Include(u => u.Places).FirstOrDefault(u => u.UserID == userid);
+            User = GammaBase.Users.Include(u => u.Places).First(u => u.UserID == userid);
             Login = User.Login;
             Name = User.Name;
-            PlaceID = User.Places.First().PlaceID;
+            UserPlaces = new ObservableCollection<PlaceID>(User.Places.Select(p => new PlaceID()
+            {
+                Value = p.PlaceID
+            }));
             Post = User.Post;
             RoleID = User.RoleID;
             IsDBAdmin = User.DBAdmin;
@@ -44,9 +48,16 @@ namespace Gamma.ViewModels
         private void InitializeFields()
         {
             ChangePasswordCommand = new DelegateCommand(ChangePassword);
+            AddPlaceCommand = new DelegateCommand(() => UserPlaces.Add(Places.Where(p => !UserPlaces.Select(up => up.Value).Contains(p.PlaceID))
+                .Select(p => new PlaceID() { Value = p.PlaceID }).FirstOrDefault()), 
+                () => Places.Any(p => !UserPlaces.Select(up => up.Value).Contains(p.PlaceID)));
+            DeletePlaceCommand = new DelegateCommand(() => UserPlaces.Remove(SelectedPlaceID), () => SelectedPlaceID != null);
             Places = new ObservableCollection<Places>(GammaBase.Places);
             Roles = new ObservableCollection<Roles>(GammaBase.Roles);
         }
+        public DelegateCommand AddPlaceCommand { get; private set; }
+        public DelegateCommand DeletePlaceCommand { get; private set; }
+        public PlaceID SelectedPlaceID { get; set; }
         private readonly bool _isNewUser;
         public bool IsDBAdmin { get; set; }
         [Required(ErrorMessage=@"Поле логин не может быть пустым")]
@@ -76,9 +87,9 @@ namespace Gamma.ViewModels
             }
         }
         [Required(ErrorMessage=@"Пароль не может быть пустым")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public string Password { get; set; }
-        [Required(ErrorMessage=@"Не указано подразделение")]
-        public int PlaceID { get; set; }
         public string Post { get; set; }
         [Required(ErrorMessage = @"Укажите роль доступа пользователя")]
         public Guid RoleID { get; set; }
@@ -91,12 +102,14 @@ namespace Gamma.ViewModels
 
         protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(gammaBase);
+            
             User.Login = Login;
             User.Name = Name;
             User.Places.Clear();
-            User.Places.Add(GammaBase.Places.Find(PlaceID));
+            foreach (var placeId in UserPlaces)
+            {
+                User.Places.Add(GammaBase.Places.Find(placeId.Value));
+            }
             User.RoleID = RoleID;
             User.ShiftID = ShiftID;
             User.Post = Post;
@@ -107,15 +120,28 @@ namespace Gamma.ViewModels
             }
             GammaBase.SaveChanges();
             if (_isNewUser)
-                DB.RecreateUserInDb(User.UserID, Password);
+                DB.RecreateUserInDb(User.UserID, Password, GammaBase);
         }
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DelegateCommand ChangePasswordCommand { get; private set; }
         private void ChangePassword()
         {
-            DB.ChangeUserPassword(User.UserID, Password);
+            DB.ChangeUserPassword(User.UserID, Password, GammaBase);
         }
         public bool ChangePassEnabled { get; set; }
+        [RequiredCollection(ErrorMessage = @"Необходимо выбрать подразделение")]
+        public ObservableCollection<PlaceID> UserPlaces { get; set; } = new ObservableCollection<PlaceID>();
         public ObservableCollection<Places> Places { get; set; }
         public ObservableCollection<Roles> Roles { get; set; }
+
+        public class PlaceID
+        {
+            public int Value
+            {
+                get;
+                set;
+            }
+        }
     }
 }

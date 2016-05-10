@@ -8,9 +8,6 @@ namespace Gamma.ViewModels
 {
     /// <summary>
     /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
     /// </summary>
     public class RoleEditViewModel : SaveImplementedViewModel
     {
@@ -61,24 +58,23 @@ namespace Gamma.ViewModels
 
         protected override void SaveToModel(GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);
             if (_isNewRole)
             {
-                gammaBase.Roles.Add(Role);
-                gammaBase.RolePermits.AddRange(RolePermits);
+                GammaBase.Roles.Add(Role);
+                GammaBase.RolePermits.AddRange(RolePermits);
             }
             else
             {
                 if (!Role.RolePermits.SequenceEqual(RolePermits))
                 {
                     var toadd = RolePermits.Where(p => !Role.RolePermits.Contains(p));
-                    gammaBase.RolePermits.AddRange(toadd);
+                    GammaBase.RolePermits.AddRange(toadd);
                     var todel = Role.RolePermits.Where(p => !RolePermits.Contains(p));
-                    gammaBase.RolePermits.RemoveRange(todel);
+                    GammaBase.RolePermits.RemoveRange(todel);
                 }
             }
-            gammaBase.SaveChanges();
+            GammaBase.SaveChanges();
             if (!_isNewRole) DB.RecreateRolePermits(Role.RoleID);
         }
         //private Dictionary<int, string> _marks = 

@@ -1,9 +1,20 @@
 ﻿using System;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Models;
 
 namespace Gamma
 {
+    public class ContextMessage
+    {
+        public ContextMessage(GammaEntities gammaBase = null)
+        {
+            GammaBase = null;
+        }
+
+        public GammaEntities GammaBase { get; set; }
+    }
+
     public class BaseReconnectedMessage { }
     public class OpenFilterDateMessage { }
  
@@ -86,23 +97,48 @@ namespace Gamma
     {
         public string Barcode;
     }
-    public class PermitEditMessage
+    public class PermitEditMessage:ContextMessage
     {
-        public Guid? PermitID;
+        public PermitEditMessage(GammaEntities gammaBase): base(gammaBase) { }
+
+        public PermitEditMessage(Guid permitId, GammaEntities gammaBase = null) : base(gammaBase)
+        {
+            PermitID = permitId;
+        }
+        public Guid? PermitID { get; private set; }
     }
-    public class RoleEditMessage
+    public class RoleEditMessage: ContextMessage
     {
+        public RoleEditMessage(GammaEntities gammaBase = null): base(gammaBase) { }
+
+        public RoleEditMessage(Guid roleID, GammaEntities gammaBase = null)
+        {
+            GammaBase = gammaBase;
+            RoleID = roleID;
+        }
+
         public Guid? RoleID;
     }
-    public class UserEditMessage
+    public class UserEditMessage: ContextMessage
     {
+        public UserEditMessage(Guid? userId, GammaEntities gammaBase = null)
+        {
+            UserID = userId;
+            GammaBase = gammaBase;
+        }
+
+        public UserEditMessage(GammaEntities gammaBase = null)
+        {
+            GammaBase = gammaBase;
+        }
+
         public Guid? UserID;
     }
     public class UserChangedMessage  { }
     public class PermitChangedMessage  { }
     public class RoleChangedMessage  { }
     
-    public class ParentSaveMessage { }
+//    public class ParentSaveMessage { }
     public class OpenManageUsersMessage { }
     public class OpenDocCloseShiftMessage
     {
@@ -123,29 +159,29 @@ namespace Gamma
     }
     public static class MessageManager
     {
-        public static void EditUser()
+        public static void EditUser(GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new UserEditMessage());
+            Messenger.Default.Send(new UserEditMessage(gammaBase));
         }
-        public static void EditUser(Guid userid)
+        public static void EditUser(Guid userId, GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new UserEditMessage { UserID = userid });
+            Messenger.Default.Send(new UserEditMessage (userId, gammaBase));
         }
-        public static void EditPermit()
+        public static void EditPermit(GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new PermitEditMessage());
+            Messenger.Default.Send(new PermitEditMessage(gammaBase));
         }
-        public static void EditPermit(Guid permitid)
+        public static void EditPermit(Guid permitId, GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new PermitEditMessage { PermitID = permitid });
+            Messenger.Default.Send(new PermitEditMessage(permitId, gammaBase));
         }
-        public static void EditRole()
+        public static void EditRole(GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new RoleEditMessage());
+            Messenger.Default.Send(new RoleEditMessage(gammaBase));
         }
-        public static void EditRole(Guid roleID)
+        public static void EditRole(Guid roleID, GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new RoleEditMessage { RoleID = roleID });
+            Messenger.Default.Send(new RoleEditMessage(roleID, gammaBase));
         }
         public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchID, Guid nomenclatureid)
         {

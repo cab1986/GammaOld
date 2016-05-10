@@ -1,4 +1,4 @@
-﻿D:\CProjects\Gamma\Gamma\obj\Debug\GeneratedInternalTypeHelper.g.cs
+﻿
 FD:\CProjects\Gamma\Gamma\App.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
@@ -23,4 +23,5 @@ FD:\CProjects\Gamma\Gamma\Views\NomenclatureView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskPMView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskRWView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\UserEditView.xaml;;
 

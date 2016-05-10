@@ -189,7 +189,7 @@ namespace Gamma.ViewModels
             IsConfirmed = Doc.IsConfirmed;
             Bars = ((IBarImplemented) CurrentViewModel).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
-            Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
+//            Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
@@ -213,10 +213,12 @@ namespace Gamma.ViewModels
                 );
         }
 
+/*
         private void SaveToModel(ParentSaveMessage msg)
         {
             SaveToModel();
         }
+*/
         private void BarcodeReceived(BarcodeMessage msg)
         {
             if (!IsActive) return;

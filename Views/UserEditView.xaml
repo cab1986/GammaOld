@@ -5,15 +5,18 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:viewModels="clr-namespace:Gamma.ViewModels"
     x:Class="Gamma.Views.UserEditView" 
     Title="Пользователь" 
-    Width="307" 
-    Height="345.104">
+    Width="500" 
+    Height="800">
     <Grid>
-        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox" Background="#FFB1CEF3">
+        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox">
             <dxlc:LayoutGroup x:Name="LayoutGroup" Orientation="Vertical" VerticalAlignment="Stretch" View="Group">
                 <dxlc:LayoutItem IsRequired="True" Label="Логин:" LabelPosition="Top">
-                    <dxe:TextEdit MinWidth="200" EditValue="{Binding Login,ValidatesOnDataErrors=True}"/>
+                    <dxe:TextEdit MinWidth="200" EditValue="{Binding Login, ValidatesOnDataErrors=True}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutGroup View="Group">
                     <dxlc:LayoutItem IsRequired="True" Label="Пароль:" LabelPosition="Top">
@@ -22,7 +25,7 @@
                     <Button Content="Сменить пароль" Height="30" Command="{Binding ChangePasswordCommand}" IsEnabled="{Binding ChangePassEnabled}"/>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem Label="Роль пользователя" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding RoleID,ValidatesOnDataErrors=True}" ItemsSource="{Binding Roles}" DisplayMember="Name" ValueMember="RoleID" />
+                    <dxe:ComboBoxEdit EditValue="{Binding RoleID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Roles}" DisplayMember="Name" ValueMember="RoleID" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Имя" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding Name, ValidatesOnDataErrors=True}"/>
@@ -30,8 +33,27 @@
                 <dxlc:LayoutItem Label="Должность" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding Post}"/>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Подразделение" LabelPosition="Top">
-                    <dxe:ComboBoxEdit ItemsSource="{Binding Places}" DisplayMember="Name" ValueMember="PlaceID" EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}"/>
+                <dxlc:LayoutItem Label="Подразделения" LabelPosition="Top">
+                    <dxb:BarManager>
+                        <dxb:BarManager.Bars>
+                            <dxb:Bar>
+                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddPlaceCommand}"/>
+                                <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeletePlaceCommand}"/>
+                            </dxb:Bar>
+                        </dxb:BarManager.Bars>
+                        <dxg:GridControl MaxHeight="1200" ItemsSource="{Binding UserPlaces}" SelectedItem="{Binding SelectedPlaceID}">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AutoWidth="True"/>
+                            </dxg:GridControl.View>
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Подразделение" FieldName="Value">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:ComboBoxEditSettings ItemsSource="{Binding Places}" ValueMember="PlaceID" DisplayMember="Name"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                            </dxg:GridControl.Columns>
+                        </dxg:GridControl>
+                    </dxb:BarManager>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Номер смены" >
