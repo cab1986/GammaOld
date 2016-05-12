@@ -67,6 +67,6 @@
         </dxlc:LayoutGroup>
     </dxlc:LayoutGroup>
     <dxmvvm:Interaction.Behaviors>
-        <g:UiAuthBehavior/>
+        <g:UIAuthBehavior/>
     </dxmvvm:Interaction.Behaviors>
 </UserControl>

@@ -100,7 +100,7 @@ namespace Gamma.ViewModels
         private string _name;
         private Users User { get; set; }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             
             User.Login = Login;

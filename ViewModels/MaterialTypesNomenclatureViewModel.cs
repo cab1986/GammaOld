@@ -180,7 +180,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             base.SaveToModel(gammaBase);
             var materialType = GammaBase.MaterialTypes.Include(mt => mt.C1CNomenclature).First(p => p.MaterialTypeID == MaterialTypeId);

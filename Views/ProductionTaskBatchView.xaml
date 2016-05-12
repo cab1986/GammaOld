@@ -1,4 +1,4 @@
-﻿<g:MvvmWindow
+﻿<UserControl
         xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -17,30 +17,19 @@
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
         x:Class="Gamma.Views.ProductionTaskBatchView"
-        mc:Ignorable="d ignore"
-        MinHeight="400"
-        Title="{Binding Title}"
-        Height="800"
-        Width="1200"
-        gc:WindowSettings.Save="True"
-        WindowState="Maximized">
-    <Window.Resources>
+        mc:Ignorable="d ignore" d:DesignHeight="900" d:DesignWidth="1200">
+    <UserControl.Resources>
         <DataTemplate DataType="{x:Type vm:ProductionTaskBatchSGBViewModel}">
             <v:ProductionTaskBatchSGBView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:ProductionTaskSGIViewModel}">
             <v:ProductionTaskSGIView />
         </DataTemplate>
-    </Window.Resources>
-    <dxmvvm:Interaction.Behaviors>
-        <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
-        <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
-    </dxmvvm:Interaction.Behaviors>
+    </UserControl.Resources>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition />
-            <RowDefinition Height="32" />
         </Grid.RowDefinitions>
         <ToolBar>
             <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" />
@@ -134,10 +123,8 @@
                 </Grid>
             </dx:DXTabItem>
         </dx:DXTabControl>
-        <Button Grid.Row="2"  HorizontalAlignment="Right" Margin="3,3,3,3" VerticalAlignment="Bottom" Width="75" Height="25" Content="Отмена" Command="{Binding CloseCommand}"/>
-        <Button Grid.Row="2"  Content="OK" HorizontalAlignment="Right" Margin="3,1,83,0" Width="75" Height="25" Command="{Binding SaveAndCloseCommand}"/>
         <dxmvvm:Interaction.Behaviors>
-            <g:UiAuthBehavior/>
+            <g:UIAuthBehavior/>
         </dxmvvm:Interaction.Behaviors>
     </Grid>
-</g:MvvmWindow>
+</UserControl>

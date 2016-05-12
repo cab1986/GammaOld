@@ -52,8 +52,19 @@ namespace Gamma.ViewModels
             IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
         }
         
+        // ReSharper disable once MemberCanBePrivate.Global
         public byte ProductionTaskStateID { get; set; }
 
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
+        public override Guid? CharacteristicID
+        {
+            get { return base.CharacteristicID; }
+            set
+            {
+                base.CharacteristicID = value;
+            }
+        }
 
         private ObservableCollection<Place> _places;
 
@@ -217,6 +228,6 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Только для чтения, если по каким-то причинам не задание невалидно, то есть возможность редактирования
         /// </summary>
-        public bool IsReadOnly => (IsConfirmed || DB.HaveWriteAccess("ProductionTasks")) && IsValid;
+        public bool IsReadOnly => (IsConfirmed || !DB.HaveWriteAccess("ProductionTasks")) && IsValid;
     }
 }

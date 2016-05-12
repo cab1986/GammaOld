@@ -19,6 +19,7 @@ namespace Gamma.ViewModels
         public MainViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
             Messenger.Default.Register<CloseMessage>(this, msg => CloseSignal = true);
+            Messenger.Default.Register<OpenProductionTaskBatchMessage>(this, OpenProductionTaskBatch);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
             if (WorkSession.PlaceID > 0) // Если не администрация
@@ -53,6 +54,9 @@ namespace Gamma.ViewModels
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
                 CloseShiftCommand = new DelegateCommand(CloseShift);
+                BackCommand = new DelegateCommand(() => { CurrentView = PreviousView;
+                                                            PreviousView = null;
+                }, () => PreviousView != null);
                 OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>(MessageManager.OpenDocCloseShifts);
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
@@ -89,6 +93,38 @@ namespace Gamma.ViewModels
                     );
             }
         }
+
+        private void OpenProductionTaskBatch(OpenProductionTaskBatchMessage msg)
+        {
+            if (msg.Window) return;
+            CurrentView = new ProductionTaskBatchViewModel(msg, DB.GammaDb);
+            ActivatedCommand = ((ProductionTaskBatchViewModel) CurrentView).ActivatedCommand;
+            DeactivatedCommand = ((ProductionTaskBatchViewModel) CurrentView).DeactivatedCommand;
+        }
+
+        private DelegateCommand _activatedCommand;
+        private DelegateCommand _deactivatedCommand;
+
+        public DelegateCommand ActivatedCommand 
+        {
+            get { return _activatedCommand; }
+            set
+            {
+                _activatedCommand = value;
+                RaisePropertyChanged("ActivatedCommand");
+            }
+        }
+
+        public DelegateCommand DeactivatedCommand
+        {
+            get { return _deactivatedCommand; }
+            set
+            {
+                _deactivatedCommand = value;
+                RaisePropertyChanged("DeactivatedCommand");
+            }
+        }
+
         private void OpenPlaceProducts(int placeID)
         {
             UIServices.SetBusyState();
@@ -138,12 +174,15 @@ namespace Gamma.ViewModels
         public ViewModelBase CurrentView
         {
             get { return _currentView; }
-            private set { 
+            private set
+            {
+                PreviousView = CurrentView;
                 _currentView = value;
                 RaisePropertyChanged("CurrentView");
                 CurrentViewChanged();
             }
         }
+        private ViewModelBase PreviousView { get; set; }
         public string StatusText { get; set; }
         private DelegateCommand _newItemCommand;
         public DelegateCommand NewItemCommand 
@@ -173,6 +212,17 @@ namespace Gamma.ViewModels
             {
                 _deleteItemCommand = value;
                 RaisePropertyChanged("DeleteItemCommand");
+            }
+        }
+
+        private DelegateCommand _backCommand;
+        public DelegateCommand BackCommand
+        {
+            get { return _backCommand; }
+            set
+            {
+                _backCommand = value;
+                RaisePropertyChanged("BackCommand");
             }
         }
         private DelegateCommand _refreshCommand;

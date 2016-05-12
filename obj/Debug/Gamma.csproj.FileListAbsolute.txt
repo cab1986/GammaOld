@@ -239,3 +239,5 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\MaterialTypesNomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftConvertingGridView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftConvertingGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchWindowView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchWindowView.baml

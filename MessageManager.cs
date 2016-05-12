@@ -29,8 +29,9 @@ namespace Gamma
     public class OpenMainMessage { }
     public class OpenProductionTaskBatchMessage 
     {
-        public BatchKinds BatchKind;
-        public Guid? ProductionTaskBatchID;
+        public BatchKinds BatchKind { get; set; }
+        public Guid? ProductionTaskBatchID { get; set; }
+        public bool Window { get; set; } = true;
     }
     public class ProductChangedMessage
     {

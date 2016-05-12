@@ -12,7 +12,7 @@ using DevExpress.Mvvm.UI.Interactivity;
 
 namespace Gamma
 {
-    public class UiAuthBehavior : Behavior<FrameworkElement>
+    public class UIAuthBehavior : Behavior<FrameworkElement>
     {
         protected override void OnAttached()
         {

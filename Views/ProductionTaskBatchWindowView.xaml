@@ -1,0 +1,32 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:common="clr-namespace:Gamma.Common"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:views="clr-namespace:Gamma.Views"
+        x:Class="Gamma.Views.ProductionTaskBatchWindowView"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="900" Width="1200"
+        common:WindowSettings.Save="True">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:ProductionTaskBatchViewModel}">
+            <views:ProductionTaskBatchView />
+        </DataTemplate>
+    </Window.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
+        <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="32" />
+        </Grid.RowDefinitions>
+        <ContentControl Content="{Binding ProductionTaskBatchViewModel}" />
+        <Button Grid.Row="1"  HorizontalAlignment="Right" Margin="3,3,3,3" VerticalAlignment="Bottom" Width="75" Height="25" Content="Отмена" Command="{Binding CloseCommand}"/>
+        <Button Grid.Row="1"  Content="OK" HorizontalAlignment="Right" Margin="3,1,83,0" Width="75" Height="25" Command="{Binding SaveAndCloseCommand}"/>
+    </Grid>
+</Window>

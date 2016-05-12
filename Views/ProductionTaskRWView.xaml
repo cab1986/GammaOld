@@ -153,6 +153,6 @@
         <Label Content="{Binding MainCutting.TotalFormat}" HorizontalAlignment="Right" FontWeight="Bold" />
     </dxlc:LayoutGroup>
     <dxmvvm:Interaction.Behaviors>
-        <g:UiAuthBehavior/>
+        <g:UIAuthBehavior/>
     </dxmvvm:Interaction.Behaviors>
 </UserControl>

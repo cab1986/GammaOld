@@ -80,7 +80,9 @@ namespace Gamma.Common
         }
         private void OpenProductionTask(OpenProductionTaskBatchMessage msg)
         {
-            var view = new ProductionTaskBatchView(msg);
+            //var view = new ProductionTaskBatchView(msg);
+            if (!msg.Window) return;
+            var view = new ProductionTaskBatchWindowView(msg);
             view.Show();
         }
         private void OpenReportList(OpenReportListMessage msg)

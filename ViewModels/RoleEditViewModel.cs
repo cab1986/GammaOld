@@ -56,7 +56,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             base.SaveToModel(gammaBase);
             if (_isNewRole)

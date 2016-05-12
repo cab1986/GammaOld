@@ -178,7 +178,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);

@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
 
         public DelegateCommand SaveAndCloseCommand { get; private set; }
 
-        protected virtual void SaveToModel(GammaEntities gammaBase = null)
+        public virtual void SaveToModel(GammaEntities gammaBase = null)
         {
         }
         /// <summary>

@@ -79,7 +79,7 @@ namespace Gamma.ViewModels
 
         }
 
-        private bool IsActive { get; set; }
+        private bool IsActive { get; set; } = true;
         /// <summary>
         /// Действие при получении шк от сканера
         /// </summary>
@@ -91,6 +91,7 @@ namespace Gamma.ViewModels
                 .FirstOrDefault(
                     dp => dp.Docs.DocTypeID == (short) DocTypes.DocProduction && dp.Products.BarCode == msg.Barcode);
             if (docProducts == null) return;
+            GammaBase.Entry(docProducts).Reload();
             docProducts.IsInConfirmed = true;
             docProducts.Docs.IsConfirmed = true;
             string message;
@@ -114,6 +115,12 @@ namespace Gamma.ViewModels
             var productionTaskProduct =
                 ProductionTaskProducts.FirstOrDefault(ptp => ptp.ProductID == docProducts.ProductID);
             if (productionTaskProduct != null) productionTaskProduct.IsConfirmed = true;
+            var view = CurrentView as ProductionTaskSGIViewModel;
+            if (view != null)
+            {
+                view.MadeQuantity =
+                    _productionTaskProducts.Where(p => p.IsConfirmed).Sum(p => p.Quantity ?? 0);
+            }
         }
 
         private bool CanCreateNewProduct()
@@ -169,11 +176,20 @@ namespace Gamma.ViewModels
         /// Создание нового продукта. В конструкторе привязка к CreateNewProduct();
         /// </summary>
         public DelegateCommand CreateNewProductCommand { get; private set; }
+
         /// <summary>
         /// Только для чтения, если нет прав или задание не в состоянии "на рассмотрении"
         /// </summary>
-        public bool IsReadOnly => (!DB.HaveWriteAccess("ProductionTasks") && !WorkSession.DBAdmin) || 
-                                  ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
+        public bool IsReadOnly
+        {
+            get
+            {
+                bool access = !DB.HaveWriteAccess("ProductionTasks") ||
+                                      ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
+                return access;
+            }
+        }
+        
 
         private BatchKinds _batchKind;
 
@@ -264,7 +280,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);
@@ -588,7 +604,7 @@ namespace Gamma.ViewModels
                 if (view != null)
                 {
                     view.MadeQuantity =
-                        _productionTaskProducts.Sum(p => p.Quantity??0);
+                        _productionTaskProducts.Where(p => p.IsConfirmed).Sum(p => p.Quantity??0);
                 }
                 RaisePropertyChanged("ProductionTaskProducts");
             }

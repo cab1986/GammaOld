@@ -239,3 +239,5 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma_Content.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftConvertingGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftUnwinderRemainderView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductPalletView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchWindowView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchWindowView.baml

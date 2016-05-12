@@ -65,14 +65,16 @@ namespace Gamma.ViewModels
         }
         private void EditItem()
         {
-            var msg = new OpenProductionTaskBatchMessage { ProductionTaskBatchID = SelectedProductionTaskSGI.ProductionTaskBatchID, BatchKind = BatchKinds.SGI };
+            var msg = new OpenProductionTaskBatchMessage { ProductionTaskBatchID = SelectedProductionTaskSGI.ProductionTaskBatchID, BatchKind = BatchKinds.SGI,
+                Window = WorkSession.PlaceGroup == PlaceGroups.Other};
             MessageManager.OpenProductionTask(msg);
         }
         private void NewProductionTask()
         {
             MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage
             {
-                BatchKind = BatchKinds.SGI
+                BatchKind = BatchKinds.SGI,
+                Window = true
             });
         }
 

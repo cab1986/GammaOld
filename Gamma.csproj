@@ -511,6 +511,7 @@
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskBatchWrapperViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGIViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskWRViewModel.cs" />
@@ -612,6 +613,9 @@
     </Compile>
     <Compile Include="Views\ProductionTaskBatchSGBView.xaml.cs">
       <DependentUpon>ProductionTaskBatchSGBView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTaskBatchWindowView.xaml.cs">
+      <DependentUpon>ProductionTaskBatchWindowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTasksSGIView.xaml.cs">
       <DependentUpon>ProductionTasksSGIView.xaml</DependentUpon>
@@ -756,6 +760,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProductionTaskBatchSGBView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTaskBatchWindowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

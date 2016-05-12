@@ -61,7 +61,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <dxmvvm:Interaction.Behaviors>
-            <g:UiAuthBehavior />
+            <g:UIAuthBehavior />
         </dxmvvm:Interaction.Behaviors>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
         <dx:DXTabControl Grid.Row="1">
@@ -91,6 +91,9 @@
             <dx:DXTabItem Header="Связи">
                 <dxg:GridControl Margin="-12,-12,-12,-12" ItemsSource="{Binding ProductRelations}" SelectedItem="{Binding SelectedProduct}"
                                  AutoExpandAllGroups="True" >
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductRelationProductCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn Header="Вид связи:" FieldName="RelationKind" GroupIndex="0" />
                         <dxg:GridColumn Header="Вид изделия:" FieldName="ProductKind" GroupIndex="1" />

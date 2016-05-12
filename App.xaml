@@ -35,7 +35,7 @@
                     </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
                 <dxmvvm:Interaction.Behaviors>
-                    <g:UiAuthBehavior/>
+                    <g:UIAuthBehavior/>
                 </dxmvvm:Interaction.Behaviors>
             </dxlc:LayoutGroup>
         </DataTemplate>
@@ -91,7 +91,7 @@
 
         <Style TargetType="{x:Type g:MainView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:LoginView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
-        <Style TargetType="{x:Type v:ProductionTaskBatchView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:ProductionTaskBatchWindowView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:NomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:DocProductView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:FindProductView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>

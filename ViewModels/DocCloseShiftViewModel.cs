@@ -93,7 +93,7 @@ namespace Gamma.ViewModels
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             if (!CanSaveExecute()) return;
 //            gammaBase = gammaBase ?? DB.GammaDb;

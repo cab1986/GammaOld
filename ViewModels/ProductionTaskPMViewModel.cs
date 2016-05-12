@@ -103,6 +103,16 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("DateEnd");
             }
         }
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
+        public override Guid? CharacteristicID
+        {
+            get { return base.CharacteristicID; }
+            set
+            {
+                base.CharacteristicID = value;
+            }
+        }
         private bool IsConfirmed { get; set; }
         private void ProductionTaskRwChanged(ProductionTaskRwMessage msg)
         {

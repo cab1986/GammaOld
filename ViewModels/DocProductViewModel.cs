@@ -193,6 +193,7 @@ namespace Gamma.ViewModels
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
+            OpenProductRelationProductCommand = new DelegateCommand(OpenProductRelationProduct, () => SelectedProduct != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
         }
 
@@ -201,6 +202,8 @@ namespace Gamma.ViewModels
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
                 from prel in GammaBase.DocRelations(Doc.DocID)
+                let productKindID = prel.ProductKindID
+                where productKindID != null
                 select new ProductRelation
                 {
                     Date = prel.Date,
@@ -208,7 +211,8 @@ namespace Gamma.ViewModels
                     Number = prel.Number,
                     ProductID = prel.ProductID,
                     ProductKind = prel.ProductKind,
-                    RelationKind = prel.RelationKind
+                    RelationKind = prel.RelationKind,
+                    ProductKindID = (ProductKinds)productKindID
                 }
                 );
         }
@@ -329,6 +333,7 @@ namespace Gamma.ViewModels
             }
         }
         public DelegateCommand OpenProductionTaskCommand { get; private set; }
+        
         private ObservableCollection<BarViewModel> _bars;
       
         private void PrintReport(PrintReportMessage msg)
@@ -339,7 +344,7 @@ namespace Gamma.ViewModels
             ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }
 
-        protected override void SaveToModel(GammaEntities gammaBase = null)
+        public override void SaveToModel(GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("Docs")) return;
             gammaBase = gammaBase ?? DB.GammaDb;
@@ -382,6 +387,25 @@ namespace Gamma.ViewModels
         private bool IsActive { get; set; }
         public DelegateCommand ActivatedCommand { get; private set; }
         public DelegateCommand DeactivatedCommand { get; private set; }
+        public DelegateCommand OpenProductRelationProductCommand { get; private set; }
+
+        private void OpenProductRelationProduct()
+        {
+            if (SelectedProduct == null) return;
+            switch (SelectedProduct.ProductKindID)
+            {
+                case ProductKinds.ProductSpool:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
+                    break;
+                case ProductKinds.ProductGroupPack:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.DocID);
+                    break;
+                case ProductKinds.ProductPallet:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);
+                    break;
+            }
+        }
+
         private ObservableCollection<ProductRelation> _productRelations;
         public ObservableCollection<ProductRelation> ProductRelations
         {
