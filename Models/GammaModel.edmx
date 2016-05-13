@@ -775,6 +775,7 @@
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="Place" Type="varchar" MaxLength="64" />
           <Property Name="PlaceID" Type="int" />
+          <Property Name="PlaceGroupID" Type="smallint" />
           <Property Name="ShiftID" Type="tinyint" />
           <Property Name="StateID" Type="tinyint" />
           <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="2" />
@@ -2574,6 +2575,7 @@
     [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
     [vProductsInfo].[Place] AS [Place], 
     [vProductsInfo].[PlaceID] AS [PlaceID], 
+    [vProductsInfo].[PlaceGroupID] AS [PlaceGroupID], 
     [vProductsInfo].[ShiftID] AS [ShiftID], 
     [vProductsInfo].[StateID] AS [StateID], 
     [vProductsInfo].[ChangeStateQuantity] AS [ChangeStateQuantity], 
@@ -4814,7 +4816,6 @@
             <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
             <End Role="PlaceGroups" EntitySet="PlaceGroups" />
           </AssociationSet>
-          <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
           <EntitySet Name="MaterialTypes" EntityType="GammaModel.MaterialTypes" />
           <AssociationSet Name="MaterialType1CNomenclature" Association="GammaModel.MaterialType1CNomenclature">
             <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
@@ -5000,6 +5001,7 @@
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
           </AssociationSet>
+          <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -5517,31 +5519,6 @@
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
           <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="*" />
         </Association>
-        <EntityType Name="vProductsInfo">
-          <Key>
-            <PropertyRef Name="DocID" />
-            <PropertyRef Name="ProductID" />
-          </Key>
-          <Property Name="DocID" Type="Guid" Nullable="false" />
-          <Property Name="ProductID" Type="Guid" Nullable="false" />
-          <Property Name="ProductKindID" Type="Byte" />
-          <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="C1CNomenclatureID" Type="Guid" />
-          <Property Name="C1CCharacteristicID" Type="Guid" />
-          <Property Name="Quantity" Type="Decimal" Precision="14" Scale="4" />
-          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-          <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="PlaceID" Type="Int32" />
-          <Property Name="ShiftID" Type="Byte" />
-          <Property Name="StateID" Type="Byte" />
-          <Property Name="ChangeStateQuantity" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="RejectionReason" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IsConfirmed" Type="Boolean" />
-          <Property Name="IsWrittenOff" Type="Boolean" />
-          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="MaterialTypes">
           <Key>
             <PropertyRef Name="MaterialTypeID" />
@@ -6153,6 +6130,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="vProductsInfo">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="ProductKindID" Type="Byte" />
+          <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Precision="14" Scale="4" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="PlaceID" Type="Int32" />
+          <Property Name="PlaceGroupID" Type="Int16" />
+          <Property Name="ShiftID" Type="Byte" />
+          <Property Name="StateID" Type="Byte" />
+          <Property Name="ChangeStateQuantity" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RejectionReason" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="IsWrittenOff" Type="Boolean" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7101,31 +7104,6 @@
               <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="vProductsInfo">
-            <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
-              <MappingFragment StoreEntitySet="vProductsInfo">
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
-                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-                <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
-                <ScalarProperty Name="ChangeStateQuantity" ColumnName="ChangeStateQuantity" />
-                <ScalarProperty Name="StateID" ColumnName="StateID" />
-                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-                <ScalarProperty Name="Place" ColumnName="Place" />
-                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MaterialTypes">
             <EntityTypeMapping TypeName="GammaModel.MaterialTypes">
               <MappingFragment StoreEntitySet="MaterialTypes">
@@ -7303,6 +7281,32 @@
                 <ScalarProperty Name="C1CnomenclatureID" ColumnName="1CnomenclatureID" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
                 <ScalarProperty Name="DocCloseShiftSampleID" ColumnName="DocCloseShiftSampleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vProductsInfo">
+            <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
+              <MappingFragment StoreEntitySet="vProductsInfo">
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
+                <ScalarProperty Name="ChangeStateQuantity" ColumnName="ChangeStateQuantity" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

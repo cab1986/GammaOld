@@ -1,3 +1,4 @@
+using System;
 using DevExpress.Mvvm;
 using System.Linq;
 using Gamma.Interfaces;
@@ -54,8 +55,10 @@ namespace Gamma.ViewModels
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
                 CloseShiftCommand = new DelegateCommand(CloseShift);
-                BackCommand = new DelegateCommand(() => { CurrentView = PreviousView;
-                                                            PreviousView = null;
+                BackCommand = new DelegateCommand(() =>
+                {
+                    CurrentView = PreviousView;
+                    PreviousView = null;
                 }, () => PreviousView != null);
                 OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>(MessageManager.OpenDocCloseShifts);
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
@@ -129,10 +132,10 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             CurrentView = new PlaceProductsViewModel(placeID);
-            RefreshCommand = (CurrentView as PlaceProductsViewModel).FindCommand;
-            NewItemCommand = (CurrentView as PlaceProductsViewModel).CreateNewProductCommand;
-            EditItemCommand = (CurrentView as PlaceProductsViewModel).OpenDocProductCommand;
-            DeleteItemCommand = (CurrentView as PlaceProductsViewModel).DeleteProductCommand;
+            RefreshCommand = ((PlaceProductsViewModel) CurrentView).FindCommand;
+            NewItemCommand = ((PlaceProductsViewModel) CurrentView).CreateNewProductCommand;
+            EditItemCommand = ((PlaceProductsViewModel) CurrentView).OpenDocProductCommand;
+            DeleteItemCommand = ((PlaceProductsViewModel) CurrentView).DeleteProductCommand;
         }
         private void FindProductionTask()
         {
@@ -152,12 +155,13 @@ namespace Gamma.ViewModels
 
         private void CurrentViewChanged()
         {
-            if (CurrentView != null && CurrentView.GetType().GetInterfaces().Contains(typeof(IItemManager)))
+            if ((CurrentView as IItemManager)!= null)
             {
-                NewItemCommand = (CurrentView as IItemManager)?.NewItemCommand;
-                EditItemCommand = (CurrentView as IItemManager)?.EditItemCommand;
-                DeleteItemCommand = (CurrentView as IItemManager)?.DeleteItemCommand;
-                RefreshCommand = (CurrentView as IItemManager)?.RefreshCommand;
+                var itemManager = (IItemManager) CurrentView;
+                NewItemCommand = itemManager.NewItemCommand;
+                EditItemCommand = itemManager.EditItemCommand;
+                DeleteItemCommand = itemManager.DeleteItemCommand;
+                RefreshCommand = itemManager.RefreshCommand;
             }
             else
             {
@@ -170,19 +174,20 @@ namespace Gamma.ViewModels
                 ProductionTaskBarVisible = true;
             else ProductionTaskBarVisible = false;
         }
-        private ViewModelBase _currentView;
-        public ViewModelBase CurrentView
+        private RootViewModel _currentView;
+        public RootViewModel CurrentView
         {
             get { return _currentView; }
             private set
             {
-                PreviousView = CurrentView;
+                PreviousView = PreviousView == value ? PreviousView = null : PreviousView = _currentView;
                 _currentView = value;
                 RaisePropertyChanged("CurrentView");
                 CurrentViewChanged();
             }
         }
-        private ViewModelBase PreviousView { get; set; }
+
+        private RootViewModel PreviousView { get; set; }
         public string StatusText { get; set; }
         private DelegateCommand _newItemCommand;
         public DelegateCommand NewItemCommand 

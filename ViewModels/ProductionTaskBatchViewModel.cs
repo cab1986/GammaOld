@@ -282,6 +282,7 @@ namespace Gamma.ViewModels
 
         public override void SaveToModel(GammaEntities gammaBase = null)
         {
+            if (IsReadOnly) return;
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);
             var productionTaskBatch = gammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);

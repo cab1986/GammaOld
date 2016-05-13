@@ -1742,7 +1742,6 @@
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
     </AssociationSet>
-    <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
     <EntitySet Name="MaterialTypes" EntityType="GammaModel.MaterialTypes" />
     <AssociationSet Name="MaterialType1CNomenclature" Association="GammaModel.MaterialType1CNomenclature">
       <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
@@ -1928,6 +1927,7 @@
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
     </AssociationSet>
+    <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -2445,31 +2445,6 @@
     <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
     <End Type="GammaModel.PlaceGroups" Role="PlaceGroups" Multiplicity="*" />
   </Association>
-  <EntityType Name="vProductsInfo">
-    <Key>
-      <PropertyRef Name="DocID" />
-      <PropertyRef Name="ProductID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ProductID" Type="Guid" Nullable="false" />
-    <Property Name="ProductKindID" Type="Byte" />
-    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Precision="3" />
-    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Quantity" Type="Decimal" Precision="14" Scale="4" />
-    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-    <Property Name="PlaceID" Type="Int32" />
-    <Property Name="ShiftID" Type="Byte" />
-    <Property Name="StateID" Type="Byte" />
-    <Property Name="ChangeStateQuantity" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="RejectionReason" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-    <Property Name="IsConfirmed" Type="Boolean" />
-    <Property Name="IsWrittenOff" Type="Boolean" />
-    <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-  </EntityType>
   <EntityType Name="MaterialTypes">
     <Key>
       <PropertyRef Name="MaterialTypeID" />
@@ -3081,4 +3056,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="vProductsInfo">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="ProductID" Type="Guid" Nullable="false" />
+    <Property Name="ProductKindID" Type="Byte" />
+    <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Precision="3" />
+    <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="Quantity" Type="Decimal" Precision="14" Scale="4" />
+    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+    <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="PlaceID" Type="Int32" />
+    <Property Name="PlaceGroupID" Type="Int16" />
+    <Property Name="ShiftID" Type="Byte" />
+    <Property Name="StateID" Type="Byte" />
+    <Property Name="ChangeStateQuantity" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="RejectionReason" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="IsConfirmed" Type="Boolean" />
+    <Property Name="IsWrittenOff" Type="Boolean" />
+    <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

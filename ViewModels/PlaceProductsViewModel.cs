@@ -209,7 +209,8 @@ namespace Gamma.ViewModels
                             Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
-                            PlaceID = vpi.PlaceID
+                            PlaceID = vpi.PlaceID,
+                            PlaceGroup = (PlaceGroups)vpi.PlaceGroupID
                         }
                     ).Take(500));
                     break;
@@ -234,7 +235,8 @@ namespace Gamma.ViewModels
                             Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
-                            PlaceID = vpi.PlaceID
+                            PlaceID = vpi.PlaceID,
+                            PlaceGroup = (PlaceGroups)vpi.PlaceGroupID
                         }
                     );
                     break;
@@ -261,7 +263,8 @@ namespace Gamma.ViewModels
                             Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
-                            PlaceID = vpi.PlaceID
+                            PlaceID = vpi.PlaceID,
+                            PlaceGroup = (PlaceGroups)vpi.PlaceGroupID
                         }
                     );
                     break;
@@ -288,7 +291,8 @@ namespace Gamma.ViewModels
                             Quantity = (int)vpi.Quantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
-                            PlaceID = vpi.PlaceID
+                            PlaceID = vpi.PlaceID,
+                            PlaceGroup = (PlaceGroups)vpi.PlaceGroupID
                         }
                     );
                     break;

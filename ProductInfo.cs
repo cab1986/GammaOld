@@ -30,16 +30,7 @@ namespace Gamma
         public byte? ShiftID { get; set; }
         public string State { get; set; }
         public string Place { get; set; }
-        private int? _placeID;
-        public int? PlaceID 
-        {
-            get { return _placeID; } 
-            set
-            {
-            	_placeID = value;
-                PlaceGroup = (PlaceGroups)DB.GammaDb.Places.Where(p => p.PlaceID == value).Select(p => p.PlaceGroupID).FirstOrDefault();
-            }
-        }
+        public int? PlaceID { get; set; }
         public PlaceGroups PlaceGroup { get; set; }
     }
 }

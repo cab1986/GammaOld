@@ -26,6 +26,7 @@ namespace Gamma.Models
         public string NomenclatureName { get; set; }
         public string Place { get; set; }
         public Nullable<int> PlaceID { get; set; }
+        public Nullable<short> PlaceGroupID { get; set; }
         public Nullable<byte> ShiftID { get; set; }
         public Nullable<byte> StateID { get; set; }
         public Nullable<decimal> ChangeStateQuantity { get; set; }

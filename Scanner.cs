@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Windows;
 using DevExpress.Mvvm;
 
 namespace Gamma
@@ -51,7 +52,8 @@ namespace Gamma
         private static void BarcodeReceive(object sender, SerialDataReceivedEventArgs e)
         {
             string receivedData = _comPort.ReadLine();
-            Messenger.Default.Send<BarcodeMessage>(new BarcodeMessage {Barcode = receivedData});
+            // Посылаем данные в основной поток приложения
+            Application.Current.Dispatcher.Invoke(new Action(() => Messenger.Default.Send(new BarcodeMessage { Barcode = receivedData }))) ;
         }
         public static bool TryToOpen()
         {

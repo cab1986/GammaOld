@@ -346,7 +346,7 @@ namespace Gamma.ViewModels
 
         public override void SaveToModel(GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("Docs")) return;
+            if (IsReadOnly) return;
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);
 /*            if (Doc == null)
@@ -377,7 +377,7 @@ namespace Gamma.ViewModels
         private DocProduction DocProduction { get; set; }
         public override bool IsValid => base.IsValid && CurrentViewModel.IsValid;
 
-        public bool IsReadOnly => IsConfirmed || (!DB.HaveWriteAccess("DocProduction") && !WorkSession.DBAdmin);
+        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("DocProduction");
 
         public override bool CanSaveExecute()
         {

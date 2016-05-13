@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -31,8 +32,8 @@ namespace Gamma.Common
             if (busy != _isBusy)
             {
                 _isBusy = busy;
+//                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => Mouse.OverrideCursor = busy ? Cursors.Wait : null));  
                 Mouse.OverrideCursor = busy ? Cursors.Wait : null;
-
                 if (_isBusy)
                 {
                     new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, dispatcherTimer_Tick, System.Windows.Application.Current.Dispatcher);

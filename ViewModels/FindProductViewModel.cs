@@ -155,7 +155,8 @@ namespace Gamma.ViewModels
                             Quantity = (int)pinfo.Quantity,
                             ShiftID = pinfo.ShiftID,
                             Place = pinfo.Place,
-                            State = pinfo.State
+                            State = pinfo.State,
+                            PlaceGroup = (PlaceGroups)pinfo.PlaceGroupID
                         }
                     ).OrderByDescending(p => p.Date)
                 );
@@ -193,7 +194,8 @@ namespace Gamma.ViewModels
                     Quantity = (int)pinfo.Quantity,
                     ShiftID = pinfo.ShiftID,
                     State = pinfo.State,
-                    Place = pinfo.Place
+                    Place = pinfo.Place,
+                    PlaceGroup = (PlaceGroups)pinfo.PlaceGroupID
                 }
                 );
             }

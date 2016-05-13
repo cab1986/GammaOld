@@ -50,5 +50,10 @@ namespace Gamma.ViewModels
             Messenger.Default.Unregister(this);
             GammaBase?.Dispose();
         }
+
+        public RootViewModel Clone()
+        {
+            return (RootViewModel)MemberwiseClone();
+        }
     }
 }

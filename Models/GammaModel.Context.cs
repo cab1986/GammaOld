@@ -84,7 +84,6 @@ namespace Gamma.Models
         public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CSpecifications> C1CSpecifications { get; set; }
-        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
@@ -93,6 +92,7 @@ namespace Gamma.Models
         public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
+        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

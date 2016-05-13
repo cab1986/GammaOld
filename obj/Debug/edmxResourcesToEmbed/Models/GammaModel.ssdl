@@ -770,6 +770,7 @@
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="Place" Type="varchar" MaxLength="64" />
     <Property Name="PlaceID" Type="int" />
+    <Property Name="PlaceGroupID" Type="smallint" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="StateID" Type="tinyint" />
     <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="2" />
@@ -2569,6 +2570,7 @@
     [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
     [vProductsInfo].[Place] AS [Place], 
     [vProductsInfo].[PlaceID] AS [PlaceID], 
+    [vProductsInfo].[PlaceGroupID] AS [PlaceGroupID], 
     [vProductsInfo].[ShiftID] AS [ShiftID], 
     [vProductsInfo].[StateID] AS [StateID], 
     [vProductsInfo].[ChangeStateQuantity] AS [ChangeStateQuantity], 

@@ -197,6 +197,11 @@ namespace Gamma.ViewModels
                 else FilledProperties &= ~Properties.PropColor;
             }
         }
+
+        protected override bool CanChooseNomenclature()
+        {
+            return !IsReadOnly;
+        }
         private Properties _filledProperties;
         private Properties FilledProperties 
         {
