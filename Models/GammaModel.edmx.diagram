@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="147">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="126">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="12.75" PointY="38" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="5.25" PointY="36.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="37.375" IsExpanded="true" />
@@ -37,7 +37,6 @@
         <EntityTypeShape EntityType="GammaModel.ProcessModels" Width="1.5" PointX="14.25" PointY="53.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductGroupPacks" Width="1.5" PointX="18.75" PointY="38.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskBatches" Width="1.5" PointX="16.5" PointY="54.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="GammaModel.ProductionTaskRWCutting" Width="1.5" PointX="18.75" PointY="35.25" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTasks" Width="1.5" PointX="18.75" PointY="49.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskSGB" Width="1.5" PointX="21" PointY="52.5" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskStates" Width="1.5" PointX="14.25" PointY="56.125" IsExpanded="true" />
@@ -90,7 +89,6 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProcessModels" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_Products" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskSGB_ProductionTasks" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskWR_ProductionTasks" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Products_ProductKinds" ManuallyRouted="false" />
@@ -119,7 +117,6 @@
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CMeasureUnitQualifiers" />
@@ -183,6 +180,10 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_Docs" />
         <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="GammaModel.ProductionTaskRWCutting" Width="1.5" PointX="24" PointY="43.625" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

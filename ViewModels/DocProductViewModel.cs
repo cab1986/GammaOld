@@ -22,11 +22,8 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="gammaBase">Контекст бд для модели(по умолчанию Null, необходим для тестирования)</param>
         /// <param name="msg">Сообщение, содержащее параметры</param>
-        public DocProductViewModel(OpenDocProductMessage msg, GammaEntities gammaBase = null)
+        public DocProductViewModel(OpenDocProductMessage msg, GammaEntities gammaBase = null): base(gammaBase)
         {
-            GammaBase = gammaBase ?? DB.GammaDb; // Если контекст не передан, то создаем новый
-            //  Если новый продукт, то сразу создаем новый документ в базе, с последующей
-            //  выгрузкой документа из базы для получения номера
             if (msg.IsNewProduct) 
             {
                 if (msg.ID == null && (msg.DocProductKind == DocProductKinds.DocProductSpool || 
@@ -195,6 +192,7 @@ namespace Gamma.ViewModels
             OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
             OpenProductRelationProductCommand = new DelegateCommand(OpenProductRelationProduct, () => SelectedProduct != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
+            IsReadOnly = !(DB.HaveWriteAccess("DocProducts") && (!IsConfirmed || IsValid));
         }
 
         private void GetProductRelations()
@@ -346,9 +344,7 @@ namespace Gamma.ViewModels
 
         public override void SaveToModel(GammaEntities gammaBase = null)
         {
-            if (IsReadOnly) return;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(gammaBase);
+            if (IsReadOnly && IsConfirmed) return;
 /*            if (Doc == null)
             {
                 Doc = new Docs() 
@@ -375,13 +371,13 @@ namespace Gamma.ViewModels
         }
         private Docs Doc { get; set; }
         private DocProduction DocProduction { get; set; }
-        public override bool IsValid => base.IsValid && CurrentViewModel.IsValid;
+        public override sealed bool IsValid => base.IsValid && CurrentViewModel.IsValid;
 
-        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("DocProduction");
+        public bool IsReadOnly { get; set; }
 
         public override bool CanSaveExecute()
         {
-            return CurrentViewModel.CanSaveExecute() && DB.HaveWriteAccess("DocProduction");
+            return IsValid && CurrentViewModel.CanSaveExecute() && DB.HaveWriteAccess("DocProduction");
         }
         public string Title { get; set; }
         private bool IsActive { get; set; }

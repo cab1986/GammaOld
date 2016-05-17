@@ -17,9 +17,11 @@ namespace Gamma.Models
         public System.Guid ProductionTaskRWCuttingID { get; set; }
         public System.Guid ProductionTaskID { get; set; }
         public Nullable<short> CutIndex { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
     
-        public virtual ProductionTasks ProductionTasks { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
+        public virtual ProductionTasks ProductionTasks { get; set; }
     }
 }

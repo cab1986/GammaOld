@@ -9,7 +9,13 @@ namespace Gamma.Common
     public class ItemsChangeObservableCollection<T> :
            ObservableCollection<T> //where T : INotifyPropertyChanged
     {
-        public ItemsChangeObservableCollection(IEnumerable<T> enumerable) : base(enumerable) { }
+        public ItemsChangeObservableCollection(IEnumerable<T> enumerable) //: base(enumerable)
+        {
+            foreach (var item in enumerable)
+            {
+                Add(item);
+            }
+        }
 
         public ItemsChangeObservableCollection()
         { }

@@ -241,3 +241,4 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftConvertingGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchWindowView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchWindowView.baml
+D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.Grid.v15.2.Extensions.dll

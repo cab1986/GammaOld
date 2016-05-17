@@ -19,7 +19,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductUnloadViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
+    public class DocProductUnloadViewModel : SaveImplementedViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
         /// Инициализирует новую viewmodel.
@@ -101,19 +101,17 @@ namespace Gamma.ViewModels
         private List<Guid> SourceSpools { get; set; }
         private void GetProductionTaskRwInfo(Guid productionTaskID)
         {
-            NomenclatureID = GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskID).
-                Select(p => p.C1CNomenclatureID).FirstOrDefault();
             Diameter = GammaBase.ProductionTaskSGB.Where(p => p.ProductionTaskID == productionTaskID).Select(p => p.Diameter).FirstOrDefault() ?? 0;
             Cuttings = new ObservableCollection<Cutting>
             (
-                from ptcut in GammaBase.ProductionTaskRWCutting
-                where ptcut.ProductionTaskID == productionTaskID
-                group ptcut by ptcut.C1CCharacteristicID into grouped
-                select new Cutting
-                {
-                    CharacteristicID = (Guid)grouped.Key,
-                    Quantity = grouped.Count()
-                }
+                GammaBase.ProductionTaskRWCutting.Where(
+                    p => p.ProductionTaskID == productionTaskID).GroupBy(p => new { p.C1CNomenclatureID, p.C1CCharacteristicID })
+                    .Select(g => new Cutting()
+                    {
+                        NomenclatureID = g.Key.C1CNomenclatureID,
+                        CharacteristicID = g.Key.C1CCharacteristicID,
+                        Quantity = g.Count()
+                    })
             );
         }
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
@@ -188,9 +186,9 @@ namespace Gamma.ViewModels
         }
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("ProducSpools")) return;
+            if (IsReadOnly) return;
 //            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID);
+            base.SaveToModel(itemID, gammaBase);
             if (UnloadSpoolsSaved) return;
             var doc = GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemID);
             foreach (var spoolid in SourceSpools)
@@ -292,18 +290,14 @@ namespace Gamma.ViewModels
         }
 
         public ObservableCollection<Cutting> Cuttings { get; set; }
+        /*
         public class Cutting
         {
             public Guid CharacteristicID { get; set; }
             public int Quantity { get; set; }
         }
+        */
         private bool IsConfirmed { get; set; }
-        public bool IsReadOnly
-        {
-            get 
-            {
-                return IsConfirmed || !DB.HaveWriteAccess("ProductSpools");
-            }
-        }
+        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools");
     }
 }

@@ -23,5 +23,6 @@ namespace Gamma.Models
         public string Format { get; set; }
         public string Color { get; set; }
         public Nullable<int> FormatNumeric { get; set; }
+        public string NomenclatureKind { get; set; }
     }
 }

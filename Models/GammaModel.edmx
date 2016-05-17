@@ -513,6 +513,7 @@
           <Property Name="ProductionTaskRWCuttingID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CutIndex" Type="smallint" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="ProductionTasks">
@@ -1892,6 +1893,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductionTaskRWCutting_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+          <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="ProductionTaskRWCutting">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
           <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -2949,6 +2962,10 @@
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
             <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskRWCutting_1CNomenclature" Association="Self.FK_ProductionTaskRWCutting_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductionTaskRWCutting_ProductionTasks" Association="Self.FK_ProductionTaskRWCutting_ProductionTasks">
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
@@ -3484,17 +3501,6 @@
           <NavigationProperty Name="ProductionTaskStates" Relationship="Self.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskBatches" ToRole="ProductionTaskStates" />
           <NavigationProperty Name="ProductionTasks" Relationship="Self.BatchProductionTasks" FromRole="ProductionTaskBatches" ToRole="ProductionTasks" />
         </EntityType>
-        <EntityType Name="ProductionTaskRWCutting">
-          <Key>
-            <PropertyRef Name="ProductionTaskRWCuttingID" />
-          </Key>
-          <Property Name="ProductionTaskRWCuttingID" Type="Guid" Nullable="false" />
-          <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
-          <Property Name="CutIndex" Type="Int16" />
-          <Property Name="C1CCharacteristicID" Type="Guid" />
-          <NavigationProperty Name="ProductionTasks" Relationship="Self.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTaskRWCutting" ToRole="ProductionTasks" />
-          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="ProductionTaskRWCutting" ToRole="C1CCharacteristics" />
-        </EntityType>
         <EntityType Name="ProductionTasks">
           <Key>
             <PropertyRef Name="ProductionTaskID" />
@@ -3508,13 +3514,13 @@
           <Property Name="DateBegin" Type="DateTime" Precision="3" />
           <Property Name="DateEnd" Type="DateTime" Precision="3" />
           <NavigationProperty Name="DocProduction" Relationship="Self.FK_DocProduction_ProductionTasks" FromRole="ProductionTasks" ToRole="DocProduction" />
-          <NavigationProperty Name="ProductionTaskRWCutting" Relationship="Self.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskRWCutting" />
           <NavigationProperty Name="ProductionTaskSGB" Relationship="Self.FK_ProductionTaskSGB_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskSGB" />
           <NavigationProperty Name="ProductionTaskWR" Relationship="Self.FK_ProductionTaskWR_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskWR" />
           <NavigationProperty Name="ProductionTaskBatches" Relationship="Self.BatchProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskBatches" />
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="ProductionTasks" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="ProductionTasks" ToRole="C1CNomenclature" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="ProductionTasks" ToRole="Places" />
+          <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskRWCutting" />
         </EntityType>
         <EntityType Name="ProductionTaskSGB">
           <Key>
@@ -4143,20 +4149,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
-          <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductionTasks">
-              <PropertyRef Name="ProductionTaskID" />
-            </Principal>
-            <Dependent Role="ProductionTaskRWCutting">
-              <PropertyRef Name="ProductionTaskID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ProductionTaskSGB_ProductionTasks">
           <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -4382,7 +4374,6 @@
           <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" />
           <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" />
           <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" />
-          <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" />
           <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" />
           <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" />
           <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" />
@@ -4527,10 +4518,6 @@
           <AssociationSet Name="FK_ProductionTaskBatches_ProductionTaskStates" Association="Self.FK_ProductionTaskBatches_ProductionTaskStates">
             <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
             <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionTaskRWCutting_ProductionTasks" Association="Self.FK_ProductionTaskRWCutting_ProductionTasks">
-            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-            <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionTaskSGB_ProductionTasks" Association="Self.FK_ProductionTaskSGB_ProductionTasks">
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
@@ -4751,10 +4738,6 @@
           <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="GammaModel.FK_ProductGroupPacks_1CCharacteristics">
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
             <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
-            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-            <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionTasks_1CCharacteristics" Association="GammaModel.FK_ProductionTasks_1CCharacteristics">
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -5002,6 +4985,19 @@
             <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
           </AssociationSet>
           <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
+          <EntitySet Name="ProductionTaskRWCutting" EntityType="GammaModel.ProductionTaskRWCutting" />
+          <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskRWCutting_1CNomenclature" Association="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskRWCutting_ProductionTasks" Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -5110,6 +5106,7 @@
           <Property Type="String" Name="Format" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Color" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
+          <Property Type="String" Name="NomenclatureKind" Nullable="false" MaxLength="3" />
         </ComplexType>
         <ComplexType Name="GetProductionTaskBatchSGBProperties_Result">
           <Property Type="Int32" Name="Diameter" Nullable="true" />
@@ -5199,7 +5196,6 @@
           <NavigationProperty Name="C1CSpecificationInputNomenclature" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CSpecificationInputNomenclature" />
           <NavigationProperty Name="C1CSpecificationOutputNomenclature" Relationship="GammaModel.FK_1CSpecificationOutputNomenclature_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CSpecificationOutputNomenclature" />
           <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductGroupPacks" />
-          <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTasks" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductPalletItems" />
@@ -5209,6 +5205,7 @@
           <NavigationProperty Name="C1CNomenclatureAnalogs2" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CCharacteristics2" FromRole="C1CCharacteristics" ToRole="C1CNomenclatureAnalogs" />
           <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocWithdrawalMaterials" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftSamples" />
+          <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
         </EntityType>
         <EntityType Name="C1CNomenclature">
           <Key>
@@ -5243,6 +5240,7 @@
           <NavigationProperty Name="C1CNomenclatureAnalogs2" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature2" FromRole="C1CNomenclature" ToRole="C1CNomenclatureAnalogs" />
           <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftSamples" />
+          <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskRWCutting" />
         </EntityType>
         <EntityType Name="C1CSpecifications">
           <Key>
@@ -5339,18 +5337,6 @@
               <PropertyRef Name="C1CCharacteristicID" />
             </Principal>
             <Dependent Role="ProductGroupPacks">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
-          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-          <End Type="GammaModel.ProductionTaskRWCutting" Role="ProductionTaskRWCutting" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CCharacteristics">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="ProductionTaskRWCutting">
               <PropertyRef Name="C1CCharacteristicID" />
             </Dependent>
           </ReferentialConstraint>
@@ -6156,6 +6142,57 @@
           <Property Name="IsWrittenOff" Type="Boolean" />
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="ProductionTaskRWCutting">
+          <Key>
+            <PropertyRef Name="ProductionTaskRWCuttingID" />
+          </Key>
+          <Property Name="ProductionTaskRWCuttingID" Type="Guid" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
+          <Property Name="CutIndex" Type="Int16" />
+          <Property Name="C1CNomenclatureID" Type="Guid" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="ProductionTaskRWCutting" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" FromRole="ProductionTaskRWCutting" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTaskRWCutting" ToRole="ProductionTasks" />
+        </EntityType>
+        <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.ProductionTaskRWCutting" Role="ProductionTaskRWCutting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="ProductionTaskRWCutting">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskRWCutting_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
+          <End Type="GammaModel.ProductionTaskRWCutting" Role="ProductionTaskRWCutting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="ProductionTaskRWCutting">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
+          <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GammaModel.ProductionTaskRWCutting" Role="ProductionTaskRWCutting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskRWCutting">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6502,16 +6539,6 @@
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="ProcessModelID" ColumnName="ProcessModelID" />
                 <ScalarProperty Name="PartyControl" ColumnName="PartyControl" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ProductionTaskRWCutting">
-            <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
-              <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
-                <ScalarProperty Name="ProductionTaskRWCuttingID" ColumnName="ProductionTaskRWCuttingID" />
-                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-                <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -6940,6 +6967,7 @@
                 <ScalarProperty Name="Format" ColumnName="Format" />
                 <ScalarProperty Name="Color" ColumnName="Color" />
                 <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+                <ScalarProperty Name="NomenclatureKind" ColumnName="NomenclatureKind" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -7307,6 +7335,17 @@
                 <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionTaskRWCutting">
+            <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
+              <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="ProductionTaskRWCuttingID" ColumnName="ProductionTaskRWCuttingID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

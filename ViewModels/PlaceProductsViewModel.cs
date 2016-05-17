@@ -325,7 +325,7 @@ namespace Gamma.ViewModels
             set
             {
                 if (_intervalid == value) return;
-                _intervalid = value;
+                _intervalid = value < 0 ? 0 : value;
                 if (_intervalid < 3) Find();
             }
         }

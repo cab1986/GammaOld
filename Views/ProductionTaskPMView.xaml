@@ -60,7 +60,7 @@
                               EditValueType="{x:Type sys:Decimal}"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
-                <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" 
+                <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
                                   DisplayMember="CharacteristicName" ValueMember="CharacteristicID" MinWidth="200"/>
             </dxlc:LayoutItem>
             <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="230" HorizontalAlignment="Right" />

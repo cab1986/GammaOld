@@ -508,6 +508,7 @@
     <Property Name="ProductionTaskRWCuttingID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="CutIndex" Type="smallint" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="ProductionTasks">
@@ -1887,6 +1888,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ProductionTaskRWCutting_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="ProductionTaskRWCutting">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
     <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -2942,6 +2955,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="Self.FK_ProductionTaskRWCutting_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskRWCutting_1CNomenclature" Association="Self.FK_ProductionTaskRWCutting_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskRWCutting_ProductionTasks" Association="Self.FK_ProductionTaskRWCutting_ProductionTasks">

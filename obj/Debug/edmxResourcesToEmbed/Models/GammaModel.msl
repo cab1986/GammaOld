@@ -344,16 +344,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ProductionTaskRWCutting">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
-        <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
-          <ScalarProperty Name="ProductionTaskRWCuttingID" ColumnName="ProductionTaskRWCuttingID" />
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-          <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="ProductionTasks">
       <EntityTypeMapping TypeName="GammaModel.ProductionTasks">
         <MappingFragment StoreEntitySet="ProductionTasks">
@@ -779,6 +769,7 @@
           <ScalarProperty Name="Format" ColumnName="Format" />
           <ScalarProperty Name="Color" ColumnName="Color" />
           <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+          <ScalarProperty Name="NomenclatureKind" ColumnName="NomenclatureKind" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
@@ -1146,6 +1137,17 @@
           <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTaskRWCutting">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTaskRWCutting">
+        <MappingFragment StoreEntitySet="ProductionTaskRWCutting">
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+          <ScalarProperty Name="ProductionTaskRWCuttingID" ColumnName="ProductionTaskRWCuttingID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

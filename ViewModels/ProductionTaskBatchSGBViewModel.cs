@@ -163,6 +163,13 @@ namespace Gamma.ViewModels
 //            if (ProductionTaskSGBView != null) ProductionTaskSGBView.SaveToModel(productionTaskID);
             ProductionTaskWrView?.SaveToModel(productionTaskID);
         }
+
+        public override bool CanSaveExecute()
+        {
+            return base.CanSaveExecute() && (FirstView?.CanSaveExecute() ?? true) &&
+                   (SecondView?.CanSaveExecute() ?? true)
+                   && (ProductionTaskWrView?.CanSaveExecute() ?? true);
+        }
         
     }
 }

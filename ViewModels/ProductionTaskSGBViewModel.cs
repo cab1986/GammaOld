@@ -96,7 +96,12 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null) // Сохранение по ProductionTaskID
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="itemID">ProductionTaskID</param>
+        /// <param name="gammaBase">Контекст БД</param>
+        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(itemID);

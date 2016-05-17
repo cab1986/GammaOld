@@ -18,8 +18,8 @@ namespace Gamma.Models
         public ProductionTasks()
         {
             this.DocProduction = new HashSet<DocProduction>();
-            this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
+            this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
@@ -33,8 +33,6 @@ namespace Gamma.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual ProductionTaskSGB ProductionTaskSGB { get; set; }
         public virtual ProductionTaskWR ProductionTaskWR { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -42,5 +40,7 @@ namespace Gamma.Models
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual Places Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the ProductionTaskPMViewModel class.
         /// </summary>
         /// 
-        public ProductionTaskPMViewModel()
+        public ProductionTaskPMViewModel() : base(DB.GammaDb)
         {
             Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.PM).
                 Select(p => new Place()
@@ -60,12 +60,21 @@ namespace Gamma.ViewModels
                 var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
                 if (productionTaskRw != null)
                 {
-                    SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                        DB.GammaDb.GetInputNomenclature(productionTaskRw.C1CNomenclatureID, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
+                    var nomenclatureIds =
+                        GammaBase.ProductionTaskRWCutting.Where(
+                            pt => pt.ProductionTaskID == productionTaskRw.ProductionTaskID).Select(pt => pt.C1CNomenclatureID).Distinct().ToList();
+                    SpecificationNomenclature = new ObservableCollection<Nomenclature1C>();
+                    foreach (var nomenclatureId in nomenclatureIds)
+                    {
+                        var inputNomenclature = new ObservableCollection<Nomenclature1C>(
+                        GammaBase.GetInputNomenclature(nomenclatureId, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
                         {
                             Name = n.Name,
                             NomenclatureID = (Guid)n.C1CNomenclatureID
                         }));
+                        SpecificationNomenclature = SpecificationNomenclature.Count == 0 ? 
+                            inputNomenclature : new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(inputNomenclature));
+                    }
                 }
             }
         }
@@ -117,17 +126,30 @@ namespace Gamma.ViewModels
         private void ProductionTaskRwChanged(ProductionTaskRwMessage msg)
         {
             if (msg.ProductionTaskBatchID != ProductionTaskBatchID) return;
-            if (msg.NomenclatureID != null)
+            if (msg.NomenclatureIDs?.Count > 0)
             {
-                SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                    DB.GammaDb.GetInputNomenclature(msg.NomenclatureID, (byte) PlaceGroups.PM)
-                        .Select(n => new Nomenclature1C()
+                SpecificationNomenclature = new ObservableCollection<Nomenclature1C>();
+                foreach (var nomenclatureID in msg.NomenclatureIDs)
+                {
+                    if (nomenclatureID != null)
+                    {
+                        var specificationNomenclature = new ObservableCollection<Nomenclature1C>(
+                            DB.GammaDb.GetInputNomenclature(nomenclatureID, (byte)PlaceGroups.PM)
+                                .Select(n => new Nomenclature1C()
+                                {
+                                    Name = n.Name,
+                                    NomenclatureID = (Guid)n.C1CNomenclatureID
+                                }));
+                        if (SpecificationNomenclature.Count == 0) SpecificationNomenclature = specificationNomenclature;
+                        else
                         {
-                            Name = n.Name,
-                            NomenclatureID = (Guid) n.C1CNomenclatureID
-                        }));
+                            SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(specificationNomenclature));
+                        }
+                    }
+                }
                 if (SpecificationNomenclature.Count == 1)
-                {NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
+                {
+                    NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
                 }
                 else
                     NomenclatureID = null;

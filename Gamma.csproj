@@ -85,6 +85,7 @@
     <Reference Include="DevExpress.Xpf.Docking.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Xpf.Grid.v15.2.Extensions, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Layout.v15.2.Core, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Printing.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
@@ -166,6 +167,7 @@
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\Cutting.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Common\Nomenclature1C.cs" />
     <Compile Include="Common\Nomenclature1CFolder.cs" />

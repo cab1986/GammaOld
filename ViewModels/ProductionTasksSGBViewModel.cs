@@ -98,6 +98,7 @@ namespace Gamma.ViewModels
             public DateTime? DateBegin { get; set; }
             public byte EnumColor { get; set; }
             public string Number { get; set; }
+            public string[] NomenclatureKind { get; set; }
         }
         
         private void GetProductionTasks()
@@ -117,10 +118,11 @@ namespace Gamma.ViewModels
                         Place = pt.Place,
                         EnumColor = (byte?)pt.EnumColor ?? 0,
                         Format = new string[16],
+                        NomenclatureKind = new string[16],
                         Number = pt.Number
                     }
                 ); 
-            foreach (ProductionTaskBatchSGB t in tempCollection)
+            foreach (var t in tempCollection)
             {
                 var productionTaskBatchID = t.ProductionTaskBatchID;
                 var cuttingList = GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchID).ToList();
@@ -136,6 +138,7 @@ namespace Gamma.ViewModels
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {
                     t.Format[k] = cuttingList[k].FormatNumeric.ToString();
+                    t.NomenclatureKind[k] = cuttingList[k].NomenclatureKind;
                     t.TotalFormat += cuttingList[k].FormatNumeric ?? 0;
                 }
                 ProductionTaskBatchesSGB.Add(t);

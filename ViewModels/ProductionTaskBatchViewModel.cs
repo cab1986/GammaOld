@@ -177,19 +177,12 @@ namespace Gamma.ViewModels
         /// </summary>
         public DelegateCommand CreateNewProductCommand { get; private set; }
 
+        private bool IsInProduction { get; set; }
         /// <summary>
         /// Только для чтения, если нет прав или задание не в состоянии "на рассмотрении"
         /// </summary>
-        public bool IsReadOnly
-        {
-            get
-            {
-                bool access = !DB.HaveWriteAccess("ProductionTasks") ||
-                                      ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision;
-                return access;
-            }
-        }
-        
+        public bool IsReadOnly => !DB.HaveWriteAccess("ProductionTasks") || IsInProduction;
+
 
         private BatchKinds _batchKind;
 
@@ -263,6 +256,7 @@ namespace Gamma.ViewModels
             Date = productionTaskBatch?.Date;         
             Comment = productionTaskBatch?.Comment;
             ProductionTaskStateID = productionTaskBatch?.ProductionTaskStateID;
+            IsInProduction = ProductionTaskStateID != (byte) ProductionTaskStates.NeedsDecision;
             ProcessModelID = (byte?)productionTaskBatch?.ProcessModelID;
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
@@ -282,7 +276,7 @@ namespace Gamma.ViewModels
 
         public override void SaveToModel(GammaEntities gammaBase = null)
         {
-            if (IsReadOnly) return;
+            if (IsReadOnly && ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision) return;
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);
             var productionTaskBatch = gammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);
@@ -537,7 +531,7 @@ namespace Gamma.ViewModels
  * */
         public override bool CanSaveExecute()
         {
-            return base.CanSaveExecute() && (CurrentView?.IsValid ?? true) &&
+            return base.CanSaveExecute() && (CurrentView?.IsValid ?? true) && (CurrentView?.CanSaveExecute() ?? true) &&
                 (DB.HaveWriteAccess("ProductionTasks"));
         }
         public DelegateCommand RefreshProductionCommand { get; private set; }

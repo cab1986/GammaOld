@@ -11,27 +11,24 @@
     <Grid>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup View="Group" Orientation="Vertical">
-                <dxlc:LayoutItem Label="Номенклатура">
-                    <dxe:TextEdit EditValue="{Binding NomenclatureName}" IsReadOnly="True"/>
-                </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Раскрой" LabelPosition="Top">
-                    <dxg:GridControl ShowBorder="False" ItemsSource="{Binding Cuttings}" MaxHeight="1000">
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="CharacteristicID" Header="Характеристика">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:ComboBoxEditSettings ItemsSource="{Binding Characteristics}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во в съеме" FixedWidth="True" Width="100">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:SpinEditSettings MinValue="1" MaxValue="20" Mask="d"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                        </dxg:GridControl.Columns>
+                    <dxg:GridControl MaxHeight="800" ItemsSource="{Binding Cuttings}">
                         <dxg:GridControl.View>
-                            <dxg:TableView ShowGroupPanel="False" AllowFixedColumnMenu="True" AutoWidth="True"
-                                           ShowDetailButtons="False" ShowFilterPanelMode="Never" AllowEditing="False"/>
+                            <dxg:TableView AutoWidth="True" AllowGrouping="False" ShowGroupPanel="False" AllowEditing="False"/>
                         </dxg:GridControl.View>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" VisibleIndex="0" />
+                                <dxg:GridColumn FieldName="CharacteristicID" Header="Характеристика" VisibleIndex="1">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:ComboBoxEdit x:Name="PART_Editor"   
+										DisplayMember="Name" 
+										ValueMember="C1CCharacteristicID" ItemsSource="{Binding RowData.Row.Characteristics}" />
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во в съеме" Width="130" FixedWidth="True" VisibleIndex="2" />
+                        </dxg:GridControl.Columns>
                     </dxg:GridControl>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
