@@ -31,9 +31,9 @@ namespace Gamma.Models
         public virtual ProductGroupPacks ProductGroupPacks { get; set; }
         public virtual ProductKinds ProductKinds { get; set; }
         public virtual ProductPallets ProductPallets { get; set; }
-        public virtual ProductSpools ProductSpools { get; set; }
         public virtual Rests Rests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SpoolInstallLog> SpoolInstallLog { get; set; }
+        public virtual ProductSpools ProductSpools { get; set; }
     }
 }

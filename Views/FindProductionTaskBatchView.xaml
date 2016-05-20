@@ -35,20 +35,21 @@
                     <dxe:ComboBoxEdit ItemsSource="{Binding ProductionTaskStates}" EditValue="{Binding ProductionTaskStateID}" ValueMember="Key" DisplayMember="Value" NullValueButtonPlacement="EditBox" AllowNullInput="True" AssignNullValueOnClearingEditText="True"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem VerticalContentAlignment="Bottom" Width="60" VerticalAlignment="Bottom">
-                    <Button Content="Найти" Height="22" Width="60" Command="{Binding FindProductionTaskBatchCommand}" VerticalAlignment="Bottom"/>    
+                    <Button Content="Найти" Height="22" Width="60" Command="{Binding FindProductionTaskBatchCommand}" VerticalAlignment="Bottom"/>
                 </dxlc:LayoutItem>
-                
+
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Результаты поиска" LabelPosition="Top" VerticalAlignment="Stretch">
                 <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" Margin="-12,-3,-12,-12" 
-                                 ItemsSource="{Binding ProductionTaskBatches}" AutoExpandAllGroups="True" SelectedItem="{Binding SelectedProductionTaskBatch}"> 
+                                 ItemsSource="{Binding ProductionTaskBatches}" AutoExpandAllGroups="True" SelectedItem="{Binding SelectedProductionTaskBatch}">
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn Header="Передел" FieldName="Place" GroupIndex="0" />
-                        <dxg:GridColumn Header="Дата начала" FieldName="DateBegin" Width="80" FixedWidth="True"/>
-                        <dxg:GridColumn Header="Номер" FieldName="Number" Width="100" FixedWidth="True" />
-                        <dxg:GridColumn Header="Дата" FieldName="Date" Width="80" FixedWidth="True" />
-                        <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                        <dxg:GridColumn Header="Состояние" FieldName="State" Width="80" FixedWidth="True" />
+                        <dxg:GridColumn Header="Передел" FieldName="Place" GroupIndex="0" SortOrder="Ascending" />
+                        <dxg:GridColumn Header="Дата начала" FieldName="DateBegin" Width="80" FixedWidth="True" VisibleIndex="0"/>
+                        <dxg:GridColumn Header="Номер" FieldName="Number" Width="100" FixedWidth="True" VisibleIndex="1" SortOrder="Descending" SortIndex="0" SortMode="Value" />
+                        <dxg:GridColumn Header="Дата" FieldName="Date" Width="80" FixedWidth="True" VisibleIndex="2" />
+                        <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" VisibleIndex="3" />
+                        <dxg:GridColumn Header="Количество" FieldName="Quantity" VisibleIndex="4" Width="90" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Состояние" FieldName="State" Width="100" FixedWidth="True" VisibleIndex="5" />
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
                         <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" AllowEditing="False"/>

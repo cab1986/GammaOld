@@ -59,8 +59,8 @@ namespace Gamma.ViewModels
             ClearGrid();
             DocCloseShiftDocs = new ObservableCollection<Docs>(GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && 
-                    d.Date >= SqlFunctions.DateAdd("hh",-1,SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(CloseDate))) && 
-                    d.Date <= SqlFunctions.DateAdd("hh",1, SqlFunctions.DateAdd("hh",-1,DB.GetShiftEndTime(CloseDate))) &&
+                    d.Date >= SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh",-1,CloseDate))) && 
+                    d.Date <= SqlFunctions.DateAdd("hh",1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh",-1,CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).Select(d => d));
             foreach (var doc in DocCloseShiftDocs.Where(doc => doc.DocTypeID == (byte)DocTypes.DocProduction))
             {
@@ -75,7 +75,7 @@ namespace Gamma.ViewModels
                             Nomenclature = string.Concat(ps.C1CNomenclature.Name," ",ps.C1CCharacteristics.Name),
                             Number = d.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.Weight
+                            Weight = ps.DecimalWeight??0
                         }).FirstOrDefault()
                     );
             }
@@ -83,11 +83,8 @@ namespace Gamma.ViewModels
 
         public void ClearGrid()
         {
-            if (DocCloseShift != null)
-            {
                 DocCloseShiftDocs.Clear();
                 Spools.Clear();
-            }
         }
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {

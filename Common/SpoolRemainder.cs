@@ -31,9 +31,9 @@ namespace Gamma.Common
         public string Nomenclature { get; set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public int Weight { get; set; }
+        public decimal Weight { get; set; }
 
-        public int MaxWeight { get; set; }
+        public decimal MaxWeight { get; set; }
 
         private string GetProductSpoolNomenclature(Guid productid)
         {
@@ -41,12 +41,12 @@ namespace Gamma.Common
                 GammaBase.ProductSpools.Where(p => p.ProductID == productid)
                     .Select(p => "№ " + p.Products.Number + " " + p.C1CNomenclature.Name + " " +
                                  p.C1CCharacteristics.Name + " Масса: " +
-                                 SqlFunctions.StringConvert((double)p.Weight) + " кг").First();
+                                 SqlFunctions.StringConvert((double)p.DecimalWeight) + " кг").First();
         }
 
-        private int GetRemainderMaxWeight(Guid productid)
+        private decimal GetRemainderMaxWeight(Guid productid)
         {
-            return GammaBase.ProductSpools.First(ps => ps.ProductID == productid).Weight;
+            return GammaBase.ProductSpools.First(ps => ps.ProductID == productid).DecimalWeight??0;
         }
 
         public bool IsReadOnly { get; set; }

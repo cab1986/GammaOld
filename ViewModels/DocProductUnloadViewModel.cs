@@ -52,22 +52,21 @@ namespace Gamma.ViewModels
                 SourceSpools = GammaBase.DocProducts.Where(dp => dp.Docs.DocWithdrawal.DocProduction.
                     Any(dprod => dprod.DocID == docID)).Select(dp => dp.ProductID).ToList();             
                 DocProducts = new ObservableCollection<DocProducts>
-                (GammaBase.DocProducts.Include("Products").Include("Products.ProductSpools").Where(dp => dp.DocID == docID));
+                (GammaBase.DocProducts.Include(d => d.Products).Include(d => d.Products.ProductSpools)
+                .Include(d => d.Products.ProductSpools.C1CNomenclature)
+                .Include(d => d.Products.ProductSpools.C1CCharacteristics).Where(dp => dp.DocID == docID));
                 Products = new ObservableCollection<Products>(DocProducts.Select(dp => dp.Products));
-//                (from p in GammaBase.Products where DocProducts.Where(dp => dp.ProductID == p.ProductID).Any() select p);
                 UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProducts
-                                                         join ps in GammaBase.ProductSpools.Include(p => p.C1CNomenclature)
-                                                                   .Include(p => p.C1CCharacteristics) on dp.ProductID equals ps.ProductID
-                                                         select new PaperBase
+                                                                   select new PaperBase
                                                          {
-                                                             BreakNumber = ps.BreakNumber,
-                                                             ProductID = ps.ProductID,
+                                                             BreakNumber = dp.Products.ProductSpools.BreakNumber,
+                                                             ProductID = dp.Products.ProductSpools.ProductID,
                                                              Number = dp.Products.Number,
-                                                             Nomenclature = ps.C1CNomenclature.Name + " " + ps.C1CCharacteristics.Name,
-                                                             CharacteristicID = (Guid)ps.C1CCharacteristicID,
-                                                             NomenclatureID = ps.C1CNomenclatureID,
-                                                             Weight = ps.Weight,
-                                                             Diameter = ps.Diameter
+                                                             Nomenclature = dp.Products.ProductSpools.C1CNomenclature.Name + " " + dp.Products.ProductSpools.C1CCharacteristics.Name,
+                                                             CharacteristicID = (Guid)dp.Products.ProductSpools.C1CCharacteristicID,
+                                                             NomenclatureID = dp.Products.ProductSpools.C1CNomenclatureID,
+                                                             Weight = dp.Products.ProductSpools.DecimalWeight??0,
+                                                             Diameter = dp.Products.ProductSpools.Diameter
                                                          }
                                     );
                 ProductSpools = new ObservableCollection<ProductSpools>
@@ -76,18 +75,6 @@ namespace Gamma.ViewModels
                 {
                     Diameter = UnloadSpools[0].Diameter;
                     BreakNumber = UnloadSpools[0].BreakNumber;
-/*                    NomenclatureID = UnloadSpools[0].NomenclatureID;
-                    Cuttings = new ObservableCollection<Cutting>
-                    (
-                    from u in UnloadSpools
-                    group u by u.CharacteristicID into grouped
-                    select new Cutting
-                    {
-                        CharacteristicID = grouped.Key,
-                        Quantity = grouped.Count()
-                    }
-                    );
-                    */
                 }
 
             }
@@ -286,7 +273,7 @@ namespace Gamma.ViewModels
             var unloadSpool = UnloadSpools.FirstOrDefault(u => u.ProductID == msg.ProductID);
             if (unloadSpool != null)
                 unloadSpool.Weight =
-                    (from ps in GammaBase.ProductSpools where ps.ProductID == msg.ProductID select ps.Weight).FirstOrDefault();
+                    (from ps in GammaBase.ProductSpools where ps.ProductID == msg.ProductID select ps.DecimalWeight).FirstOrDefault()??0;
         }
 
         public ObservableCollection<Cutting> Cuttings { get; set; }

@@ -298,6 +298,8 @@ namespace Gamma.ViewModels
                     break;
             }
         }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public string QuantityHeader { get; set; }
         private ObservableCollection<ProductInfo> _products;
         public ObservableCollection<ProductInfo> Products

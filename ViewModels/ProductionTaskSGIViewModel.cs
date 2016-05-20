@@ -172,11 +172,11 @@ namespace Gamma.ViewModels
                 productionTask.Quantity = Quantity;
                 GammaBase.SaveChanges();
         }
-        private int _madeQuantiy;
+        private decimal _madeQuantiy;
         /// <summary>
         /// Кол-во выпущенных рулончиков в шт.
         /// </summary>
-        public int MadeQuantity
+        public decimal MadeQuantity
         {
             get { return _madeQuantiy; }
             set

@@ -338,6 +338,9 @@
     <Compile Include="Models\GammaProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetBatchProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetCharPropsDescriptions_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>

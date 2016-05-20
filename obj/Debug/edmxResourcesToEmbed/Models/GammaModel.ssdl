@@ -518,7 +518,7 @@
     <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
-    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
     <Property Name="DateBegin" Type="datetime" />
@@ -593,9 +593,10 @@
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="RealFormat" Type="int" />
     <Property Name="Diameter" Type="int" Nullable="false" />
-    <Property Name="Weight" Type="int" Nullable="false" />
+    <Property Name="DecimalWeight" Type="decimal" Precision="15" Scale="5" />
     <Property Name="Length" Type="decimal" Precision="8" Scale="2" />
     <Property Name="RealBasisWeight" Type="decimal" Precision="10" Scale="4" />
+    <Property Name="ToughnessKindID" Type="tinyint" />
     <Property Name="BreakNumber" Type="tinyint" />
   </EntityType>
   <EntityType Name="ProductStates">
@@ -1927,7 +1928,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductionTasks_1CNomenclature">
-    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
     <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CNomenclature">
@@ -2348,6 +2349,9 @@
   <Function Name="GetActiveSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
   </Function>
+  <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetCharPropsDescriptions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -2399,9 +2403,6 @@
     <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetProductionTaskBatchMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
-    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
-  </Function>
-  <Function Name="GetProductionTaskBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetProductionTaskBatchSGBCuttings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">

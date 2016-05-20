@@ -41,7 +41,8 @@
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
-                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}" NullText="0" AllowNullInput="True" IsFloatValue="False"/>
+                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" 
+                                           NullText="0" AllowNullInput="True" IsFloatValue="False" Mask="f0" DisplayFormatString="f2"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="1000"
@@ -55,8 +56,16 @@
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Horizontal" View="Group">
+                <dxlc:LayoutItem Label="Прочность" LabelPosition="Top" Width="80">
+                    <dxe:ListBoxEdit ItemsSource="{Binding ToughnessKinds, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" EditValue="{Binding ToughnessKindID}" 
+                                     ValueMember="Key" DisplayMember="Value" >
+                        <dxe:ListBoxEdit.StyleSettings>
+                            <dxe:RadioListBoxEditStyleSettings HighlightedTextBackground="Yellow" HighlightedFontFamily="{x:Null}" HighlightedFontStyle="{x:Null}" HighlightedFontSize="{x:Null}" HighlightedTextForeground="Black" HighlightedFontWeight="{x:Null}"/>
+                        </dxe:ListBoxEdit.StyleSettings>
+                    </dxe:ListBoxEdit>
+                </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Качество" LabelPosition="Top" Width="150">
-                    <dxe:ListBoxEdit ItemsSource="{Binding States, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValue="{Binding StateID}" ValueMember="Key" DisplayMember="Value" Background="#FFB6D0F4">
+                    <dxe:ListBoxEdit ItemsSource="{Binding States, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValue="{Binding StateID}" ValueMember="Key" DisplayMember="Value" >
                         <dxe:ListBoxEdit.StyleSettings>
                             <dxe:RadioListBoxEditStyleSettings HighlightedTextBackground="Yellow" HighlightedFontFamily="{x:Null}" HighlightedFontStyle="{x:Null}" HighlightedFontSize="{x:Null}" HighlightedTextForeground="Black" HighlightedFontWeight="{x:Null}"/>
                         </dxe:ListBoxEdit.StyleSettings>

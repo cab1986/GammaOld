@@ -22,9 +22,9 @@ namespace Gamma.Models
         public Nullable<System.Guid> Unwinder3Spool { get; set; }
         public Nullable<bool> Unwinder3Active { get; set; }
     
+        public virtual Places Places { get; set; }
         public virtual ProductSpools ProductSpools { get; set; }
         public virtual ProductSpools ProductSpools1 { get; set; }
         public virtual ProductSpools ProductSpools2 { get; set; }
-        public virtual Places Places { get; set; }
     }
 }

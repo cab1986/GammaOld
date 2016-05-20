@@ -48,6 +48,7 @@ namespace Gamma.ViewModels
             }
             var doc = GammaBase.Docs.First(d => d.DocID == docID);
             States = new ProductStates().ToDictionary();
+            ToughnessKinds = new ToughnessKinds().ToDictionary();
             RejectionReasons = new ObservableCollection<RejectionReason>
                 (from r in GammaBase.GetSpoolRejectionReasons()
                  select new RejectionReason
@@ -74,7 +75,7 @@ namespace Gamma.ViewModels
                 ProductSpool = new ProductSpools()
                 {
                     ProductID = Product.ProductID,
-                    C1CNomenclatureID = ptInfo.NomenclatureID,
+                    C1CNomenclatureID = (Guid)ptInfo.NomenclatureID,
                     C1CCharacteristicID = ptInfo.CharacteristicID,
                     RealFormat = DB.GetLastFormat(WorkSession.PlaceID)
                 };
@@ -104,7 +105,8 @@ namespace Gamma.ViewModels
                 Diameter = ProductSpool.Diameter;
                 Length = ProductSpool.Length ?? 0;
                 BreakNumber = ProductSpool.BreakNumber;
-                Weight = ProductSpool.Weight;
+                Weight = ProductSpool.DecimalWeight??0;
+                ToughnessKindID = ProductSpool.ToughnessKindID ?? 1;
                 var stateInfo = (from d in GammaBase.DocChangeStateProducts
                     where d.ProductID == Product.ProductID
                     orderby
@@ -127,7 +129,7 @@ namespace Gamma.ViewModels
             NomenclatureID = ProductSpool.C1CNomenclatureID;
             CharacteristicID = ProductSpool.C1CCharacteristicID;
             RealFormat = ProductSpool.RealFormat ?? 0;
-            Bars.Add(ReportManager.GetReportBar("Spool", VMID));
+            Bars.Add(ReportManager.GetReportBar("SpoolLabels", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
         }
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -206,10 +208,10 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
-        private int _weight;   
+        private decimal _weight;   
         [Range(1,10000,ErrorMessage="Укажите вес тамбура")]
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public int Weight
+        public decimal Weight
         {
             get
             {
@@ -247,7 +249,7 @@ namespace Gamma.ViewModels
 
         private DocProducts DocProduct { get; set; }
         private Products Product { get; set; }
-        private ProductSpools ProductSpool { get; set; }
+        public ProductSpools ProductSpool { get; set; }
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("ProductSpools")) return;
@@ -307,7 +309,8 @@ namespace Gamma.ViewModels
             ProductSpool.BreakNumber = BreakNumber;
             ProductSpool.Diameter = Diameter;
             ProductSpool.Length = Length;
-            ProductSpool.Weight = Weight;
+            ProductSpool.DecimalWeight = Weight;
+            ProductSpool.ToughnessKindID = ToughnessKindID;
             DocProduct.IsInConfirmed = (from doc in GammaBase.Docs
                                         where doc.DocID == itemID
                                         select doc.IsConfirmed).FirstOrDefault();
@@ -339,6 +342,19 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("StateID");
             }
         }
+
+        private byte _toughnessKindID = 1;
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public byte ToughnessKindID
+        {
+            get { return _toughnessKindID; }
+            set
+            {
+                _toughnessKindID = value;
+                RaisePropertiesChanged("ToughnessKindID");
+            }
+        }
+        public Dictionary<byte, string> ToughnessKinds { get; set; }
         public Dictionary<byte, string> States { get; set; }
         public ObservableCollection<RejectionReason> RejectionReasons { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]

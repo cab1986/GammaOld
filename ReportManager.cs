@@ -35,7 +35,8 @@ namespace Gamma
             }
             var reports = from rep in GammaBase.Reports
                           join parrep in GammaBase.Reports on rep.ParentID equals parrep.ReportID where parrep.Name == reportObject
-                          select rep;
+                          orderby rep.Name
+                          select rep ;
             var bar = new BarViewModel();
             foreach (Reports report in reports)
             {

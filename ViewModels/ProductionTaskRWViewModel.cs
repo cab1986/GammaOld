@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
@@ -17,7 +16,7 @@ namespace Gamma.ViewModels
     /// <summary>
     /// ViewModel задания на ПРС
     /// </summary>
-    public class ProductionTaskRwViewModel : SaveImplementedViewModel, ICheckedAccess, IProductionTask
+    public sealed class ProductionTaskRwViewModel : SaveImplementedViewModel, ICheckedAccess, IProductionTask
     {
         /// <summary>
         /// Открытие для редактирования задания на ПРС
@@ -37,7 +36,6 @@ namespace Gamma.ViewModels
                 DateBegin = productionTask.DateBegin;
                 DateEnd = productionTask.DateEnd;
                 TaskQuantity = productionTask.Quantity;
-                IsConfirmed = productionTask.IsActual;
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
                 Cuttings = new ItemsChangeObservableCollection<Cutting>(GammaBase.ProductionTaskRWCutting.Where(
                     p => p.ProductionTaskID == productionTask.ProductionTaskID).GroupBy(p => new {p.C1CNomenclatureID, p.C1CCharacteristicID})
@@ -58,11 +56,12 @@ namespace Gamma.ViewModels
             DeleteCuttingCommand = new DelegateCommand(() =>
             {
                 Cuttings.Remove(SelectedCutting);
-                SelectedCutting = null;
                 TotalFormat = Cuttings.Sum(cutting => cutting.BaseFormat * cutting.Quantity).ToString();
                 MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => c.NomenclatureID).ToList());
             }
             , () => SelectedCutting != null && !IsConfirmed);
+            IsConfirmed = (productionTask?.IsActual ?? false) && IsValid;
+            ProductionTaskID = productionTask?.ProductionTaskID ?? SqlGuidUtil.NewSequentialid();
         }
 
         private void AddCutting()
@@ -135,15 +134,19 @@ namespace Gamma.ViewModels
                         pt.ProductionTaskRWCutting).FirstOrDefault(pt => pt.ProductionTaskBatches.Select(ptb => ptb.ProductionTaskBatchID)
                             .Contains(productionTaskBatchID));
             if (productionTaskRw == null)
+            {
                 productionTaskRw = new ProductionTasks()
                 {
-                    ProductionTaskID = SqlGuidUtil.NewSequentialid(),
+                    ProductionTaskID = ProductionTaskID,
                     PlaceGroupID = (short)PlaceGroups.Rw,
                     ProductionTaskRWCutting = new List<ProductionTaskRWCutting>(),
                     ProductionTaskBatches = new List<ProductionTaskBatches> { GammaBase.ProductionTaskBatches.First(ptb => ptb.ProductionTaskBatchID == productionTaskBatchID) }
                 };
+                GammaBase.ProductionTasks.Add(productionTaskRw);
+            }
             productionTaskRw.DateBegin = DateBegin;
             productionTaskRw.DateEnd = DateEnd;
+            productionTaskRw.Quantity = TaskQuantity;
             GammaBase.ProductionTaskRWCutting.RemoveRange(productionTaskRw.ProductionTaskRWCutting);
             foreach (var cutting in Cuttings)
             {
@@ -161,11 +164,12 @@ namespace Gamma.ViewModels
                     index++;
                 }
             }
+            ProductionTaskID = productionTaskRw.ProductionTaskID;
             GammaBase.SaveChanges();
             ProductionTaskSGBViewModel.SaveToModel(productionTaskRw.ProductionTaskID);
         }
-        
-        protected bool CanChooseNomenclature()
+
+        private bool CanChooseNomenclature()
         {
             return !IsReadOnly;
         }

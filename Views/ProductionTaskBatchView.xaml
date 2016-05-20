@@ -87,7 +87,7 @@
                             </dxb:Bar>
                         </dxb:BarManager.Bars>
                     </dxb:BarManager>
-                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}" AutoExpandAllGroups="True"
+                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}"
                                      SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn FieldName="Place" Header="Передел" GroupIndex="0" />
@@ -104,7 +104,11 @@
                                     <dxe:CheckEditSettings/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="4" Width="120" FixedWidth="True"/>
+                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="4" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="f" MaskType="Numeric"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
                             <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />

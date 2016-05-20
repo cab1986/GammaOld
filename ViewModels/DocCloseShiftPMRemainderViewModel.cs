@@ -79,7 +79,7 @@ namespace Gamma.ViewModels
                         C1CCharacteristicID = CharacteristicID,
                         C1CNomenclatureID = (Guid)NomenclatureID,
                         Diameter = 0,
-                        Weight = 0,
+                        DecimalWeight = 0,
                         ProductID = productid
                     }
                 };

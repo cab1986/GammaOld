@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamma.Models;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using DevExpress.Mvvm;
 using Gamma.Interfaces;
-using Gamma.Attributes;
 using Gamma.Common;
 
 namespace Gamma.ViewModels

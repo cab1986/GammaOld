@@ -276,7 +276,7 @@ namespace Gamma.ViewModels
 
         public override void SaveToModel(GammaEntities gammaBase = null)
         {
-            if (IsReadOnly && ProductionTaskStateID != (byte)ProductionTaskStates.NeedsDecision) return;
+            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return;
             gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel(gammaBase);
             var productionTaskBatch = gammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);
@@ -353,7 +353,7 @@ namespace Gamma.ViewModels
                                                 p => p.ProductionTaskID == productionTaskID);
                                         if (productionTaskPM != null)
                                         {
-                                            productSpool.C1CNomenclatureID = productionTaskPM.C1CNomenclatureID;
+                                            productSpool.C1CNomenclatureID = (Guid)productionTaskPM.C1CNomenclatureID;
                                             productSpool.C1CCharacteristicID = productionTaskPM.C1CCharacteristicID;
                                         }
                                         gammaBase.SaveChanges();
@@ -430,7 +430,7 @@ namespace Gamma.ViewModels
                                         new ProductPalletItems()
                                         {
                                             ProductPalletItemID = SqlGuidUtil.NewSequentialid(),ProductID = productid,
-                                            C1CNomenclatureID = productionTask.C1CNomenclatureID,
+                                            C1CNomenclatureID = (Guid)productionTask.C1CNomenclatureID,
                                             C1CCharacteristicID = (Guid)productionTask.C1CCharacteristicID,
                                             Quantity = baseQuantity}
                                     }
@@ -552,7 +552,7 @@ namespace Gamma.ViewModels
         private void RefreshProduction()
         {
             ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in 
-                                                                               GammaBase.GetProductionTaskBatchProducts(ProductionTaskBatchID)
+                                                                               GammaBase.GetBatchProducts(ProductionTaskBatchID)
                                                                            select new ProductInfo { 
                                                                                DocID = taskProducts.DocID,
                                                                                ProductKind = (ProductKinds)taskProducts.ProductKindID,

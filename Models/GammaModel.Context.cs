@@ -59,14 +59,12 @@ namespace Gamma.Models
         public virtual DbSet<ProcessModels> ProcessModels { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
-        public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<Products> Products { get; set; }
-        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<ProductStates> ProductStates { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
@@ -93,6 +91,8 @@ namespace Gamma.Models
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
+        public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
+        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {
@@ -329,15 +329,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNomenclatureFolders_Result>("GetNomenclatureFolders", placeGroupIDParameter);
         }
     
-        public virtual ObjectResult<GetProductionTaskBatchProducts_Result> GetProductionTaskBatchProducts(Nullable<System.Guid> productionTaskBatchID)
-        {
-            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
-                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
-                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchProducts_Result>("GetProductionTaskBatchProducts", productionTaskBatchIDParameter);
-        }
-    
         public virtual ObjectResult<GetProductionTaskBatchSGBCuttings_Result> GetProductionTaskBatchSGBCuttings(Nullable<System.Guid> productionTaskBatchID)
         {
             var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
@@ -538,6 +529,15 @@ namespace Gamma.Models
                 new ObjectParameter("FilterByPlaceGroup", typeof(bool));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result>("FindNomenclatureByStringWithFilter", stringParameter, iDParameter, filterByPlaceGroupParameter);
+        }
+    
+        public virtual ObjectResult<GetBatchProducts_Result> GetBatchProducts(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchProducts_Result>("GetBatchProducts", productionTaskBatchIDParameter);
         }
     }
 }

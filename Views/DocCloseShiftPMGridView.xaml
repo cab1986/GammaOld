@@ -1,28 +1,32 @@
 ﻿<UserControl
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.DocCloseShiftPMGridView"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.DocCloseShiftPMGridView"
         >
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <dx:DXTabControl>
             <dx:DXTabItem Header="Изготовленные тамбура">
                 <Grid Background="Transparent" Margin="-12,-12,-12,-12" MaxHeight="1000">
-                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding Spools}" SelectedItem="{Binding SelectedSpool}" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding Spools}" SelectedItem="{Binding SelectedSpool}" VerticalAlignment="Stretch">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="n0" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:d} шт" />
-                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:N0} кг" />
                         </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} кг"/>
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
-                                           ShowFixedTotalSummary="True"/>
+								ShowFixedTotalSummary="True"/>
                         </dxg:GridControl.View>
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowSpoolCommand}"/>

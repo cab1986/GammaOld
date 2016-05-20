@@ -11,15 +11,18 @@ namespace Gamma.Models
 {
     using System;
     
-    public partial class GetProductionTaskByBatchID_Result
+    public partial class GetBatchProducts_Result
     {
-        public Nullable<System.DateTime> DateBegin { get; set; }
-        public Nullable<System.DateTime> DateEnd { get; set; }
-        public decimal Quantity { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public Nullable<int> PlaceID { get; set; }
-        public System.Guid ProductionTaskID { get; set; }
-        public bool IsActual { get; set; }
+        public System.Guid DocID { get; set; }
+        public Nullable<byte> ProductKindID { get; set; }
+        public System.Guid ProductID { get; set; }
+        public string Number { get; set; }
+        public System.DateTime Date { get; set; }
+        public string Place { get; set; }
+        public bool IsConfirmed { get; set; }
+        public string NomenclatureName { get; set; }
+        public Nullable<System.Guid> NomenclatureID { get; set; }
+        public Nullable<System.Guid> CharacteristicID { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
     }
 }

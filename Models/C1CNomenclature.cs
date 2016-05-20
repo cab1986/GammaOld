@@ -24,8 +24,6 @@ namespace Gamma.Models
             this.C1CSpecificationInputNomenclature = new HashSet<C1CSpecificationInputNomenclature>();
             this.C1CSpecificationOutputNomenclature = new HashSet<C1CSpecificationOutputNomenclature>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
-            this.ProductionTasks = new HashSet<ProductionTasks>();
-            this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
             this.PlaceGroups = new HashSet<PlaceGroups>();
             this.MaterialTypes = new HashSet<MaterialTypes>();
@@ -37,6 +35,8 @@ namespace Gamma.Models
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
+            this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.ProductSpools = new HashSet<ProductSpools>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -65,10 +65,6 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceGroups> PlaceGroups { get; set; }
@@ -90,5 +86,9 @@ namespace Gamma.Models
         public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
     }
 }

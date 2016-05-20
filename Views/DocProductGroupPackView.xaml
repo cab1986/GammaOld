@@ -48,7 +48,11 @@
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" Width="200"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="80"/>
+                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="80">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="f0" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem SummaryType="Sum" FieldName="Weight" DisplayFormat="{}{0:f0}"/>

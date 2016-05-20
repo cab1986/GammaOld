@@ -220,6 +220,7 @@ namespace Gamma
         }
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
+            UIServices.SetBusyState();
             Messenger.Default.Send(new OpenDocProductMessage
             {
                     DocProductKind = docProductKind,

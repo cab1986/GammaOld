@@ -26,7 +26,7 @@ namespace Gamma
         public string NomenclatureName { get; set; }
         public Guid? NomenclatureID { get; set; }
         public Guid? CharacteristicID { get; set; }
-        public int? Quantity { get; set; }
+        public decimal? Quantity { get; set; }
         public byte? ShiftID { get; set; }
         public string State { get; set; }
         public string Place { get; set; }

@@ -8,6 +8,8 @@ using Gamma.Attributes;
 using Gamma.Common;
 using System.Windows;
 using System.Data.Entity;
+using DevExpress.Utils.About;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace Gamma.ViewModels
@@ -118,19 +120,7 @@ namespace Gamma.ViewModels
                         Number = product.Number;
                         Title = $"{Title} № {Number}";
                         CurrentViewModel = new DocProductSpoolViewModel(product.ProductID, false);
-                        ProductRelations = new ObservableCollection<ProductRelation>
-                            (
-                                from prel in GammaBase.ProductRelations(product.ProductID)
-                                select new ProductRelation
-                                {
-                                    Date = prel.Date,
-                                    DocID = prel.DocID,
-                                    Number = prel.Number,
-                                    ProductID = prel.ProductID,
-                                    ProductKind = prel.ProductKind,
-                                    RelationKind = prel.RelationKind
-                                }
-                            );
+                        GetProductRelations(product.ProductID);
                     }
                     else CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID, true);
                     break;
@@ -144,7 +134,7 @@ namespace Gamma.ViewModels
 //                        GammaBase.Entry<DocProduction>(DocProduction).Reload();
                         Number = Doc.Number;
                         Title = $"{Title} № {Number}";
-                        GetProductRelations();
+                        GetDocRelations();
                     }
                     CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
                     break;
@@ -157,7 +147,7 @@ namespace Gamma.ViewModels
                         Number = Doc.Number;
                         Title = $"{Title} № {Number}";
                         CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);
-                        GetProductRelations();
+                        GetDocRelations();
                     }
                     else CurrentViewModel = new DocProductGroupPackViewModel();
                     break;
@@ -170,7 +160,7 @@ namespace Gamma.ViewModels
                         Number = Doc.Number;
                         Title = $"{Title} № {Number}";
                         CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
-                        GetProductRelations();
+                        GetDocRelations();
                     }
                     else CurrentViewModel = new DocProductPalletViewModel();
                     break;
@@ -194,8 +184,29 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             IsReadOnly = !(DB.HaveWriteAccess("DocProducts") && (!IsConfirmed || IsValid));
         }
+        
+        private void GetProductRelations(Guid productId)
+        {
+            ProductRelations = new ObservableCollection<ProductRelation>
+                (
+                from prel in GammaBase.ProductRelations(productId)
+                let productKindID = prel.ProductKindID
+                where productKindID != null
+                select new ProductRelation
+                {
+                    Date = prel.Date,
+                    DocID = prel.DocID,
+                    Number = prel.Number,
+                    ProductID = prel.ProductID,
+                    ProductKind = prel.ProductKind,
+                    RelationKind = prel.RelationKind,
+                    ProductKindID = (ProductKinds)productKindID
+                }
+                );
+        }
+        
 
-        private void GetProductRelations()
+        private void GetDocRelations()
         {
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
@@ -339,7 +350,11 @@ namespace Gamma.ViewModels
             if (msg.VMID != (CurrentViewModel as IBarImplemented)?.VMID) return;
 //            if (!IsValid) return;
             SaveToModel();
-            ReportManager.PrintReport(msg.ReportID, Doc.DocID);
+            var spoolViewModel = CurrentViewModel as DocProductSpoolViewModel;
+            if (spoolViewModel != null)
+                ReportManager.PrintReport(msg.ReportID, spoolViewModel.ProductSpool.ProductID);
+            else
+                ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }
 
         public override void SaveToModel(GammaEntities gammaBase = null)

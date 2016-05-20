@@ -49,7 +49,11 @@
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn FieldName="Number" Header="Номер" FixedWidth="True" Width="100"/>
                         <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура"/>
-                        <dxg:GridColumn FieldName="Weight" Header="Вес, кг" FixedWidth="True" Width="60"/>
+                        <dxg:GridColumn FieldName="Weight" Header="Вес, кг" FixedWidth="True" Width="60">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:TextEditSettings Mask="n0" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
                     </dxg:GridControl.Columns>
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditSpoolCommand}"/>

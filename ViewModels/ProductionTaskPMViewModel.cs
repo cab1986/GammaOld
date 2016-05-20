@@ -296,7 +296,7 @@ namespace Gamma.ViewModels
                 gammaBase.SaveChanges();
                 ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
         }
-        [Range(1, 1000000, ErrorMessage = "Значение должно быть больше 0")]
+        [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal TaskQuantity { get; set; }
         public bool IsReadOnly

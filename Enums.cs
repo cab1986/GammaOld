@@ -60,6 +60,16 @@ namespace Gamma
         [Description("Ограниченная партия")]
         Limited
     }
+
+    public enum ToughnessKinds
+    {
+        [Description("↑")]
+        Higher,
+        [Description("Цель")]
+        Target,
+        [Description("↓")]
+        Lower
+    }
     /// <summary>
     /// Фильтр качества для поиска
     /// </summary>
