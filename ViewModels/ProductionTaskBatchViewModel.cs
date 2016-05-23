@@ -370,8 +370,17 @@ namespace Gamma.ViewModels
                                 //если предыдущий тамбур этой смены и не подтвержден, то открываем для редактирования
                                 if (docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                                 {
+                                    var firstOrDefault = gammaBase.DocProducts.FirstOrDefault(d => d.DocID == docProduction.DocID);
+                                     if (firstOrDefault !=
+                                            null)
+                                            productid =
+                                                firstOrDefault
+                                                    .ProductID;
+                                     else
+                                     {
+                                         break;
+                                     }
                                     MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
-                                    productid = gammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID).Select(d => d.ProductID).First();
                                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productid);
                                     return;
                                 }
