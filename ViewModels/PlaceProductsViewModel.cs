@@ -5,17 +5,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using Gamma.Models;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace Gamma.ViewModels
 {
     /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
+    /// ViewModel произведенная продукция передела
     /// </summary>
     public class PlaceProductsViewModel : RootViewModel
     {
@@ -148,14 +146,15 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.Wr:
-                    var notConfirmedGroupPack = GammaBase.Docs.Include(d => d.DocProducts)
+                    var lastGroupPack = GammaBase.Docs
                         .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
-                    if (notConfirmedGroupPack != null && !notConfirmedGroupPack.IsConfirmed)
+                    GammaBase.Entry(lastGroupPack).Reload();
+                    if (lastGroupPack != null && !lastGroupPack.IsConfirmed)
                     {
                         MessageBox.Show("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", MessageBoxButton.OK, MessageBoxImage.Information);
-                        MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, notConfirmedGroupPack.DocID);
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, lastGroupPack.DocID);
                     }
                     else MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);
                     break;
@@ -298,8 +297,6 @@ namespace Gamma.ViewModels
                     break;
             }
         }
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        // ReSharper disable once MemberCanBePrivate.Global
         public string QuantityHeader { get; set; }
         private ObservableCollection<ProductInfo> _products;
         public ObservableCollection<ProductInfo> Products
@@ -314,8 +311,9 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Products");
             }
         }
+        
         public ProductInfo SelectedProduct { get; set; }
-        public string Number { get; set; }
+        public string Number { get; set; }       
         public DateTime? DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
         public List<string> Intervals { get; set; }
@@ -335,7 +333,11 @@ namespace Gamma.ViewModels
         public DelegateCommand CreateNewProductCommand { get; private set; }
         public DelegateCommand FindCommand { get; private set; }
         public DelegateCommand OpenDocProductCommand { get; private set; }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public string DeleteProductText { get; set; }
+        // ReSharper disable once MemberCanBePrivate.Global
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string NewProductText { get; set; }
     }
 }

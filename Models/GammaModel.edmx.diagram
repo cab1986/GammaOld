@@ -53,7 +53,6 @@
         <EntityTypeShape EntityType="GammaModel.Templates" Width="1.5" PointX="8" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.UserPrintNames" Width="1.5" PointX="18" PointY="46.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.Users" Width="1.5" PointX="15.75" PointY="45.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="GammaModel.vCharacteristicSGBProperties" Width="1.5" PointX="2.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.vProductionTaskBatches" Width="1.5" PointX="5.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.vProductionTaskProducts" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
         <AssociationConnector Association="GammaModel.FK_1CCharacteristicProperties_1CProperties" ManuallyRouted="false" />
@@ -184,6 +183,7 @@
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools1" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools2" />
+        <EntityTypeShape EntityType="GammaModel.vCharacteristicSGBProperties" Width="1.5" PointX="0.75" PointY="5.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

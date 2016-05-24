@@ -57,7 +57,11 @@ namespace Gamma.ViewModels
             {
                 Cuttings.Remove(SelectedCutting);
                 TotalFormat = Cuttings.Sum(cutting => cutting.BaseFormat * cutting.Quantity).ToString();
-                MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => c.NomenclatureID).ToList());
+                MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => new Nomenclature()
+                {
+                    NomenclatureID = c.NomenclatureID,
+                    CharacteristicID = c.CharacteristicID
+                }).ToList());
             }
             , () => SelectedCutting != null && !IsConfirmed);
             IsConfirmed = (productionTask?.IsActual ?? false) && IsValid;
@@ -95,23 +99,30 @@ namespace Gamma.ViewModels
                                 .Select(cp => new
                                 {
                                     cp.CoreDiameter,
-                                    cp.LayerNumber
+                                    cp.LayerNumber,
+                                    cp.Color
                                 }).FirstOrDefault();
                         var newProps = GammaBase.vCharacteristicSGBProperties.Where(
                             cp => cp.C1CCharacteristicID == SelectedCutting.CharacteristicID)
                             .Select(cp => new
                             {
                                 cp.CoreDiameter,
-                                cp.LayerNumber
+                                cp.LayerNumber,
+                                cp.Color
                             }).First();
                         if (baseProps != null && (baseProps.CoreDiameter != newProps.CoreDiameter ||
-                            baseProps.LayerNumber != newProps.LayerNumber))
+                            baseProps.LayerNumber != newProps.LayerNumber || baseProps.Color != newProps.Color))
                         {
-                            MessageBox.Show("Гильза или слойность не совпадают", "Характеристика не подходит",
+                            MessageBox.Show("Гильза, слойность или цвет не совпадают", "Характеристика не подходит",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
                             SelectedCutting.CharacteristicID = null;
                         }
                     }
+                    MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => new Nomenclature
+                    {
+                        NomenclatureID = c.NomenclatureID,
+                        CharacteristicID = c.CharacteristicID
+                    }).ToList());
                     break;
             }
         }
@@ -254,9 +265,12 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Unregister<Nomenclature1CMessage>(this);
             SelectedCutting.NomenclatureID = msg.Nomenclature1CID;
-            MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => c.NomenclatureID).ToList());
+            MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => new Nomenclature
+            {
+                NomenclatureID = c.NomenclatureID,
+                CharacteristicID = c.CharacteristicID
+            }).ToList());
         }
-
 
         private decimal _taskQuantity;
         [Range(1,1000000000,ErrorMessage=@"Задание должно быть больше 0")]

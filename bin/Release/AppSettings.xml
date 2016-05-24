@@ -18,6 +18,6 @@
   </ScalesComPort>
   <HostName>gamma</HostName>
   <DbName>gammanew</DbName>
-  <User>sa</User>
+  <User>Костин</User>
   <UseScanner>false</UseScanner>
 </GammaSettings>

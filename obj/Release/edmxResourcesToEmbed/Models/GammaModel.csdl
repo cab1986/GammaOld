@@ -596,19 +596,6 @@
     <NavigationProperty Name="UserPrintNames" Relationship="Self.FK_UserPrintNames_Users" FromRole="Users" ToRole="UserPrintNames" />
     <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
   </EntityType>
-  <EntityType Name="vCharacteristicSGBProperties">
-    <Key>
-      <PropertyRef Name="C1CCharacteristicID" />
-    </Key>
-    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
-    <Property Name="CoreDiameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="LayerNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Diameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Format" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="FormatNumeric" Type="Int32" />
-  </EntityType>
   <EntityType Name="vProductionTaskBatches">
     <Key>
       <PropertyRef Name="ProductionTaskBatchID" />
@@ -1166,7 +1153,6 @@
     <EntitySet Name="Templates" EntityType="Self.Templates" />
     <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" />
     <EntitySet Name="Users" EntityType="Self.Users" />
-    <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" />
     <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" />
     <EntitySet Name="vProductionTaskProducts" EntityType="Self.vProductionTaskProducts" />
     <AssociationSet Name="FK_1CCharacteristicProperties_1CProperties" Association="Self.FK_1CCharacteristicProperties_1CProperties">
@@ -1774,6 +1760,12 @@
       <End Role="ProductSpools" EntitySet="ProductSpools" />
       <End Role="SourceSpools" EntitySet="SourceSpools" />
     </AssociationSet>
+    <EntitySet Name="vCharacteristicSGBProperties" EntityType="GammaModel.vCharacteristicSGBProperties" />
+    <FunctionImport Name="GetCharacteristicsForPM" ReturnType="Collection(GammaModel.GetCharacteristicsForPM_Result)">
+      <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
+      <Parameter Name="Color" Mode="In" Type="String" />
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -3116,4 +3108,23 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="vCharacteristicSGBProperties">
+    <Key>
+      <PropertyRef Name="C1CCharacteristicID" />
+    </Key>
+    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+    <Property Name="CoreDiameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="LayerNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Diameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Format" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="FormatNumeric" Type="Int32" />
+    <Property Name="LayerNumberNumeric" Type="Int32" />
+    <Property Name="CoreDiameterNumeric" Type="Int32" />
+  </EntityType>
+  <ComplexType Name="GetCharacteristicsForPM_Result">
+    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+    <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
+  </ComplexType>
 </Schema>

@@ -126,15 +126,16 @@ namespace Gamma.ViewModels
         private void ProductionTaskRwChanged(ProductionTaskRwMessage msg)
         {
             if (msg.ProductionTaskBatchID != ProductionTaskBatchID) return;
-            if (msg.NomenclatureIDs?.Count > 0)
+            if (msg.Nomenclatures?.Count > 0)
             {
                 SpecificationNomenclature = new ObservableCollection<Nomenclature1C>();
-                foreach (var nomenclatureID in msg.NomenclatureIDs)
+                foreach (var nomenclature in msg.Nomenclatures)
                 {
-                    if (nomenclatureID != null)
+                    Color = "";
+                    if (nomenclature != null)
                     {
                         var specificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                            DB.GammaDb.GetInputNomenclature(nomenclatureID, (byte)PlaceGroups.PM)
+                            DB.GammaDb.GetInputNomenclature(nomenclature.NomenclatureID, (byte)PlaceGroups.PM)
                                 .Select(n => new Nomenclature1C()
                                 {
                                     Name = n.Name,
@@ -145,14 +146,21 @@ namespace Gamma.ViewModels
                         {
                             SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(specificationNomenclature));
                         }
+                        
                     }
+                    var color = GammaBase.vCharacteristicSGBProperties.FirstOrDefault(
+                        p => p.C1CCharacteristicID == nomenclature.CharacteristicID)?.Color;
+                    if (color != null) Color = color;
                 }
                 if (SpecificationNomenclature.Count == 1)
                 {
                     NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
                 }
-                else
+                else if ((NomenclatureID != null && !SpecificationNomenclature.Select(s => s.NomenclatureID).Contains((Guid)NomenclatureID)) 
+                    || SpecificationNomenclature.Count == 0)
+                {
                     NomenclatureID = null;
+                }                   
             }
             if (msg.DateBegin != null)
             {
@@ -161,21 +169,57 @@ namespace Gamma.ViewModels
             }
         }
 
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        [Required(ErrorMessage = @"Необходимо выбрать номенклатуру")]
+        public override Guid? NomenclatureID
+        {
+            get { return base.NomenclatureID; }
+            set
+            {
+                base.NomenclatureID = value;
+                SetCharacteristics();
+            }
+        }
+
+        private void SetCharacteristics()
+        {
+            if (NomenclatureID == null) return;
+            Characteristics = new ObservableCollection<Characteristic>(GammaBase.GetCharacteristicsForPM(NomenclatureID, Color??"", PlaceID)
+                .Select(c => new Characteristic()
+                {
+                    CharacteristicID = c.C1CCharacteristicID,
+                    CharacteristicName = c.CharacteristicName
+                }));
+        }
+
+        private string Color { get; set; }
+
+        /*
         public override ObservableCollection<Characteristic> Characteristics
         {
             get { return base.Characteristics; }
             set
             {
                 var tempChars = new ObservableCollection<Characteristic>();
-                foreach (var characteristic in value)
+                foreach (var characteristic in from characteristic in value let charProperties = GammaBase.vCharacteristicSGBProperties.Where(
+                    p => p.C1CCharacteristicID == characteristic.CharacteristicID)
+                    .Select(p => new
+                    {
+                        p.CoreDiameterNumeric,
+                        p.LayerNumberNumeric,
+                        p.FormatNumeric,
+                        p.Color
+                    }).FirstOrDefault() where charProperties != null where !(charProperties.LayerNumberNumeric > 1) && !(charProperties.CoreDiameterNumeric < 280) && !(charProperties.FormatNumeric < 2500) where AvailableColors.Count <= 0 || AvailableColors.Contains(charProperties.Color) select characteristic)
                 {
-                    if (DB.GammaDb.GetCharSpoolLayerNumber(characteristic.CharacteristicID).FirstOrDefault() > 1) continue;
                     tempChars.Add(characteristic);
                 }
                 base.Characteristics = tempChars;
+                
                 RaisePropertiesChanged("Characteristics");
             }
         }
+        */
+
 
         public Guid ProductionTaskID { get; set; }
         public ProductionTaskSGBViewModel ProductionTaskSGBViewModel { get; private set; }
@@ -227,6 +271,7 @@ namespace Gamma.ViewModels
             set
             {
             	_placeID = value;
+                SetCharacteristics();
                 RaisePropertyChanged("Places");
             }
         }

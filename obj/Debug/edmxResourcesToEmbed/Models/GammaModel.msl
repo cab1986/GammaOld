@@ -510,20 +510,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="vCharacteristicSGBProperties">
-      <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
-        <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
-          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="Destination" ColumnName="Destination" />
-          <ScalarProperty Name="Format" ColumnName="Format" />
-          <ScalarProperty Name="Color" ColumnName="Color" />
-          <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vProductionTaskBatches">
       <EntityTypeMapping TypeName="GammaModel.vProductionTaskBatches">
         <MappingFragment StoreEntitySet="vProductionTaskBatches">
@@ -1152,5 +1138,29 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="vCharacteristicSGBProperties">
+      <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
+        <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
+          <ScalarProperty Name="CoreDiameterNumeric" ColumnName="CoreDiameterNumeric" />
+          <ScalarProperty Name="LayerNumberNumeric" ColumnName="LayerNumberNumeric" />
+          <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+          <ScalarProperty Name="Format" ColumnName="Format" />
+          <ScalarProperty Name="Destination" ColumnName="Destination" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
+          <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetCharacteristicsForPM" FunctionName="GammaDBModel.GetCharacteristicsForPM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetCharacteristicsForPM_Result">
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="CharacteristicName" ColumnName="CharacteristicName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

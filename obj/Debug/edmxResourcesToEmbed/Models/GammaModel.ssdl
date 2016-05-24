@@ -722,6 +722,8 @@
     <Property Name="Format" Type="varchar" MaxLength="50" />
     <Property Name="Color" Type="varchar" MaxLength="50" />
     <Property Name="FormatNumeric" Type="int" />
+    <Property Name="LayerNumberNumeric" Type="int" />
+    <Property Name="CoreDiameterNumeric" Type="int" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -751,7 +753,7 @@
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="NomenclatureID" Type="uniqueidentifier" />
     <Property Name="CharacteristicID" Type="uniqueidentifier" />
-    <Property Name="Quantity" Type="int" />
+    <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductsInfo" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -2352,6 +2354,11 @@
   <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="GetCharacteristicsForPM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="Color" Type="nvarchar" Mode="In" />
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
   <Function Name="GetCharPropsDescriptions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -2546,7 +2553,9 @@
     [vCharacteristicSGBProperties].[Destination] AS [Destination], 
     [vCharacteristicSGBProperties].[Format] AS [Format], 
     [vCharacteristicSGBProperties].[Color] AS [Color], 
-    [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric]
+    [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric], 
+    [vCharacteristicSGBProperties].[LayerNumberNumeric] AS [LayerNumberNumeric], 
+    [vCharacteristicSGBProperties].[CoreDiameterNumeric] AS [CoreDiameterNumeric]
     FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">

@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
         [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
-        public Guid? NomenclatureID
+        public virtual Guid? NomenclatureID
         {
             get { return _nomenclatureid; }
             set
@@ -90,7 +90,8 @@ namespace Gamma.ViewModels
             {
                 _characteristics = value;
                 if (Characteristics.Count == 1) CharacteristicID = Characteristics[0].CharacteristicID;
-                else CharacteristicID = null;
+                else if (CharacteristicID != null && !Characteristics.Select(c => c.CharacteristicID).Contains((Guid)CharacteristicID))
+                    CharacteristicID = null;
                 RaisePropertyChanged("Characteristics");
             }
         }

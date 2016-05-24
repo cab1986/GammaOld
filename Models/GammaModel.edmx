@@ -727,6 +727,8 @@
           <Property Name="Format" Type="varchar" MaxLength="50" />
           <Property Name="Color" Type="varchar" MaxLength="50" />
           <Property Name="FormatNumeric" Type="int" />
+          <Property Name="LayerNumberNumeric" Type="int" />
+          <Property Name="CoreDiameterNumeric" Type="int" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -756,7 +758,7 @@
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="NomenclatureID" Type="uniqueidentifier" />
           <Property Name="CharacteristicID" Type="uniqueidentifier" />
-          <Property Name="Quantity" Type="int" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductsInfo" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -2357,6 +2359,11 @@
         <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="GetCharacteristicsForPM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Color" Type="nvarchar" Mode="In" />
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetCharPropsDescriptions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -2551,7 +2558,9 @@
     [vCharacteristicSGBProperties].[Destination] AS [Destination], 
     [vCharacteristicSGBProperties].[Format] AS [Format], 
     [vCharacteristicSGBProperties].[Color] AS [Color], 
-    [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric]
+    [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric], 
+    [vCharacteristicSGBProperties].[LayerNumberNumeric] AS [LayerNumberNumeric], 
+    [vCharacteristicSGBProperties].[CoreDiameterNumeric] AS [CoreDiameterNumeric]
     FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -3688,19 +3697,6 @@
           <NavigationProperty Name="UserPrintNames" Relationship="Self.FK_UserPrintNames_Users" FromRole="Users" ToRole="UserPrintNames" />
           <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
         </EntityType>
-        <EntityType Name="vCharacteristicSGBProperties">
-          <Key>
-            <PropertyRef Name="C1CCharacteristicID" />
-          </Key>
-          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
-          <Property Name="CoreDiameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LayerNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Diameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Format" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FormatNumeric" Type="Int32" />
-        </EntityType>
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -4258,7 +4254,6 @@
           <EntitySet Name="Templates" EntityType="Self.Templates" />
           <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" />
           <EntitySet Name="Users" EntityType="Self.Users" />
-          <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" />
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" />
           <EntitySet Name="vProductionTaskProducts" EntityType="Self.vProductionTaskProducts" />
           <AssociationSet Name="FK_1CCharacteristicProperties_1CProperties" Association="Self.FK_1CCharacteristicProperties_1CProperties">
@@ -4866,6 +4861,12 @@
             <End Role="ProductSpools" EntitySet="ProductSpools" />
             <End Role="SourceSpools" EntitySet="SourceSpools" />
           </AssociationSet>
+          <EntitySet Name="vCharacteristicSGBProperties" EntityType="GammaModel.vCharacteristicSGBProperties" />
+          <FunctionImport Name="GetCharacteristicsForPM" ReturnType="Collection(GammaModel.GetCharacteristicsForPM_Result)">
+            <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
+            <Parameter Name="Color" Mode="In" Type="String" />
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -6208,6 +6209,25 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="vCharacteristicSGBProperties">
+          <Key>
+            <PropertyRef Name="C1CCharacteristicID" />
+          </Key>
+          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="CoreDiameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LayerNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Diameter" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Destination" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Format" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FormatNumeric" Type="Int32" />
+          <Property Name="LayerNumberNumeric" Type="Int32" />
+          <Property Name="CoreDiameterNumeric" Type="Int32" />
+        </EntityType>
+        <ComplexType Name="GetCharacteristicsForPM_Result">
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+          <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6720,20 +6740,6 @@
                 <ScalarProperty Name="ProgramAdmin" ColumnName="ProgramAdmin" />
                 <ScalarProperty Name="MobileComputer" ColumnName="MobileComputer" />
                 <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vCharacteristicSGBProperties">
-            <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
-              <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
-                <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
-                <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-                <ScalarProperty Name="Destination" ColumnName="Destination" />
-                <ScalarProperty Name="Format" ColumnName="Format" />
-                <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -7365,6 +7371,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="vCharacteristicSGBProperties">
+            <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
+              <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
+                <ScalarProperty Name="CoreDiameterNumeric" ColumnName="CoreDiameterNumeric" />
+                <ScalarProperty Name="LayerNumberNumeric" ColumnName="LayerNumberNumeric" />
+                <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Format" ColumnName="Format" />
+                <ScalarProperty Name="Destination" ColumnName="Destination" />
+                <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+                <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
+                <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetCharacteristicsForPM" FunctionName="GammaDBModel.GetCharacteristicsForPM" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetCharacteristicsForPM_Result">
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="CharacteristicName" ColumnName="CharacteristicName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

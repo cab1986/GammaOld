@@ -63,10 +63,10 @@ namespace Gamma
     }
     public class ProductionTaskRwMessage
     {
-        public ProductionTaskRwMessage(Guid productionTaskBatchID, List<Guid?> nomenclatureIds)
+        public ProductionTaskRwMessage(Guid productionTaskBatchID, List<Nomenclature> nomenclatures)
         {
             ProductionTaskBatchID = productionTaskBatchID;
-            NomenclatureIDs = nomenclatureIds;
+            Nomenclatures = nomenclatures;
         }
 
         public ProductionTaskRwMessage(Guid productionTaskBatchID, DateTime dateBegin)
@@ -76,9 +76,10 @@ namespace Gamma
         }
 
         public Guid ProductionTaskBatchID;
-        public List<Guid?> NomenclatureIDs;
-        public Guid? CharacteristicID;
+        public List<Nomenclature> Nomenclatures { get; set; }
+        
         public DateTime? DateBegin;
+
     }
     public class Nomenclature1CMessage
     {
@@ -185,7 +186,7 @@ namespace Gamma
         {
             Messenger.Default.Send(new RoleEditMessage(roleID, gammaBase));
         }
-        public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchID, List<Guid?> nomenclatureIds)
+        public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchID, List<Nomenclature> nomenclatureIds)
         {
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureIds));
         }

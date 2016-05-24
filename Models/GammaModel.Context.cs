@@ -75,7 +75,6 @@ namespace Gamma.Models
         public virtual DbSet<Templates> Templates { get; set; }
         public virtual DbSet<UserPrintNames> UserPrintNames { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
         public virtual DbSet<vProductionTaskBatches> vProductionTaskBatches { get; set; }
         public virtual DbSet<vProductionTaskProducts> vProductionTaskProducts { get; set; }
         public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
@@ -93,6 +92,7 @@ namespace Gamma.Models
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
+        public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {
@@ -538,6 +538,23 @@ namespace Gamma.Models
                 new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchProducts_Result>("GetBatchProducts", productionTaskBatchIDParameter);
+        }
+    
+        public virtual ObjectResult<GetCharacteristicsForPM_Result> GetCharacteristicsForPM(Nullable<System.Guid> nomenclatureID, string color, Nullable<int> placeID)
+        {
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            var colorParameter = color != null ?
+                new ObjectParameter("Color", color) :
+                new ObjectParameter("Color", typeof(string));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharacteristicsForPM_Result>("GetCharacteristicsForPM", nomenclatureIDParameter, colorParameter, placeIDParameter);
         }
     }
 }
