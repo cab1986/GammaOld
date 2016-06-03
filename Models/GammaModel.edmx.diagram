@@ -26,7 +26,6 @@
         <EntityTypeShape EntityType="GammaModel.DocProduction" Width="1.5" PointX="24" PointY="48.125" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.DocProducts" Width="1.5" PointX="21" PointY="42.5" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.Docs" Width="1.5" PointX="12.75" PointY="44.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="GammaModel.DocShipment" Width="1.5" PointX="21" PointY="49.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.DocTypes" Width="1.5" PointX="10.5" PointY="37.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.DocWithdrawal" Width="1.5" PointX="26.25" PointY="46.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.Enterprises" Width="1.5" PointX="3" PointY="48.125" IsExpanded="true" />
@@ -77,9 +76,7 @@
         <AssociationConnector Association="GammaModel.FK_DocProducts_Products" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Docs_DocTypes" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Docs_Users" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_DocShipment_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_DocShipment_Users" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_PermitTables_Permits" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_RolePermits_Permits" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProcessModels" ManuallyRouted="false" />
@@ -184,6 +181,31 @@
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools1" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools2" />
         <EntityTypeShape EntityType="GammaModel.vCharacteristicSGBProperties" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="GammaModel.C1CContractors" Width="1.5" PointX="9.375" PointY="11.875" />
+        <EntityTypeShape EntityType="GammaModel.C1CDocShipmentOrder" Width="1.5" PointX="11.625" PointY="11.875" />
+        <EntityTypeShape EntityType="GammaModel.C1CDocShipmentOrderGoods" Width="1.5" PointX="24.75" PointY="30.875" />
+        <EntityTypeShape EntityType="GammaModel.C1CWarehouses" Width="1.5" PointX="9.375" PointY="17.25" />
+        <EntityTypeShape EntityType="GammaModel.ActiveOrders" Width="1.5" PointX="13.875" PointY="13" />
+        <EntityTypeShape EntityType="GammaModel.DocShipments" Width="1.5" PointX="16" PointY="32.25" />
+        <EntityTypeShape EntityType="GammaModel.Persons" Width="1.5" PointX="11.625" PointY="62.625" />
+        <EntityTypeShape EntityType="GammaModel.PostTypes" Width="1.5" PointX="9.375" PointY="63" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrder_1CContractors" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrder_1CContractors1" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrder_1CContractors2" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrder_1CWarehouses" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" />
+        <AssociationConnector Association="GammaModel.FK_ActiveOrders_1CDocShipmentOrder" />
+        <AssociationConnector Association="GammaModel.FK_DocShipments_1CDocShipmentOrder1" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CQuality" />
+        <AssociationConnector Association="GammaModel.FK_ActiveOrders_Persons" />
+        <AssociationConnector Association="GammaModel.FK_DocShipments_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocShipments_Persons" />
+        <AssociationConnector Association="GammaModel.FK_Persons_PostTypes" />
+        <AssociationConnector Association="GammaModel.FK_Users_PostTypes" />
+        <EntityTypeShape EntityType="GammaModel.vDocShipmentOrders" Width="1.5" PointX="3.375" PointY="7.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

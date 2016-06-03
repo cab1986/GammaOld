@@ -12,25 +12,33 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class C1CQuality
+    public partial class C1CDocShipmentOrder
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public C1CQuality()
+        public C1CDocShipmentOrder()
         {
-            this.ProductStates = new HashSet<ProductStates>();
             this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
+            this.DocShipments = new HashSet<DocShipments>();
         }
     
-        public System.Guid C1CQualityID { get; set; }
-        public Nullable<System.Guid> ParentID { get; set; }
-        public string C1CCode { get; set; }
+        public System.Guid C1CDocShipmentOrderID { get; set; }
         public bool Marked { get; set; }
-        public bool IsFolder { get; set; }
-        public string Description { get; set; }
+        public bool Posted { get; set; }
+        public Nullable<System.DateTime> C1CDate { get; set; }
+        public string C1CNumber { get; set; }
+        public Nullable<System.Guid> C1CContractorID { get; set; }
+        public Nullable<System.Guid> C1CConsigneeID { get; set; }
+        public Nullable<System.Guid> C1CShipperID { get; set; }
+        public Nullable<System.Guid> C1CWarehouseID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductStates> ProductStates { get; set; }
+        public virtual C1CContractors C1CContractors { get; set; }
+        public virtual C1CContractors C1CContractors1 { get; set; }
+        public virtual C1CContractors C1CContractors2 { get; set; }
+        public virtual C1CWarehouses C1CWarehouses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
+        public virtual ActiveOrders ActiveOrders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocShipments> DocShipments { get; set; }
     }
 }

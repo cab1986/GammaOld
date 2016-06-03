@@ -12,19 +12,14 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DocTypes
+    public partial class DocShipments
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocTypes()
-        {
-            this.Docs = new HashSet<Docs>();
-        }
+        public System.Guid C1CDocShipmentOrderID { get; set; }
+        public System.Guid DocID { get; set; }
+        public int PersonID { get; set; }
     
-        public int DocTypeID { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> Movement { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docs> Docs { get; set; }
+        public virtual C1CDocShipmentOrder C1CDocShipmentOrder { get; set; }
+        public virtual Docs Docs { get; set; }
+        public virtual Persons Persons { get; set; }
     }
 }

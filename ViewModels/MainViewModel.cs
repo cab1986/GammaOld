@@ -1,4 +1,3 @@
-using System;
 using DevExpress.Mvvm;
 using System.Linq;
 using Gamma.Interfaces;
@@ -64,6 +63,7 @@ namespace Gamma.ViewModels
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
+                OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders);
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
                 OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
@@ -126,6 +126,14 @@ namespace Gamma.ViewModels
                 _deactivatedCommand = value;
                 RaisePropertyChanged("DeactivatedCommand");
             }
+        }
+
+        public DelegateCommand OpenDocShipmentOrdersCommand { get; private set; }
+
+        private void OpenDocShipmentOrders()
+        {
+            UIServices.SetBusyState();
+            CurrentView = new DocShipmentOrdersViewModel();
         }
 
         private void OpenPlaceProducts(int placeID)

@@ -48,7 +48,6 @@ namespace Gamma.Models
         public virtual DbSet<DocProduction> DocProduction { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
-        public virtual DbSet<DocShipment> DocShipment { get; set; }
         public virtual DbSet<DocTypes> DocTypes { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual DbSet<Enterprises> Enterprises { get; set; }
@@ -93,6 +92,15 @@ namespace Gamma.Models
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
+        public virtual DbSet<C1CContractors> C1CContractors { get; set; }
+        public virtual DbSet<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
+        public virtual DbSet<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
+        public virtual DbSet<C1CWarehouses> C1CWarehouses { get; set; }
+        public virtual DbSet<ActiveOrders> ActiveOrders { get; set; }
+        public virtual DbSet<DocShipments> DocShipments { get; set; }
+        public virtual DbSet<Persons> Persons { get; set; }
+        public virtual DbSet<PostTypes> PostTypes { get; set; }
+        public virtual DbSet<vDocShipmentOrders> vDocShipmentOrders { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

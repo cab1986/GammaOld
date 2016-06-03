@@ -12,19 +12,21 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DocTypes
+    public partial class PostTypes
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocTypes()
+        public PostTypes()
         {
-            this.Docs = new HashSet<Docs>();
+            this.Persons = new HashSet<Persons>();
+            this.Users = new HashSet<Users>();
         }
     
-        public int DocTypeID { get; set; }
+        public int PostTypeID { get; set; }
         public string Name { get; set; }
-        public Nullable<int> Movement { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docs> Docs { get; set; }
+        public virtual ICollection<Persons> Persons { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users> Users { get; set; }
     }
 }

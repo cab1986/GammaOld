@@ -31,6 +31,7 @@ namespace Gamma.Models
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
             this.ProductSpools = new HashSet<ProductSpools>();
+            this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -72,5 +73,7 @@ namespace Gamma.Models
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
     }
 }

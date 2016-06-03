@@ -12,19 +12,27 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DocTypes
+    public partial class C1CWarehouses
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocTypes()
+        public C1CWarehouses()
         {
-            this.Docs = new HashSet<Docs>();
+            this.C1CDocShipmentOrder = new HashSet<C1CDocShipmentOrder>();
         }
     
-        public int DocTypeID { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> Movement { get; set; }
+        public System.Guid C1CWarehouseID { get; set; }
+        public bool IsMetadata { get; set; }
+        public bool Marked { get; set; }
+        public bool Folder { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
+        public string C1CCode { get; set; }
+        public string Description { get; set; }
+        public Nullable<System.Guid> C1CSubdivisionID { get; set; }
+        public Nullable<bool> Transportation { get; set; }
+        public Nullable<bool> Transit { get; set; }
+        public Nullable<bool> ResponsibleStorage { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docs> Docs { get; set; }
+        public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
     }
 }

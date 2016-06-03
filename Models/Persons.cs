@@ -12,37 +12,25 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Users
+    public partial class Persons
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Users()
+        public Persons()
         {
-            this.Docs = new HashSet<Docs>();
-            this.UserPrintNames = new HashSet<UserPrintNames>();
-            this.Places = new HashSet<Places>();
+            this.ActiveOrders = new HashSet<ActiveOrders>();
+            this.DocShipments = new HashSet<DocShipments>();
         }
     
-        public System.Guid UserID { get; set; }
-        public System.Guid RoleID { get; set; }
-        public string Login { get; set; }
+        public int PersonID { get; set; }
+        public int PostTypeID { get; set; }
         public string Name { get; set; }
-        public string Post { get; set; }
-        public Nullable<System.DateTime> PassChange { get; set; }
-        public Nullable<bool> PassMustChange { get; set; }
-        public bool Exports { get; set; }
-        public bool DBAdmin { get; set; }
-        public Nullable<bool> ProgramAdmin { get; set; }
-        public Nullable<bool> MobileComputer { get; set; }
-        public byte ShiftID { get; set; }
-        public Nullable<int> PostTypeID { get; set; }
+        public string Barcode { get; set; }
+        public string Password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docs> Docs { get; set; }
-        public virtual Roles Roles { get; set; }
+        public virtual ICollection<ActiveOrders> ActiveOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserPrintNames> UserPrintNames { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Places> Places { get; set; }
+        public virtual ICollection<DocShipments> DocShipments { get; set; }
         public virtual PostTypes PostTypes { get; set; }
     }
 }

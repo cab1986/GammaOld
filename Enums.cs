@@ -127,4 +127,9 @@ namespace Gamma
         [Description("Выполнено")]
         Completed
     }
+
+    public enum PersonTypes
+    {
+        Loader = 1
+    }
 }

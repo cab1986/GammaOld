@@ -12,37 +12,34 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Users
+    public partial class C1CContractors
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Users()
+        public C1CContractors()
         {
-            this.Docs = new HashSet<Docs>();
-            this.UserPrintNames = new HashSet<UserPrintNames>();
-            this.Places = new HashSet<Places>();
+            this.C1CDocShipmentOrder = new HashSet<C1CDocShipmentOrder>();
+            this.C1CDocShipmentOrder1 = new HashSet<C1CDocShipmentOrder>();
+            this.C1CDocShipmentOrder2 = new HashSet<C1CDocShipmentOrder>();
         }
     
-        public System.Guid UserID { get; set; }
-        public System.Guid RoleID { get; set; }
-        public string Login { get; set; }
-        public string Name { get; set; }
-        public string Post { get; set; }
-        public Nullable<System.DateTime> PassChange { get; set; }
-        public Nullable<bool> PassMustChange { get; set; }
-        public bool Exports { get; set; }
-        public bool DBAdmin { get; set; }
-        public Nullable<bool> ProgramAdmin { get; set; }
-        public Nullable<bool> MobileComputer { get; set; }
-        public byte ShiftID { get; set; }
-        public Nullable<int> PostTypeID { get; set; }
+        public System.Guid C1CContractorID { get; set; }
+        public bool Marked { get; set; }
+        public bool Folder { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
+        public string C1CCode { get; set; }
+        public string Description { get; set; }
+        public string FullDescription { get; set; }
+        public Nullable<bool> IsBuyer { get; set; }
+        public Nullable<bool> IsSeller { get; set; }
+        public Nullable<bool> IsNonresident { get; set; }
+        public string INN { get; set; }
+        public string KPP { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docs> Docs { get; set; }
-        public virtual Roles Roles { get; set; }
+        public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserPrintNames> UserPrintNames { get; set; }
+        public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Places> Places { get; set; }
-        public virtual PostTypes PostTypes { get; set; }
+        public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder2 { get; set; }
     }
 }

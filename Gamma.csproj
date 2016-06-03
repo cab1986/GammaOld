@@ -203,6 +203,9 @@
     <Compile Include="Interfaces\IProductionTask.cs" />
     <Compile Include="Interfaces\IProductionTaskBatch.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
+    <Compile Include="Models\ActiveOrders.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Branches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -210,6 +213,15 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CCharacteristics.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CContractors.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CDocShipmentOrder.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C1CDocShipmentOrderGoods.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C1CEnumGroupTypes.cs">
@@ -263,6 +275,9 @@
     <Compile Include="Models\C1CSpecifications.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\C1CWarehouses.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CreateUnloadSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -293,7 +308,7 @@
     <Compile Include="Models\Docs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocShipment.cs">
+    <Compile Include="Models\DocShipments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocTypes.cs">
@@ -405,10 +420,16 @@
     <Compile Include="Models\PermitTables.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Persons.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PlaceGroups.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Places.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PostTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProcessModels.cs">
@@ -486,6 +507,9 @@
     <Compile Include="Models\vCharacteristicSGBProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\vDocShipmentOrders.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\vProductionTaskBatches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -515,6 +539,7 @@
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
     <Compile Include="ViewModels\DocProductPalletViewModel.cs" />
+    <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
@@ -587,6 +612,9 @@
     </Compile>
     <Compile Include="Views\DocProductView.xaml.cs">
       <DependentUpon>DocProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocShipmentOrdersView.xaml.cs">
+      <DependentUpon>DocShipmentOrdersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FindProductionTaskBatchView.xaml.cs">
       <DependentUpon>FindProductionTaskBatchView.xaml</DependentUpon>
@@ -730,6 +758,10 @@
     </Page>
     <Page Include="Views\DocProductView.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocShipmentOrdersView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FindProductionTaskBatchView.xaml">

@@ -31,6 +31,9 @@
         <DataTemplate DataType="{x:Type vm:ProductionTaskBatchViewModel}">
             <views:ProductionTaskBatchView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocShipmentOrdersViewModel}">
+            <views:DocShipmentOrdersView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
@@ -60,6 +63,9 @@
                                 </ContentControl>
                             </DataTemplate>
                         </dxb:BarSubItem.ItemTemplate>
+                    </dxb:BarSubItem>
+                    <dxb:BarSubItem Content="Склад">
+                        <dxb:BarButtonItem Content="Приказы на отгрузку" Command="{Binding OpenDocShipmentOrdersCommand}"/>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">

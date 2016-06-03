@@ -14,10 +14,16 @@ namespace Gamma
 {
     public static class DB
     {
+        /// <summary>
+        /// Многократноиспользуемый контекст БД
+        /// </summary>
         private static GammaEntities GammaBase { get; set; }
 
         private static EntityConnection Connection { get; set; }
 
+        /// <summary>
+        /// Новый экземпляр контекста БД
+        /// </summary>
         public static GammaEntities GammaDb
         {
             get
