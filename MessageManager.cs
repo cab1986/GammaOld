@@ -39,10 +39,22 @@ namespace Gamma
         public Guid ProductID;
     }
 
+    /// <summary>
+    /// Сообщение для открытия формы редактирования продукции
+    /// </summary>
     public class OpenDocProductMessage
     {
+        /// <summary>
+        /// Вид продукции
+        /// </summary>
         public DocProductKinds DocProductKind;
+        /// <summary>
+        /// Идентификатор продукции (для Unload - DocID, для остальных ProductId)
+        /// </summary>
         public Guid? ID;
+        /// <summary>
+        /// Создание нового продукта
+        /// </summary>
         public bool IsNewProduct;
     }
     public class OpenNomenclatureMessage  

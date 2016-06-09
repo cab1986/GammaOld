@@ -318,7 +318,7 @@ namespace Gamma.ViewModels
                 var productionTaskID = gammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
                         Select(p => p.ProductionTasks.FirstOrDefault(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).ProductionTaskID).
                         FirstOrDefault();
-                Guid productid;
+                Guid productId;
                 switch (BatchKind)
                 {
                     case BatchKinds.SGB:
@@ -343,11 +343,11 @@ namespace Gamma.ViewModels
                                         docProduction.UserID = WorkSession.UserID;
                                         docProduction.PrintName = WorkSession.PrintName;
                                         docProduction.DocProduction.ProductionTaskID = productionTaskID;
-                                        productid = gammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID)
+                                        productId = gammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID)
                                             .Select(d => d.ProductID)
                                             .First();
                                         var productSpool =
-                                            gammaBase.ProductSpools.First(p => p.ProductID == productid);
+                                            gammaBase.ProductSpools.First(p => p.ProductID == productId);
                                         var productionTaskPM =
                                             gammaBase.ProductionTasks.FirstOrDefault(
                                                 p => p.ProductionTaskID == productionTaskID);
@@ -358,7 +358,7 @@ namespace Gamma.ViewModels
                                         }
                                         gammaBase.SaveChanges();
                                         gammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
-                                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productid);
+                                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
                                 }
 
@@ -373,7 +373,7 @@ namespace Gamma.ViewModels
                                     var firstOrDefault = gammaBase.DocProducts.FirstOrDefault(d => d.DocID == docProduction.DocID);
                                      if (firstOrDefault !=
                                             null)
-                                            productid =
+                                            productId =
                                                 firstOrDefault
                                                     .ProductID;
                                      else
@@ -381,7 +381,7 @@ namespace Gamma.ViewModels
                                          break;
                                      }
                                     MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
-                                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productid);
+                                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
                                 }
                                 break;
@@ -426,19 +426,19 @@ namespace Gamma.ViewModels
                             (int)(gammaBase.C1CCharacteristics.Where(
                                 c => c.C1CCharacteristicID == productionTask.C1CCharacteristicID)
                                 .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First() ?? 0);
-                            productid = SqlGuidUtil.NewSequentialid();
+                            productId = SqlGuidUtil.NewSequentialid();
                             var product = new Products()
                             {
-                                ProductID = productid,
+                                ProductID = productId,
                                 ProductKindID = (byte)ProductKinds.ProductPallet,
                                 ProductPallets = new ProductPallets()
                                 {
-                                    ProductID = productid,
+                                    ProductID = productId,
                                     ProductPalletItems = new List<ProductPalletItems>
                                     {
                                         new ProductPalletItems()
                                         {
-                                            ProductPalletItemID = SqlGuidUtil.NewSequentialid(),ProductID = productid,
+                                            ProductPalletItemID = SqlGuidUtil.NewSequentialid(),ProductID = productId,
                                             C1CNomenclatureID = (Guid)productionTask.C1CNomenclatureID,
                                             C1CCharacteristicID = (Guid)productionTask.C1CCharacteristicID,
                                             Quantity = baseQuantity}
@@ -468,7 +468,7 @@ namespace Gamma.ViewModels
                                     new DocProducts
                                     {
                                         DocID = docID,
-                                        ProductID = productid
+                                        ProductID = productId
                                     }
                                 }
                             };
@@ -584,7 +584,7 @@ namespace Gamma.ViewModels
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProductionTaskProduct.ProductID);
                     break;
                 case ProductKinds.ProductGroupPack:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProductionTaskProduct.DocID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProductionTaskProduct.ProductID);
                     break;
                 case ProductKinds.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.DocID);

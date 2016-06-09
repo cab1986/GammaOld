@@ -21,25 +21,23 @@ namespace Gamma.ViewModels
     public class DocProductSpoolViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
-        /// Initializes a new instance of the DocProductSpoolViewModel class.
+        /// Инициализация информации о тамбуре
         /// </summary>
-        public DocProductSpoolViewModel()
-        {
-
-        }
-
-        public DocProductSpoolViewModel(Guid id, bool isNewProduct, GammaEntities gammaBase = null): base(gammaBase) // если это новое изделие, то id - Это docID иначе productid
+        /// <param name="id">Для нового тамбура DocID, иначе ProductID</param>
+        /// <param name="isNewProduct">Новый тамбур</param>
+        /// <param name="gammaBase">Контекст БД</param>
+        public DocProductSpoolViewModel(Guid id, bool isNewProduct, GammaEntities gammaBase = null): base(gammaBase) // если это новое изделие, то id - Это docID иначе productId
         {
             Guid docID;
-            Guid productid;
+            Guid productId;
             if (isNewProduct)
             {
                 docID = id;
-                productid = SqlGuidUtil.NewSequentialid();
+                productId = SqlGuidUtil.NewSequentialid();
             }
             else
             {
-                productid = id;
+                productId = id;
                 docID =
                     GammaBase.DocProducts.Where(
                         dp => dp.ProductID == id && dp.Docs.DocTypeID == (byte)DocTypes.DocProduction)
@@ -59,12 +57,25 @@ namespace Gamma.ViewModels
                  });
             if (isNewProduct)
             {
-                Product = new Products()
+                Product =
+                    GammaBase.Products.Include(p => p.ProductSpools)
+                        .FirstOrDefault(p => p.DocProducts.Select(d => d.DocID).Contains(id));
+                if (Product == null)
                 {
-                    ProductID = productid,
-                    ProductKindID = (byte)ProductKinds.ProductSpool
-                };
-                GammaBase.Products.Add(Product);
+                    Product = new Products()
+                    {
+                        ProductID = productId,
+                        ProductKindID = (byte) ProductKinds.ProductSpool,
+                    };
+                    GammaBase.Products.Add(Product);
+                }
+                if (Product.ProductSpools == null)
+                {
+                    Product.ProductSpools = new ProductSpools
+                    {
+                        ProductID = Product.ProductID
+                    };
+                }
                 var ptInfo = (from d in GammaBase.DocProduction
                     where d.DocID == docID
                     select new 
@@ -72,35 +83,22 @@ namespace Gamma.ViewModels
                         NomenclatureID = d.ProductionTasks.C1CNomenclatureID, 
                         CharacteristicID = d.ProductionTasks.C1CCharacteristicID 
                     }).FirstOrDefault();
-                ProductSpool = new ProductSpools()
-                {
-                    ProductID = Product.ProductID,
-                    C1CNomenclatureID = (Guid)ptInfo.NomenclatureID,
-                    C1CCharacteristicID = ptInfo.CharacteristicID,
-                    RealFormat = DB.GetLastFormat(WorkSession.PlaceID)
-                };
-                GammaBase.ProductSpools.Add(ProductSpool);
-                DocProduct = new DocProducts
-                {
-                    DocID = docID,
-                    ProductID = Product.ProductID,
-                };
-                GammaBase.DocProducts.Add(DocProduct);
+                Product.ProductSpools.C1CNomenclatureID = (Guid)ptInfo.NomenclatureID;
+                Product.ProductSpools.C1CCharacteristicID = ptInfo.CharacteristicID;
+                Product.ProductSpools.RealFormat = DB.GetLastFormat(WorkSession.PlaceID);
+                ProductSpool = Product.ProductSpools;
                 GammaBase.SaveChanges();
                 GammaBase.Entry(Product).Reload();
-//                RealFormat = ProductSpool.RealFormat; //DB.GetLastFormat(WorkSession.PlaceID);
             }
             else
             {
                 DocProduct = (from dp in GammaBase.DocProducts.Include(a => a.Docs) where dp.DocID == docID
                                   select dp).FirstOrDefault();
-                Product = GammaBase.Products.Include(p => p.ProductSpools).First(p => p.ProductID == productid);
-//                    GammaBase.Products.Where(prod => prod.DocProducts.FirstOrDefault().DocID == docID).FirstOrDefault();
-//                GammaBase.Entry<Products>(Product).Reload();  По наблюдениям Include заставляет EF выполнить запрос к базе, даже если Entity уже загружена
-                ProductSpool = Product.ProductSpools;
-//                ProductSpool = GammaBase.ProductSpools.FirstOrDefault(ps => ps.ProductID == Product.ProductID);
-//                GammaBase.Entry<ProductSpools>(ProductSpool).Reload();
-                //RealFormat = ProductSpool.RealFormat ?? 0;
+                Product = GammaBase.Products.Include(p => p.ProductSpools).First(p => p.ProductID == productId);
+                ProductSpool = Product.ProductSpools ?? new ProductSpools
+                {
+                    ProductID = Product.ProductID
+                };
                 RealBasisWeight = ProductSpool.RealBasisWeight;
                 Diameter = ProductSpool.Diameter;
                 Length = ProductSpool.Length ?? 0;

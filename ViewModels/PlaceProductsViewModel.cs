@@ -3,6 +3,7 @@ using Gamma.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using System.Data.Entity.SqlServer;
@@ -146,15 +147,19 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.Wr:
-                    var lastGroupPack = GammaBase.Docs
+                    var lastGroupPack = GammaBase.Docs.Include(d => d.DocProducts)
                         .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
                     GammaBase.Entry(lastGroupPack).Reload();
-                    if (lastGroupPack != null && !lastGroupPack.IsConfirmed)
+                    if (lastGroupPack != null && !lastGroupPack.IsConfirmed && lastGroupPack.DocProducts.Count > 0)
                     {
-                        MessageBox.Show("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", MessageBoxButton.OK, MessageBoxImage.Information);
-                        MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, lastGroupPack.DocID);
+                        var docProduct = lastGroupPack.DocProducts.FirstOrDefault();
+                        if (docProduct != null)
+                        {
+                            MessageBox.Show("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, docProduct.ProductID);
+                        }
                     }
                     else MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);
                     break;
@@ -174,7 +179,7 @@ namespace Gamma.ViewModels
                         MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, SelectedProduct.DocID);
                     break;
                 case ProductKinds.ProductGroupPack:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.DocID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
                     break;
                 case ProductKinds.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);

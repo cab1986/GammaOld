@@ -25,6 +25,7 @@ namespace Gamma.ViewModels
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
         }
+
         public DocProductGroupPackViewModel(Guid docID) : this()
         {
             var doc = GammaBase.Docs.Include(d => d.DocProducts).First(d => d.DocID == docID);
@@ -32,10 +33,10 @@ namespace Gamma.ViewModels
             IsNewGroupPack = false;
             if (doc.DocProducts.Count > 0)
             {
-                var productid = doc.DocProducts.Select(d => d.ProductID).First();
-                var productGroupPack = GammaBase.ProductGroupPacks.Where(p => p.ProductID == productid).Select(p => p).FirstOrDefault();
-                Weight = Convert.ToInt32(productGroupPack.Weight);
-                GrossWeight = Convert.ToInt32(productGroupPack.GrossWeight);
+                var productId = doc.DocProducts.Select(d => d.ProductID).First();
+                var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == productId);
+                Weight = Convert.ToInt32(productGroupPack?.Weight ?? 0);
+                GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight ?? 0);
             }
             var groupPackSpools = GammaBase.GetGroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
@@ -50,7 +51,7 @@ namespace Gamma.ViewModels
                         DocID = groupPackSpool.DocID,
                         NomenclatureID = (Guid)groupPackSpool.C1CNomenclatureID,
                         CharacteristicID = (Guid)groupPackSpool.C1CCharacteristicID,
-                        Number = String.Format("{0} от {1}", groupPackSpool.Number, groupPackSpool.Date),
+                        Number = $"{groupPackSpool.Number} от {groupPackSpool.Date}",
                         Weight = Convert.ToInt32(groupPackSpool.Quantity),
                         Nomenclature = groupPackSpool.NomenclatureName,
                     });
@@ -294,9 +295,9 @@ namespace Gamma.ViewModels
             var docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)
             {
-                var docWithdrawalid = doc.DocProduction.DocWithdrawal.FirstOrDefault().DocID;
+                var docWithdrawalId = doc.DocProduction.DocWithdrawal.FirstOrDefault().DocID;
                 docWithdrawal = GammaBase.Docs.Include(d => d.DocWithdrawal)
-                    .Include(d => d.DocProducts).First(d => d.DocID == docWithdrawalid);
+                    .Include(d => d.DocProducts).First(d => d.DocID == docWithdrawalId);
             }
             else 
             {

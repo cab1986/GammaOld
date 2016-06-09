@@ -9,7 +9,7 @@
     <Grid>
 
         <dxg:GridControl EnableSmartColumnsGeneration="False" ItemsSource="{Binding ProductionTaskBatchesSGB}" 
-			SelectedItem="{Binding SelectedProductionTaskBatch}" HorizontalAlignment="Stretch" SelectionMode="Cell" AllowLiveDataShaping="False" >
+			SelectedItem="{Binding SelectedProductionTaskBatch}" HorizontalAlignment="Stretch" AllowLiveDataShaping="False" SelectionMode="Cell" UseLayoutRounding="False" >
             <dxg:GridControl.Bands >
                 <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center" VisibleIndex="0">
                     <dxg:GridColumn FieldName="Number" Header="Номер" Width="100" VisibleIndex="0" FixedWidth="True"/>
@@ -82,7 +82,7 @@
                 </dxg:GridControlBand>
             </dxg:GridControl.Bands>
             <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" ShowGroupPanel="False" 
+                <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" 
 					AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18" AllowMoveColumnToDropArea="False">
                     <dxg:TableView.FormatConditions>
                         <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '1'" FieldName="EnumColor" ApplyToRow="True">

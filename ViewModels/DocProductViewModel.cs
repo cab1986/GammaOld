@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel; 
 using Gamma.Models;
 using System.Linq;
@@ -8,7 +9,6 @@ using Gamma.Attributes;
 using Gamma.Common;
 using System.Windows;
 using System.Data.Entity;
-using DevExpress.Utils.About;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -26,11 +26,12 @@ namespace Gamma.ViewModels
         /// <param name="msg">Сообщение, содержащее параметры</param>
         public DocProductViewModel(OpenDocProductMessage msg, GammaEntities gammaBase = null): base(gammaBase)
         {
-            if (msg.IsNewProduct) 
+            Products product = null;
+            if (msg.IsNewProduct)
             {
-                if (msg.ID == null && (msg.DocProductKind == DocProductKinds.DocProductSpool || 
-                    msg.DocProductKind == DocProductKinds.DocProductUnload ||
-                    msg.DocProductKind == DocProductKinds.DocProductPallet))
+                if (msg.ID == null && (msg.DocProductKind == DocProductKinds.DocProductSpool ||
+                                       msg.DocProductKind == DocProductKinds.DocProductUnload ||
+                                       msg.DocProductKind == DocProductKinds.DocProductPallet))
                 {
                     string productKind = "";
                     switch (msg.DocProductKind)
@@ -47,10 +48,10 @@ namespace Gamma.ViewModels
                     return;
                 }
                 IsNewDoc = true;
-                Doc = new Docs()
+                Doc = new Docs
                 {
                     DocID = SqlGuidUtil.NewSequentialid(),
-                    DocTypeID = (int)DocTypes.DocProduction,
+                    DocTypeID = (int) DocTypes.DocProduction,
                     IsConfirmed = false,
                     PlaceID = WorkSession.PlaceID,
                     ShiftID = WorkSession.ShiftID,
@@ -58,111 +59,109 @@ namespace Gamma.ViewModels
                     Date = DB.CurrentDateTime,
                     PrintName = WorkSession.PrintName
                 };
-                GammaBase.Docs.Add(Doc);
+                if (msg.DocProductKind != DocProductKinds.DocProductUnload)
+                {
+                    product = new Products
+                    {
+                        ProductID = SqlGuidUtil.NewSequentialid(),
+                        ProductKindID =
+                            msg.DocProductKind == (byte) DocProductKinds.DocProductSpool
+                                ? (byte) ProductKinds.ProductSpool
+                                : msg.DocProductKind == DocProductKinds.DocProductGroupPack
+                                    ? (byte) ProductKinds.ProductGroupPack
+                                    : (byte) ProductKinds.ProductPallet
+                    };
+                    GammaBase.Products.Add(product);
+                    Doc.DocProducts = new List<DocProducts>()
+                    {
+                        new DocProducts
+                        {
+                            ProductID = product.ProductID,
+                            DocID = Doc.DocID
+                        }
+                    };
+                }
                 DocProduction = new DocProduction()
                 {
                     DocID = Doc.DocID,
                     InPlaceID = WorkSession.PlaceID,
                     ProductionTaskID = msg.ID
                 };
-                GammaBase.DocProduction.Add(DocProduction);
+                Doc.DocProduction = DocProduction;
+                GammaBase.Docs.Add(Doc);
                 GammaBase.SaveChanges(); // Сохранение в бд
                 GammaBase.Entry(Doc).Reload(); // Получение обновленного документа(с номером из базы)
-                Number = Doc.Number;
+                if (product != null)
+                    GammaBase.Entry(product).Reload();
+                switch (msg.DocProductKind)
+                {
+                    case DocProductKinds.DocProductUnload:
+                        CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
+                        break;
+                    case DocProductKinds.DocProductGroupPack:
+                        CurrentViewModel = new DocProductGroupPackViewModel();
+                        break;
+                    case DocProductKinds.DocProductSpool:
+                        CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID, true);
+                        break;
+                    case DocProductKinds.DocProductPallet:
+                        CurrentViewModel = new DocProductPalletViewModel();
+                        break;
+                }
+            }
+            else
+            {
+                if (msg.DocProductKind == DocProductKinds.DocProductUnload)
+                {
+                    Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
+                    DocProduction = Doc.DocProduction;
+                    GetDocRelations(Doc.DocID);
+                }
+                else
+                {
+                    Doc =
+                            GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
+                                    d.DocTypeID == (byte)DocTypes.DocProduction);
+                    DocProduction = Doc.DocProduction;
+                    product =
+                        GammaBase.Products
+                            .First(p => p.ProductID == msg.ID);
+                    if (product == null)
+                    {
+                        MessageBox.Show(@"Не удалось получить информацию о продукте");
+                        CloseWindow();
+                        return;
+                    }
+                    GammaBase.Entry(product).Reload();
+                    GetProductRelations(product.ProductID);
+                }
             }
             // Создаем дочернюю viewmodel в зависимости от типа изделия
             switch (msg.DocProductKind)
             {
                 case DocProductKinds.DocProductSpool:
                     Title = "Тамбур";
-                    if (!msg.IsNewProduct) // Если не новый продукт, то находим Doc, DocProduction, 
-                    {
-                        Doc =
-                            GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
-                                    d.DocTypeID == (byte) DocTypes.DocProduction);
-//                        GammaBase.Entry<Docs>(Doc).Reload();
-                        DocProduction = Doc.DocProduction;
-//                        GammaBase.Entry<DocProduction>(DocProduction).Reload();
-                        var product =
-                            GammaBase.Products
-                                .First(p => p.ProductID == msg.ID);
-/*                        if (product == null)
-                        {
-                            var productid = SQLGuidUtil.NewSequentialid();
-                            var productionTask =
-                                GammaBase.ProductionTasks.First(
-                                    p => p.ProductionTaskID == Doc.DocProduction.ProductionTaskID);
-                            product = new Products()
-                            {
-                                ProductID = productid,
-                                ProductKindID = (byte) ProductKinds.ProductSpool,
-                                ProductSpools = new ProductSpools()
-                                {
-                                    ProductID = productid,
-                                    C1CNomenclatureID = productionTask.C1CNomenclatureID,
-                                    C1CCharacteristicID = productionTask.C1CCharacteristicID,
-                                    Diameter = 0,
-                                    Weight = 0
-                                },
-                                DocProducts = new List<DocProducts>()
-                                {
-                                    new DocProducts()
-                                    {
-                                        DocID = Doc.DocID,
-                                        ProductID = productid
-                                    }
-                                }
-                            };
-                            GammaBase.Products.Add(product);
-                            GammaBase.SaveChanges();
-                        }*/
-                        GammaBase.Entry(product).Reload();
-                        Number = product.Number;
-                        Title = $"{Title} № {Number}";
-                        CurrentViewModel = new DocProductSpoolViewModel(product.ProductID, false);
-                        GetProductRelations(product.ProductID);
-                    }
-                    else CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID, true);
+                    Number = product?.Number;
+                    Title = $"{Title} № {Number}";
+                    CurrentViewModel = new DocProductSpoolViewModel(product.ProductID, false);
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";
-                    if (!msg.IsNewProduct)
-                    {
-                        Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
-                        //GammaBase.Entry<Docs>(Doc).Reload();
-                        DocProduction = Doc.DocProduction;
-//                        GammaBase.Entry<DocProduction>(DocProduction).Reload();
-                        Number = Doc.Number;
-                        Title = $"{Title} № {Number}";
-                        GetDocRelations();
-                    }
+                    Number = Doc.Number;
+                    Title = $"{Title} № {Number}";
                     CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
                     break;
                 case DocProductKinds.DocProductGroupPack:
                     Title = "Групповая упаковка";
-                    if (!msg.IsNewProduct)
-                    {
-                        Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
-                        DocProduction = Doc.DocProduction;
-                        Number = Doc.Number;
-                        Title = $"{Title} № {Number}";
-                        CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);
-                        GetDocRelations();
-                    }
-                    else CurrentViewModel = new DocProductGroupPackViewModel();
+                    Number = product?.Number;
+                    Title = $"{Title} № {Number}";
+                    CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);                   
                     break;
                 case DocProductKinds.DocProductPallet:
                     Title = "Паллета";
-                    if (!msg.IsNewProduct)
-                    {
-                        Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
-                        DocProduction = Doc.DocProduction;
-                        Number = Doc.Number;
-                        Title = $"{Title} № {Number}";
-                        CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
-                        GetDocRelations();
-                    }
-                    else CurrentViewModel = new DocProductPalletViewModel();
+                    Number = product?.Number;
+                    Title = $"{Title} № {Number}";
+                    CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
                     break;
                 default:
                     MessageBox.Show("Действие не предусмотрено програмой");
@@ -206,11 +205,11 @@ namespace Gamma.ViewModels
         }
         
 
-        private void GetDocRelations()
+        private void GetDocRelations(Guid docId)
         {
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
-                from prel in GammaBase.DocRelations(Doc.DocID)
+                from prel in GammaBase.DocRelations(docId)
                 let productKindID = prel.ProductKindID
                 where productKindID != null
                 select new ProductRelation
@@ -409,7 +408,7 @@ namespace Gamma.ViewModels
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
                     break;
                 case ProductKinds.ProductGroupPack:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.DocID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
                     break;
                 case ProductKinds.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);

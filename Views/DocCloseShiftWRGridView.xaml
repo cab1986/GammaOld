@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.DocCloseShiftWrGridView" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.DocCloseShiftWrGridView" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="800">
     <Grid>
-
-        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding GroupPacks}" AllowColumnMRUFilterList="False">
+        <dxg:GridControl ItemsSource="{Binding GroupPacks}"  AllowColumnMRUFilterList="False" SelectedItem="{Binding SelectedGroupPack}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowGroupPackCommand}"/>
+            </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.TotalSummary>
                 <dxg:GridSummaryItem FieldName="Weight" ShowInColumn="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг"/>
             </dxg:GridControl.TotalSummary>
@@ -16,14 +18,14 @@
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" Width="120" />
                 <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="100">
                     <dxg:GridColumn.EditSettings>
-                        <dxe:DateEditSettings Mask="g"/>
+                        <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="80"/>
+                <dxg:GridColumn Header="Вес, кг" FieldName="Weight" FixedWidth="True" Width="120"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" AllowEditing="False"/>
             </dxg:GridControl.View>
         </dxg:GridControl>
 

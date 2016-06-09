@@ -52,6 +52,7 @@
     <NavigationProperty Name="C1CNomenclatureAnalogs" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CNomenclatureAnalogs" />
     <NavigationProperty Name="C1CNomenclatureAnalogs1" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CMeasureUnits1" FromRole="C1CMeasureUnits" ToRole="C1CNomenclatureAnalogs" />
     <NavigationProperty Name="C1CSpecificationInputNomenclature" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CSpecificationInputNomenclature" />
+    <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CDocShipmentOrderGoods" />
   </EntityType>
   <EntityType Name="C1CNomenclatureGroups">
     <Key>
@@ -134,6 +135,7 @@
     <Property Name="IsFolder" Type="Boolean" Nullable="false" />
     <Property Name="Description" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
     <NavigationProperty Name="ProductStates" Relationship="Self.FK_ProductStates_1CQuality" FromRole="C1CQuality" ToRole="ProductStates" />
+    <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CQuality" FromRole="C1CQuality" ToRole="C1CDocShipmentOrderGoods" />
   </EntityType>
   <EntityType Name="C1CRejectionReasons">
     <Key>
@@ -283,23 +285,14 @@
     <NavigationProperty Name="DocProducts" Relationship="Self.FK_DocProducts_Docs" FromRole="Docs" ToRole="DocProducts" />
     <NavigationProperty Name="DocTypes" Relationship="Self.FK_Docs_DocTypes" FromRole="Docs" ToRole="DocTypes" />
     <NavigationProperty Name="Users" Relationship="Self.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
-    <NavigationProperty Name="DocShipment" Relationship="Self.FK_DocShipment_Docs" FromRole="Docs" ToRole="DocShipment" />
     <NavigationProperty Name="DocWithdrawal" Relationship="Self.FK_DocWithdrawal_Docs" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="DocCloseShiftDocs" Relationship="Self.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
     <NavigationProperty Name="Docs2" Relationship="Self.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
     <NavigationProperty Name="DocCloseShiftWithdrawals" Relationship="GammaModel.DocCloseShiftWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
     <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_Docs" FromRole="Docs" ToRole="DocCloseShiftSamples" />
-  </EntityType>
-  <EntityType Name="DocShipment">
-    <Key>
-      <PropertyRef Name="DocID" />
-    </Key>
-    <Property Name="DocID" Type="Guid" Nullable="false" />
-    <Property Name="ActiveUserID" Type="Guid" />
-    <Property Name="C1CDocOrderID" Type="Guid" />
-    <NavigationProperty Name="Docs" Relationship="Self.FK_DocShipment_Docs" FromRole="DocShipment" ToRole="Docs" />
-    <NavigationProperty Name="Users" Relationship="Self.FK_DocShipment_Users" FromRole="DocShipment" ToRole="Users" />
+    <Property Name="IsMarked" Type="Boolean" />
+    <NavigationProperty Name="DocShipments" Relationship="GammaModel.FK_DocShipments_Docs" FromRole="Docs" ToRole="DocShipments" />
   </EntityType>
   <EntityType Name="DocTypes">
     <Key>
@@ -308,6 +301,7 @@
     <Property Name="DocTypeID" Type="Int32" Nullable="false" />
     <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
     <NavigationProperty Name="Docs" Relationship="Self.FK_Docs_DocTypes" FromRole="DocTypes" ToRole="Docs" />
+    <Property Name="Movement" Type="Int32" />
   </EntityType>
   <EntityType Name="DocWithdrawal">
     <Key>
@@ -591,10 +585,11 @@
     <Property Name="MobileComputer" Type="Boolean" />
     <Property Name="ShiftID" Type="Byte" Nullable="false" />
     <NavigationProperty Name="Docs" Relationship="Self.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
-    <NavigationProperty Name="DocShipment" Relationship="Self.FK_DocShipment_Users" FromRole="Users" ToRole="DocShipment" />
     <NavigationProperty Name="Roles" Relationship="Self.FK_Users_Roles1" FromRole="Users" ToRole="Roles" />
     <NavigationProperty Name="UserPrintNames" Relationship="Self.FK_UserPrintNames_Users" FromRole="Users" ToRole="UserPrintNames" />
     <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
+    <Property Name="PostTypeID" Type="Int32" />
+    <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Users_PostTypes" FromRole="Users" ToRole="PostTypes" />
   </EntityType>
   <EntityType Name="vProductionTaskBatches">
     <Key>
@@ -892,18 +887,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocShipment_Docs">
-    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
-    <End Role="DocShipment" Type="Self.DocShipment" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="Docs">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocShipment">
-        <PropertyRef Name="DocID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_DocWithdrawal_Docs">
     <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
     <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="0..1" />
@@ -913,18 +896,6 @@
       </Principal>
       <Dependent Role="DocWithdrawal">
         <PropertyRef Name="DocID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipment_Users">
-    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-    <End Role="DocShipment" Type="Self.DocShipment" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Users">
-        <PropertyRef Name="UserID" />
-      </Principal>
-      <Dependent Role="DocShipment">
-        <PropertyRef Name="ActiveUserID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1126,7 +1097,6 @@
     <EntitySet Name="DocProduction" EntityType="Self.DocProduction" />
     <EntitySet Name="DocProducts" EntityType="Self.DocProducts" />
     <EntitySet Name="Docs" EntityType="Self.Docs" />
-    <EntitySet Name="DocShipment" EntityType="Self.DocShipment" />
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" />
     <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" />
     <EntitySet Name="Enterprises" EntityType="Self.Enterprises" />
@@ -1243,17 +1213,9 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Docs" EntitySet="Docs" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocShipment_Docs" Association="Self.FK_DocShipment_Docs">
-      <End Role="Docs" EntitySet="Docs" />
-      <End Role="DocShipment" EntitySet="DocShipment" />
-    </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawal_Docs" Association="Self.FK_DocWithdrawal_Docs">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipment_Users" Association="Self.FK_DocShipment_Users">
-      <End Role="Users" EntitySet="Users" />
-      <End Role="DocShipment" EntitySet="DocShipment" />
     </AssociationSet>
     <AssociationSet Name="FK_PermitTables_Permits" Association="Self.FK_PermitTables_Permits">
       <End Role="Permits" EntitySet="Permits" />
@@ -1766,6 +1728,79 @@
       <Parameter Name="Color" Mode="In" Type="String" />
       <Parameter Name="PlaceID" Mode="In" Type="Int32" />
     </FunctionImport>
+    <EntitySet Name="C1CContractors" EntityType="GammaModel.C1CContractors" />
+    <EntitySet Name="C1CDocShipmentOrder" EntityType="GammaModel.C1CDocShipmentOrder" />
+    <EntitySet Name="C1CDocShipmentOrderGoods" EntityType="GammaModel.C1CDocShipmentOrderGoods" />
+    <EntitySet Name="C1CWarehouses" EntityType="GammaModel.C1CWarehouses" />
+    <EntitySet Name="ActiveOrders" EntityType="GammaModel.ActiveOrders" />
+    <EntitySet Name="DocShipments" EntityType="GammaModel.DocShipments" />
+    <EntitySet Name="Persons" EntityType="GammaModel.Persons" />
+    <EntitySet Name="PostTypes" EntityType="GammaModel.PostTypes" />
+    <AssociationSet Name="FK_1CDocShipmentOrderGoods_1CCharacteristics" Association="GammaModel.FK_1CDocShipmentOrderGoods_1CCharacteristics">
+      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="C1CDocShipmentOrderGoods" EntitySet="C1CDocShipmentOrderGoods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrder_1CContractors" Association="GammaModel.FK_1CDocShipmentOrder_1CContractors">
+      <End Role="C1CContractors" EntitySet="C1CContractors" />
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrder_1CContractors1" Association="GammaModel.FK_1CDocShipmentOrder_1CContractors1">
+      <End Role="C1CContractors" EntitySet="C1CContractors" />
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrder_1CContractors2" Association="GammaModel.FK_1CDocShipmentOrder_1CContractors2">
+      <End Role="C1CContractors" EntitySet="C1CContractors" />
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrder_1CWarehouses" Association="GammaModel.FK_1CDocShipmentOrder_1CWarehouses">
+      <End Role="C1CWarehouses" EntitySet="C1CWarehouses" />
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" Association="GammaModel.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder">
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+      <End Role="C1CDocShipmentOrderGoods" EntitySet="C1CDocShipmentOrderGoods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ActiveOrders_1CDocShipmentOrder" Association="GammaModel.FK_ActiveOrders_1CDocShipmentOrder">
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+      <End Role="ActiveOrders" EntitySet="ActiveOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocShipments_1CDocShipmentOrder1" Association="GammaModel.FK_DocShipments_1CDocShipmentOrder1">
+      <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+      <End Role="DocShipments" EntitySet="DocShipments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrderGoods_1CMeasureUnits" Association="GammaModel.FK_1CDocShipmentOrderGoods_1CMeasureUnits">
+      <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+      <End Role="C1CDocShipmentOrderGoods" EntitySet="C1CDocShipmentOrderGoods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrderGoods_1CNomenclature" Association="GammaModel.FK_1CDocShipmentOrderGoods_1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="C1CDocShipmentOrderGoods" EntitySet="C1CDocShipmentOrderGoods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocShipmentOrderGoods_1CQuality" Association="GammaModel.FK_1CDocShipmentOrderGoods_1CQuality">
+      <End Role="C1CQuality" EntitySet="C1CQuality" />
+      <End Role="C1CDocShipmentOrderGoods" EntitySet="C1CDocShipmentOrderGoods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ActiveOrders_Persons" Association="GammaModel.FK_ActiveOrders_Persons">
+      <End Role="Persons" EntitySet="Persons" />
+      <End Role="ActiveOrders" EntitySet="ActiveOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocShipments_Docs" Association="GammaModel.FK_DocShipments_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocShipments" EntitySet="DocShipments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocShipments_Persons" Association="GammaModel.FK_DocShipments_Persons">
+      <End Role="Persons" EntitySet="Persons" />
+      <End Role="DocShipments" EntitySet="DocShipments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Persons_PostTypes" Association="GammaModel.FK_Persons_PostTypes">
+      <End Role="PostTypes" EntitySet="PostTypes" />
+      <End Role="Persons" EntitySet="Persons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_PostTypes" Association="GammaModel.FK_Users_PostTypes">
+      <End Role="PostTypes" EntitySet="PostTypes" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="vDocShipmentOrders" EntityType="GammaModel.vDocShipmentOrders" />
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -1974,6 +2009,7 @@
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTasks" />
     <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductSpools" />
+    <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CDocShipmentOrderGoods" />
   </EntityType>
   <EntityType Name="C1CNomenclature">
     <Key>
@@ -2009,6 +2045,7 @@
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskRWCutting" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
     <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductSpools" />
+    <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CDocShipmentOrderGoods" />
   </EntityType>
   <EntityType Name="C1CSpecifications">
     <Key>
@@ -2837,7 +2874,7 @@
     <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="C1CNomenclatureID" Type="Guid" />
     <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="Quantity" Type="Decimal" Precision="14" Scale="4" />
+    <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
     <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
     <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
     <Property Name="PlaceID" Type="Int32" />
@@ -3127,4 +3164,329 @@
     <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
     <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
   </ComplexType>
+  <EntityType Name="C1CContractors">
+    <Key>
+      <PropertyRef Name="C1CContractorID" />
+    </Key>
+    <Property Name="C1CContractorID" Type="Guid" Nullable="false" />
+    <Property Name="Marked" Type="Boolean" Nullable="false" />
+    <Property Name="Folder" Type="Boolean" Nullable="false" />
+    <Property Name="ParentID" Type="Guid" />
+    <Property Name="C1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="FullDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsBuyer" Type="Boolean" />
+    <Property Name="IsSeller" Type="Boolean" />
+    <Property Name="IsNonresident" Type="Boolean" />
+    <Property Name="INN" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+    <Property Name="KPP" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors" FromRole="C1CContractors" ToRole="C1CDocShipmentOrder" />
+    <NavigationProperty Name="C1CDocShipmentOrder1" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors1" FromRole="C1CContractors" ToRole="C1CDocShipmentOrder" />
+    <NavigationProperty Name="C1CDocShipmentOrder2" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors2" FromRole="C1CContractors" ToRole="C1CDocShipmentOrder" />
+  </EntityType>
+  <EntityType Name="C1CDocShipmentOrder">
+    <Key>
+      <PropertyRef Name="C1CDocShipmentOrderID" />
+    </Key>
+    <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
+    <Property Name="Marked" Type="Boolean" Nullable="false" />
+    <Property Name="Posted" Type="Boolean" Nullable="false" />
+    <Property Name="C1CDate" Type="DateTime" Precision="3" />
+    <Property Name="C1CNumber" Type="String" Nullable="false" MaxLength="11" FixedLength="true" Unicode="false" />
+    <Property Name="C1CContractorID" Type="Guid" />
+    <Property Name="C1CConsigneeID" Type="Guid" />
+    <Property Name="C1CShipperID" Type="Guid" />
+    <Property Name="C1CWarehouseID" Type="Guid" />
+    <NavigationProperty Name="C1CContractors" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors" FromRole="C1CDocShipmentOrder" ToRole="C1CContractors" />
+    <NavigationProperty Name="C1CContractors1" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors1" FromRole="C1CDocShipmentOrder" ToRole="C1CContractors" />
+    <NavigationProperty Name="C1CContractors2" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors2" FromRole="C1CDocShipmentOrder" ToRole="C1CContractors" />
+    <NavigationProperty Name="C1CWarehouses" Relationship="GammaModel.FK_1CDocShipmentOrder_1CWarehouses" FromRole="C1CDocShipmentOrder" ToRole="C1CWarehouses" />
+    <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" FromRole="C1CDocShipmentOrder" ToRole="C1CDocShipmentOrderGoods" />
+    <NavigationProperty Name="ActiveOrders" Relationship="GammaModel.FK_ActiveOrders_1CDocShipmentOrder" FromRole="C1CDocShipmentOrder" ToRole="ActiveOrders" />
+    <NavigationProperty Name="DocShipments" Relationship="GammaModel.FK_DocShipments_1CDocShipmentOrder1" FromRole="C1CDocShipmentOrder" ToRole="DocShipments" />
+  </EntityType>
+  <EntityType Name="C1CDocShipmentOrderGoods">
+    <Key>
+      <PropertyRef Name="C1CDocShipmentOrderID" />
+      <PropertyRef Name="LineNo" />
+    </Key>
+    <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
+    <Property Name="LineNo" Type="Int32" Nullable="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="C1CMeasureUnitID" Type="Guid" />
+    <Property Name="C1CQualityID" Type="Guid" />
+    <Property Name="Coefficient" Type="Decimal" Precision="15" Scale="3" />
+    <Property Name="Amount" Type="Decimal" Precision="15" Scale="3" />
+    <Property Name="LoadToTop" Type="Boolean" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CCharacteristics" FromRole="C1CDocShipmentOrderGoods" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" FromRole="C1CDocShipmentOrderGoods" ToRole="C1CDocShipmentOrder" />
+    <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CMeasureUnits" FromRole="C1CDocShipmentOrderGoods" ToRole="C1CMeasureUnits" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CNomenclature" FromRole="C1CDocShipmentOrderGoods" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="C1CQuality" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CQuality" FromRole="C1CDocShipmentOrderGoods" ToRole="C1CQuality" />
+  </EntityType>
+  <EntityType Name="C1CWarehouses">
+    <Key>
+      <PropertyRef Name="C1CWarehouseID" />
+    </Key>
+    <Property Name="C1CWarehouseID" Type="Guid" Nullable="false" />
+    <Property Name="IsMetadata" Type="Boolean" Nullable="false" />
+    <Property Name="Marked" Type="Boolean" Nullable="false" />
+    <Property Name="Folder" Type="Boolean" Nullable="false" />
+    <Property Name="ParentID" Type="Guid" />
+    <Property Name="C1CCode" Type="String" Nullable="false" MaxLength="9" FixedLength="true" Unicode="false" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="C1CSubdivisionID" Type="Guid" />
+    <Property Name="Transportation" Type="Boolean" />
+    <Property Name="Transit" Type="Boolean" />
+    <Property Name="ResponsibleStorage" Type="Boolean" />
+    <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_1CDocShipmentOrder_1CWarehouses" FromRole="C1CWarehouses" ToRole="C1CDocShipmentOrder" />
+  </EntityType>
+  <EntityType Name="ActiveOrders">
+    <Key>
+      <PropertyRef Name="C1CDocShipmentOrderID" />
+    </Key>
+    <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
+    <Property Name="PersonID" Type="Int32" />
+    <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_ActiveOrders_1CDocShipmentOrder" FromRole="ActiveOrders" ToRole="C1CDocShipmentOrder" />
+    <NavigationProperty Name="Persons" Relationship="GammaModel.FK_ActiveOrders_Persons" FromRole="ActiveOrders" ToRole="Persons" />
+  </EntityType>
+  <EntityType Name="DocShipments">
+    <Key>
+      <PropertyRef Name="C1CDocShipmentOrderID" />
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
+    <Property Name="DocID" Type="Guid" Nullable="false" />
+    <Property Name="PersonID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_DocShipments_1CDocShipmentOrder1" FromRole="DocShipments" ToRole="C1CDocShipmentOrder" />
+    <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocShipments_Docs" FromRole="DocShipments" ToRole="Docs" />
+    <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipments_Persons" FromRole="DocShipments" ToRole="Persons" />
+  </EntityType>
+  <EntityType Name="Persons">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PostTypeID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Barcode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ActiveOrders" Relationship="GammaModel.FK_ActiveOrders_Persons" FromRole="Persons" ToRole="ActiveOrders" />
+    <NavigationProperty Name="DocShipments" Relationship="GammaModel.FK_DocShipments_Persons" FromRole="Persons" ToRole="DocShipments" />
+    <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Persons_PostTypes" FromRole="Persons" ToRole="PostTypes" />
+  </EntityType>
+  <EntityType Name="PostTypes">
+    <Key>
+      <PropertyRef Name="PostTypeID" />
+    </Key>
+    <Property Name="PostTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_PostTypes" FromRole="PostTypes" ToRole="Persons" />
+    <NavigationProperty Name="Users" Relationship="GammaModel.FK_Users_PostTypes" FromRole="PostTypes" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK_1CDocShipmentOrderGoods_1CCharacteristics">
+    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrderGoods" Role="C1CDocShipmentOrderGoods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CCharacteristics">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrderGoods">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrder_1CContractors">
+    <End Type="GammaModel.C1CContractors" Role="C1CContractors" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CContractors">
+        <PropertyRef Name="C1CContractorID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CContractorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrder_1CContractors1">
+    <End Type="GammaModel.C1CContractors" Role="C1CContractors" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CContractors">
+        <PropertyRef Name="C1CContractorID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CConsigneeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrder_1CContractors2">
+    <End Type="GammaModel.C1CContractors" Role="C1CContractors" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CContractors">
+        <PropertyRef Name="C1CContractorID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CShipperID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrder_1CWarehouses">
+    <End Type="GammaModel.C1CWarehouses" Role="C1CWarehouses" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CWarehouses">
+        <PropertyRef Name="C1CWarehouseID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CWarehouseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrderGoods_1CDocShipmentOrder">
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="1" />
+    <End Type="GammaModel.C1CDocShipmentOrderGoods" Role="C1CDocShipmentOrderGoods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CDocShipmentOrderID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrderGoods">
+        <PropertyRef Name="C1CDocShipmentOrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ActiveOrders_1CDocShipmentOrder">
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="1" />
+    <End Type="GammaModel.ActiveOrders" Role="ActiveOrders" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CDocShipmentOrderID" />
+      </Principal>
+      <Dependent Role="ActiveOrders">
+        <PropertyRef Name="C1CDocShipmentOrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocShipments_1CDocShipmentOrder1">
+    <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="1" />
+    <End Type="GammaModel.DocShipments" Role="DocShipments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CDocShipmentOrder">
+        <PropertyRef Name="C1CDocShipmentOrderID" />
+      </Principal>
+      <Dependent Role="DocShipments">
+        <PropertyRef Name="C1CDocShipmentOrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrderGoods_1CMeasureUnits">
+    <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrderGoods" Role="C1CDocShipmentOrderGoods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CMeasureUnits">
+        <PropertyRef Name="C1CMeasureUnitID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrderGoods">
+        <PropertyRef Name="C1CMeasureUnitID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrderGoods_1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrderGoods" Role="C1CDocShipmentOrderGoods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CNomenclature">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrderGoods">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocShipmentOrderGoods_1CQuality">
+    <End Type="GammaModel.C1CQuality" Role="C1CQuality" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CDocShipmentOrderGoods" Role="C1CDocShipmentOrderGoods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CQuality">
+        <PropertyRef Name="C1CQualityID" />
+      </Principal>
+      <Dependent Role="C1CDocShipmentOrderGoods">
+        <PropertyRef Name="C1CQualityID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ActiveOrders_Persons">
+    <End Type="GammaModel.Persons" Role="Persons" Multiplicity="0..1" />
+    <End Type="GammaModel.ActiveOrders" Role="ActiveOrders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Persons">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="ActiveOrders">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocShipments_Docs">
+    <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+    <End Type="GammaModel.DocShipments" Role="DocShipments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocShipments">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocShipments_Persons">
+    <End Type="GammaModel.Persons" Role="Persons" Multiplicity="1" />
+    <End Type="GammaModel.DocShipments" Role="DocShipments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Persons">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="DocShipments">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Persons_PostTypes">
+    <End Type="GammaModel.PostTypes" Role="PostTypes" Multiplicity="1" />
+    <End Type="GammaModel.Persons" Role="Persons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PostTypes">
+        <PropertyRef Name="PostTypeID" />
+      </Principal>
+      <Dependent Role="Persons">
+        <PropertyRef Name="PostTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_PostTypes">
+    <End Type="GammaModel.PostTypes" Role="PostTypes" Multiplicity="0..1" />
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PostTypes">
+        <PropertyRef Name="PostTypeID" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="PostTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="vDocShipmentOrders">
+    <Key>
+      <PropertyRef Name="C1CDocShipmentOrderID" />
+      <PropertyRef Name="CollectedQuantity" />
+    </Key>
+    <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
+    <Property Name="C1CNomenclatureID" Type="Guid" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="Quantity" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+    <Property Name="CollectedQuantity" Type="Decimal" Nullable="false" Precision="38" Scale="9" />
+  </EntityType>
 </Schema>

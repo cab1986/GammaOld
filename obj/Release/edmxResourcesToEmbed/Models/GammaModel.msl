@@ -223,6 +223,7 @@
     <EntitySetMapping Name="Docs">
       <EntityTypeMapping TypeName="GammaModel.Docs">
         <MappingFragment StoreEntitySet="Docs">
+          <ScalarProperty Name="IsMarked" ColumnName="IsMarked" />
           <ScalarProperty Name="DocID" ColumnName="DocID" />
           <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
           <ScalarProperty Name="Number" ColumnName="Number" />
@@ -237,18 +238,10 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DocShipment">
-      <EntityTypeMapping TypeName="GammaModel.DocShipment">
-        <MappingFragment StoreEntitySet="DocShipment">
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ActiveUserID" ColumnName="ActiveUserID" />
-          <ScalarProperty Name="C1CDocOrderID" ColumnName="1CDocOrderID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="DocTypes">
       <EntityTypeMapping TypeName="GammaModel.DocTypes">
         <MappingFragment StoreEntitySet="DocTypes">
+          <ScalarProperty Name="Movement" ColumnName="Movement" />
           <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -495,6 +488,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="GammaModel.Users">
         <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="PostTypeID" ColumnName="PostTypeID" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
           <ScalarProperty Name="RoleID" ColumnName="RoleID" />
           <ScalarProperty Name="Login" ColumnName="Login" />
@@ -1162,5 +1156,118 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <EntitySetMapping Name="C1CContractors">
+      <EntityTypeMapping TypeName="GammaModel.C1CContractors">
+        <MappingFragment StoreEntitySet="1CContractors">
+          <ScalarProperty Name="KPP" ColumnName="KPP" />
+          <ScalarProperty Name="INN" ColumnName="INN" />
+          <ScalarProperty Name="IsNonresident" ColumnName="IsNonresident" />
+          <ScalarProperty Name="IsSeller" ColumnName="IsSeller" />
+          <ScalarProperty Name="IsBuyer" ColumnName="IsBuyer" />
+          <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Folder" ColumnName="Folder" />
+          <ScalarProperty Name="Marked" ColumnName="Marked" />
+          <ScalarProperty Name="C1CContractorID" ColumnName="1CContractorID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="C1CDocShipmentOrder">
+      <EntityTypeMapping TypeName="GammaModel.C1CDocShipmentOrder">
+        <MappingFragment StoreEntitySet="1CDocShipmentOrder">
+          <ScalarProperty Name="C1CWarehouseID" ColumnName="1CWarehouseID" />
+          <ScalarProperty Name="C1CShipperID" ColumnName="1CShipperID" />
+          <ScalarProperty Name="C1CConsigneeID" ColumnName="1CConsigneeID" />
+          <ScalarProperty Name="C1CContractorID" ColumnName="1CContractorID" />
+          <ScalarProperty Name="C1CNumber" ColumnName="1CNumber" />
+          <ScalarProperty Name="C1CDate" ColumnName="1CDate" />
+          <ScalarProperty Name="Posted" ColumnName="Posted" />
+          <ScalarProperty Name="Marked" ColumnName="Marked" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="C1CDocShipmentOrderGoods">
+      <EntityTypeMapping TypeName="GammaModel.C1CDocShipmentOrderGoods">
+        <MappingFragment StoreEntitySet="1CDocShipmentOrderGoods">
+          <ScalarProperty Name="LoadToTop" ColumnName="LoadToTop" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Coefficient" ColumnName="Coefficient" />
+          <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
+          <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="LineNo" ColumnName="LineNo" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="C1CWarehouses">
+      <EntityTypeMapping TypeName="GammaModel.C1CWarehouses">
+        <MappingFragment StoreEntitySet="1CWarehouses">
+          <ScalarProperty Name="ResponsibleStorage" ColumnName="ResponsibleStorage" />
+          <ScalarProperty Name="Transit" ColumnName="Transit" />
+          <ScalarProperty Name="Transportation" ColumnName="Transportation" />
+          <ScalarProperty Name="C1CSubdivisionID" ColumnName="1CSubdivisionID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Folder" ColumnName="Folder" />
+          <ScalarProperty Name="Marked" ColumnName="Marked" />
+          <ScalarProperty Name="IsMetadata" ColumnName="IsMetadata" />
+          <ScalarProperty Name="C1CWarehouseID" ColumnName="1CWarehouseID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ActiveOrders">
+      <EntityTypeMapping TypeName="GammaModel.ActiveOrders">
+        <MappingFragment StoreEntitySet="ActiveOrders">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocShipments">
+      <EntityTypeMapping TypeName="GammaModel.DocShipments">
+        <MappingFragment StoreEntitySet="DocShipments">
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Persons">
+      <EntityTypeMapping TypeName="GammaModel.Persons">
+        <MappingFragment StoreEntitySet="Persons">
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PostTypeID" ColumnName="PostTypeID" />
+          <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PostTypes">
+      <EntityTypeMapping TypeName="GammaModel.PostTypes">
+        <MappingFragment StoreEntitySet="PostTypes">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PostTypeID" ColumnName="PostTypeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vDocShipmentOrders">
+      <EntityTypeMapping TypeName="GammaModel.vDocShipmentOrders">
+        <MappingFragment StoreEntitySet="vDocShipmentOrders">
+          <ScalarProperty Name="CollectedQuantity" ColumnName="CollectedQuantity" />
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

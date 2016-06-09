@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using Gamma.Common;
 
 namespace Gamma.ViewModels
@@ -44,17 +45,19 @@ namespace Gamma.ViewModels
                 PlaceID = (byte)docCloseShift.PlaceID;
             }
             ShowGroupPackCommand = new DelegateCommand(() =>
-                MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.DocID),
+                MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.ProductID),
                 () => SelectedGroupPack != null);
         }
         public void FillGrid()
         {
+            UIServices.SetBusyState();
             ClearGrid();
             DocCloseShiftDocs = new ObservableCollection<Docs>(GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID &&
-                    d.Date >= DB.GetShiftBeginTime(CloseDate) && d.Date <= DB.GetShiftEndTime(CloseDate) &&
+                    d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                    d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)
-                    && d.DocProducts.Count > 0).Select(d => d));
+                    && d.DocProducts.Count > 0).Select(d => d).OrderByDescending(d => d.Date));
             foreach (var doc in DocCloseShiftDocs)
             {
                 if (doc.DocTypeID == (byte)DocTypes.DocProduction)
