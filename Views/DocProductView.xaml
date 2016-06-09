@@ -80,6 +80,15 @@
                                     <dxe:ButtonInfo Content="i" Command="{Binding OpenProductionTaskCommand}"/>
                                 </dxe:ButtonEdit>
                             </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Выпущено на переделе" LabelPosition="Top">
+                                <dxe:TextEdit EditValue="{Binding Place}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Смена №" LabelPosition="Top">
+                                <dxe:TextEdit EditValue="{Binding ShiftID}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Принял" LabelPosition="Top">
+                                <dxe:TextEdit EditValue="{Binding PrintName}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Подтвержден:">
                                 <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left"/>
                             </dxlc:LayoutItem>

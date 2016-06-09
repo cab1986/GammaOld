@@ -337,17 +337,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="ProductionTaskSGB">
-      <EntityTypeMapping TypeName="GammaModel.ProductionTaskSGB">
-        <MappingFragment StoreEntitySet="ProductionTaskSGB">
-          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="DiameterPlus" ColumnName="DiameterPlus" />
-          <ScalarProperty Name="DiameterMinus" ColumnName="DiameterMinus" />
-          <ScalarProperty Name="Crepe" ColumnName="Crepe" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="ProductionTaskStates">
       <EntityTypeMapping TypeName="GammaModel.ProductionTaskStates">
         <MappingFragment StoreEntitySet="ProductionTaskStates">
@@ -1266,6 +1255,19 @@
           <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
           <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
           <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionTaskSGB">
+      <EntityTypeMapping TypeName="GammaModel.ProductionTaskSGB">
+        <MappingFragment StoreEntitySet="ProductionTaskSGB">
+          <ScalarProperty Name="QualitySpecification" ColumnName="QualitySpecification" />
+          <ScalarProperty Name="TechSpecification" ColumnName="TechSpecification" />
+          <ScalarProperty Name="Crepe" ColumnName="Crepe" />
+          <ScalarProperty Name="DiameterMinus" ColumnName="DiameterMinus" />
+          <ScalarProperty Name="DiameterPlus" ColumnName="DiameterPlus" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

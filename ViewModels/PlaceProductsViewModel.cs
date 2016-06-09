@@ -182,7 +182,7 @@ namespace Gamma.ViewModels
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
                     break;
                 case ProductKinds.ProductPallet:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
                     break;
             }
         }

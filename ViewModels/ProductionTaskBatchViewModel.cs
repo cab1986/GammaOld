@@ -587,7 +587,7 @@ namespace Gamma.ViewModels
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProductionTaskProduct.ProductID);
                     break;
                 case ProductKinds.ProductPallet:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.DocID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.ProductID);
                     break;
                 default:
                     MessageBox.Show("Ошибка программы, действие не предусмотрено");

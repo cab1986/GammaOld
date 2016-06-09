@@ -58,7 +58,6 @@ namespace Gamma.Models
         public virtual DbSet<ProcessModels> ProcessModels { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
-        public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
@@ -101,6 +100,7 @@ namespace Gamma.Models
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<PostTypes> PostTypes { get; set; }
         public virtual DbSet<vDocShipmentOrders> vDocShipmentOrders { get; set; }
+        public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

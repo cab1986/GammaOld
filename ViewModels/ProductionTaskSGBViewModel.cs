@@ -35,6 +35,8 @@ namespace Gamma.ViewModels
                 Diameter = productionTaskSGB.Diameter ?? 0;
                 DiameterMinus = productionTaskSGB.DiameterMinus ?? 0;
                 DiameterPlus = productionTaskSGB.DiameterPlus ?? 0;
+                QualitySpecification = productionTaskSGB.QualitySpecification;
+                TechSpecification = productionTaskSGB.TechSpecification;
             }
         }
         private int _crepe;
@@ -81,6 +83,12 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("DiameterPlus");
             }
         }
+
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public string TechSpecification { get; set; }
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public string QualitySpecification { get; set; }
+
         private int _diameterMinus;
         [UIAuth(UIAuthLevel.ReadOnly)]
         public int DiameterMinus
@@ -104,7 +112,7 @@ namespace Gamma.ViewModels
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID);
+            base.SaveToModel(itemID, gammaBase);
             var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
             if (productionTask == null)
             {
@@ -119,6 +127,8 @@ namespace Gamma.ViewModels
             productionTask.ProductionTaskSGB.DiameterMinus = DiameterMinus;
             productionTask.ProductionTaskSGB.DiameterPlus = DiameterPlus;
             productionTask.ProductionTaskSGB.Crepe = Crepe;
+            productionTask.ProductionTaskSGB.TechSpecification = TechSpecification;
+            productionTask.ProductionTaskSGB.QualitySpecification = QualitySpecification;
             gammaBase.SaveChanges();
         }
 

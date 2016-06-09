@@ -622,6 +622,8 @@
     <Property Name="DiameterPlus" Type="int" />
     <Property Name="DiameterMinus" Type="int" />
     <Property Name="Crepe" Type="int" />
+    <Property Name="TechSpecification" Type="nvarchar" MaxLength="50" />
+    <Property Name="QualitySpecification" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="ProductionTaskStates">
     <Key>

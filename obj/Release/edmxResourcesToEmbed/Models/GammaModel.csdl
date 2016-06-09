@@ -404,17 +404,6 @@
     <NavigationProperty Name="ProductionTaskStates" Relationship="Self.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskBatches" ToRole="ProductionTaskStates" />
     <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTaskBatches" ToRole="ProductionTasks" />
   </EntityType>
-  <EntityType Name="ProductionTaskSGB">
-    <Key>
-      <PropertyRef Name="ProductionTaskID" />
-    </Key>
-    <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
-    <Property Name="Diameter" Type="Int32" />
-    <Property Name="DiameterPlus" Type="Int32" />
-    <Property Name="DiameterMinus" Type="Int32" />
-    <Property Name="Crepe" Type="Int32" />
-    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskSGB_ProductionTasks" FromRole="ProductionTaskSGB" ToRole="ProductionTasks" />
-  </EntityType>
   <EntityType Name="ProductionTaskStates">
     <Key>
       <PropertyRef Name="ProductionTaskStateID" />
@@ -1107,7 +1096,6 @@
     <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" />
     <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" />
     <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" />
-    <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" />
     <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" />
     <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" />
     <EntitySet Name="ProductKinds" EntityType="Self.ProductKinds" />
@@ -1682,10 +1670,6 @@
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskSGB_ProductionTasks" Association="GammaModel.FK_ProductionTaskSGB_ProductionTasks">
-      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-      <End Role="ProductionTaskSGB" EntitySet="ProductionTaskSGB" />
-    </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskWR_ProductionTasks" Association="GammaModel.FK_ProductionTaskWR_ProductionTasks">
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
@@ -1801,6 +1785,11 @@
       <End Role="Users" EntitySet="Users" />
     </AssociationSet>
     <EntitySet Name="vDocShipmentOrders" EntityType="GammaModel.vDocShipmentOrders" />
+    <EntitySet Name="ProductionTaskSGB" EntityType="GammaModel.ProductionTaskSGB" />
+    <AssociationSet Name="FK_ProductionTaskSGB_ProductionTasks" Association="GammaModel.FK_ProductionTaskSGB_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ProductionTaskSGB" EntitySet="ProductionTaskSGB" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -2941,9 +2930,9 @@
     <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_ProductionTasks" FromRole="ProductionTasks" ToRole="DocProduction" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="ProductionTasks" ToRole="Places" />
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskRWCutting" />
-    <NavigationProperty Name="ProductionTaskSGB" Relationship="GammaModel.FK_ProductionTaskSGB_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskSGB" />
     <NavigationProperty Name="ProductionTaskWR" Relationship="GammaModel.FK_ProductionTaskWR_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskWR" />
     <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskBatches" />
+    <NavigationProperty Name="ProductionTaskSGB" Relationship="GammaModel.FK_ProductionTaskSGB_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskSGB" />
   </EntityType>
   <Association Name="FK_ProductionTasks_1CCharacteristics">
     <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -3003,20 +2992,6 @@
         <PropertyRef Name="ProductionTaskID" />
       </Principal>
       <Dependent Role="ProductionTaskRWCutting">
-        <PropertyRef Name="ProductionTaskID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductionTaskSGB_ProductionTasks">
-    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Type="GammaModel.ProductionTaskSGB" Role="ProductionTaskSGB" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="ProductionTasks">
-        <PropertyRef Name="ProductionTaskID" />
-      </Principal>
-      <Dependent Role="ProductionTaskSGB">
         <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
@@ -3489,4 +3464,31 @@
     <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
     <Property Name="CollectedQuantity" Type="Decimal" Nullable="false" Precision="38" Scale="9" />
   </EntityType>
+  <EntityType Name="ProductionTaskSGB">
+    <Key>
+      <PropertyRef Name="ProductionTaskID" />
+    </Key>
+    <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
+    <Property Name="Diameter" Type="Int32" />
+    <Property Name="DiameterPlus" Type="Int32" />
+    <Property Name="DiameterMinus" Type="Int32" />
+    <Property Name="Crepe" Type="Int32" />
+    <Property Name="TechSpecification" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="QualitySpecification" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskSGB_ProductionTasks" FromRole="ProductionTaskSGB" ToRole="ProductionTasks" />
+  </EntityType>
+  <Association Name="FK_ProductionTaskSGB_ProductionTasks">
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="GammaModel.ProductionTaskSGB" Role="ProductionTaskSGB" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ProductionTaskSGB">
+        <PropertyRef Name="ProductionTaskID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

@@ -9,7 +9,7 @@
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              x:Class="Gamma.Views.ProductionTaskSGBView" 
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="190">
+             d:DesignHeight="150" d:DesignWidth="440">
     <Grid>
         <dxlc:LayoutGroup Header="Свойства продукции" View="Group">
             <dxlc:LayoutItem Label="Креп, %" LabelPosition="Top" Width="45" Visibility="Collapsed">
@@ -27,6 +27,12 @@
             <dxlc:LayoutItem Label="Диаметр-" LabelPosition="Top" Width="55">
                 <dxe:SpinEdit AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}" MinValue="0" 
                               EditValue="{Binding DiameterMinus, ValidatesOnDataErrors=True}" IsFloatValue="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Тех. карта №" LabelPosition="Top" Width="80">
+                <dxe:TextEdit EditValue="{Binding TechSpecification}"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Спецификация по качеству №" LabelPosition="Top" Width="168">
+                <dxe:TextEdit EditValue="{Binding QualitySpecification}" />
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
     </Grid>

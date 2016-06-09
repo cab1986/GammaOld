@@ -173,6 +173,9 @@ namespace Gamma.ViewModels
             if (productionTaskBatch != null) ProductionTaskBatchID = productionTaskBatch.ProductionTaskBatchID;
             DocDate = Doc.Date;
             IsConfirmed = Doc.IsConfirmed;
+            PrintName = Doc.PrintName;
+            ShiftID = Doc.ShiftID.ToString();
+            Place = GammaBase.Places.FirstOrDefault(p => p.PlaceID == Doc.PlaceID)?.Name;
             Bars = ((IBarImplemented) CurrentViewModel).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
 //            Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
@@ -183,6 +186,10 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             IsReadOnly = !(DB.HaveWriteAccess("DocProducts") && (!IsConfirmed || IsValid));
         }
+
+        public string PrintName { get; set; }
+        public string Place { get; set; }
+        public string ShiftID { get; set; }
         
         private void GetProductRelations(Guid productId)
         {
