@@ -19,6 +19,7 @@
     mc:Ignorable="d ignore" 
     Title="{Binding Title}"
     Height ="600" Width="1200" 
+    d:DataContext="{d:DesignInstance Type=vm:DocProductViewModel, IsDesignTimeCreatable=False}"
     gc:WindowSettings.Save="True">
     <g:MvvmWindow.Resources>
         <DataTemplate DataType="{x:Type vm:DocProductPalletViewModel}">

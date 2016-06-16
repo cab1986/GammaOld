@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity.SqlServer;
 using System.Linq;
-using System.Text;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Interfaces;
@@ -15,15 +13,25 @@ namespace Gamma.ViewModels
     {
         public DocShipmentOrdersViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
+            OpenDocShipmentOrderCommand = new DelegateCommand<object>(OpenDocShipmentOrder);
             Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
             FindCommand = new DelegateCommand(Find);
-            CanChangePerson = DB.HaveWriteAccess("ActiveOrders");
-            Persons = GammaBase.Persons.Where(p => p.PostTypeID == (int) PersonTypes.Loader).Select(p => new Person
+ //           CanChangePerson = DB.HaveWriteAccess("DocShipmentOrderInfo");
+/*            Persons = GammaBase.Persons.Where(p => p.PostTypeID == (int) PersonTypes.Loader).Select(p => new Person
             {
                 PersonId = p.PersonID,
                 Name = p.Name
             }).ToList();
+*/
             IntervalId = 0;
+            Find();
+        }
+
+        private void OpenDocShipmentOrder(object row)
+        {
+            var docShipmentOrderId = (row as DocShipmentOrder)?.DocShipmentOrderId;
+            if (docShipmentOrderId == null) return;
+            MessageManager.OpenDocShipmentOrder((Guid)docShipmentOrderId);
         }
 
         public DelegateCommand DeleteItemCommand { get; private set; }
@@ -54,7 +62,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public bool CanChangePerson { get; set; }
+//        public bool CanChangePerson { get; set; }
 
         private ObservableCollection<DocShipmentOrder> _docShipmentOrders;
 
@@ -68,9 +76,14 @@ namespace Gamma.ViewModels
             }
         }
 
+        public DocShipmentOrder SelectedDocShipmentOrder { get; set; }
+
+        public DelegateCommand<object> OpenDocShipmentOrderCommand { get; private set; }
+
         private void Find()
         {
             UIServices.SetBusyState();
+            SelectedDocShipmentOrder = null;
             using (var gammaBase = DB.GammaDb)
             {
                 switch (IntervalId)
@@ -83,7 +96,9 @@ namespace Gamma.ViewModels
                                 DocShipmentOrderId = d.C1CDocShipmentOrderID,
                                 Number = d.C1CNumber,
                                 Date = d.C1CDate ?? DB.CurrentDateTime,
-                                ActivePersonId = d.ActiveOrders.PersonID,
+                                VehicleNumber = d.DocShipmentOrderInfo.VehicleNumber,
+                                Consignee = d.C1CConsignees.Description,
+                                ActivePerson = d.DocShipmentOrderInfo.Persons.Name,
                             }));
                         break;
                     case 1:
@@ -94,13 +109,14 @@ namespace Gamma.ViewModels
                                 DocShipmentOrderId = d.C1CDocShipmentOrderID,
                                 Number = d.C1CNumber,
                                 Date = d.C1CDate ?? DB.CurrentDateTime,
-                                ActivePersonId = d.ActiveOrders.PersonID,
+                                Consignee = d.C1CConsignees.Description,
+                                ActivePerson = d.DocShipmentOrderInfo.Persons.Name,
                             }));
                         break;
                     case 2:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
                             gammaBase.C1CDocShipmentOrder.Where(d =>
-                                (d.C1CNumber == null || d.C1CNumber.Contains(Number) || Number == "") &&
+                                (Number == null || d.C1CNumber.Contains(Number)) &&
                                 (d.C1CDate >= DateBegin || DateBegin == null) &&
                                 (d.C1CDate <= DateEnd || DateEnd == null)).OrderByDescending(d => d.C1CDate).Take(500)
                                 .Select(d => new DocShipmentOrder
@@ -108,7 +124,8 @@ namespace Gamma.ViewModels
                                     DocShipmentOrderId = d.C1CDocShipmentOrderID,
                                     Number = d.C1CNumber,
                                     Date = d.C1CDate ?? DB.CurrentDateTime,
-                                    ActivePersonId = d.ActiveOrders.PersonID,
+                                    Consignee = d.C1CConsignees.Description,
+                                    ActivePerson = d.DocShipmentOrderInfo.Persons.Name,
                                 }));
                         break;
                 }
@@ -134,7 +151,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public List<Person> Persons { get; set; }
+//        public List<Person> Persons { get; set; }
     }
 
 
@@ -150,6 +167,10 @@ namespace Gamma.ViewModels
         public Guid DocShipmentOrderId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
+        public string Consignee { get; set; }
+        public string VehicleNumber { get; set; }
+        public string ActivePerson { get; set; }
+        /*
         private int? _activePersonId;
 
         public int? ActivePersonId
@@ -168,16 +189,16 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var activeOrder =
-                    gammaBase.ActiveOrders.FirstOrDefault(ao => ao.C1CDocShipmentOrderID == docShipmentOrderId);               
+                    gammaBase.DocShipmentOrderInfo.FirstOrDefault(ao => ao.C1CDocShipmentOrderID == docShipmentOrderId);               
                 if (activeOrder == null)
                 {
-                    activeOrder = new ActiveOrders
+                    activeOrder = new DocShipmentOrderInfo
                     {
                         C1CDocShipmentOrderID = docShipmentOrderId
                     };
-                    gammaBase.ActiveOrders.Add(activeOrder);
+                    gammaBase.DocShipmentOrderInfo.Add(activeOrder);
                 }
-                activeOrder.PersonID = activePersonId;
+                activeOrder.ActivePersonID = activePersonId;
 
                 // На случай, если в базе уже удален приказ с данным ID
                 try
@@ -191,6 +212,7 @@ namespace Gamma.ViewModels
                 
             }
         }
+        */
         public ObservableCollection<DocShipmentGood> DocShipmentOrderGoods { get; set; }
     }
 

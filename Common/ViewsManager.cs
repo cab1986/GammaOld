@@ -22,6 +22,12 @@ namespace Gamma.Common
             Messenger.Default.Register<FindProductionTaskBatchMessage>(this, FindProductionTaskBatch);
             Messenger.Default.Register<OpenPlaceGroupsNomenclatureMessage>(this, OpenPlaceGroupsNomenclature);
             Messenger.Default.Register<OpenMaterialTypesNomenclatureMessage>(this, OpenMaterialTypeNomenclature);
+            Messenger.Default.Register<OpenDocShipmentOrderMessage>(this, OpenDocShipmentOrder);
+        }
+
+        private void OpenDocShipmentOrder(OpenDocShipmentOrderMessage msg)
+        {
+            new DocShipmentOrderView(msg.DocShipmentOrderId).Show();
         }
 
         private void OpenMaterialTypeNomenclature(OpenMaterialTypesNomenclatureMessage msg)

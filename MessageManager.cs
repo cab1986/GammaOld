@@ -39,6 +39,15 @@ namespace Gamma
         public Guid ProductID;
     }
 
+    public class OpenDocShipmentOrderMessage
+    {
+        public OpenDocShipmentOrderMessage(Guid docShipmentOrderId)
+        {
+            DocShipmentOrderId = docShipmentOrderId;
+        }
+        public Guid DocShipmentOrderId { get; set; }
+    }
+
     /// <summary>
     /// Сообщение для открытия формы редактирования продукции
     /// </summary>
@@ -198,6 +207,12 @@ namespace Gamma
         {
             Messenger.Default.Send(new RoleEditMessage(roleID, gammaBase));
         }
+
+        public static void OpenDocShipmentOrder(Guid docShipmentOrderId)
+        {
+            Messenger.Default.Send(new OpenDocShipmentOrderMessage(docShipmentOrderId));
+        }
+
         public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchID, List<Nomenclature> nomenclatureIds)
         {
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureIds));

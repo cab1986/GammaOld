@@ -23,6 +23,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
+        public Nullable<decimal> BaseMeasureUnitQuantity { get; set; }
         public string NomenclatureName { get; set; }
         public string Place { get; set; }
         public Nullable<int> PlaceID { get; set; }

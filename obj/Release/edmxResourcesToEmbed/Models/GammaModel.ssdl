@@ -292,13 +292,6 @@
     <Property Name="Transit" Type="bit" />
     <Property Name="ResponsibleStorage" Type="bit" />
   </EntityType>
-  <EntityType Name="ActiveOrders">
-    <Key>
-      <PropertyRef Name="1CDocShipmentOrderID" />
-    </Key>
-    <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="PersonID" Type="int" />
-  </EntityType>
   <EntityType Name="BatchProductionTasks">
     <Key>
       <PropertyRef Name="ProductionTaskBatchID" />
@@ -424,6 +417,14 @@
     <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="Comment" Type="varchar" MaxLength="8000" />
     <Property Name="IsFromOldGamma" Type="bit" />
+  </EntityType>
+  <EntityType Name="DocShipmentOrderInfo">
+    <Key>
+      <PropertyRef Name="1CDocShipmentOrderID" />
+    </Key>
+    <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ActivePersonID" Type="int" />
+    <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="DocShipments">
     <Key>
@@ -877,6 +878,7 @@
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+    <Property Name="BaseMeasureUnitQuantity" Type="decimal" Precision="20" Scale="10" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="Place" Type="varchar" MaxLength="64" />
     <Property Name="PlaceID" Type="int" />
@@ -1503,25 +1505,25 @@
   </Association>
   <Association Name="FK_ActiveOrders_1CDocShipmentOrder">
     <End Role="1CDocShipmentOrder" Type="Self.1CDocShipmentOrder" Multiplicity="1" />
-    <End Role="ActiveOrders" Type="Self.ActiveOrders" Multiplicity="0..1" />
+    <End Role="DocShipmentOrderInfo" Type="Self.DocShipmentOrderInfo" Multiplicity="0..1" />
     <ReferentialConstraint>
       <Principal Role="1CDocShipmentOrder">
         <PropertyRef Name="1CDocShipmentOrderID" />
       </Principal>
-      <Dependent Role="ActiveOrders">
+      <Dependent Role="DocShipmentOrderInfo">
         <PropertyRef Name="1CDocShipmentOrderID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ActiveOrders_Persons">
     <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
-    <End Role="ActiveOrders" Type="Self.ActiveOrders" Multiplicity="*" />
+    <End Role="DocShipmentOrderInfo" Type="Self.DocShipmentOrderInfo" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Persons">
         <PropertyRef Name="PersonID" />
       </Principal>
-      <Dependent Role="ActiveOrders">
-        <PropertyRef Name="PersonID" />
+      <Dependent Role="DocShipmentOrderInfo">
+        <PropertyRef Name="ActivePersonID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2772,7 +2774,6 @@
     <EntitySet Name="1CSpecificationOutputNomenclature" EntityType="Self.1CSpecificationOutputNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CSpecifications" EntityType="Self.1CSpecifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CWarehouses" EntityType="Self.1CWarehouses" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="ActiveOrders" EntityType="Self.ActiveOrders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
@@ -2786,6 +2787,7 @@
     <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocShipmentOrderInfo" EntityType="Self.DocShipmentOrderInfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocShipments" EntityType="Self.DocShipments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
@@ -2881,6 +2883,7 @@
     [vProductsInfo].[1CNomenclatureID] AS [1CNomenclatureID], 
     [vProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
     [vProductsInfo].[Quantity] AS [Quantity], 
+    [vProductsInfo].[BaseMeasureUnitQuantity] AS [BaseMeasureUnitQuantity], 
     [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
     [vProductsInfo].[Place] AS [Place], 
     [vProductsInfo].[PlaceID] AS [PlaceID], 
@@ -3100,11 +3103,11 @@
     </AssociationSet>
     <AssociationSet Name="FK_ActiveOrders_1CDocShipmentOrder" Association="Self.FK_ActiveOrders_1CDocShipmentOrder">
       <End Role="1CDocShipmentOrder" EntitySet="1CDocShipmentOrder" />
-      <End Role="ActiveOrders" EntitySet="ActiveOrders" />
+      <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
     </AssociationSet>
     <AssociationSet Name="FK_ActiveOrders_Persons" Association="Self.FK_ActiveOrders_Persons">
       <End Role="Persons" EntitySet="Persons" />
-      <End Role="ActiveOrders" EntitySet="ActiveOrders" />
+      <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
     </AssociationSet>
     <AssociationSet Name="FK_BatchProductionTasks_ProductionTaskBatches" Association="Self.FK_BatchProductionTasks_ProductionTaskBatches">
       <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />

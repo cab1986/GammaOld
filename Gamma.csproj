@@ -75,10 +75,12 @@
     <Reference Include="DevExpress.Printing.v15.2.Core, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.Sparkline.v15.2.Core, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Utils.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
     <Reference Include="DevExpress.Xpf.Charts.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Controls.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Xpf.Core.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
@@ -105,6 +107,9 @@
     <Reference Include="DevExpress.Xpf.Themes.DXStyle.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="DevExpress.XtraEditors.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraGrid.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraPrinting.v15.2, Version=15.2.9.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
       <Private>True</Private>
     </Reference>
@@ -168,6 +173,7 @@
     <Compile Include="BarCommand.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\Cutting.cs" />
+    <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Common\Nomenclature.cs" />
     <Compile Include="Common\Nomenclature1C.cs" />
@@ -203,9 +209,6 @@
     <Compile Include="Interfaces\IProductionTask.cs" />
     <Compile Include="Interfaces\IProductionTaskBatch.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
-    <Compile Include="Models\ActiveOrders.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Branches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -306,6 +309,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Docs.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocShipmentOrderInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocShipments.cs">
@@ -540,6 +546,7 @@
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
     <Compile Include="ViewModels\DocProductPalletViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
+    <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
@@ -615,6 +622,9 @@
     </Compile>
     <Compile Include="Views\DocShipmentOrdersView.xaml.cs">
       <DependentUpon>DocShipmentOrdersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocShipmentOrderView.xaml.cs">
+      <DependentUpon>DocShipmentOrderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FindProductionTaskBatchView.xaml.cs">
       <DependentUpon>FindProductionTaskBatchView.xaml</DependentUpon>
@@ -761,6 +771,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocShipmentOrdersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocShipmentOrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

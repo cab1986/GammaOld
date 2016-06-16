@@ -244,3 +244,17 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchWindowView.baml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Grid.v15.2.Extensions.dll
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocShipmentOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocShipmentOrdersView.baml
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Controls.v15.2.dll
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraGrid.v15.2.dll
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Controls.v15.2.xml
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraGrid.v15.2.xml
+D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocShipmentOrderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocShipmentOrderView.baml

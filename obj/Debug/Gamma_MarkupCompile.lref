@@ -1,4 +1,4 @@
-﻿
+﻿D:\CProjects\Gamma\Gamma\obj\Debug\GeneratedInternalTypeHelper.g.cs
 FD:\CProjects\Gamma\Gamma\App.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
@@ -10,6 +10,8 @@ FD:\CProjects\Gamma\Gamma\Views\DocProductPalletView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductSpoolView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductUnloadView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocShipmentOrdersView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocShipmentOrderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\FindProductionTaskBatchView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\FindProductView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\LoginView.xaml;;
@@ -25,5 +27,4 @@ FD:\CProjects\Gamma\Gamma\Views\NomenclatureView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskPMView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskRWView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocShipmentOrdersView.xaml;;
 

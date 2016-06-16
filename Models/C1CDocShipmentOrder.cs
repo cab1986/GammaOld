@@ -32,13 +32,13 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CWarehouseID { get; set; }
     
         public virtual C1CContractors C1CContractors { get; set; }
-        public virtual C1CContractors C1CContractors1 { get; set; }
-        public virtual C1CContractors C1CContractors2 { get; set; }
+        public virtual C1CContractors C1CConsignees { get; set; }
+        public virtual C1CContractors C1CShippers { get; set; }
         public virtual C1CWarehouses C1CWarehouses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
-        public virtual ActiveOrders ActiveOrders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocShipments> DocShipments { get; set; }
+        public virtual DocShipmentOrderInfo DocShipmentOrderInfo { get; set; }
     }
 }

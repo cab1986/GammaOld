@@ -244,3 +244,17 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchWindowView.baml
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.Grid.v15.2.Extensions.dll
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrdersView.baml
+D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.Controls.v15.2.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraGrid.v15.2.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.Controls.v15.2.xml
+D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraGrid.v15.2.xml
+D:\CProjects\Gamma\Gamma\bin\Debug\de\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\es\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\ja\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\ru\DevExpress.Xpf.Controls.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\de\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\es\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\ja\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\ru\DevExpress.XtraGrid.v15.2.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrderView.baml

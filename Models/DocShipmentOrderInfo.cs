@@ -12,10 +12,11 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ActiveOrders
+    public partial class DocShipmentOrderInfo
     {
         public System.Guid C1CDocShipmentOrderID { get; set; }
-        public Nullable<int> PersonID { get; set; }
+        public Nullable<int> ActivePersonID { get; set; }
+        public string VehicleNumber { get; set; }
     
         public virtual C1CDocShipmentOrder C1CDocShipmentOrder { get; set; }
         public virtual Persons Persons { get; set; }
