@@ -112,7 +112,10 @@ namespace Gamma.ViewModels
             RaisePropertyChanged("ValidPropertiesCount");
         }
 
-        public virtual bool IsValid => (ValidPropertiesCount == TotalPropertiesWithValidationCount);
+        public virtual bool IsValid
+        {
+            get { return ValidPropertiesCount == TotalPropertiesWithValidationCount; }
+        } 
     }
         
 }

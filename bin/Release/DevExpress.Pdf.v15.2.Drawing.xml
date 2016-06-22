@@ -4,29 +4,6 @@
         <name>DevExpress.Pdf.v15.2.Drawing</name>
     </assembly>
     <members>
-        <member name="T:DevExpress.Pdf.PdfQueryPageSettingsEventHandler">
-
-            <summary>
-                <para> </para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.Pdf.PdfQueryPageSettingsEventHandler.Invoke(System.Object,DevExpress.Pdf.PdfQueryPageSettingsEventArgs)">
-            <summary>
-                <para>A method that will handle the <see cref="E:DevExpress.Pdf.PdfDocumentProcessor.QueryPageSettings"/> and <see cref="E:DevExpress.XtraPdfViewer.PdfViewer.QueryPageSettings"/> events.
-</para>
-            </summary>
-            <param name="sender">
-		The event source. This parameter identifies either the <see cref="T:DevExpress.Pdf.PdfDocumentProcessor"/> or <see cref="T:DevExpress.XtraPdfViewer.PdfViewer"/> which raised the event.
-
-            </param>
-            <param name="e">
-		A <see cref="T:DevExpress.Pdf.PdfQueryPageSettingsEventArgs"/> object that contains event data.
-
-            </param>
-
-
-        </member>
         <member name="T:DevExpress.Pdf.PdfQueryPageSettingsEventArgs">
 
             <summary>
@@ -52,6 +29,29 @@
             </summary>
             <value>A <see cref="T:System.Drawing.SizeF"/> value.
 </value>
+
+
+        </member>
+        <member name="T:DevExpress.Pdf.PdfQueryPageSettingsEventHandler">
+
+            <summary>
+                <para> </para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.Pdf.PdfQueryPageSettingsEventHandler.Invoke(System.Object,DevExpress.Pdf.PdfQueryPageSettingsEventArgs)">
+            <summary>
+                <para>A method that will handle the <see cref="E:DevExpress.Pdf.PdfDocumentProcessor.QueryPageSettings"/> and <see cref="E:DevExpress.XtraPdfViewer.PdfViewer.QueryPageSettings"/> events.
+</para>
+            </summary>
+            <param name="sender">
+		The event source. This parameter identifies either the <see cref="T:DevExpress.Pdf.PdfDocumentProcessor"/> or <see cref="T:DevExpress.XtraPdfViewer.PdfViewer"/> which raised the event.
+
+            </param>
+            <param name="e">
+		A <see cref="T:DevExpress.Pdf.PdfQueryPageSettingsEventArgs"/> object that contains event data.
+
+            </param>
 
 
         </member>

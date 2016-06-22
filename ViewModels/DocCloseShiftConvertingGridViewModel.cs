@@ -78,6 +78,9 @@ namespace Gamma.ViewModels
                     NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name
                 }));
         }
+
+        public bool IsChanged { get; private set; }
+
         private bool IsConfirmed { get; set; }
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || !DB.HaveWriteAccess("DocCloseShiftSamples") || IsConfirmed;
@@ -131,21 +134,7 @@ namespace Gamma.ViewModels
                             MeasureUnit = m.MeasureUnit,
                             MeasureUnitID = m.MeasureUnitID
                         }));
- /*           foreach (var material in WithdrawalMaterials)
-            {
-                var nomenclatureAnalogIds =
-                    GammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == material.NomenclatureID)
-                        .Select(a => a.C1CNomenclatureAnalogID)
-                        .ToList();
-                foreach (var nomenclatureAnalogId in nomenclatureAnalogIds)
-                {
-                    material.AvailableNomenclatures.Add(new WithdrawalMaterial.NomenclatureAnalog()
-                    {
-                        NomenclatureID = (Guid)nomenclatureAnalogId
-                    });
-                }
-            }
-            */
+            IsChanged = true;
         }
         public DelegateCommand AddWithdrawalMaterialCommand { get; private set; }
         public DelegateCommand DeleteWithdrawalMaterialCommand { get; private set; }
@@ -190,6 +179,7 @@ namespace Gamma.ViewModels
             DocCloseShiftDocs?.Clear();
             WithdrawalMaterials?.Clear();
             Samples?.Clear();
+            IsChanged = true;
         }
 
         private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();

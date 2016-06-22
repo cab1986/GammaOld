@@ -584,6 +584,7 @@
     <Property Name="ProductionTaskBatchID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="BatchKindID" Type="smallint" Nullable="false" />
     <Property Name="ProductionTaskStateID" Type="tinyint" Nullable="false" />
+    <Property Name="1CContractorID" Type="uniqueidentifier" />
     <Property Name="UserID" Type="uniqueidentifier" />
     <Property Name="Number" Type="varchar" MaxLength="255" />
     <Property Name="Date" Type="datetime" />
@@ -814,6 +815,7 @@
     <Property Name="Destination" Type="varchar" MaxLength="50" />
     <Property Name="Format" Type="varchar" MaxLength="50" />
     <Property Name="Color" Type="varchar" MaxLength="50" />
+    <Property Name="Buyer" Type="varchar" MaxLength="50" />
     <Property Name="FormatNumeric" Type="int" />
     <Property Name="LayerNumberNumeric" Type="int" />
     <Property Name="CoreDiameterNumeric" Type="int" />
@@ -2119,6 +2121,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ProductionTaskBatches_1CContractors">
+    <End Role="1CContractors" Type="Self.1CContractors" Multiplicity="0..1" />
+    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CContractors">
+        <PropertyRef Name="1CContractorID" />
+      </Principal>
+      <Dependent Role="ProductionTaskBatches">
+        <PropertyRef Name="1CContractorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ProductionTaskBatches_ProcessModels">
     <End Role="ProcessModels" Type="Self.ProcessModels" Multiplicity="0..1" />
     <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
@@ -2557,6 +2571,10 @@
   <Function Name="CharacteristicLayerNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="CheckProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+    <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="CheckSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
@@ -2633,6 +2651,12 @@
   <Function Name="GetCharacteristicsForPM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="Color" Type="nvarchar" Mode="In" />
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GetCharacteristicsForProdTaskPM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="Color" Type="nvarchar" Mode="In" />
+    <Parameter Name="Buyer" Type="nvarchar" Mode="In" />
     <Parameter Name="PlaceID" Type="int" Mode="In" />
   </Function>
   <Function Name="GetCharPropsDescriptions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -2742,6 +2766,9 @@
     <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="Password" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="UploadDocCloseShiftReportTo1C" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PlaceID" Type="int" Mode="In" />
@@ -2836,6 +2863,7 @@
     [vCharacteristicSGBProperties].[Destination] AS [Destination], 
     [vCharacteristicSGBProperties].[Format] AS [Format], 
     [vCharacteristicSGBProperties].[Color] AS [Color], 
+    [vCharacteristicSGBProperties].[Buyer] AS [Buyer], 
     [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric], 
     [vCharacteristicSGBProperties].[LayerNumberNumeric] AS [LayerNumberNumeric], 
     [vCharacteristicSGBProperties].[CoreDiameterNumeric] AS [CoreDiameterNumeric]
@@ -3300,6 +3328,10 @@
     <AssociationSet Name="FK_ProductGroupPacks_Products" Association="Self.FK_ProductGroupPacks_Products">
       <End Role="Products" EntitySet="Products" />
       <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskBatches_1CContractors" Association="Self.FK_ProductionTaskBatches_1CContractors">
+      <End Role="1CContractors" EntitySet="1CContractors" />
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductionTaskBatches_ProcessModels" Association="Self.FK_ProductionTaskBatches_ProcessModels">
       <End Role="ProcessModels" EntitySet="ProcessModels" />

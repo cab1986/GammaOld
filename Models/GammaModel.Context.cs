@@ -57,7 +57,6 @@ namespace Gamma.Models
         public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
         public virtual DbSet<ProcessModels> ProcessModels { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
-        public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
@@ -101,6 +100,7 @@ namespace Gamma.Models
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
+        public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {
@@ -548,7 +548,20 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchProducts_Result>("GetBatchProducts", productionTaskBatchIDParameter);
         }
     
-        public virtual ObjectResult<GetCharacteristicsForPM_Result> GetCharacteristicsForPM(Nullable<System.Guid> nomenclatureID, string color, Nullable<int> placeID)
+        public virtual ObjectResult<CheckProductionTaskSourceSpools_Result> CheckProductionTaskSourceSpools(Nullable<int> placeID, Nullable<System.Guid> productionTaskID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckProductionTaskSourceSpools_Result>("CheckProductionTaskSourceSpools", placeIDParameter, productionTaskIDParameter);
+        }
+    
+        public virtual ObjectResult<GetCharacteristicsForProdTaskPM_Result> GetCharacteristicsForProdTaskPM(Nullable<System.Guid> nomenclatureID, string color, string buyer, Nullable<int> placeID)
         {
             var nomenclatureIDParameter = nomenclatureID.HasValue ?
                 new ObjectParameter("NomenclatureID", nomenclatureID) :
@@ -558,11 +571,24 @@ namespace Gamma.Models
                 new ObjectParameter("Color", color) :
                 new ObjectParameter("Color", typeof(string));
     
+            var buyerParameter = buyer != null ?
+                new ObjectParameter("Buyer", buyer) :
+                new ObjectParameter("Buyer", typeof(string));
+    
             var placeIDParameter = placeID.HasValue ?
                 new ObjectParameter("PlaceID", placeID) :
                 new ObjectParameter("PlaceID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharacteristicsForPM_Result>("GetCharacteristicsForPM", nomenclatureIDParameter, colorParameter, placeIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharacteristicsForProdTaskPM_Result>("GetCharacteristicsForProdTaskPM", nomenclatureIDParameter, colorParameter, buyerParameter, placeIDParameter);
+        }
+    
+        public virtual int UploadDocCloseShiftReportTo1C(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UploadDocCloseShiftReportTo1C", docIDParameter);
         }
     }
 }

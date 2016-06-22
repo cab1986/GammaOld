@@ -287,7 +287,7 @@
     <NavigationProperty Name="Users" Relationship="Self.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
     <NavigationProperty Name="DocWithdrawal" Relationship="Self.FK_DocWithdrawal_Docs" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="DocCloseShiftDocs" Relationship="Self.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
-    <NavigationProperty Name="Docs2" Relationship="Self.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
+    <NavigationProperty Name="DocCloseShift" Relationship="Self.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
     <NavigationProperty Name="DocCloseShiftWithdrawals" Relationship="GammaModel.DocCloseShiftWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
     <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_Docs" FromRole="Docs" ToRole="DocCloseShiftSamples" />
@@ -371,7 +371,7 @@
     </Key>
     <Property Name="ProcessModelID" Type="Int16" Nullable="false" />
     <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="ProductionTaskBatches" Relationship="Self.FK_ProductionTaskBatches_ProcessModels" FromRole="ProcessModels" ToRole="ProductionTaskBatches" />
+    <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.FK_ProductionTaskBatches_ProcessModels" FromRole="ProcessModels" ToRole="ProductionTaskBatches" />
   </EntityType>
   <EntityType Name="ProductGroupPacks">
     <Key>
@@ -387,23 +387,6 @@
     <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="ProductGroupPacks" ToRole="C1CCharacteristics" />
     <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="ProductGroupPacks" ToRole="C1CNomenclature" />
   </EntityType>
-  <EntityType Name="ProductionTaskBatches">
-    <Key>
-      <PropertyRef Name="ProductionTaskBatchID" />
-    </Key>
-    <Property Name="ProductionTaskBatchID" Type="Guid" Nullable="false" />
-    <Property Name="BatchKindID" Type="Int16" Nullable="false" />
-    <Property Name="ProductionTaskStateID" Type="Byte" Nullable="false" />
-    <Property Name="UserID" Type="Guid" />
-    <Property Name="Number" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Precision="3" />
-    <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-    <Property Name="ProcessModelID" Type="Int16" />
-    <Property Name="PartyControl" Type="Boolean" />
-    <NavigationProperty Name="ProcessModels" Relationship="Self.FK_ProductionTaskBatches_ProcessModels" FromRole="ProductionTaskBatches" ToRole="ProcessModels" />
-    <NavigationProperty Name="ProductionTaskStates" Relationship="Self.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskBatches" ToRole="ProductionTaskStates" />
-    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTaskBatches" ToRole="ProductionTasks" />
-  </EntityType>
   <EntityType Name="ProductionTaskStates">
     <Key>
       <PropertyRef Name="ProductionTaskStateID" />
@@ -411,7 +394,7 @@
     <Property Name="ProductionTaskStateID" Type="Byte" Nullable="false" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="IsActual" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="ProductionTaskBatches" Relationship="Self.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskStates" ToRole="ProductionTaskBatches" />
+    <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskStates" ToRole="ProductionTaskBatches" />
   </EntityType>
   <EntityType Name="ProductionTaskWR">
     <Key>
@@ -916,18 +899,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_ProductionTaskBatches_ProcessModels">
-    <End Role="ProcessModels" Type="Self.ProcessModels" Multiplicity="0..1" />
-    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProcessModels">
-        <PropertyRef Name="ProcessModelID" />
-      </Principal>
-      <Dependent Role="ProductionTaskBatches">
-        <PropertyRef Name="ProcessModelID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_ProductGroupPacks_Products">
     <End Role="Products" Type="Self.Products" Multiplicity="1" />
     <End Role="ProductGroupPacks" Type="Self.ProductGroupPacks" Multiplicity="0..1" />
@@ -937,18 +908,6 @@
       </Principal>
       <Dependent Role="ProductGroupPacks">
         <PropertyRef Name="ProductID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_ProductionTaskBatches_ProductionTaskStates">
-    <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="1" />
-    <End Role="ProductionTaskBatches" Type="Self.ProductionTaskBatches" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ProductionTaskStates">
-        <PropertyRef Name="ProductionTaskStateID" />
-      </Principal>
-      <Dependent Role="ProductionTaskBatches">
-        <PropertyRef Name="ProductionTaskStateID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1095,7 +1054,6 @@
     <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" />
     <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" />
     <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" />
-    <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" />
     <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" />
     <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" />
     <EntitySet Name="ProductKinds" EntityType="Self.ProductKinds" />
@@ -1213,17 +1171,9 @@
       <End Role="Permits" EntitySet="Permits" />
       <End Role="RolePermits" EntitySet="RolePermits" />
     </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskBatches_ProcessModels" Association="Self.FK_ProductionTaskBatches_ProcessModels">
-      <End Role="ProcessModels" EntitySet="ProcessModels" />
-      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
-    </AssociationSet>
     <AssociationSet Name="FK_ProductGroupPacks_Products" Association="Self.FK_ProductGroupPacks_Products">
       <End Role="Products" EntitySet="Products" />
       <End Role="ProductGroupPacks" EntitySet="ProductGroupPacks" />
-    </AssociationSet>
-    <AssociationSet Name="FK_ProductionTaskBatches_ProductionTaskStates" Association="Self.FK_ProductionTaskBatches_ProductionTaskStates">
-      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
-      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
     </AssociationSet>
     <AssociationSet Name="FK_Products_ProductKinds" Association="Self.FK_Products_ProductKinds">
       <End Role="ProductKinds" EntitySet="ProductKinds" />
@@ -1673,10 +1623,6 @@
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
     </AssociationSet>
-    <AssociationSet Name="BatchProductionTasks" Association="GammaModel.BatchProductionTasks">
-      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
-      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
-    </AssociationSet>
     <FunctionImport Name="GetBatchProducts" ReturnType="Collection(GammaModel.GetBatchProducts_Result)">
       <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
     </FunctionImport>
@@ -1706,11 +1652,6 @@
       <End Role="SourceSpools" EntitySet="SourceSpools" />
     </AssociationSet>
     <EntitySet Name="vCharacteristicSGBProperties" EntityType="GammaModel.vCharacteristicSGBProperties" />
-    <FunctionImport Name="GetCharacteristicsForPM" ReturnType="Collection(GammaModel.GetCharacteristicsForPM_Result)">
-      <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
-      <Parameter Name="Color" Mode="In" Type="String" />
-      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
-    </FunctionImport>
     <EntitySet Name="C1CContractors" EntityType="GammaModel.C1CContractors" />
     <EntitySet Name="C1CDocShipmentOrder" EntityType="GammaModel.C1CDocShipmentOrder" />
     <EntitySet Name="C1CDocShipmentOrderGoods" EntityType="GammaModel.C1CDocShipmentOrderGoods" />
@@ -1790,6 +1731,36 @@
       <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
     </AssociationSet>
     <EntitySet Name="vProductsInfo" EntityType="GammaModel.vProductsInfo" />
+    <EntitySet Name="ProductionTaskBatches" EntityType="GammaModel.ProductionTaskBatches" />
+    <AssociationSet Name="FK_ProductionTaskBatches_1CContractors" Association="GammaModel.FK_ProductionTaskBatches_1CContractors">
+      <End Role="C1CContractors" EntitySet="C1CContractors" />
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskBatches_ProcessModels" Association="GammaModel.FK_ProductionTaskBatches_ProcessModels">
+      <End Role="ProcessModels" EntitySet="ProcessModels" />
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductionTaskBatches_ProductionTaskStates" Association="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates">
+      <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+    </AssociationSet>
+    <AssociationSet Name="BatchProductionTasks" Association="GammaModel.BatchProductionTasks">
+      <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+    </AssociationSet>
+    <FunctionImport Name="CheckProductionTaskSourceSpools" ReturnType="Collection(GammaModel.CheckProductionTaskSourceSpools_Result)">
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+      <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+    </FunctionImport>
+    <FunctionImport Name="GetCharacteristicsForProdTaskPM" ReturnType="Collection(GammaModel.GetCharacteristicsForProdTaskPM_Result)">
+      <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
+      <Parameter Name="Color" Mode="In" Type="String" />
+      <Parameter Name="Buyer" Mode="In" Type="String" />
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="UploadDocCloseShiftReportTo1C">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -1831,7 +1802,7 @@
     <Property Type="Guid" Name="ProductID" Nullable="false" />
     <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
     <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-    <Property Type="Int32" Name="Weight" Nullable="false" />
+    <Property Type="Decimal" Name="Weight" Nullable="true" Precision="15" Scale="5" />
     <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
     <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="511" />
   </ComplexType>
@@ -2905,8 +2876,8 @@
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="ProductionTasks" ToRole="Places" />
     <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskRWCutting" />
     <NavigationProperty Name="ProductionTaskWR" Relationship="GammaModel.FK_ProductionTaskWR_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskWR" />
-    <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskBatches" />
     <NavigationProperty Name="ProductionTaskSGB" Relationship="GammaModel.FK_ProductionTaskSGB_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskSGB" />
+    <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskBatches" />
   </EntityType>
   <Association Name="FK_ProductionTasks_1CCharacteristics">
     <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -2983,10 +2954,6 @@
         <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
-  </Association>
-  <Association Name="BatchProductionTasks">
-    <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
-    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="*" />
   </Association>
   <ComplexType Name="GetBatchProducts_Result">
     <Property Type="Guid" Name="DocID" Nullable="false" />
@@ -3108,6 +3075,7 @@
     <Property Name="FormatNumeric" Type="Int32" />
     <Property Name="LayerNumberNumeric" Type="Int32" />
     <Property Name="CoreDiameterNumeric" Type="Int32" />
+    <Property Name="Buyer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
   <ComplexType Name="GetCharacteristicsForPM_Result">
     <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
@@ -3132,6 +3100,7 @@
     <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors" FromRole="C1CContractors" ToRole="C1CDocShipmentOrder" />
     <NavigationProperty Name="C1CDocShipmentOrder1" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors1" FromRole="C1CContractors" ToRole="C1CDocShipmentOrder" />
     <NavigationProperty Name="C1CDocShipmentOrder2" Relationship="GammaModel.FK_1CDocShipmentOrder_1CContractors2" FromRole="C1CContractors" ToRole="C1CDocShipmentOrder" />
+    <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.FK_ProductionTaskBatches_1CContractors" FromRole="C1CContractors" ToRole="ProductionTaskBatches" />
   </EntityType>
   <EntityType Name="C1CDocShipmentOrder">
     <Key>
@@ -3493,4 +3462,71 @@
     <Property Name="IsWrittenOff" Type="Boolean" />
     <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
+  <EntityType Name="ProductionTaskBatches">
+    <Key>
+      <PropertyRef Name="ProductionTaskBatchID" />
+    </Key>
+    <Property Name="ProductionTaskBatchID" Type="Guid" Nullable="false" />
+    <Property Name="BatchKindID" Type="Int16" Nullable="false" />
+    <Property Name="ProductionTaskStateID" Type="Byte" Nullable="false" />
+    <Property Name="C1CContractorID" Type="Guid" />
+    <Property Name="UserID" Type="Guid" />
+    <Property Name="Number" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Precision="3" />
+    <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+    <Property Name="ProcessModelID" Type="Int16" />
+    <Property Name="PartyControl" Type="Boolean" />
+    <NavigationProperty Name="C1CContractors" Relationship="GammaModel.FK_ProductionTaskBatches_1CContractors" FromRole="ProductionTaskBatches" ToRole="C1CContractors" />
+    <NavigationProperty Name="ProcessModels" Relationship="GammaModel.FK_ProductionTaskBatches_ProcessModels" FromRole="ProductionTaskBatches" ToRole="ProcessModels" />
+    <NavigationProperty Name="ProductionTaskStates" Relationship="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskBatches" ToRole="ProductionTaskStates" />
+    <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.BatchProductionTasks" FromRole="ProductionTaskBatches" ToRole="ProductionTasks" />
+  </EntityType>
+  <Association Name="FK_ProductionTaskBatches_1CContractors">
+    <End Type="GammaModel.C1CContractors" Role="C1CContractors" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CContractors">
+        <PropertyRef Name="C1CContractorID" />
+      </Principal>
+      <Dependent Role="ProductionTaskBatches">
+        <PropertyRef Name="C1CContractorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskBatches_ProcessModels">
+    <End Type="GammaModel.ProcessModels" Role="ProcessModels" Multiplicity="0..1" />
+    <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProcessModels">
+        <PropertyRef Name="ProcessModelID" />
+      </Principal>
+      <Dependent Role="ProductionTaskBatches">
+        <PropertyRef Name="ProcessModelID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductionTaskBatches_ProductionTaskStates">
+    <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates" Multiplicity="1" />
+    <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTaskStates">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Principal>
+      <Dependent Role="ProductionTaskBatches">
+        <PropertyRef Name="ProductionTaskStateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="BatchProductionTasks">
+    <End Type="GammaModel.ProductionTaskBatches" Role="ProductionTaskBatches" Multiplicity="*" />
+    <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="*" />
+  </Association>
+  <ComplexType Name="CheckProductionTaskSourceSpools_Result">
+    <Property Type="String" Name="ResultMessage" Nullable="false" MaxLength="255" />
+    <Property Type="Boolean" Name="BlockCreation" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="GetCharacteristicsForProdTaskPM_Result">
+    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+    <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
+  </ComplexType>
 </Schema>

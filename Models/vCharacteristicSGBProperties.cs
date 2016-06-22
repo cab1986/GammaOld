@@ -24,5 +24,6 @@ namespace Gamma.Models
         public Nullable<int> FormatNumeric { get; set; }
         public Nullable<int> LayerNumberNumeric { get; set; }
         public Nullable<int> CoreDiameterNumeric { get; set; }
+        public string Buyer { get; set; }
     }
 }

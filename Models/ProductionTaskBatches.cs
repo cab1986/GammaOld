@@ -23,6 +23,7 @@ namespace Gamma.Models
         public System.Guid ProductionTaskBatchID { get; set; }
         public short BatchKindID { get; set; }
         public byte ProductionTaskStateID { get; set; }
+        public Nullable<System.Guid> C1CContractorID { get; set; }
         public Nullable<System.Guid> UserID { get; set; }
         public string Number { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
@@ -30,6 +31,7 @@ namespace Gamma.Models
         public Nullable<short> ProcessModelID { get; set; }
         public Nullable<bool> PartyControl { get; set; }
     
+        public virtual C1CContractors C1CContractors { get; set; }
         public virtual ProcessModels ProcessModels { get; set; }
         public virtual ProductionTaskStates ProductionTaskStates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

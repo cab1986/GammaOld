@@ -35,7 +35,6 @@
         <EntityTypeShape EntityType="GammaModel.PlaceGroups" Width="1.5" PointX="5.25" PointY="54" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProcessModels" Width="1.5" PointX="12" PointY="72.5" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductGroupPacks" Width="1.5" PointX="23.5" PointY="47.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="GammaModel.ProductionTaskBatches" Width="1.5" PointX="14.25" PointY="72.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskStates" Width="1.5" PointX="12" PointY="74.875" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskWR" Width="1.5" PointX="18.75" PointY="69.25" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductKinds" Width="1.5" PointX="16" PointY="38.375" IsExpanded="true" />
@@ -78,9 +77,7 @@
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_PermitTables_Permits" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_RolePermits_Permits" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProcessModels" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_Products" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Products_ProductKinds" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_ProductPallets_Products1" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_Rests_Products" ManuallyRouted="false" />
@@ -169,7 +166,6 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_Places" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskWR_ProductionTasks" />
-        <AssociationConnector Association="GammaModel.BatchProductionTasks" />
         <EntityTypeShape EntityType="GammaModel.ProductSpools" Width="1.5" PointX="20.5" PointY="42.125" IsExpanded="true" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_1CNomenclature" />
@@ -206,6 +202,11 @@
         <AssociationConnector Association="GammaModel.FK_ActiveOrders_1CDocShipmentOrder" />
         <AssociationConnector Association="GammaModel.FK_ActiveOrders_Persons" />
         <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="GammaModel.ProductionTaskBatches" Width="1.5" PointX="25.25" PointY="56.75" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_1CContractors" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProcessModels" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" />
+        <AssociationConnector Association="GammaModel.BatchProductionTasks" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -21,8 +21,7 @@ namespace Gamma.ViewModels
     {
         /// <summary>
         /// Initializes a new instance of the ProductionTaskPMViewModel class.
-        /// </summary>
-        /// 
+        /// </summary>        
         public ProductionTaskPMViewModel() : base(DB.GammaDb)
         {
             Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.PM).
@@ -141,16 +140,14 @@ namespace Gamma.ViewModels
                                     Name = n.Name,
                                     NomenclatureID = (Guid)n.C1CNomenclatureID
                                 }));
-                        if (SpecificationNomenclature.Count == 0) SpecificationNomenclature = specificationNomenclature;
-                        else
-                        {
-                            SpecificationNomenclature = new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(specificationNomenclature));
-                        }
-                        
+                        SpecificationNomenclature = SpecificationNomenclature.Count == 0 ? specificationNomenclature 
+                            : new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(specificationNomenclature));
                     }
-                    var color = GammaBase.vCharacteristicSGBProperties.FirstOrDefault(
-                        p => p.C1CCharacteristicID == nomenclature.CharacteristicID)?.Color;
-                    if (color != null) Color = color;
+                    var charProperties = GammaBase.vCharacteristicSGBProperties.FirstOrDefault(
+                        p => p.C1CCharacteristicID == nomenclature.CharacteristicID);
+                    if (charProperties == null) continue;
+                    Color = charProperties.Color;
+                    Buyer = charProperties.Buyer;
                 }
                 if (SpecificationNomenclature.Count == 1)
                 {
@@ -184,7 +181,7 @@ namespace Gamma.ViewModels
         private void SetCharacteristics()
         {
             if (NomenclatureID == null) return;
-            Characteristics = new ObservableCollection<Characteristic>(GammaBase.GetCharacteristicsForPM(NomenclatureID, Color??"", PlaceID)
+            Characteristics = new ObservableCollection<Characteristic>(GammaBase.GetCharacteristicsForProdTaskPM(NomenclatureID, Color??"",Buyer??"", PlaceID)
                 .Select(c => new Characteristic()
                 {
                     CharacteristicID = c.C1CCharacteristicID,
@@ -192,7 +189,15 @@ namespace Gamma.ViewModels
                 }));
         }
 
+        /// <summary>
+        /// Цвет для фильтрации характеристик
+        /// </summary>
         private string Color { get; set; }
+
+        /// <summary>
+        /// Контрагент для фильтрации характеристик
+        /// </summary>
+        private string Buyer { get; set; }
 
         /*
         public override ObservableCollection<Characteristic> Characteristics

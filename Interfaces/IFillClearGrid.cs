@@ -4,5 +4,6 @@
     {
         void FillGrid();
         void ClearGrid();
+        bool IsChanged { get; }
     }
 }

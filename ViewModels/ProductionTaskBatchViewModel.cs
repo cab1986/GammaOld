@@ -21,6 +21,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public ProductionTaskBatchViewModel(OpenProductionTaskBatchMessage msg, GammaEntities gammaBase = null): base(gammaBase)
         {
+            Contractors = GammaBase.C1CContractors.Where(c => c.IsBuyer ?? false).ToList();
             ProductionTaskBatchID = msg.ProductionTaskBatchID ?? SqlGuidUtil.NewSequentialid();
             ChangeStateReadOnly = !DB.HaveWriteAccess("ProductionTasks");
             BatchKind = msg.BatchKind;
@@ -78,6 +79,8 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
 
         }
+
+        public override bool IsValid => base.IsValid && (!PartyControl || (PartyControl && ContractorId != null));
 
         private bool IsActive { get; set; } = true;
         /// <summary>
@@ -208,9 +211,21 @@ namespace Gamma.ViewModels
                 ChangeCurrentView(_batchKind);
             }
         }
-        private byte? _processModelid;
+        private byte? _processModelId;
 
         private bool _partyControl;
+
+        /// <summary>
+        /// Идентификатор контрагента
+        /// </summary>
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public Guid? ContractorId { get; set; }
+
+        /// <summary>
+        /// Список контрагентов
+        /// </summary>
+        public List<C1CContractors> Contractors { get; set; }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public bool PartyControl
         {
@@ -229,14 +244,14 @@ namespace Gamma.ViewModels
         {
             get
             {
-                return _processModelid;
+                return _processModelId;
             }
             set
             {
-                _processModelid = value;
+                _processModelId = value;
                 if (CurrentView is IProductionTaskBatch)
                 {
-                    (CurrentView as IProductionTaskBatch).ProcessModelID = _processModelid ?? 0;
+                    (CurrentView as IProductionTaskBatch).ProcessModelID = _processModelId ?? 0;
                 }
             }
         }
@@ -258,6 +273,7 @@ namespace Gamma.ViewModels
             ProductionTaskStateID = productionTaskBatch?.ProductionTaskStateID;
             IsInProduction = ProductionTaskStateID != (byte) ProductionTaskStates.NeedsDecision;
             ProcessModelID = (byte?)productionTaskBatch?.ProcessModelID;
+            ContractorId = productionTaskBatch?.C1CContractorID;
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
         }
@@ -295,6 +311,7 @@ namespace Gamma.ViewModels
             productionTaskBatch.Comment = Comment;
             productionTaskBatch.PartyControl = PartyControl;
             productionTaskBatch.BatchKindID = (short)BatchKind;
+            productionTaskBatch.C1CContractorID = ContractorId;
             gammaBase.SaveChanges();
             CurrentView?.SaveToModel(ProductionTaskBatchID);
         }
@@ -659,6 +676,7 @@ namespace Gamma.ViewModels
         public string Title { get; set; }
         private bool SourceSpoolsCorrect()
         {
+            var dialogResult = MessageBoxResult.None;
             using (var gammaBase = DB.GammaDb)
             {
                 var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
@@ -672,10 +690,28 @@ namespace Gamma.ViewModels
                     MessageBox.Show("В задании не указан раскрой");
                     return false;
                 }
-                var result = DB.CheckSourceSpools(WorkSession.PlaceID, ProductionTaskBatchID);
-                if (string.IsNullOrEmpty(result)) return true;
-                var dialogResult = MessageBox.Show(result, "Проверка исходных тамбуров", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                return dialogResult == MessageBoxResult.Yes;
+                var productionTaskId =
+                    gammaBase.ProductionTasks
+                        .FirstOrDefault(pt => pt.PlaceGroupID == (int) WorkSession.PlaceGroup
+                                                          &&
+                                                          pt.ProductionTaskBatches.Select(p => p.ProductionTaskBatchID)
+                                                              .Contains(ProductionTaskBatchID))?
+                        .ProductionTaskID;
+                var result = gammaBase.CheckProductionTaskSourceSpools(WorkSession.PlaceID, productionTaskId).First();
+                var resultMessage = result.ResultMessage;
+                if (!string.IsNullOrWhiteSpace(resultMessage))
+                {
+                    if (result.BlockCreation)
+                    {
+                        MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        dialogResult = MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    }
+                }
+                return !result.BlockCreation || dialogResult == MessageBoxResult.Yes;
             }
         }
     }

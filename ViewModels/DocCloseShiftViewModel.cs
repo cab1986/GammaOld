@@ -53,11 +53,11 @@ namespace Gamma.ViewModels
                         : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
                     break;
             }
-            if (CurrentViewModelGrid is IFillClearGrid)
+            var grid = CurrentViewModelGrid as IFillClearGrid;
+            if (grid != null)
             {
-                FillGridCommand = new DelegateCommand(((IFillClearGrid) CurrentViewModelGrid).FillGrid, () => !IsConfirmed);
-                ClearGridCommand = new DelegateCommand(((IFillClearGrid) CurrentViewModelGrid).ClearGrid,
-                    () => !IsConfirmed);
+                FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed);
+                ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed);
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
@@ -118,6 +118,9 @@ namespace Gamma.ViewModels
             IsNewDoc = false;
             CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
+            var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;
+            if (currenGridViewModel != null && currenGridViewModel.IsChanged && IsConfirmed)
+                DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);
         }
         private ObservableCollection<BarViewModel> _bars;
         public ObservableCollection<BarViewModel> Bars

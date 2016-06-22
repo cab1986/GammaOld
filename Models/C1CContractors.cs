@@ -20,6 +20,7 @@ namespace Gamma.Models
             this.C1CDocShipmentOrder = new HashSet<C1CDocShipmentOrder>();
             this.C1CDocShipmentOrder1 = new HashSet<C1CDocShipmentOrder>();
             this.C1CDocShipmentOrder2 = new HashSet<C1CDocShipmentOrder>();
+            this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
         }
     
         public System.Guid C1CContractorID { get; set; }
@@ -41,5 +42,7 @@ namespace Gamma.Models
         public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
     }
 }

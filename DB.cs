@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Infrastructure;
@@ -128,6 +129,25 @@ namespace Gamma
                 return new ObservableCollection<string>(GammaDb.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
             }
         }
+
+        public static void UploadDocCloseShiftTo1C(Guid docId, GammaEntities gammaBase = null)
+        {
+            gammaBase = gammaBase ?? GammaDb;
+            try
+            {
+                var docIdParameter = new SqlParameter("DocID", SqlDbType.UniqueIdentifier)
+                {
+                    Value = docId
+                };
+                string sql = $"exec [dbo].[UploadDocCloseShiftReportTo1C] @DocID";
+                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось выгрузить рапорт в 1С");
+            }
+        }
+
         public static void ChangeUserPassword(Guid userid,string password, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? GammaDb;

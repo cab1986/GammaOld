@@ -4,74 +4,95 @@
         <name>DevExpress.XtraPrinting.v15.2</name>
     </assembly>
     <members>
-        <member name="T:DevExpress.XtraPrinting.Preview.RibbonControllerBase">
+        <member name="T:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags">
 
             <summary>
-                <para>Represents the base class for Ribbon Controller classes that embed their specific functionality into the existing <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> object.
-
-
-
+                <para>Enables modifying options in the <b>Print</b> dialog that is provided by the <see cref="T:DevExpress.XtraPrinting.Preview.PrintDialogRunner"/>.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.RibbonControllerBase.BeginInit">
+        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowAllPages">
             <summary>
-                <para>Starts the RibbonControllerBase's initialization. Initialization occurs at runtime.
-
+                <para>Indicates whether the <b>All</b> option button is enabled.
 </para>
             </summary>
 
 
         </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.RibbonControllerBase.EndInit">
+        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowCurrentPage">
             <summary>
-                <para>Ends the RibbonControllerBase's initialization.
-
+                <para>Indicates whether the <b>Current page</b> option button is enabled.
 </para>
             </summary>
 
 
         </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.RibbonControllerBase.Initialize(DevExpress.XtraBars.Ribbon.RibbonControl,DevExpress.XtraBars.Ribbon.RibbonStatusBar)">
+        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowPrintToFile">
             <summary>
-                <para>Performs basic initialization of the created <b>Ribbon Controller</b>, and assigns the specified <b>Ribbon Control</b> and <b>Ribbon Status Bar</b> to it.
-
+                <para>Indicates whether the <b>Print to file</b> check box is enabled.
 </para>
             </summary>
-            <param name="ribbonControl">
-		A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> object, specifying the Ribbon Control to be assigned to the <see cref="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonControl"/> property.
-
-
-            </param>
-            <param name="ribbonStatusBar">
-		A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonStatusBar"/> object, specifying the Ribbon status bar to be assigned to the <see cref="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonStatusBar"/> property.
-
-
-
-            </param>
 
 
         </member>
-        <member name="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonControl">
+        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowSelection">
             <summary>
-                <para>Gets or sets the <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> class instance to which the <b>Ribbon Controller</b> belongs.
-
+                <para>Indicates whether the <b>Selection</b> option button is enabled.
 </para>
             </summary>
-            <value>A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> class instance to which the <b>Ribbon Controller</b> belongs. 
+
+
+        </member>
+        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowSomePages">
+            <summary>
+                <para>Indicates whether the <b>Pages</b> option button is enabled.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="T:DevExpress.XtraPrinting.Preview.PrintDialogRunner">
+
+            <summary>
+                <para>Provides settings to an application's <b>Print</b> dialog.
+</para>
+            </summary>
+
+        </member>
+        <member name="P:DevExpress.XtraPrinting.Preview.PrintDialogRunner.Instance">
+            <summary>
+                <para>Assigns a default <b>Print</b> dialog.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner"/>, or <see cref="T:DevExpress.XtraPrinting.Preview.SystemPrintDialogRunner"/>.
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonStatusBar">
+        <member name="M:DevExpress.XtraPrinting.Preview.PrintDialogRunner.Run(System.Drawing.Printing.PrintDocument,DevExpress.LookAndFeel.UserLookAndFeel,System.Windows.Forms.IWin32Window,DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags)">
             <summary>
-                <para>Gets or sets the <see cref="T:DevExpress.XtraBars.Ribbon.RibbonStatusBar"/> class instance to which the <b>Ribbon Controller</b> belongs.
-
+                <para>Invokes a specified <b>Print</b> dialog.
 </para>
             </summary>
-            <value>A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonStatusBar"/> class instance to which the <b>Ribbon Controller</b> belongs. 
-</value>
+            <param name="document">
+		A <see cref="T:System.Drawing.Printing.PrintDocument"/>.
+
+            </param>
+            <param name="lookAndFeel">
+		A <see cref="T:DevExpress.LookAndFeel.UserLookAndFeel"/>.
+
+            </param>
+            <param name="owner">
+		An object implementing the <see cref="T:System.Windows.Forms.IWin32Window"/> interface that is the dialog owner.
+
+            </param>
+            <param name="flags">
+		A <see cref="T:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags"/> enumeration value that enables editing of specific settings in the invoked dialog.
+
+            </param>
+            <returns>A <see cref="T:System.Windows.Forms.DialogResult"/> enumeration value that specifies identifiers to indicate the return value of a dialog box.
+</returns>
 
 
         </member>
@@ -208,6 +229,13 @@
 		A <see cref="T:System.String"/> value, specifying the printer name. 
 
             </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrintingLinks.DataGridLink.Print">
+            <summary>
+                <para> </para>
+            </summary>
 
 
         </member>
@@ -433,6 +461,13 @@
 		A <see cref="T:System.String"/> value, specifying the printer name. 
 
             </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrintingLinks.RichTextBoxLink.Print">
+            <summary>
+                <para> </para>
+            </summary>
 
 
         </member>
@@ -672,6 +707,13 @@
 
 
         </member>
+        <member name="M:DevExpress.XtraPrintingLinks.CompositeLink.Print">
+            <summary>
+                <para> </para>
+            </summary>
+
+
+        </member>
         <member name="M:DevExpress.XtraPrintingLinks.CompositeLink.PrintDlg">
             <summary>
                 <para>Displays the standard <b>Print</b> dialog and prints the current document. 
@@ -898,6 +940,13 @@
 
 
         </member>
+        <member name="M:DevExpress.XtraPrintingLinks.TreeViewLink.Print">
+            <summary>
+                <para> </para>
+            </summary>
+
+
+        </member>
         <member name="M:DevExpress.XtraPrintingLinks.TreeViewLink.PrintDlg">
             <summary>
                 <para>Displays the standard <b>Print</b> dialog and prints the current document. 
@@ -1108,6 +1157,13 @@
 		A <see cref="T:System.String"/> value, specifying the printer name. 
 
             </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrintingLinks.ListViewLink.Print">
+            <summary>
+                <para> </para>
+            </summary>
 
 
         </member>
@@ -1350,7 +1406,7 @@
 
 </para>
             </summary>
-            <value>An object of the <see cref="T:System.Collections.Generic.IEnumerable"/> generic type, representing a collection of Ribbon pages.
+            <value>An object of the <see cref="T:System.Collections.Generic.IEnumerable"/>&#60;T&#62; generic type, representing a collection of Ribbon pages.
 </value>
 
 
@@ -1374,6 +1430,95 @@
 
 </para>
             </summary>
+
+
+        </member>
+        <member name="T:DevExpress.XtraPrinting.Preview.RibbonImageCollection">
+
+            <summary>
+                <para>Represents the collection of images used in the Ribbon UI.
+
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.RibbonImageCollection.#ctor">
+            <summary>
+                <para>Initializes a new instance of the RibbonImageCollection class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.RibbonImageCollection.GetImage(System.String)">
+            <summary>
+                <para>Gets the specified image from the collection.
+</para>
+            </summary>
+            <param name="name">
+		A <see cref="T:System.String"/> value specifying the image name.
+
+            </param>
+            <returns>An <see cref="T:System.Drawing.Image"/> object.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.RibbonImageCollection.SetImage(System.String,System.Drawing.Image)">
+            <summary>
+                <para>Sets the specified image in the collection.
+</para>
+            </summary>
+            <param name="name">
+		A <see cref="T:System.String"/> value specifying the image name.
+
+            </param>
+            <param name="value">
+		An <see cref="T:System.Drawing.Image"/> object.
+
+            </param>
+
+
+        </member>
+        <member name="T:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner">
+
+            <summary>
+                <para>Specifies a <b>Print</b> dialog to select a printer, specify the print options (number of copies, page range, and paper source) and print the document.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner.#ctor">
+            <summary>
+                <para>Initializes a new instance of the DefaultPrintDialogRunner class with default settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner.Run(System.Drawing.Printing.PrintDocument,DevExpress.LookAndFeel.UserLookAndFeel,System.Windows.Forms.IWin32Window,DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags)">
+            <summary>
+                <para>Invokes a customized <b>Print</b> dialog.
+</para>
+            </summary>
+            <param name="document">
+		A <see cref="T:System.Drawing.Printing.PrintDocument"/>.
+
+            </param>
+            <param name="lookAndFeel">
+		A <see cref="T:DevExpress.LookAndFeel.UserLookAndFeel"/>.
+
+            </param>
+            <param name="owner">
+		An object implementing the <see cref="T:System.Windows.Forms.IWin32Window"/> interface that is the dialog owner.
+
+            </param>
+            <param name="flags">
+		A <see cref="T:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags"/> enumeration value that enables editing of specific settings in the invoked dialog.
+
+            </param>
+            <returns>A <see cref="T:System.Windows.Forms.DialogResult"/> enumeration value that specifies identifiers to indicate the return value of a dialog box.
+</returns>
 
 
         </member>
@@ -1735,53 +1880,6 @@
             </param>
             <param name="lookAndFeel">
 		A <see cref="T:DevExpress.LookAndFeel.UserLookAndFeel"/> object, specifying the look-and-feel settings applied to the Ribbon Print Preview form.
-
-            </param>
-
-
-        </member>
-        <member name="T:DevExpress.XtraPrinting.Preview.RibbonImageCollection">
-
-            <summary>
-                <para>Represents the collection of images used in the Ribbon UI.
-
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.RibbonImageCollection.#ctor">
-            <summary>
-                <para>Initializes a new instance of the RibbonImageCollection class.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.RibbonImageCollection.GetImage(System.String)">
-            <summary>
-                <para>Gets the specified image from the collection.
-</para>
-            </summary>
-            <param name="name">
-		A <see cref="T:System.String"/> value specifying the image name.
-
-            </param>
-            <returns>An <see cref="T:System.Drawing.Image"/> object.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.RibbonImageCollection.SetImage(System.String,System.Drawing.Image)">
-            <summary>
-                <para>Sets the specified image in the collection.
-</para>
-            </summary>
-            <param name="name">
-		A <see cref="T:System.String"/> value specifying the image name.
-
-            </param>
-            <param name="value">
-		An <see cref="T:System.Drawing.Image"/> object.
 
             </param>
 
@@ -2280,51 +2378,100 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags">
+        <member name="T:DevExpress.XtraPrinting.Preview.PageSetupEditorForm">
 
             <summary>
-                <para>Enables modifying options in the <b>Print</b> dialog that is provided by the <see cref="T:DevExpress.XtraPrinting.Preview.PrintDialogRunner"/>.
+                <para>A customized <b>Page Setup</b> dialog that reflects the application's current Look And Feel settings.
 </para>
             </summary>
 
         </member>
-        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowAllPages">
+        <member name="M:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.#ctor">
             <summary>
-                <para>Indicates whether the <b>All</b> option button is enabled.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowCurrentPage">
-            <summary>
-                <para>Indicates whether the <b>Current page</b> option button is enabled.
+                <para>Initializes a new instance of the PageSetupEditorForm class with default settings.
 </para>
             </summary>
 
 
         </member>
-        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowPrintToFile">
+        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.IsMetric">
             <summary>
-                <para>Indicates whether the <b>Print to file</b> check box is enabled.
+                <para>Specifies whether the editor values in the <b>Page Setup</b> dialog use the imperial or metric system of measurement.
+
 </para>
             </summary>
+            <value><b>true</b> if the editor values are calculated in millimeters; <b>false</b> if the editor values are calculated in inches.
+</value>
 
 
         </member>
-        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowSelection">
+        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.Landscape">
             <summary>
-                <para>Indicates whether the <b>Selection</b> option button is enabled.
-</para>
+                <para> </para>
             </summary>
+            <value> </value>
 
 
         </member>
-        <member name="F:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags.AllowSomePages">
+        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.MarginsF">
             <summary>
-                <para>Indicates whether the <b>Pages</b> option button is enabled.
-</para>
+                <para> </para>
             </summary>
+            <value> </value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.MinMarginsF">
+            <summary>
+                <para> </para>
+            </summary>
+            <value> </value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.PaperSize">
+            <summary>
+                <para> </para>
+            </summary>
+            <value> </value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.SetupBaseProperties(System.Boolean,DevExpress.XtraPrinting.Native.MarginsF,DevExpress.XtraPrinting.Native.MarginsF,System.Drawing.Size,System.Drawing.Printing.PaperKind)">
+            <summary>
+                <para> </para>
+            </summary>
+            <param name="landscape">
+		 
+            </param>
+            <param name="marginsF">
+		 
+            </param>
+            <param name="minMarginsF">
+		 
+            </param>
+            <param name="pageSize">
+		 
+            </param>
+            <param name="paperKind">
+		 
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.SetupPaperSizes(System.Drawing.Printing.PaperSizeCollection,System.Drawing.Size,System.Drawing.Printing.PaperKind)">
+            <summary>
+                <para> </para>
+            </summary>
+            <param name="paperSizes">
+		 
+            </param>
+            <param name="pageSize">
+		 
+            </param>
+            <param name="paperKind">
+		 
+            </param>
 
 
         </member>
@@ -2367,128 +2514,6 @@
             </param>
             <returns>A <see cref="T:System.Windows.Forms.DialogResult"/> enumeration value that specifies identifiers to indicate the return value of a dialog box.
 </returns>
-
-
-        </member>
-        <member name="T:DevExpress.XtraPrinting.Preview.PrintDialogRunner">
-
-            <summary>
-                <para>Provides settings to an application's <b>Print</b> dialog.
-</para>
-            </summary>
-
-        </member>
-        <member name="P:DevExpress.XtraPrinting.Preview.PrintDialogRunner.Instance">
-            <summary>
-                <para>Assigns a default <b>Print</b> dialog.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner"/>, or <see cref="T:DevExpress.XtraPrinting.Preview.SystemPrintDialogRunner"/>.
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.PrintDialogRunner.Run(System.Drawing.Printing.PrintDocument,DevExpress.LookAndFeel.UserLookAndFeel,System.Windows.Forms.IWin32Window,DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags)">
-            <summary>
-                <para>Invokes a specified <b>Print</b> dialog.
-</para>
-            </summary>
-            <param name="document">
-		A <see cref="T:System.Drawing.Printing.PrintDocument"/>.
-
-            </param>
-            <param name="lookAndFeel">
-		A <see cref="T:DevExpress.LookAndFeel.UserLookAndFeel"/>.
-
-            </param>
-            <param name="owner">
-		An object implementing the <see cref="T:System.Windows.Forms.IWin32Window"/> interface that is the dialog owner.
-
-            </param>
-            <param name="flags">
-		A <see cref="T:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags"/> enumeration value that enables editing of specific settings in the invoked dialog.
-
-            </param>
-            <returns>A <see cref="T:System.Windows.Forms.DialogResult"/> enumeration value that specifies identifiers to indicate the return value of a dialog box.
-</returns>
-
-
-        </member>
-        <member name="T:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner">
-
-            <summary>
-                <para>Specifies a <b>Print</b> dialog to select a printer, specify the print options (number of copies, page range, and paper source) and print the document.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner.#ctor">
-            <summary>
-                <para>Initializes a new instance of the DefaultPrintDialogRunner class with default settings.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.DefaultPrintDialogRunner.Run(System.Drawing.Printing.PrintDocument,DevExpress.LookAndFeel.UserLookAndFeel,System.Windows.Forms.IWin32Window,DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags)">
-            <summary>
-                <para>Invokes a customized <b>Print</b> dialog.
-</para>
-            </summary>
-            <param name="document">
-		A <see cref="T:System.Drawing.Printing.PrintDocument"/>.
-
-            </param>
-            <param name="lookAndFeel">
-		A <see cref="T:DevExpress.LookAndFeel.UserLookAndFeel"/>.
-
-            </param>
-            <param name="owner">
-		An object implementing the <see cref="T:System.Windows.Forms.IWin32Window"/> interface that is the dialog owner.
-
-            </param>
-            <param name="flags">
-		A <see cref="T:DevExpress.XtraPrinting.Preview.PrintDialogAllowFlags"/> enumeration value that enables editing of specific settings in the invoked dialog.
-
-            </param>
-            <returns>A <see cref="T:System.Windows.Forms.DialogResult"/> enumeration value that specifies identifiers to indicate the return value of a dialog box.
-</returns>
-
-
-        </member>
-        <member name="T:DevExpress.XtraPrinting.Preview.PageSetupEditorForm">
-
-            <summary>
-                <para>A customized <b>Page Setup</b> dialog that reflects the application's current Look And Feel settings.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.#ctor">
-            <summary>
-                <para>Initializes a new instance of the PageSetupEditorForm class with default settings.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.IsMetric">
-            <summary>
-                <para>Specifies whether the editor values in the <b>Page Setup</b> dialog use imperial or metric system of measurement.
-</para>
-            </summary>
-            <value><b>true</b> if the editor values are calculated in millimeters; <b>false</b> if the editor values are calculated in inches.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraPrinting.Preview.PageSetupEditorForm.PageSettings">
-            <summary>
-                <para>Specifies the settings of a printed document page.
-</para>
-            </summary>
-            <value>A <see cref="T:System.Drawing.Printing.PageSettings"/> object.
-</value>
 
 
         </member>
@@ -2759,6 +2784,13 @@
 
 
         </member>
+        <member name="M:DevExpress.XtraPrinting.PrintableComponentLink.Print">
+            <summary>
+                <para> </para>
+            </summary>
+
+
+        </member>
         <member name="M:DevExpress.XtraPrinting.PrintableComponentLink.PrintDlg">
             <summary>
                 <para>Displays the standard <b>Print</b> dialog and prints the current document. 
@@ -2963,6 +2995,77 @@
 </para>
             </summary>
             <value>A <see cref="T:System.Drawing.Printing.PageSettings"/> object representing the current page settings.
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraPrinting.Preview.RibbonControllerBase">
+
+            <summary>
+                <para>Represents the base class for Ribbon Controller classes that embed their specific functionality into the existing <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> object.
+
+
+
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.RibbonControllerBase.BeginInit">
+            <summary>
+                <para>Starts the RibbonControllerBase's initialization. Initialization occurs at runtime.
+
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.RibbonControllerBase.EndInit">
+            <summary>
+                <para>Ends the RibbonControllerBase's initialization.
+
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Preview.RibbonControllerBase.Initialize(DevExpress.XtraBars.Ribbon.RibbonControl,DevExpress.XtraBars.Ribbon.RibbonStatusBar)">
+            <summary>
+                <para>Performs basic initialization of the created <b>Ribbon Controller</b>, and assigns the specified <b>Ribbon Control</b> and <b>Ribbon Status Bar</b> to it.
+
+</para>
+            </summary>
+            <param name="ribbonControl">
+		A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> object, specifying the Ribbon Control to be assigned to the <see cref="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonControl"/> property.
+
+
+            </param>
+            <param name="ribbonStatusBar">
+		A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonStatusBar"/> object, specifying the Ribbon status bar to be assigned to the <see cref="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonStatusBar"/> property.
+
+
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonControl">
+            <summary>
+                <para>Gets or sets the <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> class instance to which the <b>Ribbon Controller</b> belongs.
+
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonControl"/> class instance to which the <b>Ribbon Controller</b> belongs. 
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraPrinting.Preview.RibbonControllerBase.RibbonStatusBar">
+            <summary>
+                <para>Gets or sets the <see cref="T:DevExpress.XtraBars.Ribbon.RibbonStatusBar"/> class instance to which the <b>Ribbon Controller</b> belongs.
+
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraBars.Ribbon.RibbonStatusBar"/> class instance to which the <b>Ribbon Controller</b> belongs. 
 </value>
 
 
@@ -3623,6 +3726,13 @@
 		A <see cref="T:System.String"/> representing the name of the printer on which to print the document. 
 
             </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraPrinting.Link.Print">
+            <summary>
+                <para> </para>
+            </summary>
 
 
         </member>

@@ -1,7 +1,5 @@
 ﻿<UserControl
-        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,14 +8,13 @@
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
         xmlns:g="clr-namespace:Gamma"
-        xmlns:gc="clr-namespace:Gamma.Common"
-        xmlns:v="clr-namespace:Gamma.Views"
+    xmlns:v="clr-namespace:Gamma.Views"
         xmlns:vm="clr-namespace:Gamma.ViewModels"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
-        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
         x:Class="Gamma.Views.ProductionTaskBatchView"
-        mc:Ignorable="d ignore" d:DesignHeight="900" d:DesignWidth="1200">
+        mc:Ignorable="d ignore" d:DesignHeight="900" d:DesignWidth="1200"
+        d:DataContext="{d:DesignInstance Type=vm:ProductionTaskBatchViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type vm:ProductionTaskBatchSGBViewModel}">
             <v:ProductionTaskBatchSGBView/>
@@ -57,11 +54,14 @@
                                                       DisplayMember="Value" ValueMember="Key"  AllowNullInput="True">
                                     </dxe:ComboBoxEdit>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Контроль партии">
-                                    <dxe:CheckEdit EditValue="{Binding PartyControl}" />
+                                <dxlc:LayoutItem Label="Контроль партии" Visibility="Collapsed">
+                                    <dxe:CheckEdit EditValue="{Binding PartyControl}" x:Name="PartyControlCheck"/>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Причина контроля" Visibility="Collapsed">
-                                    <dxe:ComboBoxEdit />
+                                <dxlc:LayoutItem Label="Контрагент" LabelPosition="Top" Visibility="Collapsed">
+                                    <dxe:ComboBoxEdit IsEnabled="{Binding ElementName=PartyControlCheck, Path=IsChecked}"
+                                                      EditValue="{Binding ContractorId, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Contractors}" DisplayMember="Description" ValueMember="C1CContractorID"
+                                                      FindMode="Always" ImmediatePopup="True" AllowNullInput="True" AssignNullValueOnClearingEditText="True" FilterCondition="Contains" 
+                                                      FindButtonPlacement="None" IncrementalFiltering="True" IncrementalSearch="False" ValidateOnTextInput="False"/>
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                             <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Auto">

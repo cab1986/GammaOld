@@ -254,6 +254,375 @@
 
 
         </member>
+        <member name="T:DevExpress.Xpf.DocumentViewer.DocumentMapCommands">
+
+            <summary>
+                <para>Provides access to document map commands.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.#ctor">
+            <summary>
+                <para>Initializes a new instance of a DocumentMapCommands class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.CanExecuteCollapseTopLevelNodesCommand(DevExpress.Xpf.Grid.TreeListView,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+                <para> </para>
+            </summary>
+            <param name="d">
+		 
+            </param>
+            <param name="e">
+		 
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.CanExecuteExpandTopLevelNodesCommand(DevExpress.Xpf.Grid.TreeListView,System.Windows.Input.CanExecuteRoutedEventArgs)">
+            <summary>
+                <para> </para>
+            </summary>
+            <param name="d">
+		 
+            </param>
+            <param name="e">
+		 
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.CollapseTopLevelNodesCommand">
+            <summary>
+                <para>Returns a command that collapses top-level nodes of the Document Map.
+</para>
+            </summary>
+            <value>An object implementing the <see cref="T:System.Windows.Input.ICommand"/> interface that defines the command.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.ExecuteGoToNodeCommand(System.Windows.FrameworkElement,System.Windows.Input.ExecutedRoutedEventArgs)">
+            <summary>
+                <para>Executes the <see cref="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.GoToNodeCommand"/> command.
+</para>
+            </summary>
+            <param name="d">
+		 
+
+            </param>
+            <param name="e">
+		 
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.ExpandCurrentNodeCommand">
+            <summary>
+                <para>Returns a command that expands the currently selected node of the Document Map.
+</para>
+            </summary>
+            <value>An object implementing the <see cref="T:System.Windows.Input.ICommand"/> interface that defines the command.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.ExpandTopLevelNodesCommand">
+            <summary>
+                <para>Returns a command that expands top-level nodes of the Document Map.
+</para>
+            </summary>
+            <value>An object implementing the <see cref="T:System.Windows.Input.ICommand"/> interface that defines the command.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.GoToNodeCommand">
+            <summary>
+                <para>Returns a command that navigates to a document element corresponding to the selected Document Map's node.
+</para>
+            </summary>
+            <value>An object implementing the <see cref="T:System.Windows.Input.ICommand"/> interface that defines the command.
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.Xpf.DocumentViewer.DocumentMapSettings">
+
+            <summary>
+                <para>Provides access to document map settings.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.#ctor">
+            <summary>
+                <para>Initializes a new instance of a DocumentMapSettings class with the default settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.ActualHideAfterUse">
+            <summary>
+                <para>Gets the actual value of the Document Map visibility after using it for navigation purposes.
+</para>
+            </summary>
+            <value><b>true</b>, if the Document Map is hidden after using it; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.ActualHideAfterUseProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> 
+</returns>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.GoToCommand">
+            <summary>
+                <para>Returns a command that navigates to a document element corresponding to the selected bookmark.
+</para>
+            </summary>
+            <value>An object implementing the <see cref="T:System.Windows.Input.ICommand"/> interface that defines the command.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.HideAfterUse">
+            <summary>
+                <para>Gets or sets a value that specifies whether the Document Map should be hidden after using it for navigation purposes. This is a dependency property.
+</para>
+            </summary>
+            <value>
+<b>true</b>, to hide the Document Map after using it for navigation purposes; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.HideAfterUseProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> 
+</returns>
+
+
+        </member>
+        <member name="E:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.Invalidate">
+            <summary>
+                <para>Fires after any modifications in the Document Map are made by changing Document Map settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.Source">
+            <summary>
+                <para>Gets a collection of the Document Map's items. This is a dependency property.
+</para>
+            </summary>
+            <value>A source of objects represented as items in the Document Map.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.UpdateProperties">
+            <summary>
+                <para>Updates the properties of the Document Map.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.WrapLongLines">
+            <summary>
+                <para>Gets or sets a value that specifies whether long lines should be wrapped in the Document Map. This is a dependency property.
+</para>
+            </summary>
+            <value>A <see cref="Nullable&lt;Boolean&gt;"/> object that specifies whether to wrap long lines in the Document Map.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.WrapLongLinesProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="T:DevExpress.Xpf.DocumentViewer.DocumentMapControl">
+
+            <summary>
+                <para>Represents the Document Map Control.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapControl.#ctor">
+            <summary>
+                <para>Initializes a new instance of a DocumentMapControl class with the default settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSettings">
+            <summary>
+                <para>Provides access to the actual Document Map settings. 
+
+</para>
+            </summary>
+            <value>An object that specifies the actual Document Map settings.
+
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSettingsProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSource">
+            <summary>
+                <para>Gets an actual collection of the DocumentMapControl's items. This is a dependency property.
+</para>
+            </summary>
+            <value>A source of objects represented as items in the Document Map.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSourceProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HideAfterUse">
+            <summary>
+                <para>Gets or sets a value that specifies whether the Document Map should be hidden after using it for navigation purposes.
+</para>
+            </summary>
+            <value><b>true</b>, to hide the Document Map after using it for navigation purposes; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HideAfterUseProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HighlightedItem">
+            <summary>
+                <para>Gets the Document Map's currently highlighted item. This is a dependency property.
+</para>
+            </summary>
+            <value>An object that specifies the currently highlighted item.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HighlightedItemProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapControl.OnApplyTemplate">
+            <summary>
+                <para>Called after the template is completely generated and attached to the visual tree.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.Settings">
+            <summary>
+                <para>Provides access to Document Map settings.
+</para>
+            </summary>
+            <value>An object that specifies Document Map settings.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.SettingsProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.TreeViewStyle">
+            <summary>
+                <para>Gets or sets a style applied to the Document Map's tree view. This is a dependency property.
+</para>
+            </summary>
+            <value>A Style object providing corresponding style settings.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.TreeViewStyleProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.WrapLongLines">
+            <summary>
+                <para>Gets or sets a value that specifies whether long lines should be wrapped in the Document Map. This is a dependency property.
+</para>
+            </summary>
+            <value><b>true</b>, to wrap long lines; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.WrapLongLinesProperty">
+            <summary>
+                <para>Identifies the  dependency property.
+</para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
         <member name="T:DevExpress.Xpf.DocumentViewer.DocumentViewerControl">
 
             <summary>
@@ -329,7 +698,8 @@
         </member>
         <member name="P:DevExpress.Xpf.DocumentViewer.DocumentViewerControl.ActualDocumentMapSettings">
             <summary>
-                <para>Provides access to actual settings of the document map, which reflects the document structure in a tree-like form. 
+                <para>Provides access to the actual settings of the document map, which reflects the document structure in a tree-like form. 
+
 </para>
             </summary>
             <value>An object that specifies document map settings.
@@ -476,7 +846,7 @@
         </member>
         <member name="P:DevExpress.Xpf.DocumentViewer.DocumentViewerControl.CommandProvider">
             <summary>
-                <para>Specifies a document viewer's command provider. This is a dependency property.
+                <para>Specifies a Document Viewer's command provider. This is a dependency property.
 </para>
             </summary>
             <value>A <see cref="CommandProvider"/> object.
@@ -1109,338 +1479,6 @@
             </summary>
             <value>An object implementing the <see cref="T:System.Windows.Input.ICommand"/> interface that defines the command.
 </value>
-
-
-        </member>
-        <member name="T:DevExpress.Xpf.DocumentViewer.DocumentMapCommands">
-
-            <summary>
-                <para>Provides access to document map commands.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.#ctor">
-            <summary>
-                <para>Initializes a new instance of a DocumentMapCommands class.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.CanExecuteCollapseTopLevelNodesCommand(DevExpress.Xpf.Grid.TreeListView,System.Windows.Input.CanExecuteRoutedEventArgs)">
-            <summary>
-                <para> </para>
-            </summary>
-            <param name="d">
-		 
-            </param>
-            <param name="e">
-		 
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.CanExecuteExpandTopLevelNodesCommand(DevExpress.Xpf.Grid.TreeListView,System.Windows.Input.CanExecuteRoutedEventArgs)">
-            <summary>
-                <para> </para>
-            </summary>
-            <param name="d">
-		 
-            </param>
-            <param name="e">
-		 
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.CollapseTopLevelNodesCommand">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.ExecuteGoToNodeCommand(System.Windows.FrameworkElement,System.Windows.Input.ExecutedRoutedEventArgs)">
-            <summary>
-                <para> </para>
-            </summary>
-            <param name="d">
-		 
-            </param>
-            <param name="e">
-		 
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.ExpandCurrentNodeCommand">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.ExpandTopLevelNodesCommand">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapCommands.GoToNodeCommand">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="T:DevExpress.Xpf.DocumentViewer.DocumentMapSettings">
-
-            <summary>
-                <para>Provides access to document map settings.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.#ctor">
-            <summary>
-                <para>Initializes a new instance of a DocumentMapSettings class with the default settings.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.ActualHideAfterUse">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.ActualHideAfterUseProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> 
-</returns>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.GoToCommand">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.HideAfterUse">
-            <summary>
-                <para>
-This is a dependency property.
-</para>
-            </summary>
-            <value>
-</value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.HideAfterUseProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> 
-</returns>
-
-
-        </member>
-        <member name="E:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.Invalidate">
-            <summary>
-                <para> </para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.Source">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.UpdateProperties">
-            <summary>
-                <para> </para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.WrapLongLines">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapSettings.WrapLongLinesProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="T:DevExpress.Xpf.DocumentViewer.DocumentMapControl">
-
-            <summary>
-                <para>Represents the Document Map Control.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapControl.#ctor">
-            <summary>
-                <para>Initializes a new instance of a DocumentMapControl class with the default settings.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSettings">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSettingsProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSource">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.ActualSourceProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HideAfterUse">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HideAfterUseProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HighlightedItem">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.HighlightedItemProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="M:DevExpress.Xpf.DocumentViewer.DocumentMapControl.OnApplyTemplate">
-            <summary>
-                <para>Called after the template is completely generated and attached to the visual tree.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.Settings">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.SettingsProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.TreeViewStyle">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.TreeViewStyleProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="P:DevExpress.Xpf.DocumentViewer.DocumentMapControl.WrapLongLines">
-            <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="F:DevExpress.Xpf.DocumentViewer.DocumentMapControl.WrapLongLinesProperty">
-            <summary>
-                <para>Identifies the  dependency property.
-</para>
-            </summary>
-            <returns> </returns>
 
 
         </member>

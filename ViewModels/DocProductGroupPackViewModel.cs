@@ -198,7 +198,7 @@ namespace Gamma.ViewModels
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
                                  Weight = p.Quantity ?? 0,
-                                 Number = string.Format("{0} от {1}", p.Number, p.Date)
+                                 Number = $"{p.Number} от {p.Date}"
                              };
             AddSpoolIfCorrect(spool);
         }
@@ -221,17 +221,14 @@ namespace Gamma.ViewModels
                 {
                     MessageBox.Show("Нельзя упаковывать рулоны с разных переделов",
                         "Рулон другого передела", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    return;
                 }
-                if (spool.NomenclatureID != NomenclatureID || spool.CharacteristicID != CharacteristicID)
+                else if (spool.NomenclatureID != NomenclatureID || spool.CharacteristicID != CharacteristicID)
                 {
-                    MessageBox.Show("Номенклатура тамбура не совпадает с номенклатурой ГУ");
-                    return;
+                    MessageBox.Show("Номенклатура рулона не совпадает с номенклатурой ГУ");
                 }
-                if (Spools.Select(s => s.ProductID).Contains(spool.ProductID))
+                else if (Spools.Select(s => s.ProductID).Contains(spool.ProductID))
                 {
                     MessageBox.Show("Данный рулон уже занесен");
-                    return;
                 }
                 else
                 {

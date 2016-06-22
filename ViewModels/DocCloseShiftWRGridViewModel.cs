@@ -81,11 +81,16 @@ namespace Gamma.ViewModels
                     );
                 }
             }
+            IsChanged = true;
         }
+
+        public bool IsChanged { get; private set; }
+
         public void ClearGrid()
         {
             DocCloseShiftDocs.Clear();
             GroupPacks.Clear();
+            IsChanged = true;
         }
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {

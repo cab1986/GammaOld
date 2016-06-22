@@ -4,6 +4,95 @@
         <name>DevExpress.XtraTreeList.v15.2</name>
     </assembly>
     <members>
+        <member name="T:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop">
+
+            <summary>
+                <para>Contains options that control node drag-and-drop functionality.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.#ctor">
+            <summary>
+                <para>Initializes a new instance of the TreeListOptionsDragAndDrop class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.AcceptOuterNodes">
+            <summary>
+                <para>Gets or sets whether the current TreeList accepts nodes being dragged from another TreeList control.
+</para>
+            </summary>
+            <value><b>true</b>, if the current TreeList accepts nodes being dragged from another TreeList control; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.Assign(DevExpress.Utils.Controls.BaseOptions)">
+            <summary>
+                <para>Copies settings of the specified object to the current object.
+</para>
+            </summary>
+            <param name="options">
+		An object whose settings are copied to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.CanCloneNodesOnDrop">
+            <summary>
+                <para>Gets or sets whether end-users are allowed to clone nodes using drag-and-drop. 
+</para>
+            </summary>
+            <value><b>true</b>, to allow end-users to clone nodes using drag-and-drop; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.DragNodesExpandDelay">
+            <summary>
+                <para>Gets or sets the amount of time (in milliseconds) before the node is expanded when another node is dragged over it.
+</para>
+            </summary>
+            <value>An integer value specifying the delay (in milliseconds) from the time a dragged node begins hovering over a collapsed node to the time that the node is expanded.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.DragNodesMode">
+            <summary>
+                <para>Gets or sets whether single or multiple nodes can be dragged simultaneously, or whether the drag-and-drop functionality is disabled.
+
+</para>
+            </summary>
+            <value>Nodes drag-and-drop mode.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.DropNodesMode">
+            <summary>
+                <para>Gets or sets whether the SHIFT key needs to be pressed to insert a node before another node.
+</para>
+            </summary>
+            <value><b>true</b>, if the SHIFT key needs to be pressed to insert a node before another node; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.ExpandNodeOnDrag">
+            <summary>
+                <para>Gets or sets whether collapsed nodes are automatically expanded when the node currently being dragged is hovered over them.
+</para>
+            </summary>
+            <value><b>true</b>, if collapsed nodes are automatically expanded when a dragged node is hovered over them; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
         <member name="T:DevExpress.XtraTreeList.Localization.TreeListLocalizer">
 
             <summary>
@@ -48,6 +137,342 @@
             </summary>
             <returns>A <see cref="T:DevExpress.Utils.Localization.XtraLocalizer`1"/> object, which provides resources based on the thread's culture.
 </returns>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.TreeListOptionsFilter">
+
+            <summary>
+                <para>Provides filtering options for the <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsFilter.#ctor">
+            <summary>
+                <para>Initializes a new instance of the TreeListOptionsFilter class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.AllowColumnMRUFilterList">
+            <summary>
+                <para>Gets or sets whether recently used filter items are displayed in the Column's Filter DropDown.
+</para>
+            </summary>
+            <value><b>true</b> if the columns' filter dropdown lists can display recently used filter items; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.AllowFilterEditor">
+            <summary>
+                <para>Gets or sets whether the Filter Editor can be used to build complex filter criteria.
+</para>
+            </summary>
+            <value><b>true</b> to allow using the <b>Filter Editor</b>; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.AllowMRUFilterList">
+            <summary>
+                <para>Gets or sets whether the TreeList's MRU Filter List is enabled.
+</para>
+            </summary>
+            <value><b>true</b> if the MRU Filter List is enabled; otherwise <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsFilter.Assign(DevExpress.Utils.Controls.BaseOptions)">
+            <summary>
+                <para>Copies all the settings from the options object passed as the parameter.
+</para>
+            </summary>
+            <param name="options">
+		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.ColumnFilterPopupRowCount">
+            <summary>
+                <para>Gets or sets the maximum number of items that the Column's Filter DropDown can display simultaneously.
+</para>
+            </summary>
+            <value>An integer value specifying the maximum height of regular filter dropdowns. The height is specified in rows.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.DefaultFilterEditorView">
+            <summary>
+                <para>Gets or sets how an end-user can edit criteria in the Filter Editor.
+</para>
+            </summary>
+            <value>A value that specifies how an end-user can edit criteria in the Filter Editor.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.FilterMode">
+            <summary>
+                <para>Gets or sets a filter mode used within the current <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraTreeList.FilterMode"/> enumerator value that specifies a filter mode used within the current <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.MRUColumnFilterListCount">
+            <summary>
+                <para>Gets or sets the maximum number of items that the column's MRU Filter Lists can store.
+</para>
+            </summary>
+            <value>An integer specifying the maximum number of items that the column's MRU Filter Lists can store.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.MRUFilterListPopupCount">
+            <summary>
+                <para>Gets or sets the maximum number of items the TreeList's MRU Filter List can display at once.
+</para>
+            </summary>
+            <value>An integer value that determines the maximum number of items that the TreeList's MRU Filter List can display at once.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.ShowAllValuesInCheckedFilterPopup">
+            <summary>
+                <para>Gets or sets whether the column <b>filter dropdown</b> represented as a checked list shows all available values. 
+</para>
+            </summary>
+            <value><b>true</b>, if the column <b>filter dropdown</b> shows all available values; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.ShowAllValuesInFilterPopup">
+            <summary>
+                <para>Gets or sets whether the Column's Filter DropDown shows all available values.
+</para>
+            </summary>
+            <value><b>true</b> to display all values in the Column's Filter DropDown; otherwise <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs">
+
+            <summary>
+                <para>Provides data for the <see cref="E:DevExpress.XtraTreeList.TreeList.CustomDrawNodeCell"/> event.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.#ctor(DevExpress.Utils.Drawing.GraphicsCache,System.Drawing.Rectangle,DevExpress.Utils.AppearanceObject,DevExpress.XtraEditors.Drawing.BaseEditPainter,DevExpress.XtraTreeList.Columns.TreeListColumn,DevExpress.XtraTreeList.Nodes.TreeListNode,DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo,System.Boolean)">
+            <summary>
+                <para>Initializes a new instance of the <see cref="T:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs"/> class.
+</para>
+            </summary>
+            <param name="cache">
+		A <see cref="T:DevExpress.Utils.Drawing.GraphicsCache"/> object which specifies the storage for the most  used  pens, fonts and brushes. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Cache"/> property.
+
+            </param>
+            <param name="r">
+		A <see cref="T:System.Drawing.Rectangle"/> structure which represents the painted element's bounding rectangle. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Bounds"/> property.
+
+            </param>
+            <param name="appearance">
+		An <see cref="T:DevExpress.Utils.AppearanceObject"/> object which specifies the painted cell's appearance settings. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Appearance"/> property.
+
+            </param>
+            <param name="painter">
+		A <see cref="T:DevExpress.XtraEditors.Drawing.BaseEditPainter"/> object that provides facilities for painting a cell using the default mechanism. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Painter"/> property.
+
+            </param>
+            <param name="column">
+		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListColumn"/> object which represents the column containing the painted cell. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Column"/> property.
+
+            </param>
+            <param name="node">
+		A <see cref="T:DevExpress.XtraTreeList.Nodes.TreeListNode"/> object which represents the node in which the painted cell resides This value is assigned to the <b>Node</b> property.
+
+            </param>
+            <param name="viewInfo">
+		A <see cref="T:DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo"/> object which provides view information on the painted cell's editor. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditViewInfo"/> property.
+
+            </param>
+            <param name="focused">
+		<b>true</b> if the painted cell has focus; otherwise, <b>false</b>. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Focused"/> property.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.#ctor(DevExpress.Utils.Drawing.GraphicsCache,System.Drawing.Rectangle,DevExpress.Utils.AppearanceObject,DevExpress.XtraEditors.Drawing.BaseEditPainter,DevExpress.XtraTreeList.Columns.TreeListColumn,DevExpress.XtraTreeList.Nodes.TreeListNode,DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo,System.Boolean,System.Boolean)">
+            <summary>
+                <para>Initializes a new instance of the CustomDrawNodeCellEventArgs class.
+</para>
+            </summary>
+            <param name="cache">
+		A <see cref="T:DevExpress.Utils.Drawing.GraphicsCache"/> object which specifies the storage for the most used  pens, fonts and brushes. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Cache"/> property.
+
+            </param>
+            <param name="r">
+		A <see cref="T:System.Drawing.Rectangle"/> structure which represents the painted element's bounding rectangle. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Bounds"/> property.
+
+            </param>
+            <param name="appearance">
+		An <see cref="T:DevExpress.Utils.AppearanceObject"/> object which specifies the painted cell's appearance settings. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Appearance"/> property.
+
+            </param>
+            <param name="painter">
+		A <see cref="T:DevExpress.XtraEditors.Drawing.BaseEditPainter"/> object that provides facilities for painting a cell using the default mechanism. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Painter"/> property.
+
+            </param>
+            <param name="column">
+		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListColumn"/> object which represents the column containing the painted cell. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Column"/> property.
+
+            </param>
+            <param name="node">
+		A <see cref="T:DevExpress.XtraTreeList.Nodes.TreeListNode"/> object which represents the node in which the painted cell resides This value is assigned to the <b>Node</b> property.
+
+            </param>
+            <param name="viewInfo">
+		A <see cref="T:DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo"/> object which provides view information on the painted cell's editor. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditViewInfo"/> property.
+
+            </param>
+            <param name="focused">
+		<b>true</b>, if the painted cell has focus; otherwise, <b>false</b>. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Focused"/> property.
+
+            </param>
+            <param name="isRightToLeft">
+		A Boolean value that specifies whether the TreeList's elements are aligned to support locales using right-to-left fonts. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.IsRightToLeft"/> property.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.CellText">
+            <summary>
+                <para>Gets the painted cell's display text.
+</para>
+            </summary>
+            <value>A string value representing the painted cell's display text.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.CellValue">
+            <summary>
+                <para>Gets the painted cell's value.
+</para>
+            </summary>
+            <value>An object representing the painted cell's value.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Column">
+            <summary>
+                <para>Gets the painted cell's column.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListColumn"/> object representing the column that contains the painted cell.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditPainter">
+            <summary>
+                <para>Gets the editor's painter object used to paint a cell.
+</para>
+            </summary>
+            <value>A <b>BaseEditPainter</b> object providing a painting mechanism for the painted editor.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditViewInfo">
+            <summary>
+                <para>Gets the editor's view information.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo"/> object providing view information on the painted cell's editor.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Focused">
+            <summary>
+                <para>Gets a value indicating whether the painted cell has focus.
+</para>
+            </summary>
+            <value><b>true</b> if the painted cell has focus; otherwise. <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.Columns.AutoFilterCondition">
+
+            <summary>
+                <para>Enumerates the comparison operator types for the filter conditions created for specific columns via the Auto Filter Row.
+</para>
+            </summary>
+
+        </member>
+        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Contains">
+            <summary>
+                <para>The <b>Contains</b> operator selects records whose values in the corresponding column contain the entered string. 
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Default">
+            <summary>
+                <para><para>
+For columns being filtered by their display text (see <see cref="P:DevExpress.XtraTreeList.Columns.TreeListColumn.FilterMode"/>), the <b>Default</b> option acts identically to the <b>Like</b> option.
+</para>
+
+<para>
+The <b>Default</b> option acts like the <b>Equals</b> option for the columns that have any of the following in-place editors or any of their descendants: <see cref="T:DevExpress.XtraEditors.CheckEdit"/>, <see cref="T:DevExpress.XtraEditors.DateEdit"/>, <see cref="T:DevExpress.XtraEditors.LookUpEditBase"/> or <see cref="T:DevExpress.XtraEditors.ImageComboBoxEdit"/>.
+</para>
+
+<para>
+For other columns, the <b>Default</b> option acts identically to the <b>Like</b> option. 
+</para>
+
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Equals">
+            <summary>
+                <para>The <b>Equals</b> comparison operator selects records whose values in the corresponding column match the entered value.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Like">
+            <summary>
+                <para><para>
+The <b>Like</b> comparison operator selects records whose values in the corresponding column start with the entered string.
+</para>
+
+For the columns that use <see cref="T:DevExpress.XtraEditors.CheckEdit"/>, <see cref="T:DevExpress.XtraEditors.DateEdit"/>, <see cref="T:DevExpress.XtraEditors.LookUpEditBase"/> or <see cref="T:DevExpress.XtraEditors.ImageComboBoxEdit"/> in-place editors, the <b>Equals</b> operator is always used, unless these columns are filtered by display text (see <see cref="P:DevExpress.XtraTreeList.Columns.TreeListColumn.FilterMode"/>).
+
+</para>
+            </summary>
 
 
         </member>
@@ -138,116 +563,43 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter">
+        <member name="T:DevExpress.XtraTreeList.TreeListAnimationType">
 
             <summary>
-                <para>Contains filter options for columns. 
+                <para>Lists the values that identify cells within which animation is enabled.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.#ctor">
+        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.AnimateAllContent">
             <summary>
-                <para>Initializes a new instance of the TreeListOptionsColumnFilter class.
+                <para>Animation is enabled within all visible cells.
 </para>
             </summary>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.AllowAutoFilter">
+        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.AnimateFocusedNode">
             <summary>
-                <para>Gets or sets whether the column's values can be filtered using the Auto Filter Row.
+                <para>Animation is enabled within the focused node.
 </para>
             </summary>
-            <value><b>true</b> if the column's values can be filtered using the automatic filtering row; otherwise, <b>false</b>.
-</value>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.AllowFilter">
+        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.Default">
             <summary>
-                <para>Gets or sets whether an end-user can filter against the current column using the filter dropdown.
-
-
+                <para>The same value as the <see cref="F:DevExpress.XtraTreeList.TreeListAnimationType.AnimateAllContent"/> option.
 </para>
             </summary>
-            <value><b>true</b> if  an end-user can filter against the current column using the filter dropdown; otherwise, <b>false</b>.
-</value>
 
 
         </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.Assign(DevExpress.Utils.Controls.BaseOptions)">
+        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.NeverAnimate">
             <summary>
-                <para>Copies the settings from the object passed as the parameter. 
+                <para>Animation is disabled.
 </para>
             </summary>
-            <param name="options">
-		An object whose settings are copied to the current object.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.AutoFilterCondition">
-            <summary>
-                <para>Gets or sets the type of the comparison operator used to create filter conditions for the current column via the auto filter row.
-</para>
-            </summary>
-            <value>An <see cref="T:DevExpress.XtraTreeList.Columns.AutoFilterCondition"/> value that determines the type of the comparison operator used to create filter conditions for the current column via the auto filter row.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.FilterPopupMode">
-            <summary>
-                <para>Gets or sets the display mode for the current column's filter dropdown. 
-
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraTreeList.FilterPopupMode"/> value that specifies the display mode for the column's filter dropdown list.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ImmediateUpdateAutoFilter">
-            <summary>
-                <para>Gets or sets whether the column's filter condition is updated as soon as an end-user modifies the contents of the auto filter row's cell. 
-
-</para>
-            </summary>
-            <value><b>true</b> if the column's filter condition is updated each time an end-user modifies the contents of the auto filter row's cell; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ImmediateUpdatePopupDateFilter">
-            <summary>
-                <para>This option is in effect for date-time columns whose Filter DropDown contains an embedded calendar with check boxes to select common date intervals. It specifies whether selecting a date or date range via this dropdown window filters Tree List nodes immediately. 
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.Utils.DefaultBoolean"/> value that specifies whether data is filtered immediately when selecting a date or date range via the calendar.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ShowBlanksFilterItems">
-            <summary>
-                <para>Gets or sets whether the column's Filter Dropdown (when presented as a Regular List or Checked List) displays the "(Blanks)" and "(Non Blanks)" filter items. 
-
-</para>
-            </summary>
-            <value>A value that specifies whether the column's Filter Dropdown (when presented as a Regular List or Checked List) displays the "(Blanks)" and "(Non Blanks)" filter items. 
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ShowEmptyDateFilter">
-            <summary>
-                <para>Gets or sets whether a Filter DropDown has a filter used to select records that contain null values in a date-time column.
-</para>
-            </summary>
-            <value><b>true</b> if a corresponding filter is available; otherwise, <b>false</b>.
-</value>
 
 
         </member>
@@ -493,17 +845,17 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.VirtualTreeSetCellValueEventHandler">
+        <member name="T:DevExpress.XtraTreeList.VirtualTreeGetChildNodesEventHandler">
 
             <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.VirtualTreeSetCellValue"/> event.
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.VirtualTreeGetChildNodes"/> event.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraTreeList.VirtualTreeSetCellValueEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.VirtualTreeSetCellValueInfo)">
+        <member name="M:DevExpress.XtraTreeList.VirtualTreeGetChildNodesEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.VirtualTreeGetChildNodesInfo)">
             <summary>
-                <para>Represents the method for handling events which take a <see cref="T:DevExpress.XtraTreeList.VirtualTreeSetCellValueInfo"/> object as a parameter.
+                <para>Represents the method for handling events which take a <see cref="T:DevExpress.XtraTreeList.VirtualTreeGetChildNodesInfo"/> object as a parameter.
 </para>
             </summary>
             <param name="sender">
@@ -511,7 +863,7 @@
 
             </param>
             <param name="e">
-		A <see cref="T:DevExpress.XtraTreeList.VirtualTreeSetCellValueInfo"/> object that contains data for the event.
+		A <see cref="T:DevExpress.XtraTreeList.VirtualTreeGetChildNodesInfo"/> object that contains data for the event.
 
             </param>
 
@@ -1058,6 +1410,30 @@
 
 
         </member>
+        <member name="T:DevExpress.XtraTreeList.VirtualTreeSetCellValueEventHandler">
+
+            <summary>
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.VirtualTreeSetCellValue"/> event.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.VirtualTreeSetCellValueEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.VirtualTreeSetCellValueInfo)">
+            <summary>
+                <para>Represents the method for handling events which take a <see cref="T:DevExpress.XtraTreeList.VirtualTreeSetCellValueInfo"/> object as a parameter.
+</para>
+            </summary>
+            <param name="sender">
+		The event source. This identifies the Tree List control which fires the event.
+
+            </param>
+            <param name="e">
+		A <see cref="T:DevExpress.XtraTreeList.VirtualTreeSetCellValueInfo"/> object that contains data for the event.
+
+            </param>
+
+
+        </member>
         <member name="T:DevExpress.XtraEditors.TreeListLookUpEdit">
 
             <summary>
@@ -1102,241 +1478,6 @@
             </summary>
             <value>A <see cref="T:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit"/> object containing settings for the editor. 
 </value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit">
-
-            <summary>
-                <para>A repository item which stores settings specific to a <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.#ctor">
-            <summary>
-                <para>Initializes a new instance of the RepositoryItemTreeListLookUpEdit class.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.AllowSelectOnHover">
-            <summary>
-                <para>Gets or sets whether the <see cref="T:DevExpress.XtraTreeList.TreeList"/>'s nodes are automatically focused when hovered with the mouse pointer.
-</para>
-            </summary>
-            <value><b>true</b>, if the <see cref="T:DevExpress.XtraTreeList.TreeList"/>'s nodes are automatically focused when hovered with the mouse pointer; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.Assign(DevExpress.XtraEditors.Repository.RepositoryItem)">
-            <summary>
-                <para>Copies settings of the specified repository item.
-</para>
-            </summary>
-            <param name="item">
-		A <see cref="T:DevExpress.XtraEditors.Repository.RepositoryItem"/> object or its descendant that represents the source of the operation.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.AutoComplete">
-            <summary>
-                <para>Gets or sets whether the automatic completion feature is enabled.
-</para>
-            </summary>
-            <value><b>true</b>, if the automatic completion feature is enabled; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.AutoExpandAllNodes">
-            <summary>
-                <para>Gets or sets whether all nodes are automatically expanded when the Tree List is being loaded. This is a dependency property.
-</para>
-            </summary>
-            <value><b>true</b>, to expand all nodes when the Tree List is being loaded; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="F:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.DefaultExportMode">
-            <summary>
-                <para> </para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="F:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.EditorName">
-            <summary>
-                <para>Returns "TreeListLookUpEdit". This member supports the internal infrastructure, and is not intended to be used directly from your code.
-</para>
-            </summary>
-            <returns> </returns>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.EditorTypeName">
-            <summary>
-                <para>Gets the class name of an editor corresponding to the current repository item.
-</para>
-            </summary>
-            <value>The string identifying the class name of a corresponding editor.
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetDisplayText(DevExpress.Utils.FormatInfo,System.Object)">
-            <summary>
-                <para>Returns the text representation of the specified value, formatted according to the specified settings.
-</para>
-            </summary>
-            <param name="format">
-		A <see cref="T:DevExpress.Utils.FormatInfo"/> object that specifies formatting settings.
-
-            </param>
-            <param name="editValue">
-		A value to be formatted.
-
-            </param>
-            <returns>A string that specifies the value's formatted text representation.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetDisplayTextByIndex(System.Int32)">
-            <summary>
-                <para>Returns the text representation of the <b>DisplayMember</b> field value of the specified row. 
-</para>
-            </summary>
-            <param name="index">
-		An integer that is the index of the required row.
-
-            </param>
-            <returns>The text representation of the <b>DisplayMember</b> field value for the specified row.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetDisplayTextByKeyValue(System.Object)">
-            <summary>
-                <para>Returns the text representation of the <b>DisplayMember</b> field value of the row that contains the specified <b>ValueMember</b> field value. 
-</para>
-            </summary>
-            <param name="keyValue">
-		The value of the <b>ValueMember</b> field for the row to locate.
-
-            </param>
-            <returns>The text representation of the <b>DisplayMember</b> field value for the specified row.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetIndexByKeyValue(System.Object)">
-            <summary>
-                <para>Returns the index of the row that contains the specified value in the <b>ValueMember</b> field.
-</para>
-            </summary>
-            <param name="keyValue">
-		The value of the <b>ValueMember</b> field for the row to locate. 
-
-            </param>
-            <returns>An integer that specifies the index of the required row.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetKeyValueByIndex(System.Int32)">
-            <summary>
-                <para>Returns the key value contained in the specified row.
-</para>
-            </summary>
-            <param name="index">
-		An integer that is the index of the required row.
-
-            </param>
-            <returns>The value of the row's <b>ValueMember</b> field. 
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetRowByKeyValue(System.Object)">
-            <summary>
-                <para>Returns a data source row containing the specified value in the <see cref="P:DevExpress.XtraEditors.Repository.RepositoryItemLookUpEditBase.ValueMember"/> field.
-</para>
-            </summary>
-            <param name="keyValue">
-		The value of the <see cref="P:DevExpress.XtraEditors.Repository.RepositoryItemLookUpEditBase.ValueMember"/> field for the row to be located.
-
-            </param>
-            <returns>An object representing the data source record containing the specified value. <b>null</b> (<b>Nothing</b> in Visual Basic) if no record with the specified value in the <see cref="P:DevExpress.XtraEditors.Repository.RepositoryItemLookUpEditBase.ValueMember"/> field was found.
-</returns>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.OwnerEdit">
-            <summary>
-                <para>Gets the editor which owns the current repository item object.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control owning the current repository item.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.PopupFilterMode">
-            <summary>
-                <para>Gets or sets how records in the dropdown window are filtered when typing text within the edit box. 
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraEditors.PopupFilterMode"/> value that specifies the editor's popup filter mode. 
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.RegisterTreeListLookUpEdit">
-            <summary>
-                <para>Registers the <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.TreeList">
-            <summary>
-                <para>Gets or sets a <see cref="T:DevExpress.XtraTreeList.TreeList"/> associated with the current <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraTreeList.TreeList"/> associated with the current <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
-</value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraTreeList.VirtualTreeGetChildNodesEventHandler">
-
-            <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.VirtualTreeGetChildNodes"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.VirtualTreeGetChildNodesEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.VirtualTreeGetChildNodesInfo)">
-            <summary>
-                <para>Represents the method for handling events which take a <see cref="T:DevExpress.XtraTreeList.VirtualTreeGetChildNodesInfo"/> object as a parameter.
-</para>
-            </summary>
-            <param name="sender">
-		The event source. This identifies the Tree List control which fires the event.
-
-            </param>
-            <param name="e">
-		A <see cref="T:DevExpress.XtraTreeList.VirtualTreeGetChildNodesInfo"/> object that contains data for the event.
-
-            </param>
 
 
         </member>
@@ -1402,118 +1543,6 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.TreeListOptionsClipboard">
-
-            <summary>
-                <para>Provides clipboard options for the <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
-
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsClipboard.#ctor(System.Boolean)">
-            <summary>
-                <para> </para>
-            </summary>
-            <param name="allowFormattedMode">
-		 
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsClipboard.AllowCopy">
-            <summary>
-                <para>Gets or sets whether an end-user can copy selected TreeList nodes to the clipboard.
-
-</para>
-            </summary>
-            <value>A <b>DefaultBoolean</b> enumerator value that specifies if an end-user can copy selected TreeList nodes to the clipboard.
-
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsClipboard.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies settings from the specified object to the current object.
-</para>
-            </summary>
-            <param name="options">
-		An object whose setting will be copied to the current object
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsClipboard.CopyNodeHierarchy">
-            <summary>
-                <para>Specifies whether the nodes hierarchy should be saved when copying data from this Tree List.
-</para>
-            </summary>
-            <value>A <b>DefaultBoolean</b> enumerator value that specifies whether the nodes hierarchy should be saved.
-
-</value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraTreeList.CalcNodeHeightEventHandler">
-
-            <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.CalcNodeHeight"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.CalcNodeHeightEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.CalcNodeHeightEventArgs)">
-            <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.CalcNodeHeight"/> event.
-</para>
-            </summary>
-            <param name="sender">
-		The event sender (typically the <see cref="T:DevExpress.XtraTreeList.TreeList"/> control).
-
-            </param>
-            <param name="e">
-		A <see cref="T:DevExpress.XtraTreeList.CalcNodeHeightEventArgs"/> object that contains data related to the event.
-
-            </param>
-
-
-        </member>
-        <member name="T:DevExpress.XtraTreeList.CalcNodeHeightEventArgs">
-
-            <summary>
-                <para>Provides data for the <see cref="E:DevExpress.XtraTreeList.TreeList.CalcNodeHeight"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.CalcNodeHeightEventArgs.#ctor(DevExpress.XtraTreeList.Nodes.TreeListNode,System.Int32)">
-            <summary>
-                <para>Creates an instance of the <see cref="T:DevExpress.XtraTreeList.CalcNodeHeightEventArgs"/> class.
-</para>
-            </summary>
-            <param name="node">
-		A <see cref="T:DevExpress.XtraTreeList.Nodes.TreeListNode"/> object representing the node whose height is calculated. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.NodeEventArgs.Node"/> property.
-
-            </param>
-            <param name="nodeHeight">
-		An integer value specifying the node height. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CalcNodeHeightEventArgs.NodeHeight"/> property.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CalcNodeHeightEventArgs.NodeHeight">
-            <summary>
-                <para>Gets or sets the current node's height in pixels.
-</para>
-            </summary>
-            <value>An integer value specifying the node's height in pixels.
-</value>
-
-
-        </member>
         <member name="T:DevExpress.XtraTreeList.CustomizeNewNodeFromOuterDataEventHandler">
 
             <summary>
@@ -1535,6 +1564,104 @@
 		Contains event data.
 
             </param>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.TreeListOptionsNavigation">
+
+            <summary>
+                <para>Contains options that control node navigation functionality.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsNavigation.#ctor">
+            <summary>
+                <para>Initializes a new instance of the TreeListOptionsNavigation class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsNavigation.Assign(DevExpress.Utils.Controls.BaseOptions)">
+            <summary>
+                <para>Copies settings of the specified object to the current object.
+</para>
+            </summary>
+            <param name="options">
+		An object whose settings are copied to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.AutoFocusNewNode">
+            <summary>
+                <para>Gets or sets whether a newly added node is automatically focused.
+</para>
+            </summary>
+            <value><b>true</b>, if a newly added node is automatically focused; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.AutoMoveRowFocus">
+            <summary>
+                <para>Gets or sets whether the Left Arrow and Right Arrow keyboard keys move focus to the next/previous node when the current node's last/first cell is focused.
+</para>
+            </summary>
+            <value><b>true</b>, if horizontal navigation keys can move focus between nodes; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.EnterMovesNextColumn">
+            <summary>
+                <para>Gets or sets whether the ENTER key can be used to move focus between cells.
+</para>
+            </summary>
+            <value><b>true</b>, to enable focus moving using the ENTER key; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.MoveOnEdit">
+            <summary>
+                <para>Gets or sets whether end-users can navigate through cells using Arrow keys while editing cells.
+</para>
+            </summary>
+            <value><b>true</b>, to allow end-users to navigate through cells using arrow keys while editing cells; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.UseBandsAdvHorzNavigation">
+            <summary>
+                <para>Gets or sets whether advanced horizontal navigation is enabled in a banded layout.
+
+</para>
+            </summary>
+            <value> </value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.UseBandsAdvVertNavigation">
+            <summary>
+                <para>Gets or sets whether advanced vertical navigation is enabled in a banded layout.
+</para>
+            </summary>
+            <value><b>true</b>, if advanced vertical navigation is enabled; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.UseTabKey">
+            <summary>
+                <para>Gets or sets whether the TAB/SHIFT + TAB key combinations move focus to the next/previous node cell or to the next/previous control in the tab order.
+</para>
+            </summary>
+            <value><b>true</b>, if the TAB/SHIFT+TAB key combinations are processed by the Tree List; otherwise, <b>false</b>.
+</value>
 
 
         </member>
@@ -2669,75 +2796,6 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.TreeListOptionsMenu">
-
-            <summary>
-                <para>Provides menu options for Tree List controls.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsMenu.#ctor">
-            <summary>
-                <para>Initializes a new instance of the <see cref="T:DevExpress.XtraTreeList.TreeListOptionsMenu"/> class.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsMenu.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies all settings from the options object passed as the parameter.
-</para>
-            </summary>
-            <param name="options">
-		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.EnableColumnMenu">
-            <summary>
-                <para>Gets or sets whether end-users can invoke the column header context menu.
-
-</para>
-            </summary>
-            <value><b>true</b> if end-users can right-click column headers to invoke their context menus; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.EnableFooterMenu">
-            <summary>
-                <para>Gets or sets whether end-users can invoke footer context menus.
-</para>
-            </summary>
-            <value><b>true</b> if end-users can click the summary footer and group footers to invoke their context menus; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.ShowAutoFilterRowItem">
-            <summary>
-                <para>Gets whether the 'Show Auto Filter Row' check item is displayed within the Column Header Context Menu.
-</para>
-            </summary>
-            <value><b>true</b> if the 'Show Auto Filter Row' check item is available within a column header's menu; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.ShowConditionalFormattingItem">
-            <summary>
-                <para>Gets or sets whether the <b>Conditional Formatting</b> menu is available in a column's context menu at runtime, allowing end-users to apply style formats to columns.
-</para>
-            </summary>
-            <value><b>true</b>, if the conditional formatting menu is available at runtime; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
         <member name="T:DevExpress.XtraTreeList.TreeListOptionsBehavior">
 
             <summary>
@@ -3507,62 +3565,6 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.Columns.AutoFilterCondition">
-
-            <summary>
-                <para>Enumerates the comparison operator types for the filter conditions created for specific columns via the Auto Filter Row.
-</para>
-            </summary>
-
-        </member>
-        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Contains">
-            <summary>
-                <para>The <b>Contains</b> operator selects records whose values in the corresponding column contain the entered string. 
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Default">
-            <summary>
-                <para><para>
-For columns being filtered by their display text (see <see cref="P:DevExpress.XtraTreeList.Columns.TreeListColumn.FilterMode"/>), the <b>Default</b> option acts identically to the <b>Like</b> option.
-</para>
-
-<para>
-The <b>Default</b> option acts like the <b>Equals</b> option for the columns that have any of the following in-place editors or any of their descendants: <see cref="T:DevExpress.XtraEditors.CheckEdit"/>, <see cref="T:DevExpress.XtraEditors.DateEdit"/>, <see cref="T:DevExpress.XtraEditors.LookUpEditBase"/> or <see cref="T:DevExpress.XtraEditors.ImageComboBoxEdit"/>.
-</para>
-
-<para>
-For other columns, the <b>Default</b> option acts identically to the <b>Like</b> option. 
-</para>
-
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Equals">
-            <summary>
-                <para>The <b>Equals</b> comparison operator selects records whose values in the corresponding column match the entered value.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraTreeList.Columns.AutoFilterCondition.Like">
-            <summary>
-                <para><para>
-The <b>Like</b> comparison operator selects records whose values in the corresponding column start with the entered string.
-</para>
-
-For the columns that use <see cref="T:DevExpress.XtraEditors.CheckEdit"/>, <see cref="T:DevExpress.XtraEditors.DateEdit"/>, <see cref="T:DevExpress.XtraEditors.LookUpEditBase"/> or <see cref="T:DevExpress.XtraEditors.ImageComboBoxEdit"/> in-place editors, the <b>Equals</b> operator is always used, unless these columns are filtered by display text (see <see cref="P:DevExpress.XtraTreeList.Columns.TreeListColumn.FilterMode"/>).
-
-</para>
-            </summary>
-
-
-        </member>
         <member name="T:DevExpress.XtraTreeList.FilterPopupMode">
 
             <summary>
@@ -3601,6 +3603,119 @@ If there is no underlying data that would fall into a specific date range, the c
                 <para>The filter dropdown is represented as a regular list of filter items. Clicking an item invokes a corresponding action, and automatically closes the dropdown. 
 </para>
             </summary>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter">
+
+            <summary>
+                <para>Contains filter options for columns. 
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.#ctor">
+            <summary>
+                <para>Initializes a new instance of the TreeListOptionsColumnFilter class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.AllowAutoFilter">
+            <summary>
+                <para>Gets or sets whether the column's values can be filtered using the Auto Filter Row.
+</para>
+            </summary>
+            <value><b>true</b> if the column's values can be filtered using the automatic filtering row; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.AllowFilter">
+            <summary>
+                <para>Gets or sets whether an end-user can filter against the current column using the filter dropdown.
+
+
+</para>
+            </summary>
+            <value><b>true</b> if  an end-user can filter against the current column using the filter dropdown; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.Assign(DevExpress.Utils.Controls.BaseOptions)">
+            <summary>
+                <para>Copies the settings from the object passed as the parameter. 
+</para>
+            </summary>
+            <param name="options">
+		An object whose settings are copied to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.AutoFilterCondition">
+            <summary>
+                <para>Gets or sets the type of the comparison operator used to create filter conditions for the current column via the auto filter row.
+</para>
+            </summary>
+            <value>An <see cref="T:DevExpress.XtraTreeList.Columns.AutoFilterCondition"/> value that determines the type of the comparison operator used to create filter conditions for the current column via the auto filter row.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.FilterPopupMode">
+            <summary>
+                <para>Gets or sets the display mode for the current column's filter dropdown. 
+
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraTreeList.FilterPopupMode"/> value that specifies the display mode for the column's filter dropdown list.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ImmediateUpdateAutoFilter">
+            <summary>
+                <para>Gets or sets whether the column's filter condition is updated as soon as an end-user modifies the contents of the auto filter row's cell. 
+
+</para>
+            </summary>
+            <value><b>true</b> if the column's filter condition is updated each time an end-user modifies the contents of the auto filter row's cell; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ImmediateUpdatePopupDateFilter">
+            <summary>
+                <para>This option is in effect for date-time columns whose Filter DropDown contains an embedded calendar with check boxes to select common date intervals. It specifies whether selecting a date or date range via this dropdown window filters Tree List nodes immediately. 
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.Utils.DefaultBoolean"/> value that specifies whether data is filtered immediately when selecting a date or date range via the calendar.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ShowBlanksFilterItems">
+            <summary>
+                <para>Gets or sets whether the column's Filter Dropdown (when presented as a Regular List or Checked List) displays the "(Blanks)" and "(Non Blanks)" filter items. 
+
+</para>
+            </summary>
+            <value>A value that specifies whether the column's Filter Dropdown (when presented as a Regular List or Checked List) displays the "(Blanks)" and "(Non Blanks)" filter items. 
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListOptionsColumnFilter.ShowEmptyDateFilter">
+            <summary>
+                <para>Gets or sets whether a Filter DropDown has a filter used to select records that contain null values in a date-time column.
+</para>
+            </summary>
+            <value><b>true</b> if a corresponding filter is available; otherwise, <b>false</b>.
+</value>
 
 
         </member>
@@ -3892,240 +4007,6 @@ If there is no underlying data that would fall into a specific date range, the c
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.Columns.TreeListBandCollection">
-
-            <summary>
-                <para>A band collection within a <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.#ctor(DevExpress.XtraTreeList.Columns.TreeListBand)">
-            <summary>
-                <para>Initializes a new instance of the TreeListBandCollection class.
-</para>
-            </summary>
-            <param name="ownerBand">
-		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListBand"/> object that will own the created band collection. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.OwnerBand"/> property.
-
-
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.#ctor(DevExpress.XtraTreeList.Columns.TreeListBand,DevExpress.XtraTreeList.TreeList)">
-            <summary>
-                <para>Initializes a new instance of a TreeListBandCollection class.
-</para>
-            </summary>
-            <param name="ownerBand">
-		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListBand"/> object that will own the created band collection. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.OwnerBand"/> property.
-
-
-            </param>
-            <param name="treeList">
-		A <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that will own the created band collection. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.TreeList"/> property.
-
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Add(DevExpress.XtraTreeList.Columns.TreeListBand)">
-            <summary>
-                <para>Adds the specified band to the end of the band collection.
-</para>
-            </summary>
-            <param name="band">
-		An object that specifies the band to be added.
-
-            </param>
-            <returns>An object specifying the new band.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Add">
-            <summary>
-                <para>Creates a new band and adds it to the band collection.
-</para>
-            </summary>
-            <returns>An object that specifies the new band.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.AddBand(System.String)">
-            <summary>
-                <para>Creates a new band with the specified caption and appends it to the band collection.
-</para>
-            </summary>
-            <param name="caption">
-		A value that specifies the band's caption. This value is assign to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBand.Caption"/> property.
-
-            </param>
-            <returns>An object that specifies the new band.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.AddRange(DevExpress.XtraTreeList.Columns.TreeListBand[])">
-            <summary>
-                <para>Adds an array of bands to the end of the band collection.
-</para>
-            </summary>
-            <param name="bands">
-		An array of bands to be added to the collection. 
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Contains(DevExpress.XtraTreeList.Columns.TreeListBand,System.Boolean)">
-            <summary>
-                <para>Returns whether the specified band is contained within the current band collection or any of its bands' <see cref="P:DevExpress.XtraTreeList.TreeList.Bands"/> collections.
-</para>
-            </summary>
-            <param name="band">
-		An object that specifies the band to be found.
-
-            </param>
-            <param name="recursive">
-		<b>true</b>, if the search should be extended to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBand.Bands"/> collections of the current collection's bands; otherwise, <b>false</b>.
-
-            </param>
-            <returns><b>true</b>, if the specified band is found; otherwise, <b>false</b>.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.CreateBand">
-            <summary>
-                <para>Create a new instance of the TreeListBandCollection class with default settings.
-</para>
-            </summary>
-            <returns>An object that specifies the created band.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.IndexOf(DevExpress.XtraTreeList.Columns.TreeListBand)">
-            <summary>
-                <para>Returns the specified band's position within the collection.
-</para>
-            </summary>
-            <param name="band">
-		An object that specifies the band to locate.
-
-            </param>
-            <returns>The zero-based index of the specified band within the collection; <b>-1</b>, if the collection does not contain the specified band.
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Insert(System.Int32,DevExpress.XtraTreeList.Columns.TreeListBand)">
-            <summary>
-                <para>Inserts the specified band to the specified position within the band collection.
-</para>
-            </summary>
-            <param name="position">
-		The zero-based index at which the specified band should be inserted.
-
-            </param>
-            <param name="band">
-		An <see cref="T:DevExpress.XtraTreeList.Columns.TreeListBand"/> object to be inserted.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Item(System.Int32)">
-            <summary>
-                <para>Provides indexed access to the band collection.
-</para>
-            </summary>
-            <param name="index">
-		The band's zero-based index.
-
-            </param>
-            <value>The band located at the specified position within the collection.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Item(System.String)">
-            <summary>
-                <para>Returns a band with the specified name within the collection.
-</para>
-            </summary>
-            <param name="name">
-		The band with the specified name; <b>null</b> (<b>Nothing</b> in visual basic) if no band is found. 
-
-            </param>
-            <value>The band's name to be found.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.OwnerBand">
-            <summary>
-                <para>Gets a band that owns the current collection.
-</para>
-            </summary>
-            <value>An object that specifies the band owning the current collection.
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Remove(DevExpress.XtraTreeList.Columns.TreeListBand)">
-            <summary>
-                <para>Removes the specified band from the band collection.
-</para>
-            </summary>
-            <param name="band">
-		An object that specifies the band to be removed.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.SetBandIndex(System.Int32,DevExpress.XtraTreeList.Columns.TreeListBand)">
-            <summary>
-                <para>Changes the specified band's position within the collection.
-</para>
-            </summary>
-            <param name="newIndex">
-		A new band position within the collection.
-
-            </param>
-            <param name="band">
-		An object that specifies the band to be moved.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.TreeList">
-            <summary>
-                <para>Gets a <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that owns the current collection.
-</para>
-            </summary>
-            <value>An object owning the current collection.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.VisibleCount">
-            <summary>
-                <para>Gets the number of visible bands within the collection.
-</para>
-            </summary>
-            <value>A value that specifies the number of visible bands. 
-</value>
-
-
-        </member>
         <member name="T:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRuleCollection">
 
             <summary>
@@ -4157,101 +4038,267 @@ If there is no underlying data that would fall into a specific date range, the c
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule">
+        <member name="T:DevExpress.XtraTreeList.TreeListOptionsClipboard">
 
             <summary>
-                <para>Specifies a single style format rule for a <see cref="T:DevExpress.XtraTreeList.TreeList"/> control.
+                <para>Provides clipboard options for the <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
+
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.#ctor">
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsClipboard.#ctor(System.Boolean)">
             <summary>
-                <para>Initializes a new instance of a TreeListFormatRule class.
-</para>
+                <para> </para>
             </summary>
+            <param name="allowFormattedMode">
+		 
+            </param>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ApplyToRow">
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsClipboard.AllowCopy">
             <summary>
-                <para>Gets or sets whether the format is applied to the entire row.
+                <para>Gets or sets whether an end-user can copy selected TreeList nodes to the clipboard.
+
 </para>
             </summary>
-            <value><b>true</b>, if the format is applied to the entire row; otherwise, <b>false</b>.
+            <value>A <b>DefaultBoolean</b> enumerator value that specifies if an end-user can copy selected TreeList nodes to the clipboard.
+
 </value>
 
 
         </member>
-        <member name="M:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.Assign(DevExpress.XtraEditors.FormatRuleBase)">
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsClipboard.Assign(DevExpress.Utils.Controls.BaseOptions)">
             <summary>
                 <para>Copies settings from the specified object to the current object.
 </para>
             </summary>
-            <param name="source">
-		An object whose settings are to be copied to the current object.
+            <param name="options">
+		An object whose setting will be copied to the current object
 
             </param>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.Column">
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsClipboard.CopyNodeHierarchy">
             <summary>
-                <para>Gets or sets a column that provides values to test against the current format rule. By default, the format is applied to this column.
+                <para>Specifies whether the nodes hierarchy should be saved when copying data from this Tree List.
 </para>
             </summary>
-            <value>The column that provides values to test against the current formatting rule.
+            <value>A <b>DefaultBoolean</b> enumerator value that specifies whether the nodes hierarchy should be saved.
+
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ColumnApplyTo">
-            <summary>
-                <para>Gets or sets a column, to which the format should be applied instead of the column specified by the <see cref="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.Column"/> property.
+        <member name="T:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit">
 
+            <summary>
+                <para>A repository item which stores settings specific to a <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
 </para>
             </summary>
-            <value>The target column to which the format is applied.
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.#ctor">
+            <summary>
+                <para>Initializes a new instance of the RepositoryItemTreeListLookUpEdit class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.AllowSelectOnHover">
+            <summary>
+                <para>Gets or sets whether the <see cref="T:DevExpress.XtraTreeList.TreeList"/>'s nodes are automatically focused when hovered with the mouse pointer.
+</para>
+            </summary>
+            <value><b>true</b>, if the <see cref="T:DevExpress.XtraTreeList.TreeList"/>'s nodes are automatically focused when hovered with the mouse pointer; otherwise, <b>false</b>.
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ColumnApplyToName">
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.Assign(DevExpress.XtraEditors.Repository.RepositoryItem)">
             <summary>
-                <para>This member supports the internal infrastructure, and is not intended to be used directly from your code. 
+                <para>Copies settings of the specified repository item.
 </para>
             </summary>
-            <value>The name of the column to which a format is applied.
+            <param name="item">
+		A <see cref="T:DevExpress.XtraEditors.Repository.RepositoryItem"/> object or its descendant that represents the source of the operation.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.AutoComplete">
+            <summary>
+                <para>Gets or sets whether the automatic completion feature is enabled.
+</para>
+            </summary>
+            <value><b>true</b>, if the automatic completion feature is enabled; otherwise, <b>false</b>.
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ColumnName">
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.AutoExpandAllNodes">
             <summary>
-                <para>This member supports the internal infrastructure, and is not intended to be used directly from your code.
+                <para>Gets or sets whether all nodes are automatically expanded when the Tree List is being loaded. This is a dependency property.
 </para>
             </summary>
-            <value>The name of the column that provides values to test against the current formatting rule.
+            <value><b>true</b>, to expand all nodes when the Tree List is being loaded; otherwise, <b>false</b>.
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.IsValid">
+        <member name="F:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.DefaultExportMode">
             <summary>
-                <para>Gets whether the current TreeListFormatRule object is properly customized. 
+                <para> </para>
+            </summary>
+            <returns> </returns>
+
+
+        </member>
+        <member name="F:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.EditorName">
+            <summary>
+                <para>Returns "TreeListLookUpEdit". This member supports the internal infrastructure, and is not intended to be used directly from your code.
 </para>
             </summary>
-            <value><b>true</b>, if the TreeListFormatRule object is properly customized; otherwise, <b>false</b>.
+            <returns> </returns>
+
+
+        </member>
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.EditorTypeName">
+            <summary>
+                <para>Gets the class name of an editor corresponding to the current repository item.
+</para>
+            </summary>
+            <value>The string identifying the class name of a corresponding editor.
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.TreeList">
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetDisplayText(DevExpress.Utils.FormatInfo,System.Object)">
             <summary>
-                <para>Gets the <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that owns the current formatting rule.
+                <para>Returns the text representation of the specified value, formatted according to the specified settings.
 </para>
             </summary>
-            <value>A <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that owns the current formatting rule.
+            <param name="format">
+		A <see cref="T:DevExpress.Utils.FormatInfo"/> object that specifies formatting settings.
+
+            </param>
+            <param name="editValue">
+		A value to be formatted.
+
+            </param>
+            <returns>A string that specifies the value's formatted text representation.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetDisplayTextByIndex(System.Int32)">
+            <summary>
+                <para>Returns the text representation of the <b>DisplayMember</b> field value of the specified row. 
+</para>
+            </summary>
+            <param name="index">
+		An integer that is the index of the required row.
+
+            </param>
+            <returns>The text representation of the <b>DisplayMember</b> field value for the specified row.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetDisplayTextByKeyValue(System.Object)">
+            <summary>
+                <para>Returns the text representation of the <b>DisplayMember</b> field value of the row that contains the specified <b>ValueMember</b> field value. 
+</para>
+            </summary>
+            <param name="keyValue">
+		The value of the <b>ValueMember</b> field for the row to locate.
+
+            </param>
+            <returns>The text representation of the <b>DisplayMember</b> field value for the specified row.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetIndexByKeyValue(System.Object)">
+            <summary>
+                <para>Returns the index of the row that contains the specified value in the <b>ValueMember</b> field.
+</para>
+            </summary>
+            <param name="keyValue">
+		The value of the <b>ValueMember</b> field for the row to locate. 
+
+            </param>
+            <returns>An integer that specifies the index of the required row.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetKeyValueByIndex(System.Int32)">
+            <summary>
+                <para>Returns the key value contained in the specified row.
+</para>
+            </summary>
+            <param name="index">
+		An integer that is the index of the required row.
+
+            </param>
+            <returns>The value of the row's <b>ValueMember</b> field. 
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.GetRowByKeyValue(System.Object)">
+            <summary>
+                <para>Returns a data source row containing the specified value in the <see cref="P:DevExpress.XtraEditors.Repository.RepositoryItemLookUpEditBase.ValueMember"/> field.
+</para>
+            </summary>
+            <param name="keyValue">
+		The value of the <see cref="P:DevExpress.XtraEditors.Repository.RepositoryItemLookUpEditBase.ValueMember"/> field for the row to be located.
+
+            </param>
+            <returns>An object representing the data source record containing the specified value. <b>null</b> (<b>Nothing</b> in Visual Basic) if no record with the specified value in the <see cref="P:DevExpress.XtraEditors.Repository.RepositoryItemLookUpEditBase.ValueMember"/> field was found.
+</returns>
+
+
+        </member>
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.OwnerEdit">
+            <summary>
+                <para>Gets the editor which owns the current repository item object.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control owning the current repository item.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.PopupFilterMode">
+            <summary>
+                <para>Gets or sets how records in the dropdown window are filtered when typing text within the edit box. 
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraEditors.PopupFilterMode"/> value that specifies the editor's popup filter mode. 
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.RegisterTreeListLookUpEdit">
+            <summary>
+                <para>Registers the <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraEditors.Repository.RepositoryItemTreeListLookUpEdit.TreeList">
+            <summary>
+                <para>Gets or sets a <see cref="T:DevExpress.XtraTreeList.TreeList"/> associated with the current <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraTreeList.TreeList"/> associated with the current <see cref="T:DevExpress.XtraEditors.TreeListLookUpEdit"/> control.
 </value>
 
 
@@ -4467,43 +4514,72 @@ If there is no underlying data that would fall into a specific date range, the c
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.TreeListAnimationType">
+        <member name="T:DevExpress.XtraTreeList.TreeListOptionsMenu">
 
             <summary>
-                <para>Lists the values that identify cells within which animation is enabled.
+                <para>Provides menu options for Tree List controls.
 </para>
             </summary>
 
         </member>
-        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.AnimateAllContent">
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsMenu.#ctor">
             <summary>
-                <para>Animation is enabled within all visible cells.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.AnimateFocusedNode">
-            <summary>
-                <para>Animation is enabled within the focused node.
+                <para>Initializes a new instance of the <see cref="T:DevExpress.XtraTreeList.TreeListOptionsMenu"/> class.
 </para>
             </summary>
 
 
         </member>
-        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.Default">
+        <member name="M:DevExpress.XtraTreeList.TreeListOptionsMenu.Assign(DevExpress.Utils.Controls.BaseOptions)">
             <summary>
-                <para>The same value as the <see cref="F:DevExpress.XtraTreeList.TreeListAnimationType.AnimateAllContent"/> option.
+                <para>Copies all settings from the options object passed as the parameter.
 </para>
             </summary>
+            <param name="options">
+		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
+
+            </param>
 
 
         </member>
-        <member name="F:DevExpress.XtraTreeList.TreeListAnimationType.NeverAnimate">
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.EnableColumnMenu">
             <summary>
-                <para>Animation is disabled.
+                <para>Gets or sets whether end-users can invoke the column header context menu.
+
 </para>
             </summary>
+            <value><b>true</b> if end-users can right-click column headers to invoke their context menus; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.EnableFooterMenu">
+            <summary>
+                <para>Gets or sets whether end-users can invoke footer context menus.
+</para>
+            </summary>
+            <value><b>true</b> if end-users can click the summary footer and group footers to invoke their context menus; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.ShowAutoFilterRowItem">
+            <summary>
+                <para>Gets whether the 'Show Auto Filter Row' check item is displayed within the Column Header Context Menu.
+</para>
+            </summary>
+            <value><b>true</b> if the 'Show Auto Filter Row' check item is available within a column header's menu; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.TreeListOptionsMenu.ShowConditionalFormattingItem">
+            <summary>
+                <para>Gets or sets whether the <b>Conditional Formatting</b> menu is available in a column's context menu at runtime, allowing end-users to apply style formats to columns.
+</para>
+            </summary>
+            <value><b>true</b>, if the conditional formatting menu is available at runtime; otherwise, <b>false</b>.
+</value>
 
 
         </member>
@@ -4805,6 +4881,30 @@ If there is no underlying data that would fall into a specific date range, the c
                 <para>The corresponding user's property has been changed.
 </para>
             </summary>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.FocusedColumnChangedEventHandler">
+
+            <summary>
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.FocusedColumnChanged"/> event.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.FocusedColumnChangedEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.FocusedColumnChangedEventArgs)">
+            <summary>
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.FocusedColumnChanged"/> event.
+</para>
+            </summary>
+            <param name="sender">
+		The event sender (typically the <see cref="T:DevExpress.XtraTreeList.TreeList"/> control).
+
+            </param>
+            <param name="e">
+		A <see cref="T:DevExpress.XtraTreeList.FocusedColumnChangedEventArgs"/> object that contains data related to the event.
+
+            </param>
 
 
         </member>
@@ -5674,134 +5774,6 @@ If there is no underlying data that would fall into a specific date range, the c
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.TreeListOptionsFilter">
-
-            <summary>
-                <para>Provides filtering options for the <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsFilter.#ctor">
-            <summary>
-                <para>Initializes a new instance of the TreeListOptionsFilter class.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.AllowColumnMRUFilterList">
-            <summary>
-                <para>Gets or sets whether recently used filter items are displayed in the Column's Filter DropDown.
-</para>
-            </summary>
-            <value><b>true</b> if the columns' filter dropdown lists can display recently used filter items; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.AllowFilterEditor">
-            <summary>
-                <para>Gets or sets whether the Filter Editor can be used to build complex filter criteria.
-</para>
-            </summary>
-            <value><b>true</b> to allow using the <b>Filter Editor</b>; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.AllowMRUFilterList">
-            <summary>
-                <para>Gets or sets whether the TreeList's MRU Filter List is enabled.
-</para>
-            </summary>
-            <value><b>true</b> if the MRU Filter List is enabled; otherwise <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsFilter.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies all the settings from the options object passed as the parameter.
-</para>
-            </summary>
-            <param name="options">
-		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.ColumnFilterPopupRowCount">
-            <summary>
-                <para>Gets or sets the maximum number of items that the Column's Filter DropDown can display simultaneously.
-</para>
-            </summary>
-            <value>An integer value specifying the maximum height of regular filter dropdowns. The height is specified in rows.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.DefaultFilterEditorView">
-            <summary>
-                <para>Gets or sets how an end-user can edit criteria in the Filter Editor.
-</para>
-            </summary>
-            <value>A value that specifies how an end-user can edit criteria in the Filter Editor.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.FilterMode">
-            <summary>
-                <para>Gets or sets a filter mode used within the current <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraTreeList.FilterMode"/> enumerator value that specifies a filter mode used within the current <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.MRUColumnFilterListCount">
-            <summary>
-                <para>Gets or sets the maximum number of items that the column's MRU Filter Lists can store.
-</para>
-            </summary>
-            <value>An integer specifying the maximum number of items that the column's MRU Filter Lists can store.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.MRUFilterListPopupCount">
-            <summary>
-                <para>Gets or sets the maximum number of items the TreeList's MRU Filter List can display at once.
-</para>
-            </summary>
-            <value>An integer value that determines the maximum number of items that the TreeList's MRU Filter List can display at once.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.ShowAllValuesInCheckedFilterPopup">
-            <summary>
-                <para>Gets or sets whether the column <b>filter dropdown</b> represented as a checked list shows all available values. 
-</para>
-            </summary>
-            <value><b>true</b>, if the column <b>filter dropdown</b> shows all available values; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsFilter.ShowAllValuesInFilterPopup">
-            <summary>
-                <para>Gets or sets whether the Column's Filter DropDown shows all available values.
-</para>
-            </summary>
-            <value><b>true</b> to display all values in the Column's Filter DropDown; otherwise <b>false</b>.
-</value>
-
-
-        </member>
         <member name="T:DevExpress.XtraTreeList.CalcNodeDragImageIndexEventHandler">
 
             <summary>
@@ -5884,104 +5856,6 @@ If there is no underlying data that would fall into a specific date range, the c
 </para>
             </summary>
             <value>A <see cref="T:System.Drawing.Point"/> structure representing the current mouse pointer's coordinates.
-</value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraTreeList.TreeListOptionsNavigation">
-
-            <summary>
-                <para>Contains options that control node navigation functionality.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsNavigation.#ctor">
-            <summary>
-                <para>Initializes a new instance of the TreeListOptionsNavigation class.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsNavigation.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies settings of the specified object to the current object.
-</para>
-            </summary>
-            <param name="options">
-		An object whose settings are copied to the current object.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.AutoFocusNewNode">
-            <summary>
-                <para>Gets or sets whether a newly added node is automatically focused.
-</para>
-            </summary>
-            <value><b>true</b>, if a newly added node is automatically focused; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.AutoMoveRowFocus">
-            <summary>
-                <para>Gets or sets whether the Left Arrow and Right Arrow keyboard keys move focus to the next/previous node when the current node's last/first cell is focused.
-</para>
-            </summary>
-            <value><b>true</b>, if horizontal navigation keys can move focus between nodes; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.EnterMovesNextColumn">
-            <summary>
-                <para>Gets or sets whether the ENTER key can be used to move focus between cells.
-</para>
-            </summary>
-            <value><b>true</b>, to enable focus moving using the ENTER key; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.MoveOnEdit">
-            <summary>
-                <para>Gets or sets whether end-users can navigate through cells using Arrow keys while editing cells.
-</para>
-            </summary>
-            <value><b>true</b>, to allow end-users to navigate through cells using arrow keys while editing cells; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.UseBandsAdvHorzNavigation">
-            <summary>
-                <para>Gets or sets whether advanced horizontal navigation is enabled in a banded layout.
-
-</para>
-            </summary>
-            <value> </value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.UseBandsAdvVertNavigation">
-            <summary>
-                <para>Gets or sets whether advanced vertical navigation is enabled in a banded layout.
-</para>
-            </summary>
-            <value><b>true</b>, if advanced vertical navigation is enabled; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsNavigation.UseTabKey">
-            <summary>
-                <para>Gets or sets whether the TAB/SHIFT + TAB key combinations move focus to the next/previous node cell or to the next/previous control in the tab order.
-</para>
-            </summary>
-            <value><b>true</b>, if the TAB/SHIFT+TAB key combinations are processed by the Tree List; otherwise, <b>false</b>.
 </value>
 
 
@@ -6684,30 +6558,6 @@ If there is no underlying data that would fall into a specific date range, the c
             </summary>
             <value>A <see cref="T:DevExpress.XtraEditors.Repository.RepositoryItem"/> object representing the currently assigned editor.
 </value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraTreeList.FocusedColumnChangedEventHandler">
-
-            <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.FocusedColumnChanged"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.FocusedColumnChangedEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.FocusedColumnChangedEventArgs)">
-            <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.FocusedColumnChanged"/> event.
-</para>
-            </summary>
-            <param name="sender">
-		The event sender (typically the <see cref="T:DevExpress.XtraTreeList.TreeList"/> control).
-
-            </param>
-            <param name="e">
-		A <see cref="T:DevExpress.XtraTreeList.FocusedColumnChangedEventArgs"/> object that contains data related to the event.
-
-            </param>
 
 
         </member>
@@ -7430,158 +7280,6 @@ If there is no underlying data that would fall into a specific date range, the c
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs">
-
-            <summary>
-                <para>Provides data for the <see cref="E:DevExpress.XtraTreeList.TreeList.CustomDrawNodeCell"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.#ctor(DevExpress.Utils.Drawing.GraphicsCache,System.Drawing.Rectangle,DevExpress.Utils.AppearanceObject,DevExpress.XtraEditors.Drawing.BaseEditPainter,DevExpress.XtraTreeList.Columns.TreeListColumn,DevExpress.XtraTreeList.Nodes.TreeListNode,DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo,System.Boolean)">
-            <summary>
-                <para>Initializes a new instance of the <see cref="T:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs"/> class.
-</para>
-            </summary>
-            <param name="cache">
-		A <see cref="T:DevExpress.Utils.Drawing.GraphicsCache"/> object which specifies the storage for the most  used  pens, fonts and brushes. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Cache"/> property.
-
-            </param>
-            <param name="r">
-		A <see cref="T:System.Drawing.Rectangle"/> structure which represents the painted element's bounding rectangle. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Bounds"/> property.
-
-            </param>
-            <param name="appearance">
-		An <see cref="T:DevExpress.Utils.AppearanceObject"/> object which specifies the painted cell's appearance settings. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Appearance"/> property.
-
-            </param>
-            <param name="painter">
-		A <see cref="T:DevExpress.XtraEditors.Drawing.BaseEditPainter"/> object that provides facilities for painting a cell using the default mechanism. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Painter"/> property.
-
-            </param>
-            <param name="column">
-		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListColumn"/> object which represents the column containing the painted cell. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Column"/> property.
-
-            </param>
-            <param name="node">
-		A <see cref="T:DevExpress.XtraTreeList.Nodes.TreeListNode"/> object which represents the node in which the painted cell resides This value is assigned to the <b>Node</b> property.
-
-            </param>
-            <param name="viewInfo">
-		A <see cref="T:DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo"/> object which provides view information on the painted cell's editor. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditViewInfo"/> property.
-
-            </param>
-            <param name="focused">
-		<b>true</b> if the painted cell has focus; otherwise, <b>false</b>. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Focused"/> property.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.#ctor(DevExpress.Utils.Drawing.GraphicsCache,System.Drawing.Rectangle,DevExpress.Utils.AppearanceObject,DevExpress.XtraEditors.Drawing.BaseEditPainter,DevExpress.XtraTreeList.Columns.TreeListColumn,DevExpress.XtraTreeList.Nodes.TreeListNode,DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo,System.Boolean,System.Boolean)">
-            <summary>
-                <para>Initializes a new instance of the CustomDrawNodeCellEventArgs class.
-</para>
-            </summary>
-            <param name="cache">
-		A <see cref="T:DevExpress.Utils.Drawing.GraphicsCache"/> object which specifies the storage for the most used  pens, fonts and brushes. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Cache"/> property.
-
-            </param>
-            <param name="r">
-		A <see cref="T:System.Drawing.Rectangle"/> structure which represents the painted element's bounding rectangle. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Bounds"/> property.
-
-            </param>
-            <param name="appearance">
-		An <see cref="T:DevExpress.Utils.AppearanceObject"/> object which specifies the painted cell's appearance settings. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Appearance"/> property.
-
-            </param>
-            <param name="painter">
-		A <see cref="T:DevExpress.XtraEditors.Drawing.BaseEditPainter"/> object that provides facilities for painting a cell using the default mechanism. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.Painter"/> property.
-
-            </param>
-            <param name="column">
-		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListColumn"/> object which represents the column containing the painted cell. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Column"/> property.
-
-            </param>
-            <param name="node">
-		A <see cref="T:DevExpress.XtraTreeList.Nodes.TreeListNode"/> object which represents the node in which the painted cell resides This value is assigned to the <b>Node</b> property.
-
-            </param>
-            <param name="viewInfo">
-		A <see cref="T:DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo"/> object which provides view information on the painted cell's editor. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditViewInfo"/> property.
-
-            </param>
-            <param name="focused">
-		<b>true</b>, if the painted cell has focus; otherwise, <b>false</b>. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Focused"/> property.
-
-            </param>
-            <param name="isRightToLeft">
-		A Boolean value that specifies whether the TreeList's elements are aligned to support locales using right-to-left fonts. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CustomDrawEventArgs.IsRightToLeft"/> property.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.CellText">
-            <summary>
-                <para>Gets the painted cell's display text.
-</para>
-            </summary>
-            <value>A string value representing the painted cell's display text.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.CellValue">
-            <summary>
-                <para>Gets the painted cell's value.
-</para>
-            </summary>
-            <value>An object representing the painted cell's value.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Column">
-            <summary>
-                <para>Gets the painted cell's column.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListColumn"/> object representing the column that contains the painted cell.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditPainter">
-            <summary>
-                <para>Gets the editor's painter object used to paint a cell.
-</para>
-            </summary>
-            <value>A <b>BaseEditPainter</b> object providing a painting mechanism for the painted editor.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.EditViewInfo">
-            <summary>
-                <para>Gets the editor's view information.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraEditors.ViewInfo.BaseEditViewInfo"/> object providing view information on the painted cell's editor.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.CustomDrawNodeCellEventArgs.Focused">
-            <summary>
-                <para>Gets a value indicating whether the painted cell has focus.
-</para>
-            </summary>
-            <value><b>true</b> if the painted cell has focus; otherwise. <b>false</b>.
-</value>
-
-
-        </member>
         <member name="T:DevExpress.XtraTreeList.CustomDrawNodeButtonEventHandler">
 
             <summary>
@@ -8259,91 +7957,60 @@ If there is no underlying data that would fall into a specific date range, the c
 
 
         </member>
-        <member name="T:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop">
+        <member name="T:DevExpress.XtraTreeList.CalcNodeHeightEventHandler">
 
             <summary>
-                <para>Contains options that control node drag-and-drop functionality.
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.CalcNodeHeight"/> event.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.#ctor">
+        <member name="M:DevExpress.XtraTreeList.CalcNodeHeightEventHandler.Invoke(System.Object,DevExpress.XtraTreeList.CalcNodeHeightEventArgs)">
             <summary>
-                <para>Initializes a new instance of the TreeListOptionsDragAndDrop class.
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraTreeList.TreeList.CalcNodeHeight"/> event.
 </para>
             </summary>
+            <param name="sender">
+		The event sender (typically the <see cref="T:DevExpress.XtraTreeList.TreeList"/> control).
 
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.AcceptOuterNodes">
-            <summary>
-                <para>Gets or sets whether the current TreeList accepts nodes being dragged from another TreeList control.
-</para>
-            </summary>
-            <value><b>true</b>, if the current TreeList accepts nodes being dragged from another TreeList control; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies settings of the specified object to the current object.
-</para>
-            </summary>
-            <param name="options">
-		An object whose settings are copied to the current object.
+            </param>
+            <param name="e">
+		A <see cref="T:DevExpress.XtraTreeList.CalcNodeHeightEventArgs"/> object that contains data related to the event.
 
             </param>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.CanCloneNodesOnDrop">
+        <member name="T:DevExpress.XtraTreeList.CalcNodeHeightEventArgs">
+
             <summary>
-                <para>Gets or sets whether end-users are allowed to clone nodes using drag-and-drop. 
+                <para>Provides data for the <see cref="E:DevExpress.XtraTreeList.TreeList.CalcNodeHeight"/> event.
 </para>
             </summary>
-            <value><b>true</b>, to allow end-users to clone nodes using drag-and-drop; otherwise, <b>false</b>.
-</value>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.CalcNodeHeightEventArgs.#ctor(DevExpress.XtraTreeList.Nodes.TreeListNode,System.Int32)">
+            <summary>
+                <para>Creates an instance of the <see cref="T:DevExpress.XtraTreeList.CalcNodeHeightEventArgs"/> class.
+</para>
+            </summary>
+            <param name="node">
+		A <see cref="T:DevExpress.XtraTreeList.Nodes.TreeListNode"/> object representing the node whose height is calculated. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.NodeEventArgs.Node"/> property.
+
+            </param>
+            <param name="nodeHeight">
+		An integer value specifying the node height. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.CalcNodeHeightEventArgs.NodeHeight"/> property.
+
+            </param>
 
 
         </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.DragNodesExpandDelay">
+        <member name="P:DevExpress.XtraTreeList.CalcNodeHeightEventArgs.NodeHeight">
             <summary>
-                <para>Gets or sets the amount of time (in milliseconds) before the node is expanded when another node is dragged over it.
+                <para>Gets or sets the current node's height in pixels.
 </para>
             </summary>
-            <value>An integer value specifying the delay (in milliseconds) from the time a dragged node begins hovering over a collapsed node to the time that the node is expanded.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.DragNodesMode">
-            <summary>
-                <para>Gets or sets whether single or multiple nodes can be dragged simultaneously, or whether the drag-and-drop functionality is disabled.
-
-</para>
-            </summary>
-            <value>Nodes drag-and-drop mode.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.DropNodesMode">
-            <summary>
-                <para>Gets or sets whether the SHIFT key needs to be pressed to insert a node before another node.
-</para>
-            </summary>
-            <value><b>true</b>, if the SHIFT key needs to be pressed to insert a node before another node; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraTreeList.TreeListOptionsDragAndDrop.ExpandNodeOnDrag">
-            <summary>
-                <para>Gets or sets whether collapsed nodes are automatically expanded when the node currently being dragged is hovered over them.
-</para>
-            </summary>
-            <value><b>true</b>, if collapsed nodes are automatically expanded when a dragged node is hovered over them; otherwise, <b>false</b>.
+            <value>An integer value specifying the node's height in pixels.
 </value>
 
 
@@ -12145,7 +11812,7 @@ the tree structure due to adding, deleting and modifying nodes, until the <see c
                 <para>Returns the list of currently selected cells.
 </para>
             </summary>
-            <returns>A <see cref="List"/> object that contains the cells currently selected.
+            <returns>A <see cref="List&lt;TreeListCell&gt;"/> object that contains the cells currently selected.
 
 </returns>
 
@@ -15379,6 +15046,339 @@ When handling the <see cref="E:DevExpress.XtraTreeList.TreeList.GetSelectImage"/
                 <para>The test point belongs to the Tree List's vertical scroll bar.
 </para>
             </summary>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.Columns.TreeListBandCollection">
+
+            <summary>
+                <para>A band collection within a <see cref="T:DevExpress.XtraTreeList.TreeList"/>.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.#ctor(DevExpress.XtraTreeList.Columns.TreeListBand)">
+            <summary>
+                <para>Initializes a new instance of the TreeListBandCollection class.
+</para>
+            </summary>
+            <param name="ownerBand">
+		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListBand"/> object that will own the created band collection. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.OwnerBand"/> property.
+
+
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.#ctor(DevExpress.XtraTreeList.Columns.TreeListBand,DevExpress.XtraTreeList.TreeList)">
+            <summary>
+                <para>Initializes a new instance of a TreeListBandCollection class.
+</para>
+            </summary>
+            <param name="ownerBand">
+		A <see cref="T:DevExpress.XtraTreeList.Columns.TreeListBand"/> object that will own the created band collection. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.OwnerBand"/> property.
+
+
+            </param>
+            <param name="treeList">
+		A <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that will own the created band collection. This value is assigned to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.TreeList"/> property.
+
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Add(DevExpress.XtraTreeList.Columns.TreeListBand)">
+            <summary>
+                <para>Adds the specified band to the end of the band collection.
+</para>
+            </summary>
+            <param name="band">
+		An object that specifies the band to be added.
+
+            </param>
+            <returns>An object specifying the new band.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Add">
+            <summary>
+                <para>Creates a new band and adds it to the band collection.
+</para>
+            </summary>
+            <returns>An object that specifies the new band.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.AddBand(System.String)">
+            <summary>
+                <para>Creates a new band with the specified caption and appends it to the band collection.
+</para>
+            </summary>
+            <param name="caption">
+		A value that specifies the band's caption. This value is assign to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBand.Caption"/> property.
+
+            </param>
+            <returns>An object that specifies the new band.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.AddRange(DevExpress.XtraTreeList.Columns.TreeListBand[])">
+            <summary>
+                <para>Adds an array of bands to the end of the band collection.
+</para>
+            </summary>
+            <param name="bands">
+		An array of bands to be added to the collection. 
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Contains(DevExpress.XtraTreeList.Columns.TreeListBand,System.Boolean)">
+            <summary>
+                <para>Returns whether the specified band is contained within the current band collection or any of its bands' <see cref="P:DevExpress.XtraTreeList.TreeList.Bands"/> collections.
+</para>
+            </summary>
+            <param name="band">
+		An object that specifies the band to be found.
+
+            </param>
+            <param name="recursive">
+		<b>true</b>, if the search should be extended to the <see cref="P:DevExpress.XtraTreeList.Columns.TreeListBand.Bands"/> collections of the current collection's bands; otherwise, <b>false</b>.
+
+            </param>
+            <returns><b>true</b>, if the specified band is found; otherwise, <b>false</b>.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.CreateBand">
+            <summary>
+                <para>Create a new instance of the TreeListBandCollection class with default settings.
+</para>
+            </summary>
+            <returns>An object that specifies the created band.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.IndexOf(DevExpress.XtraTreeList.Columns.TreeListBand)">
+            <summary>
+                <para>Returns the specified band's position within the collection.
+</para>
+            </summary>
+            <param name="band">
+		An object that specifies the band to locate.
+
+            </param>
+            <returns>The zero-based index of the specified band within the collection; <b>-1</b>, if the collection does not contain the specified band.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Insert(System.Int32,DevExpress.XtraTreeList.Columns.TreeListBand)">
+            <summary>
+                <para>Inserts the specified band to the specified position within the band collection.
+</para>
+            </summary>
+            <param name="position">
+		The zero-based index at which the specified band should be inserted.
+
+            </param>
+            <param name="band">
+		An <see cref="T:DevExpress.XtraTreeList.Columns.TreeListBand"/> object to be inserted.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Item(System.Int32)">
+            <summary>
+                <para>Provides indexed access to the band collection.
+</para>
+            </summary>
+            <param name="index">
+		The band's zero-based index.
+
+            </param>
+            <value>The band located at the specified position within the collection.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Item(System.String)">
+            <summary>
+                <para>Returns a band with the specified name within the collection.
+</para>
+            </summary>
+            <param name="name">
+		The band with the specified name; <b>null</b> (<b>Nothing</b> in visual basic) if no band is found. 
+
+            </param>
+            <value>The band's name to be found.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.OwnerBand">
+            <summary>
+                <para>Gets a band that owns the current collection.
+</para>
+            </summary>
+            <value>An object that specifies the band owning the current collection.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.Remove(DevExpress.XtraTreeList.Columns.TreeListBand)">
+            <summary>
+                <para>Removes the specified band from the band collection.
+</para>
+            </summary>
+            <param name="band">
+		An object that specifies the band to be removed.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.Columns.TreeListBandCollection.SetBandIndex(System.Int32,DevExpress.XtraTreeList.Columns.TreeListBand)">
+            <summary>
+                <para>Changes the specified band's position within the collection.
+</para>
+            </summary>
+            <param name="newIndex">
+		A new band position within the collection.
+
+            </param>
+            <param name="band">
+		An object that specifies the band to be moved.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.TreeList">
+            <summary>
+                <para>Gets a <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that owns the current collection.
+</para>
+            </summary>
+            <value>An object owning the current collection.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.Columns.TreeListBandCollection.VisibleCount">
+            <summary>
+                <para>Gets the number of visible bands within the collection.
+</para>
+            </summary>
+            <value>A value that specifies the number of visible bands. 
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule">
+
+            <summary>
+                <para>Specifies a single style format rule for a <see cref="T:DevExpress.XtraTreeList.TreeList"/> control.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.#ctor">
+            <summary>
+                <para>Initializes a new instance of a TreeListFormatRule class.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ApplyToRow">
+            <summary>
+                <para>Gets or sets whether the format is applied to the entire row.
+</para>
+            </summary>
+            <value><b>true</b>, if the format is applied to the entire row; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.Assign(DevExpress.XtraEditors.FormatRuleBase)">
+            <summary>
+                <para>Copies settings from the specified object to the current object.
+</para>
+            </summary>
+            <param name="source">
+		An object whose settings are to be copied to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.Column">
+            <summary>
+                <para>Gets or sets a column that provides values to test against the current format rule. By default, the format is applied to this column.
+</para>
+            </summary>
+            <value>The column that provides values to test against the current formatting rule.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ColumnApplyTo">
+            <summary>
+                <para>Gets or sets a column, to which the format should be applied instead of the column specified by the <see cref="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.Column"/> property.
+
+</para>
+            </summary>
+            <value>The target column to which the format is applied.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ColumnApplyToName">
+            <summary>
+                <para>This member supports the internal infrastructure, and is not intended to be used directly from your code. 
+</para>
+            </summary>
+            <value>The name of the column to which a format is applied.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.ColumnName">
+            <summary>
+                <para>This member supports the internal infrastructure, and is not intended to be used directly from your code.
+</para>
+            </summary>
+            <value>The name of the column that provides values to test against the current formatting rule.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.IsValid">
+            <summary>
+                <para>Gets whether the current TreeListFormatRule object is properly customized. 
+</para>
+            </summary>
+            <value><b>true</b>, if the TreeListFormatRule object is properly customized; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraTreeList.StyleFormatConditions.TreeListFormatRule.TreeList">
+            <summary>
+                <para>Gets the <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that owns the current formatting rule.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraTreeList.TreeList"/> object that owns the current formatting rule.
+</value>
 
 
         </member>

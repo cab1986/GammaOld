@@ -48,393 +48,25 @@
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.Utils.MoveType">
+        <member name="T:DevExpress.XtraLayout.Utils.LayoutType">
 
             <summary>
-                <para>Lists the values that specify how a layout item is inserted to another position.
+                <para>Contains the values that specify how an item is positioned next to a base item.
 </para>
             </summary>
 
         </member>
-        <member name="F:DevExpress.XtraLayout.Utils.MoveType.Inside">
+        <member name="F:DevExpress.XtraLayout.Utils.LayoutType.Horizontal">
             <summary>
-                <para>An item is inserted inside the specified item.
-
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.Utils.MoveType.Outside">
-            <summary>
-                <para>An item is inserted outside the specified item. In this case, the inserted item is reduced to its minimum size which is specified by its <see cref="P:DevExpress.XtraLayout.BaseLayoutItem.MinSize"/> property.
-
+                <para>Specifies that an item is positioned horizontally next to a base item.
 </para>
             </summary>
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.Customization.LayoutItemDragController">
-
+        <member name="F:DevExpress.XtraLayout.Utils.LayoutType.Vertical">
             <summary>
-                <para>Contains methods to move a layout item to a position next to another layout item.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Utils.MoveType,DevExpress.XtraLayout.Utils.InsertLocation,DevExpress.XtraLayout.Utils.LayoutType,System.Drawing.Size)">
-            <summary>
-                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
-</para>
-            </summary>
-            <param name="dragItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
-
-
-            </param>
-            <param name="baseItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned.  This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
-
-            </param>
-            <param name="moveType">
-		A <see cref="T:DevExpress.XtraLayout.Utils.MoveType"/> value that specifies whether the <i>dragItem</i> is inserted inside or outside the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.MoveType"/> property.
-
-            </param>
-            <param name="insertLocation">
-		A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <i>dragItem</i> is inserted before or after the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation"/> property.
-
-
-
-            </param>
-            <param name="layoutType">
-		A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <i>draItem</i> is inserted horizontally or vertically next to the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType"/> property.
-
-
-            </param>
-            <param name="rating">
-		 
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem)">
-            <summary>
-                <para>Initializes a new LayoutItemDragController instance with settings specifying that the<i>dragItem</i> should be inserted horizontally after the <i>baseItem</i>, occupying its largest part (typically, half the region).
-
-
-</para>
-            </summary>
-            <param name="dragItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
-
-            </param>
-            <param name="baseItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Utils.InsertLocation,DevExpress.XtraLayout.Utils.LayoutType)">
-            <summary>
-                <para>Initializes a new LayoutItemDragController instance with settings specifying that the <i>dragItem</i> should be inserted next to the <i>baseItem</i>, occupying its largest part (typically, half the region).
-
-</para>
-            </summary>
-            <param name="dragItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
-
-
-            </param>
-            <param name="baseItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
-
-
-            </param>
-            <param name="insertLocation">
-		A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <i>dragItem</i> is inserted before or after the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation"/> property.
-
-            </param>
-            <param name="layoutType">
-		A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <i>dragItem</i> is inserted horizontally or vertically next to the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType"/> property.
-
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.LayoutGroup,System.Drawing.Point)">
-            <summary>
-                <para>Initializes a new LayoutItemDragController instance with settings specifying that the <i>dragItem</i> should be inserted at a certain position within a specific group.
-
-</para>
-            </summary>
-            <param name="dragItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
-
-
-            </param>
-            <param name="group">
-		A <see cref="T:DevExpress.XtraLayout.LayoutGroup"/> object into which the <i>dragItem</i> will be inserted.
-
-            </param>
-            <param name="pt">
-		A Point where the <i>dragItem</i> will be inserted into the group.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Utils.MoveType,DevExpress.XtraLayout.Utils.InsertLocation,DevExpress.XtraLayout.Utils.LayoutType)">
-            <summary>
-                <para>Initializes a new LayoutItemDragController instance with settings specifying that the <i>dragItem</i> should be inserted next to the <i>baseItem</i>.
-
-</para>
-            </summary>
-            <param name="dragItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
-
-
-            </param>
-            <param name="baseItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
-
-            </param>
-            <param name="moveType">
-		A <see cref="T:DevExpress.XtraLayout.Utils.MoveType"/> value that specifies whether the <i>dragItem</i> is inserted inside or outside the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.MoveType"/> property.
-
-            </param>
-            <param name="insertLocation">
-		A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <i>dragItem</i> is inserted before or after the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation"/> property.
-
-
-
-            </param>
-            <param name="layoutType">
-		A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <i>dragItem</i> is inserted horizontally or vertically next to the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType"/> property.
-
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Customization.LayoutItemDragController)">
-            <summary>
-                <para>Initializes a new LayoutItemDragController instance with settings specifying that the dragItem should be inserted next to another item, as specified by the settings of the controller parameter. 
-
-</para>
-            </summary>
-            <param name="dragItem">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property. 
-
-            </param>
-            <param name="controller">
-		A LayoutItemDragController object, whose settings determine how a dragItem is inserted next to another item. 
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.Drag">
-            <summary>
-                <para>Inserts the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> to a position, specified by the settings of the current LayoutItemDragController object. This method cannot be used to move items that do not belong to a <see cref="T:DevExpress.XtraLayout.LayoutControl"/>.
-
-</para>
-            </summary>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragBounds">
-            <summary>
-                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
-</para>
-            </summary>
-            <value> 
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem">
-            <summary>
-                <para>Gets the item to be inserted to a position, specified by the settings of the LayoutItemDragController object.
-
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object that represents the item to be inserted.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragOutsideSize">
-            <summary>
-                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
-</para>
-            </summary>
-            <value> 
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragWildItem">
-            <summary>
-                <para>Inserts the orphan <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> to a position specified by the settings of the current LayoutItemDragController object. This method cannot be used to move items that belong to a <see cref="T:DevExpress.XtraLayout.LayoutControl"/>.
-
-</para>
-            </summary>
-            <returns><b>true</b> if the item has been successfully inserted; otherwise, <b>false</b>.
-</returns>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitInfo">
-            <summary>
-                <para>Gets an object that identifies an element located at the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitPoint"/> point. This member is in effect if the current LayoutItemDragController object has been initiailized using a constructor with a Point parameter.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo"/> object that provides information on the element located at the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitPoint"/> point.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitPoint">
-            <summary>
-                <para>Gets the point at which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> will be inserted. This member is in effect if the current LayoutItemDragController object has been initialized using a constructor with a Point parameter.
-
-
-</para>
-            </summary>
-            <value>A Point at which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> will be inserted.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation">
-            <summary>
-                <para>Gets whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted before or after the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
-
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted before or after the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item">
-            <summary>
-                <para>Gets the item next to which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object that identifies the item next to which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType">
-            <summary>
-                <para>Gets whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted horizontally or vertically next to the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted horizontally or vertically next to the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.MoveType">
-            <summary>
-                <para>Gets whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted inside or outside the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
-</para>
-            </summary>
-            <value>A <see cref="T:DevExpress.XtraLayout.Utils.MoveType"/> value that specifies whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted inside or outside the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Rating">
-            <summary>
-                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
-</para>
-            </summary>
-            <value> 
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.ShouldRestoreOriginalSize">
-            <summary>
-                <para>For internal use.
-</para>
-            </summary>
-            <value> 
-</value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraLayout.ControlMaxSizeCalcMode">
-
-            <summary>
-                <para>Contains values that specify how default maximum size constraints are calculated for controls that implement the <see cref="T:DevExpress.Utils.Controls.IXtraResizableControl"/> interface.
-</para>
-            </summary>
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.ControlMaxSizeCalcMode.CombineControlMaximumSizeAndIXtraResizableMaxSize">
-            <summary>
-                <para>The default maximum width is calculated for a control as the maximum of two values: Control.MaximumSize.Width and IXtraResizableControl.MaxSize.Width.
-<para>
-The default maximum height is calculated for a control as the maximum of two values: Control.MaximumSize.Height and IXtraResizableControl.MaxSize.Height.
-</para>
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.ControlMaxSizeCalcMode.UseControlMaximumSize">
-            <summary>
-                <para>The default maximum width and height are specified by the Control.MaximumSize.Width and Control.MaximumSize.Height values, respectively.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.ControlMaxSizeCalcMode.UseControlMaximumSizeIfNotZero">
-            <summary>
-                <para>The default maximum width is specified by the Control.MaximumSize.Width property if it is not set to <b>0</b>; otherwise, the default maximum width is specified by the IXtraResizableControl.MaxSize.Width property.
-<para>
-The default maximum height is specified by the Control.MaximumSize.Height property if it is not set to <b>0</b>; otherwise, the default maximum height is specified by the IXtraResizableControl.MaxSize.Height property.
-</para>
-</para>
-            </summary>
-
-
-        </member>
-        <member name="T:DevExpress.XtraLayout.AutoSizeModes">
-
-            <summary>
-                <para>Enumerates the options that specify how a <see cref="T:DevExpress.XtraLayout.LayoutControl"/>'s size is changed when it is positioned within another LayoutControl.
-</para>
-            </summary>
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.AutoSizeModes.ResizeToMinSize">
-            <summary>
-                <para>The embedded LayoutControl's size is fixed and is equal to its minimum size.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.AutoSizeModes.UseMinAndMaxSize">
-            <summary>
-                <para>The embedded LayoutControl's size can vary between its minimum and maximum sizes. 
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.AutoSizeModes.UseMinSizeAndGrow">
-            <summary>
-                <para>The embedded LayoutControl's minimum size is restricted; while its maximum size is unlimited.
+                <para>Specifies that an item is positioned vertically next to a base item.
 </para>
             </summary>
 
@@ -535,9 +167,11 @@ The default maximum height is specified by the Control.MaximumSize.Height proper
         </member>
         <member name="P:DevExpress.XtraDataLayout.DataLayoutControl.AllowGeneratingNestedGroups">
             <summary>
-                <para> </para>
+                <para>Gets or sets whether or not this DataLayoutControl is allowed to automatically create nested groups.
+</para>
             </summary>
-            <value> </value>
+            <value><b>true</b>, if this DataLayoutControl is allowed to automatically create nested groups; otherwise, <b>false</b>.
+</value>
 
 
         </member>
@@ -661,6 +295,197 @@ The default maximum height is specified by the Control.MaximumSize.Height proper
 </para>
             </summary>
             <value>A System.ComponentModel.ISite object.
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraLayout.LayoutSerializationOptions">
+
+            <summary>
+                <para>Contains options that control how the LayoutControl's layout is saved to and restored from a data store (an XML file, stream or the system registry). 
+
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.LayoutSerializationOptions.#ctor">
+            <summary>
+                <para>Initializes a new instance of the LayoutSerializationOptions class with default settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.LayoutSerializationOptions.Assign(DevExpress.Utils.Controls.BaseOptions)">
+            <summary>
+                <para>Copies options from the specified object to the current object.
+</para>
+            </summary>
+            <param name="options">
+		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.DiscardOldItems">
+            <summary>
+                <para>Gets or sets whether the items that exist in a layout when it's restored, but that don't exist in the current layout control, should be discarded or added to the control.
+
+</para>
+            </summary>
+            <value><b>true</b> to discard the items that exist in the layout being restored, but don't exist in the current layout control; <b>false</b> to add these items to the layout control.
+
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RecreateIFixedItems">
+            <summary>
+                <para>Gets or sets whether or not secondary layout items should be re-created when restoring the LayoutControl's layout.
+</para>
+            </summary>
+            <value><b>true</b>, if secondary layout items should be re-created; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreAppearanceItemCaption">
+            <summary>
+                <para>Gets or sets whether the appearance settings of item captions are loaded when a layout is loaded from a data store.
+</para>
+            </summary>
+            <value>A Boolean value that specifies whether the corresponding appearance options are restored when a layout is restored.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreAppearanceTabPage">
+            <summary>
+                <para>Gets or sets whether the appearance settings of tab pages are loaded when a layout is loaded from a data store.
+</para>
+            </summary>
+            <value>A Boolean value that specifies whether the corresponding appearance options are restored when a layout is restored.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreGroupPadding">
+            <summary>
+                <para>Gets or sets whether layout groups' padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreGroupSpacing">
+            <summary>
+                <para>Gets or sets whether layout groups' spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutGroupAppearanceGroup">
+            <summary>
+                <para>Gets or sets whether the appearance settings of groups are loaded when a layout is loaded from a data store.
+</para>
+            </summary>
+            <value>A Boolean value that specifies whether the corresponding appearance options are restored when a layout is restored.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemCustomizationFormText">
+            <summary>
+                <para>Gets or sets whether values of layout items' <see cref="P:DevExpress.XtraLayout.BaseLayoutItem.CustomizationFormText"/> properties are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemPadding">
+            <summary>
+                <para>Gets or sets whether layout items' padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemSpacing">
+            <summary>
+                <para>Gets or sets whether layout items' spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemText">
+            <summary>
+                <para>Gets or sets whether layout items' captions are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> if layout items' captions are restored when restoring the control's layout from a data store; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreRootGroupPadding">
+            <summary>
+                <para>Gets or sets whether the layout root group's padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreRootGroupSpacing">
+            <summary>
+                <para>Gets or sets whether the layout root group's spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreTabbedGroupPadding">
+            <summary>
+                <para>Gets or sets whether tabbed groups' padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreTabbedGroupSpacing">
+            <summary>
+                <para>Gets or sets whether tabbed groups' spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreTextToControlDistance">
+            <summary>
+                <para>Gets or sets whether values of layout items' <see cref="P:DevExpress.XtraLayout.BaseLayoutItem.TextToControlDistance"/> properties are restored when restoring the control's layout from a data store.
+</para>
+            </summary>
+            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
 </value>
 
 
@@ -1140,74 +965,6 @@ For the root group, its parent is the LayoutControl itself (the LayoutControl's 
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.LayoutMenuEventArgs">
-
-            <summary>
-                <para>Provides data for the <see cref="E:DevExpress.XtraLayout.LayoutControl.PopupMenuShowing"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.LayoutMenuEventArgs.#ctor(DevExpress.Utils.Menu.DXPopupMenu,DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo,System.Boolean)">
-            <summary>
-                <para>Initializes a new instance of the LayoutMenuEventArgs class with the specified settings.
-</para>
-            </summary>
-            <param name="menu">
-		A <see cref="T:DevExpress.Utils.Menu.DXPopupMenu"/> object representing the menu to be displayed. This object is assigned to the Menu property.
-
-            </param>
-            <param name="hitInfo">
-		A <see cref="T:DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo"/> object that identifies the clicked object. This object is assigned to the HitInfo property.
-
-            </param>
-            <param name="allow">
-		A Boolean value that specifies whether the menu is allowed to be displayed. This value is assigned to the Allow property.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.LayoutMenuEventArgs.#ctor(DevExpress.Utils.Menu.DXPopupMenu,DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo)">
-            <summary>
-                <para>Initializes a new instance of the LayoutMenuEventArgs class with the specified settings.
-</para>
-            </summary>
-            <param name="menu">
-		A <see cref="T:DevExpress.Utils.Menu.DXPopupMenu"/> object representing the menu to be displayed. This object is assigned to the Menu property.
-
-            </param>
-            <param name="hitInfo">
-		A <see cref="T:DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo"/> object that identifies the clicked object. This object is assigned to the HitInfo property.
-
-            </param>
-
-
-        </member>
-        <member name="T:DevExpress.XtraLayout.LayoutMenuEventHandler">
-
-            <summary>
-                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraLayout.LayoutControl.PopupMenuShowing"/> event.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.LayoutMenuEventHandler.Invoke(System.Object,DevExpress.XtraLayout.LayoutMenuEventArgs)">
-            <summary>
-                <para>Represents a method for handling the <see cref="E:DevExpress.XtraLayout.LayoutControl.PopupMenuShowing"/> event.
-</para>
-            </summary>
-            <param name="sender">
-		The event source. This identifies the LayoutControl control which fires the event.
-
-            </param>
-            <param name="e">
-		A <see cref="T:DevExpress.XtraLayout.LayoutMenuEventArgs"/> object that contains data for the event.
-
-            </param>
-
-
-        </member>
         <member name="T:DevExpress.XtraLayout.AutoAlignMode">
 
             <summary>
@@ -1361,9 +1118,11 @@ For the root group, its parent is the LayoutControl itself (the LayoutControl's 
         </member>
         <member name="P:DevExpress.XtraLayout.OptionsView.AllowLockSizeIndicators">
             <summary>
-                <para> </para>
+                <para>Gets or sets whether or not lock size indicators should be displayed during the runtime customization.
+</para>
             </summary>
-            <value> </value>
+            <value>A <see cref="DefaultBoolean"/> enumerator value that specifies whether or not lock size indicators should be displayed during the runtime customization.
+</value>
 
 
         </member>
@@ -2156,192 +1915,124 @@ For the root group, its parent is the LayoutControl itself (the LayoutControl's 
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.LayoutSerializationOptions">
+        <member name="T:DevExpress.XtraLayout.OptionsPrintItem">
 
             <summary>
-                <para>Contains options that control how the LayoutControl's layout is saved to and restored from a data store (an XML file, stream or the system registry). 
-
+                <para>Provides print and export options for layout items.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraLayout.LayoutSerializationOptions.#ctor">
+        <member name="M:DevExpress.XtraLayout.OptionsPrintItem.#ctor(DevExpress.XtraLayout.BaseLayoutItem)">
             <summary>
-                <para>Initializes a new instance of the LayoutSerializationOptions class with default settings.
+                <para>Initializes a new instance of an <see cref="T:DevExpress.XtraLayout.OptionsPrintItem"/> class with the specified owner.
 </para>
             </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.LayoutSerializationOptions.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies options from the specified object to the current object.
-</para>
-            </summary>
-            <param name="options">
-		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
+            <param name="owner">
+		An object that will own the created object.
 
             </param>
 
 
         </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.DiscardOldItems">
-            <summary>
-                <para>Gets or sets whether the items that exist in a layout when it's restored, but that don't exist in the current layout control, should be discarded or added to the control.
+        <member name="T:DevExpress.XtraLayout.ColumnDefinition">
 
+            <summary>
+                <para>Defines a column in a table layout.
 </para>
             </summary>
-            <value><b>true</b> to discard the items that exist in the layout being restored, but don't exist in the current layout control; <b>false</b> to add these items to the layout control.
 
+        </member>
+        <member name="M:DevExpress.XtraLayout.ColumnDefinition.#ctor">
+            <summary>
+                <para>Initializes a new instance of a ColumnDefinition class with the default settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.ColumnDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup)">
+            <summary>
+                <para>Initializes a new instance of a ColumnDefinition class with the specified owner.
+</para>
+            </summary>
+            <param name="owner">
+		A layout group that owns the created ColumnDefinition object.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.ColumnDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup,System.Double,System.Windows.Forms.SizeType)">
+            <summary>
+                <para>Initializes a new instance of a ColumnDefinition class with the specified settings.
+</para>
+            </summary>
+            <param name="owner">
+		A layout group that owns the created ColumnDefinition object.
+
+            </param>
+            <param name="size">
+		The width of the created column. This value is assigned to the <see cref="P:DevExpress.XtraLayout.ColumnDefinition.Width"/> property.
+
+            </param>
+            <param name="sizingType">
+		The size type of the created column. This value is assigned to the <see cref="P:DevExpress.XtraLayout.ColumnDefinition.SizeType"/> property.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.ColumnDefinition.SizeType">
+            <summary>
+                <para>Gets or sets the column's size type in a table layout.
+</para>
+            </summary>
+            <value>A value that specifies the column's size type.
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RecreateIFixedItems">
+        <member name="P:DevExpress.XtraLayout.ColumnDefinition.Width">
             <summary>
-                <para> </para>
-            </summary>
-            <value> </value>
+                <para>Gets or sets the column width, in pixels or as a percentage, according to the <see cref="P:DevExpress.XtraLayout.ColumnDefinition.SizeType"/>.
 
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreAppearanceItemCaption">
-            <summary>
-                <para>Gets or sets whether the appearance settings of item captions are loaded when a layout is loaded from a data store.
 </para>
             </summary>
-            <value>A Boolean value that specifies whether the corresponding appearance options are restored when a layout is restored.
+            <value>A value that specifies the column width. 
 </value>
 
 
         </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreAppearanceTabPage">
+        <member name="T:DevExpress.XtraLayout.AutoSizeModes">
+
             <summary>
-                <para>Gets or sets whether the appearance settings of tab pages are loaded when a layout is loaded from a data store.
+                <para>Enumerates the options that specify how a <see cref="T:DevExpress.XtraLayout.LayoutControl"/>'s size is changed when it is positioned within another LayoutControl.
 </para>
             </summary>
-            <value>A Boolean value that specifies whether the corresponding appearance options are restored when a layout is restored.
-</value>
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.AutoSizeModes.ResizeToMinSize">
+            <summary>
+                <para>The embedded LayoutControl's size is fixed and is equal to its minimum size.
+</para>
+            </summary>
 
 
         </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreGroupPadding">
+        <member name="F:DevExpress.XtraLayout.AutoSizeModes.UseMinAndMaxSize">
             <summary>
-                <para>Gets or sets whether layout groups' padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
+                <para>The embedded LayoutControl's size can vary between its minimum and maximum sizes. 
 </para>
             </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
 
 
         </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreGroupSpacing">
+        <member name="F:DevExpress.XtraLayout.AutoSizeModes.UseMinSizeAndGrow">
             <summary>
-                <para>Gets or sets whether layout groups' spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
+                <para>The embedded LayoutControl's minimum size is restricted; while its maximum size is unlimited.
 </para>
             </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutGroupAppearanceGroup">
-            <summary>
-                <para>Gets or sets whether the appearance settings of groups are loaded when a layout is loaded from a data store.
-</para>
-            </summary>
-            <value>A Boolean value that specifies whether the corresponding appearance options are restored when a layout is restored.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemCustomizationFormText">
-            <summary>
-                <para>Gets or sets whether values of layout items' <see cref="P:DevExpress.XtraLayout.BaseLayoutItem.CustomizationFormText"/> properties are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemPadding">
-            <summary>
-                <para>Gets or sets whether layout items' padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemSpacing">
-            <summary>
-                <para>Gets or sets whether layout items' spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreLayoutItemText">
-            <summary>
-                <para>Gets or sets whether layout items' captions are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> if layout items' captions are restored when restoring the control's layout from a data store; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreRootGroupPadding">
-            <summary>
-                <para>Gets or sets whether the layout root group's padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreRootGroupSpacing">
-            <summary>
-                <para>Gets or sets whether the layout root group's spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreTabbedGroupPadding">
-            <summary>
-                <para>Gets or sets whether tabbed groups' padding settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Padding"/>) are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreTabbedGroupSpacing">
-            <summary>
-                <para>Gets or sets whether tabbed groups' spacing settings (<see cref="P:DevExpress.XtraLayout.BaseLayoutItem.Spacing"/>) are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.LayoutSerializationOptions.RestoreTextToControlDistance">
-            <summary>
-                <para>Gets or sets whether values of layout items' <see cref="P:DevExpress.XtraLayout.BaseLayoutItem.TextToControlDistance"/> properties are restored when restoring the control's layout from a data store.
-</para>
-            </summary>
-            <value><b>true</b> to restore the corresponding settings; otherwise, <b>false</b>.
-</value>
 
 
         </member>
@@ -2779,25 +2470,51 @@ For the root group, its parent is the LayoutControl itself (the LayoutControl's 
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.Utils.LayoutType">
+        <member name="T:DevExpress.XtraLayout.LayoutMenuEventHandler">
 
             <summary>
-                <para>Contains the values that specify how an item is positioned next to a base item.
+                <para>Represents a method that will handle the <see cref="E:DevExpress.XtraLayout.LayoutControl.PopupMenuShowing"/> event.
 </para>
             </summary>
 
         </member>
-        <member name="F:DevExpress.XtraLayout.Utils.LayoutType.Horizontal">
+        <member name="M:DevExpress.XtraLayout.LayoutMenuEventHandler.Invoke(System.Object,DevExpress.XtraLayout.LayoutMenuEventArgs)">
             <summary>
-                <para>Specifies that an item is positioned horizontally next to a base item.
+                <para>Represents a method for handling the <see cref="E:DevExpress.XtraLayout.LayoutControl.PopupMenuShowing"/> event.
+</para>
+            </summary>
+            <param name="sender">
+		The event source. This identifies the LayoutControl control which fires the event.
+
+            </param>
+            <param name="e">
+		A <see cref="T:DevExpress.XtraLayout.LayoutMenuEventArgs"/> object that contains data for the event.
+
+            </param>
+
+
+        </member>
+        <member name="T:DevExpress.XtraLayout.Utils.MoveType">
+
+            <summary>
+                <para>Lists the values that specify how a layout item is inserted to another position.
+</para>
+            </summary>
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.Utils.MoveType.Inside">
+            <summary>
+                <para>An item is inserted inside the specified item.
+
 </para>
             </summary>
 
 
         </member>
-        <member name="F:DevExpress.XtraLayout.Utils.LayoutType.Vertical">
+        <member name="F:DevExpress.XtraLayout.Utils.MoveType.Outside">
             <summary>
-                <para>Specifies that an item is positioned vertically next to a base item.
+                <para>An item is inserted outside the specified item. In this case, the inserted item is reduced to its minimum size which is specified by its <see cref="P:DevExpress.XtraLayout.BaseLayoutItem.MinSize"/> property.
+
 </para>
             </summary>
 
@@ -7961,6 +7678,302 @@ For the root group, its parent is the LayoutControl itself (the LayoutControl's 
 
 
         </member>
+        <member name="T:DevExpress.XtraLayout.Customization.LayoutItemDragController">
+
+            <summary>
+                <para>Contains methods to move a layout item to a position next to another layout item.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Utils.MoveType,DevExpress.XtraLayout.Utils.InsertLocation,DevExpress.XtraLayout.Utils.LayoutType,System.Drawing.Size)">
+            <summary>
+                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
+</para>
+            </summary>
+            <param name="dragItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
+
+
+            </param>
+            <param name="baseItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned.  This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
+
+            </param>
+            <param name="moveType">
+		A <see cref="T:DevExpress.XtraLayout.Utils.MoveType"/> value that specifies whether the <i>dragItem</i> is inserted inside or outside the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.MoveType"/> property.
+
+            </param>
+            <param name="insertLocation">
+		A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <i>dragItem</i> is inserted before or after the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation"/> property.
+
+
+
+            </param>
+            <param name="layoutType">
+		A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <i>draItem</i> is inserted horizontally or vertically next to the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType"/> property.
+
+
+            </param>
+            <param name="rating">
+		 
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem)">
+            <summary>
+                <para>Initializes a new LayoutItemDragController instance with settings specifying that the<i>dragItem</i> should be inserted horizontally after the <i>baseItem</i>, occupying its largest part (typically, half the region).
+
+
+</para>
+            </summary>
+            <param name="dragItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
+
+            </param>
+            <param name="baseItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Utils.InsertLocation,DevExpress.XtraLayout.Utils.LayoutType)">
+            <summary>
+                <para>Initializes a new LayoutItemDragController instance with settings specifying that the <i>dragItem</i> should be inserted next to the <i>baseItem</i>, occupying its largest part (typically, half the region).
+
+</para>
+            </summary>
+            <param name="dragItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
+
+
+            </param>
+            <param name="baseItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
+
+
+            </param>
+            <param name="insertLocation">
+		A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <i>dragItem</i> is inserted before or after the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation"/> property.
+
+            </param>
+            <param name="layoutType">
+		A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <i>dragItem</i> is inserted horizontally or vertically next to the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType"/> property.
+
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.LayoutGroup,System.Drawing.Point)">
+            <summary>
+                <para>Initializes a new LayoutItemDragController instance with settings specifying that the <i>dragItem</i> should be inserted at a certain position within a specific group.
+
+</para>
+            </summary>
+            <param name="dragItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
+
+
+            </param>
+            <param name="group">
+		A <see cref="T:DevExpress.XtraLayout.LayoutGroup"/> object into which the <i>dragItem</i> will be inserted.
+
+            </param>
+            <param name="pt">
+		A Point where the <i>dragItem</i> will be inserted into the group.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Utils.MoveType,DevExpress.XtraLayout.Utils.InsertLocation,DevExpress.XtraLayout.Utils.LayoutType)">
+            <summary>
+                <para>Initializes a new LayoutItemDragController instance with settings specifying that the <i>dragItem</i> should be inserted next to the <i>baseItem</i>.
+
+</para>
+            </summary>
+            <param name="dragItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property.
+
+
+            </param>
+            <param name="baseItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object relative to which the <i>dragItem</i> will be positioned. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/> property.
+
+            </param>
+            <param name="moveType">
+		A <see cref="T:DevExpress.XtraLayout.Utils.MoveType"/> value that specifies whether the <i>dragItem</i> is inserted inside or outside the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.MoveType"/> property.
+
+            </param>
+            <param name="insertLocation">
+		A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <i>dragItem</i> is inserted before or after the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation"/> property.
+
+
+
+            </param>
+            <param name="layoutType">
+		A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <i>dragItem</i> is inserted horizontally or vertically next to the <i>baseItem</i>. This value is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType"/> property.
+
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.#ctor(DevExpress.XtraLayout.BaseLayoutItem,DevExpress.XtraLayout.Customization.LayoutItemDragController)">
+            <summary>
+                <para>Initializes a new LayoutItemDragController instance with settings specifying that the dragItem should be inserted next to another item, as specified by the settings of the controller parameter. 
+
+</para>
+            </summary>
+            <param name="dragItem">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object to be moved. This object is used to initialize the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> property. 
+
+            </param>
+            <param name="controller">
+		A LayoutItemDragController object, whose settings determine how a dragItem is inserted next to another item. 
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.Drag">
+            <summary>
+                <para>Inserts the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> to a position, specified by the settings of the current LayoutItemDragController object. This method cannot be used to move items that do not belong to a <see cref="T:DevExpress.XtraLayout.LayoutControl"/>.
+
+</para>
+            </summary>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragBounds">
+            <summary>
+                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
+</para>
+            </summary>
+            <value> 
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem">
+            <summary>
+                <para>Gets the item to be inserted to a position, specified by the settings of the LayoutItemDragController object.
+
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object that represents the item to be inserted.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragOutsideSize">
+            <summary>
+                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
+</para>
+            </summary>
+            <value> 
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragWildItem">
+            <summary>
+                <para>Inserts the orphan <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> to a position specified by the settings of the current LayoutItemDragController object. This method cannot be used to move items that belong to a <see cref="T:DevExpress.XtraLayout.LayoutControl"/>.
+
+</para>
+            </summary>
+            <returns><b>true</b> if the item has been successfully inserted; otherwise, <b>false</b>.
+</returns>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitInfo">
+            <summary>
+                <para>Gets an object that identifies an element located at the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitPoint"/> point. This member is in effect if the current LayoutItemDragController object has been initiailized using a constructor with a Point parameter.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo"/> object that provides information on the element located at the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitPoint"/> point.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.HitPoint">
+            <summary>
+                <para>Gets the point at which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> will be inserted. This member is in effect if the current LayoutItemDragController object has been initialized using a constructor with a Point parameter.
+
+
+</para>
+            </summary>
+            <value>A Point at which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> will be inserted.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.InsertLocation">
+            <summary>
+                <para>Gets whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted before or after the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
+
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraLayout.Utils.InsertLocation"/> value that specifies whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted before or after the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item">
+            <summary>
+                <para>Gets the item next to which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object that identifies the item next to which the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.LayoutType">
+            <summary>
+                <para>Gets whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted horizontally or vertically next to the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraLayout.Utils.LayoutType"/> value that specifies whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted horizontally or vertically next to the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.MoveType">
+            <summary>
+                <para>Gets whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted inside or outside the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
+</para>
+            </summary>
+            <value>A <see cref="T:DevExpress.XtraLayout.Utils.MoveType"/> value that specifies whether the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.DragItem"/> is inserted inside or outside the <see cref="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Item"/>.
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.Rating">
+            <summary>
+                <para>This member supports the internal infrastructure and is not intended to be used directly from your code.
+</para>
+            </summary>
+            <value> 
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.Customization.LayoutItemDragController.ShouldRestoreOriginalSize">
+            <summary>
+                <para>For internal use.
+</para>
+            </summary>
+            <value> 
+</value>
+
+
+        </member>
         <member name="T:DevExpress.XtraLayout.SplitterItemFixedStyles">
 
             <summary>
@@ -8022,9 +8035,11 @@ For the root group, its parent is the LayoutControl itself (the LayoutControl's 
         </member>
         <member name="P:DevExpress.XtraDataLayout.RetrieveFieldsParameters.CustomListParameters">
             <summary>
-                <para> </para>
+                <para>This member supports the internal infrastructure, and is not intended to be used directly from your code.
+</para>
             </summary>
-            <value> </value>
+            <value> 
+</value>
 
 
         </member>
@@ -8175,23 +8190,110 @@ This property indicates when changes to the bound editor property are propagated
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.OptionsPrintItem">
+        <member name="T:DevExpress.XtraLayout.RowDefinition">
 
             <summary>
-                <para>Provides print and export options for layout items.
+                <para>Defines a row in a table layout.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.XtraLayout.OptionsPrintItem.#ctor(DevExpress.XtraLayout.BaseLayoutItem)">
+        <member name="M:DevExpress.XtraLayout.RowDefinition.#ctor">
             <summary>
-                <para>Initializes a new instance of an <see cref="T:DevExpress.XtraLayout.OptionsPrintItem"/> class with the specified owner.
+                <para>Initializes a new instance of a RowDefinition class with the default settings.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.RowDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup)">
+            <summary>
+                <para>Initializes a new instance of a RowDefinition class with the specified owner.
 </para>
             </summary>
             <param name="owner">
-		An object that will own the created object.
+		A layout group that owns the created RowDefinition object.
 
             </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.RowDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup,System.Double,System.Windows.Forms.SizeType)">
+            <summary>
+                <para>Initializes a new instance of a RowDefinition class with the specified settings.
+</para>
+            </summary>
+            <param name="owner">
+		A layout group that owns the created RowDefinition object.
+
+            </param>
+            <param name="size">
+		The height of the created row. This value is assigned to the <see cref="P:DevExpress.XtraLayout.RowDefinition.Height"/> property.
+
+            </param>
+            <param name="sizingType">
+		The size type of the created row. This value is assigned to the <see cref="P:DevExpress.XtraLayout.RowDefinition.SizeType"/> property.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.RowDefinition.Height">
+            <summary>
+                <para>Gets or sets the row height, in pixels or as a percentage, according to the <see cref="P:DevExpress.XtraLayout.RowDefinition.SizeType"/>.
+
+</para>
+            </summary>
+            <value>A value that specifies the row height. 
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.RowDefinition.SizeType">
+            <summary>
+                <para>Gets or sets the row's size type in a table layout.
+</para>
+            </summary>
+            <value>A value that specifies the row's size type. 
+</value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraLayout.ControlMaxSizeCalcMode">
+
+            <summary>
+                <para>Contains values that specify how default maximum size constraints are calculated for controls that implement the <see cref="T:DevExpress.Utils.Controls.IXtraResizableControl"/> interface.
+</para>
+            </summary>
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.ControlMaxSizeCalcMode.CombineControlMaximumSizeAndIXtraResizableMaxSize">
+            <summary>
+                <para>The default maximum width is calculated for a control as the maximum of two values: Control.MaximumSize.Width and IXtraResizableControl.MaxSize.Width.
+<para>
+The default maximum height is calculated for a control as the maximum of two values: Control.MaximumSize.Height and IXtraResizableControl.MaxSize.Height.
+</para>
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.ControlMaxSizeCalcMode.UseControlMaximumSize">
+            <summary>
+                <para>The default maximum width and height are specified by the Control.MaximumSize.Width and Control.MaximumSize.Height values, respectively.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.ControlMaxSizeCalcMode.UseControlMaximumSizeIfNotZero">
+            <summary>
+                <para>The default maximum width is specified by the Control.MaximumSize.Width property if it is not set to <b>0</b>; otherwise, the default maximum width is specified by the IXtraResizableControl.MaxSize.Width property.
+<para>
+The default maximum height is specified by the Control.MaximumSize.Height property if it is not set to <b>0</b>; otherwise, the default maximum height is specified by the IXtraResizableControl.MaxSize.Height property.
+</para>
+</para>
+            </summary>
 
 
         </member>
@@ -8380,144 +8482,6 @@ This property indicates when changes to the bound editor property are propagated
 
 
         </member>
-        <member name="T:DevExpress.XtraLayout.ColumnDefinition">
-
-            <summary>
-                <para>Defines a column in a table layout.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.ColumnDefinition.#ctor">
-            <summary>
-                <para>Initializes a new instance of a ColumnDefinition class with the default settings.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.ColumnDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup)">
-            <summary>
-                <para>Initializes a new instance of a ColumnDefinition class with the specified owner.
-</para>
-            </summary>
-            <param name="owner">
-		A layout group that owns the created ColumnDefinition object.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.ColumnDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup,System.Double,System.Windows.Forms.SizeType)">
-            <summary>
-                <para>Initializes a new instance of a ColumnDefinition class with the specified settings.
-</para>
-            </summary>
-            <param name="owner">
-		A layout group that owns the created ColumnDefinition object.
-
-            </param>
-            <param name="size">
-		The width of the created column. This value is assigned to the <see cref="P:DevExpress.XtraLayout.ColumnDefinition.Width"/> property.
-
-            </param>
-            <param name="sizingType">
-		The size type of the created column. This value is assigned to the <see cref="P:DevExpress.XtraLayout.ColumnDefinition.SizeType"/> property.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.ColumnDefinition.SizeType">
-            <summary>
-                <para>Gets or sets the column's size type in a table layout.
-</para>
-            </summary>
-            <value>A value that specifies the column's size type.
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.ColumnDefinition.Width">
-            <summary>
-                <para>Gets or sets the column width, in pixels or as a percentage, according to the <see cref="P:DevExpress.XtraLayout.ColumnDefinition.SizeType"/>.
-
-</para>
-            </summary>
-            <value>A value that specifies the column width. 
-</value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraLayout.RowDefinition">
-
-            <summary>
-                <para>Defines a row in a table layout.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.RowDefinition.#ctor">
-            <summary>
-                <para>Initializes a new instance of a RowDefinition class with the default settings.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.RowDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup)">
-            <summary>
-                <para>Initializes a new instance of a RowDefinition class with the specified owner.
-</para>
-            </summary>
-            <param name="owner">
-		A layout group that owns the created RowDefinition object.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.RowDefinition.#ctor(DevExpress.XtraLayout.LayoutGroup,System.Double,System.Windows.Forms.SizeType)">
-            <summary>
-                <para>Initializes a new instance of a RowDefinition class with the specified settings.
-</para>
-            </summary>
-            <param name="owner">
-		A layout group that owns the created RowDefinition object.
-
-            </param>
-            <param name="size">
-		The height of the created row. This value is assigned to the <see cref="P:DevExpress.XtraLayout.RowDefinition.Height"/> property.
-
-            </param>
-            <param name="sizingType">
-		The size type of the created row. This value is assigned to the <see cref="P:DevExpress.XtraLayout.RowDefinition.SizeType"/> property.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.RowDefinition.Height">
-            <summary>
-                <para>Gets or sets the row height, in pixels or as a percentage, according to the <see cref="P:DevExpress.XtraLayout.RowDefinition.SizeType"/>.
-
-</para>
-            </summary>
-            <value>A value that specifies the row height. 
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.RowDefinition.SizeType">
-            <summary>
-                <para>Gets or sets the row's size type in a table layout.
-</para>
-            </summary>
-            <value>A value that specifies the row's size type. 
-</value>
-
-
-        </member>
         <member name="T:DevExpress.XtraLayout.RowDefinitions">
 
             <summary>
@@ -8650,6 +8614,164 @@ This property indicates when changes to the bound editor property are propagated
             </summary>
             <value>A positive integer value that specifies the number of rows spanned by the layout item.
 </value>
+
+
+        </member>
+        <member name="T:DevExpress.XtraLayout.Utils.LayoutMode">
+
+            <summary>
+                <para>Enumerates values that specify the layout mode for a <see cref="T:DevExpress.XtraLayout.LayoutGroup"/>.
+
+</para>
+            </summary>
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.Utils.LayoutMode.Flow">
+            <summary>
+                <para>Flow layout mode. Layout items are automatically arranged in rows according to their order in the <see cref="P:DevExpress.XtraLayout.LayoutGroup.Items"/> collection, and are automatically wrapped at the group's right edge
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.Utils.LayoutMode.Regular">
+            <summary>
+                <para>Regular layout mode. Layout items can stretch within the parent layout group and can have any size
+
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.XtraLayout.Utils.LayoutMode.Table">
+            <summary>
+                <para>Table layout mode. Layout items are arranged in a two-dimensional table according to their row and column indexes and span values.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="T:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions">
+
+            <summary>
+                <para>Contains options that specify which operations can be performed on a layout item at runtime.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.#ctor(DevExpress.XtraLayout.BaseLayoutItem)">
+            <summary>
+                <para>Initializes a new instance of the BaseLayoutItemCustomizationOptions class.
+</para>
+            </summary>
+            <param name="owner">
+		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object that will own the created object.
+
+            </param>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.AllowDrag">
+            <summary>
+                <para>Gets or sets whether the current layout item/group can be dragged-and-dropped to another position.
+
+</para>
+            </summary>
+            <value>An ItemDragDropMode value that specifies whether the current item/group can be dragged-and-dropped to another position.
+
+</value>
+
+
+        </member>
+        <member name="P:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.AllowDrop">
+            <summary>
+                <para>Gets or sets whether other items can be dragged-and-dropped onto the current layout item/group.
+
+</para>
+            </summary>
+            <value>An ItemDragDropMode value that specifies whether other items can be dragged-and-dropped onto the current layout item/group.
+
+</value>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.Assign(DevExpress.Utils.Controls.BaseOptions)">
+            <summary>
+                <para>Copies options from the specified object to the current object.
+</para>
+            </summary>
+            <param name="options">
+		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.CanDrag">
+            <summary>
+                <para>Returns whether the layout item can be dragged-and-dropped to another position.
+
+</para>
+            </summary>
+            <returns><b>true</b> if the layout item can be dragged-and-dropped to another position; otherwise, <b>false</b>.
+
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.CanDrop">
+            <summary>
+                <para>Returns whether other layout items can be dragged-and-dropped onto the current layout item.
+
+</para>
+            </summary>
+            <returns><b>true</b> if other layout items can be dragged-and-dropped onto the current layout item; otherwise, <b>false</b>.
+
+</returns>
+
+
+        </member>
+        <member name="T:DevExpress.XtraLayout.LayoutMenuEventArgs">
+
+            <summary>
+                <para>Provides data for the <see cref="E:DevExpress.XtraLayout.LayoutControl.PopupMenuShowing"/> event.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.LayoutMenuEventArgs.#ctor(DevExpress.Utils.Menu.DXPopupMenu,DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo,System.Boolean)">
+            <summary>
+                <para>Initializes a new instance of the LayoutMenuEventArgs class with the specified settings.
+</para>
+            </summary>
+            <param name="menu">
+		A <see cref="T:DevExpress.Utils.Menu.DXPopupMenu"/> object representing the menu to be displayed. This object is assigned to the Menu property.
+
+            </param>
+            <param name="hitInfo">
+		A <see cref="T:DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo"/> object that identifies the clicked object. This object is assigned to the HitInfo property.
+
+            </param>
+            <param name="allow">
+		A Boolean value that specifies whether the menu is allowed to be displayed. This value is assigned to the Allow property.
+
+            </param>
+
+
+        </member>
+        <member name="M:DevExpress.XtraLayout.LayoutMenuEventArgs.#ctor(DevExpress.Utils.Menu.DXPopupMenu,DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo)">
+            <summary>
+                <para>Initializes a new instance of the LayoutMenuEventArgs class with the specified settings.
+</para>
+            </summary>
+            <param name="menu">
+		A <see cref="T:DevExpress.Utils.Menu.DXPopupMenu"/> object representing the menu to be displayed. This object is assigned to the Menu property.
+
+            </param>
+            <param name="hitInfo">
+		A <see cref="T:DevExpress.XtraLayout.HitInfo.BaseLayoutItemHitInfo"/> object that identifies the clicked object. This object is assigned to the HitInfo property.
+
+            </param>
 
 
         </member>
@@ -8821,120 +8943,6 @@ This property indicates when changes to the bound editor property are propagated
             </summary>
             <value>The table layout's rows.
 </value>
-
-
-        </member>
-        <member name="T:DevExpress.XtraLayout.Utils.LayoutMode">
-
-            <summary>
-                <para>Enumerates values that specify the layout mode for a <see cref="T:DevExpress.XtraLayout.LayoutGroup"/>.
-
-</para>
-            </summary>
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.Utils.LayoutMode.Flow">
-            <summary>
-                <para>Flow layout mode. Layout items are automatically arranged in rows according to their order in the <see cref="P:DevExpress.XtraLayout.LayoutGroup.Items"/> collection, and are automatically wrapped at the group's right edge
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.Utils.LayoutMode.Regular">
-            <summary>
-                <para>Regular layout mode. Layout items can stretch within the parent layout group and can have any size
-
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.XtraLayout.Utils.LayoutMode.Table">
-            <summary>
-                <para>Table layout mode. Layout items are arranged in a two-dimensional table according to their row and column indexes and span values.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="T:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions">
-
-            <summary>
-                <para>Contains options that specify which operations can be performed on a layout item at runtime.
-</para>
-            </summary>
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.#ctor(DevExpress.XtraLayout.BaseLayoutItem)">
-            <summary>
-                <para>Initializes a new instance of the BaseLayoutItemCustomizationOptions class.
-</para>
-            </summary>
-            <param name="owner">
-		A <see cref="T:DevExpress.XtraLayout.BaseLayoutItem"/> object that will own the created object.
-
-            </param>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.AllowDrag">
-            <summary>
-                <para>Gets or sets whether the current layout item/group can be dragged-and-dropped to another position.
-
-</para>
-            </summary>
-            <value>An ItemDragDropMode value that specifies whether the current item/group can be dragged-and-dropped to another position.
-
-</value>
-
-
-        </member>
-        <member name="P:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.AllowDrop">
-            <summary>
-                <para>Gets or sets whether other items can be dragged-and-dropped onto the current layout item/group.
-
-</para>
-            </summary>
-            <value>An ItemDragDropMode value that specifies whether other items can be dragged-and-dropped onto the current layout item/group.
-
-</value>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.Assign(DevExpress.Utils.Controls.BaseOptions)">
-            <summary>
-                <para>Copies options from the specified object to the current object.
-</para>
-            </summary>
-            <param name="options">
-		A <see cref="T:DevExpress.Utils.Controls.BaseOptions"/> descendant whose settings are assigned to the current object.
-
-            </param>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.CanDrag">
-            <summary>
-                <para>Returns whether the layout item can be dragged-and-dropped to another position.
-
-</para>
-            </summary>
-            <returns><b>true</b> if the layout item can be dragged-and-dropped to another position; otherwise, <b>false</b>.
-
-</returns>
-
-
-        </member>
-        <member name="M:DevExpress.XtraLayout.BaseLayoutItemCustomizationOptions.CanDrop">
-            <summary>
-                <para>Returns whether other layout items can be dragged-and-dropped onto the current layout item.
-
-</para>
-            </summary>
-            <returns><b>true</b> if other layout items can be dragged-and-dropped onto the current layout item; otherwise, <b>false</b>.
-
-</returns>
 
 
         </member>

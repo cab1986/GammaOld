@@ -4,102 +4,6 @@
         <name>DevExpress.Office.v15.2.Core</name>
     </assembly>
     <members>
-        <member name="T:DevExpress.Office.Utils.OfficeImageFormat">
-
-            <summary>
-                <para>Lists supported image formats.
-</para>
-            </summary>
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Bmp">
-            <summary>
-                <para>Specifies the bitmap (BMP) image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Emf">
-            <summary>
-                <para>Specifies the enhanced metafile (EMF) image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Exif">
-            <summary>
-                <para>Specifies the Exchangeable Image File (Exif) format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Gif">
-            <summary>
-                <para>Specifies the Graphics Interchange Format (GIF) image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Icon">
-            <summary>
-                <para>Specifies the Windows icon image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Jpeg">
-            <summary>
-                <para>Specifies the Joint Photographic Experts Group (JPEG) image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.MemoryBmp">
-            <summary>
-                <para>Specifies a memory bitmap image format. 
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.None">
-            <summary>
-                <para>Unspecified format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Png">
-            <summary>
-                <para>Specifies the W3C Portable Network Graphics (PNG) image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Tiff">
-            <summary>
-                <para>Specifies the Tagged Image File Format (TIFF) image format.
-</para>
-            </summary>
-
-
-        </member>
-        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Wmf">
-            <summary>
-                <para>Specifies the Windows metafile (WMF) image format.
-</para>
-            </summary>
-
-
-        </member>
         <member name="T:DevExpress.Office.Options.DataSourceTypes">
 
             <summary>
@@ -126,7 +30,7 @@
         </member>
         <member name="F:DevExpress.Office.Options.DataSourceTypes.Excel">
             <summary>
-                <para>Specifies that a data source used to extract data from Microsoft Excel documents is available for data binding from the <b>Data Source Wizard</b>.
+                <para>Specifies that a data source used to extract data from Microsoft&#174; Excel&#174; documents is available for data binding from the <b>Data Source Wizard</b>.
 </para>
             </summary>
 
@@ -444,6 +348,58 @@
                 <para>Specifies points as measurement units. 
 </para>
             </summary>
+
+
+        </member>
+        <member name="T:DevExpress.Office.Services.IUriProvider">
+
+            <summary>
+                <para>Defines the provider of the locations for external objects in a document export.
+</para>
+            </summary>
+
+        </member>
+        <member name="M:DevExpress.Office.Services.IUriProvider.CreateCssUri(System.String,System.String,System.String)">
+            <summary>
+                <para>Creates URI for CSS data.
+</para>
+            </summary>
+            <param name="rootUri">
+		A string that specifies the root URI.
+
+            </param>
+            <param name="styleText">
+		A string containing CSS definitions for which the URI is created.
+
+            </param>
+            <param name="relativeUri">
+		A string that specifies the relative part of the URI (path relative to the root).
+
+            </param>
+            <returns>A string that is the URI of CSS data.
+</returns>
+
+
+        </member>
+        <member name="M:DevExpress.Office.Services.IUriProvider.CreateImageUri(System.String,DevExpress.Office.Utils.OfficeImage,System.String)">
+            <summary>
+                <para>Creates an image URI.
+</para>
+            </summary>
+            <param name="rootUri">
+		A string that specifies the root URI.
+
+            </param>
+            <param name="image">
+		An <see cref="T:DevExpress.Office.Utils.OfficeImage"/> object for which the URI is created.
+
+            </param>
+            <param name="relativeUri">
+		A string that specifies the relative part of the URI (path relative to the root).
+
+            </param>
+            <returns>A string that is the image URI.
+</returns>
 
 
         </member>
@@ -1103,55 +1059,99 @@
 
 
         </member>
-        <member name="T:DevExpress.Office.Services.IUriProvider">
+        <member name="T:DevExpress.Office.Utils.OfficeImageFormat">
 
             <summary>
-                <para>Defines the provider of the locations for external objects in a document export.
+                <para>Lists supported image formats.
 </para>
             </summary>
 
         </member>
-        <member name="M:DevExpress.Office.Services.IUriProvider.CreateCssUri(System.String,System.String,System.String)">
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Bmp">
             <summary>
-                <para>Creates URI for CSS data.
+                <para>Specifies the bitmap (BMP) image format.
 </para>
             </summary>
-            <param name="rootUri">
-		A string that specifies the root URI.
-
-            </param>
-            <param name="styleText">
-		A string containing CSS definitions for which the URI is created.
-
-            </param>
-            <param name="relativeUri">
-		A string that specifies the relative part of the URI (path relative to the root).
-
-            </param>
-            <returns>A string that is the URI of CSS data.
-</returns>
 
 
         </member>
-        <member name="M:DevExpress.Office.Services.IUriProvider.CreateImageUri(System.String,DevExpress.Office.Utils.OfficeImage,System.String)">
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Emf">
             <summary>
-                <para>Creates an image URI.
+                <para>Specifies the enhanced metafile (EMF) image format.
 </para>
             </summary>
-            <param name="rootUri">
-		A string that specifies the root URI.
 
-            </param>
-            <param name="image">
-		An <see cref="T:DevExpress.Office.Utils.OfficeImage"/> object for which the URI is created.
 
-            </param>
-            <param name="relativeUri">
-		A string that specifies the relative part of the URI (path relative to the root).
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Exif">
+            <summary>
+                <para>Specifies the Exchangeable Image File (Exif) format.
+</para>
+            </summary>
 
-            </param>
-            <returns>A string that is the image URI.
-</returns>
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Gif">
+            <summary>
+                <para>Specifies the Graphics Interchange Format (GIF) image format.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Icon">
+            <summary>
+                <para>Specifies the Windows icon image format.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Jpeg">
+            <summary>
+                <para>Specifies the Joint Photographic Experts Group (JPEG) image format.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.MemoryBmp">
+            <summary>
+                <para>Specifies a memory bitmap image format. 
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.None">
+            <summary>
+                <para>Unspecified format.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Png">
+            <summary>
+                <para>Specifies the W3C Portable Network Graphics (PNG) image format.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Tiff">
+            <summary>
+                <para>Specifies the Tagged Image File Format (TIFF) image format.
+</para>
+            </summary>
+
+
+        </member>
+        <member name="F:DevExpress.Office.Utils.OfficeImageFormat.Wmf">
+            <summary>
+                <para>Specifies the Windows metafile (WMF) image format.
+</para>
+            </summary>
 
 
         </member>

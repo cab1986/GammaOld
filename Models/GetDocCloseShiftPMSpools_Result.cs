@@ -16,7 +16,7 @@ namespace Gamma.Models
         public System.Guid ProductID { get; set; }
         public System.Guid NomenclatureID { get; set; }
         public Nullable<System.Guid> CharacteristicID { get; set; }
-        public int Weight { get; set; }
+        public Nullable<decimal> Weight { get; set; }
         public string Number { get; set; }
         public string Nomenclature { get; set; }
     }

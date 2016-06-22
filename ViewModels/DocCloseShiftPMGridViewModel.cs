@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
                         Nomenclature = sp.Nomenclature,
                         Number = sp.Number,
                         ProductID = sp.ProductID,
-                        Weight = (decimal)sp.Weight
+                        Weight = sp.Weight??0
                     }
                     );
                 DocCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
@@ -46,6 +46,8 @@ namespace Gamma.ViewModels
                 () => SelectedSpool != null);
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
         }
+
+        public bool IsChanged { get; private set; }
 
         public Guid? VMID { get; } = Guid.NewGuid();
 
@@ -61,7 +63,9 @@ namespace Gamma.ViewModels
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && 
                     d.Date >= SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh",-1,CloseDate))) && 
                     d.Date <= SqlFunctions.DateAdd("hh",1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh",-1,CloseDate))) &&
-                    (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).Select(d => d));
+                    (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)
+                    && !d.DocCloseShift.Any() && d.IsConfirmed)
+                    .Select(d => d));
             foreach (var doc in DocCloseShiftDocs.Where(doc => doc.DocTypeID == (byte)DocTypes.DocProduction))
             {
                 Spools.Add(
@@ -79,12 +83,14 @@ namespace Gamma.ViewModels
                         }).FirstOrDefault()
                     );
             }
+            IsChanged = true;
         }
 
         public void ClearGrid()
         {
-                DocCloseShiftDocs.Clear();
-                Spools.Clear();
+            DocCloseShiftDocs.Clear();
+            Spools.Clear();
+            IsChanged = true;
         }
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
@@ -92,7 +98,7 @@ namespace Gamma.ViewModels
             base.SaveToModel(itemID, gammaBase);
             if (DocCloseShift == null)
             {
-                DocCloseShift = GammaBase.Docs.Where(d => d.DocID == itemID).Select(d => d).FirstOrDefault();
+                DocCloseShift = GammaBase.Docs.FirstOrDefault(d => d.DocID == itemID);
                 foreach (var doc in DocCloseShiftDocs)
                 {
                     DocCloseShift.DocCloseShiftDocs.Add(doc);
