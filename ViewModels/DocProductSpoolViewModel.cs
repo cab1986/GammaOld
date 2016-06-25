@@ -7,7 +7,7 @@ using System.Data.Entity;
 using Gamma.Attributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DevExpress.Mvvm;
+using System.Windows;
 
 
 namespace Gamma.ViewModels
@@ -18,33 +18,18 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocProductSpoolViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
+    public sealed class DocProductSpoolViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
     {
         /// <summary>
         /// Инициализация информации о тамбуре
         /// </summary>
-        /// <param name="id">Для нового тамбура DocID, иначе ProductID</param>
-        /// <param name="isNewProduct">Новый тамбур</param>
+        /// <param name="docId">ID документа</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public DocProductSpoolViewModel(Guid id, bool isNewProduct, GammaEntities gammaBase = null): base(gammaBase) // если это новое изделие, то id - Это docID иначе productId
+        public DocProductSpoolViewModel(Guid docId, GammaEntities gammaBase = null): base(gammaBase)
         {
-            Guid docID;
-            Guid productId;
-            if (isNewProduct)
-            {
-                docID = id;
-                productId = SqlGuidUtil.NewSequentialid();
-            }
-            else
-            {
-                productId = id;
-                docID =
-                    GammaBase.DocProducts.Where(
-                        dp => dp.ProductID == id && dp.Docs.DocTypeID == (byte)DocTypes.DocProduction)
-                        .Select(dp => dp.DocID)
-                        .First();
-            }
-            var doc = GammaBase.Docs.First(d => d.DocID == docID);
+            ProductId = GammaBase.DocProducts.FirstOrDefault(d => d.DocID == docId)?.ProductID ??
+                            SqlGuidUtil.NewSequentialid();
+            var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == docId);
             States = new ProductStates().ToDictionary();
             ToughnessKinds = new ToughnessKinds().ToDictionary();
             RejectionReasons = new ObservableCollection<RejectionReason>
@@ -55,65 +40,43 @@ namespace Gamma.ViewModels
                      Description = r.Description,
                      FullDescription = r.FullDescription
                  });
-            if (isNewProduct)
+            var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
+            if (productSpool == null)
             {
-                Product =
-                    GammaBase.Products.Include(p => p.ProductSpools)
-                        .FirstOrDefault(p => p.DocProducts.Select(d => d.DocID).Contains(id));
-                if (Product == null)
+                var productionTask =
+                    GammaBase.ProductionTasks.FirstOrDefault(
+                        pt => pt.ProductionTaskID == doc.DocProduction.ProductionTaskID);
+                if (productionTask != null)
                 {
-                    Product = new Products()
-                    {
-                        ProductID = productId,
-                        ProductKindID = (byte) ProductKinds.ProductSpool,
-                    };
-                    GammaBase.Products.Add(Product);
+                    NomenclatureID = productionTask.C1CNomenclatureID;
+                    CharacteristicID = productionTask.C1CCharacteristicID;
                 }
-                if (Product.ProductSpools == null)
+                else
                 {
-                    Product.ProductSpools = new ProductSpools
-                    {
-                        ProductID = Product.ProductID
-                    };
+                    MessageBox.Show("Не удалось получить информацию о задании, выбирите номенклатуру вручную");
                 }
-                var ptInfo = (from d in GammaBase.DocProduction
-                    where d.DocID == docID
-                    select new 
-                    { 
-                        NomenclatureID = d.ProductionTasks.C1CNomenclatureID, 
-                        CharacteristicID = d.ProductionTasks.C1CCharacteristicID 
-                    }).FirstOrDefault();
-                Product.ProductSpools.C1CNomenclatureID = (Guid)ptInfo.NomenclatureID;
-                Product.ProductSpools.C1CCharacteristicID = ptInfo.CharacteristicID;
-                Product.ProductSpools.RealFormat = DB.GetLastFormat(WorkSession.PlaceID);
-                ProductSpool = Product.ProductSpools;
-                GammaBase.SaveChanges();
-                GammaBase.Entry(Product).Reload();
+                RealFormat = DB.GetLastFormat(WorkSession.PlaceID);
             }
             else
             {
-                DocProduct = (from dp in GammaBase.DocProducts.Include(a => a.Docs) where dp.DocID == docID
-                                  select dp).FirstOrDefault();
-                Product = GammaBase.Products.Include(p => p.ProductSpools).First(p => p.ProductID == productId);
-                ProductSpool = Product.ProductSpools ?? new ProductSpools
-                {
-                    ProductID = Product.ProductID
-                };
-                RealBasisWeight = ProductSpool.RealBasisWeight;
-                Diameter = ProductSpool.Diameter;
-                Length = ProductSpool.Length ?? 0;
-                BreakNumber = ProductSpool.BreakNumber;
-                Weight = ProductSpool.DecimalWeight??0;
-                ToughnessKindID = ProductSpool.ToughnessKindID ?? 1;
+                NomenclatureID = productSpool.C1CNomenclatureID;
+                CharacteristicID = productSpool.C1CCharacteristicID;
+                RealFormat = productSpool.RealFormat;
+                RealBasisWeight = productSpool.RealBasisWeight;
+                Diameter = productSpool.Diameter;
+                Length = productSpool.Length ?? 0;
+                BreakNumber = productSpool.BreakNumber;
+                Weight = productSpool.DecimalWeight ?? 0;
+                ToughnessKindID = productSpool.ToughnessKindID ?? 1;
                 var stateInfo = (from d in GammaBase.DocChangeStateProducts
-                    where d.ProductID == Product.ProductID
-                    orderby
-                    d.Docs.Date descending
-                    select new 
-                    {
-                        d.StateID,
-                        RejectionReasonID = d.C1CRejectionReasonID
-                    }).Take(1).FirstOrDefault();
+                                 where d.ProductID == ProductId
+                                 orderby
+                                 d.Docs.Date descending
+                                 select new
+                                 {
+                                     d.StateID,
+                                     RejectionReasonID = d.C1CRejectionReasonID
+                                 }).Take(1).FirstOrDefault();
                 if (stateInfo != null)
                 {
                     StateID = stateInfo.StateID;
@@ -123,10 +86,7 @@ namespace Gamma.ViewModels
                 {
                     StateID = 0;
                 }
-            }
-            NomenclatureID = ProductSpool.C1CNomenclatureID;
-            CharacteristicID = ProductSpool.C1CCharacteristicID;
-            RealFormat = ProductSpool.RealFormat ?? 0;
+            }          
             Bars.Add(ReportManager.GetReportBar("SpoolLabels", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
         }
@@ -178,7 +138,7 @@ namespace Gamma.ViewModels
         }
         private int? _realFormat;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(100,5000,ErrorMessage="Необходимо указать реальный формат")]
+        [Range(100,5000,ErrorMessage=@"Необходимо указать реальный формат")]
         public int? RealFormat
         {
             get
@@ -207,7 +167,7 @@ namespace Gamma.ViewModels
         }
         private bool IsConfirmed { get; set; }
         private decimal _weight;   
-        [Range(1,10000,ErrorMessage="Укажите вес тамбура")]
+        [Range(1,10000,ErrorMessage=@"Укажите вес тамбура")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Weight
         {
@@ -236,84 +196,81 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
-        private Guid? _vmid = Guid.NewGuid();
-        public Guid? VMID
-        {
-            get
-            {
-                return _vmid;
-            }
-        }
+
+        public Guid? VMID { get; } = Guid.NewGuid();
 
         private DocProducts DocProduct { get; set; }
-        private Products Product { get; set; }
-        public ProductSpools ProductSpool { get; set; }
+        /// <summary>
+        /// ID продукта, используется для печати амбалажа
+        /// </summary>
+        public Guid ProductId { get; private set; }
+        /// <summary>
+        /// Сохранение в базу
+        /// </summary>
+        /// <param name="itemID">ID документа</param>
+        /// <param name="gammaBase">Контекст БД</param>
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("ProductSpools")) return;
-            gammaBase = gammaBase ?? DB.GammaDb;
             base.SaveToModel();
-  /*          if (Product == null)
+            var product =
+                GammaBase.Products.Include(p => p.ProductSpools)
+                    .FirstOrDefault(p => p.DocProducts.Select(dp => dp.DocID).Contains(itemID));
+            if (product == null)
             {
-                Product = new Products() { ProductID = SQLGuidUtil.NewSequentialid(), ProductKindID = (int)ProductKinds.ProductSpool };
-                ProductSpool = new ProductSpools() { ProductID = Product.ProductID };
-                DocProduct = new DocProducts()
+                var id = SqlGuidUtil.NewSequentialid();
+                product = new Products
                 {
-                    DocID = DocID,
-                    ProductID = Product.ProductID,
-                    IsInConfirmed = (from doc in GammaBase.Docs
-                                     where doc.DocID == DocID
-                                     select doc.IsConfirmed).FirstOrDefault()
+                    ProductID = id,
+                    ProductKindID = (int)ProductKinds.ProductSpool,
                 };
-                GammaBase.Products.Add(Product);
-                GammaBase.ProductSpools.Add(ProductSpool);
-                GammaBase.DocProducts.Add(DocProduct);
-                if (StateID != (byte)ProductStates.Good)
-                    GammaBase.DocProductChangeState.Add(new DocProductChangeState() { DocID = DocID, StateID = (byte)StateID });
             }
-            else
- */
-            var stateid = (from d in GammaBase.DocChangeStateProducts where d.ProductID == Product.ProductID
+            if (product.ProductSpools == null)
+            {
+                product.ProductSpools = new ProductSpools
+                {
+                    ProductID = product.ProductID
+                };
+            }
+
+            var stateId = (from d in GammaBase.DocChangeStateProducts where d.ProductID == product.ProductID
                                orderby
                                d.Docs.Date descending
                                    select d.StateID).Take(1).FirstOrDefault();
-            if (stateid != StateID)
+            if (stateId != StateID)
             {
-                 var docChangeid = SqlGuidUtil.NewSequentialid();
-                 var docChangeStateProducts = new Collection<DocChangeStateProducts>();
-                 docChangeStateProducts.Add(new DocChangeStateProducts() 
-                 { 
-                     DocID = docChangeid, 
-                     ProductID = Product.ProductID,
-                     StateID = (byte)StateID,
-                     C1CRejectionReasonID = RejectionReasonID,
-                     Quantity = Weight
-                 });
-                    var doc = new Docs()
+                var docChangeId = SqlGuidUtil.NewSequentialid();
+                var doc = new Docs()
                     {
-                        DocID = docChangeid,
+                        DocID = docChangeId,
                         Date = DB.CurrentDateTime,
                         DocTypeID = (byte)DocTypes.DocChangeState,
                         IsConfirmed = true,
                         UserID = WorkSession.UserID,
-                        DocChangeStateProducts = docChangeStateProducts
+                        DocChangeStateProducts = new Collection<DocChangeStateProducts>
+                        {
+                            new DocChangeStateProducts()
+                            {
+                                DocID = docChangeId,
+                                ProductID = product.ProductID,
+                                StateID = StateID ?? 0,
+                                C1CRejectionReasonID = RejectionReasonID,
+                                Quantity = Weight
+                            }
+                        }
                     };
                     GammaBase.Docs.Add(doc);
             }
-            ProductSpool.C1CNomenclatureID = (Guid)NomenclatureID;
-            ProductSpool.C1CCharacteristicID = CharacteristicID;
-            ProductSpool.RealBasisWeight = RealBasisWeight;
-            ProductSpool.RealFormat = RealFormat;
-            ProductSpool.BreakNumber = BreakNumber;
-            ProductSpool.Diameter = Diameter;
-            ProductSpool.Length = Length;
-            ProductSpool.DecimalWeight = Weight;
-            ProductSpool.ToughnessKindID = ToughnessKindID;
-            DocProduct.IsInConfirmed = (from doc in GammaBase.Docs
-                                        where doc.DocID == itemID
-                                        select doc.IsConfirmed).FirstOrDefault();
+            product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
+            product.ProductSpools.C1CCharacteristicID = CharacteristicID;
+            product.ProductSpools.RealBasisWeight = RealBasisWeight;
+            product.ProductSpools.RealFormat = RealFormat;
+            product.ProductSpools.BreakNumber = BreakNumber;
+            product.ProductSpools.Diameter = Diameter;
+            product.ProductSpools.Length = Length;
+            product.ProductSpools.DecimalWeight = Weight;
+            product.ProductSpools.ToughnessKindID = ToughnessKindID;
             GammaBase.SaveChanges();
-            Messenger.Default.Send(new ProductChangedMessage {ProductID = Product.ProductID});
         }
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools");
 

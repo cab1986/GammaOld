@@ -93,6 +93,7 @@ namespace Gamma.ViewModels
                 GammaBase.Entry(Doc).Reload(); // Получение обновленного документа(с номером из базы)
                 if (product != null)
                     GammaBase.Entry(product).Reload();
+                /*
                 switch (msg.DocProductKind)
                 {
                     case DocProductKinds.DocProductUnload:
@@ -108,6 +109,7 @@ namespace Gamma.ViewModels
                         CurrentViewModel = new DocProductPalletViewModel();
                         break;
                 }
+                */
             }
             else
             {
@@ -143,7 +145,7 @@ namespace Gamma.ViewModels
                     Title = "Тамбур";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
-                    CurrentViewModel = new DocProductSpoolViewModel(product.ProductID, false);
+                    CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID);
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";
@@ -358,7 +360,7 @@ namespace Gamma.ViewModels
             SaveToModel();
             var spoolViewModel = CurrentViewModel as DocProductSpoolViewModel;
             if (spoolViewModel != null)
-                ReportManager.PrintReport(msg.ReportID, spoolViewModel.ProductSpool.ProductID);
+                ReportManager.PrintReport(msg.ReportID, spoolViewModel.ProductId);
             else
                 ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }

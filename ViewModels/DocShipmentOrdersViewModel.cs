@@ -16,6 +16,7 @@ namespace Gamma.ViewModels
             OpenDocShipmentOrderCommand = new DelegateCommand<object>(OpenDocShipmentOrder);
             Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
             FindCommand = new DelegateCommand(Find);
+            RefreshCommand = FindCommand;
  //           CanChangePerson = DB.HaveWriteAccess("DocShipmentOrderInfo");
 /*            Persons = GammaBase.Persons.Where(p => p.PostTypeID == (int) PersonTypes.Loader).Select(p => new Person
             {

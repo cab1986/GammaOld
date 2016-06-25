@@ -37,7 +37,7 @@ namespace Gamma.ViewModels
                 ActivePersonId = docShipmentOrderInfo.DocShipmentOrderInfo.ActivePersonID;
             }
             FillDocShipmentOrderGoods(docShipmentOrderId);
-            IsReadOnly = docShipmentOrderInfo.Posted || !DB.HaveWriteAccess("DocShipmentOrderInfo");
+            IsReadOnly = !DB.HaveWriteAccess("DocShipmentOrderInfo");
         }
 
         public string Title { get; set; }
@@ -91,7 +91,10 @@ namespace Gamma.ViewModels
                 GammaBase.DocShipmentOrderInfo.FirstOrDefault(d => d.C1CDocShipmentOrderID == DocShipmentOrderID);
             if (docShipmentOrderInfo == null)
             {
-                docShipmentOrderInfo = new DocShipmentOrderInfo();
+                docShipmentOrderInfo = new DocShipmentOrderInfo
+                {
+                    C1CDocShipmentOrderID = DocShipmentOrderID
+                };
                 GammaBase.DocShipmentOrderInfo.Add(docShipmentOrderInfo);
             }
             docShipmentOrderInfo.VehicleNumber = VehicleNumber;
