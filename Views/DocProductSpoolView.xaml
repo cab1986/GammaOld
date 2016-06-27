@@ -15,12 +15,12 @@
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup View="Group" Orientation="Vertical">
                 <dxlc:LayoutItem Label="Номенклатура">
-                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
+                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
                          <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
                      </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Характеристика">
-                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID}"
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                       DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>

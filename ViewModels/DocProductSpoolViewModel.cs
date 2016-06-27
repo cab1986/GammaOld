@@ -90,6 +90,15 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("SpoolLabels", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
         }
+
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
+        public override Guid? CharacteristicID
+        {
+            get { return base.CharacteristicID; }
+            set { base.CharacteristicID = value; }
+        }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Range(1,5000,ErrorMessage = @"Необходимо указать диаметр")]
         // ReSharper disable once MemberCanBePrivate.Global

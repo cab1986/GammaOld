@@ -93,23 +93,6 @@ namespace Gamma.ViewModels
                 GammaBase.Entry(Doc).Reload(); // Получение обновленного документа(с номером из базы)
                 if (product != null)
                     GammaBase.Entry(product).Reload();
-                /*
-                switch (msg.DocProductKind)
-                {
-                    case DocProductKinds.DocProductUnload:
-                        CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
-                        break;
-                    case DocProductKinds.DocProductGroupPack:
-                        CurrentViewModel = new DocProductGroupPackViewModel();
-                        break;
-                    case DocProductKinds.DocProductSpool:
-                        CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID, true);
-                        break;
-                    case DocProductKinds.DocProductPallet:
-                        CurrentViewModel = new DocProductPalletViewModel();
-                        break;
-                }
-                */
             }
             else
             {
@@ -281,7 +264,6 @@ namespace Gamma.ViewModels
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime DocDate { get; set; }
         private bool _isConfirmed;
-        private bool HaveChanges { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public bool IsConfirmed 
         {
@@ -368,28 +350,9 @@ namespace Gamma.ViewModels
         public override void SaveToModel(GammaEntities gammaBase = null)
         {
             if (IsReadOnly && IsConfirmed) return;
-/*            if (Doc == null)
-            {
-                Doc = new Docs() 
-                { 
-                    DocID = Guid.NewGuid(), 
-                    UserID = WorkSession.UserID, 
-                    IsConfirmed = IsConfirmed,
-                    PlaceID = WorkSession.PlaceID, 
-                    ShiftID = WorkSession.ShiftID,
-                    DocTypeID = (int)DocTypes.DocProduction,
-                    PrintName = WorkSession.PrintName
-                };
-                DocProduction = new DocProduction() { DocID = Doc.DocID, InPlaceID = GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == ProductionTaskID).Select(p => p.PlaceID).FirstOrDefault(), ProductionTaskID = ProductionTaskID };
-                GammaBase.Docs.Add(Doc);
-                GammaBase.DocProduction.Add(DocProduction);
-            }
-             */
-            //           Doc.Number = Number;
             Doc.Date = DocDate;
             Doc.IsConfirmed = IsConfirmed;
             GammaBase.SaveChanges();
-            HaveChanges = false;
             CurrentViewModel.SaveToModel(Doc.DocID);
         }
         private Docs Doc { get; set; }
