@@ -306,13 +306,13 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
+        public override void SaveToModel(Guid itemId, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
         {
             if (!DB.HaveWriteAccess("ProductionTaskSGB")) return;
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID);
+            base.SaveToModel(itemId);
             var productionTaskBatch =
-                    gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemID);
+                    gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemId);
                 ProductionTasks productionTask;
                 if (productionTaskBatch == null)
                 {
@@ -321,7 +321,7 @@ namespace Gamma.ViewModels
                     return;
                 }
                 var productionTaskTemp =
-                    gammaBase.GetProductionTaskByBatchID(itemID, (short) PlaceGroups.PM).FirstOrDefault();
+                    gammaBase.GetProductionTaskByBatchID(itemId, (short) PlaceGroups.PM).FirstOrDefault();
                 if (productionTaskTemp == null)
                 {
                     ProductionTaskID = SqlGuidUtil.NewSequentialid();

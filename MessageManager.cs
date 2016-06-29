@@ -173,6 +173,7 @@ namespace Gamma
     }
     public class OpenPlaceGroupsNomenclatureMessage  { }
     public class OpenMaterialTypesNomenclatureMessage { }
+    public class OpenWarehousePersonsMessage { }
     public class OpenDocCloseShiftsMessage 
     {
         public PlaceGroups? PlaceGroup;
@@ -310,6 +311,12 @@ namespace Gamma
         {
             Messenger.Default.Send(new OpenMaterialTypesNomenclatureMessage());
         }
+
+        public static void OpenWarehousePersons()
+        {
+            Messenger.Default.Send(new OpenWarehousePersonsMessage());
+        }
+
         public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null)
         {
             Messenger.Default.Send(new OpenDocProductMessage

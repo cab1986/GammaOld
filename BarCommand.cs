@@ -9,10 +9,10 @@ namespace Gamma
         public BarViewModel()
         {
             Name = "";
-            Commands = new ObservableCollection<BarCommand<PrintReportMessage>>();
+            Commands = new ObservableCollection<BarCommand<object>>();
         }
         public string Name { get; set; }
-        public  ObservableCollection<BarCommand<PrintReportMessage>> Commands { get; set; }
+        public  ObservableCollection<BarCommand<object>> Commands { get; set; }
         }
     public class BarCommand<T> : DelegateCommand<T>
     {

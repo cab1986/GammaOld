@@ -40,7 +40,7 @@ namespace Gamma
             var bar = new BarViewModel();
             foreach (Reports report in reports)
             {
-                var command = new BarCommand<PrintReportMessage>(msg => MessageManager.PrintReport(msg))
+                var command = new BarCommand<object>(msg => MessageManager.PrintReport((PrintReportMessage)msg))
                 {
                     Caption = report.Name,
                     CommandParameter = new PrintReportMessage()

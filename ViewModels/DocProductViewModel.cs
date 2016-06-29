@@ -249,6 +249,7 @@ namespace Gamma.ViewModels
                 || CurrentViewModel is DocProductGroupPackViewModel) msg.BatchKind = BatchKinds.SGB;else if (CurrentViewModel is DocProductPalletViewModel) msg.BatchKind = BatchKinds.SGI;
             MessageManager.OpenProductionTask(msg);
         }
+
         public ObservableCollection<BarViewModel> Bars
         {
             get
@@ -261,6 +262,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime DocDate { get; set; }
         private bool _isConfirmed;
@@ -338,13 +340,15 @@ namespace Gamma.ViewModels
         private void PrintReport(PrintReportMessage msg)
         {
             if (msg.VMID != (CurrentViewModel as IBarImplemented)?.VMID) return;
-//            if (!IsValid) return;
+            if (!IsValid)
+            {
+                MessageBox.Show("Не заполнены некоторые обязательные поля!", "Поля не заполнены", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                return;
+            }
             SaveToModel();
             var spoolViewModel = CurrentViewModel as DocProductSpoolViewModel;
-            if (spoolViewModel != null)
-                ReportManager.PrintReport(msg.ReportID, spoolViewModel.ProductId);
-            else
-                ReportManager.PrintReport(msg.ReportID, Doc.DocID);
+            ReportManager.PrintReport(msg.ReportID, spoolViewModel?.ProductId ?? Doc.DocID);
         }
 
         public override void SaveToModel(GammaEntities gammaBase = null)

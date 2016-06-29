@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     {
         public DocShipmentOrdersViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
-            OpenDocShipmentOrderCommand = new DelegateCommand<object>(OpenDocShipmentOrder);
+            OpenDocShipmentOrderCommand = new DelegateCommand<object>(OpenDocShipmentOrder, (m) => DB.HaveWriteAccess("DocShipmentOrderInfo"));
             Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
             FindCommand = new DelegateCommand(Find);
             RefreshCommand = FindCommand;
@@ -37,7 +37,7 @@ namespace Gamma.ViewModels
 
         public DelegateCommand DeleteItemCommand { get; private set; }
 
-        public DelegateCommand EditItemCommand { get; private set; }
+        public DelegateCommand<object> EditItemCommand { get; private set; }
 
         public DelegateCommand NewItemCommand { get; private set; }
 

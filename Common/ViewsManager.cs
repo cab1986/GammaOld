@@ -23,6 +23,12 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenPlaceGroupsNomenclatureMessage>(this, OpenPlaceGroupsNomenclature);
             Messenger.Default.Register<OpenMaterialTypesNomenclatureMessage>(this, OpenMaterialTypeNomenclature);
             Messenger.Default.Register<OpenDocShipmentOrderMessage>(this, OpenDocShipmentOrder);
+            Messenger.Default.Register<OpenWarehousePersonsMessage>(this, OpenWarehousePersons);
+        }
+
+        private void OpenWarehousePersons(OpenWarehousePersonsMessage msg)
+        {
+            new WarehousePersonsView().Show();
         }
 
         private void OpenDocShipmentOrder(OpenDocShipmentOrderMessage msg)

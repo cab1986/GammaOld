@@ -5,7 +5,7 @@ namespace Gamma.Interfaces
     interface IItemManager
     {
         DelegateCommand NewItemCommand { get; }
-        DelegateCommand EditItemCommand { get; }
+        DelegateCommand<object> EditItemCommand { get; }
         DelegateCommand DeleteItemCommand { get; }
         DelegateCommand RefreshCommand { get; }
     }

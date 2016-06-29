@@ -258,3 +258,5 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
+D:\CProjects\Gamma\Gamma\obj\Release\Views\WarehousePersonsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\WarehousePersonsView.baml

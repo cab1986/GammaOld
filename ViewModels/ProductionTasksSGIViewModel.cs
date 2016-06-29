@@ -98,7 +98,7 @@ namespace Gamma.ViewModels
             set;
         }
 
-        public DelegateCommand EditItemCommand
+        public DelegateCommand<object> EditItemCommand
         {
             get;
             set;

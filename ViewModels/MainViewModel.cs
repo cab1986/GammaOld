@@ -63,11 +63,12 @@ namespace Gamma.ViewModels
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
-                OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders);
+                OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders, DB.HaveReadAccess("DocShipments"));
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
                 OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
                     () => DB.HaveWriteAccess("MaterialType1CNomenclature"));
+                OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -207,8 +208,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("NewItemCommand");
             }
         }
-        private DelegateCommand _editItemCommand;
-        public DelegateCommand EditItemCommand 
+        private DelegateCommand<object> _editItemCommand;
+        public DelegateCommand<object> EditItemCommand 
         {
             get { return _editItemCommand; }
             private set
@@ -274,6 +275,7 @@ namespace Gamma.ViewModels
         public DelegateCommand<int> OpenPlaceProductsCommand { get; private set; }
         public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
         public DelegateCommand OpenMaterialTypesNomenclatureCommand { get; private set; }
+        public DelegateCommand OpenWarehousePersonsCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public class PlaceProduct
         {

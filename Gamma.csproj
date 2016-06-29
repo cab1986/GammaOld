@@ -587,6 +587,7 @@
     <Compile Include="ViewModels\RootViewModel.cs" />
     <Compile Include="ViewModels\SourceSpoolsViewModel.cs" />
     <Compile Include="ViewModels\ValidationViewModelBase.cs" />
+    <Compile Include="ViewModels\WarehousePersonsViewModel.cs" />
     <Compile Include="Views\ComPortSettingsView.xaml.cs">
       <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
     </Compile>
@@ -708,6 +709,9 @@
     </Compile>
     <Compile Include="Views\SourceSpoolsView.xaml.cs">
       <DependentUpon>SourceSpoolsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WarehousePersonsView.xaml.cs">
+      <DependentUpon>WarehousePersonsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WindowCloseBehavior.cs" />
     <Compile Include="MessageManager.cs" />
@@ -877,6 +881,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SourceSpoolsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WarehousePersonsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

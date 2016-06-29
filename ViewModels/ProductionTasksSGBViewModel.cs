@@ -29,7 +29,7 @@ namespace Gamma.ViewModels
         }
 
         public DelegateCommand NewItemCommand {get; set;}
-        public DelegateCommand EditItemCommand {get; set;}
+        public DelegateCommand<object> EditItemCommand {get; set;}
         public DelegateCommand DeleteItemCommand {get; set;}
         public DelegateCommand RefreshCommand { get; set; }
         private void NewItem()

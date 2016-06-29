@@ -11,13 +11,15 @@
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
     xmlns:g="clr-namespace:Gamma"
+    xmlns:common="clr-namespace:Gamma.Common"
     x:Class="Gamma.MainView" 
     mc:Ignorable="d ignore" 
     Title="Gamma"
     Height="716" 
     Width="899"
-    WindowState="Maximized">
-
+    WindowState="Maximized"
+    d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
+    common:WindowSettings.Save="True">
     <Window.Resources>
        <DataTemplate DataType="{x:Type vm:ProductionTasksSGBViewModel}">
             <views:ProductionTasksSGBView />
@@ -66,6 +68,7 @@
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Склад">
                         <dxb:BarButtonItem Content="Приказы на отгрузку" Command="{Binding OpenDocShipmentOrdersCommand}"/>
+                        <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">
