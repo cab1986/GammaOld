@@ -104,5 +104,6 @@
         <Style TargetType="{x:Type v:PlaceGroupsNomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:MaterialTypesNomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:DocShipmentOrderView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
+        <Style TargetType="{x:Type v:ImportOldProductsView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
     </Application.Resources>
 </Application>

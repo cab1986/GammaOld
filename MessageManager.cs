@@ -174,6 +174,7 @@ namespace Gamma
     public class OpenPlaceGroupsNomenclatureMessage  { }
     public class OpenMaterialTypesNomenclatureMessage { }
     public class OpenWarehousePersonsMessage { }
+    public class OpenImportOldProductsMessage { }
     public class OpenDocCloseShiftsMessage 
     {
         public PlaceGroups? PlaceGroup;
@@ -315,6 +316,11 @@ namespace Gamma
         public static void OpenWarehousePersons()
         {
             Messenger.Default.Send(new OpenWarehousePersonsMessage());
+        }
+
+        public static void OpenImportOldProducts()
+        {
+            Messenger.Default.Send(new OpenImportOldProductsMessage());
         }
 
         public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null)

@@ -17,20 +17,19 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Persons()
         {
-            this.DocShipments = new HashSet<DocShipments>();
             this.DocShipmentOrderInfo = new HashSet<DocShipmentOrderInfo>();
+            this.DocShipments = new HashSet<DocShipments>();
         }
     
         public int PersonID { get; set; }
-        public int PostTypeID { get; set; }
+        public Nullable<int> PostTypeID { get; set; }
         public string Name { get; set; }
         public string Barcode { get; set; }
         public string Password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocShipments> DocShipments { get; set; }
-        public virtual PostTypes PostTypes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocShipments> DocShipments { get; set; }
     }
 }

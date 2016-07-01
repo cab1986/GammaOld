@@ -24,6 +24,12 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenMaterialTypesNomenclatureMessage>(this, OpenMaterialTypeNomenclature);
             Messenger.Default.Register<OpenDocShipmentOrderMessage>(this, OpenDocShipmentOrder);
             Messenger.Default.Register<OpenWarehousePersonsMessage>(this, OpenWarehousePersons);
+            Messenger.Default.Register<OpenImportOldProductsMessage>(this, OpenImportOldProducts);
+        }
+
+        private void OpenImportOldProducts(OpenImportOldProductsMessage obj)
+        {
+            new ImportOldProductsView().Show();
         }
 
         private void OpenWarehousePersons(OpenWarehousePersonsMessage msg)

@@ -10,18 +10,14 @@
 namespace Gamma.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DocCloseShiftSamples
+    public partial class GetOldProductInfo_Result
     {
-        public System.Guid DocCloseShiftSampleID { get; set; }
-        public System.Guid DocID { get; set; }
-        public System.Guid C1CNomenclatureID { get; set; }
-        public System.Guid C1CCharacteristicID { get; set; }
-        public decimal Quantity { get; set; }
-    
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual Docs Docs { get; set; }
+        public Nullable<System.Guid> ProductId { get; set; }
+        public string ProductNumber { get; set; }
+        public Nullable<System.Guid> NomenclatureId { get; set; }
+        public Nullable<System.Guid> CharacteristicId { get; set; }
+        public string OldNomenclature { get; set; }
+        public Nullable<long> OldProductId { get; set; }
     }
 }

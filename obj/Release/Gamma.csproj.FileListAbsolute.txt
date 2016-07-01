@@ -260,3 +260,5 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
 D:\CProjects\Gamma\Gamma\obj\Release\Views\WarehousePersonsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\WarehousePersonsView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ImportOldProductsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ImportOldProductsView.baml

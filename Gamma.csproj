@@ -396,6 +396,9 @@
     <Compile Include="Models\GetNomenclatureFolders_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetOldProductInfo_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetProductionTaskBatchProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -554,6 +557,7 @@
     <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
+    <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
@@ -638,6 +642,9 @@
     </Compile>
     <Compile Include="Views\FindProductView.xaml.cs">
       <DependentUpon>FindProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImportOldProductsView.xaml.cs">
+      <DependentUpon>ImportOldProductsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -794,6 +801,10 @@
     </Page>
     <Page Include="Views\FindProductView.xaml">
       <SubType>Form</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImportOldProductsView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginView.xaml">

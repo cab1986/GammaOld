@@ -77,14 +77,10 @@ namespace Gamma.Models
         public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CSpecifications> C1CSpecifications { get; set; }
-        public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
-        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual DbSet<Places> Places { get; set; }
-        public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
@@ -93,14 +89,18 @@ namespace Gamma.Models
         public virtual DbSet<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
         public virtual DbSet<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
         public virtual DbSet<C1CWarehouses> C1CWarehouses { get; set; }
-        public virtual DbSet<DocShipments> DocShipments { get; set; }
-        public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<PostTypes> PostTypes { get; set; }
         public virtual DbSet<vDocShipmentOrders> vDocShipmentOrders { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
+        public virtual DbSet<Persons> Persons { get; set; }
+        public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
+        public virtual DbSet<DocShipments> DocShipments { get; set; }
+        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
+        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {
@@ -589,6 +589,40 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UploadDocCloseShiftReportTo1C", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GetOldProductInfo_Result> GetOldProductInfo(string number, Nullable<int> productKindId)
+        {
+            var numberParameter = number != null ?
+                new ObjectParameter("Number", number) :
+                new ObjectParameter("Number", typeof(string));
+    
+            var productKindIdParameter = productKindId.HasValue ?
+                new ObjectParameter("ProductKindId", productKindId) :
+                new ObjectParameter("ProductKindId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetOldProductInfo_Result>("GetOldProductInfo", numberParameter, productKindIdParameter);
+        }
+    
+        public virtual int SaveOldProductToNewBase(Nullable<long> id, Nullable<int> productKindId, Nullable<System.Guid> nomenclatureID, Nullable<System.Guid> characteristicID)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(long));
+    
+            var productKindIdParameter = productKindId.HasValue ?
+                new ObjectParameter("ProductKindId", productKindId) :
+                new ObjectParameter("ProductKindId", typeof(int));
+    
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SaveOldProductToNewBase", idParameter, productKindIdParameter, nomenclatureIDParameter, characteristicIDParameter);
         }
     }
 }

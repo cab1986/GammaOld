@@ -69,6 +69,7 @@ namespace Gamma.ViewModels
                 OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
                     () => DB.HaveWriteAccess("MaterialType1CNomenclature"));
                 OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
+                OpenImportOldProductsCommand = new DelegateCommand(MessageManager.OpenImportOldProducts, () => DB.HaveWriteAccess("Products"));
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -276,6 +277,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
         public DelegateCommand OpenMaterialTypesNomenclatureCommand { get; private set; }
         public DelegateCommand OpenWarehousePersonsCommand { get; private set; }
+        public DelegateCommand OpenImportOldProductsCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public class PlaceProduct
         {

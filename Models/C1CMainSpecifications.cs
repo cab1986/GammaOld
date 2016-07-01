@@ -14,7 +14,7 @@ namespace Gamma.Models
     
     public partial class C1CMainSpecifications
     {
-        public System.Guid ID { get; set; }
+        public System.Guid C1CMainSpecificationID { get; set; }
         public Nullable<System.DateTime> Period { get; set; }
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
@@ -23,7 +23,7 @@ namespace Gamma.Models
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual C1CSpecifications C1CSpecifications { get; set; }
         public virtual C1CPlaces C1CPlaces { get; set; }
+        public virtual C1CSpecifications C1CSpecifications { get; set; }
     }
 }

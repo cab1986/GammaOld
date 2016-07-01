@@ -24,5 +24,6 @@ namespace Gamma.Models
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual DocWithdrawal DocWithdrawal { get; set; }
+        public virtual Docs Docs { get; set; }
     }
 }

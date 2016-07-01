@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
             Samples = new ObservableCollection<Sample>(GammaBase.DocCloseShiftSamples.Where(ds => ds.DocID == docId)
                 .Select(ds => new Sample
                 {
-                    NomenclatureID = ds.C1CnomenclatureID,
+                    NomenclatureID = ds.C1CNomenclatureID,
                     CharacteristicID = ds.C1CCharacteristicID,
                     Quantity = ds.Quantity/ds.C1CCharacteristics.C1CMeasureUnitsPackage.Coefficient??1,
                     NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name
@@ -264,7 +264,7 @@ namespace Gamma.ViewModels
                 docCloseShift.DocCloseShiftSamples.Add(new DocCloseShiftSamples
                 {
                     DocID = docId,
-                    C1CnomenclatureID = sample.NomenclatureID,
+                    C1CNomenclatureID = sample.NomenclatureID,
                     C1CCharacteristicID = sample.CharacteristicID,
                     DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
                     Quantity = sample.Quantity*GammaBase.C1CCharacteristics

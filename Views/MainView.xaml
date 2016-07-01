@@ -69,6 +69,7 @@
                     <dxb:BarSubItem Content="Склад">
                         <dxb:BarButtonItem Content="Приказы на отгрузку" Command="{Binding OpenDocShipmentOrdersCommand}"/>
                         <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
+                        <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">

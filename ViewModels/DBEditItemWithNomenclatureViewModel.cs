@@ -45,8 +45,6 @@ namespace Gamma.ViewModels
         }
         private string _nomenclatureName;
         [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public string NomenclatureName
         {
             get { return _nomenclatureName; }
@@ -109,7 +107,7 @@ namespace Gamma.ViewModels
             set
             {
                 _characteristicID = value;
-                RaisePropertiesChanged("CharacteristicID");
+                RaisePropertyChanged("CharacteristicID");
             }
         }
 
