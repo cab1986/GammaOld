@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Printing.IndexedProperties;
 using System.Windows;
 
 namespace Gamma.Dialogs
@@ -19,5 +20,12 @@ namespace Gamma.Dialogs
 
         public DateTime DateBegin { get { return EdtDateBegin.DateTime; } }
         public DateTime DateEnd { get { return EdtDateEnd.DateTime; } }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var curDate = DateTime.Today;
+            EdtDateBegin.DateTime = new DateTime(curDate.Year, curDate.Month - 1, 1);
+            EdtDateEnd.DateTime = new DateTime(curDate.Year, curDate.Month, 1).AddSeconds(-1);
+        }
     }
 }

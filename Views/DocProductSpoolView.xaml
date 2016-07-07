@@ -8,10 +8,19 @@
         xmlns:ignore="http://www.ignore.com"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
         x:Class="Gamma.Views.DocProductSpoolView"
         mc:Ignorable="d ignore"
-             DataContext="{Binding}">
+             DataContext="{Binding}"
+         d:DataContext="{d:DesignInstance Type=viewModels:DocProductSpoolViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key = "BooleanToVisibility" />
+    </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="28"/>
+        </Grid.RowDefinitions>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup View="Group" Orientation="Vertical">
                 <dxlc:LayoutItem Label="Номенклатура">
@@ -78,6 +87,8 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
+        <Button Grid.Row="1" HorizontalAlignment="Right" Content="Создать упаковку" Command="{Binding CreateGroupPackCommand}" 
+                Visibility="{Binding ShowCreateGroupPack, Converter={StaticResource BooleanToVisibility}}"/>
     </Grid>
     <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior />

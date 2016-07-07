@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
 using DevExpress.Mvvm;
 using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Common;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Gamma.Dialogs;
 using Gamma.Models;
 
@@ -63,6 +66,7 @@ namespace Gamma.ViewModels
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
+                PrintReportCommand = new DelegateCommand<Guid>(PrintReport);
                 OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders, DB.HaveReadAccess("DocShipments"));
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
@@ -97,6 +101,17 @@ namespace Gamma.ViewModels
                     }
                     );
             }
+            Reports = new List<ReportItem>(
+                                           (from rep in GammaBase.Reports
+                                           join parrep in GammaBase.Reports on rep.ParentID equals parrep.ReportID
+                                           where parrep.Name == "Reports"
+                                           orderby rep.Name
+                                           select rep).ToList().Select(p => new ReportItem
+                                           {
+                                               ReportId = p.ReportID,
+                                               ReportName = p.Name,
+                                               Command = PrintReportCommand
+                                           }));
         }
 
         private void OpenProductionTaskBatch(OpenProductionTaskBatchMessage msg)
@@ -147,6 +162,12 @@ namespace Gamma.ViewModels
             EditItemCommand = ((PlaceProductsViewModel) CurrentView).OpenDocProductCommand;
             DeleteItemCommand = ((PlaceProductsViewModel) CurrentView).DeleteProductCommand;
         }
+
+        private void PrintReport(Guid reportId)
+        {
+            ReportManager.PrintReport(reportId);
+        }
+
         private void FindProductionTask()
         {
 //            if (CurrentView is ProductionTasksPMViewModel)
@@ -278,12 +299,25 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenMaterialTypesNomenclatureCommand { get; private set; }
         public DelegateCommand OpenWarehousePersonsCommand { get; private set; }
         public DelegateCommand OpenImportOldProductsCommand { get; private set; }
+        public DelegateCommand<Guid> PrintReportCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
+        public List<ReportItem> Reports { get; set; }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public class PlaceProduct
         {
             public string Place { get; set; }
             public DelegateCommand<int> Command { get; set; }
             public int PlaceID { get; set; }
         }
+
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+        public class ReportItem
+        {
+            public DelegateCommand<Guid> Command { get; set; }
+            public Guid ReportId { get; set; }
+            public string ReportName { get; set; }
+        }
+
     }
 }

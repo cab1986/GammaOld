@@ -151,7 +151,8 @@ namespace Gamma.ViewModels
                         .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
-                    GammaBase.Entry(lastGroupPack).Reload();
+                    if (lastGroupPack != null)
+                        GammaBase.Entry(lastGroupPack).Reload();
                     if (lastGroupPack != null && !lastGroupPack.IsConfirmed && lastGroupPack.DocProducts.Count > 0)
                     {
                         var docProduct = lastGroupPack.DocProducts.FirstOrDefault();

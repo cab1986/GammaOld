@@ -32,6 +32,7 @@ namespace Gamma.Models
         public string Description { get; set; }
         public string PrintDescription { get; set; }
         public Nullable<decimal> ValueNumeric { get; set; }
+        public string SortValue { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }

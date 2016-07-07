@@ -178,6 +178,11 @@ namespace Gamma.ViewModels
                              }).FirstOrDefault();
             AddSpoolIfCorrect(spool);
         }
+
+        /// <summary>
+        /// Добавление рулона по штрих-коду
+        /// </summary>
+        /// <param name="barcode">штрих-код</param>
         public void AddSpool(string barcode)
         {
             var p = (from pinf in GammaBase.vProductsInfo

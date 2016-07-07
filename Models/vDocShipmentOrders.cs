@@ -20,5 +20,6 @@ namespace Gamma.Models
         public string Quantity { get; set; }
         public string NomenclatureName { get; set; }
         public decimal CollectedQuantity { get; set; }
+        public string ShortNomenclatureName { get; set; }
     }
 }

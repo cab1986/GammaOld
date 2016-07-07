@@ -624,5 +624,18 @@ namespace Gamma.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SaveOldProductToNewBase", idParameter, productKindIdParameter, nomenclatureIDParameter, characteristicIDParameter);
         }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> CreateGroupPackWithSpool(Nullable<System.Guid> spoolID, string printName)
+        {
+            var spoolIDParameter = spoolID.HasValue ?
+                new ObjectParameter("SpoolID", spoolID) :
+                new ObjectParameter("SpoolID", typeof(System.Guid));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateGroupPackWithSpool", spoolIDParameter, printNameParameter);
+        }
     }
 }

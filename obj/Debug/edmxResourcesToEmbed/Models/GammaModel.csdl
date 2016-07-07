@@ -123,6 +123,7 @@
     <NavigationProperty Name="C1CNomenclatureProperties" Relationship="Self.FK_1CNomenclatureProperties_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CNomenclatureProperties" />
     <NavigationProperty Name="C1CProperties" Relationship="Self.FK_1CPropertyValues_1CProperties" FromRole="C1CPropertyValues" ToRole="C1CProperties" />
     <NavigationProperty Name="C1CPropertyValueGammaPropertyValue" Relationship="Self.FK_1CPropertyValueGammaPropertyValue_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CPropertyValueGammaPropertyValue" />
+    <Property Name="SortValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="C1CQuality">
     <Key>
@@ -1772,6 +1773,10 @@
       <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
       <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
     </FunctionImport>
+    <FunctionImport Name="CreateGroupPackWithSpool" ReturnType="Collection(Guid)">
+      <Parameter Name="SpoolID" Mode="In" Type="Guid" />
+      <Parameter Name="PrintName" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -3139,6 +3144,7 @@
     <Property Name="Quantity" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
     <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
     <Property Name="CollectedQuantity" Type="Decimal" Nullable="false" Precision="38" Scale="9" />
+    <Property Name="ShortNomenclatureName" Type="String" MaxLength="238" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="ProductionTaskSGB">
     <Key>

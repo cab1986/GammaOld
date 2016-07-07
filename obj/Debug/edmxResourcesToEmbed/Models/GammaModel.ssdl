@@ -218,6 +218,7 @@
     <Property Name="Description" Type="varchar" MaxLength="50" />
     <Property Name="PrintDescription" Type="ntext" />
     <Property Name="ValueNumeric" Type="decimal" Precision="20" Scale="5" />
+    <Property Name="SortValue" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="1CQuality">
     <Key>
@@ -834,6 +835,7 @@
     <Property Name="Quantity" Type="varchar" MaxLength="30" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="CollectedQuantity" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+    <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="238" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -2564,6 +2566,10 @@
     <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PrintName" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SpoolID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="PrintName" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="CreateRemainderSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -2852,7 +2858,8 @@
     [vDocShipmentOrders].[1CCharacteristicID] AS [1CCharacteristicID], 
     [vDocShipmentOrders].[Quantity] AS [Quantity], 
     [vDocShipmentOrders].[NomenclatureName] AS [NomenclatureName], 
-    [vDocShipmentOrders].[CollectedQuantity] AS [CollectedQuantity]
+    [vDocShipmentOrders].[CollectedQuantity] AS [CollectedQuantity], 
+    [vDocShipmentOrders].[ShortNomenclatureName] AS [ShortNomenclatureName]
     FROM [dbo].[vDocShipmentOrders] AS [vDocShipmentOrders]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">

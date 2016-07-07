@@ -223,6 +223,7 @@
           <Property Name="Description" Type="varchar" MaxLength="50" />
           <Property Name="PrintDescription" Type="ntext" />
           <Property Name="ValueNumeric" Type="decimal" Precision="20" Scale="5" />
+          <Property Name="SortValue" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="1CQuality">
           <Key>
@@ -839,6 +840,7 @@
           <Property Name="Quantity" Type="varchar" MaxLength="30" />
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="CollectedQuantity" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+          <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="238" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -2569,6 +2571,10 @@
           <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SpoolID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PrintName" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="CreateRemainderSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -2857,7 +2863,8 @@
     [vDocShipmentOrders].[1CCharacteristicID] AS [1CCharacteristicID], 
     [vDocShipmentOrders].[Quantity] AS [Quantity], 
     [vDocShipmentOrders].[NomenclatureName] AS [NomenclatureName], 
-    [vDocShipmentOrders].[CollectedQuantity] AS [CollectedQuantity]
+    [vDocShipmentOrders].[CollectedQuantity] AS [CollectedQuantity], 
+    [vDocShipmentOrders].[ShortNomenclatureName] AS [ShortNomenclatureName]
     FROM [dbo].[vDocShipmentOrders] AS [vDocShipmentOrders]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -3574,6 +3581,7 @@
           <NavigationProperty Name="C1CNomenclatureProperties" Relationship="Self.FK_1CNomenclatureProperties_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CNomenclatureProperties" />
           <NavigationProperty Name="C1CProperties" Relationship="Self.FK_1CPropertyValues_1CProperties" FromRole="C1CPropertyValues" ToRole="C1CProperties" />
           <NavigationProperty Name="C1CPropertyValueGammaPropertyValue" Relationship="Self.FK_1CPropertyValueGammaPropertyValue_1CPropertyValues" FromRole="C1CPropertyValues" ToRole="C1CPropertyValueGammaPropertyValue" />
+          <Property Name="SortValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="C1CQuality">
           <Key>
@@ -5223,6 +5231,10 @@
             <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
             <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
           </FunctionImport>
+          <FunctionImport Name="CreateGroupPackWithSpool" ReturnType="Collection(Guid)">
+            <Parameter Name="SpoolID" Mode="In" Type="Guid" />
+            <Parameter Name="PrintName" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -6590,6 +6602,7 @@
           <Property Name="Quantity" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
           <Property Name="CollectedQuantity" Type="Decimal" Nullable="false" Precision="38" Scale="9" />
+          <Property Name="ShortNomenclatureName" Type="String" MaxLength="238" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ProductionTaskSGB">
           <Key>
@@ -7091,6 +7104,7 @@
           <EntitySetMapping Name="C1CPropertyValues">
             <EntityTypeMapping TypeName="GammaModel.C1CPropertyValues">
               <MappingFragment StoreEntitySet="1CPropertyValues">
+                <ScalarProperty Name="SortValue" ColumnName="SortValue" />
                 <ScalarProperty Name="C1CPropertyValueID" ColumnName="1CPropertyValueID" />
                 <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
                 <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
@@ -8102,6 +8116,7 @@
           <EntitySetMapping Name="vDocShipmentOrders">
             <EntityTypeMapping TypeName="GammaModel.vDocShipmentOrders">
               <MappingFragment StoreEntitySet="vDocShipmentOrders">
+                <ScalarProperty Name="ShortNomenclatureName" ColumnName="ShortNomenclatureName" />
                 <ScalarProperty Name="CollectedQuantity" ColumnName="CollectedQuantity" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
@@ -8284,6 +8299,7 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SaveOldProductToNewBase" FunctionName="GammaDBModel.SaveOldProductToNewBase" />
+          <FunctionImportMapping FunctionImportName="CreateGroupPackWithSpool" FunctionName="GammaDBModel.CreateGroupPackWithSpool" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

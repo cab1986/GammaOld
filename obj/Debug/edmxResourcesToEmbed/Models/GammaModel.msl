@@ -87,6 +87,7 @@
     <EntitySetMapping Name="C1CPropertyValues">
       <EntityTypeMapping TypeName="GammaModel.C1CPropertyValues">
         <MappingFragment StoreEntitySet="1CPropertyValues">
+          <ScalarProperty Name="SortValue" ColumnName="SortValue" />
           <ScalarProperty Name="C1CPropertyValueID" ColumnName="1CPropertyValueID" />
           <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
           <ScalarProperty Name="C1CPropertyID" ColumnName="1CPropertyID" />
@@ -1098,6 +1099,7 @@
     <EntitySetMapping Name="vDocShipmentOrders">
       <EntityTypeMapping TypeName="GammaModel.vDocShipmentOrders">
         <MappingFragment StoreEntitySet="vDocShipmentOrders">
+          <ScalarProperty Name="ShortNomenclatureName" ColumnName="ShortNomenclatureName" />
           <ScalarProperty Name="CollectedQuantity" ColumnName="CollectedQuantity" />
           <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
@@ -1280,5 +1282,6 @@
       </ResultMapping>
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="SaveOldProductToNewBase" FunctionName="GammaDBModel.SaveOldProductToNewBase" />
+    <FunctionImportMapping FunctionImportName="CreateGroupPackWithSpool" FunctionName="GammaDBModel.CreateGroupPackWithSpool" />
   </EntityContainerMapping>
 </Mapping>

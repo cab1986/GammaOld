@@ -191,6 +191,7 @@ namespace Gamma.ViewModels
         public DelegateCommand ChooseSelectedNomenclature { get; private set; }
         private void ChooseNomenclature()
         {
+            if (SelectedNomenclature == null) return;
             UIServices.SetBusyState();
             var msg = new Nomenclature1CMessage {Nomenclature1CID = SelectedNomenclature.Nomenclature1CID};
             Messenger.Default.Send(msg);

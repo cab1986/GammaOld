@@ -8,6 +8,7 @@ using Gamma.Attributes;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
+using DevExpress.Mvvm;
 
 
 namespace Gamma.ViewModels
@@ -27,6 +28,8 @@ namespace Gamma.ViewModels
         /// <param name="gammaBase">Контекст БД</param>
         public DocProductSpoolViewModel(Guid docId, GammaEntities gammaBase = null): base(gammaBase)
         {
+            DocID = docId;
+            ShowCreateGroupPack = WorkSession.PlaceID == 21;
             ProductId = GammaBase.DocProducts.FirstOrDefault(d => d.DocID == docId)?.ProductID ??
                             SqlGuidUtil.NewSequentialid();
             var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == docId);
@@ -89,6 +92,7 @@ namespace Gamma.ViewModels
             }          
             Bars.Add(ReportManager.GetReportBar("SpoolLabels", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
+            CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
         }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -98,6 +102,8 @@ namespace Gamma.ViewModels
             get { return base.CharacteristicID; }
             set { base.CharacteristicID = value; }
         }
+
+        public bool ShowCreateGroupPack { get; private set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Range(1,5000,ErrorMessage = @"Необходимо указать диаметр")]
@@ -127,7 +133,22 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Length");
             }
         }
-        public Guid? DocID { get; set; }
+
+        public DelegateCommand CreateGroupPackCommand { get; private set; }
+
+        private void CreateGroupPack()
+        {            
+            SaveToModel(DocID);
+            var groupPackId = GammaBase.CreateGroupPackWithSpool(ProductId, WorkSession.PrintName).FirstOrDefault();
+            if (groupPackId != null)
+                MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, (Guid) groupPackId);
+            else
+            {
+                MessageBox.Show("Вы пытаетесь создать упаковку из тамбура, который уже переработан");
+            }
+        }
+
+        private Guid DocID { get; }
 
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)
         {
