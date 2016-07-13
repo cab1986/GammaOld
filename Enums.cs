@@ -45,7 +45,7 @@ namespace Gamma
     /// <summary>
     /// Группы переделов. Привязаны к таблице в базе, менять только вместе!
     /// </summary>
-    public enum PlaceGroups { PM, Rw, Convertings, Wr, Other }
+    public enum PlaceGroups { PM, Rw, Convertings, Wr, Other, Warehouses }
     /// <summary>
     /// Качество продукта
     /// </summary>
@@ -104,7 +104,8 @@ namespace Gamma
         DocWithdrawal,
         DocMovement,
         DocCloseShift,
-        DocChangeState
+        DocChangeState,
+        DocUnpack
     }
     public enum PermissionMark
     {

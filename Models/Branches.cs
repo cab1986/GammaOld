@@ -27,6 +27,7 @@ namespace Gamma.Models
         public string Phones { get; set; }
         public string WebInfo { get; set; }
         public string QualityContacts { get; set; }
+        public Nullable<System.Guid> C1CSubdivisionID { get; set; }
     
         public virtual Enterprises Enterprises { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

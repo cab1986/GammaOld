@@ -41,7 +41,6 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CPlaceID { get; set; }
     
         public virtual C1CPlaces C1CPlaces { get; set; }
-        public virtual Branches Branches { get; set; }
         public virtual Departments Departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMovement> DocMovement { get; set; }
@@ -63,5 +62,6 @@ namespace Gamma.Models
         public virtual ICollection<Users> Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
+        public virtual Branches Branches { get; set; }
     }
 }

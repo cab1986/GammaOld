@@ -72,7 +72,11 @@ namespace Gamma.ViewModels
 
         private void SetNomenclatureName(Guid? nomenclatureid)
         {
-            if (nomenclatureid == null) return;
+            if (nomenclatureid == null)
+            {
+                NomenclatureName = null;
+                return;
+            }
             NomenclatureName = (from nom in GammaBase.C1CNomenclature
                                 where nom.C1CNomenclatureID == nomenclatureid
                                 select nom.Name).FirstOrDefault();

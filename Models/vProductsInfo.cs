@@ -35,5 +35,8 @@ namespace Gamma.Models
         public Nullable<bool> IsConfirmed { get; set; }
         public Nullable<bool> IsWrittenOff { get; set; }
         public string State { get; set; }
+        public Nullable<decimal> GrossQuantity { get; set; }
+        public Nullable<decimal> BaseMeasureUnitGrossQuantity { get; set; }
+        public string ShortNomenclatureName { get; set; }
     }
 }

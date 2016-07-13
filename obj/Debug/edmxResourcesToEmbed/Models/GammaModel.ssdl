@@ -312,6 +312,7 @@
     <Property Name="Phones" Type="varchar" MaxLength="8000" />
     <Property Name="WebInfo" Type="varchar" MaxLength="8000" />
     <Property Name="QualityContacts" Type="varchar" MaxLength="8000" />
+    <Property Name="1CSubdivisionID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="Departments">
     <Key>
@@ -426,6 +427,7 @@
     <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ActivePersonID" Type="int" />
     <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="ShiftID" Type="tinyint" />
   </EntityType>
   <EntityType Name="DocShipments">
     <Key>
@@ -835,7 +837,7 @@
     <Property Name="Quantity" Type="varchar" MaxLength="30" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="CollectedQuantity" Type="decimal" Precision="38" Scale="9" Nullable="false" />
-    <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="238" />
+    <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -884,7 +886,10 @@
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
     <Property Name="BaseMeasureUnitQuantity" Type="decimal" Precision="20" Scale="10" />
+    <Property Name="GrossQuantity" Type="decimal" Precision="10" Scale="4" />
+    <Property Name="BaseMeasureUnitGrossQuantity" Type="decimal" Precision="15" Scale="9" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+    <Property Name="ShortNomenclatureName" Type="varchar" MaxLength="1000" />
     <Property Name="Place" Type="varchar" MaxLength="64" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="PlaceGroupID" Type="smallint" />
@@ -2748,6 +2753,10 @@
     <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="UnpackGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="PrintName" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="UploadDocCloseShiftReportTo1C" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -2895,7 +2904,10 @@
     [vProductsInfo].[1CCharacteristicID] AS [1CCharacteristicID], 
     [vProductsInfo].[Quantity] AS [Quantity], 
     [vProductsInfo].[BaseMeasureUnitQuantity] AS [BaseMeasureUnitQuantity], 
+    [vProductsInfo].[GrossQuantity] AS [GrossQuantity], 
+    [vProductsInfo].[BaseMeasureUnitGrossQuantity] AS [BaseMeasureUnitGrossQuantity], 
     [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
+    [vProductsInfo].[ShortNomenclatureName] AS [ShortNomenclatureName], 
     [vProductsInfo].[Place] AS [Place], 
     [vProductsInfo].[PlaceID] AS [PlaceID], 
     [vProductsInfo].[PlaceGroupID] AS [PlaceGroupID], 

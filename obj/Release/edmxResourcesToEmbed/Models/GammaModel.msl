@@ -149,19 +149,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Branches">
-      <EntityTypeMapping TypeName="GammaModel.Branches">
-        <MappingFragment StoreEntitySet="Branches">
-          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-          <ScalarProperty Name="EnterpriseID" ColumnName="EnterpriseID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Address" ColumnName="Address" />
-          <ScalarProperty Name="Phones" ColumnName="Phones" />
-          <ScalarProperty Name="WebInfo" ColumnName="WebInfo" />
-          <ScalarProperty Name="QualityContacts" ColumnName="QualityContacts" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Departments">
       <EntityTypeMapping TypeName="GammaModel.Departments">
         <MappingFragment StoreEntitySet="Departments">
@@ -1122,18 +1109,12 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DocShipmentOrderInfo">
-      <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderInfo">
-        <MappingFragment StoreEntitySet="DocShipmentOrderInfo">
-          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
-          <ScalarProperty Name="ActivePersonID" ColumnName="ActivePersonID" />
-          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vProductsInfo">
       <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
         <MappingFragment StoreEntitySet="vProductsInfo">
+          <ScalarProperty Name="ShortNomenclatureName" ColumnName="ShortNomenclatureName" />
+          <ScalarProperty Name="BaseMeasureUnitGrossQuantity" ColumnName="BaseMeasureUnitGrossQuantity" />
+          <ScalarProperty Name="GrossQuantity" ColumnName="GrossQuantity" />
           <ScalarProperty Name="State" ColumnName="State" />
           <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
           <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
@@ -1283,5 +1264,30 @@
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="SaveOldProductToNewBase" FunctionName="GammaDBModel.SaveOldProductToNewBase" />
     <FunctionImportMapping FunctionImportName="CreateGroupPackWithSpool" FunctionName="GammaDBModel.CreateGroupPackWithSpool" />
+    <FunctionImportMapping FunctionImportName="UnpackGroupPack" FunctionName="GammaDBModel.UnpackGroupPack" />
+    <EntitySetMapping Name="DocShipmentOrderInfo">
+      <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderInfo">
+        <MappingFragment StoreEntitySet="DocShipmentOrderInfo">
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+          <ScalarProperty Name="ActivePersonID" ColumnName="ActivePersonID" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Branches">
+      <EntityTypeMapping TypeName="GammaModel.Branches">
+        <MappingFragment StoreEntitySet="Branches">
+          <ScalarProperty Name="C1CSubdivisionID" ColumnName="1CSubdivisionID" />
+          <ScalarProperty Name="QualityContacts" ColumnName="QualityContacts" />
+          <ScalarProperty Name="WebInfo" ColumnName="WebInfo" />
+          <ScalarProperty Name="Phones" ColumnName="Phones" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="EnterpriseID" ColumnName="EnterpriseID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -40,7 +40,6 @@ namespace Gamma.Models
         public virtual DbSet<C1CRejectionReasons> C1CRejectionReasons { get; set; }
         public virtual DbSet<C1CSpecificationInputNomenclature> C1CSpecificationInputNomenclature { get; set; }
         public virtual DbSet<C1CSpecificationOutputNomenclature> C1CSpecificationOutputNomenclature { get; set; }
-        public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<DocChangeStateProducts> DocChangeStateProducts { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
@@ -92,7 +91,6 @@ namespace Gamma.Models
         public virtual DbSet<PostTypes> PostTypes { get; set; }
         public virtual DbSet<vDocShipmentOrders> vDocShipmentOrders { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
-        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
         public virtual DbSet<Persons> Persons { get; set; }
@@ -101,6 +99,8 @@ namespace Gamma.Models
         public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
+        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
+        public virtual DbSet<Branches> Branches { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {
@@ -636,6 +636,19 @@ namespace Gamma.Models
                 new ObjectParameter("PrintName", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateGroupPackWithSpool", spoolIDParameter, printNameParameter);
+        }
+    
+        public virtual int UnpackGroupPack(Nullable<System.Guid> productID, string printName)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UnpackGroupPack", productIDParameter, printNameParameter);
         }
     }
 }

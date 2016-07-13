@@ -22,8 +22,25 @@ namespace Gamma.ViewModels
             AddSpoolCommand = new DelegateCommand(AddSpool, () => !IsReadOnly);
             DeleteSpoolCommand = new DelegateCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly);
             OpenSpoolCommand = new DelegateCommand(OpenSpool, () => SelectedSpool != null);
+            UnpackCommand = new DelegateCommand(Unpack, () => !IsNewGroupPack && ProductId != null && WorkSession.PlaceGroup == PlaceGroups.Wr);
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
+        }
+
+        private void Unpack()
+        {
+            if (ProductId == null) return;
+            if (!GammaBase.Rests.Any(r => r.ProductID == @ProductId))
+            {
+                MessageBox.Show("Данная упаковка не числится на остатках");
+                return;
+            }
+            if (
+                MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                GammaBase.UnpackGroupPack(ProductId, WorkSession.PrintName);
+            }
         }
 
         public DocProductGroupPackViewModel(Guid docID) : this()
@@ -33,8 +50,8 @@ namespace Gamma.ViewModels
             IsNewGroupPack = false;
             if (doc.DocProducts.Count > 0)
             {
-                var productId = doc.DocProducts.Select(d => d.ProductID).First();
-                var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == productId);
+                ProductId = doc.DocProducts.Select(d => d.ProductID).First();
+                var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
                 Weight = Convert.ToInt32(productGroupPack?.Weight ?? 0);
                 GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight ?? 0);
             }
@@ -62,12 +79,16 @@ namespace Gamma.ViewModels
                 CoreWeight = BaseCoreWeight * Spools.Count;
             }
         }
+/*
         private int Format { get; set; }
+*/
         private bool IsNewGroupPack { get; set; }
         private void GetWeight()
         {
             Weight = Convert.ToInt32(Scales.GetWeight());            
         }
+
+        private Guid? ProductId { get; set; }
 
         private void GetGrossWeight()
         {
@@ -93,7 +114,7 @@ namespace Gamma.ViewModels
         private int _weight;
         private int _grossWeight;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(1,1000000,ErrorMessage="Значение должно быть больше 0")]
+        [Range(1,1000000,ErrorMessage=@"Значение должно быть больше 0")]
         public int Weight
         {
             get
@@ -106,7 +127,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Weight");
             }
         }
-        [Range(1, 1000000, ErrorMessage = "Значение должно быть больше 0")]
+        [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public int GrossWeight
         {
@@ -151,6 +172,10 @@ namespace Gamma.ViewModels
         public DelegateCommand GetGrossWeightCommand { get; private set; }
         public DelegateCommand AddSpoolCommand { get; private set; }
         public DelegateCommand DeleteSpoolCommand { get; private set; }
+        public DelegateCommand UnpackCommand { get; private set; }
+
+        
+
         private void AddSpool()
         {
             MessageManager.OpenFindProduct(ProductKinds.ProductSpool, true);
@@ -355,12 +380,6 @@ namespace Gamma.ViewModels
             if (SelectedSpool == null) return;
             MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID);  
         }
-        public override bool IsValid
-        {
-            get
-            {
-                return base.IsValid && Spools.Count > 0;
-            }
-        }
+        public override bool IsValid => base.IsValid && Spools.Count > 0;
     }
 }

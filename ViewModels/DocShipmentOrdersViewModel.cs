@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     {
         public DocShipmentOrdersViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
-            OpenDocShipmentOrderCommand = new DelegateCommand<object>(OpenDocShipmentOrder, (m) => DB.HaveWriteAccess("DocShipmentOrderInfo"));
+            OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveWriteAccess("DocShipmentOrderInfo"));
             Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
             FindCommand = new DelegateCommand(Find);
             RefreshCommand = FindCommand;
@@ -28,10 +28,11 @@ namespace Gamma.ViewModels
             Find();
         }
 
-        private void OpenDocShipmentOrder(object row)
+        private void OpenDocShipmentOrder()
         {
-            var docShipmentOrderId = (row as DocShipmentOrder)?.DocShipmentOrderId;
-            if (docShipmentOrderId == null) return;
+            if (SelectedDocShipmentOrder == null) return;
+            var docShipmentOrderId = SelectedDocShipmentOrder.DocShipmentOrderId; //(row as DocShipmentOrder)?.DocShipmentOrderId;
+//            if (docShipmentOrderId == null) return;
             MessageManager.OpenDocShipmentOrder((Guid)docShipmentOrderId);
         }
 
@@ -79,7 +80,7 @@ namespace Gamma.ViewModels
 
         public DocShipmentOrder SelectedDocShipmentOrder { get; set; }
 
-        public DelegateCommand<object> OpenDocShipmentOrderCommand { get; private set; }
+        public DelegateCommand OpenDocShipmentOrderCommand { get; private set; }
 
         private void Find()
         {
@@ -91,7 +92,9 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.C1CDocShipmentOrder.Where(d => !d.Posted).OrderByDescending(d => d.C1CDate)
+                            gammaBase.C1CDocShipmentOrder.Where(d => !d.Posted && 
+                            gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
+                            .OrderByDescending(d => d.C1CDate)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1CDocShipmentOrderID,
@@ -104,7 +107,9 @@ namespace Gamma.ViewModels
                         break;
                     case 1:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.C1CDocShipmentOrder.OrderByDescending(d => d.C1CDate).Take(500)
+                            gammaBase.C1CDocShipmentOrder
+                            .Where(d => gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
+                            .OrderByDescending(d => d.C1CDate).Take(500)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1CDocShipmentOrderID,
@@ -119,7 +124,9 @@ namespace Gamma.ViewModels
                             gammaBase.C1CDocShipmentOrder.Where(d =>
                                 (Number == null || d.C1CNumber.Contains(Number)) &&
                                 (d.C1CDate >= DateBegin || DateBegin == null) &&
-                                (d.C1CDate <= DateEnd || DateEnd == null)).OrderByDescending(d => d.C1CDate).Take(500)
+                                (d.C1CDate <= DateEnd || DateEnd == null) &&
+                                gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
+                                .OrderByDescending(d => d.C1CDate).Take(500)
                                 .Select(d => new DocShipmentOrder
                                 {
                                     DocShipmentOrderId = d.C1CDocShipmentOrderID,

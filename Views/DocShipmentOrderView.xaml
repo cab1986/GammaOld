@@ -10,9 +10,10 @@
         xmlns:viewModels="clr-namespace:Gamma.ViewModels"
         xmlns:common="clr-namespace:Gamma.Common"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         x:Class="Gamma.Views.DocShipmentOrderView"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=viewModels:DocShipmentOrderViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance Type=viewModels:DocShipmentOrderViewModel, IsDesignTimeCreatable=False}"
         Title="{Binding Title}" Height="800" Width="1000"
         common:WindowSettings.Save="True">
     <Window.Resources>
@@ -57,6 +58,10 @@
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Груз собирает">
                         <dxe:ComboBoxEdit EditValue="{Binding ActivePersonId}" ItemsSource="{Binding Persons}" ValueMember="PersonID" DisplayMember="Name"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Смена №" Width="100">
+                        <dxe:SpinEdit EditValue="{Binding ShiftId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
+                                      AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem LabelPosition="Top" Label="Состав приказа" VerticalAlignment="Stretch">

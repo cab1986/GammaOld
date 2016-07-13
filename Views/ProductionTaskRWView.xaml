@@ -35,7 +35,7 @@
             <ContentControl Content="{Binding ProductionTaskSGBViewModel}" />
             <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" HorizontalAlignment="Right" Width="80">
                 <dxe:SpinEdit EditValue="{Binding TaskQuantity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-					MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Decimal}" IsFloatValue="False"/>
+					MinValue="0" MaxValue="100000" EditValueType="{x:Type sys:Decimal}" MaskUseAsDisplayFormat="True" />
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
         <dxlc:LayoutItem Label="Конфигурация" LabelPosition="Top">

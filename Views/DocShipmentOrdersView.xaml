@@ -8,9 +8,9 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
-             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" x:Class="Gamma.Views.DocShipmentOrdersView"
+             x:Class="Gamma.Views.DocShipmentOrdersView"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type viewModels:DocShipmentOrdersViewModel}}"
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocShipmentOrdersViewModel}}"
              d:DesignHeight="300" d:DesignWidth="1000">
     <UserControl.Resources>
         <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:TextEdit}">
@@ -48,16 +48,12 @@
             </dxlc:LayoutItem>
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
         </dxlc:LayoutControl>
-        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}">
+        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" Name="GridControl">
             <dxmvvm:Interaction.Behaviors>
-                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocShipmentOrderCommand}" PassEventArgsToCommand="True">
-                    <dxmvvm:EventToCommand.EventArgsConverter>
-                        <dx:EventArgsToDataRowConverter/>
-                    </dxmvvm:EventToCommand.EventArgsConverter>
-                </dxmvvm:EventToCommand>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocShipmentOrderCommand}" />
             </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True" AllowEditing="False"/>
+                <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
             </dxg:GridControl.View>
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер отгрузки" FieldName="Number" VisibleIndex="0" />

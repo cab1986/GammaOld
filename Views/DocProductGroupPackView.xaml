@@ -12,8 +12,14 @@
     xmlns:g="clr-namespace:Gamma"
     x:Class="Gamma.Views.DocProductGroupPackView" 
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    mc:Ignorable="d">
+    xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewModels:DocProductGroupPackViewModel, IsDesignTimeCreatable=False}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
         <dxlc:LayoutControl Orientation="Vertical" Margin="0,0,0,0" >
             <dxlc:LayoutGroup Orientation="Horizontal" Height="40">
                 <Button Content="Вес нетто" Command="{Binding GetWeightCommand}" Width="90" Visibility="Collapsed"/>
@@ -68,6 +74,7 @@
                 </dxb:BarManager>
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
+        <Button Content="Распаковать" Grid.Row="1" HorizontalAlignment="Right" Command="{Binding UnpackCommand}" />
         <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior />
         </dxmvvm:Interaction.Behaviors>

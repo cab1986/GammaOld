@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Windows;
+using DevExpress.Mvvm;
 using Gamma.Attributes;
 using Gamma.Interfaces;
 using Gamma.Models;
@@ -35,12 +35,21 @@ namespace Gamma.ViewModels
             {
                 VehicleNumber = docShipmentOrderInfo.DocShipmentOrderInfo.VehicleNumber;
                 ActivePersonId = docShipmentOrderInfo.DocShipmentOrderInfo.ActivePersonID;
+                ShiftId = docShipmentOrderInfo.DocShipmentOrderInfo.ShiftID;
             }
             FillDocShipmentOrderGoods(docShipmentOrderId);
             IsReadOnly = !DB.HaveWriteAccess("DocShipmentOrderInfo");
+            Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 
         public string Title { get; set; }
+
+        private void PrintReport(PrintReportMessage msg)
+        {
+            if (msg.VMID != VMId) return;           
+            SaveToModel();
+            ReportManager.PrintReport(msg.ReportID, DocShipmentOrderID);
+        }
 
         private Guid VMId { get; set; } = Guid.NewGuid();
 
@@ -68,6 +77,8 @@ namespace Gamma.ViewModels
                     }));
             }
         }
+
+        public byte? ShiftId { get; set; }
 
         public List<BarViewModel> Bars { get; set; } = new List<BarViewModel>();
 
@@ -99,6 +110,7 @@ namespace Gamma.ViewModels
             }
             docShipmentOrderInfo.VehicleNumber = VehicleNumber;
             docShipmentOrderInfo.ActivePersonID = ActivePersonId;
+            docShipmentOrderInfo.ShiftID = ShiftId;
             GammaBase.SaveChanges();
         }
 

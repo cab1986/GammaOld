@@ -57,7 +57,7 @@
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="80">
                 <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" 
-                              EditValueType="{x:Type sys:Decimal}"/>
+                              EditValueType="{x:Type sys:Decimal}" MaskUseAsDisplayFormat="True"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
                 <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 

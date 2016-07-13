@@ -44,7 +44,7 @@
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}" AllowCustomization="False" />
         <dxlc:LayoutControl Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
             <dxlc:LayoutItem Label="Имя" LabelPosition="Top">
-                <dxe:TextEdit EditValue="{Binding NewPersonName}"/>
+                <dxe:TextEdit EditValue="{Binding NewPersonName, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
             <Button Content="Добавить" Command="{Binding AddPersonCommand}"  Height="22" VerticalAlignment="Center" HorizontalAlignment="Right" Width="79" Margin="0,18,0,0"/>
         </dxlc:LayoutControl>
