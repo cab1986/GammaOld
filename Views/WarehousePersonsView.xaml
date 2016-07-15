@@ -13,7 +13,7 @@
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         x:Class="Gamma.Views.WarehousePersonsView"
         mc:Ignorable="d"
-        Title="WarehousePersonsView" Height="300" Width="300"
+        Title="Работники склада" Height="300" Width="300"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:WarehousePersonsViewModel}}"
         common:WindowSettings.Save="True">
     <Window.Resources>

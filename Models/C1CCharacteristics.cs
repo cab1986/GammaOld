@@ -27,11 +27,11 @@ namespace Gamma.Models
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
-            this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
             this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
             this.C1CMainSpecifications = new HashSet<C1CMainSpecifications>();
+            this.ProductSpools = new HashSet<ProductSpools>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -66,8 +66,6 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
@@ -75,5 +73,7 @@ namespace Gamma.Models
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
     }
 }

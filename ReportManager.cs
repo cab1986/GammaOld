@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 
 namespace Gamma
 {
-    class ReportManager
+    static class ReportManager
     {          
         static ReportManager()
         {

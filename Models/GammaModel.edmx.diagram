@@ -148,13 +148,6 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_Places" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskWR_ProductionTasks" />
-        <EntityTypeShape EntityType="GammaModel.ProductSpools" Width="1.5" PointX="20.5" PointY="42.125" IsExpanded="true" />
-        <AssociationConnector Association="GammaModel.FK_ProductSpools_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_ProductSpools_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_ProductSpools_Products" />
-        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools" />
-        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools1" />
-        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools2" />
         <EntityTypeShape EntityType="GammaModel.vCharacteristicSGBProperties" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CContractors" Width="1.5" PointX="16" PointY="28.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CDocShipmentOrder" Width="1.5" PointX="18.25" PointY="30.5" IsExpanded="true" />
@@ -207,6 +200,13 @@
         <EntityTypeShape EntityType="GammaModel.Branches" Width="1.5" PointX="5.25" PointY="63.75" />
         <AssociationConnector Association="GammaModel.FK_Branches_Enterprises" />
         <AssociationConnector Association="GammaModel.FK_Places_Branches" />
+        <EntityTypeShape EntityType="GammaModel.ProductSpools" Width="1.5" PointX="20.5" PointY="41.75" />
+        <AssociationConnector Association="GammaModel.FK_ProductSpools_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_ProductSpools_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductSpools_Products" />
+        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools" />
+        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools1" />
+        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools2" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

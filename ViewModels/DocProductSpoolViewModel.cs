@@ -69,7 +69,7 @@ namespace Gamma.ViewModels
                 Diameter = productSpool.Diameter;
                 Length = productSpool.Length ?? 0;
                 BreakNumber = productSpool.BreakNumber;
-                Weight = productSpool.DecimalWeight ?? 0;
+                Weight = productSpool.DecimalWeight;
                 ToughnessKindID = productSpool.ToughnessKindID ?? 1;
                 var stateInfo = (from d in GammaBase.DocChangeStateProducts
                                  where d.ProductID == ProductId

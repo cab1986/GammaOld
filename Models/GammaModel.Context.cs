@@ -82,7 +82,6 @@ namespace Gamma.Models
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
-        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
         public virtual DbSet<C1CContractors> C1CContractors { get; set; }
         public virtual DbSet<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
@@ -101,6 +100,7 @@ namespace Gamma.Models
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
+        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

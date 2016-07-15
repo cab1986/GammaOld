@@ -694,8 +694,7 @@
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="RealFormat" Type="int" />
           <Property Name="Diameter" Type="int" Nullable="false" />
-          <Property Name="Weight" Type="int" Nullable="false" />
-          <Property Name="DecimalWeight" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="DecimalWeight" Type="decimal" Precision="15" Scale="5" Nullable="false" />
           <Property Name="Length" Type="decimal" Precision="8" Scale="2" />
           <Property Name="RealBasisWeight" Type="decimal" Precision="10" Scale="4" />
           <Property Name="ToughnessKindID" Type="tinyint" />
@@ -5015,31 +5014,6 @@
           <FunctionImport Name="GetBatchProducts" ReturnType="Collection(GammaModel.GetBatchProducts_Result)">
           <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
           </FunctionImport>
-          <EntitySet Name="ProductSpools" EntityType="GammaModel.ProductSpools" />
-          <AssociationSet Name="FK_ProductSpools_1CCharacteristics" Association="GammaModel.FK_ProductSpools_1CCharacteristics">
-            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSpools_1CNomenclature" Association="GammaModel.FK_ProductSpools_1CNomenclature">
-            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSpools_Products" Association="GammaModel.FK_ProductSpools_Products">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SourceSpools_ProductSpools" Association="GammaModel.FK_SourceSpools_ProductSpools">
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-            <End Role="SourceSpools" EntitySet="SourceSpools" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SourceSpools_ProductSpools1" Association="GammaModel.FK_SourceSpools_ProductSpools1">
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-            <End Role="SourceSpools" EntitySet="SourceSpools" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SourceSpools_ProductSpools2" Association="GammaModel.FK_SourceSpools_ProductSpools2">
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-            <End Role="SourceSpools" EntitySet="SourceSpools" />
-          </AssociationSet>
           <EntitySet Name="vCharacteristicSGBProperties" EntityType="GammaModel.vCharacteristicSGBProperties" />
           <EntitySet Name="C1CContractors" EntityType="GammaModel.C1CContractors" />
           <EntitySet Name="C1CDocShipmentOrder" EntityType="GammaModel.C1CDocShipmentOrder" />
@@ -5224,6 +5198,31 @@
           <AssociationSet Name="FK_Places_Branches" Association="GammaModel.FK_Places_Branches">
             <End Role="Branches" EntitySet="Branches" />
             <End Role="Places" EntitySet="Places" />
+          </AssociationSet>
+          <EntitySet Name="ProductSpools" EntityType="GammaModel.ProductSpools" />
+          <AssociationSet Name="FK_ProductSpools_1CCharacteristics" Association="GammaModel.FK_ProductSpools_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSpools_1CNomenclature" Association="GammaModel.FK_ProductSpools_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductSpools_Products" Association="GammaModel.FK_ProductSpools_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SourceSpools_ProductSpools" Association="GammaModel.FK_SourceSpools_ProductSpools">
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+            <End Role="SourceSpools" EntitySet="SourceSpools" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SourceSpools_ProductSpools1" Association="GammaModel.FK_SourceSpools_ProductSpools1">
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+            <End Role="SourceSpools" EntitySet="SourceSpools" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SourceSpools_ProductSpools2" Association="GammaModel.FK_SourceSpools_ProductSpools2">
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+            <End Role="SourceSpools" EntitySet="SourceSpools" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -5429,11 +5428,11 @@
           <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocWithdrawalMaterials" />
           <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTasks" />
-          <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductSpools" />
           <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CDocShipmentOrderGoods" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftSamples" />
           <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductPalletItems" />
           <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CMainSpecifications" />
+          <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductSpools" />
         </EntityType>
         <EntityType Name="C1CNomenclature">
           <Key>
@@ -5464,12 +5463,12 @@
           <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocWithdrawalMaterials" />
           <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskRWCutting" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
-          <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductSpools" />
           <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CDocShipmentOrderGoods" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftSamples" />
           <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductPalletItems" />
           <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CMainSpecifications" />
           <NavigationProperty Name="MaterialTypes" Relationship="GammaModel.MaterialTypeNomenclature" FromRole="C1CNomenclature" ToRole="MaterialTypes" />
+          <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductSpools" />
         </EntityType>
         <EntityType Name="C1CSpecifications">
           <Key>
@@ -6248,100 +6247,6 @@
           <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
           <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="14" Scale="4" />
         </ComplexType>
-        <EntityType Name="ProductSpools">
-          <Key>
-            <PropertyRef Name="ProductID" />
-          </Key>
-          <Property Name="ProductID" Type="Guid" Nullable="false" />
-          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
-          <Property Name="C1CCharacteristicID" Type="Guid" />
-          <Property Name="RealFormat" Type="Int32" />
-          <Property Name="Diameter" Type="Int32" Nullable="false" />
-          <Property Name="DecimalWeight" Type="Decimal" Precision="15" Scale="5" />
-          <Property Name="Length" Type="Decimal" Precision="8" Scale="2" />
-          <Property Name="RealBasisWeight" Type="Decimal" Precision="10" Scale="4" />
-          <Property Name="ToughnessKindID" Type="Byte" />
-          <Property Name="BreakNumber" Type="Byte" />
-          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="ProductSpools" ToRole="C1CCharacteristics" />
-          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="ProductSpools" ToRole="C1CNomenclature" />
-          <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="ProductSpools" ToRole="Products" />
-          <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="ProductSpools" ToRole="SourceSpools" />
-          <NavigationProperty Name="SourceSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="ProductSpools" ToRole="SourceSpools" />
-          <NavigationProperty Name="SourceSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="ProductSpools" ToRole="SourceSpools" />
-          <Property Name="Weight" Type="Int32" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_ProductSpools_1CCharacteristics">
-          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CCharacteristics">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="ProductSpools">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductSpools_1CNomenclature">
-          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
-          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CNomenclature">
-              <PropertyRef Name="C1CNomenclatureID" />
-            </Principal>
-            <Dependent Role="ProductSpools">
-              <PropertyRef Name="C1CNomenclatureID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductSpools_Products">
-          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
-          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="ProductSpools">
-              <PropertyRef Name="ProductID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SourceSpools_ProductSpools">
-          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductSpools">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="SourceSpools">
-              <PropertyRef Name="Unwinder1Spool" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SourceSpools_ProductSpools1">
-          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductSpools">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="SourceSpools">
-              <PropertyRef Name="Unwinder2Spool" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SourceSpools_ProductSpools2">
-          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
-          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductSpools">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="SourceSpools">
-              <PropertyRef Name="Unwinder3Spool" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="C1CCharacteristicID" />
@@ -7030,6 +6935,99 @@
             </Principal>
             <Dependent Role="Places">
               <PropertyRef Name="BranchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductSpools">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="RealFormat" Type="Int32" />
+          <Property Name="Diameter" Type="Int32" Nullable="false" />
+          <Property Name="DecimalWeight" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="Length" Type="Decimal" Precision="8" Scale="2" />
+          <Property Name="RealBasisWeight" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="ToughnessKindID" Type="Byte" />
+          <Property Name="BreakNumber" Type="Byte" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="ProductSpools" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="ProductSpools" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="ProductSpools" ToRole="Products" />
+          <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="ProductSpools" ToRole="SourceSpools" />
+          <NavigationProperty Name="SourceSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="ProductSpools" ToRole="SourceSpools" />
+          <NavigationProperty Name="SourceSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="ProductSpools" ToRole="SourceSpools" />
+        </EntityType>
+        <Association Name="FK_ProductSpools_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="ProductSpools">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSpools_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="ProductSpools">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductSpools_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductSpools">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SourceSpools_ProductSpools">
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductSpools">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="SourceSpools">
+              <PropertyRef Name="Unwinder1Spool" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SourceSpools_ProductSpools1">
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductSpools">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="SourceSpools">
+              <PropertyRef Name="Unwinder2Spool" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SourceSpools_ProductSpools2">
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductSpools">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="SourceSpools">
+              <PropertyRef Name="Unwinder3Spool" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -8014,23 +8012,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="ProductSpools">
-            <EntityTypeMapping TypeName="GammaModel.ProductSpools">
-              <MappingFragment StoreEntitySet="ProductSpools">
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
-                <ScalarProperty Name="ToughnessKindID" ColumnName="ToughnessKindID" />
-                <ScalarProperty Name="RealBasisWeight" ColumnName="RealBasisWeight" />
-                <ScalarProperty Name="Length" ColumnName="Length" />
-                <ScalarProperty Name="DecimalWeight" ColumnName="DecimalWeight" />
-                <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-                <ScalarProperty Name="RealFormat" ColumnName="RealFormat" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="vCharacteristicSGBProperties">
             <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
               <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
@@ -8324,6 +8305,22 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="EnterpriseID" ColumnName="EnterpriseID" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductSpools">
+            <EntityTypeMapping TypeName="GammaModel.ProductSpools">
+              <MappingFragment StoreEntitySet="ProductSpools">
+                <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
+                <ScalarProperty Name="ToughnessKindID" ColumnName="ToughnessKindID" />
+                <ScalarProperty Name="RealBasisWeight" ColumnName="RealBasisWeight" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="DecimalWeight" ColumnName="DecimalWeight" />
+                <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+                <ScalarProperty Name="RealFormat" ColumnName="RealFormat" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

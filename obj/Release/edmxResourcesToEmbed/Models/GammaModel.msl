@@ -976,23 +976,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <EntitySetMapping Name="ProductSpools">
-      <EntityTypeMapping TypeName="GammaModel.ProductSpools">
-        <MappingFragment StoreEntitySet="ProductSpools">
-          <ScalarProperty Name="Weight" ColumnName="Weight" />
-          <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
-          <ScalarProperty Name="ToughnessKindID" ColumnName="ToughnessKindID" />
-          <ScalarProperty Name="RealBasisWeight" ColumnName="RealBasisWeight" />
-          <ScalarProperty Name="Length" ColumnName="Length" />
-          <ScalarProperty Name="DecimalWeight" ColumnName="DecimalWeight" />
-          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-          <ScalarProperty Name="RealFormat" ColumnName="RealFormat" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vCharacteristicSGBProperties">
       <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
         <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
@@ -1286,6 +1269,22 @@
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="EnterpriseID" ColumnName="EnterpriseID" />
           <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductSpools">
+      <EntityTypeMapping TypeName="GammaModel.ProductSpools">
+        <MappingFragment StoreEntitySet="ProductSpools">
+          <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
+          <ScalarProperty Name="ToughnessKindID" ColumnName="ToughnessKindID" />
+          <ScalarProperty Name="RealBasisWeight" ColumnName="RealBasisWeight" />
+          <ScalarProperty Name="Length" ColumnName="Length" />
+          <ScalarProperty Name="DecimalWeight" ColumnName="DecimalWeight" />
+          <ScalarProperty Name="Diameter" ColumnName="Diameter" />
+          <ScalarProperty Name="RealFormat" ColumnName="RealFormat" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
