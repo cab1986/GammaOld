@@ -43,7 +43,6 @@ namespace Gamma.Models
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<DocChangeStateProducts> DocChangeStateProducts { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
-        public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<DocProduction> DocProduction { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
@@ -91,7 +90,6 @@ namespace Gamma.Models
         public virtual DbSet<PostTypes> PostTypes { get; set; }
         public virtual DbSet<vDocShipmentOrders> vDocShipmentOrders { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
-        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
@@ -101,6 +99,13 @@ namespace Gamma.Models
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
+        public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
+        public virtual DbSet<DocMovement> DocMovement { get; set; }
+        public virtual DbSet<DocBroke> DocBroke { get; set; }
+        public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
+        public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
+        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
+        public virtual DbSet<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

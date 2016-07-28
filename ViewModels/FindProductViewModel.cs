@@ -44,11 +44,12 @@ namespace Gamma.ViewModels
                           ).ToList<Place>();
             SelectedPlaces = new List<Object>(PlacesList);
         }
+
         public FindProductViewModel(FindProductMessage msg) : this()
         {
-            ButtonPanelVisible = msg.ChooseSourceProduct;
+            ButtonPanelVisible = msg.ChooseProduct;
             SelectedProductKindIndex = (byte)msg.ProductKind;
-            ProductKindSelectEnabled = !msg.ChooseSourceProduct;
+            ProductKindSelectEnabled = msg.AllowChangeProductKind;
         }
         private bool _buttonPanelVisible;
         public bool ButtonPanelVisible

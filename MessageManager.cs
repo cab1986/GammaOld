@@ -25,6 +25,33 @@ namespace Gamma
         public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие
     }
 
+    public class EditRejectionReasonsMessage
+    {
+        public EditRejectionReasonsMessage(List<DocBrokeProductRejectionReasons> rejectionReasons, Guid docId,
+            Guid productId)
+        {
+            RejectionReasons = rejectionReasons;
+            DocId = docId;
+            ProductId = productId;
+        }
+        
+        public List<DocBrokeProductRejectionReasons> RejectionReasons { get; set; }
+        public Guid DocId { get; set; }
+        public Guid ProductId { get; set; }
+    }
+
+    public class OpenDocBrokeMessage
+    {
+        public OpenDocBrokeMessage(Guid docId, Guid? productId = null)
+        {
+            DocId = docId;
+            ProductId = productId;
+        }
+
+        public Guid DocId { get; private set; }
+        public Guid? ProductId { get; private set; }
+    }
+
     public class CloseMessage { }
  
     public class OpenMainMessage { }
@@ -109,8 +136,9 @@ namespace Gamma
     public class OpenReportListMessage { }
     public class FindProductMessage
     {
-        public bool ChooseSourceProduct;
+        public bool ChooseProduct;
         public ProductKinds ProductKind;
+        public bool AllowChangeProductKind = true;
     }
     public class ConfigureComPortMessage  { }
     public class ChoosenProductMessage
@@ -220,6 +248,12 @@ namespace Gamma
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureIds));
         }
 
+        public static void EditRejectionReasons(List<DocBrokeProductRejectionReasons> rejectionReasons, Guid docId,
+            Guid productId)
+        {
+            Messenger.Default.Send(new EditRejectionReasonsMessage(rejectionReasons, docId, productId));
+        }
+
         public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchID, DateTime dateBegin)
         {
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, dateBegin));
@@ -258,6 +292,12 @@ namespace Gamma
                     IsNewProduct = false
                 });
         }
+
+        public static void OpenDocBroke(Guid docId, Guid? productId = null)
+        {
+            Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId));
+        }
+
         public static void OpenReportList()
         {
             Messenger.Default.Send(new OpenReportListMessage());
@@ -272,15 +312,19 @@ namespace Gamma
         {
             Messenger.Default.Send(new FindProductMessage
             {
-                    ChooseSourceProduct = false
+                    ChooseProduct = false
             });
         }
-        public static void OpenFindProduct(ProductKinds productKind, bool chooseSourceProduct = false)
+
+
+
+        public static void OpenFindProduct(ProductKinds productKind, bool chooseProduct = false, bool allowChangeProductKind = false)
         {
             Messenger.Default.Send(new FindProductMessage
             {
                     ProductKind = productKind,
-                    ChooseSourceProduct = chooseSourceProduct
+                    ChooseProduct = chooseProduct,
+                    AllowChangeProductKind = allowChangeProductKind
             });
         }
         public static void OpenDocCloseShift(Guid docID)

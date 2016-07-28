@@ -45,7 +45,6 @@ namespace Gamma.Models
         public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
-        public virtual DocMovement DocMovement { get; set; }
         public virtual DocProduction DocProduction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProducts> DocProducts { get; set; }
@@ -65,5 +64,7 @@ namespace Gamma.Models
         public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocShipments> DocShipments { get; set; }
+        public virtual DocMovement DocMovement { get; set; }
+        public virtual DocBroke DocBroke { get; set; }
     }
 }

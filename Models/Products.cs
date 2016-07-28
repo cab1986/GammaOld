@@ -19,6 +19,9 @@ namespace Gamma.Models
         {
             this.DocProducts = new HashSet<DocProducts>();
             this.SpoolInstallLog = new HashSet<SpoolInstallLog>();
+            this.DocProductionProducts = new HashSet<DocProductionProducts>();
+            this.DocBrokeProducts = new HashSet<DocBrokeProducts>();
+            this.DocBrokeDecisionProducts = new HashSet<DocBrokeDecisionProducts>();
         }
     
         public System.Guid ProductID { get; set; }
@@ -35,5 +38,11 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SpoolInstallLog> SpoolInstallLog { get; set; }
         public virtual ProductSpools ProductSpools { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeProducts> DocBrokeProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
     }
 }

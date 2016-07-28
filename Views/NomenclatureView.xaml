@@ -5,14 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
         xmlns:g="clr-namespace:Gamma"
-        xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.NomenclatureView"
+        xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:common="clr-namespace:Gamma.Common"
+        x:Class="Gamma.Views.NomenclatureView"
         mc:Ignorable="d ignore"
-        Height="{g:SettingBinding NomenclatureHeight}"
-        Width="{g:SettingBinding NomenclatureWidth}"
-        Left="{g:SettingBinding NomenclatureLeft}"
-        Top="{g:SettingBinding NomenclatureTop}"
-        WindowState="{g:SettingBinding NomenclatureWState}"
-        >
+        common:WindowSettings.Save="True">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="75" />

@@ -11,10 +11,8 @@ namespace Gamma.Views
         /// Initializes a new instance of the DocProductSpoolView class.
         /// </summary>
         public DocProductSpoolView()
-        {
-            var context = this.DataContext;
-            InitializeComponent();
-            var context2 = this.DataContext;
+        {           
+            InitializeComponent();   
         }
     }
 }

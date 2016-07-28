@@ -69,7 +69,7 @@ namespace Gamma.ViewModels
                 Diameter = productSpool.Diameter;
                 Length = productSpool.Length ?? 0;
                 BreakNumber = productSpool.BreakNumber;
-                Weight = productSpool.DecimalWeight ?? 0;
+                Weight = productSpool.DecimalWeight;
                 ToughnessKindID = productSpool.ToughnessKindID ?? 1;
                 var stateInfo = (from d in GammaBase.DocChangeStateProducts
                                  where d.ProductID == ProductId
@@ -92,6 +92,7 @@ namespace Gamma.ViewModels
             }          
             Bars.Add(ReportManager.GetReportBar("SpoolLabels", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
+            AllowEditProduct = DB.AllowEditProduct(ProductId, GammaBase);
             CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
         }
 
@@ -227,6 +228,10 @@ namespace Gamma.ViewModels
             }
         }
 
+        private bool AllowEditProduct { get; set; }
+
+        public bool WeightReadOnly => !AllowEditProduct || IsReadOnly;
+
         public Guid? VMID { get; } = Guid.NewGuid();
 
         private DocProducts DocProduct { get; set; }
@@ -244,7 +249,7 @@ namespace Gamma.ViewModels
             if (!DB.HaveWriteAccess("ProductSpools")) return;
             base.SaveToModel();
             var product =
-                GammaBase.Products.Include(p => p.ProductSpools)
+                GammaBase.Products.Include(p => p.ProductSpools).Include(p => p.DocProductionProducts)
                     .FirstOrDefault(p => p.DocProducts.Select(dp => dp.DocID).Contains(itemID));
             if (product == null)
             {
@@ -262,7 +267,18 @@ namespace Gamma.ViewModels
                     ProductID = product.ProductID
                 };
             }
-
+            if (product.DocProductionProducts == null)
+            {
+                product.DocProductionProducts = new List<DocProductionProducts>
+                {
+                    new DocProductionProducts
+                    {
+                        ProductID = product.ProductID,
+                        DocID = itemID,
+                        Quantity = Weight
+                    }
+                };
+            }
             var stateId = (from d in GammaBase.DocChangeStateProducts where d.ProductID == product.ProductID
                                orderby
                                d.Docs.Date descending

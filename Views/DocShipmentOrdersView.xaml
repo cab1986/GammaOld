@@ -48,7 +48,7 @@
             </dxlc:LayoutItem>
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
         </dxlc:LayoutControl>
-        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" Name="GridControl">
+        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" Name="gridControl">
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocShipmentOrderCommand}" />
             </dxmvvm:Interaction.Behaviors>

@@ -1,5 +1,6 @@
 ﻿
 FD:\CProjects\Gamma\Gamma\App.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocBrokeView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftUnwinderRemainderView.xaml;;
@@ -29,4 +30,5 @@ FD:\CProjects\Gamma\Gamma\Views\ProductionTaskPMView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskRWView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\WarehousePersonsView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\EditRejectionReasonsView.xaml;;
 

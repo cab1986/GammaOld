@@ -25,6 +25,18 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenDocShipmentOrderMessage>(this, OpenDocShipmentOrder);
             Messenger.Default.Register<OpenWarehousePersonsMessage>(this, OpenWarehousePersons);
             Messenger.Default.Register<OpenImportOldProductsMessage>(this, OpenImportOldProducts);
+            Messenger.Default.Register<OpenDocBrokeMessage>(this, OpenDocBroke);
+            Messenger.Default.Register<EditRejectionReasonsMessage>(this, EditRejectionReasonsDialog);
+        }
+
+        private void EditRejectionReasonsDialog(EditRejectionReasonsMessage msg)
+        {
+            new EditRejectionReasonsView(msg.RejectionReasons, msg.DocId, msg.ProductId).ShowDialog();
+        }
+
+        private void OpenDocBroke(OpenDocBrokeMessage msg)
+        {
+            new DocBrokeView(msg.DocId, msg.ProductId).Show();
         }
 
         private void OpenImportOldProducts(OpenImportOldProductsMessage obj)

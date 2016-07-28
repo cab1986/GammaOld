@@ -290,6 +290,18 @@
     <Compile Include="Models\Departments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocBroke.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocBrokeDecisionProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocBrokeProductRejectionReasons.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocBrokeProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocChangeStateProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -303,6 +315,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocProduction.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocProductionProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocProducts.cs">
@@ -542,13 +557,13 @@
     <Compile Include="ReportManager.cs" />
     <Compile Include="Scales.cs" />
     <Compile Include="Common\PaperBase.cs" />
-    <Compile Include="SettingBindingExtension.cs" />
     <Compile Include="SQLGuidUtil.cs" />
     <Compile Include="UIAuthBehavior.cs" />
     <Compile Include="ValidationExceptionBehavior.cs" />
     <Compile Include="PasswordBoxHelper.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
@@ -556,6 +571,7 @@
     <Compile Include="ViewModels\DocProductPalletViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
+    <Compile Include="ViewModels\EditRejectionReasonsViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
@@ -594,6 +610,9 @@
     <Compile Include="ViewModels\WarehousePersonsViewModel.cs" />
     <Compile Include="Views\ComPortSettingsView.xaml.cs">
       <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocBrokeView.xaml.cs">
+      <DependentUpon>DocBrokeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftConvertingGridView.xaml.cs">
       <DependentUpon>DocCloseShiftConvertingGridView.xaml</DependentUpon>
@@ -636,6 +655,9 @@
     </Compile>
     <Compile Include="Views\DocShipmentOrderView.xaml.cs">
       <DependentUpon>DocShipmentOrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditRejectionReasonsView.xaml.cs">
+      <DependentUpon>EditRejectionReasonsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FindProductionTaskBatchView.xaml.cs">
       <DependentUpon>FindProductionTaskBatchView.xaml</DependentUpon>
@@ -739,6 +761,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DocBrokeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DocCloseShiftConvertingGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -792,6 +818,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocShipmentOrderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditRejectionReasonsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

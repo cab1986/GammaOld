@@ -93,6 +93,7 @@
                             <dxlc:LayoutItem Label="Подтвержден:">
                                 <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left"/>
                             </dxlc:LayoutItem>
+                            <Button Height="26" Content="Добавить в акт" Command="{Binding AddToDocBrokeCommand}"/>
                         </dxlc:LayoutGroup>
                         <ContentControl Content="{Binding}" DataContext="{Binding CurrentViewModel}"/>
                     </dxlc:LayoutControl>

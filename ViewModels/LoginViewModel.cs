@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.Mvvm.POCO;
 using Gamma.Common;
 
 namespace Gamma.ViewModels
@@ -9,10 +11,21 @@ namespace Gamma.ViewModels
     /// <summary>
     /// This class contains properties that a View can data bind to.
     /// </summary>
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public class LoginViewModel : ValidationViewModelBase
     {
+        /*
+        public class Metadata : IMetadataProvider<LoginViewModel>
+        {
+            void IMetadataProvider<LoginViewModel>.BuildMetadata(MetadataBuilder<LoginViewModel> builder)
+            {
+                builder.CommandFromMethod(x => x.Authenticate())
+                    .CanExecuteMethod(x => x.CanExecute())
+                    .CommandName("LoginCommand");
+            }
+        }
+        */
+
+
         [Required(ErrorMessage=@"Поле не может быть пустым")]
         public string Login { get; set; }
 
@@ -23,17 +36,20 @@ namespace Gamma.ViewModels
             set;
         }
 
+        public DelegateCommand LoginCommand { get; private set; }
+
         [Required(ErrorMessage = @"Поле не может быть пустым")]
-        // ReSharper disable once MemberCanBePrivate.Global
         public string DataBase { get; set; }
 
         [Required(ErrorMessage = @"Поле не может быть пустым")]
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Password { get; set; }
 
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public DelegateCommand LoginCommand { get; private set; }
+        public static LoginViewModel Create()
+        {
+            return ViewModelSource.Create(() => new LoginViewModel());
+        }
+
+        
         public LoginViewModel()
         {
             var appSettings = GammaSettings.Get();
@@ -69,6 +85,13 @@ namespace Gamma.ViewModels
             CloseWindow();
         }
         public bool UseScanner { get; set; }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            LoginCommand = null;
+            
+        }
 
     }
     

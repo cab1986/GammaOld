@@ -168,8 +168,31 @@ namespace Gamma.ViewModels
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
             OpenProductRelationProductCommand = new DelegateCommand(OpenProductRelationProduct, () => SelectedProduct != null);
+            AddToDocBrokeCommand = new DelegateCommand(AddToDocBroke, () => IsValid);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             IsReadOnly = !(DB.HaveWriteAccess("DocProducts") && (!IsConfirmed || IsValid));
+        }
+
+        public DelegateCommand AddToDocBrokeCommand { get; private set; }
+
+        private void AddToDocBroke()
+        {
+            SaveToModel();
+            if (Doc == null) return;
+            var productId = GammaBase.DocProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
+            if (productId == null) return;
+            var docBrokeId =
+                GammaBase.Docs.FirstOrDefault(
+                    d => d.DocTypeID == (int) DocTypes.DocBroke && !d.IsConfirmed && d.PlaceID == WorkSession.PlaceID)?.DocID;
+            if (docBrokeId != null)
+            {
+                MessageBox.Show("Есть незакрытый акт. Данный продукт будет добавлен в этот акт");
+                MessageManager.OpenDocBroke((Guid) docBrokeId, productId);
+            }
+            else
+            {
+                MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid(), productId);
+            }
         }
 
         public string PrintName { get; set; }
@@ -361,13 +384,13 @@ namespace Gamma.ViewModels
         }
         private Docs Doc { get; set; }
         private DocProduction DocProduction { get; set; }
-        public override sealed bool IsValid => base.IsValid && CurrentViewModel.IsValid;
+        public override sealed bool IsValid => base.IsValid && (CurrentViewModel?.IsValid ?? false);
 
         public bool IsReadOnly { get; set; }
 
         public override bool CanSaveExecute()
         {
-            return IsValid && CurrentViewModel.CanSaveExecute() && DB.HaveWriteAccess("DocProduction");
+            return IsValid && (CurrentViewModel?.CanSaveExecute() ?? false) && DB.HaveWriteAccess("DocProduction");
         }
         public string Title { get; set; }
         private bool IsActive { get; set; }
@@ -406,5 +429,12 @@ namespace Gamma.ViewModels
             }
         }
         public ProductRelation SelectedProduct { get; set; }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            (CurrentViewModel as IDisposable)?.Dispose();
+            CurrentViewModel = null;
+        }
     }
 }

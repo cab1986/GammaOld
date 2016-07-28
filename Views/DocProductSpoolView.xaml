@@ -13,9 +13,6 @@
         mc:Ignorable="d ignore"
              DataContext="{Binding}"
          d:DataContext="{d:DesignInstance Type=viewModels:DocProductSpoolViewModel, IsDesignTimeCreatable=False}">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key = "BooleanToVisibility" />
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -49,7 +46,7 @@
             </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
-                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
+                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000" IsReadOnly="{Binding WeightReadOnly}"
                                            EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" 
                                            NullText="0" AllowNullInput="True" IsFloatValue="False" Mask="f0" DisplayFormatString="f2"/>
                     </dxlc:LayoutItem>
@@ -88,7 +85,7 @@
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <Button Grid.Row="1" HorizontalAlignment="Right" Content="Создать упаковку" Command="{Binding CreateGroupPackCommand}" 
-                Visibility="{Binding ShowCreateGroupPack, Converter={StaticResource BooleanToVisibility}}"/>
+                Visibility="{Binding ShowCreateGroupPack, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
     <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior />

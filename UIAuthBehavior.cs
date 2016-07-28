@@ -28,6 +28,12 @@ namespace Gamma
                 
         }
 
+        protected override void OnDetaching()
+        {
+            base.OnDetaching();
+            AssociatedObject.DataContextChanged -= AssociatedObject_DataContextChanged;
+        }
+
         void AssociatedObject_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (this.AssociatedObject.DataContext != null)

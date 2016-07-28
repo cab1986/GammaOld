@@ -28,7 +28,7 @@ namespace Gamma.Dialogs
         private GammaEntities GammaBase { get; set; }
         public ChangeSpoolDialog(Guid productSpoolid) : this()
         {
-            EdtBrokeWeight.Value = GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.DecimalWeight).FirstOrDefault()??0;
+            EdtBrokeWeight.Value = GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.DecimalWeight).FirstOrDefault();
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {

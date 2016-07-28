@@ -79,7 +79,7 @@ namespace Gamma.ViewModels
                             Nomenclature = string.Concat(ps.C1CNomenclature.Name," ",ps.C1CCharacteristics.Name),
                             Number = d.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.DecimalWeight??0
+                            Weight = ps.DecimalWeight
                         }).FirstOrDefault()
                     );
             }

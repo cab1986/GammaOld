@@ -12,8 +12,16 @@ namespace Gamma
 
         protected override void OnAttached()
         {
-            this.AssociatedObject.AddHandler(Validation.ErrorEvent, new EventHandler<ValidationErrorEventArgs>(this.OnValidationError));
+            _handler = OnValidationError;
+            this.AssociatedObject.AddHandler(Validation.ErrorEvent, _handler);
         }
+
+        protected override void OnDetaching()
+        {
+            AssociatedObject.RemoveHandler(Validation.ErrorEvent, _handler);
+        }
+
+        private EventHandler<ValidationErrorEventArgs> _handler ;
 
         private void OnValidationError(object sender, ValidationErrorEventArgs e)
         {

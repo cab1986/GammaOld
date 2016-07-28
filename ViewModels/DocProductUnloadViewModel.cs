@@ -65,7 +65,7 @@ namespace Gamma.ViewModels
                                                              Nomenclature = dp.Products.ProductSpools.C1CNomenclature.Name + " " + dp.Products.ProductSpools.C1CCharacteristics.Name,
                                                              CharacteristicID = (Guid)dp.Products.ProductSpools.C1CCharacteristicID,
                                                              NomenclatureID = dp.Products.ProductSpools.C1CNomenclatureID,
-                                                             Weight = dp.Products.ProductSpools.DecimalWeight??0,
+                                                             Weight = dp.Products.ProductSpools.DecimalWeight,
                                                              Diameter = dp.Products.ProductSpools.Diameter
                                                          }
                                     );
@@ -273,7 +273,7 @@ namespace Gamma.ViewModels
             var unloadSpool = UnloadSpools.FirstOrDefault(u => u.ProductID == msg.ProductID);
             if (unloadSpool != null)
                 unloadSpool.Weight =
-                    (from ps in GammaBase.ProductSpools where ps.ProductID == msg.ProductID select ps.DecimalWeight).FirstOrDefault()??0;
+                    (from ps in GammaBase.ProductSpools where ps.ProductID == msg.ProductID select ps.DecimalWeight).FirstOrDefault();
         }
 
         public ObservableCollection<Cutting> Cuttings { get; set; }

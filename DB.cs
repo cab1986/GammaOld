@@ -118,10 +118,20 @@ namespace Gamma
         {
             return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetSpoolCoreWeight('{productid}')").AsEnumerable().First();
         }
+
         public static short GetSpoolDiameter(Guid productid, GammaEntities gammaBase = null)
         {
             return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetSpoolDiameter('{productid}')").AsEnumerable().First();
         }
+
+        public static bool AllowEditProduct(Guid productId, GammaEntities gammaBase = null)
+        {
+            return
+                (gammaBase ?? GammaDb).Database.SqlQuery<bool>($"SELECT dbo.AllowEditProduct('{productId}')")
+                    .AsEnumerable()
+                    .First();
+        }
+
         public static ObservableCollection<string> BaseTables
         { 
             get

@@ -17,11 +17,13 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     ShutdownMode="OnLastWindowClose" 
     Startup="Application_Startup" 
     Exit="Application_Exit"
     DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> 
         <DataTemplate x:Key="SpoolRemainderTemplate">
             <dxlc:LayoutGroup Orientation="Horizontal">
                 <dxlc:LayoutItem Label="Вес" LabelPosition="Top" Width="80" >
@@ -38,6 +40,22 @@
                     <g:UIAuthBehavior/>
                 </dxmvvm:Interaction.Behaviors>
             </dxlc:LayoutGroup>
+        </DataTemplate>
+        <DataTemplate x:Key="BarTemplate" DataType="g:BarViewModel">
+            <ContentControl>
+                <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>
+            </ContentControl>
+        </DataTemplate>
+        <DataTemplate x:Key="ItemTemplate">
+            <ContentControl>
+                <dxb:BarButtonItem Content="{Binding Caption}"
+        			Glyph="{Binding SmallGlyph}"
+        			LargeGlyph="{Binding LargeGlyph}"
+        			GlyphAlignment="Top"
+        			BarItemDisplayMode="ContentAndGlyph"
+        			Command="{Binding}"
+        			CommandParameter="{Binding CommandParameter}"/>
+            </ContentControl>
         </DataTemplate>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin"
@@ -105,5 +123,6 @@
         <Style TargetType="{x:Type v:MaterialTypesNomenclatureView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:DocShipmentOrderView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:ImportOldProductsView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
+        <Style TargetType="{x:Type v:DocBrokeView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
     </Application.Resources>
 </Application>

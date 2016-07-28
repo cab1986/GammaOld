@@ -17,6 +17,8 @@ namespace Gamma.Models
         public System.Guid ProductID { get; set; }
         public Nullable<int> PlaceID { get; set; }
         public Nullable<byte> Quantity { get; set; }
+        public Nullable<int> PlaceZoneID { get; set; }
+        public Nullable<int> PlaceZoneCellID { get; set; }
     
         public virtual Products Products { get; set; }
         public virtual Places Places { get; set; }

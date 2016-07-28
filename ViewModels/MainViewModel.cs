@@ -156,6 +156,7 @@ namespace Gamma.ViewModels
         private void OpenPlaceProducts(int placeID)
         {
             UIServices.SetBusyState();
+            (CurrentView as IDisposable)?.Dispose();
             CurrentView = new PlaceProductsViewModel(placeID);
             RefreshCommand = ((PlaceProductsViewModel) CurrentView).FindCommand;
             NewItemCommand = ((PlaceProductsViewModel) CurrentView).CreateNewProductCommand;

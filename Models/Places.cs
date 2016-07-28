@@ -17,8 +17,6 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Places()
         {
-            this.DocMovement = new HashSet<DocMovement>();
-            this.DocMovement1 = new HashSet<DocMovement>();
             this.DocProduction = new HashSet<DocProduction>();
             this.Docs = new HashSet<Docs>();
             this.DocWithdrawal = new HashSet<DocWithdrawal>();
@@ -26,6 +24,8 @@ namespace Gamma.Models
             this.SpoolInstallLog = new HashSet<SpoolInstallLog>();
             this.Users = new HashSet<Users>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
+            this.DocMovement = new HashSet<DocMovement>();
+            this.DocMovement1 = new HashSet<DocMovement>();
         }
     
         public int PlaceID { get; set; }
@@ -43,10 +43,6 @@ namespace Gamma.Models
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual Departments Departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocMovement> DocMovement { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocMovement> DocMovement1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> Docs { get; set; }
@@ -63,5 +59,9 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         public virtual Branches Branches { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovement> DocMovement { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovement> DocMovement1 { get; set; }
     }
 }

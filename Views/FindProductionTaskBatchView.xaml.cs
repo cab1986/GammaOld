@@ -1,16 +1,15 @@
-﻿using System.Windows;
-using Gamma.ViewModels;
+﻿using Gamma.ViewModels;
 
 namespace Gamma.Views
 {
     /// <summary>
     /// Interaction logic for FindProductionTaskView.xaml
     /// </summary>
-    public partial class FindProductionTaskBatchView : Window
+    public partial class FindProductionTaskBatchView
     {
         public FindProductionTaskBatchView(BatchKinds batchKind)
         {
-            this.DataContext = new FindProductionTaskBatchViewModel(batchKind);
+            DataContext = new FindProductionTaskBatchViewModel(batchKind);
             InitializeComponent();
         }
     }

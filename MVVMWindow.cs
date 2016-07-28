@@ -6,14 +6,17 @@ namespace Gamma
 {
     public class MvvmWindow : Window
     {
-        public MvvmWindow()
+        protected MvvmWindow(): base()
         {
             Closed += MVVMWindow_Closed;
         }
 
         void MVVMWindow_Closed(object sender, EventArgs e)
         {
+            Closed -= MVVMWindow_Closed;
             Messenger.Default.Unregister(this);
+            (DataContext as IDisposable)?.Dispose();
+            DataContext = null;
         }
         
     }

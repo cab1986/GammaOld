@@ -1,4 +1,5 @@
-﻿using DevExpress.Mvvm;
+﻿using System;
+using DevExpress.Mvvm;
 using Gamma.Models;
 
 
@@ -7,7 +8,7 @@ namespace Gamma.ViewModels
     /// <summary>
     /// This class contains properties that a View can data bind to.
     /// </summary>
-    public abstract class RootViewModel : ViewModelBase
+    public abstract class RootViewModel : ViewModelBase, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the RootViewModel class.
@@ -41,19 +42,23 @@ namespace Gamma.ViewModels
             }
         }
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DelegateCommand CloseCommand { get; private set; }
 
-        private void Cleanup()
+        protected void Cleanup()
         {
             Messenger.Default.Unregister(this);
             GammaBase?.Dispose();
+            CloseCommand = null;
         }
 
         public RootViewModel Clone()
         {
             return (RootViewModel)MemberwiseClone();
+        }
+
+        public virtual void Dispose()
+        {
+            Cleanup();
         }
     }
 }

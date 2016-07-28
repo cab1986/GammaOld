@@ -257,8 +257,12 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
-D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\WarehousePersonsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\WarehousePersonsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ImportOldProductsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ImportOldProductsView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.baml

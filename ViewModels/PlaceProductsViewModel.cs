@@ -339,11 +339,18 @@ namespace Gamma.ViewModels
         public DelegateCommand CreateNewProductCommand { get; private set; }
         public DelegateCommand FindCommand { get; private set; }
         public DelegateCommand OpenDocProductCommand { get; private set; }
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        // ReSharper disable once MemberCanBePrivate.Global
+        
         public string DeleteProductText { get; set; }
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        
         public string NewProductText { get; set; }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            DeleteProductCommand = null;
+            CreateNewProductCommand = null;
+            FindCommand = null;
+            OpenDocProductCommand = null;
+        }
     }
 }

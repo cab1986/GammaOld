@@ -5,13 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:g="clr-namespace:Gamma"
-        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.FindProductView"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+              xmlns:common="clr-namespace:Gamma.Common"
+              x:Class="Gamma.Views.FindProductView"
         mc:Ignorable="d ignore"
         Title="Поиск изделий"
-        Height="{g:SettingBinding FindProductHeight}"
-        Width="{g:SettingBinding FindProductWidth}"
-        Left="{g:SettingBinding FindProductLeft}"
-        Top="{g:SettingBinding FindProductTop}" >
+        common:WindowSettings.Save="True">
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>

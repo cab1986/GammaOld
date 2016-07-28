@@ -46,7 +46,7 @@ namespace Gamma.Common
 
         private decimal GetRemainderMaxWeight(Guid productid)
         {
-            return GammaBase.ProductSpools.First(ps => ps.ProductID == productid).DecimalWeight??0;
+            return GammaBase.ProductSpools.First(ps => ps.ProductID == productid).DecimalWeight;
         }
 
         public bool IsReadOnly { get; set; }

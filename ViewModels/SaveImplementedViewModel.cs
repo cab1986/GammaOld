@@ -44,6 +44,12 @@ namespace Gamma.ViewModels
             CloseWindow();
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            SaveAndCloseCommand = null;
+        }
+
         public virtual bool CanSaveExecute()
         {
             return IsValid;

@@ -1,5 +1,4 @@
-﻿<Window 
-    xmlns:my="http://schemas.devexpress.com/winfx/2008/xaml/charts/rangecontrolclient" 
+﻿<g:MvvmWindow
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
@@ -8,12 +7,9 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
     x:Class="Gamma.Views.FindProductionTaskBatchView"
     xmlns:g="clr-namespace:Gamma"
+    xmlns:common="clr-namespace:Gamma.Common"
     Title="{Binding Title}" 
-    Height="{g:SettingBinding FindProductionTaskHeight}"
-    Width="{g:SettingBinding FindProductionTaskWidth}"
-    Left="{g:SettingBinding FindProductionTaskLeft}"
-    Top="{g:SettingBinding FindProductionTaskTop}" 
-    >
+    common:WindowSettings.Save="True" >
     <Grid>
 
         <dxlc:LayoutControl Orientation="Vertical">
@@ -40,7 +36,7 @@
 
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Результаты поиска" LabelPosition="Top" VerticalAlignment="Stretch">
-                <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" Margin="-12,-3,-12,-12" 
+                <dxg:GridControl EnableSmartColumnsGeneration="True" Margin="-12,-3,-12,-12" 
                                  ItemsSource="{Binding ProductionTaskBatches}" AutoExpandAllGroups="True" SelectedItem="{Binding SelectedProductionTaskBatch}">
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn Header="Передел" FieldName="Place" GroupIndex="0" SortOrder="Ascending" />
@@ -60,7 +56,5 @@
                 </dxg:GridControl>
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
-
-
     </Grid>
-</Window>
+</g:MvvmWindow>

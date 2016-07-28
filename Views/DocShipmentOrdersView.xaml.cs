@@ -21,7 +21,7 @@ namespace Gamma.Views
             int rowHandle = ((GridControl)e.NewView.DataControl).GetMasterRowHandle();
             if (DataControlBase.InvalidRowHandle == rowHandle)
                 return;
-            vm.SelectedDocShipmentOrder = GridControl.GetRow(rowHandle) as DocShipmentOrder;
+            vm.SelectedDocShipmentOrder = gridControl.GetRow(rowHandle) as DocShipmentOrder;
         }
     }
 }

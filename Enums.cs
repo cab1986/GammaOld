@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace Gamma
 {
@@ -58,7 +59,11 @@ namespace Gamma
         [Description("На утилизацию")]
         Broke,
         [Description("Ограниченная партия")]
-        Limited
+        Limited,
+        [Description("Хоз. нужды")]
+        InternalUsage,
+        [Description("На переделку")]
+        Repack
     }
 
     public enum ToughnessKinds
@@ -105,7 +110,8 @@ namespace Gamma
         DocMovement,
         DocCloseShift,
         DocChangeState,
-        DocUnpack
+        DocUnpack,
+        DocBroke
     }
     public enum PermissionMark
     {

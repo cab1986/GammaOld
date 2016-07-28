@@ -18,6 +18,7 @@ namespace Gamma.Models
         public ProductStates()
         {
             this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
+            this.DocBrokeDecisionProducts = new HashSet<DocBrokeDecisionProducts>();
         }
     
         public byte StateID { get; set; }
@@ -27,5 +28,7 @@ namespace Gamma.Models
         public virtual C1CQuality C1CQuality { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
     }
 }
