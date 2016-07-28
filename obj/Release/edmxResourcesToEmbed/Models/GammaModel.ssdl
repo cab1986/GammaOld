@@ -689,8 +689,7 @@
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="RealFormat" Type="int" />
     <Property Name="Diameter" Type="int" Nullable="false" />
-    <Property Name="Weight" Type="int" Nullable="false" />
-    <Property Name="DecimalWeight" Type="decimal" Precision="15" Scale="5" />
+    <Property Name="DecimalWeight" Type="decimal" Precision="15" Scale="5" Nullable="false" />
     <Property Name="Length" Type="decimal" Precision="8" Scale="2" />
     <Property Name="RealBasisWeight" Type="decimal" Precision="10" Scale="4" />
     <Property Name="ToughnessKindID" Type="tinyint" />
