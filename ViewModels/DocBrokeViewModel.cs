@@ -4,11 +4,9 @@ using System.Linq;
 using Gamma.Common;
 using Gamma.Models;
 using System.Data.Entity;
-using System.Text;
 using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -57,6 +55,7 @@ namespace Gamma.ViewModels
                 AddProduct((Guid)productId, DocId, BrokeProducts, BrokeDecisionProducts);
             }
             AddProductCommand = new DelegateCommand(ChooseProductToAdd);
+            EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons);
         }
 
         /// <summary>
@@ -78,7 +77,13 @@ namespace Gamma.ViewModels
             var docBrokeProductInfo =
                     gammaBase.DocBrokeProducts.Include(d => d.DocBrokeProductRejectionReasons)
                     .FirstOrDefault(d => d.DocID == docId);
-            var brokeProduct = new BrokeProduct
+            var brokeProduct = new BrokeProduct(docBrokeProductInfo == null ? new ItemsChangeObservableCollection<RejectionReason>() :
+                new ItemsChangeObservableCollection<RejectionReason>(docBrokeProductInfo.DocBrokeProductRejectionReasons
+                .Select(d => new RejectionReason()
+                {
+                    RejectionReasonID = d.C1CRejectionReasonID,
+                    Comment = d.Comment
+                })))
             {
                 Date = product.Date,
                 NomenclatureName = product.ShortNomenclatureName,
@@ -88,13 +93,8 @@ namespace Gamma.ViewModels
                 BaseMeasureUnit = product.BaseMeasureUnit,
                 PrintName = product.PrintName,
                 ProductId = product.ProductID, 
-                Quantity = product.BaseMeasureUnitQuantity??0,
+                Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity??0 : docBrokeProductInfo.Quantity??0
             };
-            if (docBrokeProductInfo != null)
-            {
-                brokeProduct.Quantity = docBrokeProductInfo.Quantity ?? 0;
-                brokeProduct.RejectionReasons = docBrokeProductInfo.DocBrokeProductRejectionReasons.ToList();
-            }
             brokeProducts.Add(brokeProduct);
 #endregion AddBrokeProduct
 #region AddBrokeDecisionProduct
@@ -199,14 +199,19 @@ namespace Gamma.ViewModels
                 _selectedBrokeDecisionProduct = value;
                 InternalUsageProduct.BrokeDecisionProduct = null;
                 InternalUsageProduct.IsChecked = false;
+                InternalUsageProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
                 GoodProduct.BrokeDecisionProduct = null;
                 GoodProduct.IsChecked = false;
+                GoodProduct.IsReadOnly = (value == null || IsReadOnly);
                 LimitedProduct.BrokeDecisionProduct = null;
                 LimitedProduct.IsChecked = false;
+                LimitedProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
                 BrokeProduct.BrokeDecisionProduct = null;
                 BrokeProduct.IsChecked = false;
+                BrokeProduct.IsReadOnly = value == null || IsReadOnly;
                 RepackProduct.BrokeDecisionProduct = null;
                 RepackProduct.IsChecked = false;
+                RepackProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
                 if (value == null) return;
                 var products = BrokeDecisionProducts.Where(p => p.ProductId == value.ProductId).ToList();
                 foreach (var product in products)
@@ -216,6 +221,7 @@ namespace Gamma.ViewModels
                         case ProductStates.Broke:
                             BrokeProduct.IsChecked = true;
                             BrokeProduct.BrokeDecisionProduct = product;
+                            
                             break;
                         case ProductStates.Good:
                             GoodProduct.IsChecked = true;
@@ -251,6 +257,14 @@ namespace Gamma.ViewModels
                     RepackProduct.BrokeDecisionProduct =
                         CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductStates.Repack);
             }
+        }
+
+        public DelegateCommand EditRejectionReasonsCommand { get; private set; }
+
+        private void EditRejectionReasons()
+        {
+            if (SelectedBrokeProduct?.RejectionReasons == null) return;
+            MessageManager.EditRejectionReasons(SelectedBrokeProduct.RejectionReasons);
         }
 
         /// <summary>
@@ -327,200 +341,39 @@ namespace Gamma.ViewModels
                         ProductID = docBrokeProduct.ProductId,
                         DocID = doc.DocID,
                         Quantity = docBrokeProduct.Quantity,
-                        DocBrokeProductRejectionReasons = docBrokeProduct.RejectionReasons
+                        DocBrokeProductRejectionReasons = new List<DocBrokeProductRejectionReasons>()
                     };
+                    foreach (var reason in docBrokeProduct.RejectionReasons)
+                    {
+                        brokeProduct.DocBrokeProductRejectionReasons.Add(new DocBrokeProductRejectionReasons
+                        {
+                            ProductID = brokeProduct.ProductID,
+                            DocID = brokeProduct.DocID,
+                            C1CRejectionReasonID = reason.RejectionReasonID,
+                            Comment = reason.Comment
+                        });
+                    }
                     doc.DocBroke.DocBrokeProducts.Add(brokeProduct);
                 }
+#region Сохранение решений по продукции
+                if (doc.DocBroke.DocBrokeDecisionProducts == null) 
+                    doc.DocBroke.DocBrokeDecisionProducts = new List<DocBrokeDecisionProducts>();
+                foreach (var decisionProduct in BrokeDecisionProducts)
+                {
+                    doc.DocBroke.DocBrokeDecisionProducts.Add(new DocBrokeDecisionProducts
+                    {
+                        C1CCharacteristicID = decisionProduct.CharacteristicId,
+                        C1CNomenclatureID = decisionProduct.NomenclatureId,
+                        Quantity = decisionProduct.Quantity,
+                        ProductID = decisionProduct.ProductId,
+                        DocID = DocId,
+                        StateID = (byte)decisionProduct.ProductState,
+                        Comment = decisionProduct.Comment
+                    });
+                }
+#endregion
                 gammaBase.SaveChanges();
             }
-        }
-    }
-
-    public class EditBrokeDecisionItem: DbEditItemWithNomenclatureViewModel
-    {
-        public EditBrokeDecisionItem(string name, ProductStates productState, ItemsChangeObservableCollection<BrokeDecisionProduct> decisionProducts, bool canChooseNomenclature = false)
-        {
-            Name = name;
-            ProductState = productState;
-            NomenclatureVisible = canChooseNomenclature;
-            BrokeDecisionProducts = decisionProducts;
-        }
-
-        public override Guid? NomenclatureID
-        {
-            get { return base.NomenclatureID; }
-            set
-            {
-                base.NomenclatureID = value;
-                if (BrokeDecisionProduct != null)
-                {
-                    BrokeDecisionProduct.NomenclatureId = NomenclatureID;
-                }
-            }
-        }
-
-        public override Guid? CharacteristicID
-        {
-            get { return base.CharacteristicID; }
-            set
-            {
-                base.CharacteristicID = value;
-                if (BrokeDecisionProduct != null)
-                {
-                    BrokeDecisionProduct.CharacteristicId = CharacteristicID;
-                }
-            }
-        }
-
-        private ItemsChangeObservableCollection<BrokeDecisionProduct> BrokeDecisionProducts { get; set; }
-        public bool NomenclatureVisible { get; private set; }
-
-        private bool _isChecked;
-
-        public bool IsChecked
-        {
-            get { return _isChecked; }
-            set
-            {
-                _isChecked = value;
-                RaisePropertyChanged("IsChecked");
-                if (BrokeDecisionProduct == null) return;
-                if (value)
-                {
-                    if (!BrokeDecisionProducts.Contains(BrokeDecisionProduct))
-                        BrokeDecisionProducts.Add(BrokeDecisionProduct);
-                    BrokeDecisionProducts.Remove(BrokeDecisionProducts.FirstOrDefault(
-                        bp =>
-                            bp.ProductId == BrokeDecisionProduct.ProductId &&
-                            bp.ProductState == ProductStates.NeedsDecision));
-
-                }
-                else
-                {
-                    var needDecisionProduct = new BrokeDecisionProduct
-                    {
-                        ProductState = ProductStates.NeedsDecision,
-                        Quantity = BrokeDecisionProduct.MaxQuantity,
-                        MaxQuantity = BrokeDecisionProduct.MaxQuantity,
-                        ProductId = BrokeDecisionProduct.ProductId,
-                        Number = BrokeDecisionProduct.Number,
-                        NomenclatureName = BrokeDecisionProduct.Number
-                    };
-                    BrokeDecisionProducts.Remove(BrokeDecisionProduct);
-                    if (BrokeDecisionProducts.All(bp => bp.ProductId != BrokeDecisionProduct.ProductId))
-                    { 
-                        BrokeDecisionProducts.Add(needDecisionProduct);
-                    }
-                }
-            }
-        }
-        public string Name { get; set; }
-        private ProductStates ProductState { get; set; }
-
-        private BrokeDecisionProduct _brokeDecisionProduct;
-
-        public BrokeDecisionProduct BrokeDecisionProduct
-        {
-            get { return _brokeDecisionProduct; }
-            set
-            {
-                _brokeDecisionProduct = value;
-                RaisePropertyChanged("BrokeDecisionProduct");
-            }
-        }
-    }
-
-    public class BrokeDecisionProduct : ViewModelBase
-    {
-        public decimal MaxQuantity { get; set; }
-
-        public Guid ProductId { get; set; }
-
-        private ProductStates _productState;
-        public ProductStates ProductState
-        {
-            get { return _productState; }
-            set
-            {
-                _productState = value;
-                Decision = _productState.GetAttributeOfType<DescriptionAttribute>().Description;
-            }
-        }
-        public string NomenclatureName { get; set; }
-
-        private decimal _quantity;
-
-        public decimal Quantity
-        {
-            get { return _quantity; }
-            set
-            {
-                _quantity = value;
-                RaisePropertyChanged("Quantity");
-            }
-            
-        }
-        public string Comment { get; set; }
-        public string Number { get; set; }
-        public string Decision { get; private set; }
-        public Guid? NomenclatureId { get; set; }
-        public Guid? CharacteristicId { get; set; }
-    }
-
-    public class BrokeProduct : ViewModelBase
-    {
-        public Guid ProductId { get; set; }
-        public string NomenclatureName { get; set; }
-        public string Number { get; set; }
-        public string BaseMeasureUnit { get; set; }
-        public decimal Quantity { get; set; }
-
-        private string _rejectionReasonString;
-
-        public string RejectionReasonsString
-        {
-            get { return _rejectionReasonString; }
-            set
-            {
-                _rejectionReasonString = value;
-                RaisePropertyChanged("RejectionReasonString");
-            }
-        }
-
-        public DateTime? Date { get; set; }
-        public string Place { get; set; }
-        public int ShiftId { get; set; }
-        public string PrintName { get; set; }
-        private List<DocBrokeProductRejectionReasons> _rejectionReasons;
-
-        public List<DocBrokeProductRejectionReasons> RejectionReasons
-        {
-            get { return _rejectionReasons; }
-            set
-            {
-                _rejectionReasons = value;
-                RejectionReasonsString = FormRejectionReasonsString(_rejectionReasons);
-            }
-        }
-
-        private string FormRejectionReasonsString(List<DocBrokeProductRejectionReasons> list, GammaEntities gammaDb = null)
-        {
-            var sbuilder = new StringBuilder();
-            using (var gammaBase = gammaDb ?? DB.GammaDb)
-            {
-                foreach (var reason in list)
-                {
-                    var description =
-                        gammaBase.C1CRejectionReasons.FirstOrDefault(
-                            r => r.C1CRejectionReasonID == reason.C1CRejectionReasonID);
-                    if (description != null)
-                    {
-                        sbuilder.Append(description);
-                        sbuilder.Append(Environment.NewLine);
-                    }
-                }
-            }
-            return sbuilder.ToString();
         }
     }
 }

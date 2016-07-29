@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using DevExpress.Mvvm;
+using Gamma.Common;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
     public class EditRejectionReasonsViewModel : RootViewModel
     {
-        public EditRejectionReasonsViewModel(List<DocBrokeProductRejectionReasons> rejectionReasons, Guid docId, Guid productId)
+        public EditRejectionReasonsViewModel(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
         {
-            DocId = docId;
-            ProductId = productId;
             RejectionReasons = rejectionReasons;
             using (var gammaBase = DB.GammaDb)
             {
-                RejectionReasonsList = new List<RejectionReason>(gammaBase.C1CRejectionReasons.Select(r => new RejectionReason
+                RejectionReasonsList = new List<RejectionReason>(gammaBase.C1CRejectionReasons.Where(r => (!r.IsFolder??true) && (!r.IsMarked??true))
+                    .Select(r => new RejectionReason
                 {
                     RejectionReasonID = r.C1CRejectionReasonID,
                     Description = r.Description,
                     FullDescription = r.FullDescription
-                }));
+                }).OrderBy(r => r.Description));
             }
             if (RejectionReasonsList.Count == 0)
             {
@@ -33,12 +34,9 @@ namespace Gamma.ViewModels
             DeleteRejectionReasonCommand = new DelegateCommand(DeleteRejectionReason);
         }
 
-        private Guid DocId { get; }
-        private Guid ProductId { get;  }
+        private ItemsChangeObservableCollection<RejectionReason> _rejectionReasons;
 
-        private List<DocBrokeProductRejectionReasons> _rejectionReasons;
-
-        public List<DocBrokeProductRejectionReasons> RejectionReasons
+        public ItemsChangeObservableCollection<RejectionReason> RejectionReasons
         {
             get { return _rejectionReasons; }
             set
@@ -55,11 +53,10 @@ namespace Gamma.ViewModels
 
         private void AddRejectionReason()
         {
-            RejectionReasons.Add(new DocBrokeProductRejectionReasons
+            RejectionReasons.Add(new RejectionReason
             {
-                ProductID = ProductId,
-                DocID = DocId,
-                C1CRejectionReasonID = RejectionReasonsList.First().RejectionReasonID
+                RejectionReasonID = RejectionReasonsList.First().RejectionReasonID,
+                Description = RejectionReasonsList.First().Description
             });
         }
 
@@ -69,6 +66,7 @@ namespace Gamma.ViewModels
             RejectionReasons.Remove(SelectedRejectionReason);
         }
 
-        public DocBrokeProductRejectionReasons SelectedRejectionReason { get; set; }
+        public RejectionReason SelectedRejectionReason { get; set; }
+
     }
 }

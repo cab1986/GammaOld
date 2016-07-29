@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+using Gamma.Common;
 using Gamma.Models;
 using Gamma.ViewModels;
 
@@ -16,10 +15,9 @@ namespace Gamma.Views
             InitializeComponent();
         }
 
-        public EditRejectionReasonsView(List<DocBrokeProductRejectionReasons> rejectionReasons, Guid docId,
-            Guid productId)
+        public EditRejectionReasonsView(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
         {
-            DataContext = new EditRejectionReasonsViewModel(rejectionReasons, docId, productId);
+            DataContext = new EditRejectionReasonsViewModel(rejectionReasons);
             InitializeComponent();
         }
     }

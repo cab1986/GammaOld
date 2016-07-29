@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gamma.Common
+namespace Gamma.Models
 {
     public class ProductRelation
     {
@@ -10,6 +10,6 @@ namespace Gamma.Common
         public DateTime Date { get; set; }
         public Guid DocID { get; set; }
         public Guid ProductID { get; set; }
-        public ProductKinds ProductKindID { get; set; }
+        public Gamma.ProductKinds ProductKindID { get; set; }
     }
 }

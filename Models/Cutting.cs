@@ -3,9 +3,8 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using DevExpress.Mvvm;
-using Gamma.Models;
 
-namespace Gamma.Common
+namespace Gamma.Models
 {
     public class Cutting : ViewModelBase
     {

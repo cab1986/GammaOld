@@ -3,9 +3,8 @@ using System.Data.Entity.SqlServer;
 using System.Linq;
 using Gamma.Attributes;
 using Gamma.Interfaces;
-using Gamma.Models;
 
-namespace Gamma.Common
+namespace Gamma.Models
 {
     public class SpoolRemainder: ICheckedAccess
     {

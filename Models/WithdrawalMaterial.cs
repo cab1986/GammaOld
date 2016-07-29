@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using DevExpress.Mvvm;
 
-namespace Gamma.Common
+namespace Gamma.Models
 {
     //TODO Добавить нормальный конструктор к WithdrawalMaterial
 

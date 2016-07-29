@@ -10,6 +10,7 @@
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              xmlns:common="clr-namespace:Gamma.Common"
+             xmlns:models="clr-namespace:Gamma.Models"
              x:Class="Gamma.Views.DocCloseShiftConvertingGridView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="800">
@@ -71,7 +72,7 @@
                 </dxg:GridControl>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Паллеты">
-                <dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type common:Pallet}">
+                <dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type models:Pallet}">
                     <dxg:GridControl.TotalSummary>
                         <dxg:GridSummaryItem Alignment="Right" FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}"/>
                     </dxg:GridControl.TotalSummary>

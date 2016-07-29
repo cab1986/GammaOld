@@ -275,7 +275,9 @@ namespace Gamma.ViewModels
                     {
                         ProductID = product.ProductID,
                         DocID = itemID,
-                        Quantity = Weight
+                        Quantity = Weight,
+                        C1CNomenclatureID = (Guid)NomenclatureID,
+                        C1CCharacteristicID = (Guid)CharacteristicID
                     }
                 };
             }

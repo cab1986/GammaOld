@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gamma.Common
+namespace Gamma.Models
 {
     public class Nomenclature1CFolder
     {

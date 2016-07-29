@@ -97,6 +97,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Characteristics");
             }
         }
+
         protected virtual bool CanChooseNomenclature()
         {
             return true;

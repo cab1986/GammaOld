@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Gamma.Interfaces;
 using DevExpress.Mvvm;
@@ -283,6 +284,12 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Spools");
             }
         }
+
+        /// <summary>
+        /// Сохранение в базу
+        /// </summary>
+        /// <param name="itemID">ID документа</param>
+        /// <param name="gammaBase">Контекст БД</param>
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return;
@@ -314,6 +321,20 @@ namespace Gamma.ViewModels
 //                GammaBase.Products.Add(product);
             }
             if (product.ProductGroupPacks == null) product.ProductGroupPacks = new ProductGroupPacks() { ProductID = product.ProductID };
+            if (product.DocProductionProducts == null)
+            {
+                product.DocProductionProducts = new List<DocProductionProducts>
+                {
+                    new DocProductionProducts
+                    {
+                        ProductID = product.ProductID,
+                        DocID = itemID,
+                        Quantity = Weight,
+                        C1CNomenclatureID = NomenclatureID,
+                        C1CCharacteristicID = CharacteristicID
+                    }
+                };
+            }
             product.ProductGroupPacks.C1CNomenclatureID = NomenclatureID;
             product.ProductGroupPacks.C1CCharacteristicID = CharacteristicID;
             product.ProductGroupPacks.Weight = Weight;

@@ -1,7 +1,7 @@
 ﻿using System;
 using DevExpress.Mvvm;
 
-namespace Gamma.Common
+namespace Gamma.Models
 {
     public class PaperBase : ViewModelBase
     {

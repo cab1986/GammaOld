@@ -13,7 +13,7 @@
         xmlns:gamma="clr-namespace:Gamma"
         x:Class="Gamma.Views.EditRejectionReasonsView"
         mc:Ignorable="d"
-        Title="Список дефектов" Height="300" Width="800"
+        Title="Список дефектов" Height="300" Width="1000"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:EditRejectionReasonsViewModel}}"
         common:WindowSettings.Save="True">
     <dxb:BarManager>
@@ -25,9 +25,9 @@
                                    GlyphSize="Small" Command="{Binding DeleteRejectionReasonCommand}"/>
             </dxb:Bar>
         </dxb:BarManager.Bars>
-        <dxg:GridControl ItemsSource="{Binding RejectionReasons}">
+        <dxg:GridControl ItemsSource="{Binding RejectionReasons}" SelectedItem="{Binding SelectedRejectionReason}">
             <dxg:GridControl.Columns>
-                <dxg:GridColumn FieldName="C1CRejectionReasonID" Header="Дефект">
+                <dxg:GridColumn FieldName="RejectionReasonID" Header="Дефект" x:Name="RejectionReasonId">
                     <dxg:GridColumn.EditSettings>
                         <dxe:ComboBoxEditSettings ItemsSource="{Binding RejectionReasonsList}" DisplayMember="Description" ValueMember="RejectionReasonID"/>
                     </dxg:GridColumn.EditSettings>

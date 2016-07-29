@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Models;
@@ -18,7 +19,7 @@ namespace Gamma
 
     public class BaseReconnectedMessage { }
     public class OpenFilterDateMessage { }
- 
+
     public class PrintReportMessage
     {
         public Guid ReportID { get; set; } // id отчета
@@ -27,17 +28,13 @@ namespace Gamma
 
     public class EditRejectionReasonsMessage
     {
-        public EditRejectionReasonsMessage(List<DocBrokeProductRejectionReasons> rejectionReasons, Guid docId,
-            Guid productId)
+        public EditRejectionReasonsMessage(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
         {
             RejectionReasons = rejectionReasons;
-            DocId = docId;
-            ProductId = productId;
+           
         }
         
-        public List<DocBrokeProductRejectionReasons> RejectionReasons { get; set; }
-        public Guid DocId { get; set; }
-        public Guid ProductId { get; set; }
+        public ItemsChangeObservableCollection<RejectionReason> RejectionReasons { get; set; }
     }
 
     public class OpenDocBrokeMessage
@@ -248,10 +245,11 @@ namespace Gamma
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureIds));
         }
 
-        public static void EditRejectionReasons(List<DocBrokeProductRejectionReasons> rejectionReasons, Guid docId,
-            Guid productId)
+
+
+        public static void EditRejectionReasons(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
         {
-            Messenger.Default.Send(new EditRejectionReasonsMessage(rejectionReasons, docId, productId));
+            Messenger.Default.Send(new EditRejectionReasonsMessage(rejectionReasons));
         }
 
         public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchID, DateTime dateBegin)
