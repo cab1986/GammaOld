@@ -46,12 +46,12 @@ namespace Gamma.ViewModels
 
         public DocProductGroupPackViewModel(Guid docID) : this()
         {
-            var doc = GammaBase.Docs.Include(d => d.DocProducts).First(d => d.DocID == docID);
+            var doc = GammaBase.Docs.Include(d => d.DocProduction.DocProductionProducts).First(d => d.DocID == docID);
             IsConfirmed = doc.IsConfirmed;
             IsNewGroupPack = false;
-            if (doc.DocProducts.Count > 0)
+            if (doc.DocProduction.DocProductionProducts.Count > 0)
             {
-                ProductId = doc.DocProducts.Select(d => d.ProductID).First();
+                ProductId = doc.DocProduction.DocProductionProducts.Select(d => d.ProductID).First();
                 var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
                 Weight = Convert.ToInt32(productGroupPack?.Weight ?? 0);
                 GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight ?? 0);
@@ -300,23 +300,23 @@ namespace Gamma.ViewModels
                 doc.DocProduction = new DocProduction()
                 {
                     DocID = doc.DocID,
-                    InPlaceID = doc.PlaceID
+                    InPlaceID = doc.PlaceID,
+                    DocProductionProducts = new List<DocProductionProducts>()
                 };
-            var product = GammaBase.Products.Include(p => p.ProductGroupPacks).FirstOrDefault(p => p.DocProducts.FirstOrDefault().DocID == itemID);
+            var product = GammaBase.Products.Include(p => p.ProductGroupPacks).FirstOrDefault(p => p.DocProductionProducts.FirstOrDefault().DocID == itemID);
             if (product == null)
             {
-                var productid = SqlGuidUtil.NewSequentialid();
+                var productId = SqlGuidUtil.NewSequentialid();
                 product = new Products()
                 {
-                    ProductID = productid,
+                    ProductID = productId,
                     ProductKindID = (byte)ProductKinds.ProductGroupPack,
                     ProductGroupPacks = new ProductGroupPacks()
                 };
-                doc.DocProducts.Add(new DocProducts()
+                doc.DocProduction.DocProductionProducts.Add(new DocProductionProducts()
                 {
                     Products = product,
-                    DocID = doc.DocID,
-                    IsInConfirmed = doc.IsConfirmed
+                    DocID = doc.DocID
                 });
 //                GammaBase.Products.Add(product);
             }
@@ -345,7 +345,7 @@ namespace Gamma.ViewModels
             {
                 var docWithdrawalId = doc.DocProduction.DocWithdrawal.FirstOrDefault().DocID;
                 docWithdrawal = GammaBase.Docs.Include(d => d.DocWithdrawal)
-                    .Include(d => d.DocProducts).First(d => d.DocID == docWithdrawalId);
+                    .Include(d => d.DocWithdrawal.DocWithdrawalProducts).First(d => d.DocID == docWithdrawalId);
             }
             else 
             {
@@ -364,16 +364,15 @@ namespace Gamma.ViewModels
                     OutPlaceID = docWithdrawal.PlaceID,
                     DocProduction = docProductions
                 };
-                docWithdrawal.DocProducts = new ObservableCollection<DocProducts>();
+                docWithdrawal.DocWithdrawal.DocWithdrawalProducts = new ObservableCollection<DocWithdrawalProducts>();
                 GammaBase.Docs.Add(docWithdrawal);
             }
-            docWithdrawal.DocProducts.Clear();
+            docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Clear();
             foreach (var spool in Spools)
                 {
-                    docWithdrawal.DocProducts.Add(new DocProducts()
+                    docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Add(new DocWithdrawalProducts()
                     {
                         DocID = docWithdrawal.DocID,
-                        IsInConfirmed = doc.IsConfirmed,
                         ProductID = spool.ProductID
                     });
                 }

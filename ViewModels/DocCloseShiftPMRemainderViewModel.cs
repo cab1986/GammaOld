@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class DocCloseShiftPMRemainderViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess
+    public sealed class DocCloseShiftPMRemainderViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess
     {
         /// <summary>
         /// Initializes a new instance of the DocCloseShiftPMRemainderViewModel class.
@@ -21,17 +21,24 @@ namespace Gamma.ViewModels
         public DocCloseShiftPMRemainderViewModel(GammaEntities gammaBase = null)
         {
             GammaBase = gammaBase ?? DB.GammaDb;
-            var productSpool = (from d in GammaBase.Docs
+            var productSpool =
+                GammaBase.ProductSpools.FirstOrDefault(
+                    ps =>
+                        ps.Products.DocProductionProducts.FirstOrDefault().DocProduction.Docs.PlaceID ==
+                        WorkSession.PlaceID &&
+                        ps.Products.DocProductionProducts.FirstOrDefault().DocProduction.Docs.ShiftID ==
+                        WorkSession.ShiftID);
+/*                
+                (from d in GammaBase.Docs
                                 where d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID
                                 join dp in GammaBase.DocProducts on d.DocID equals dp.DocID
                                 join ps in GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
                                 orderby d.Date descending
                                 select ps).FirstOrDefault();
-            if (productSpool != null)
-            {
-                NomenclatureID = productSpool.C1CNomenclatureID;
-                CharacteristicID = productSpool.C1CCharacteristicID;
-            }
+                                */
+            if (productSpool == null) return;
+            NomenclatureID = productSpool.C1CNomenclatureID;
+            CharacteristicID = productSpool.C1CCharacteristicID;
         }
 
         public DocCloseShiftPMRemainderViewModel(Guid docID, GammaEntities gammaBase = null)
@@ -85,9 +92,9 @@ namespace Gamma.ViewModels
                 };
                 gammaBase.Products.Add(product);
                 var docID = SqlGuidUtil.NewSequentialid();
-                var docProducts = new ObservableCollection<DocProducts>
+                var docProductionProducts = new ObservableCollection<DocProductionProducts>
                 {
-                    new DocProducts()
+                    new DocProductionProducts()
                     {
                         DocID = docID,
                         ProductID = productid
@@ -102,9 +109,9 @@ namespace Gamma.ViewModels
                     DocProduction = new DocProduction()
                     {
                         DocID = docID,
-                        InPlaceID = doc.PlaceID
-                    },
-                    DocProducts = docProducts
+                        InPlaceID = doc.PlaceID,
+                        DocProductionProducts = docProductionProducts
+                    }
                 };
                 gammaBase.Docs.Add(docProduction);
                 DocCloseShiftRemainder = new DocCloseShiftRemainders()

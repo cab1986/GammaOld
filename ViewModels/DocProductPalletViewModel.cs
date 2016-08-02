@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
         public DocProductPalletViewModel(Guid docId, GammaEntities gammaBase = null) : this()
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            var productId = gammaBase.DocProducts.Where(d => d.DocID == docId).Select(d => d.ProductID).First();
+            var productId = gammaBase.DocProductionProducts.Where(d => d.DocID == docId).Select(d => d.ProductID).First();
             PalletItems = new ObservableCollection<ProductPalletItem>(
                 from palItems in gammaBase.ProductPalletItems
                 where palItems.ProductID == productId
@@ -77,7 +77,7 @@ namespace Gamma.ViewModels
                 gammaBase.Products.Include(p => p.ProductPallets)
                     .Include(
                         p =>
-                            p.ProductPallets.ProductPalletItems).First(p => gammaBase.DocProducts.Where(d => d.DocID == itemID)
+                            p.ProductPallets.ProductPalletItems).First(p => gammaBase.DocProductionProducts.Where(d => d.DocID == itemID)
                                 .Select(d => d.ProductID)
                                 .Contains(p.ProductID));
             if (product == null)
@@ -91,13 +91,12 @@ namespace Gamma.ViewModels
                         ProductID = productId,
                         ProductPalletItems = new List<ProductPalletItems>()
                     },
-                    DocProducts = new List<DocProducts>
+                    DocProductionProducts = new List<DocProductionProducts>
                     {
-                        new DocProducts
+                        new DocProductionProducts
                         {
                             DocID = itemID,
-                            ProductID = productId,
-                            IsInConfirmed = true
+                            ProductID = productId
                         }
                     }
                 };

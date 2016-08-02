@@ -41,8 +41,8 @@ namespace Gamma.Models
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserPrintNames> UserPrintNames { get; set; }
+        public virtual PostTypes PostTypes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Places> Places { get; set; }
-        public virtual PostTypes PostTypes { get; set; }
     }
 }

@@ -21,8 +21,8 @@ namespace Gamma.Models
         public Nullable<decimal> GrossWeight { get; set; }
         public Nullable<short> Diameter { get; set; }
     
-        public virtual Products Products { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

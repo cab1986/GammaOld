@@ -49,14 +49,14 @@ namespace Gamma.ViewModels
             else // Получение данных по id документа
             {
                 IsConfirmed = GammaBase.Docs.Where(d => d.DocID == docID).Select(d => d.IsConfirmed).FirstOrDefault();
-                SourceSpools = GammaBase.DocProducts.Where(dp => dp.Docs.DocWithdrawal.DocProduction.
+                SourceSpools = GammaBase.DocWithdrawalProducts.Where(dp => dp.DocWithdrawal.DocProduction.
                     Any(dprod => dprod.DocID == docID)).Select(dp => dp.ProductID).ToList();             
-                DocProducts = new ObservableCollection<DocProducts>
-                (GammaBase.DocProducts.Include(d => d.Products).Include(d => d.Products.ProductSpools)
+                DocProductionProducts = new ObservableCollection<DocProductionProducts>
+                (GammaBase.DocProductionProducts.Include(d => d.Products).Include(d => d.Products.ProductSpools)
                 .Include(d => d.Products.ProductSpools.C1CNomenclature)
                 .Include(d => d.Products.ProductSpools.C1CCharacteristics).Where(dp => dp.DocID == docID));
-                Products = new ObservableCollection<Products>(DocProducts.Select(dp => dp.Products));
-                UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProducts
+                Products = new ObservableCollection<Products>(DocProductionProducts.Select(dp => dp.Products));
+                UnloadSpools = new ObservableCollection<PaperBase>(from dp in DocProductionProducts
                                                                    select new PaperBase
                                                          {
                                                              BreakNumber = dp.Products.ProductSpools.BreakNumber,
@@ -70,7 +70,7 @@ namespace Gamma.ViewModels
                                                          }
                                     );
                 ProductSpools = new ObservableCollection<ProductSpools>
-                (DocProducts.Select(dp => dp.Products.ProductSpools));
+                (DocProductionProducts.Select(dp => dp.Products.ProductSpools));
                 if (UnloadSpools.Count > 0)
                 {
                     Diameter = UnloadSpools[0].Diameter;
@@ -178,11 +178,11 @@ namespace Gamma.ViewModels
             base.SaveToModel(itemID, gammaBase);
             if (UnloadSpoolsSaved) return;
             var doc = GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemID);
-            foreach (var spoolid in SourceSpools)
+            foreach (var spoolId in SourceSpools)
             {
                 var docWithdrawal = GammaBase.Docs.FirstOrDefault(d => d.DocTypeID == (byte) DocTypes.DocWithdrawal &&
-                                                                 d.DocProducts.Select(dp => dp.ProductID)
-                                                                     .Contains(spoolid));
+                                                                 d.DocWithdrawal.DocWithdrawalProducts.Select(dp => dp.ProductID)
+                                                                     .Contains(spoolId));
                 if (docWithdrawal == null)
                 {
                     var docID = SqlGuidUtil.NewSequentialid();
@@ -195,15 +195,18 @@ namespace Gamma.ViewModels
                         DocTypeID = (byte)DocTypes.DocWithdrawal,
                         IsConfirmed = true,
                         UserID = WorkSession.UserID,
-                        DocProducts = new List<DocProducts>(new[] {new DocProducts()
-                    {
-                        DocID = docID,
-                        ProductID = spoolid
-                    }}),
                         DocWithdrawal = new DocWithdrawal()
                         {
                             DocID = docID,
                             OutPlaceID = WorkSession.PlaceID,
+                            DocWithdrawalProducts = new List<DocWithdrawalProducts>
+                            {
+                                new DocWithdrawalProducts
+                                {
+                                    DocID = docID,
+                                    ProductID = spoolId
+                                }
+                            }
                         }
                     };
                     GammaBase.Docs.Add(docWithdrawal);
@@ -213,7 +216,7 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
             UnloadSpoolsSaved = true;
         }
-        private ObservableCollection<DocProducts> DocProducts { get; set; }
+        private ObservableCollection<DocProductionProducts> DocProductionProducts { get; set; }
         private Guid ProductionTaskID { get; set; }
         private ObservableCollection<Products> Products { get; set; }
         private ObservableCollection<ProductSpools> ProductSpools { get; set; }

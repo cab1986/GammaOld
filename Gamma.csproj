@@ -172,43 +172,6 @@
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
-    <Compile Include="Models\Cutting.cs" />
-    <Compile Include="Common\GridControlWithState.cs" />
-    <Compile Include="Common\ItemsChangeObservableCollection.cs" />
-    <Compile Include="Models\Nomenclature.cs" />
-    <Compile Include="Models\Nomenclature1C.cs" />
-    <Compile Include="Models\Nomenclature1CFolder.cs" />
-    <Compile Include="Models\Pallet.cs" />
-    <Compile Include="Models\ProductRelation.cs" />
-    <Compile Include="Common\RequiredCollectionAttribute.cs" />
-    <Compile Include="Models\SpoolRemainder.cs" />
-    <Compile Include="Common\UIServices.cs" />
-    <Compile Include="Common\ViewsManager.cs" />
-    <Compile Include="Common\WindowSettings.cs" />
-    <Compile Include="Models\WithdrawalMaterial.cs" />
-    <Compile Include="Converters\ElementEmptyConverter.cs" />
-    <Compile Include="DB.cs" />
-    <Compile Include="Dialogs\ChangeSpoolDialog.xaml.cs">
-      <DependentUpon>ChangeSpoolDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\ChoosePrintNameDialog.xaml.cs">
-      <DependentUpon>ChoosePrintNameDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\FilterDateReportDialog.xaml.cs">
-      <DependentUpon>FilterDateReportDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Enums.cs" />
-    <Compile Include="DocCloseShift.cs" />
-    <Compile Include="Functions.cs" />
-    <Compile Include="GammaSettings.cs" />
-    <Compile Include="GridControlWithBands.cs" />
-    <Compile Include="Interfaces\IBarImplemented.cs" />
-    <Compile Include="Interfaces\ICheckedAccess.cs" />
-    <Compile Include="Interfaces\IFillClearGrid.cs" />
-    <Compile Include="Interfaces\IItemManager.cs" />
-    <Compile Include="Interfaces\IProductionTask.cs" />
-    <Compile Include="Interfaces\IProductionTaskBatch.cs" />
-    <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
     <Compile Include="Models\Branches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -287,6 +250,9 @@
     <Compile Include="Models\CreateUnloadSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Cutting.cs" />
+    <Compile Include="Common\GridControlWithState.cs" />
+    <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Models\Departments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -344,6 +310,9 @@
     <Compile Include="Models\DocWithdrawalMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocWithdrawalProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Enterprises.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -359,22 +328,6 @@
     <Compile Include="Models\FindProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GammaModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GammaModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GammaModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GammaModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GammaModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GammaModelManualConstructor.cs" />
     <Compile Include="Models\GammaProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -444,6 +397,10 @@
     <Compile Include="Models\MaterialTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Nomenclature.cs" />
+    <Compile Include="Models\Nomenclature1C.cs" />
+    <Compile Include="Models\Nomenclature1CFolder.cs" />
+    <Compile Include="Models\Pallet.cs" />
     <Compile Include="Models\Permits.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -495,6 +452,8 @@
     <Compile Include="Models\ProductPallets.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProductRelation.cs" />
+    <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Models\ProductRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -525,6 +484,10 @@
     <Compile Include="Models\SpoolInstallLog.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SpoolRemainder.cs" />
+    <Compile Include="Common\UIServices.cs" />
+    <Compile Include="Common\ViewsManager.cs" />
+    <Compile Include="Common\WindowSettings.cs" />
     <Compile Include="Models\Templates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -549,6 +512,46 @@
     <Compile Include="Models\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\WithdrawalMaterial.cs" />
+    <Compile Include="Converters\ElementEmptyConverter.cs" />
+    <Compile Include="DB.cs" />
+    <Compile Include="Dialogs\ChangeSpoolDialog.xaml.cs">
+      <DependentUpon>ChangeSpoolDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ChoosePrintNameDialog.xaml.cs">
+      <DependentUpon>ChoosePrintNameDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FilterDateReportDialog.xaml.cs">
+      <DependentUpon>FilterDateReportDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Enums.cs" />
+    <Compile Include="DocCloseShift.cs" />
+    <Compile Include="Functions.cs" />
+    <Compile Include="GammaSettings.cs" />
+    <Compile Include="GridControlWithBands.cs" />
+    <Compile Include="Interfaces\IBarImplemented.cs" />
+    <Compile Include="Interfaces\ICheckedAccess.cs" />
+    <Compile Include="Interfaces\IFillClearGrid.cs" />
+    <Compile Include="Interfaces\IItemManager.cs" />
+    <Compile Include="Interfaces\IProductionTask.cs" />
+    <Compile Include="Interfaces\IProductionTaskBatch.cs" />
+    <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
+    <Compile Include="Models\GammaModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GammaModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GammaModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GammaModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GammaModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GammaModelManualConstructor.cs" />
     <Compile Include="MVVMWindow.cs" />
     <Compile Include="Place.cs" />
     <Compile Include="ProductInfo.cs" />
@@ -565,6 +568,7 @@
     <Compile Include="Models\BrokeDecisionProduct.cs" />
     <Compile Include="Models\BrokeProduct.cs" />
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
@@ -613,6 +617,9 @@
     <Compile Include="ViewModels\WarehousePersonsViewModel.cs" />
     <Compile Include="Views\ComPortSettingsView.xaml.cs">
       <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocBrokeListView.xaml.cs">
+      <DependentUpon>DocBrokeListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
@@ -761,6 +768,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ComPortSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocBrokeListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

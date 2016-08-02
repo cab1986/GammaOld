@@ -70,18 +70,6 @@
                         </dxe:ListBoxEdit.StyleSettings>
                     </dxe:ListBoxEdit>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Качество" LabelPosition="Top" Width="150">
-                    <dxe:ListBoxEdit ItemsSource="{Binding States, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValue="{Binding StateID}" ValueMember="Key" DisplayMember="Value" >
-                        <dxe:ListBoxEdit.StyleSettings>
-                            <dxe:RadioListBoxEditStyleSettings HighlightedTextBackground="Yellow" HighlightedFontFamily="{x:Null}" HighlightedFontStyle="{x:Null}" HighlightedFontSize="{x:Null}" HighlightedTextForeground="Black" HighlightedFontWeight="{x:Null}"/>
-                        </dxe:ListBoxEdit.StyleSettings>
-                    </dxe:ListBoxEdit>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Причина" LabelPosition="Top">
-                    <dxe:ComboBoxEdit ItemsSource="{Binding RejectionReasons, UpdateSourceTrigger=LostFocus}" EditValue="{Binding RejectionReasonID}" 
-                                      ValueMember="RejectionReasonID" DisplayMember="Description" 
-                                      FindMode="Always" AutoComplete="True" ImmediatePopup="True" IncrementalFiltering="True" AllowNullInput="True" AssignNullValueOnClearingEditText="True" ClearSelectionOnBackspace="True"/>
-                </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <Button Grid.Row="1" HorizontalAlignment="Right" Content="Создать упаковку" Command="{Binding CreateGroupPackCommand}" 

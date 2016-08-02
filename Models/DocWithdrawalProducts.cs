@@ -12,17 +12,14 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DocProductionProducts
+    public partial class DocWithdrawalProducts
     {
         public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }
-        public decimal Quantity { get; set; }
-        public System.Guid C1CNomenclatureID { get; set; }
-        public System.Guid C1CCharacteristicID { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
+        public Nullable<bool> CompleteWithdrawal { get; set; }
     
-        public virtual DocProduction DocProduction { get; set; }
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
+        public virtual DocWithdrawal DocWithdrawal { get; set; }
         public virtual Products Products { get; set; }
     }
 }

@@ -266,3 +266,5 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeListView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeListView.baml

@@ -56,15 +56,14 @@ namespace Gamma.ViewModels
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID &&
                     d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
-                    (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)
-                    && d.DocProducts.Count > 0).Select(d => d).OrderByDescending(d => d.Date));
+                    (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).OrderByDescending(d => d.Date));
             foreach (var doc in DocCloseShiftDocs)
             {
                 if (doc.DocTypeID == (byte)DocTypes.DocProduction)
                 {
 
                     GroupPacks.Add(
-                        (from d in GammaBase.DocProducts
+                        (from d in GammaBase.DocProductionProducts
                          join ps in GammaBase.ProductGroupPacks on d.ProductID equals ps.ProductID
                          where d.DocID == doc.DocID
                          select new PaperBase
@@ -74,7 +73,7 @@ namespace Gamma.ViewModels
                              DocID = doc.DocID,
                              NomenclatureID = (Guid)ps.C1CNomenclatureID,
                              Nomenclature = string.Concat(ps.C1CNomenclature.Name, " ", ps.C1CCharacteristics.Name),
-                             Number = d.Docs.Number,
+                             Number = d.DocProduction.Docs.Number,
                              ProductID = d.ProductID,
                              Weight = ps.Weight ?? 0
                          }).FirstOrDefault()

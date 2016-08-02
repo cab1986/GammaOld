@@ -147,19 +147,19 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.Wr:
-                    var lastGroupPack = GammaBase.Docs.Include(d => d.DocProducts)
+                    var lastGroupPack = GammaBase.Docs.Include(d => d.DocProduction.DocProductionProducts)
                         .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
                     if (lastGroupPack != null)
                         GammaBase.Entry(lastGroupPack).Reload();
-                    if (lastGroupPack != null && !lastGroupPack.IsConfirmed && lastGroupPack.DocProducts.Count > 0)
+                    if (lastGroupPack != null && !lastGroupPack.IsConfirmed && lastGroupPack.DocProduction.DocProductionProducts.Count > 0)
                     {
-                        var docProduct = lastGroupPack.DocProducts.FirstOrDefault();
-                        if (docProduct != null)
+                        var docProductionProduct = lastGroupPack.DocProduction.DocProductionProducts.FirstOrDefault();
+                        if (docProductionProduct != null)
                         {
                             MessageBox.Show("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", MessageBoxButton.OK, MessageBoxImage.Information);
-                            MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, docProduct.ProductID);
+                            MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, docProductionProduct.ProductID);
                         }
                     }
                     else MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);

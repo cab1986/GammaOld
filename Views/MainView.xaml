@@ -21,6 +21,9 @@
     d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
     common:WindowSettings.Save="True">
     <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DocBrokeListViewModel}">
+            <views:DocBrokeListView />
+        </DataTemplate>
        <DataTemplate DataType="{x:Type vm:ProductionTasksSGBViewModel}">
             <views:ProductionTasksSGBView />
         </DataTemplate>
@@ -65,6 +68,7 @@
                                 </DataTemplate>
                             </dxb:BarSubItem.ItemTemplate>
                         </dxb:BarSubItem>
+                        <dxb:BarButtonItem Content="Акты о браке" Command="{Binding OpenDocBrokeListCommand}"/>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Производство" ItemLinksSource="{Binding PlaceProducts}">
                         <dxb:BarSubItem.ItemTemplate>

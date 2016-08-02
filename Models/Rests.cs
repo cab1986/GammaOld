@@ -20,7 +20,7 @@ namespace Gamma.Models
         public Nullable<int> PlaceZoneID { get; set; }
         public Nullable<int> PlaceZoneCellID { get; set; }
     
-        public virtual Products Products { get; set; }
         public virtual Places Places { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

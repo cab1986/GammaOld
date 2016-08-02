@@ -69,7 +69,7 @@ namespace Gamma.ViewModels
             foreach (var doc in DocCloseShiftDocs.Where(doc => doc.DocTypeID == (byte)DocTypes.DocProduction))
             {
                 Spools.Add(
-                    (from d in GammaBase.DocProducts 
+                    (from d in GammaBase.DocProductionProducts 
                         join ps in GammaBase.ProductSpools on d.ProductID equals ps.ProductID
                         where d.DocID == doc.DocID
                         select new PaperBase 
@@ -77,7 +77,7 @@ namespace Gamma.ViewModels
                             CharacteristicID = (Guid)ps.C1CCharacteristicID,
                             NomenclatureID = ps.C1CNomenclatureID,
                             Nomenclature = string.Concat(ps.C1CNomenclature.Name," ",ps.C1CCharacteristics.Name),
-                            Number = d.Docs.Number,
+                            Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
                             Weight = ps.DecimalWeight
                         }).FirstOrDefault()

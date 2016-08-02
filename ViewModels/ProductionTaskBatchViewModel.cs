@@ -90,33 +90,33 @@ namespace Gamma.ViewModels
         private void BarcodeReceived(BarcodeMessage msg)
         {
             if (!IsActive) return;
-            var docProducts = GammaBase.DocProducts.Include(dp => dp.Docs).Include(dp => dp.Products)
+            var docProductionProducts = GammaBase.DocProductionProducts.Include(dp => dp.DocProduction.Docs).Include(dp => dp.Products)
                 .FirstOrDefault(
-                    dp => dp.Docs.DocTypeID == (short) DocTypes.DocProduction && dp.Products.BarCode == msg.Barcode);
-            if (docProducts == null) return;
-            GammaBase.Entry(docProducts).Reload();
-            docProducts.IsInConfirmed = true;
-            docProducts.Docs.IsConfirmed = true;
+                    dp => dp.Products.BarCode == msg.Barcode);
+            if (docProductionProducts == null) return;
+            GammaBase.Entry(docProductionProducts).Reload();
+//            docProductionProducts.IsInConfirmed = true;
+            //docProductionProducts.Docs.IsConfirmed = true;
             string message;
-            switch (docProducts.Products.ProductKindID)
+            switch (docProductionProducts.Products.ProductKindID)
             {
                 case (byte)ProductKinds.ProductSpool:
-                    message = $"Тамбур №{docProducts.Products.Number} подтвержден";
+                    message = $"Тамбур №{docProductionProducts.Products.Number} подтвержден";
                     break;
                 case (byte)ProductKinds.ProductPallet:
-                    message = $"Паллета №{docProducts.Products.Number} подтверждена";
+                    message = $"Паллета №{docProductionProducts.Products.Number} подтверждена";
                     break;
                 case (byte)ProductKinds.ProductGroupPack:
-                    message = $"Групповая упаковка №{docProducts.Products.Number} подтверждена";
+                    message = $"Групповая упаковка №{docProductionProducts.Products.Number} подтверждена";
                     break;
                 default:
-                    message = $"Продукт №{docProducts.Products.Number} подтвержден";
+                    message = $"Продукт №{docProductionProducts.Products.Number} подтвержден";
                     break;
             }
             GammaBase.SaveChanges();
             MessageBox.Show(message, "Подтверждение", MessageBoxButton.OK, MessageBoxImage.Information);
             var productionTaskProduct =
-                ProductionTaskProducts.FirstOrDefault(ptp => ptp.ProductID == docProducts.ProductID);
+                ProductionTaskProducts.FirstOrDefault(ptp => ptp.ProductID == docProductionProducts.ProductID);
             if (productionTaskProduct != null) productionTaskProduct.IsConfirmed = true;
             var view = CurrentView as ProductionTaskSGIViewModel;
             if (view != null)
@@ -360,7 +360,7 @@ namespace Gamma.ViewModels
                                         docProduction.UserID = WorkSession.UserID;
                                         docProduction.PrintName = WorkSession.PrintName;
                                         docProduction.DocProduction.ProductionTaskID = productionTaskID;
-                                        productId = gammaBase.DocProducts.Where(d => d.DocID == docProduction.DocID)
+                                        productId = gammaBase.DocProductionProducts.Where(d => d.DocID == docProduction.DocID)
                                             .Select(d => d.ProductID)
                                             .First();
                                         var productSpool =
@@ -378,16 +378,10 @@ namespace Gamma.ViewModels
                                         MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
                                 }
-
-                                /*var notConfirmedDoc = DB.GammaBase.Docs.Where(d => d.PlaceID == WorkSession.PlaceID &&
-                                    d.ShiftID == WorkSession.ShiftID && d.DocProducts.FirstOrDefault() != null
-                                    && d.DocTypeID == (byte)DocTypes.DocProduction).
-                                    OrderByDescending(d => d.Date).Take(1).FirstOrDefault();
-                                 * */
                                 //если предыдущий тамбур этой смены и не подтвержден, то открываем для редактирования
                                 if (docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                                 {
-                                    var firstOrDefault = gammaBase.DocProducts.FirstOrDefault(d => d.DocID == docProduction.DocID);
+                                    var firstOrDefault = gammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == docProduction.DocID);
                                      if (firstOrDefault !=
                                             null)
                                             productId =
@@ -478,24 +472,24 @@ namespace Gamma.ViewModels
                                 {
                                     DocID = docID,
                                     InPlaceID = WorkSession.PlaceID,
-                                    ProductionTaskID = productionTask.ProductionTaskID
-                                },
-                                DocProducts = new List<DocProducts>
-                                {
-                                    new DocProducts
+                                    ProductionTaskID = productionTask.ProductionTaskID,
+                                    DocProductionProducts = new List<DocProductionProducts>
                                     {
-                                        DocID = docID,
-                                        ProductID = productId
+                                        new DocProductionProducts
+                                        {
+                                            DocID = docID,
+                                            ProductID = productId
+                                        }
                                     }
                                 }
                             };
                             gammaBase.Docs.Add(doc);
                             var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
-                            foreach (var spoolId in sourceSpools)
+                            foreach (var spoolId in sourceSpools.Where(s => s != null))
                             {
                                 var docWithdrawal =
                                     gammaBase.DocWithdrawal
-                                        .FirstOrDefault(d => d.Docs.DocProducts.Select(dp => dp.ProductID).Contains((Guid)spoolId));
+                                        .FirstOrDefault(d => d.Docs.DocWithdrawal.DocWithdrawalProducts.Select(dp => dp.ProductID).Contains((Guid)spoolId));
                                 if (docWithdrawal == null)
                                 {
                                     var docWithdrawalid = SqlGuidUtil.NewSequentialid();
@@ -512,15 +506,14 @@ namespace Gamma.ViewModels
                                             UserID = WorkSession.UserID,
                                             ShiftID = WorkSession.ShiftID,
                                             PrintName = WorkSession.PrintName,
-                                            IsConfirmed = false,
-                                            DocProducts = new List<DocProducts>
+                                            IsConfirmed = false
+                                        },
+                                        DocWithdrawalProducts = new List<DocWithdrawalProducts>
+                                        {
+                                            new DocWithdrawalProducts
                                             {
-                                                new DocProducts
-                                                {
-                                                    DocID = docWithdrawalid,
-                                                    ProductID = (Guid)spoolId,
-                                                    IsOutConfirmed = true
-                                                }
+                                                DocID = docWithdrawalid,
+                                                ProductID = (Guid)spoolId
                                             }
                                         }
                                     };

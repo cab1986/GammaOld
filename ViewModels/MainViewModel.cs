@@ -5,7 +5,6 @@ using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Common;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using Gamma.Dialogs;
 using Gamma.Models;
 
@@ -74,7 +73,7 @@ namespace Gamma.ViewModels
                     () => DB.HaveWriteAccess("MaterialType1CNomenclature"));
                 OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
                 OpenImportOldProductsCommand = new DelegateCommand(MessageManager.OpenImportOldProducts, () => DB.HaveWriteAccess("Products"));
-            }
+                OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);}
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroups.PM:
@@ -151,6 +150,12 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             CurrentView = new DocShipmentOrdersViewModel();
+        }
+
+        private void OpenDocBrokeList()
+        {
+            UIServices.SetBusyState();
+            CurrentView = new DocBrokeListViewModel();
         }
 
         private void OpenPlaceProducts(int placeID)
@@ -300,11 +305,11 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenMaterialTypesNomenclatureCommand { get; private set; }
         public DelegateCommand OpenWarehousePersonsCommand { get; private set; }
         public DelegateCommand OpenImportOldProductsCommand { get; private set; }
+        public DelegateCommand OpenDocBrokeListCommand { get; private set; }
         public DelegateCommand<Guid> PrintReportCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public List<ReportItem> Reports { get; set; }
 
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public class PlaceProduct
         {
             public string Place { get; set; }
@@ -312,7 +317,6 @@ namespace Gamma.ViewModels
             public int PlaceID { get; set; }
         }
 
-        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
         public class ReportItem
         {
             public DelegateCommand<Guid> Command { get; set; }

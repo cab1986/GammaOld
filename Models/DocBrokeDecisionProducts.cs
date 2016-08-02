@@ -23,7 +23,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
-        public virtual Products Products { get; set; }
         public virtual ProductStates ProductStates { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

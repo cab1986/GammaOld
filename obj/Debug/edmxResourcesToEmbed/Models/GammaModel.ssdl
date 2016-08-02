@@ -521,6 +521,16 @@
     <Property Name="WithdrawByFact" Type="bit" />
     <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
   </EntityType>
+  <EntityType Name="DocWithdrawalProducts">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+    <Property Name="CompleteWithdrawal" Type="bit" />
+  </EntityType>
   <EntityType Name="Enterprises">
     <Key>
       <PropertyRef Name="EnterpriseID" />
@@ -601,6 +611,7 @@
       <PropertyRef Name="PlaceID" />
     </Key>
     <Property Name="PlaceID" Type="int" Nullable="false" />
+    <Property Name="PlaceGuid" Type="uniqueidentifier" />
     <Property Name="BranchID" Type="int" Nullable="false" />
     <Property Name="BranchUnitID" Type="int" />
     <Property Name="Name" Type="varchar" MaxLength="64" />
@@ -735,7 +746,8 @@
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Number" Type="varchar" MaxLength="20" />
     <Property Name="BarCode" Type="varchar" MaxLength="20" />
-    <Property Name="ProductKindID" Type="tinyint" />
+    <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
+    <Property Name="StateID" Type="tinyint" />
   </EntityType>
   <EntityType Name="ProductSpools">
     <Key>
@@ -1925,6 +1937,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocProductionProducts_1CCharacteristics">
+    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+    <End Role="DocProductionProducts" Type="Self.DocProductionProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CCharacteristics">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="DocProductionProducts">
+        <PropertyRef Name="1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocProductionProducts_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="DocProductionProducts" Type="Self.DocProductionProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="DocProductionProducts">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DocProductionProducts_DocProduction">
     <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="1" />
     <End Role="DocProductionProducts" Type="Self.DocProductionProducts" Multiplicity="*" />
@@ -2159,6 +2195,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocWithdrawalProducts_DocWithdrawal">
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
+    <End Role="DocWithdrawalProducts" Type="Self.DocWithdrawalProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocWithdrawal">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocWithdrawalProducts">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocWithdrawalProducts_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="DocWithdrawalProducts" Type="Self.DocWithdrawalProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="DocWithdrawalProducts">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_MaterialTypeNomenclature_1CNomenclature">
     <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
     <End Role="MaterialTypeNomenclature" Type="Self.MaterialTypeNomenclature" Multiplicity="*" />
@@ -2218,6 +2278,18 @@
       </Principal>
       <Dependent Role="PlaceGroup1CNomenclature">
         <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Places_1CPlaces">
+    <End Role="1CPlaces" Type="Self.1CPlaces" Multiplicity="0..1" />
+    <End Role="Places" Type="Self.Places" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CPlaces">
+        <PropertyRef Name="1CPlaceID" />
+      </Principal>
+      <Dependent Role="Places">
+        <PropertyRef Name="1CPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2480,7 +2552,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Products_ProductKinds">
-    <End Role="ProductKinds" Type="Self.ProductKinds" Multiplicity="0..1" />
+    <End Role="ProductKinds" Type="Self.ProductKinds" Multiplicity="1" />
     <End Role="Products" Type="Self.Products" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductKinds">
@@ -2488,6 +2560,18 @@
       </Principal>
       <Dependent Role="Products">
         <PropertyRef Name="ProductKindID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Products_ProductStates">
+    <End Role="ProductStates" Type="Self.ProductStates" Multiplicity="0..1" />
+    <End Role="Products" Type="Self.Products" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductStates">
+        <PropertyRef Name="StateID" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="StateID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3003,6 +3087,7 @@
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocWithdrawalProducts" EntityType="Self.DocWithdrawalProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Enterprises" EntityType="Self.Enterprises" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GammaProperties" EntityType="Self.GammaProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MaterialTypeNomenclature" EntityType="Self.MaterialTypeNomenclature" Schema="dbo" store:Type="Tables" />
@@ -3431,6 +3516,14 @@
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="DocProduction" EntitySet="DocProduction" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocProductionProducts_1CCharacteristics" Association="Self.FK_DocProductionProducts_1CCharacteristics">
+      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+      <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocProductionProducts_1CNomenclature" Association="Self.FK_DocProductionProducts_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
+    </AssociationSet>
     <AssociationSet Name="FK_DocProductionProducts_DocProduction" Association="Self.FK_DocProductionProducts_DocProduction">
       <End Role="DocProduction" EntitySet="DocProduction" />
       <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
@@ -3507,6 +3600,14 @@
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawalMaterials" EntitySet="DocWithdrawalMaterials" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawalProducts_DocWithdrawal" Association="Self.FK_DocWithdrawalProducts_DocWithdrawal">
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+      <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocWithdrawalProducts_Products" Association="Self.FK_DocWithdrawalProducts_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
+    </AssociationSet>
     <AssociationSet Name="FK_MaterialTypeNomenclature_1CNomenclature" Association="Self.FK_MaterialTypeNomenclature_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="MaterialTypeNomenclature" EntitySet="MaterialTypeNomenclature" />
@@ -3526,6 +3627,10 @@
     <AssociationSet Name="FK_PlaceGroup1CNomenclature_PlaceGroups" Association="Self.FK_PlaceGroup1CNomenclature_PlaceGroups">
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Places_1CPlaces" Association="Self.FK_Places_1CPlaces">
+      <End Role="1CPlaces" EntitySet="1CPlaces" />
+      <End Role="Places" EntitySet="Places" />
     </AssociationSet>
     <AssociationSet Name="FK_Places_Branches" Association="Self.FK_Places_Branches">
       <End Role="Branches" EntitySet="Branches" />
@@ -3613,6 +3718,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_Products_ProductKinds" Association="Self.FK_Products_ProductKinds">
       <End Role="ProductKinds" EntitySet="ProductKinds" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Products_ProductStates" Association="Self.FK_Products_ProductStates">
+      <End Role="ProductStates" EntitySet="ProductStates" />
       <End Role="Products" EntitySet="Products" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductSpools_1CCharacteristics" Association="Self.FK_ProductSpools_1CCharacteristics">

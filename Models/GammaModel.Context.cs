@@ -44,7 +44,6 @@ namespace Gamma.Models
         public virtual DbSet<DocChangeStateProducts> DocChangeStateProducts { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DbSet<DocProduction> DocProduction { get; set; }
-        public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<DocTypes> DocTypes { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
@@ -57,9 +56,7 @@ namespace Gamma.Models
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
-        public virtual DbSet<ProductKinds> ProductKinds { get; set; }
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
-        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductStates> ProductStates { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
@@ -76,9 +73,7 @@ namespace Gamma.Models
         public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CSpecifications> C1CSpecifications { get; set; }
         public virtual DbSet<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
-        public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
@@ -106,6 +101,12 @@ namespace Gamma.Models
         public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
+        public virtual DbSet<Places> Places { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<ProductKinds> ProductKinds { get; set; }
+        public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
+        public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
+        public virtual DbSet<DocProducts> DocProducts { get; set; }
     
         public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
         {

@@ -93,7 +93,9 @@
                             <dxlc:LayoutItem Label="Подтвержден:">
                                 <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left"/>
                             </dxlc:LayoutItem>
-                            <Button Height="26" Content="Добавить в акт" Command="{Binding AddToDocBrokeCommand}"/>
+                            <Label Content="{Binding State}" Visibility="{Binding AllowAddToBrokeAction, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Button Height="26" Content="Добавить в акт" Command="{Binding AddToDocBrokeCommand}" 
+                                    Visibility="{Binding AllowAddToBrokeAction, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </dxlc:LayoutGroup>
                         <ContentControl Content="{Binding}" DataContext="{Binding CurrentViewModel}"/>
                     </dxlc:LayoutControl>

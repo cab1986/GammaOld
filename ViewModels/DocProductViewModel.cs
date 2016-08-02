@@ -48,16 +48,21 @@ namespace Gamma.ViewModels
                     return;
                 }
                 IsNewDoc = true;
+                var docId = SqlGuidUtil.NewSequentialid();
                 Doc = new Docs
                 {
-                    DocID = SqlGuidUtil.NewSequentialid(),
-                    DocTypeID = (int) DocTypes.DocProduction,
+                    DocID = docId,
+                    DocTypeID = (int)DocTypes.DocProduction,
                     IsConfirmed = false,
                     PlaceID = WorkSession.PlaceID,
                     ShiftID = WorkSession.ShiftID,
                     UserID = WorkSession.UserID,
                     Date = DB.CurrentDateTime,
-                    PrintName = WorkSession.PrintName
+                    PrintName = WorkSession.PrintName,
+                    DocProduction = new DocProduction
+                    {
+                        DocID = docId
+                    }
                 };
                 if (msg.DocProductKind != DocProductKinds.DocProductUnload)
                 {
@@ -72,9 +77,9 @@ namespace Gamma.ViewModels
                                     : (byte) ProductKinds.ProductPallet
                     };
                     GammaBase.Products.Add(product);
-                    Doc.DocProducts = new List<DocProducts>()
+                    Doc.DocProduction.DocProductionProducts = new List<DocProductionProducts>()
                     {
-                        new DocProducts
+                        new DocProductionProducts()
                         {
                             ProductID = product.ProductID,
                             DocID = Doc.DocID
@@ -105,11 +110,11 @@ namespace Gamma.ViewModels
                 else
                 {
                     Doc =
-                            GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
+                            GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProduction.DocProductionProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
                                     d.DocTypeID == (byte)DocTypes.DocProduction);
                     DocProduction = Doc.DocProduction;
                     product =
-                        GammaBase.Products
+                        GammaBase.Products.Include(p => p.ProductStates)
                             .First(p => p.ProductID == msg.ID);
                     if (product == null)
                     {
@@ -119,6 +124,7 @@ namespace Gamma.ViewModels
                     }
                     GammaBase.Entry(product).Reload();
                     GetProductRelations(product.ProductID);
+                    State = product.ProductStates?.Name ?? "Годная";
                 }
             }
             // Создаем дочернюю viewmodel в зависимости от типа изделия
@@ -128,24 +134,28 @@ namespace Gamma.ViewModels
                     Title = "Тамбур";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
+                    AllowAddToBrokeAction = true;
                     CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID);
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";
                     Number = Doc.Number;
                     Title = $"{Title} № {Number}";
+                    AllowAddToBrokeAction = false;
                     CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
                     break;
                 case DocProductKinds.DocProductGroupPack:
                     Title = "Групповая упаковка";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
+                    AllowAddToBrokeAction = true;
                     CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);                   
                     break;
                 case DocProductKinds.DocProductPallet:
                     Title = "Паллета";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
+                    AllowAddToBrokeAction = true;
                     CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
                     break;
                 default:
@@ -170,16 +180,17 @@ namespace Gamma.ViewModels
             OpenProductRelationProductCommand = new DelegateCommand(OpenProductRelationProduct, () => SelectedProduct != null);
             AddToDocBrokeCommand = new DelegateCommand(AddToDocBroke, () => IsValid);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
-            IsReadOnly = !(DB.HaveWriteAccess("DocProducts") && (!IsConfirmed || IsValid));
+            IsReadOnly = !(DB.HaveWriteAccess("DocProductionProducts") && (!IsConfirmed || IsValid));
         }
 
+        public bool AllowAddToBrokeAction { get; set; }
         public DelegateCommand AddToDocBrokeCommand { get; private set; }
 
         private void AddToDocBroke()
         {
             SaveToModel();
             if (Doc == null) return;
-            var productId = GammaBase.DocProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
+            var productId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
             if (productId == null) return;
             var docBrokeId =
                 GammaBase.Docs.FirstOrDefault(
@@ -195,6 +206,8 @@ namespace Gamma.ViewModels
             }
         }
 
+
+        public string State { get; set; }
         public string PrintName { get; set; }
         public string Place { get; set; }
         public string ShiftID { get; set; }
@@ -256,7 +269,7 @@ namespace Gamma.ViewModels
                                  where p.BarCode == msg.Barcode
                                  select p.ProductID).FirstOrDefault();
                 if (productid == new Guid()) return;
-                if (GammaBase.DocProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productid).Select(d => d).FirstOrDefault() != null)
+                if (GammaBase.DocProductionProducts.Where(d => d.DocID == Doc.DocID && d.ProductID == productid).Select(d => d).FirstOrDefault() != null)
                     IsConfirmed = false;
             }
             else

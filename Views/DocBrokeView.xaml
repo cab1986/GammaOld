@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Gamma.Views"
         xmlns:viewModels="clr-namespace:Gamma.ViewModels"
         xmlns:common="clr-namespace:Gamma.Common"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
@@ -13,6 +12,7 @@
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:gamma="clr-namespace:Gamma"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         x:Class="Gamma.Views.DocBrokeView"
         mc:Ignorable="d"
         Title="Акт о браке" Height="1000" Width="1200"
@@ -61,19 +61,22 @@
                 <RowDefinition />
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
+            <dxmvvm:Interaction.Behaviors>
+                <gamma:UIAuthBehavior />
+            </dxmvvm:Interaction.Behaviors>
             <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True" >
                 <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" Width="200">
                     <dxlc:LayoutItem Label="Номер">
-                        <dxe:TextEdit EditValue="{Binding DocNumber}" />
+                        <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Дата">
-                        <dxe:DateEdit EditValue="{Binding Date}"/>
+                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Место обнаружения" LabelPosition="Top">
-                        <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                        <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Место хранения" LabelPosition="Top">
-                        <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                        <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Подтвержден">
                         <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
@@ -97,15 +100,15 @@
                                             <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}"/>
                                         </dxg:GridControl.View>
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура"/>
-                                            <dxg:GridColumn FieldName="Number" Header="Номер"/>
-                                            <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True"/>
-                                            <dxg:GridColumn FieldName="Quantity" Header="Количество" Width="80" FixedWidth="True">
+                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="Number" Header="Номер" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="Quantity" Header="Количество" Width="80" FixedWidth="True" AllowEditing="False">
                                                 <dxg:GridColumn.EditSettings>
                                                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True"/>
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="RejectionReasonsString" Header="Несоответствия, дефекты">
+                                            <dxg:GridColumn FieldName="RejectionReasonsString" Header="Несоответствия, дефекты" AllowEditing="False">
                                                 <dxg:GridColumn.EditSettings>
                                                     <dxe:ButtonEditSettings AllowDefaultButton="False">
                                                         <dxe:ButtonEditSettings.Buttons>
@@ -114,9 +117,9 @@
                                                     </dxe:ButtonEditSettings>
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="Date" Header="Дата" Width="80" FixedWidth="True"/>
-                                            <dxg:GridColumn FieldName="Place" Header="Производственный участок" Width="100" FixedWidth="True"/>
-                                            <dxg:GridColumn FieldName="PrintName" Header="Виновник"/>
+                                            <dxg:GridColumn FieldName="Date" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="Place" Header="Производственный участок" Width="100" FixedWidth="True" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="PrintName" Header="Виновник" AllowEditing="False"/>
                                         </dxg:GridControl.Columns>
                                     </dxg:GridControl>
                                 </dxb:BarManager>
@@ -166,5 +169,6 @@
             <Button Content="Сохранить" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,90,0"/>
             <Button Content="Отмена" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,10,0" />
         </Grid>
+        
     </dxb:BarManager>
 </gamma:MvvmWindow>

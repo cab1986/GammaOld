@@ -98,10 +98,36 @@ namespace Gamma.Models
                 {
                     if (!BrokeDecisionProducts.Contains(BrokeDecisionProduct))
                         BrokeDecisionProducts.Add(BrokeDecisionProduct);
-                    BrokeDecisionProducts.Remove(BrokeDecisionProducts.FirstOrDefault(
+                    var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(
                         bp =>
                             bp.ProductId == BrokeDecisionProduct.ProductId &&
-                            bp.ProductState == Gamma.ProductStates.NeedsDecision));
+                            bp.ProductState == Gamma.ProductStates.NeedsDecision);
+                    var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
+                        .Sum(p => p.Quantity);
+                    if (sumQuantity >= BrokeDecisionProduct.MaxQuantity)
+                    {
+                        BrokeDecisionProducts.Remove(productNeedsDecision);
+                    }
+                    else
+                    {
+                        if (productNeedsDecision != null)
+                        {
+                            productNeedsDecision.Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity;
+                        }
+                        else
+                        {
+                            productNeedsDecision = new BrokeDecisionProduct
+                            {
+                                MaxQuantity = BrokeDecisionProduct.MaxQuantity,
+                                Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity,
+                                ProductId = BrokeDecisionProduct.ProductId,
+                                Number = BrokeDecisionProduct.Number,
+                                ProductState = Gamma.ProductStates.NeedsDecision,
+                                NomenclatureName = BrokeDecisionProduct.NomenclatureName
+                            };
+                            BrokeDecisionProducts.Add(productNeedsDecision);
+                        }
+                    }
 
                 }
                 else

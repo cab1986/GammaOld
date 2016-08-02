@@ -30,7 +30,7 @@ namespace Gamma.ViewModels
         {
             DocID = docId;
             ShowCreateGroupPack = WorkSession.PlaceID == 21;
-            ProductId = GammaBase.DocProducts.FirstOrDefault(d => d.DocID == docId)?.ProductID ??
+            ProductId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == docId)?.ProductID ??
                             SqlGuidUtil.NewSequentialid();
             var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == docId);
             States = new ProductStates().ToDictionary();
@@ -234,7 +234,7 @@ namespace Gamma.ViewModels
 
         public Guid? VMID { get; } = Guid.NewGuid();
 
-        private DocProducts DocProduct { get; set; }
+        private DocProductionProducts DocProductionProduct { get; set; }
         /// <summary>
         /// ID продукта, используется для печати амбалажа
         /// </summary>
@@ -250,7 +250,7 @@ namespace Gamma.ViewModels
             base.SaveToModel();
             var product =
                 GammaBase.Products.Include(p => p.ProductSpools).Include(p => p.DocProductionProducts)
-                    .FirstOrDefault(p => p.DocProducts.Select(dp => dp.DocID).Contains(itemID));
+                    .FirstOrDefault(p => p.DocProductionProducts.Select(dp => dp.DocID).Contains(itemID));
             if (product == null)
             {
                 var id = SqlGuidUtil.NewSequentialid();
