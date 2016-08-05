@@ -108,35 +108,6 @@ namespace Gamma.Models
         public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
     
-        public virtual int CreateDocChangeStateForProduct(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> quantity, Nullable<short> stateID, Nullable<System.Guid> rejectionReasonID, string printName)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            var productIDParameter = productID.HasValue ?
-                new ObjectParameter("ProductID", productID) :
-                new ObjectParameter("ProductID", typeof(System.Guid));
-    
-            var quantityParameter = quantity.HasValue ?
-                new ObjectParameter("Quantity", quantity) :
-                new ObjectParameter("Quantity", typeof(decimal));
-    
-            var stateIDParameter = stateID.HasValue ?
-                new ObjectParameter("StateID", stateID) :
-                new ObjectParameter("StateID", typeof(short));
-    
-            var rejectionReasonIDParameter = rejectionReasonID.HasValue ?
-                new ObjectParameter("RejectionReasonID", rejectionReasonID) :
-                new ObjectParameter("RejectionReasonID", typeof(System.Guid));
-    
-            var printNameParameter = printName != null ?
-                new ObjectParameter("PrintName", printName) :
-                new ObjectParameter("PrintName", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocChangeStateForProduct", docIDParameter, productIDParameter, quantityParameter, stateIDParameter, rejectionReasonIDParameter, printNameParameter);
-        }
-    
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
             var docIDParameter = docID.HasValue ?
@@ -655,6 +626,35 @@ namespace Gamma.Models
                 new ObjectParameter("PrintName", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UnpackGroupPack", productIDParameter, printNameParameter);
+        }
+    
+        public virtual int CreateDocBrokeWithBrokeDecision(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> brokeQuantity, Nullable<System.Guid> rejectionReasonID, string printName, Nullable<int> placeID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var brokeQuantityParameter = brokeQuantity.HasValue ?
+                new ObjectParameter("BrokeQuantity", brokeQuantity) :
+                new ObjectParameter("BrokeQuantity", typeof(decimal));
+    
+            var rejectionReasonIDParameter = rejectionReasonID.HasValue ?
+                new ObjectParameter("RejectionReasonID", rejectionReasonID) :
+                new ObjectParameter("RejectionReasonID", typeof(System.Guid));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecision", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, printNameParameter, placeIDParameter);
         }
     }
 }

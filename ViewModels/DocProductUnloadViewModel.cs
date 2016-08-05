@@ -31,8 +31,7 @@ namespace Gamma.ViewModels
             ProductionTaskID =
                     (Guid)GammaBase.DocProduction.Where(d => d.DocID == docID).Select(d => d.ProductionTaskID).First();
             GetProductionTaskRwInfo(ProductionTaskID);
-            CreateSpoolsCommand = new DelegateCommand(CreateSpools, CanCreateSpools);
-            EditSpoolCommand = new DelegateCommand(EditSpool);
+            CreateSpoolsCommand = new DelegateCommand(CreateSpools, CanCreateSpools);EditSpoolCommand = new DelegateCommand(EditSpool);
             Bars.Add(ReportManager.GetReportBar("Unload", VMID));
             if (newProduct)  // Если новый съем то получаем раскрой из задания DocProduction и инициализруем коллекцию тамбуров съема
             {

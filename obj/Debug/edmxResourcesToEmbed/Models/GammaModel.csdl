@@ -1015,14 +1015,6 @@
       <End Role="DocProduction" EntitySet="DocProduction" />
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
     </AssociationSet>
-    <FunctionImport Name="CreateDocChangeStateForProduct">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-      <Parameter Name="ProductID" Mode="In" Type="Guid" />
-      <Parameter Name="Quantity" Mode="In" Type="Decimal" />
-      <Parameter Name="StateID" Mode="In" Type="Int16" />
-      <Parameter Name="RejectionReasonID" Mode="In" Type="Guid" />
-      <Parameter Name="PrintName" Mode="In" Type="String" />
-    </FunctionImport>
     <FunctionImport Name="CreateRemainderSpool">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
       <Parameter Name="ProductID" Mode="In" Type="Guid" />
@@ -1682,6 +1674,14 @@
       <End Role="Products" EntitySet="Products" />
       <End Role="DocProducts" EntitySet="DocProducts" />
     </AssociationSet>
+    <FunctionImport Name="CreateDocBrokeWithBrokeDecision">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+      <Parameter Name="BrokeQuantity" Mode="In" Type="Decimal" />
+      <Parameter Name="RejectionReasonID" Mode="In" Type="Guid" />
+      <Parameter Name="PrintName" Mode="In" Type="String" />
+      <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />

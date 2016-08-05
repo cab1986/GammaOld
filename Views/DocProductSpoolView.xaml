@@ -45,10 +45,10 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
-                    <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
-                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000" IsReadOnly="{Binding WeightReadOnly}"
-                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" 
-                                           NullText="0" AllowNullInput="True" IsFloatValue="False" Mask="f0" DisplayFormatString="f2"/>
+                    <dxlc:LayoutItem Label="Вес тамбура, т" LabelPosition="Top">
+                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10" 
+                                           EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Decimal}"
+                                           NullText="0" AllowNullInput="True" IsFloatValue="true" MaskUseAsDisplayFormat="True" Increment="0.001"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="1000"
@@ -57,7 +57,8 @@
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000"
-                                           EditValue="{Binding Diameter, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
+                                           EditValue="{Binding Diameter, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                                            EditValueType="{x:Type sys:Int32}" NullText="0" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
@@ -69,6 +70,9 @@
                             <dxe:RadioListBoxEditStyleSettings HighlightedTextBackground="Yellow" HighlightedFontFamily="{x:Null}" HighlightedFontStyle="{x:Null}" HighlightedFontSize="{x:Null}" HighlightedTextForeground="Black" HighlightedFontWeight="{x:Null}"/>
                         </dxe:ListBoxEdit.StyleSettings>
                     </dxe:ListBoxEdit>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Текущий вес тамбура, т" LabelPosition="Top" Width="150">
+                    <dxe:TextEdit IsReadOnly="True" EditValue="{Binding RestWeight}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

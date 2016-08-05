@@ -5,9 +5,7 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using System.Linq;
 using Gamma.Interfaces;
-using Gamma.Attributes;
-using Gamma.Common;
-using System.Windows;
+using Gamma.Attributes;using System.Windows;
 using System.Data.Entity;
 
 // ReSharper disable MemberCanBePrivate.Global

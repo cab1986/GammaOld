@@ -8,6 +8,7 @@ using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Windows;
 using Gamma.Attributes;
 
 namespace Gamma.ViewModels
@@ -31,11 +32,11 @@ namespace Gamma.ViewModels
                 .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons))
                 .FirstOrDefault(d => d.DocID == DocId);
             BrokeProducts = new ItemsChangeObservableCollection<BrokeProduct>();
-            InternalUsageProduct = new EditBrokeDecisionItem("Хоз. нужды", ProductStates.InternalUsage, BrokeDecisionProducts);
-            GoodProduct = new EditBrokeDecisionItem("Годная", ProductStates.Good, BrokeDecisionProducts);
-            LimitedProduct = new EditBrokeDecisionItem("Ограниченная партия", ProductStates.Limited, BrokeDecisionProducts);
-            BrokeProduct = new EditBrokeDecisionItem("На утилизацию", ProductStates.Broke, BrokeDecisionProducts);
-            RepackProduct = new EditBrokeDecisionItem("На переделку", ProductStates.Repack, BrokeDecisionProducts, true);
+            InternalUsageProduct = new EditBrokeDecisionItem("Хоз. нужды", ProductState.InternalUsage, BrokeDecisionProducts);
+            GoodProduct = new EditBrokeDecisionItem("Годная", ProductState.Good, BrokeDecisionProducts);
+            LimitedProduct = new EditBrokeDecisionItem("Ограниченная партия", ProductState.Limited, BrokeDecisionProducts);
+            BrokeProduct = new EditBrokeDecisionItem("На утилизацию", ProductState.Broke, BrokeDecisionProducts);
+            RepackProduct = new EditBrokeDecisionItem("На переделку", ProductState.Repack, BrokeDecisionProducts, true);
 
             if (doc != null)
             {
@@ -59,8 +60,23 @@ namespace Gamma.ViewModels
             }
             AddProductCommand = new DelegateCommand(ChooseProductToAdd);
             DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct);
-            EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons);
+            EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
             IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
+            Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
+        }
+
+
+        private void PrintReport(PrintReportMessage msg)
+        {
+            if (msg.VMID != VMID) return;
+            if (!IsValid)
+            {
+                MessageBox.Show("Не заполнены некоторые обязательные поля!", "Поля не заполнены", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                return;
+            }
+            SaveToModel();
+            ReportManager.PrintReport(msg.ReportID, DocId);
         }
 
         /// <summary>
@@ -83,7 +99,7 @@ namespace Gamma.ViewModels
 #region AddBrokeProduct
             var docBrokeProductInfo =
                     gammaBase.DocBrokeProducts.Include(d => d.DocBrokeProductRejectionReasons)
-                    .FirstOrDefault(d => d.DocID == docId);
+                    .FirstOrDefault(d => d.DocID == docId && d.ProductID == productId);
             var brokeProduct = new BrokeProduct(docBrokeProductInfo == null ? new ItemsChangeObservableCollection<RejectionReason>() :
                 new ItemsChangeObservableCollection<RejectionReason>(docBrokeProductInfo.DocBrokeProductRejectionReasons
                 .Select(d => new RejectionReason()
@@ -93,7 +109,7 @@ namespace Gamma.ViewModels
                 })))
             {
                 Date = product.Date,
-                NomenclatureName = product.ShortNomenclatureName,
+                NomenclatureName = product.NomenclatureName,
                 Number = product.Number,
                 Place = product.Place,
                 ShiftId = product.ShiftID,
@@ -105,7 +121,7 @@ namespace Gamma.ViewModels
             brokeProducts.Add(brokeProduct);
 #endregion AddBrokeProduct
 #region AddBrokeDecisionProduct
-            var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId).ToList();
+            var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
             if (docBrokeDecisionProducts.Count == 0)
             {
                 brokeDecisionProducts.Add(new BrokeDecisionProduct
@@ -114,8 +130,9 @@ namespace Gamma.ViewModels
                     MaxQuantity = product.BaseMeasureUnitQuantity ?? 1000000,
                     ProductId = product.ProductID,
                     Number = product.Number,
-                    NomenclatureName = product.ShortNomenclatureName,
-                    ProductState = ProductStates.NeedsDecision
+                    NomenclatureName = product.NomenclatureName,
+                    ProductState = ProductState.NeedsDecision,
+                    MeasureUnit = product.BaseMeasureUnit
                 });
             }
             else
@@ -126,10 +143,10 @@ namespace Gamma.ViewModels
                     {
                         Quantity = decisionProduct.Quantity,
                         MaxQuantity = product.BaseMeasureUnitQuantity ?? 1000000,
-                        ProductState = (ProductStates)decisionProduct.StateID,
+                        ProductState = (ProductState)decisionProduct.StateID,
                         ProductId = decisionProduct.ProductID,
                         Number = product.Number,
-                        NomenclatureName = product.ShortNomenclatureName,
+                        NomenclatureName = product.NomenclatureName,
                         Comment = decisionProduct.Comment,
                         NomenclatureId = decisionProduct.C1CNomenclatureID,
                         CharacteristicId = decisionProduct.C1CCharacteristicID
@@ -228,22 +245,27 @@ namespace Gamma.ViewModels
             get { return _selectedBrokeDecisionProduct; }
             set
             {
-                if (_selectedBrokeDecisionProduct == value) return;
+                if (Equals(_selectedBrokeDecisionProduct, value)) return;
                 _selectedBrokeDecisionProduct = value;
                 InternalUsageProduct.BrokeDecisionProduct = null;
                 InternalUsageProduct.IsChecked = false;
+                InternalUsageProduct.Quantity = 0;
                 InternalUsageProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
                 GoodProduct.BrokeDecisionProduct = null;
                 GoodProduct.IsChecked = false;
+                GoodProduct.Quantity = 0;
                 GoodProduct.IsReadOnly = (value == null || IsReadOnly);
                 LimitedProduct.BrokeDecisionProduct = null;
                 LimitedProduct.IsChecked = false;
+                LimitedProduct.Quantity = 0;
                 LimitedProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
                 BrokeProduct.BrokeDecisionProduct = null;
                 BrokeProduct.IsChecked = false;
+                BrokeProduct.Quantity = 0;
                 BrokeProduct.IsReadOnly = value == null || IsReadOnly;
                 RepackProduct.BrokeDecisionProduct = null;
                 RepackProduct.IsChecked = false;
+                RepackProduct.Quantity = 0;
                 RepackProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
                 if (value == null) return;
                 var products = BrokeDecisionProducts.Where(p => p.ProductId == value.ProductId).ToList();
@@ -251,44 +273,48 @@ namespace Gamma.ViewModels
                 {
                     switch (product.ProductState)
                     {
-                        case ProductStates.Broke:
+                        case ProductState.Broke:
                             BrokeProduct.IsChecked = true;
+                            BrokeProduct.Quantity = product.Quantity;
                             BrokeProduct.BrokeDecisionProduct = product;
-                            
                             break;
-                        case ProductStates.Good:
+                        case ProductState.Good:
                             GoodProduct.IsChecked = true;
+                            GoodProduct.Quantity = product.Quantity;
                             GoodProduct.BrokeDecisionProduct = product;
                             break;
-                        case ProductStates.InternalUsage:
+                        case ProductState.InternalUsage:
                             InternalUsageProduct.IsChecked = true;
+                            InternalUsageProduct.Quantity = product.Quantity;
                             InternalUsageProduct.BrokeDecisionProduct = product;
                             break;
-                        case ProductStates.Limited:
+                        case ProductState.Limited:
                             LimitedProduct.IsChecked = true;
+                            LimitedProduct.Quantity = product.Quantity;
                             LimitedProduct.BrokeDecisionProduct = product;
                             break;
-                        case ProductStates.Repack:
+                        case ProductState.Repack:
                             RepackProduct.IsChecked = true;
+                            RepackProduct.Quantity = product.Quantity;
                             RepackProduct.BrokeDecisionProduct = product;
                             break;
                     }
                 }
                 if (BrokeProduct.BrokeDecisionProduct == null)
                     BrokeProduct.BrokeDecisionProduct =
-                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductStates.Broke);
+                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductState.Broke);
                 if (GoodProduct.BrokeDecisionProduct == null)
                     GoodProduct.BrokeDecisionProduct =
-                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductStates.Good);
+                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductState.Good);
                 if (InternalUsageProduct.BrokeDecisionProduct == null)
                     InternalUsageProduct.BrokeDecisionProduct =
-                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductStates.InternalUsage);
+                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductState.InternalUsage);
                 if (LimitedProduct.BrokeDecisionProduct == null)
                     LimitedProduct.BrokeDecisionProduct =
-                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductStates.Limited);
+                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductState.Limited);
                 if (RepackProduct.BrokeDecisionProduct == null)
                     RepackProduct.BrokeDecisionProduct =
-                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductStates.Repack);
+                        CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductState.Repack);
             }
         }
 
@@ -307,7 +333,7 @@ namespace Gamma.ViewModels
         /// <param name="productState">Новое состояние</param>
         /// <returns></returns>
         private BrokeDecisionProduct CreateNewBrokeDecisionProductWithState(BrokeDecisionProduct product,
-            ProductStates productState)
+            ProductState productState)
         {
             var decisionProduct = new BrokeDecisionProduct
             {
@@ -333,6 +359,7 @@ namespace Gamma.ViewModels
 
         public override void SaveToModel(GammaEntities gamma = null)
         {
+            if (!DB.HaveWriteAccess("DocBroke")) return;
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)

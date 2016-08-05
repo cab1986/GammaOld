@@ -33,8 +33,9 @@ namespace Gamma.ViewModels
             ProductId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == docId)?.ProductID ??
                             SqlGuidUtil.NewSequentialid();
             var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == docId);
-            States = new ProductStates().ToDictionary();
+//            States = new ProductState().ToDictionary();
             ToughnessKinds = new ToughnessKinds().ToDictionary();
+            /*
             RejectionReasons = new ObservableCollection<RejectionReason>
                 (from r in GammaBase.GetSpoolRejectionReasons()
                  select new RejectionReason
@@ -43,7 +44,9 @@ namespace Gamma.ViewModels
                      Description = r.Description,
                      FullDescription = r.FullDescription
                  });
-            var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
+            */
+            var productSpool = GammaBase.ProductSpools.Include(p => p.Products.DocProductionProducts)
+                .FirstOrDefault(p => p.ProductID == ProductId);
             if (productSpool == null)
             {
                 var productionTask =
@@ -69,8 +72,11 @@ namespace Gamma.ViewModels
                 Diameter = productSpool.Diameter;
                 Length = productSpool.Length ?? 0;
                 BreakNumber = productSpool.BreakNumber;
-                Weight = productSpool.DecimalWeight;
+                var productionQuantity = productSpool.Products.DocProductionProducts.FirstOrDefault()?.Quantity??0;
+                Weight = productionQuantity > 100 ? productionQuantity/1000 : productionQuantity;
+                RestWeight = productSpool.DecimalWeight > 100 ? productSpool.DecimalWeight/1000 : productSpool.DecimalWeight;
                 ToughnessKindID = productSpool.ToughnessKindID ?? 1;
+/*
                 var stateInfo = (from d in GammaBase.DocChangeStateProducts
                                  where d.ProductID == ProductId
                                  orderby
@@ -89,8 +95,9 @@ namespace Gamma.ViewModels
                 {
                     StateID = 0;
                 }
+                */
             }          
-            Bars.Add(ReportManager.GetReportBar("SpoolLabels", VMID));
+            Bars.Add(ReportManager.GetReportBar("Spool", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
             AllowEditProduct = DB.AllowEditProduct(ProductId, GammaBase);
             CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
@@ -108,7 +115,7 @@ namespace Gamma.ViewModels
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Range(1,5000,ErrorMessage = @"Необходимо указать диаметр")]
-        // ReSharper disable once MemberCanBePrivate.Global
+        
         public int Diameter
         {
             get
@@ -121,6 +128,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Diameter");
             }
         }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal? Length
         {
@@ -198,7 +206,7 @@ namespace Gamma.ViewModels
         }
         private bool IsConfirmed { get; set; }
         private decimal _weight;   
-        [Range(1,10000,ErrorMessage=@"Укажите вес тамбура")]
+        [Range(0.001,10,ErrorMessage=@"Укажите вес тамбура")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Weight
         {
@@ -212,6 +220,23 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Weight");
             }
         }
+
+
+        private decimal _restWeight;
+
+        /// <summary>
+        /// Остаточный вес тамбура (текущий)
+        /// </summary>
+        public decimal RestWeight
+        {
+            get { return _restWeight; }
+            set
+            {
+                _restWeight = value;
+                RaisePropertyChanged("RestWeight");
+            }
+        }
+
         private decimal? _length;
         private int _diameter;
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
@@ -230,11 +255,11 @@ namespace Gamma.ViewModels
 
         private bool AllowEditProduct { get; set; }
 
-        public bool WeightReadOnly => !AllowEditProduct || IsReadOnly;
+//        public bool WeightReadOnly => !AllowEditProduct || IsReadOnly;
 
         public Guid? VMID { get; } = Guid.NewGuid();
 
-        private DocProductionProducts DocProductionProduct { get; set; }
+//        private DocProductionProducts DocProductionProduct { get; set; }
         /// <summary>
         /// ID продукта, используется для печати амбалажа
         /// </summary>
@@ -259,6 +284,7 @@ namespace Gamma.ViewModels
                     ProductID = id,
                     ProductKindID = (int)ProductKinds.ProductSpool,
                 };
+                GammaBase.Products.Add(product);
             }
             if (product.ProductSpools == null)
             {
@@ -267,7 +293,7 @@ namespace Gamma.ViewModels
                     ProductID = product.ProductID
                 };
             }
-            if (product.DocProductionProducts == null)
+            if (product.DocProductionProducts == null || product.DocProductionProducts.Count == 0)
             {
                 product.DocProductionProducts = new List<DocProductionProducts>
                 {
@@ -281,6 +307,7 @@ namespace Gamma.ViewModels
                     }
                 };
             }
+            /*
             var stateId = (from d in GammaBase.DocChangeStateProducts where d.ProductID == product.ProductID
                                orderby
                                d.Docs.Date descending
@@ -309,18 +336,30 @@ namespace Gamma.ViewModels
                     };
                     GammaBase.Docs.Add(doc);
             }
-            product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
-            product.ProductSpools.C1CCharacteristicID = CharacteristicID;
+            */
+            if (AllowEditProduct)
+            {
+                product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
+                product.ProductSpools.C1CCharacteristicID = CharacteristicID;
+                product.ProductSpools.DecimalWeight = Weight;
+                var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
+                if (docProductionProduct != null)
+                {
+                    docProductionProduct.Quantity = Weight;
+                    docProductionProduct.C1CNomenclatureID = (Guid)NomenclatureID;
+                    docProductionProduct.C1CCharacteristicID = (Guid)CharacteristicID;
+                }
+            }
             product.ProductSpools.RealBasisWeight = RealBasisWeight;
             product.ProductSpools.RealFormat = RealFormat;
             product.ProductSpools.BreakNumber = BreakNumber;
             product.ProductSpools.Diameter = Diameter;
             product.ProductSpools.Length = Length;
-            product.ProductSpools.DecimalWeight = Weight;
+            
             product.ProductSpools.ToughnessKindID = ToughnessKindID;
             GammaBase.SaveChanges();
         }
-        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools");
+        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools") || !AllowEditProduct;
 
         public override bool CanSaveExecute()
         {
@@ -328,9 +367,10 @@ namespace Gamma.ViewModels
         }
         protected override bool CanChooseNomenclature()
         {
-            return !IsConfirmed && DB.HaveWriteAccess("ProductSpools");
+            return !IsConfirmed && DB.HaveWriteAccess("ProductSpools") && AllowEditProduct;
         }
-        private byte? _stateid;
+        //private byte? _stateid;
+/*
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Required(ErrorMessage=@"Необходимо выбрать качество")]
         public byte? StateID
@@ -345,7 +385,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("StateID");
             }
         }
-
+*/
         private byte _toughnessKindID = 1;
         [UIAuth(UIAuthLevel.ReadOnly)]
         public byte ToughnessKindID
@@ -358,10 +398,10 @@ namespace Gamma.ViewModels
             }
         }
         public Dictionary<byte, string> ToughnessKinds { get; set; }
-        public Dictionary<byte, string> States { get; set; }
-        public ObservableCollection<RejectionReason> RejectionReasons { get; set; }
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        public Guid? RejectionReasonID { get; set; }
+//        public Dictionary<byte, string> States { get; set; }
+//        public ObservableCollection<RejectionReason> RejectionReasons { get; set; }
+//        [UIAuth(UIAuthLevel.ReadOnly)]
+//        public Guid? RejectionReasonID { get; set; }
 
     }
 }

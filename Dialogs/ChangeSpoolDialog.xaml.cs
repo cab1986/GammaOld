@@ -35,11 +35,11 @@ namespace Gamma.Dialogs
             switch (ChangeState)
             {
                 case SpoolChangeState.WithBroke:
-                    Weight = Convert.ToInt32(EdtBrokeWeight.EditValue);
+                    Weight = Convert.ToDecimal(EdtBrokeWeight.EditValue);
                     RejectionReasonID = (Guid)LkpBrokeReason.EditValue;
                     break;
                 case SpoolChangeState.WithRemainder:
-                    Weight = Convert.ToInt32(EdtRemainderWeight.Text);
+                    Weight = Convert.ToDecimal(EdtRemainderWeight.Text);
                     break;
                 default:
                     Weight = 0;
@@ -64,7 +64,7 @@ namespace Gamma.Dialogs
             ChangeState = SpoolChangeState.WithRemainder;
  //           Weight = edtRemainderWeight.Text;
         }
-        public int Weight { get; set; }
+        public decimal Weight { get; set; }
         public Guid? RejectionReasonID { get; set; }
         private List<RejectionReason> RejectionReasons { get; set; }
         public SpoolChangeState ChangeState { get; set; }

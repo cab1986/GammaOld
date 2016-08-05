@@ -358,13 +358,13 @@ namespace Gamma.ViewModels
                 docWithdrawal.DocTypeID = (byte)DocTypes.DocWithdrawal;
                 docWithdrawal.IsConfirmed = doc.IsConfirmed;
                 var docProductions = new ObservableCollection<DocProduction> {doc.DocProduction};
-                docWithdrawal.DocWithdrawal = new DocWithdrawal()
+                docWithdrawal.DocWithdrawal = new DocWithdrawal
                 {
                     DocID = docWithdrawal.DocID,
                     OutPlaceID = docWithdrawal.PlaceID,
-                    DocProduction = docProductions
+                    DocProduction = docProductions,
+                    DocWithdrawalProducts = new ObservableCollection<DocWithdrawalProducts>()
                 };
-                docWithdrawal.DocWithdrawal.DocWithdrawalProducts = new ObservableCollection<DocWithdrawalProducts>();
                 GammaBase.Docs.Add(docWithdrawal);
             }
             docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Clear();

@@ -66,20 +66,26 @@ namespace Gamma.ViewModels
         public DelegateCommand<byte> ChooseSpoolCommand {get; set;}
         public DelegateCommand<byte> DeleteSpoolCommand {get; set;}
         public DelegateCommand<byte> ChangeUnwinderActiveCommand { get; set; }
+
         private void ChooseSpool(byte unum)
         {
             CurrentUnwinder = unum;
             Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
             MessageManager.OpenFindProduct(ProductKinds.ProductSpool,true);
         }
-        private void CreateRemainderSpool(Guid parentProductID, int weight)
+        private void CreateRemainderSpool(Guid productId, decimal weight)
         {
-            var docID = SqlGuidUtil.NewSequentialid();
-            var productid = SqlGuidUtil.NewSequentialid();
             UIServices.SetBusyState();
-            GammaBase.CreateRemainderSpool(docID, productid, parentProductID, weight, WorkSession.PrintName);
-            ReportManager.PrintReport("Амбалаж", "Spool", docID);
+            var docWithdrawalProduct =
+                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
+                    .FirstOrDefault(d => d.ProductID == productId);
+            if (docWithdrawalProduct == null) return;
+            docWithdrawalProduct.Quantity = weight;
+            docWithdrawalProduct.CompleteWithdrawal = false;
+            GammaBase.SaveChanges();
+            ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.DocID);
         }
+
         private byte CurrentUnwinder { get; set; }
         private void SourceSpoolChanged(ChoosenProductMessage msg)
         {
@@ -143,6 +149,9 @@ namespace Gamma.ViewModels
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder1ProductID, dialog.Weight);
                                     break;
+                                case SpoolChangeState.FullyConverted:
+                                    ComleteWithdraw((Guid) Unwinder1ProductID);
+                                    break;
                             }
                         }
                     }
@@ -163,6 +172,9 @@ namespace Gamma.ViewModels
                                     break;
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder2ProductID, dialog.Weight);
+                                    break;
+                                case SpoolChangeState.FullyConverted:
+                                    ComleteWithdraw((Guid)Unwinder2ProductID);
                                     break;
                             }
                         }
@@ -185,6 +197,9 @@ namespace Gamma.ViewModels
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder3ProductID, dialog.Weight);
                                     break;
+                                case SpoolChangeState.FullyConverted:
+                                    ComleteWithdraw((Guid)Unwinder3ProductID);
+                                    break;
                             }
                         }
                     }
@@ -194,15 +209,28 @@ namespace Gamma.ViewModels
             }
             GammaBase.SaveChanges();
         }
+
+        private void ComleteWithdraw(Guid productId)
+        {
+            UIServices.SetBusyState();
+            var docWithdrawalProduct =
+                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
+                    .FirstOrDefault(d => d.ProductID == productId);
+            if (docWithdrawalProduct == null) return;
+            docWithdrawalProduct.CompleteWithdrawal = true;
+            GammaBase.SaveChanges();
+        }
+
         private void BrokeProduct(Guid productid, decimal weight, Guid? rejectionReasonId)
         {
             var docID = SqlGuidUtil.NewSequentialid();
-            GammaBase.CreateDocChangeStateForProduct(docID, productid, weight, (short)ProductStates.Broke,
-                rejectionReasonId, WorkSession.PrintName);
+            GammaBase.CreateDocBrokeWithBrokeDecision(docID, productid, weight/1000, rejectionReasonId,
+                WorkSession.PrintName, WorkSession.PlaceID);
+//            MessageManager.OpenDocBroke(docID);
             var docProductionId = GammaBase.DocProductionProducts
                 .Where(d => d.ProductID == productid && d.DocProduction.Docs.DocTypeID == (byte)DocTypes.DocProduction)
                 .Select(d => d.DocID).FirstOrDefault();
-            ReportManager.PrintReport("Амбалаж", "Spool", docProductionId);
+            ReportManager.PrintReport("Амбалаж на утилизацию", "Spool", docProductionId);
         }
         private void ChangeUnwinderActive(byte unum)
         {

@@ -33,12 +33,12 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroups.PM:
-                    QuantityHeader = "Вес, кг";
+                    QuantityHeader = "Вес, т";
                     NewProductText = "Создать новый тамбур";
                     DeleteProductText = "Удалить тамбур";
                     break;
                 case PlaceGroups.Rw:
-                    QuantityHeader = "Вес, кг";
+                    QuantityHeader = "Вес, т";
                     NewProductText = "Создать новый съем";
                     DeleteProductText = "Удалить съем";
                     break;
@@ -48,7 +48,7 @@ namespace Gamma.ViewModels
                     DeleteProductText = "Удалить паллету";
                     break;
                 case PlaceGroups.Wr:
-                    QuantityHeader = "Вес нетто, кг";
+                    QuantityHeader = "Вес нетто, т";
                     NewProductText = "Создать новую групповую упаковку";
                     DeleteProductText = "Удалить групповую упаковку";
                     break;
@@ -211,7 +211,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = (int)vpi.Quantity,
+                            Quantity = vpi.BaseMeasureUnitQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,
@@ -237,7 +237,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = (int)vpi.Quantity,
+                            Quantity = vpi.BaseMeasureUnitQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,
@@ -265,7 +265,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = (int)vpi.Quantity,
+                            Quantity = vpi.BaseMeasureUnitQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,
@@ -293,7 +293,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKinds)vpi.ProductKindID,
-                            Quantity = (int)vpi.Quantity,
+                            Quantity = vpi.BaseMeasureUnitQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,

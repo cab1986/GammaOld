@@ -50,7 +50,7 @@ namespace Gamma
     /// <summary>
     /// Качество продукта
     /// </summary>
-    public enum ProductStates 
+    public enum ProductState
     {
         [Description("Годная")]
         Good,

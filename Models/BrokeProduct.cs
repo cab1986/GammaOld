@@ -13,6 +13,7 @@ namespace Gamma.Models
         public BrokeProduct(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
         {
             RejectionReasons = rejectionReasons;
+            RejectionReasonsString = FormRejectionReasonsString(RejectionReasons);
             RejectionReasons.CollectionChanged += FormRejectionReasonString;
         }
 
@@ -28,15 +29,15 @@ namespace Gamma.Models
         public string BaseMeasureUnit { get; set; }
         public decimal Quantity { get; set; }
 
-        private string _rejectionReasonString;
+        private string _rejectionReasonsString;
 
         public string RejectionReasonsString
         {
-            get { return _rejectionReasonString; }
+            get { return _rejectionReasonsString; }
             set
             {
-                _rejectionReasonString = value;
-                RaisePropertyChanged("RejectionReasonString");
+                _rejectionReasonsString = value;
+                RaisePropertyChanged("RejectionReasonsString");
             }
         }
 

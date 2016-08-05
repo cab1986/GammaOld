@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<BarcodeMessage>(this,BarcodeReceived);
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKinds));
             ProductKindsList.Add("Все");
-            States = Functions.EnumDescriptionsToList(typeof(ProductStates));
+            States = Functions.EnumDescriptionsToList(typeof(ProductState));
             States.Add("Любое");
             SelectedStateIndex = States.Count - 1;
             ResetSearchCommand = new DelegateCommand(ResetSearch);

@@ -22,6 +22,7 @@ namespace Gamma.ViewModels
                 PlaceGuid = p.PlaceGuid,
                 PlaceName = p.Name
             }));
+            Find();
         }
 
         public List<Place> PlacesList { get; set; }
@@ -130,11 +131,11 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 DocBrokeList = new List<DocBrokeListItem>(
-                    from d in gammaBase.Docs where d.DocTypeID == (int)DocTypes.DocBroke && 
+                    from d in gammaBase.Docs.Where(d => d.DocTypeID == (int)DocTypes.DocBroke &&
                     (DateBegin == null || d.Date >= DateBegin) &&
                     (DateEnd == null || d.Date <= DateEnd) &&
                     (PlaceDiscoverId == null || d.DocBroke.PlaceDiscoverID == PlaceDiscoverId) &&
-                    (PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)
+                    (PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)).OrderByDescending(d => d.Date).Take(500)
                     join pd in gammaBase.Places on d.DocBroke.PlaceDiscoverID equals pd.PlaceGuid
                     into ds
                     from x in ds.DefaultIfEmpty()

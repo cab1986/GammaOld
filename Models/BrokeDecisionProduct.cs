@@ -10,8 +10,8 @@ namespace Gamma.Models
 
         public Guid ProductId { get; set; }
 
-        private Gamma.ProductStates _productState;
-        public Gamma.ProductStates ProductState
+        private ProductState _productState;
+        public ProductState ProductState
         {
             get { return _productState; }
             set
@@ -39,5 +39,27 @@ namespace Gamma.Models
         public string Decision { get; private set; }
         public Guid? NomenclatureId { get; set; }
         public Guid? CharacteristicId { get; set; }
+        public string MeasureUnit { get; set; }
+
+        protected bool Equals(BrokeDecisionProduct other)
+        {
+            return _productState == other._productState && ProductId.Equals(other.ProductId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((BrokeDecisionProduct) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((int) _productState*397) ^ ProductId.GetHashCode();
+            }
+        }
     }
 }

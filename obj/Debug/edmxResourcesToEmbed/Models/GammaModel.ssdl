@@ -2835,13 +2835,13 @@
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
   </Function>
-  <Function Name="CreateDocChangeStateForProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+  <Function Name="CreateDocBrokeWithBrokeDecision" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
-    <Parameter Name="Quantity" Type="decimal" Mode="In" />
-    <Parameter Name="StateID" Type="smallint" Mode="In" />
+    <Parameter Name="BrokeQuantity" Type="decimal" Mode="In" />
     <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PrintName" Type="varchar" Mode="In" />
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
   </Function>
   <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="SpoolID" Type="uniqueidentifier" Mode="In" />

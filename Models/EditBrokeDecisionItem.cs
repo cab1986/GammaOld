@@ -8,7 +8,7 @@ namespace Gamma.Models
 {
     public class EditBrokeDecisionItem: DbEditItemWithNomenclatureViewModel
     {
-        public EditBrokeDecisionItem(string name, Gamma.ProductStates productState, ItemsChangeObservableCollection<BrokeDecisionProduct> decisionProducts, bool canChooseNomenclature = false)
+        public EditBrokeDecisionItem(string name, Gamma.ProductState productState, ItemsChangeObservableCollection<BrokeDecisionProduct> decisionProducts, bool canChooseNomenclature = false)
         {
             Name = name;
             ProductState = productState;
@@ -25,13 +25,39 @@ namespace Gamma.Models
             {
                 if (BrokeDecisionProduct != null)
                 {
-                    var sumQuantity =
-                        BrokeDecisionProducts.Except(new List<BrokeDecisionProduct> {BrokeDecisionProduct})
-                            .Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
-                            .Sum(p => p.Quantity);
-                    if (sumQuantity + value > BrokeDecisionProduct.MaxQuantity)
+                    var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(bp => bp.ProductState == ProductState.NeedsDecision && bp.ProductId == BrokeDecisionProduct.ProductId);
+                    var sumQuantity = 
+                        BrokeDecisionProducts
+                            .Where(p => p.ProductId == BrokeDecisionProduct.ProductId).ToList().Except(new List<BrokeDecisionProduct>
+                        {
+                            BrokeDecisionProduct,
+                            productNeedsDecision
+                        })
+                        .Sum(p => p.Quantity);
+                    if (sumQuantity + value >= BrokeDecisionProduct.MaxQuantity)
+                    {
                         value = BrokeDecisionProduct.MaxQuantity - sumQuantity;
-                    BrokeDecisionProduct.Quantity = value;
+                        if (IsChecked)
+                            BrokeDecisionProducts.Remove(productNeedsDecision);
+                    }
+                    else if (IsChecked)
+                    {
+                        if (productNeedsDecision == null)
+                        {
+                            productNeedsDecision = new BrokeDecisionProduct
+                            {
+                                MaxQuantity = BrokeDecisionProduct.MaxQuantity,
+                                ProductId = BrokeDecisionProduct.ProductId,
+                                NomenclatureName = BrokeDecisionProduct.NomenclatureName,
+                                Number = BrokeDecisionProduct.Number,
+                                ProductState = ProductState.NeedsDecision,
+                                MeasureUnit = BrokeDecisionProduct.MeasureUnit
+                            };
+                            BrokeDecisionProducts.Add(productNeedsDecision);
+                        }
+                        productNeedsDecision.Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity - value;
+                    }
+                    BrokeDecisionProduct.Quantity = value;                   
                 }
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
@@ -91,18 +117,23 @@ namespace Gamma.Models
             get { return _isChecked; }
             set
             {
+                if (_isChecked == value) return;
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
                 if (BrokeDecisionProduct == null) return;
+                var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(
+                        bp =>
+                            bp.ProductId == BrokeDecisionProduct.ProductId &&
+                            bp.ProductState == ProductState.NeedsDecision);
                 if (value)
                 {
                     if (!BrokeDecisionProducts.Contains(BrokeDecisionProduct))
                         BrokeDecisionProducts.Add(BrokeDecisionProduct);
-                    var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(
-                        bp =>
-                            bp.ProductId == BrokeDecisionProduct.ProductId &&
-                            bp.ProductState == Gamma.ProductStates.NeedsDecision);
-                    var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
+                    
+                    var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId).Except(new List<BrokeDecisionProduct>
+                    {
+                        productNeedsDecision
+                    })
                         .Sum(p => p.Quantity);
                     if (sumQuantity >= BrokeDecisionProduct.MaxQuantity)
                     {
@@ -122,38 +153,43 @@ namespace Gamma.Models
                                 Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity,
                                 ProductId = BrokeDecisionProduct.ProductId,
                                 Number = BrokeDecisionProduct.Number,
-                                ProductState = Gamma.ProductStates.NeedsDecision,
-                                NomenclatureName = BrokeDecisionProduct.NomenclatureName
+                                ProductState = ProductState.NeedsDecision,
+                                NomenclatureName = BrokeDecisionProduct.NomenclatureName,
+                                MeasureUnit = BrokeDecisionProduct.MeasureUnit
                             };
                             BrokeDecisionProducts.Add(productNeedsDecision);
                         }
                     }
-
                 }
                 else
                 {
-                    var needDecisionProduct = new BrokeDecisionProduct
-                    {
-                        ProductState = Gamma.ProductStates.NeedsDecision,
-                        Quantity = BrokeDecisionProduct.MaxQuantity,
-                        MaxQuantity = BrokeDecisionProduct.MaxQuantity,
-                        ProductId = BrokeDecisionProduct.ProductId,
-                        Number = BrokeDecisionProduct.Number,
-                        NomenclatureName = BrokeDecisionProduct.Number
-                    };
                     BrokeDecisionProducts.Remove(BrokeDecisionProduct);
-                    if (BrokeDecisionProducts.All(bp => bp.ProductId != BrokeDecisionProduct.ProductId))
-                    { 
-                        BrokeDecisionProducts.Add(needDecisionProduct);
+                    var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
+                        .Sum(p => p.Quantity);
+                    if (productNeedsDecision == null)
+                    {
+                        productNeedsDecision = new BrokeDecisionProduct
+                        {
+                            ProductState = ProductState.NeedsDecision,
+                            Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity,
+                            MaxQuantity = BrokeDecisionProduct.MaxQuantity,
+                            ProductId = BrokeDecisionProduct.ProductId,
+                            Number = BrokeDecisionProduct.Number,
+                            NomenclatureName = BrokeDecisionProduct.Number,
+                            MeasureUnit = BrokeDecisionProduct.MeasureUnit
+                        };
+                        BrokeDecisionProducts.Add(productNeedsDecision);
                     }
-                    Quantity = 0;
+                    else
+                        productNeedsDecision.Quantity += BrokeDecisionProduct.Quantity;
+                        Quantity = 0;
                 }
             }
         }
 
         public string Name { get; set; }
 
-        private Gamma.ProductStates ProductState { get; set; }
+        private Gamma.ProductState ProductState { get; set; }
 
         private BrokeDecisionProduct _brokeDecisionProduct;
 

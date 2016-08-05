@@ -13,6 +13,7 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:gamma="clr-namespace:Gamma"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:models="clr-namespace:Gamma.Models"
         x:Class="Gamma.Views.DocBrokeView"
         mc:Ignorable="d"
         Title="Акт о браке" Height="1000" Width="1200"
@@ -24,24 +25,24 @@
         </DataTemplate>
         <DataTemplate x:Key="EditDecisionItem">
             <dxlc:LayoutGroup Orientation="Horizontal" >
-                    <dxlc:LayoutItem Width="20">
-                        <dxe:CheckEdit EditValue="{Binding Path=IsChecked}" AllowNullInput="True" IsReadOnly="{Binding Path=IsReadOnly}"/>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutGroup Orientation="Vertical">
-                        <dxlc:LayoutGroup Orientation="Horizontal">
-                            <dxlc:LayoutItem Width ="120">
-                                <Label Content="{Binding Path=Name}" />
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Кол-во" Width="100" >
+                <dxlc:LayoutItem Width="20">
+                    <dxe:CheckEdit EditValue="{Binding Path=IsChecked}" AllowNullInput="True" IsReadOnly="{Binding Path=IsReadOnly}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup Orientation="Vertical">
+                    <dxlc:LayoutGroup Orientation="Horizontal">
+                        <dxlc:LayoutItem Width ="120">
+                            <Label Content="{Binding Path=Name}" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Кол-во" Width="100" >
                             <dxe:SpinEdit MinValue="0" EditValue="{Binding Path=Quantity, UpdateSourceTrigger=PropertyChanged}" Increment="0.001"
                                           EditValueType="{x:Type system:Decimal}" IsFloatValue="True" IsReadOnly="{Binding Path=IsReadOnly}"
                                           ShowEditorButtons="False" MaxValue="{Binding Path=BrokeDecisionProduct.MaxQuantity}"
                                           MaskUseAsDisplayFormat="True"/>
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Примечание">
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding Path=BrokeDecisionProduct.Comment}" IsReadOnly="{Binding Path=IsReadOnly}"/>
-                            </dxlc:LayoutItem>
-                        </dxlc:LayoutGroup>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxe:ButtonEdit EditValue="{Binding Path=NomenclatureName}" AllowDefaultButton="False" IsReadOnly="True">
                             <dxe:ButtonInfo Command="{Binding ChooseNomenclatureCommand}" Content="..."/>
@@ -105,12 +106,12 @@
                                             <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="Quantity" Header="Количество" Width="80" FixedWidth="True" AllowEditing="False">
                                                 <dxg:GridColumn.EditSettings>
-                                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True"/>
+                                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="RejectionReasonsString" Header="Несоответствия, дефекты" AllowEditing="False">
+                                            <dxg:GridColumn FieldName="RejectionReasonsString" Header="Несоответствия, дефекты">
                                                 <dxg:GridColumn.EditSettings>
-                                                    <dxe:ButtonEditSettings AllowDefaultButton="False">
+                                                    <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">
                                                         <dxe:ButtonEditSettings.Buttons>
                                                             <dxe:ButtonInfo Content="..." Command="{Binding EditRejectionReasonsCommand}"/>
                                                         </dxe:ButtonEditSettings.Buttons>
@@ -129,19 +130,21 @@
                     <dx:DXTabItem Header="Решение">
                         <dxlc:LayoutControl Orientation="Vertical">
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">
-                                <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" MaxHeight="2000" SelectedItem="{Binding SelectedBrokeDecisionProduct}">
+                                <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" MaxHeight="2000" SelectedItem="{Binding SelectedBrokeDecisionProduct}"
+                                                 DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}">
                                     <dxg:GridControl.View>
-                                        <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False"/>
+                                        <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False" BestFitMode="Smart"/>
                                     </dxg:GridControl.View>
                                     <dxg:GridControl.Columns>
-                                        <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура"/>
-                                        <dxg:GridColumn FieldName="Number" Header="Номер" />
-                                        <dxg:GridColumn FieldName="Quantity" Header="Кол-во" >
+                                        <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" VisibleIndex="0"/>
+                                        <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" />
+                                        <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="80" FixedWidth="True" VisibleIndex="2">
                                             <dxg:GridColumn.EditSettings>
-                                                <dxe:TextEditSettings MaskUseAsDisplayFormat="True"/>
+                                                <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>
                                             </dxg:GridColumn.EditSettings>
                                         </dxg:GridColumn>
-                                        <dxg:GridColumn FieldName="Decision" Header="Решение"/>
+                                        <dxg:GridColumn FieldName="MeasureUnit" Width="60" Header="ед. изм." VisibleIndex="3" FixedWidth="True"/>
+                                        <dxg:GridColumn FieldName="Decision" Header="Решение" VisibleIndex="4"/>
                                     </dxg:GridControl.Columns>
                                 </dxg:GridControl>
                             </dxlc:LayoutItem>
@@ -169,6 +172,6 @@
             <Button Content="Сохранить" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,90,0"/>
             <Button Content="Отмена" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,10,0" />
         </Grid>
-        
+
     </dxb:BarManager>
 </gamma:MvvmWindow>
