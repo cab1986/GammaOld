@@ -12,6 +12,7 @@
 using DevExpress.Mvvm;
 using DevExpress.Mvvm.UI;
 using DevExpress.Mvvm.UI.Interactivity;
+using DevExpress.Xpf.DXBinding;
 using DevExpress.Xpf.Docking;
 using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Editors.DataPager;

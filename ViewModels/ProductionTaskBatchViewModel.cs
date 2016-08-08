@@ -568,6 +568,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("SelectedProductionTaskProduct");
             }
         }
+
         private void RefreshProduction()
         {
             ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in 

@@ -19,6 +19,7 @@ using DevExpress.Xpf.Core.ConditionalFormatting;
 using DevExpress.Xpf.Core.DataSources;
 using DevExpress.Xpf.Core.Serialization;
 using DevExpress.Xpf.Core.ServerMode;
+using DevExpress.Xpf.DXBinding;
 using DevExpress.Xpf.Grid;
 using DevExpress.Xpf.Grid.ConditionalFormatting;
 using DevExpress.Xpf.Grid.LookUp;

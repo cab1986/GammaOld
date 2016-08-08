@@ -147,6 +147,10 @@ namespace Gamma.ViewModels
 
         public DelegateCommand FindNomenclatureByStringCommand { get; private set; }
 
+
+        /// <summary>
+        /// ID группы переделов или типа материала
+        /// </summary>
         private int FilterID { get; set; }
         private bool FilterByPlaceGroup { get; set; }
 

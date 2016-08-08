@@ -16,7 +16,7 @@ namespace Gamma.Models
     {
         public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }
-        public Nullable<byte> ProductKindID { get; set; }
+        public byte ProductKindID { get; set; }
         public string Number { get; set; }
         public System.DateTime Date { get; set; }
         public string BarCode { get; set; }

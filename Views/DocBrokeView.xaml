@@ -97,11 +97,18 @@
                                         </dxb:Bar>
                                     </dxb:BarManager.Bars>
                                     <dxg:GridControl ItemsSource="{Binding BrokeProducts}" MaxHeight="2000" SelectedItem="{Binding SelectedBrokeProduct}">
+                                        <dxmvvm:Interaction.Behaviors>
+                                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
+                                        </dxmvvm:Interaction.Behaviors>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}"/>
                                         </dxg:GridControl.View>
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False" >
+                                                <dxg:GridColumn.EditSettings>
+                                                    <dxe:TextEditSettings TextWrapping="WrapWithOverflow"/>
+                                                </dxg:GridColumn.EditSettings>
+                                            </dxg:GridColumn>
                                             <dxg:GridColumn FieldName="Number" Header="Номер" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="Quantity" Header="Количество" Width="80" FixedWidth="True" AllowEditing="False">

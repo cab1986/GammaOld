@@ -9,6 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using DevExpress.Xpf.DXBinding;
 using DevExpress.Xpf.LayoutControl;
 using Gamma.ViewModels;
 using Gamma.Views;

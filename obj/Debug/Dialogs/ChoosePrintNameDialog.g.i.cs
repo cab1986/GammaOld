@@ -9,6 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using DevExpress.Xpf.DXBinding;
 using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Editors.DataPager;
 using DevExpress.Xpf.Editors.DateNavigator;

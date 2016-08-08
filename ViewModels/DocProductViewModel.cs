@@ -62,6 +62,12 @@ namespace Gamma.ViewModels
                         DocID = docId
                     }
                 };
+                DocProduction = new DocProduction()
+                {
+                    DocID = Doc.DocID,
+                    InPlaceID = WorkSession.PlaceID,
+                    ProductionTaskID = msg.ID
+                };
                 if (msg.DocProductKind != DocProductKinds.DocProductUnload)
                 {
                     product = new Products
@@ -75,21 +81,16 @@ namespace Gamma.ViewModels
                                     : (byte) ProductKinds.ProductPallet
                     };
                     GammaBase.Products.Add(product);
-                    Doc.DocProduction.DocProductionProducts = new List<DocProductionProducts>()
+                    DocProduction.DocProductionProducts = new List<DocProductionProducts>()
                     {
                         new DocProductionProducts()
                         {
                             ProductID = product.ProductID,
                             DocID = Doc.DocID
+
                         }
                     };
                 }
-                DocProduction = new DocProduction()
-                {
-                    DocID = Doc.DocID,
-                    InPlaceID = WorkSession.PlaceID,
-                    ProductionTaskID = msg.ID
-                };
                 Doc.DocProduction = DocProduction;
                 GammaBase.Docs.Add(Doc);
                 GammaBase.SaveChanges(); // Сохранение в бд
@@ -175,7 +176,7 @@ namespace Gamma.ViewModels
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductionTaskCommand = new DelegateCommand(OpenProductionTask, () => ProductionTaskBatchID != null);
-            OpenProductRelationProductCommand = new DelegateCommand(OpenProductRelationProduct, () => SelectedProduct != null);
+            OpenProductRelationCommand = new DelegateCommand(OpenProductRelation, () => SelectedRelation != null);
             AddToDocBrokeCommand = new DelegateCommand(AddToDocBroke, () => IsValid);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             IsReadOnly = !(DB.HaveWriteAccess("DocProductionProducts") && (!IsConfirmed || IsValid));
@@ -214,18 +215,16 @@ namespace Gamma.ViewModels
         {
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
-                from prel in GammaBase.ProductRelations(productId)
-                let productKindID = prel.ProductKindID
-                where productKindID != null
+                from prel in GammaBase.GetProductRelations(productId)
                 select new ProductRelation
                 {
+                    Description = prel.Description,
                     Date = prel.Date,
                     DocID = prel.DocID,
                     Number = prel.Number,
                     ProductID = prel.ProductID,
-                    ProductKind = prel.ProductKind,
-                    RelationKind = prel.RelationKind,
-                    ProductKindID = (ProductKinds)productKindID
+                    ProductKindID = prel.ProductKindID,
+                    DocType = (DocTypes)(prel.DocTypeID??0)
                 }
                 );
         }
@@ -233,6 +232,7 @@ namespace Gamma.ViewModels
 
         private void GetDocRelations(Guid docId)
         {
+            /*
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
                 from prel in GammaBase.DocRelations(docId)
@@ -249,6 +249,7 @@ namespace Gamma.ViewModels
                     ProductKindID = (ProductKinds)productKindID
                 }
                 );
+                */
         }
 
 /*
@@ -407,21 +408,29 @@ namespace Gamma.ViewModels
         private bool IsActive { get; set; }
         public DelegateCommand ActivatedCommand { get; private set; }
         public DelegateCommand DeactivatedCommand { get; private set; }
-        public DelegateCommand OpenProductRelationProductCommand { get; private set; }
+        public DelegateCommand OpenProductRelationCommand { get; private set; }
 
-        private void OpenProductRelationProduct()
+        private void OpenProductRelation()
         {
-            if (SelectedProduct == null) return;
-            switch (SelectedProduct.ProductKindID)
+            if (SelectedRelation == null) return;
+            switch (SelectedRelation.DocType)
             {
-                case ProductKinds.ProductSpool:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
+                case DocTypes.DocBroke:
+                    MessageManager.OpenDocBroke(SelectedRelation.DocID);
                     break;
-                case ProductKinds.ProductGroupPack:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
-                    break;
-                case ProductKinds.ProductPallet:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.DocID);
+                default:
+                    switch (SelectedRelation.ProductKindID)
+                    {
+                        case (int)ProductKinds.ProductSpool:
+                            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedRelation.ProductID);
+                            break;
+                        case (int)ProductKinds.ProductGroupPack:
+                            MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedRelation.ProductID);
+                            break;
+                        case (int)ProductKinds.ProductPallet:
+                            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedRelation.DocID);
+                            break;
+                    }
                     break;
             }
         }
@@ -439,7 +448,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductRelations");
             }
         }
-        public ProductRelation SelectedProduct { get; set; }
+        public ProductRelation SelectedRelation { get; set; }
 
         public override void Dispose()
         {

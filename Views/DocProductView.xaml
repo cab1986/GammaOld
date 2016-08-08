@@ -14,7 +14,8 @@
     xmlns:g="clr-namespace:Gamma" 
     xmlns:gc="clr-namespace:Gamma.Common"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
-    xmlns:dynamic="clr-namespace:System.Dynamic;assembly=System.Core" 
+    xmlns:dynamic="clr-namespace:System.Dynamic;assembly=System.Core"
+    xmlns:models="clr-namespace:Gamma.Models"
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
     Title="{Binding Title}"
@@ -102,14 +103,13 @@
                 </Grid>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Связи">
-                <dxg:GridControl Margin="-12,-12,-12,-12" ItemsSource="{Binding ProductRelations}" SelectedItem="{Binding SelectedProduct}"
-                                 AutoExpandAllGroups="True" >
+                <dxg:GridControl Margin="-12,-12,-12,-12" ItemsSource="{Binding ProductRelations}" SelectedItem="{Binding SelectedRelation}"
+                                 AutoExpandAllGroups="True" DesignTimeDataObjectType="{x:Type models:ProductRelation}">
                     <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductRelationProductCommand}"/>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductRelationCommand}"/>
                     </dxmvvm:Interaction.Behaviors>
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn Header="Вид связи:" FieldName="RelationKind" GroupIndex="0" />
-                        <dxg:GridColumn Header="Вид изделия:" FieldName="ProductKind" GroupIndex="1" />
+                        <dxg:GridColumn Header="Вид связи" FieldName="Description" GroupIndex="0" />
                         <dxg:GridColumn Header="Номер" FieldName="Number" />
                         <dxg:GridColumn Header="Дата" FieldName="Date" />
                     </dxg:GridControl.Columns>

@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 using DevExpress.Xpf.Bars;
+using DevExpress.Xpf.DXBinding;
 using DevExpress.Xpf.Docking;
 using DevExpress.Xpf.Editors;
 using DevExpress.Xpf.Editors.DataPager;

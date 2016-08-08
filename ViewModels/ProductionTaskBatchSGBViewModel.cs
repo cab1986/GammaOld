@@ -154,7 +154,7 @@ namespace Gamma.ViewModels
         }
         public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            base.SaveToModel(itemID);
+            base.SaveToModel(itemID, gammaBase);
             FirstView?.SaveToModel(itemID);
             SecondView?.SaveToModel(itemID);
             var productionTask = FirstView as IProductionTask;

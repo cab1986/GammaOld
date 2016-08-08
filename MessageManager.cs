@@ -280,6 +280,23 @@ namespace Gamma
             UIServices.SetBusyState();
             Messenger.Default.Send(msg);
         }
+
+        public static void OpenDocProduct(ProductKinds productKind, Guid productId)
+        {
+            switch (productKind)
+            {
+                case ProductKinds.ProductSpool:
+                    OpenDocProduct(DocProductKinds.DocProductSpool, productId);
+                    break;
+                case ProductKinds.ProductGroupPack:
+                    OpenDocProduct(DocProductKinds.DocProductGroupPack, productId);
+                    break;
+                case ProductKinds.ProductPallet:
+                    OpenDocProduct(DocProductKinds.DocProductPallet, productId);
+                    break;
+            }
+        }
+
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
             UIServices.SetBusyState();

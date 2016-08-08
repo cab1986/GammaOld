@@ -15,7 +15,7 @@ namespace Gamma.ViewModels
 {
     public class DocBrokeViewModel: SaveImplementedViewModel, IBarImplemented, ICheckedAccess
     {
-        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, decimal? brokeQuantity = null, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, GammaEntities gammaBase = null) : base(gammaBase)
         {
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             DocId = docBrokeId;
@@ -47,7 +47,7 @@ namespace Gamma.ViewModels
                 IsConfirmed = doc.IsConfirmed;
                 foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
                 {
-                    AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, BrokeDecisionProducts, brokeQuantity);
+                    AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
                 }
             }
             else
@@ -58,9 +58,10 @@ namespace Gamma.ViewModels
             {
                 AddProduct((Guid)productId, DocId, BrokeProducts, BrokeDecisionProducts);
             }
-            AddProductCommand = new DelegateCommand(ChooseProductToAdd);
-            DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct);
+            AddProductCommand = new DelegateCommand(ChooseProductToAdd, () => !IsReadOnly);
+            DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
             EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
+            OpenProductCommand = new DelegateCommand(OpenProduct);
             IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
@@ -86,10 +87,9 @@ namespace Gamma.ViewModels
         /// <param name="docId">ID документа акта о браке</param>
         /// <param name="brokeProducts">Список продукции</param>
         /// <param name="brokeDecisionProducts">Список решений по продукции</param>
-        /// <param name="brokeQuantity">Количество отбракованного, остальное будет считаться годным</param>
         /// <param name="gammaBase">Контекст БД</param>
         private void AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ICollection<BrokeDecisionProduct> brokeDecisionProducts,
-            decimal? brokeQuantity = null, GammaEntities gammaBase = null)
+            GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             if (BrokeProducts.Select(bp => bp.ProductId).Contains(productId)) return;
@@ -116,6 +116,7 @@ namespace Gamma.ViewModels
                 BaseMeasureUnit = product.BaseMeasureUnit,
                 PrintName = product.PrintName,
                 ProductId = product.ProductID, 
+                ProductKind = (ProductKinds)product.ProductKindID,
                 Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity??0 : docBrokeProductInfo.Quantity??0
             };
             brokeProducts.Add(brokeProduct);
@@ -143,6 +144,7 @@ namespace Gamma.ViewModels
                     {
                         Quantity = decisionProduct.Quantity,
                         MaxQuantity = product.BaseMeasureUnitQuantity ?? 1000000,
+                        MeasureUnit = product.BaseMeasureUnit,
                         ProductState = (ProductState)decisionProduct.StateID,
                         ProductId = decisionProduct.ProductID,
                         Number = product.Number,
@@ -318,6 +320,13 @@ namespace Gamma.ViewModels
             }
         }
 
+        private void OpenProduct()
+        {
+            if (SelectedBrokeProduct == null) return;
+            MessageManager.OpenDocProduct(SelectedBrokeProduct.ProductKind, SelectedBrokeProduct.ProductId);
+        }
+
+        public DelegateCommand OpenProductCommand { get; private set; }
         public DelegateCommand EditRejectionReasonsCommand { get; private set; }
 
         private void EditRejectionReasons()

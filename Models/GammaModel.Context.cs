@@ -94,7 +94,6 @@ namespace Gamma.Models
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
-        public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<DocBroke> DocBroke { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
@@ -107,6 +106,7 @@ namespace Gamma.Models
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
+        public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -372,15 +372,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result>("GetProductionTasks", batchKindIDParameter);
         }
     
-        public virtual ObjectResult<GetProductRelations_Result> GetProductRelations(Nullable<System.Guid> docID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductRelations_Result>("GetProductRelations", docIDParameter);
-        }
-    
         public virtual ObjectResult<GetSpoolRejectionReasons_Result> GetSpoolRejectionReasons()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpoolRejectionReasons_Result>("GetSpoolRejectionReasons");
@@ -402,15 +393,6 @@ namespace Gamma.Models
                 new ObjectParameter("RoleID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("mxp_RecreateRolePermits", roleIDParameter);
-        }
-    
-        public virtual ObjectResult<ProductRelations_Result> ProductRelations(Nullable<System.Guid> productID)
-        {
-            var productIDParameter = productID.HasValue ?
-                new ObjectParameter("ProductID", productID) :
-                new ObjectParameter("ProductID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ProductRelations_Result>("ProductRelations", productIDParameter);
         }
     
         public virtual int RecreateUser(Nullable<System.Guid> userID, string password)
@@ -497,23 +479,6 @@ namespace Gamma.Models
                 new ObjectParameter("MaterialTypeID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMaterialNomenclatureFolders_Result>("GetMaterialNomenclatureFolders", materialTypeIDParameter);
-        }
-    
-        public virtual ObjectResult<FindNomenclatureByStringWithFilter_Result> FindNomenclatureByStringWithFilter(string @string, Nullable<int> iD, Nullable<bool> filterByPlaceGroup)
-        {
-            var stringParameter = @string != null ?
-                new ObjectParameter("String", @string) :
-                new ObjectParameter("String", typeof(string));
-    
-            var iDParameter = iD.HasValue ?
-                new ObjectParameter("ID", iD) :
-                new ObjectParameter("ID", typeof(int));
-    
-            var filterByPlaceGroupParameter = filterByPlaceGroup.HasValue ?
-                new ObjectParameter("FilterByPlaceGroup", filterByPlaceGroup) :
-                new ObjectParameter("FilterByPlaceGroup", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result>("FindNomenclatureByStringWithFilter", stringParameter, iDParameter, filterByPlaceGroupParameter);
         }
     
         public virtual ObjectResult<GetBatchProducts_Result> GetBatchProducts(Nullable<System.Guid> productionTaskBatchID)
@@ -655,6 +620,32 @@ namespace Gamma.Models
                 new ObjectParameter("PlaceID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecision", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, printNameParameter, placeIDParameter);
+        }
+    
+        public virtual ObjectResult<FindNomenclatureByStringWithFilter_Result1> FindNomenclatureByStringWithFilter(string searchString, Nullable<int> id, Nullable<bool> filterByPlaceGroup)
+        {
+            var searchStringParameter = searchString != null ?
+                new ObjectParameter("SearchString", searchString) :
+                new ObjectParameter("SearchString", typeof(string));
+    
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var filterByPlaceGroupParameter = filterByPlaceGroup.HasValue ?
+                new ObjectParameter("FilterByPlaceGroup", filterByPlaceGroup) :
+                new ObjectParameter("FilterByPlaceGroup", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result1>("FindNomenclatureByStringWithFilter", searchStringParameter, idParameter, filterByPlaceGroupParameter);
+        }
+    
+        public virtual ObjectResult<GetProductRelations_Result2> GetProductRelations(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductRelations_Result2>("GetProductRelations", productIDParameter);
         }
     }
 }

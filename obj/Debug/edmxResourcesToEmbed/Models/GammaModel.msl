@@ -692,18 +692,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="GetProductRelations" FunctionName="GammaDBModel.GetProductRelations">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.GetProductRelations_Result">
-          <ScalarProperty Name="RelationKind" ColumnName="RelationKind" />
-          <ScalarProperty Name="ProductKind" ColumnName="ProductKind" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="GetSpoolRejectionReasons" FunctionName="GammaDBModel.GetSpoolRejectionReasons">
       <ResultMapping>
         <ComplexTypeMapping TypeName="GammaModel.GetSpoolRejectionReasons_Result">
@@ -715,19 +703,6 @@
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="UserPermit" FunctionName="GammaDBModel.msp_UserPermit" />
     <FunctionImportMapping FunctionImportName="mxp_RecreateRolePermits" FunctionName="GammaDBModel.mxp_RecreateRolePermits" />
-    <FunctionImportMapping FunctionImportName="ProductRelations" FunctionName="GammaDBModel.ProductRelations">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.ProductRelations_Result">
-          <ScalarProperty Name="RelationKind" ColumnName="RelationKind" />
-          <ScalarProperty Name="ProductKind" ColumnName="ProductKind" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="RecreateUser" FunctionName="GammaDBModel.RecreateUser" />
     <FunctionImportMapping FunctionImportName="WriteSpoolInstallLog" FunctionName="GammaDBModel.WriteSpoolInstallLog" />
     <EntitySetMapping Name="C1CCharacteristics">
@@ -1186,17 +1161,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DocProductionProducts">
-      <EntityTypeMapping TypeName="GammaModel.DocProductionProducts">
-        <MappingFragment StoreEntitySet="DocProductionProducts">
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="DocMovement">
       <EntityTypeMapping TypeName="GammaModel.DocMovement">
         <MappingFragment StoreEntitySet="DocMovement">
@@ -1358,5 +1322,37 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="CreateDocBrokeWithBrokeDecision" FunctionName="GammaDBModel.CreateDocBrokeWithBrokeDecision" />
+    <EntitySetMapping Name="DocProductionProducts">
+      <EntityTypeMapping TypeName="GammaModel.DocProductionProducts">
+        <MappingFragment StoreEntitySet="DocProductionProducts">
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="FindNomenclatureByStringWithFilter" FunctionName="GammaDBModel.FindNomenclatureByStringWithFilter">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.FindNomenclatureByStringWithFilter_Result1">
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetProductRelations" FunctionName="GammaDBModel.GetProductRelations">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetProductRelations_Result2">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>
