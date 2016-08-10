@@ -95,7 +95,6 @@ namespace Gamma.Models
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
-        public virtual DbSet<DocBroke> DocBroke { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
         public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
@@ -107,6 +106,7 @@ namespace Gamma.Models
         public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
+        public virtual DbSet<DocBroke> DocBroke { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -188,15 +188,6 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteUnload", docIDParameter);
-        }
-    
-        public virtual ObjectResult<DocRelations_Result> DocRelations(Nullable<System.Guid> docID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DocRelations_Result>("DocRelations", docIDParameter);
         }
     
         public virtual ObjectResult<FindProductionTasks_Result> FindProductionTasks(Nullable<int> batchKindID, Nullable<byte> productionTaskStateID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd, string number)
@@ -646,6 +637,15 @@ namespace Gamma.Models
                 new ObjectParameter("ProductID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductRelations_Result2>("GetProductRelations", productIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocRelations_Result> GetDocRelations(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocRelations_Result>("GetDocRelations", docIDParameter);
         }
     }
 }

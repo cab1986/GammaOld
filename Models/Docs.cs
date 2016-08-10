@@ -62,9 +62,9 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocShipments> DocShipments { get; set; }
         public virtual DocMovement DocMovement { get; set; }
-        public virtual DocBroke DocBroke { get; set; }
         public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProducts> DocProducts { get; set; }
+        public virtual DocBroke DocBroke { get; set; }
     }
 }

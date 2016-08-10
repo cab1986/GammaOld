@@ -329,6 +329,7 @@
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PlaceDiscoverID" Type="uniqueidentifier" />
     <Property Name="PlaceStoreID" Type="uniqueidentifier" />
+    <Property Name="IsInFuturePeriod" Type="bit" />
   </EntityType>
   <EntityType Name="DocBrokeDecisionProducts">
     <Key>
@@ -2868,9 +2869,6 @@
   <Function Name="DeleteUnload" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
-  <Function Name="DocRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
-  </Function>
   <Function Name="FillDocCloseShiftConvertingMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -2937,6 +2935,9 @@
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetDocCloseShiftWRGroupPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="GetDocRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="GetGroupPackDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">

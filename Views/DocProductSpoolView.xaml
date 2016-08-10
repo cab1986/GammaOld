@@ -45,10 +45,10 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
-                    <dxlc:LayoutItem Label="Вес тамбура, т" LabelPosition="Top">
-                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10" 
+                    <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
+                        <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000" 
                                            EditValue="{Binding Weight, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Decimal}"
-                                           NullText="0" AllowNullInput="True" IsFloatValue="true" MaskUseAsDisplayFormat="True" Increment="0.001"/>
+                                           NullText="0" AllowNullInput="True" IsFloatValue="False" MaskUseAsDisplayFormat="True" Increment="1"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="1000"
@@ -71,7 +71,7 @@
                         </dxe:ListBoxEdit.StyleSettings>
                     </dxe:ListBoxEdit>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Текущий вес тамбура, т" LabelPosition="Top" Width="150">
+                <dxlc:LayoutItem Label="Текущий вес тамбура, кг" LabelPosition="Top" Width="150">
                     <dxe:TextEdit IsReadOnly="True" EditValue="{Binding RestWeight}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>

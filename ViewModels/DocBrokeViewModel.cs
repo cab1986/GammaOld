@@ -44,6 +44,7 @@ namespace Gamma.ViewModels
                 Date = doc.Date;
                 PlaceDiscoverId = doc.DocBroke.PlaceDiscoverID;
                 PlaceStoreId = doc.DocBroke.PlaceStoreID;
+                IsInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false;
                 IsConfirmed = doc.IsConfirmed;
                 foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
                 {
@@ -232,6 +233,8 @@ namespace Gamma.ViewModels
             BrokeProducts.Remove(SelectedBrokeProduct);
         }
         
+        public bool IsInFuturePeriod { get; set; }
+
         private Guid DocId { get; }
 
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
@@ -399,6 +402,7 @@ namespace Gamma.ViewModels
                     };
                 doc.DocBroke.PlaceDiscoverID = PlaceDiscoverId;
                 doc.DocBroke.PlaceStoreID = PlaceStoreId;
+                doc.DocBroke.IsInFuturePeriod = IsInFuturePeriod;
                 foreach (var docBrokeProduct in doc.DocBroke.DocBrokeProducts)
                 {
                     if (docBrokeProduct.DocBrokeProductRejectionReasons.Count > 0)

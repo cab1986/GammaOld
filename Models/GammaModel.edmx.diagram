@@ -178,16 +178,12 @@
         <AssociationConnector Association="GammaModel.FK_Branches_Enterprises" />
         <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="14.25" PointY="57.375" />
         <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" />
-        <EntityTypeShape EntityType="GammaModel.DocBroke" Width="1.5" PointX="14.25" PointY="54.375" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeProducts" Width="1.5" PointX="23.5" PointY="39.875" />
-        <AssociationConnector Association="GammaModel.FK_DocBroke_Docs" />
-        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_DocBroke" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeProductRejectionReasons" Width="1.5" PointX="25.75" PointY="40" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProductRejectionReasons_DocBrokeProducts" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProductRejectionReasons_1CRejectionReasons" />
         <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="9.75" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeDecisionProducts" Width="1.5" PointX="24.75" PointY="61.625" />
-        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBroke" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_ProductStates" />
         <EntityTypeShape EntityType="GammaModel.Places" Width="1.5" PointX="7.5" PointY="53.375" />
         <AssociationConnector Association="GammaModel.FK_Places_Branches" />
@@ -228,6 +224,10 @@
         <AssociationConnector Association="GammaModel.FK_DocProductionProducts_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocProductionProducts_DocProduction" />
         <AssociationConnector Association="GammaModel.FK_DocProductionProducts_Products" />
+        <EntityTypeShape EntityType="GammaModel.DocBroke" Width="1.5" PointX="14.25" PointY="61.125" />
+        <AssociationConnector Association="GammaModel.FK_DocBroke_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBroke" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_DocBroke" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

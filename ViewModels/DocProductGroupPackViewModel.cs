@@ -53,8 +53,8 @@ namespace Gamma.ViewModels
             {
                 ProductId = doc.DocProduction.DocProductionProducts.Select(d => d.ProductID).First();
                 var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
-                Weight = Convert.ToInt32(productGroupPack?.Weight ?? 0);
-                GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight ?? 0);
+                Weight = Convert.ToInt32(productGroupPack?.Weight*1000 ?? 0);
+                GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight*1000 ?? 0);
             }
             var groupPackSpools = GammaBase.GetGroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
@@ -329,7 +329,7 @@ namespace Gamma.ViewModels
                     {
                         ProductID = product.ProductID,
                         DocID = itemID,
-                        Quantity = Weight,
+                        Quantity = Weight/1000,
                         C1CNomenclatureID = NomenclatureID,
                         C1CCharacteristicID = CharacteristicID
                     }
@@ -337,8 +337,8 @@ namespace Gamma.ViewModels
             }
             product.ProductGroupPacks.C1CNomenclatureID = NomenclatureID;
             product.ProductGroupPacks.C1CCharacteristicID = CharacteristicID;
-            product.ProductGroupPacks.Weight = Weight;
-            product.ProductGroupPacks.GrossWeight = GrossWeight;
+            product.ProductGroupPacks.Weight = Weight/1000;
+            product.ProductGroupPacks.GrossWeight = GrossWeight/1000;
             product.ProductGroupPacks.Diameter = Diameter;
             var docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)

@@ -23,6 +23,7 @@ namespace Gamma.ViewModels
             EditItemCommand = new DelegateCommand(EditItem,SelectedNotNull);
             NewItemCommand = new DelegateCommand(NewItem);
             DeleteItemCommand = new DelegateCommand(DeleteItem,SelectedNotNull);
+            RecreateAllRolesPermitsCommand = new DelegateCommand(RecreateAllRolesPermits);
             Messenger.Default.Register<BaseReconnectedMessage>(this,LoadTables);
         }
         private bool SelectedNotNull()
@@ -196,6 +197,17 @@ namespace Gamma.ViewModels
                     break;
             }
         }
+
+        private void RecreateAllRolesPermits()
+        {
+            foreach (var role in Roles)
+            {
+                DB.RecreateRolePermits(role.RoleID);
+            }
+        }
+
+        public DelegateCommand RecreateAllRolesPermitsCommand { get; private set; }
+
         public DelegateCommand EditItemCommand { get; set; }
         private void EditItem()
         {

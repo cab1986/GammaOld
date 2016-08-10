@@ -175,7 +175,7 @@ namespace Gamma.Models
                             MaxQuantity = BrokeDecisionProduct.MaxQuantity,
                             ProductId = BrokeDecisionProduct.ProductId,
                             Number = BrokeDecisionProduct.Number,
-                            NomenclatureName = BrokeDecisionProduct.Number,
+                            NomenclatureName = BrokeDecisionProduct.NomenclatureName,
                             MeasureUnit = BrokeDecisionProduct.MeasureUnit
                         };
                         BrokeDecisionProducts.Add(productNeedsDecision);

@@ -10,8 +10,10 @@
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
         xmlns:g="clr-namespace:Gamma"
-    x:Class="Gamma.Views.ManageUsersView" 
-    mc:Ignorable="d ignore" 
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        x:Class="Gamma.Views.ManageUsersView" 
+    mc:Ignorable="d ignore"
+    d:DataContext="{d:DesignInstance Type=viewModels:ManageUsersViewModel, IsDesignTimeCreatable=False}"
     Width="893.373">
     <Grid>
         <dxb:BarManager>
@@ -40,16 +42,24 @@
                     </Grid>
                 </dx:DXTabItem>
                 <dx:DXTabItem  Header="Настройка ролей">
-                    <Grid Background="Transparent">
-                        <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}">
-                            <dxg:GridControl.Columns>
-                                <dxg:GridColumn Header="Роль" FieldName="Name"/>
-                            </dxg:GridControl.Columns>
-                            <dxg:GridControl.View>
-                                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" />
-                            </dxg:GridControl.View>
-                        </dxg:GridControl>
-                    </Grid>
+                    <dxb:BarManager>
+                        <dxb:BarManager.Bars>
+                            <dxb:Bar>
+                                <dxb:BarButtonItem Content="Пересоздать роли" Glyph="{dx:DXImage Image=Convert_16x16.png}" LargeGlyph="{dx:DXImage Image=Convert_32x32.png}" GlyphSize="Small"
+                                                   Command="{Binding RecreateAllRolesPermitsCommand}"/>
+                            </dxb:Bar>
+                        </dxb:BarManager.Bars>
+                        <Grid Background="Transparent">
+                            <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}">
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn Header="Роль" FieldName="Name"/>
+                                </dxg:GridControl.Columns>
+                                <dxg:GridControl.View>
+                                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" />
+                                </dxg:GridControl.View>
+                            </dxg:GridControl>
+                        </Grid>
+                    </dxb:BarManager>
                 </dx:DXTabItem>
                 <dx:DXTabItem Header="Настройка видов доступа">
                     <Grid Background="Transparent">

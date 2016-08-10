@@ -232,24 +232,22 @@ namespace Gamma.ViewModels
 
         private void GetDocRelations(Guid docId)
         {
-            /*
+            
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
-                from prel in GammaBase.DocRelations(docId)
-                let productKindID = prel.ProductKindID
-                where productKindID != null
+                from prel in GammaBase.GetDocRelations(docId)
                 select new ProductRelation
                 {
                     Date = prel.Date,
                     DocID = prel.DocID,
                     Number = prel.Number,
                     ProductID = prel.ProductID,
-                    ProductKind = prel.ProductKind,
-                    RelationKind = prel.RelationKind,
-                    ProductKindID = (ProductKinds)productKindID
+                    Description = prel.Description,
+                    ProductKindID = prel.ProductKindID,
+                    DocType = (DocTypes)(prel.DocTypeID??0)
                 }
                 );
-                */
+                
         }
 
 /*

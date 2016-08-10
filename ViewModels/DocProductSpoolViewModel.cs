@@ -73,8 +73,8 @@ namespace Gamma.ViewModels
                 Length = productSpool.Length ?? 0;
                 BreakNumber = productSpool.BreakNumber;
                 var productionQuantity = productSpool.Products.DocProductionProducts.FirstOrDefault()?.Quantity??0;
-                Weight = productionQuantity > 100 ? productionQuantity/1000 : productionQuantity;
-                RestWeight = productSpool.DecimalWeight > 100 ? productSpool.DecimalWeight/1000 : productSpool.DecimalWeight;
+                Weight = productionQuantity > 100 ? productionQuantity : productionQuantity*1000;
+                RestWeight = productSpool.DecimalWeight > 100 ? productSpool.DecimalWeight : productSpool.DecimalWeight*1000;
                 ToughnessKindID = productSpool.ToughnessKindID ?? 1;
 /*
                 var stateInfo = (from d in GammaBase.DocChangeStateProducts
@@ -206,7 +206,7 @@ namespace Gamma.ViewModels
         }
         private bool IsConfirmed { get; set; }
         private decimal _weight;   
-        [Range(0.001,10,ErrorMessage=@"Укажите вес тамбура")]
+        [Range(1,10000,ErrorMessage=@"Укажите вес тамбура")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Weight
         {
@@ -301,7 +301,7 @@ namespace Gamma.ViewModels
                     {
                         ProductID = product.ProductID,
                         DocID = itemID,
-                        Quantity = Weight,
+                        Quantity = Weight/1000,
                         C1CNomenclatureID = (Guid)NomenclatureID,
                         C1CCharacteristicID = (Guid)CharacteristicID
                     }
@@ -345,7 +345,7 @@ namespace Gamma.ViewModels
                 var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
                 if (docProductionProduct != null)
                 {
-                    docProductionProduct.Quantity = Weight;
+                    docProductionProduct.Quantity = Weight/1000;
                     docProductionProduct.C1CNomenclatureID = (Guid)NomenclatureID;
                     docProductionProduct.C1CCharacteristicID = (Guid)CharacteristicID;
                 }

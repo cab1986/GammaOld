@@ -10,20 +10,15 @@
 namespace Gamma.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DocBrokeDecisionProducts
+    public partial class GetDocRelations_Result
     {
+        public string Description { get; set; }
         public System.Guid DocID { get; set; }
+        public Nullable<int> DocTypeID { get; set; }
         public System.Guid ProductID { get; set; }
-        public byte StateID { get; set; }
-        public decimal Quantity { get; set; }
-        public string Comment { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-    
-        public virtual ProductStates ProductStates { get; set; }
-        public virtual Products Products { get; set; }
-        public virtual DocBroke DocBroke { get; set; }
+        public string Number { get; set; }
+        public System.DateTime Date { get; set; }
+        public byte ProductKindID { get; set; }
     }
 }

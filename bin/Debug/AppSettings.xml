@@ -18,6 +18,6 @@
   </ScalesComPort>
   <HostName>asutpmatt\sqlexpress</HostName>
   <DbName>gammanew</DbName>
-  <User>ПРС21</User>
+  <User>sa</User>
   <UseScanner>false</UseScanner>
 </GammaSettings>

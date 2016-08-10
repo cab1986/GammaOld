@@ -494,19 +494,6 @@
     <FunctionImportMapping FunctionImportName="DeleteGroupPack" FunctionName="GammaDBModel.DeleteGroupPack" />
     <FunctionImportMapping FunctionImportName="DeleteSpool" FunctionName="GammaDBModel.DeleteSpool" />
     <FunctionImportMapping FunctionImportName="DeleteUnload" FunctionName="GammaDBModel.DeleteUnload" />
-    <FunctionImportMapping FunctionImportName="DocRelations" FunctionName="GammaDBModel.DocRelations">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="GammaModel.DocRelations_Result">
-          <ScalarProperty Name="RelationKind" ColumnName="RelationKind" />
-          <ScalarProperty Name="ProductKind" ColumnName="ProductKind" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="FindProductionTasks" FunctionName="GammaDBModel.FindProductionTasks">
       <ResultMapping>
         <ComplexTypeMapping TypeName="GammaModel.FindProductionTasks_Result">
@@ -1172,15 +1159,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DocBroke">
-      <EntityTypeMapping TypeName="GammaModel.DocBroke">
-        <MappingFragment StoreEntitySet="DocBroke">
-          <ScalarProperty Name="PlaceStoreID" ColumnName="PlaceStoreID" />
-          <ScalarProperty Name="PlaceDiscoverID" ColumnName="PlaceDiscoverID" />
-          <ScalarProperty Name="DocID" ColumnName="DocID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="DocBrokeProducts">
       <EntityTypeMapping TypeName="GammaModel.DocBrokeProducts">
         <MappingFragment StoreEntitySet="DocBrokeProducts">
@@ -1354,5 +1332,28 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDocRelations" FunctionName="GammaDBModel.GetDocRelations">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetDocRelations_Result">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+          <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="DocBroke">
+      <EntityTypeMapping TypeName="GammaModel.DocBroke">
+        <MappingFragment StoreEntitySet="DocBroke">
+          <ScalarProperty Name="IsInFuturePeriod" ColumnName="IsInFuturePeriod" />
+          <ScalarProperty Name="PlaceStoreID" ColumnName="PlaceStoreID" />
+          <ScalarProperty Name="PlaceDiscoverID" ColumnName="PlaceDiscoverID" />
+          <ScalarProperty Name="DocID" ColumnName="DocID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

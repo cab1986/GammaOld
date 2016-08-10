@@ -109,9 +109,9 @@
                 <dxb:Bar UseWholeRow="True" Visible="{Binding ProductionTaskBarVisible}" AllowCustomizationMenu="False" AllowHide="False" AllowQuickCustomization="False" AllowCollapse="True">
                     <dxb:BarButtonItem Content="Найти задание" BarItemDisplayMode="ContentAndGlyph" Glyph="{dx:DXImage Image=Find_16x16.png}" Command="{Binding FindProductionTaskCommand}"/>
                 </dxb:Bar>
-                <dxb:Bar Caption="StatusBar" IsStatusBar="True" ShowSizeGrip="True">
+                <dxb:Bar Caption="StatusBar" IsStatusBar="True" ShowDragWidget="False" UseWholeRow="True">
                     <dxb:Bar.DockInfo>
-                        <dxb:BarDockInfo ContainerType="Bottom" />
+                        <dxb:BarDockInfo ContainerType="Bottom"/>
                     </dxb:Bar.DockInfo>
                     <dxb:BarButtonItem Content="{Binding StatusText}"/>
                 </dxb:Bar>
