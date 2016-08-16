@@ -144,7 +144,7 @@ namespace Gamma.ViewModels
                     brokeDecisionProducts.Add(new BrokeDecisionProduct
                     {
                         Quantity = decisionProduct.Quantity,
-                        MaxQuantity = product.BaseMeasureUnitQuantity ?? 1000000,
+                        MaxQuantity = docBrokeProductInfo?.Quantity ?? 1000000,
                         MeasureUnit = product.BaseMeasureUnit,
                         ProductState = (ProductState)decisionProduct.StateID,
                         ProductId = decisionProduct.ProductID,
@@ -356,7 +356,8 @@ namespace Gamma.ViewModels
                 ProductId = product.ProductId,
                 Number = product.Number,
                 NomenclatureName = product.NomenclatureName,
-                ProductState = productState
+                ProductState = productState,
+                MeasureUnit = product.MeasureUnit
             };
             return decisionProduct;
         }

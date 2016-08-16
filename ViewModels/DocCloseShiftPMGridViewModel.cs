@@ -32,7 +32,8 @@ namespace Gamma.ViewModels
                         Nomenclature = sp.Nomenclature,
                         Number = sp.Number,
                         ProductID = sp.ProductID,
-                        Weight = sp.Weight??0
+                        //TODO Убрать проверку при переводе всех переделов на тонны
+                        Weight = (sp.Weight > 10 ? sp.Weight/1000 : sp.Weight)??0
                     }
                     );
                 DocCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
@@ -79,7 +80,7 @@ namespace Gamma.ViewModels
                             Nomenclature = string.Concat(ps.C1CNomenclature.Name," ",ps.C1CCharacteristics.Name),
                             Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.DecimalWeight
+                            Weight = ps.DecimalWeight > 10 ? ps.DecimalWeight/1000 : ps.DecimalWeight
                         }).FirstOrDefault()
                     );
             }

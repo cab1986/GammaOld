@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<OpenProductionTaskBatchMessage>(this, OpenProductionTaskBatch);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
-            if (WorkSession.PlaceID > 0 && WorkSession.PlaceID < 4) // Если производственный передел
+            if (WorkSession.IsProductionPlace) // Если производственный передел
             {
                 var dialog = new ChoosePrintNameDialog();
                 dialog.ShowDialog();

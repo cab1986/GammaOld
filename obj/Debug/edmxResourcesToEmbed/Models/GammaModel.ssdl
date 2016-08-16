@@ -2946,9 +2946,6 @@
   <Function Name="GetGroupPackSpoolCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
   </Function>
-  <Function Name="GetGroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
-  </Function>
   <Function Name="GetInputNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
@@ -3009,6 +3006,9 @@
   <Function Name="GetSpoolRejectionReasons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="GetUnwindersCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="TableName" Type="varchar" Mode="In" />

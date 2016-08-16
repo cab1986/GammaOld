@@ -118,6 +118,8 @@ namespace Gamma.Models
             set
             {
                 if (_isChecked == value) return;
+                if (value && ProductState != ProductState.Broke && BrokeDecisionProducts.Any(p => p.ProductState != ProductState 
+                    && p.ProductState != ProductState.Broke && p.ProductState != ProductState.NeedsDecision)) return;
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
                 if (BrokeDecisionProduct == null) return;
@@ -127,6 +129,7 @@ namespace Gamma.Models
                             bp.ProductState == ProductState.NeedsDecision);
                 if (value)
                 {
+                    
                     if (!BrokeDecisionProducts.Contains(BrokeDecisionProduct))
                         BrokeDecisionProducts.Add(BrokeDecisionProduct);
                     
@@ -163,8 +166,7 @@ namespace Gamma.Models
                 }
                 else
                 {
-                    BrokeDecisionProducts.Remove(BrokeDecisionProduct);
-                    var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
+                    var sumQuantity = BrokeDecisionProducts.Except(new List<BrokeDecisionProduct> {BrokeDecisionProduct}).Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
                         .Sum(p => p.Quantity);
                     if (productNeedsDecision == null)
                     {
@@ -183,6 +185,7 @@ namespace Gamma.Models
                     else
                         productNeedsDecision.Quantity += BrokeDecisionProduct.Quantity;
                         Quantity = 0;
+                    BrokeDecisionProducts.Remove(BrokeDecisionProduct);
                 }
             }
         }

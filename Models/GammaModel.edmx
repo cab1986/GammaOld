@@ -2952,9 +2952,6 @@
         <Function Name="GetGroupPackSpoolCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="GetGroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
-        </Function>
         <Function Name="GetInputNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
@@ -3015,6 +3012,9 @@
         <Function Name="GetSpoolRejectionReasons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetUnwindersCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TableName" Type="varchar" Mode="In" />
@@ -4882,9 +4882,6 @@
           <FunctionImport Name="GetDocCloseShiftWRGroupPacks" ReturnType="Collection(GammaModel.GetDocCloseShiftWRGroupPacks_Result)">
           <Parameter Name="DocID" Mode="In" Type="Guid" />
           </FunctionImport>
-          <FunctionImport Name="GetGroupPackSpools" ReturnType="Collection(GammaModel.GetGroupPackSpools_Result)">
-          <Parameter Name="DocID" Mode="In" Type="Guid" />
-          </FunctionImport>
           <FunctionImport Name="GetInputNomenclature" ReturnType="Collection(GammaModel.GetInputNomenclature_Result)">
             <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
             <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
@@ -5495,6 +5492,9 @@
             <End Role="DocBroke" EntitySet="DocBroke" />
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
           </AssociationSet>
+          <FunctionImport Name="GroupPackSpools" ReturnType="Collection(GammaModel.GroupPackSpools_Result)">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -7759,6 +7759,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GroupPackSpools_Result">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="DocID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="15" Scale="5" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="PlaceID" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8313,31 +8324,6 @@
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetGroupPackSpools" FunctionName="GammaDBModel.GetGroupPackSpools">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.GetGroupPackSpools_Result">
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-                <ScalarProperty Name="Place" ColumnName="Place" />
-                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-                <ScalarProperty Name="StateID" ColumnName="StateID" />
-                <ScalarProperty Name="ChangeStateQuantity" ColumnName="ChangeStateQuantity" />
-                <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
-                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-                <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
-                <ScalarProperty Name="State" ColumnName="State" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -9119,6 +9105,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GroupPackSpools" FunctionName="GammaDBModel.GroupPackSpools" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GroupPackSpools_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

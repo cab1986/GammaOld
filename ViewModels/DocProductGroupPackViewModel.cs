@@ -56,7 +56,7 @@ namespace Gamma.ViewModels
                 Weight = Convert.ToInt32(productGroupPack?.Weight*1000 ?? 0);
                 GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight*1000 ?? 0);
             }
-            var groupPackSpools = GammaBase.GetGroupPackSpools(docID).ToList();
+            var groupPackSpools = GammaBase.GroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
             {
                 BaseCoreWeight = DB.GetSpoolCoreWeight(groupPackSpools[0].ProductID);
@@ -70,7 +70,7 @@ namespace Gamma.ViewModels
                         NomenclatureID = (Guid)groupPackSpool.C1CNomenclatureID,
                         CharacteristicID = (Guid)groupPackSpool.C1CCharacteristicID,
                         Number = $"{groupPackSpool.Number} от {groupPackSpool.Date}",
-                        Weight = Convert.ToInt32(groupPackSpool.Quantity),
+                        Weight = groupPackSpool.Quantity??0,
                         Nomenclature = groupPackSpool.NomenclatureName,
                     });
                 }
@@ -373,7 +373,8 @@ namespace Gamma.ViewModels
                     docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Add(new DocWithdrawalProducts()
                     {
                         DocID = docWithdrawal.DocID,
-                        ProductID = spool.ProductID
+                        ProductID = spool.ProductID,
+                        CompleteWithdrawal = true
                     });
                 }
             GammaBase.SaveChanges();

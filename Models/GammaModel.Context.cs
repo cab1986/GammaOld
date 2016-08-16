@@ -274,15 +274,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftWRGroupPacks_Result>("GetDocCloseShiftWRGroupPacks", docIDParameter);
         }
     
-        public virtual ObjectResult<GetGroupPackSpools_Result> GetGroupPackSpools(Nullable<System.Guid> docID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetGroupPackSpools_Result>("GetGroupPackSpools", docIDParameter);
-        }
-    
         public virtual ObjectResult<GetInputNomenclature_Result> GetInputNomenclature(Nullable<System.Guid> nomenclatureID, Nullable<int> placeGroupID)
         {
             var nomenclatureIDParameter = nomenclatureID.HasValue ?
@@ -646,6 +637,15 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocRelations_Result>("GetDocRelations", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GroupPackSpools_Result> GroupPackSpools(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GroupPackSpools_Result>("GroupPackSpools", docIDParameter);
         }
     }
 }

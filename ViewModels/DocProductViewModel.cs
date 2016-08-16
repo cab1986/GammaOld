@@ -392,6 +392,7 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
             CurrentViewModel.SaveToModel(Doc.DocID);
         }
+
         private Docs Doc { get; set; }
         private DocProduction DocProduction { get; set; }
         public override sealed bool IsValid => base.IsValid && (CurrentViewModel?.IsValid ?? false);

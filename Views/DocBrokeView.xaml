@@ -65,21 +65,21 @@
             <dxmvvm:Interaction.Behaviors>
                 <gamma:UIAuthBehavior />
             </dxmvvm:Interaction.Behaviors>
-            <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True" >
+            <dxlc:LayoutControl Header="Header" Orientation="Horizontal">
                 <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" Width="230">
                     <dxlc:LayoutItem Label="Номер">
                         <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Дата">
-                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True"/>
+                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Место обнаружения" LabelPosition="Top">
-                        <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
+                        <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId, ValidatesOnDataErrors=True}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Место хранения" LabelPosition="Top">
-                        <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
+                        <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId, ValidatesOnDataErrors=True}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
                     </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Выявлен п последующих периодах">
+                    <dxlc:LayoutItem Label="Выявлен в последующих периодах" LabelPosition="Top">
                         <dxe:CheckEdit EditValue="{Binding IsInFuturePeriod}" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Подтвержден">

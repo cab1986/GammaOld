@@ -24,20 +24,21 @@
         <dxlc:LayoutControl Grid.Row="1">
             <dxlc:LayoutItem Label="Место обнаружения:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding PlacesList}" EditValue="{Binding PlaceDiscoverId}" DisplayMember="PlaceName" ValueMember="PlaceGuid"
-                                  IsTextEditable="False"/>
+                                  IsTextEditable="False" ClearSelectionOnBackspace="True" AutoComplete="True" AllowNullInput="True">
+                </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Место хранения:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding PlacesList}" EditValue="{Binding PlaceStoreId}" DisplayMember="PlaceName" ValueMember="PlaceGuid"
-                                  IsTextEditable="False"/>
+                                  IsTextEditable="False" ClearSelectionOnBackspace="True" AutoComplete="True" AllowNullInput="True" />
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номер:">
                 <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=PropertyChanged}" />
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Дата с:" Width="120">
-                <dxe:DateEdit EditValue="{Binding DateBegin}" />
+                <dxe:DateEdit EditValue="{Binding DateBegin}" ShowClearButton="True" AllowNullInput="True"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="по:" Width="100">
-                <dxe:DateEdit EditValue="{Binding DateEnd}" />
+                <dxe:DateEdit EditValue="{Binding DateEnd}" ShowClearButton="True" AllowNullInput="True"/>
             </dxlc:LayoutItem>
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60" Height="22" Margin="0,-5,0,0"/>
         </dxlc:LayoutControl>

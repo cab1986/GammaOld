@@ -19,10 +19,10 @@
                         <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
                             <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
                                 <dxe:SpinEdit AllowDefaultButton="False" HorizontalContentAlignment="Stretch" Name="EdtBrokeWeight"
-                                              IsFloatValue="False"/>
+                                              IsFloatValue="False" IsEnabled="{Binding ElementName=RadioBroke, Path=IsChecked}"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Причина брака" LabelPosition="Top">
-                                <dxe:ComboBoxEdit Name="LkpBrokeReason" FindMode="Always" AutoComplete="True" 
+                                <dxe:ComboBoxEdit Name="LkpBrokeReason" FindMode="Always" AutoComplete="True" IsEnabled="{Binding ElementName=RadioBroke, Path=IsChecked}"
                                                   ValueMember="RejectionReasonID" DisplayMember="Description"
                                                   ImmediatePopup="True" IncrementalFiltering="True" AllowNullInput="True" 
                                                   AssignNullValueOnClearingEditText="True" ClearSelectionOnBackspace="True"/>
@@ -36,7 +36,8 @@
                     <Label Content="Переработан с остатком:" VerticalAlignment="Center" DockPanel.Dock="Right" Width="150"/>
                     <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
                             <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
-                                <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="EdtRemainderWeight" HorizontalContentAlignment="Stretch"/>
+                                <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="EdtRemainderWeight" HorizontalContentAlignment="Stretch"
+                                              IsEnabled="{Binding ElementName=RadioReminder, Path=IsChecked}"/>
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                 </dxlc:LayoutControl>

@@ -25,7 +25,8 @@ namespace Gamma
                                      u.Places.FirstOrDefault().PlaceID,
                                      placeGroupID = u.Places.FirstOrDefault().PlaceGroupID, u.ShiftID, u.DBAdmin,
                                      programAdmin = u.ProgramAdmin,
-                                     u.Places.FirstOrDefault().BranchID
+                                     u.Places.FirstOrDefault().BranchID,
+                                     u.Places.FirstOrDefault().IsProductionPlace
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -38,6 +39,7 @@ namespace Gamma
                 BranchID = userInfo.BranchID;
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroups)userInfo.placeGroupID;
+                IsProductionPlace = userInfo.IsProductionPlace ?? false;
             }
         }
         public static bool DBAdmin
@@ -59,6 +61,8 @@ namespace Gamma
         {
             get; private set;
         }
+
+        public static bool IsProductionPlace { get; private set; }
         public static PlaceGroups PlaceGroup { get; private set; }
         public static string PrintName { get; set; }
     }

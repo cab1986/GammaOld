@@ -34,7 +34,7 @@ namespace Gamma.ViewModels
             SourceSpools = GammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
             if (SourceSpools == null)
             {
-                SourceSpools = new SourceSpools() { PlaceID = (int)WorkSession.PlaceID };
+                SourceSpools = new SourceSpools() { PlaceID = WorkSession.PlaceID };
                 GammaBase.SourceSpools.Add(SourceSpools);
                 GammaBase.SaveChanges();
             }
@@ -80,10 +80,11 @@ namespace Gamma.ViewModels
                 GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
                     .FirstOrDefault(d => d.ProductID == productId);
             if (docWithdrawalProduct == null) return;
-            docWithdrawalProduct.Quantity = weight;
+            var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
+            docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight/1000;
             docWithdrawalProduct.CompleteWithdrawal = false;
             GammaBase.SaveChanges();
-            ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.DocID);
+            ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
         }
 
         private byte CurrentUnwinder { get; set; }
@@ -123,8 +124,6 @@ namespace Gamma.ViewModels
                     Unwinder3ProductID = msg.ProductID;
                     SourceSpools.Unwinder3Spool = msg.ProductID;
                     SourceSpools.Unwinder3Active = Unwinder3Active;
-                    break;
-                default:
                     break;
             }
             GammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
@@ -215,22 +214,23 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             var docWithdrawalProduct =
                 GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
-                    .FirstOrDefault(d => d.ProductID == productId);
+                    .FirstOrDefault(d => d.ProductID == productId && d.Quantity == null && (d.CompleteWithdrawal == null && d.CompleteWithdrawal == false));
             if (docWithdrawalProduct == null) return;
             docWithdrawalProduct.CompleteWithdrawal = true;
             GammaBase.SaveChanges();
         }
 
-        private void BrokeProduct(Guid productid, decimal weight, Guid? rejectionReasonId)
+        private void BrokeProduct(Guid productId, decimal weight, Guid? rejectionReasonId)
         {
             var docID = SqlGuidUtil.NewSequentialid();
-            GammaBase.CreateDocBrokeWithBrokeDecision(docID, productid, weight/1000, rejectionReasonId,
+            GammaBase.CreateDocBrokeWithBrokeDecision(docID, productId, weight/1000, rejectionReasonId,
                 WorkSession.PrintName, WorkSession.PlaceID);
+            ComleteWithdraw(productId);
 //            MessageManager.OpenDocBroke(docID);
-            var docProductionId = GammaBase.DocProductionProducts
-                .Where(d => d.ProductID == productid && d.DocProduction.Docs.DocTypeID == (byte)DocTypes.DocProduction)
-                .Select(d => d.DocID).FirstOrDefault();
-            ReportManager.PrintReport("Амбалаж на утилизацию", "Spool", docProductionId);
+//            var docProductionId = GammaBase.DocProductionProducts
+//                .Where(d => d.ProductID == productid && d.DocProduction.Docs.DocTypeID == (byte)DocTypes.DocProduction)
+//                .Select(d => d.DocID).FirstOrDefault();
+            ReportManager.PrintReport("Амбалаж утилизация", "Spool", productId);
         }
         private void ChangeUnwinderActive(byte unum)
         {
@@ -392,10 +392,16 @@ namespace Gamma.ViewModels
                     select "№" + pspool.Products.Number + " " + pspool.C1CNomenclature.Name + " " + pspool.C1CCharacteristics.Name).FirstOrDefault();
         }
         private SourceSpools SourceSpools { get; set; }
-        private bool CheckSpoolIsUsed(Guid? productid)
+        private bool CheckSpoolIsUsed(Guid? productId)
         {
-            return GammaBase.DocWithdrawal.Any(dw => GammaBase.DocWithdrawalProducts.Where
-                (dp => dp.ProductID == productid).Select(dp => dp.DocID).Contains(dw.DocID));
+            return
+                GammaBase.DocWithdrawalProducts.Any(
+                    dw =>
+                        dw.ProductID == productId && dw.Quantity == null &&
+                        (dw.CompleteWithdrawal == null || dw.CompleteWithdrawal == false));
+//                .DocWithdrawal.Any(dw => dw.DocWithdrawalProducts.
+//            GammaBase.DocWithdrawalProducts.Where
+//                (dp => dp.ProductID == productId).Select(dp => dp.DocID).Contains(dw.DocID));
         }
         private Visibility _sourceSpoolsVisible;
         public Visibility SourceSpoolsVisible

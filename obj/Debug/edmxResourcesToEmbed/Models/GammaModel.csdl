@@ -1066,9 +1066,6 @@
     <FunctionImport Name="GetDocCloseShiftWRGroupPacks" ReturnType="Collection(GammaModel.GetDocCloseShiftWRGroupPacks_Result)">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
     </FunctionImport>
-    <FunctionImport Name="GetGroupPackSpools" ReturnType="Collection(GammaModel.GetGroupPackSpools_Result)">
-      <Parameter Name="DocID" Mode="In" Type="Guid" />
-    </FunctionImport>
     <FunctionImport Name="GetInputNomenclature" ReturnType="Collection(GammaModel.GetInputNomenclature_Result)">
       <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
       <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
@@ -1679,6 +1676,9 @@
       <End Role="DocBroke" EntitySet="DocBroke" />
       <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
     </AssociationSet>
+    <FunctionImport Name="GroupPackSpools" ReturnType="Collection(GammaModel.GroupPackSpools_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -3943,4 +3943,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="GroupPackSpools_Result">
+    <Property Type="Guid" Name="ProductID" Nullable="false" />
+    <Property Type="Guid" Name="DocID" Nullable="false" />
+    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+    <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+    <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="15" Scale="5" />
+    <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="PlaceID" Nullable="false" />
+  </ComplexType>
 </Schema>

@@ -26,9 +26,14 @@ namespace Gamma.Dialogs
             LkpBrokeReason.ItemsSource = RejectionReasons;
         }
         private GammaEntities GammaBase { get; set; }
+
         public ChangeSpoolDialog(Guid productSpoolid) : this()
         {
-            EdtBrokeWeight.Value = GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.DecimalWeight).FirstOrDefault();
+            var maxValue = GammaBase.ProductSpools.Where(p => p.ProductID == productSpoolid).Select(p => p.DecimalWeight).FirstOrDefault();
+            if (maxValue < 100) maxValue = maxValue*1000;
+            EdtBrokeWeight.Value = maxValue;
+            EdtBrokeWeight.MaxValue = maxValue;
+            EdtRemainderWeight.MaxValue = maxValue;
         }
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {

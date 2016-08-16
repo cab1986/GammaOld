@@ -179,9 +179,11 @@ namespace Gamma.ViewModels
             var doc = GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemID);
             foreach (var spoolId in SourceSpools)
             {
-                var docWithdrawal = GammaBase.Docs.FirstOrDefault(d => d.DocTypeID == (byte) DocTypes.DocWithdrawal &&
-                                                                 d.DocWithdrawal.DocWithdrawalProducts.Select(dp => dp.ProductID)
-                                                                     .Contains(spoolId));
+                var docWithdrawal = GammaBase.Docs.FirstOrDefault(d => d.DocTypeID == (byte) DocTypes.DocWithdrawal 
+                                                            && d.DocWithdrawal.DocWithdrawalProducts.Any(dp => dp.ProductID == spoolId && dp.Quantity == null &&
+                                                            (dp.CompleteWithdrawal == null || dp.CompleteWithdrawal == false)));
+                //&& d.DocWithdrawal.DocWithdrawalProducts.Select(dp => dp.ProductID)
+                //                                                     .Contains(spoolId));
                 if (docWithdrawal == null)
                 {
                     var docID = SqlGuidUtil.NewSequentialid();

@@ -406,6 +406,9 @@
     <Compile Include="Models\GetSpoolRejectionReasons_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GroupPackSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MaterialTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>

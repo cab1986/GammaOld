@@ -110,6 +110,7 @@ namespace Gamma
         DocMovement,
         DocCloseShift,
         DocChangeState,
+        DocShipment,
         DocUnpack,
         DocBroke
     }
