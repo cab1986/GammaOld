@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using Gamma.Models;
 using Gamma.Dialogs;
@@ -77,12 +78,13 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             var docWithdrawalProduct =
-                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
+                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
                     .FirstOrDefault(d => d.ProductID == productId);
             if (docWithdrawalProduct == null) return;
             var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
             docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight/1000;
             docWithdrawalProduct.CompleteWithdrawal = false;
+            docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
             GammaBase.SaveChanges();
             ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
         }
@@ -213,12 +215,13 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             var docWithdrawalProduct =
-                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
+                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
                     .FirstOrDefault(d => d.ProductID == productId && d.Quantity == null && (d.CompleteWithdrawal == null || d.CompleteWithdrawal == false));
             if (docWithdrawalProduct == null) return;
             var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
             docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity;
             docWithdrawalProduct.CompleteWithdrawal = true;
+            docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
             GammaBase.SaveChanges();
         }
 

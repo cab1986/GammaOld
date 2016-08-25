@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("russian.frl")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("models/gammamodel.context.tt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("models/gammamodel.tt")]
 

@@ -8,10 +8,13 @@ namespace Gamma.Models
 {
     public class SpoolRemainder: ICheckedAccess
     {
-        public SpoolRemainder(GammaEntities gammaBase = null)
+        public SpoolRemainder(DateTime docDate,GammaEntities gammaBase = null)
         {
             GammaBase = gammaBase ?? DB.GammaDb;
+            DocDate = docDate;
         }
+
+        private DateTime DocDate { get; set; }
         private GammaEntities GammaBase { get; }
         public int Index { get; set; }
         private Guid? _productid;
@@ -22,8 +25,9 @@ namespace Gamma.Models
             set
             {
                 _productid = value;
-                Nomenclature = ProductID != null ? GetProductSpoolNomenclature((Guid)ProductID) : string.Empty;
-                MaxWeight = ProductID != null ? GetRemainderMaxWeight((Guid)ProductID) : 0;
+                MaxWeight = ProductID != null ? GetRemainderMaxWeight((Guid)ProductID, DocDate) : 0;
+                Nomenclature = ProductID != null ? GetProductSpoolNomenclature((Guid)ProductID) + MaxWeight + "кг": string.Empty;
+                
             }
         }
 
@@ -39,13 +43,13 @@ namespace Gamma.Models
             return
                 GammaBase.ProductSpools.Where(p => p.ProductID == productid)
                     .Select(p => "№ " + p.Products.Number + " " + p.C1CNomenclature.Name + " " +
-                                 p.C1CCharacteristics.Name + " Масса: " +
-                                 SqlFunctions.StringConvert((double)p.DecimalWeight) + " кг").First();
+                                 p.C1CCharacteristics.Name + " Масса: ").First();
+
         }
 
-        private decimal GetRemainderMaxWeight(Guid productid)
+        private decimal GetRemainderMaxWeight(Guid productid, DateTime date)
         {
-            return GammaBase.ProductSpools.First(ps => ps.ProductID == productid).DecimalWeight;
+            return DB.CalculateSpoolWeightBeforeDate(productid, date, GammaBase)*1000;
         }
 
         public bool IsReadOnly { get; set; }

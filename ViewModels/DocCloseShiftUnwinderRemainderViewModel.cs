@@ -20,19 +20,20 @@ namespace Gamma.ViewModels
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
+            var date = DB.CurrentDateTime;
             var sourceSpools = gammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeID);
             if (sourceSpools == null) return;
             if (sourceSpools.Unwinder1Spool != null)
             {
-                AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool);
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date);
             }
             if (sourceSpools.Unwinder2Spool != null)
             {
-                AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool);
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date);
             }
             if (sourceSpools.Unwinder3Spool != null)
             {
-                AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool);
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date);
             }
             /*            SpoolRemainders[0].ProductID = sourceSpools.Unwinder1Spool;
                         SpoolRemainders[1].ProductID = sourceSpools.Unwinder2Spool;
@@ -42,9 +43,10 @@ namespace Gamma.ViewModels
                         SpoolRemainders[2].Weight = SpoolRemainders[2].MaxWeight;
             */
         }
-        private void AddSpoolRemainder(Guid productId)
+
+        private void AddSpoolRemainder(Guid productId, DateTime date)
         {
-            var spoolRemainder = new SpoolRemainder
+            var spoolRemainder = new SpoolRemainder(date)
             {
                 ProductID = productId
             };
@@ -64,13 +66,14 @@ namespace Gamma.ViewModels
             var remainders = doc.DocCloseShiftRemainders.ToList();
             foreach (var remainder in remainders)
             {
-                var spoolRemainder = new SpoolRemainder
+                var spoolRemainder = new SpoolRemainder(doc.Date)
                 {
                     ProductID = remainder.ProductID,
                     Weight = (int) remainder.Quantity,
                     IsReadOnly = IsConfirmed,
                     Index = SpoolRemainders.Count
                 };
+                if (spoolRemainder.MaxWeight < spoolRemainder.Weight) spoolRemainder.MaxWeight = spoolRemainder.Weight;
                 SpoolRemainders.Add(spoolRemainder);
             }
         }

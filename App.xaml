@@ -26,7 +26,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> 
         <DataTemplate x:Key="SpoolRemainderTemplate">
             <dxlc:LayoutGroup Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Вес, кг" LabelPosition="Top" Width="80" >
+                <dxlc:LayoutItem Label="Вес остатка, кг" LabelPosition="Top" Width="80" >
                     <dxe:SpinEdit EditValue="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" MaxValue="{Binding MaxWeight}"
                                      EditValueType="{x:Type system:Int32}" IsFloatValue="False" MinValue="0"/>
                 </dxlc:LayoutItem>

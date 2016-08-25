@@ -4,6 +4,7 @@ using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Models;
 using System.Collections.ObjectModel;
+using Gamma.Common;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -59,8 +60,11 @@ namespace Gamma.ViewModels
                 FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed);
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed);
             }
+            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && placeGroupID == (int)PlaceGroups.PM);
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
+
+
         private void PrintReport(PrintReportMessage msg)
         {
             if (msg.VMID != (CurrentViewModelGrid as IBarImplemented)?.VMID) return;
@@ -121,6 +125,18 @@ namespace Gamma.ViewModels
                 DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);
             return true;
         }
+
+        public DelegateCommand UploadTo1CCommand { get; private set; }
+
+        private void UploadTo1C()
+        {
+            UIServices.SetBusyState();
+            if (CurrentViewModelGrid != null && Doc != null)
+            {
+                DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);
+            }
+        }
+
         private ObservableCollection<BarViewModel> _bars;
         public ObservableCollection<BarViewModel> Bars
         {

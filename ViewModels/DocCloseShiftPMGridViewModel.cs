@@ -70,16 +70,16 @@ namespace Gamma.ViewModels
             {
                 Spools.Add(
                     (from d in GammaBase.DocProductionProducts 
-                        join ps in GammaBase.ProductSpools on d.ProductID equals ps.ProductID
+                        join ps in GammaBase.vProductsInfo on d.ProductID equals ps.ProductID
                         where d.DocID == doc.DocID
                         select new PaperBase 
                         { 
                             CharacteristicID = (Guid)ps.C1CCharacteristicID,
-                            NomenclatureID = ps.C1CNomenclatureID,
-                            Nomenclature = string.Concat(ps.C1CNomenclature.Name," ",ps.C1CCharacteristics.Name),
+                            NomenclatureID = (Guid)ps.C1CNomenclatureID,
+                            Nomenclature = ps.NomenclatureName,
                             Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.DecimalWeight > 10 ? ps.DecimalWeight : ps.DecimalWeight*1000
+                            Weight = ps.ProductionQuantity
                         }).FirstOrDefault()
                     );
             }

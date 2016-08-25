@@ -92,6 +92,12 @@ namespace Gamma
             );
         }
 */
+
+        public static decimal CalculateSpoolWeightBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.CalculateSpoolWeightBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();
+        }
+
         public static string CheckSourceSpools(int placeID, Guid productionTaskID, GammaEntities gammaBase = null)
         {
             return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.CheckSourceSpools({placeID}, '{productionTaskID}')").AsEnumerable().FirstOrDefault();
