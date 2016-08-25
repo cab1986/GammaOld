@@ -149,7 +149,7 @@ namespace Gamma.ViewModels
                                     CreateRemainderSpool((Guid)Unwinder1ProductID, dialog.Weight);
                                     break;
                                 case SpoolChangeState.FullyConverted:
-                                    ComleteWithdraw((Guid) Unwinder1ProductID);
+                                    CompleteWithdraw((Guid) Unwinder1ProductID);
                                     break;
                             }
                         }
@@ -173,7 +173,7 @@ namespace Gamma.ViewModels
                                     CreateRemainderSpool((Guid)Unwinder2ProductID, dialog.Weight);
                                     break;
                                 case SpoolChangeState.FullyConverted:
-                                    ComleteWithdraw((Guid)Unwinder2ProductID);
+                                    CompleteWithdraw((Guid)Unwinder2ProductID);
                                     break;
                             }
                         }
@@ -197,7 +197,7 @@ namespace Gamma.ViewModels
                                     CreateRemainderSpool((Guid)Unwinder3ProductID, dialog.Weight);
                                     break;
                                 case SpoolChangeState.FullyConverted:
-                                    ComleteWithdraw((Guid)Unwinder3ProductID);
+                                    CompleteWithdraw((Guid)Unwinder3ProductID);
                                     break;
                             }
                         }
@@ -209,13 +209,15 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
         }
 
-        private void ComleteWithdraw(Guid productId)
+        private void CompleteWithdraw(Guid productId)
         {
             UIServices.SetBusyState();
             var docWithdrawalProduct =
                 GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date)
-                    .FirstOrDefault(d => d.ProductID == productId && d.Quantity == null && (d.CompleteWithdrawal == null && d.CompleteWithdrawal == false));
+                    .FirstOrDefault(d => d.ProductID == productId && d.Quantity == null && (d.CompleteWithdrawal == null || d.CompleteWithdrawal == false));
             if (docWithdrawalProduct == null) return;
+            var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
+            docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity;
             docWithdrawalProduct.CompleteWithdrawal = true;
             GammaBase.SaveChanges();
         }
@@ -225,7 +227,7 @@ namespace Gamma.ViewModels
             var docID = SqlGuidUtil.NewSequentialid();
             GammaBase.CreateDocBrokeWithBrokeDecision(docID, productId, weight/1000, rejectionReasonId,
                 WorkSession.PrintName, WorkSession.PlaceID);
-            ComleteWithdraw(productId);
+            CompleteWithdraw(productId);
 //            MessageManager.OpenDocBroke(docID);
 //            var docProductionId = GammaBase.DocProductionProducts
 //                .Where(d => d.ProductID == productid && d.DocProduction.Docs.DocTypeID == (byte)DocTypes.DocProduction)

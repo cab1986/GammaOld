@@ -93,11 +93,9 @@ namespace Gamma.ViewModels
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            if (!CanSaveExecute()) return;
-//            gammaBase = gammaBase ?? DB.GammaDb;
-//            base.SaveToModel(gammaBase);
+            if (!CanSaveExecute()) return false;
             if (IsNewDoc)
             {
                 Doc = new Docs()
@@ -121,6 +119,7 @@ namespace Gamma.ViewModels
             var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;
             if (currenGridViewModel != null && currenGridViewModel.IsChanged)
                 DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);
+            return true;
         }
         private ObservableCollection<BarViewModel> _bars;
         public ObservableCollection<BarViewModel> Bars

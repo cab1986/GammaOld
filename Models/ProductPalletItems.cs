@@ -15,7 +15,7 @@ namespace Gamma.Models
     public partial class ProductPalletItems
     {
         public System.Guid ProductPalletItemID { get; set; }
-        public System.Guid ProductID { get; set; }
+        public Nullable<System.Guid> ProductID { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }
         public System.Guid C1CCharacteristicID { get; set; }
         public Nullable<int> Quantity { get; set; }

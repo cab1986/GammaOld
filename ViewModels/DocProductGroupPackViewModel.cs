@@ -53,8 +53,8 @@ namespace Gamma.ViewModels
             {
                 ProductId = doc.DocProduction.DocProductionProducts.Select(d => d.ProductID).First();
                 var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
-                Weight = Convert.ToInt32(productGroupPack?.Weight*1000 ?? 0);
-                GrossWeight = Convert.ToInt32(productGroupPack?.GrossWeight*1000 ?? 0);
+                Weight = Convert.ToInt32((productGroupPack?.Weight > 10 ? productGroupPack.Weight : productGroupPack?.Weight*1000));
+                GrossWeight = Convert.ToInt32((productGroupPack?.GrossWeight > 10 ? productGroupPack.GrossWeight : productGroupPack?.GrossWeight * 1000));
             }
             var groupPackSpools = GammaBase.GroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
@@ -190,6 +190,7 @@ namespace Gamma.ViewModels
         private void AddChoosenSpool(ChoosenProductMessage msg)
         {
             Messenger.Default.Unregister(this);
+            if (!CheckAddedSpool(msg.ProductID)) return;
             var spool = (from p in GammaBase.vProductsInfo where p.ProductID == msg.ProductID
                              select p).ToList().Select( p => new PaperBase()
                              {
@@ -215,6 +216,7 @@ namespace Gamma.ViewModels
                          where pinf.BarCode == barcode
                          select pinf).FirstOrDefault();
             if (p == null) return;
+            if (!CheckAddedSpool(p.ProductID)) return;
             if (p.IsWrittenOff??false)
             {
                 MessageBox.Show("Вы пытаететесь добавить списанный рулон");
@@ -233,6 +235,16 @@ namespace Gamma.ViewModels
                              };
             AddSpoolIfCorrect(spool);
         }
+
+        private bool CheckAddedSpool(Guid productId)
+        {
+            if (Spools.Count <= 0) return true;
+            var result = GammaBase.CheckAddedGroupPackSpool(Spools.First().ProductID, productId).FirstOrDefault();
+            if (string.IsNullOrEmpty(result)) return true;
+            MessageBox.Show(result, "Некорректный рулон", MessageBoxButton.OK, MessageBoxImage.Error);
+            return false;
+        }
+
         private decimal BaseCoreWeight { get; set; }
         public void AddSpoolIfCorrect(PaperBase spool)
         {
@@ -290,12 +302,20 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="itemID">ID документа</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return;
-            //gammaBase = gammaBase ?? DB.GammaDb;
-            var doc = GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal)
+            if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return true;
+            var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight,
+                Spools.Count).FirstOrDefault();
+            if (!string.IsNullOrEmpty(result))
+            {
+                MessageBox.Show(result, "Некорректный вес", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                return false;
+            }
+            var doc = GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal).Include(d => d.DocProduction.DocProductionProducts)
                 .Where(d => d.DocID == itemID).Select(d => d).First();
+            var product = GammaBase.Products.Include(p => p.ProductGroupPacks).Include(p => p.DocProductionProducts)
+                .FirstOrDefault(p => p.DocProductionProducts.FirstOrDefault().DocID == itemID);
             if (doc.DocProduction == null)
                 doc.DocProduction = new DocProduction()
                 {
@@ -303,7 +323,6 @@ namespace Gamma.ViewModels
                     InPlaceID = doc.PlaceID,
                     DocProductionProducts = new List<DocProductionProducts>()
                 };
-            var product = GammaBase.Products.Include(p => p.ProductGroupPacks).FirstOrDefault(p => p.DocProductionProducts.FirstOrDefault().DocID == itemID);
             if (product == null)
             {
                 var productId = SqlGuidUtil.NewSequentialid();
@@ -311,13 +330,27 @@ namespace Gamma.ViewModels
                 {
                     ProductID = productId,
                     ProductKindID = (byte)ProductKinds.ProductGroupPack,
-                    ProductGroupPacks = new ProductGroupPacks()
+                    ProductGroupPacks = new ProductGroupPacks(),
+                    DocProductionProducts = new List<DocProductionProducts>()
+                    {
+                        new DocProductionProducts()
+                        {
+                            DocID = doc.DocID,
+                            ProductID = productId,
+                        }
+                    }
                 };
+/*          
                 doc.DocProduction.DocProductionProducts.Add(new DocProductionProducts()
                 {
                     Products = product,
-                    DocID = doc.DocID
+                    ProductID = productId,
+                    DocID = doc.DocID,
+                    Quantity = (decimal)Weight/1000,
+                    C1CNomenclatureID = NomenclatureID,
+                    C1CCharacteristicID = CharacteristicID
                 });
+                */
 //                GammaBase.Products.Add(product);
             }
             if (product.ProductGroupPacks == null) product.ProductGroupPacks = new ProductGroupPacks() { ProductID = product.ProductID };
@@ -329,16 +362,20 @@ namespace Gamma.ViewModels
                     {
                         ProductID = product.ProductID,
                         DocID = itemID,
-                        Quantity = Weight/1000,
-                        C1CNomenclatureID = NomenclatureID,
-                        C1CCharacteristicID = CharacteristicID
                     }
                 };
             }
+            var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
+            if (docProductionProduct != null)
+            {
+                docProductionProduct.Quantity = (decimal) Weight/1000;
+                docProductionProduct.C1CNomenclatureID = NomenclatureID;
+                docProductionProduct.C1CCharacteristicID = CharacteristicID;
+            }
             product.ProductGroupPacks.C1CNomenclatureID = NomenclatureID;
             product.ProductGroupPacks.C1CCharacteristicID = CharacteristicID;
-            product.ProductGroupPacks.Weight = Weight/1000;
-            product.ProductGroupPacks.GrossWeight = GrossWeight/1000;
+            product.ProductGroupPacks.Weight = (decimal)Weight/1000;
+            product.ProductGroupPacks.GrossWeight = (decimal)GrossWeight/1000;
             product.ProductGroupPacks.Diameter = Diameter;
             var docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)
@@ -378,6 +415,7 @@ namespace Gamma.ViewModels
                     });
                 }
             GammaBase.SaveChanges();
+            return true;
         }
         // ReSharper disable once MemberCanBePrivate.Global
         public PaperBase SelectedSpool { get; set; }

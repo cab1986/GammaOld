@@ -79,11 +79,10 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="itemID">ID документа закрытия смены</param>
         /// <param name="gammaBase">Контекст базы данных</param>
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("DocCloseShiftRemainders")) return;
+            if (!DB.HaveWriteAccess("DocCloseShiftRemainders")) return true;
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
             var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
             foreach (var remainder in remainders)
             {
@@ -102,6 +101,7 @@ namespace Gamma.ViewModels
                 docRemainder.Quantity = remainder.Weight;
             }
             gammaBase.SaveChanges();
+            return true;
         }
 
         public List<SpoolRemainder> SpoolRemainders { get; set; } = new List<SpoolRemainder>(); // = {new SpoolRemainder() {Index = 1}, new SpoolRemainder() {Index = 2}, new SpoolRemainder() {Index = 3} };

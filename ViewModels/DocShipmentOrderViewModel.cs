@@ -94,10 +94,9 @@ namespace Gamma.ViewModels
 
         private Guid DocShipmentOrderID { get; set; }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("DocShipmentOrderInfo")) return;
-            base.SaveToModel(gammaBase);
+            if (!DB.HaveWriteAccess("DocShipmentOrderInfo")) return true;
             var docShipmentOrderInfo =
                 GammaBase.DocShipmentOrderInfo.FirstOrDefault(d => d.C1CDocShipmentOrderID == DocShipmentOrderID);
             if (docShipmentOrderInfo == null)
@@ -112,6 +111,7 @@ namespace Gamma.ViewModels
             docShipmentOrderInfo.ActivePersonID = ActivePersonId;
             docShipmentOrderInfo.ShiftID = ShiftId;
             GammaBase.SaveChanges();
+            return true;
         }
 
         public ObservableCollection<DocShipmentOrderGood> DocShipmentOrderGoods { get; set; }

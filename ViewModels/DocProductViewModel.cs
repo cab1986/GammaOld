@@ -191,6 +191,11 @@ namespace Gamma.ViewModels
             if (Doc == null) return;
             var productId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
             if (productId == null) return;
+            if (!GammaBase.Rests.Any(r => r.ProductID == productId && r.Quantity > 0))
+            {
+                MessageBox.Show("Нельзя актировать продукт, которого нет на остатках");
+                return;
+            }
             var docBrokeId =
                 GammaBase.Docs.FirstOrDefault(
                     d => d.DocTypeID == (int) DocTypes.DocBroke && !d.IsConfirmed && d.PlaceID == WorkSession.PlaceID)?.DocID;
@@ -379,18 +384,18 @@ namespace Gamma.ViewModels
                     MessageBoxImage.Asterisk);
                 return;
             }
-            SaveToModel();
+            if (!SaveToModel()) return;
             var spoolViewModel = CurrentViewModel as DocProductSpoolViewModel;
             ReportManager.PrintReport(msg.ReportID, spoolViewModel?.ProductId ?? Doc.DocID);
         }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            if (IsReadOnly && IsConfirmed) return;
+            if (IsReadOnly && IsConfirmed) return true;
             Doc.Date = DocDate;
             Doc.IsConfirmed = IsConfirmed;
             GammaBase.SaveChanges();
-            CurrentViewModel.SaveToModel(Doc.DocID);
+            return IsReadOnly || CurrentViewModel.SaveToModel(Doc.DocID);
         }
 
         private Docs Doc { get; set; }

@@ -91,11 +91,9 @@ namespace Gamma.ViewModels
             GroupPacks.Clear();
             IsChanged = true;
         }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID);
+            if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return true;
             var doc = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == itemID);
             if (doc.DocCloseShiftDocs == null)
             {
@@ -107,6 +105,7 @@ namespace Gamma.ViewModels
                     doc.DocCloseShiftDocs.Add(docCloseShiftDoc);
                 }
             GammaBase.SaveChanges();
+            return true;
         }
         private int PlaceID { get; set; }
         private byte ShiftID { get; set; }

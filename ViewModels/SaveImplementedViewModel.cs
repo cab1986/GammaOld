@@ -25,23 +25,26 @@ namespace Gamma.ViewModels
 
         public DelegateCommand SaveAndCloseCommand { get; private set; }
 
-        public virtual void SaveToModel(GammaEntities gammaBase = null)
+        public virtual bool SaveToModel(GammaEntities gammaBase = null)
         {
+            return true;
         }
         /// <summary>
         /// Сохранение в БД
         /// </summary>
         /// <param name="itemID"></param>
         /// <param name="gammaBase">Контекст БД</param>
-        public virtual void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public virtual bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             UIServices.SetBusyState();
+            return true;
         }
 
         protected virtual void SaveToModelAndClose()
         {
-            SaveToModel();
-            CloseWindow();
+            UIServices.SetBusyState();
+            if (SaveToModel())
+                CloseWindow();
         }
 
         public override void Dispose()

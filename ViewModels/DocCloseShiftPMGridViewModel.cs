@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Data.Entity.SqlServer;
-using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -33,7 +32,7 @@ namespace Gamma.ViewModels
                         Number = sp.Number,
                         ProductID = sp.ProductID,
                         //TODO Убрать проверку при переводе всех переделов на тонны
-                        Weight = (sp.Weight > 10 ? sp.Weight/1000 : sp.Weight)??0
+                        Weight = (sp.Weight > 10 ? sp.Weight : sp.Weight*1000)??0
                     }
                     );
                 DocCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
@@ -80,7 +79,7 @@ namespace Gamma.ViewModels
                             Nomenclature = string.Concat(ps.C1CNomenclature.Name," ",ps.C1CCharacteristics.Name),
                             Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.DecimalWeight > 10 ? ps.DecimalWeight/1000 : ps.DecimalWeight
+                            Weight = ps.DecimalWeight > 10 ? ps.DecimalWeight : ps.DecimalWeight*1000
                         }).FirstOrDefault()
                     );
             }
@@ -93,10 +92,8 @@ namespace Gamma.ViewModels
             Spools.Clear();
             IsChanged = true;
         }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
             if (DocCloseShift == null)
             {
                 DocCloseShift = GammaBase.Docs.FirstOrDefault(d => d.DocID == itemID);
@@ -114,6 +111,7 @@ namespace Gamma.ViewModels
                 }
             }
             GammaBase.SaveChanges();
+            return true;
         }
         private ObservableCollection<PaperBase> _spools = new ObservableCollection<PaperBase>();
         public ObservableCollection<PaperBase> Spools

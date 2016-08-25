@@ -86,15 +86,14 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("GroupPackConfig");
             }
         }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null) // Сохранение по ProductionTaskID
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null) // Сохранение по ProductionTaskID
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
             var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
             if (productionTask == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
             if (productionTask.ProductionTaskWR == null)
             {
@@ -105,6 +104,7 @@ namespace Gamma.ViewModels
             productionTask.ProductionTaskWR.NumFilmLayers = NumFilmLayers;
             productionTask.ProductionTaskWR.GroupPackConfig = GroupPackConfig;
             gammaBase.SaveChanges();
+            return true;
         }
 
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductionTaskWR");

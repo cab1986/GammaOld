@@ -56,9 +56,8 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel(gammaBase);
             if (_isNewRole)
             {
                 GammaBase.Roles.Add(Role);
@@ -76,6 +75,7 @@ namespace Gamma.ViewModels
             }
             GammaBase.SaveChanges();
             if (!_isNewRole) DB.RecreateRolePermits(Role.RoleID);
+            return true;
         }
         //private Dictionary<int, string> _marks = 
         public Dictionary<byte,string> Marks { get; set; }

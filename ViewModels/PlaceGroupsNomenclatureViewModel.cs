@@ -178,10 +178,9 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(gammaBase);
             var placeGroup = gammaBase.PlaceGroups.Include(p => p.C1CNomenclature).First(p => p.PlaceGroupID == PlaceGroupID);
             if (placeGroup.C1CNomenclature == null) placeGroup.C1CNomenclature = new List<C1CNomenclature>();
             else
@@ -193,6 +192,7 @@ namespace Gamma.ViewModels
                 placeGroup.C1CNomenclature.Add(nomenclature);
             }
             gammaBase.SaveChanges();
+            return true;
         }
 
     }

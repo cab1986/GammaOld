@@ -47,14 +47,16 @@ namespace Gamma.ViewModels
         protected void Cleanup()
         {
             Messenger.Default.Unregister(this);
-            GammaBase?.Dispose();
+//            GammaBase?.Dispose();
             CloseCommand = null;
         }
 
+/*
         public RootViewModel Clone()
         {
             return (RootViewModel)MemberwiseClone();
         }
+*/
 
         public virtual void Dispose()
         {

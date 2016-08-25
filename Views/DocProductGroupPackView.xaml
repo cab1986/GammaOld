@@ -62,6 +62,7 @@
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem SummaryType="Sum" FieldName="Weight" DisplayFormat="{}{0:f0}"/>
+                            <dxg:GridSummaryItem SummaryType="Count" FieldName="Number" />
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" 

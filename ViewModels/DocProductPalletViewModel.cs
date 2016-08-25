@@ -68,11 +68,10 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="itemID">Id документа выработки</param>
         /// <param name="gammaBase">Контекст базы данныъ</param>
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!CanSaveExecute()) return;
+            if (!CanSaveExecute()) return true;
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
             var product =
                 gammaBase.Products.Include(p => p.ProductPallets)
                     .Include(
@@ -126,6 +125,7 @@ namespace Gamma.ViewModels
                 });
             }
             gammaBase.SaveChanges();
+            return true;
         }
     }
 }

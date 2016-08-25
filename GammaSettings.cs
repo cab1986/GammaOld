@@ -10,7 +10,7 @@ namespace Gamma
     [Serializable]
     public class GammaSettings
     {
-        private const string FileName = "AppSettings.xml";
+        private static string FileName { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Gamma\\AppSettings.xml";
 
         // Параметры com-порта сканера
         public ComPort ScannerComPort = new ComPort();
@@ -85,7 +85,13 @@ namespace Gamma
 
         public static void Serialize()
         {
-            var appSettings = GammaSettings.Get();
+            var appSettings = Get();
+            var folderPath = Path.GetDirectoryName(FileName);
+            if (folderPath == null) return;
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
             using (var appFile = new FileStream(FileName, FileMode.Create))
             {
                 var serializer = new XmlSerializer(typeof(GammaSettings));

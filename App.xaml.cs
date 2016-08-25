@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Threading;
+using System.Windows;
 
 namespace Gamma
 {
@@ -11,6 +13,14 @@ namespace Gamma
         {
             var appSettings = GammaSettings.Get();
             DevExpress.Xpf.Core.ApplicationThemeHelper.UpdateApplicationThemeName();
+            // Create a new object, representing the German culture. 
+            CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
+
+            // The following line provides localization for the application's user interface. 
+            Thread.CurrentThread.CurrentUICulture = culture;
+
+            // The following line provides localization for data formats. 
+            Thread.CurrentThread.CurrentCulture = culture;
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

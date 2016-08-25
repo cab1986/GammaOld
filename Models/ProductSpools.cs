@@ -32,6 +32,7 @@ namespace Gamma.Models
         public Nullable<decimal> RealBasisWeight { get; set; }
         public Nullable<byte> ToughnessKindID { get; set; }
         public Nullable<byte> BreakNumber { get; set; }
+        public int Weight { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }

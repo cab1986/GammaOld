@@ -290,11 +290,9 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(gammaBase);
+            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return true;
             var productionTaskBatch = gammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);
             if (productionTaskBatch == null)
             {
@@ -314,6 +312,7 @@ namespace Gamma.ViewModels
             productionTaskBatch.C1CContractorID = ContractorId;
             gammaBase.SaveChanges();
             CurrentView?.SaveToModel(ProductionTaskBatchID);
+            return true;
         }
 
 /*

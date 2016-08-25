@@ -31,7 +31,7 @@ namespace Gamma.Common
 
         private void EditRejectionReasonsDialog(EditRejectionReasonsMessage msg)
         {
-            new EditRejectionReasonsView(msg.RejectionReasons).ShowDialog();
+            new EditRejectionReasonsView(msg.BrokeProduct).ShowDialog();
         }
 
         private void OpenDocBroke(OpenDocBrokeMessage msg)

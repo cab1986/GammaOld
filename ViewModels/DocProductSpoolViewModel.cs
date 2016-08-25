@@ -269,10 +269,9 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="itemID">ID документа</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("ProductSpools")) return;
-            base.SaveToModel();
+            if (!DB.HaveWriteAccess("ProductSpools")) return true;
             var product =
                 GammaBase.Products.Include(p => p.ProductSpools).Include(p => p.DocProductionProducts)
                     .FirstOrDefault(p => p.DocProductionProducts.Select(dp => dp.DocID).Contains(itemID));
@@ -341,7 +340,7 @@ namespace Gamma.ViewModels
             {
                 product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
                 product.ProductSpools.C1CCharacteristicID = CharacteristicID;
-                product.ProductSpools.DecimalWeight = Weight;
+                product.ProductSpools.DecimalWeight = Weight/1000;
                 var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
                 if (docProductionProduct != null)
                 {
@@ -358,6 +357,7 @@ namespace Gamma.ViewModels
             
             product.ProductSpools.ToughnessKindID = ToughnessKindID;
             GammaBase.SaveChanges();
+            return true;
         }
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools") || !AllowEditProduct;
 

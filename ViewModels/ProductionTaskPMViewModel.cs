@@ -306,11 +306,10 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override void SaveToModel(Guid itemId, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
+        public override bool SaveToModel(Guid itemId, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
         {
-            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return;
+            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return true;
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemId);
             var productionTaskBatch =
                     gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemId);
                 ProductionTasks productionTask;
@@ -318,7 +317,7 @@ namespace Gamma.ViewModels
                 {
                     MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK,
                         MessageBoxImage.Error);
-                    return;
+                    return true;
                 }
                 var productionTaskTemp =
                     gammaBase.GetProductionTaskByBatchID(itemId, (short) PlaceGroups.PM).FirstOrDefault();
@@ -345,6 +344,7 @@ namespace Gamma.ViewModels
                 productionTask.DateEnd = DateEnd;
                 gammaBase.SaveChanges();
                 ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
+            return true;
         }
         [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]

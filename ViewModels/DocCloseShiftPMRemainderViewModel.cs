@@ -69,10 +69,9 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
         }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
             var doc = gammaBase.Docs.First(d => d.DocID == itemID);
             if (DocCloseShiftRemainder == null && Quantity > 0)
             {
@@ -129,10 +128,9 @@ namespace Gamma.ViewModels
                 DocCloseShiftRemainder.Quantity = Quantity;
             } 
             gammaBase.SaveChanges();
+            return true;
         }
-        public bool IsReadOnly
-        {
-            get { return !DB.HaveWriteAccess("DocCloseShiftRemainders") && !WorkSession.DBAdmin || IsConfirmed; }
-        }
+
+        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftRemainders") && !WorkSession.DBAdmin || IsConfirmed;
     }
 }

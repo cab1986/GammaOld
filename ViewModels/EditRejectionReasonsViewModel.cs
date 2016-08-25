@@ -11,12 +11,14 @@ namespace Gamma.ViewModels
 {
     public class EditRejectionReasonsViewModel : RootViewModel
     {
-        public EditRejectionReasonsViewModel(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
+        public EditRejectionReasonsViewModel(BrokeProduct brokeProduct)
         {
-            RejectionReasons = rejectionReasons;
+            RejectionReasons = brokeProduct.RejectionReasons;
             using (var gammaBase = DB.GammaDb)
             {
-                RejectionReasonsList = new List<RejectionReason>(gammaBase.C1CRejectionReasons.Where(r => (!r.IsFolder??true) && (!r.IsMarked??true))
+                RejectionReasonsList = new List<RejectionReason>(gammaBase.C1CRejectionReasons
+                    .Where(r => (!r.IsFolder??true) && (!r.IsMarked??true) && r.ParentID != null
+                    && gammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == (int)brokeProduct.ProductKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))
                     .Select(r => new RejectionReason
                 {
                     RejectionReasonID = r.C1CRejectionReasonID,
@@ -53,11 +55,11 @@ namespace Gamma.ViewModels
 
         private void AddRejectionReason()
         {
-            RejectionReasons.Add(new RejectionReason
-            {
-                RejectionReasonID = RejectionReasonsList.First().RejectionReasonID,
-                Description = RejectionReasonsList.First().Description
-            });
+            RejectionReasons.Add(new RejectionReason());
+            //{
+            //RejectionReasonID = RejectionReasonsList.First().RejectionReasonID,
+            //Description = RejectionReasonsList.First().Description
+        //});
         }
 
         private void DeleteRejectionReason()

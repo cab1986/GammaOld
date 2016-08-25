@@ -64,7 +64,7 @@ namespace Gamma.ViewModels
                                                              Nomenclature = dp.Products.ProductSpools.C1CNomenclature.Name + " " + dp.Products.ProductSpools.C1CCharacteristics.Name,
                                                              CharacteristicID = (Guid)dp.Products.ProductSpools.C1CCharacteristicID,
                                                              NomenclatureID = dp.Products.ProductSpools.C1CNomenclatureID,
-                                                             Weight = dp.Products.ProductSpools.DecimalWeight,
+                                                             Weight = dp.Products.ProductSpools.DecimalWeight*1000,
                                                              Diameter = dp.Products.ProductSpools.Diameter
                                                          }
                                     );
@@ -170,12 +170,10 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("UnloadSpools");
             }
         }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (IsReadOnly) return;
-//            gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
-            if (UnloadSpoolsSaved) return;
+            if (IsReadOnly) return true;          
+            if (UnloadSpoolsSaved) return true;
             var doc = GammaBase.DocProduction.Include(d => d.DocWithdrawal).FirstOrDefault(d => d.DocID == itemID);
             foreach (var spoolId in SourceSpools)
             {
@@ -216,6 +214,7 @@ namespace Gamma.ViewModels
             }
             GammaBase.SaveChanges();
             UnloadSpoolsSaved = true;
+            return true;
         }
         private ObservableCollection<DocProductionProducts> DocProductionProducts { get; set; }
         private Guid ProductionTaskID { get; set; }
@@ -271,13 +270,14 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<ProductChangedMessage>(this,ProductChanged);
             MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedUnloadSpool.ProductID);
         }
+
         private void ProductChanged(ProductChangedMessage msg)
         {
             Messenger.Default.Unregister(this);
             var unloadSpool = UnloadSpools.FirstOrDefault(u => u.ProductID == msg.ProductID);
             if (unloadSpool != null)
                 unloadSpool.Weight =
-                    (from ps in GammaBase.ProductSpools where ps.ProductID == msg.ProductID select ps.DecimalWeight).FirstOrDefault();
+                    (from ps in GammaBase.ProductSpools where ps.ProductID == msg.ProductID select ps.DecimalWeight*1000).FirstOrDefault();
         }
 
         public ObservableCollection<Cutting> Cuttings { get; set; }

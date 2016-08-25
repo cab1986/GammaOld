@@ -21,22 +21,29 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>\\SERVER7\shares\Общая папка\Gamma\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <MapFileExtensions>false</MapFileExtensions>
+    <ProductName>Gamma</ProductName>
+    <PublisherName>STG</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +67,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>3C57A0A18CA3E675A723B0EB245F201A91BB8EEE</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Gamma_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Data.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
@@ -123,9 +148,15 @@
     </Reference>
     <Reference Include="FastReport, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\FastReports\FastReport.Net Trial\Framework 4.0\FastReport.dll</HintPath>
-      <Private>True</Private>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\dlls\FastReport.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Bars, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dlls\FastReport.Bars.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Editor, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=db7e5ce63278458c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dlls\FastReport.Editor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -429,6 +460,12 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Places.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PlaceZoneCells.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PlaceZones.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PostTypes.cs">
@@ -984,6 +1021,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>GammaModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Gamma_TemporaryKey.pfx" />
     <None Include="Models\GammaModel.edmx.diagram">
       <DependentUpon>GammaModel.edmx</DependentUpon>
     </None>
@@ -991,6 +1029,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1001,6 +1040,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 и x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -1009,6 +1053,11 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
@@ -1019,6 +1068,9 @@
     <Resource Include="kbemusedsrv_7641.ico" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="AppSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </AdditionalFiles>
     <Content Include="Models\GammaModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>GammaModel.edmx</DependentUpon>

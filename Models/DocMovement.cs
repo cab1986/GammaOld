@@ -15,9 +15,7 @@ namespace Gamma.Models
     public partial class DocMovement
     {
         public System.Guid DocID { get; set; }
-        public int InPlaceID { get; set; }
-        public Nullable<int> InPlaceZoneID { get; set; }
-        public Nullable<int> InPlaceZoneCellID { get; set; }
+        public Nullable<int> InPlaceID { get; set; }
         public Nullable<int> OutPlaceID { get; set; }
     
         public virtual Docs Docs { get; set; }

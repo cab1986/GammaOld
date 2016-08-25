@@ -23,7 +23,7 @@ namespace Gamma.Models
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual C1CSpecifications C1CSpecifications { get; set; }
         public virtual C1CPlaces C1CPlaces { get; set; }
+        public virtual C1CSpecifications C1CSpecifications { get; set; }
     }
 }

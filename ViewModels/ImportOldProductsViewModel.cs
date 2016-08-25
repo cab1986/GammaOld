@@ -111,11 +111,12 @@ namespace Gamma.ViewModels
             IsAssociated = ProductId != null;
         }
         
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             GammaBase.SaveOldProductToNewBase(OldProductId, SelectedProductKindIndex, NomenclatureID, CharacteristicID);
             Number = SavedNumber;
             Find();
+            return true;
         }
         
     }

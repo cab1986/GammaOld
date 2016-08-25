@@ -180,9 +180,8 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel(gammaBase);
             var materialType = GammaBase.MaterialTypes.Include(mt => mt.C1CNomenclature).First(p => p.MaterialTypeID == MaterialTypeId);
             if (materialType.C1CNomenclature == null) materialType.C1CNomenclature = new List<C1CNomenclature>();
             else
@@ -194,6 +193,7 @@ namespace Gamma.ViewModels
                 materialType.C1CNomenclature.Add(nomenclature);
             }
             GammaBase.SaveChanges();
+            return true;
         }
     }
 }

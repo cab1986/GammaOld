@@ -26,7 +26,13 @@ namespace Gamma.ViewModels
                     PlaceID = p.PlaceID,
                     PlaceName = p.Name
                 }).ToList();
-            StorePlaces = DiscoverPlaces;
+            StorePlaces = GammaBase.Places.Where(p => p.IsWarehouse??false)
+                .Select(p => new Place
+                {
+                    PlaceGuid = p.PlaceGuid,
+                    PlaceID = p.PlaceID,
+                    PlaceName = p.Name
+                }).ToList();
             var doc = GammaBase.Docs.Include(d => d.DocBroke)
                 .Include(d => d.DocBroke.DocBrokeProducts)
                 .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons))
@@ -54,6 +60,18 @@ namespace Gamma.ViewModels
             else
             {
                 Date = DB.CurrentDateTime;
+                var number =
+                    GammaBase.Docs.Where(d => d.DocTypeID == (int) DocTypes.DocBroke && d.Number != null)
+                        .OrderByDescending(d => d.Date)
+                        .FirstOrDefault();
+                try
+                {
+                    DocNumber = (Convert.ToInt32(number) + 1).ToString();
+                }
+                catch
+                {
+                    DocNumber = "1";
+                }
             }
             if (productId != null)
             {
@@ -143,7 +161,7 @@ namespace Gamma.ViewModels
                 {
                     brokeDecisionProducts.Add(new BrokeDecisionProduct
                     {
-                        Quantity = decisionProduct.Quantity,
+                        Quantity = decisionProduct.Quantity??0,
                         MaxQuantity = docBrokeProductInfo?.Quantity ?? 1000000,
                         MeasureUnit = product.BaseMeasureUnit,
                         ProductState = (ProductState)decisionProduct.StateID,
@@ -215,7 +233,7 @@ namespace Gamma.ViewModels
 
         public override bool CanSaveExecute()
         {
-            return IsValid && !IsReadOnly;
+            return IsValid; //&& !IsReadOnly;
         }
         
         public DelegateCommand AddProductCommand { get; private set; }
@@ -335,7 +353,7 @@ namespace Gamma.ViewModels
         private void EditRejectionReasons()
         {
             if (SelectedBrokeProduct?.RejectionReasons == null) return;
-            MessageManager.EditRejectionReasons(SelectedBrokeProduct.RejectionReasons);
+            MessageManager.EditRejectionReasons(SelectedBrokeProduct);
         }
 
         /// <summary>
@@ -370,9 +388,9 @@ namespace Gamma.ViewModels
         public EditBrokeDecisionItem BrokeProduct { get; set; } 
         public EditBrokeDecisionItem RepackProduct { get; set; } 
 
-        public override void SaveToModel(GammaEntities gamma = null)
+        public override bool SaveToModel(GammaEntities gamma = null)
         {
-            if (!DB.HaveWriteAccess("DocBroke")) return;
+            if (!DB.HaveWriteAccess("DocBroke")) return true;
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)
@@ -454,6 +472,7 @@ namespace Gamma.ViewModels
 #endregion
                 gammaBase.SaveChanges();
             }
+            return true;
         }
     }
 }

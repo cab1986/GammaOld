@@ -86,9 +86,8 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            base.SaveToModel();
             var settings = GammaSettings.Get();
             settings.ScannerComPort.ComPortNumber = ScannerComPortNumber;
             settings.ScannerComPort.BaudRate = ScannerBaudRate;
@@ -102,6 +101,7 @@ namespace Gamma.ViewModels
             settings.ScalesComPort.Parity = (Parity)ScalesParity;
             settings.ScalesComPort.StopBits = (StopBits)ScalesStopBits;
             settings.ScalesComPort.HandShake = (Handshake)ScalesHandShake;
+            return true;
         }
         
     }

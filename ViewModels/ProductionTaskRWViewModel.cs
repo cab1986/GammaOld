@@ -136,9 +136,9 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="productionTaskBatchID">ID пакета заданий</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public override void SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
         {
-            if (IsReadOnly) return;
+            if (IsReadOnly) return true;
             var productionTaskRw = GammaBase.ProductionTasks
                 .Include(
                     pt =>
@@ -178,6 +178,7 @@ namespace Gamma.ViewModels
             ProductionTaskID = productionTaskRw.ProductionTaskID;
             GammaBase.SaveChanges();
             ProductionTaskSGBViewModel.SaveToModel(productionTaskRw.ProductionTaskID);
+            return true;
         }
 
         private bool CanChooseNomenclature()

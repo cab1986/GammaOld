@@ -27,10 +27,18 @@
         </dxb:BarManager.Bars>
         <dxg:GridControl ItemsSource="{Binding RejectionReasons}" SelectedItem="{Binding SelectedRejectionReason}">
             <dxg:GridControl.Columns>
-                <dxg:GridColumn FieldName="RejectionReasonID" Header="Дефект" x:Name="RejectionReasonId">
+                <dxg:GridColumn FieldName="RejectionReasonID" Header="Дефект">
                     <dxg:GridColumn.EditSettings>
-                        <dxe:ComboBoxEditSettings ItemsSource="{Binding RejectionReasonsList}" DisplayMember="Description" ValueMember="RejectionReasonID"/>
+                        <dxe:ComboBoxEditSettings ItemsSource="{Binding RejectionReasonsList}" DisplayMember="Description" ValueMember="RejectionReasonID"
+                                                  IsTextEditable="True"
+                                              AutoComplete="False" 
+                                              ImmediatePopup="True"
+                                              ValidateOnTextInput="False"
+                                              IncrementalFiltering="True"
+                                              AllowNullInput="False"
+                                                  FilterCondition="Contains"/>
                     </dxg:GridColumn.EditSettings>
+
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="Comment" Header="Примечание"/>
             </dxg:GridControl.Columns>

@@ -44,7 +44,7 @@ namespace Gamma.Models
 
         public DateTime? Date { get; set; }
         public string Place { get; set; }
-        public int ShiftId { get; set; }
+        public byte? ShiftId { get; set; }
         public string PrintName { get; set; }
 
         public ItemsChangeObservableCollection<RejectionReason> RejectionReasons { get; }

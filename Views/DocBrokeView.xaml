@@ -89,7 +89,7 @@
                 <dx:DXTabControl>
                     <dx:DXTabItem Header="Несоответствующая продукция">
                         <dxlc:LayoutGroup>
-                            <dxlc:LayoutItem Label="Продукция" LabelPosition="Top">
+                            <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">
                                 <dxb:BarManager>
                                     <dxb:BarManager.Bars>
                                         <dxb:Bar>
@@ -99,12 +99,12 @@
                                                                Command="{Binding DeleteProductCommand}"/>
                                         </dxb:Bar>
                                     </dxb:BarManager.Bars>
-                                    <dxg:GridControl ItemsSource="{Binding BrokeProducts}" MaxHeight="2000" SelectedItem="{Binding SelectedBrokeProduct}">
+                                    <dxg:GridControl ItemsSource="{Binding BrokeProducts}" SelectedItem="{Binding SelectedBrokeProduct}">
                                         <dxmvvm:Interaction.Behaviors>
                                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
                                         </dxmvvm:Interaction.Behaviors>
                                         <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}"/>
+                                            <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}" ScrollViewer.CanContentScroll="True" />
                                         </dxg:GridControl.View>
                                         <dxg:GridControl.Columns>
                                             <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False" >
@@ -140,8 +140,9 @@
                     <dx:DXTabItem Header="Решение">
                         <dxlc:LayoutControl Orientation="Vertical">
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">
-                                <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" MaxHeight="2000" SelectedItem="{Binding SelectedBrokeDecisionProduct}"
-                                                 DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}">
+                                <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" SelectedItem="{Binding SelectedBrokeDecisionProduct}" dxlc:LayoutControl.UseDesiredHeightAsMaxHeight="True"
+                                                 CurrentItem = "{Binding SelectedBrokeDecisionProduct}" 
+                                                 DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}" >
                                     <dxg:GridControl.View>
                                         <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False" BestFitMode="Smart"/>
                                     </dxg:GridControl.View>

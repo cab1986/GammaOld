@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Interfaces;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
-    public class DocBrokeListViewModel: RootViewModel
+    public class DocBrokeListViewModel: RootViewModel, IItemManager
     {
         public DocBrokeListViewModel(GammaEntities gammaBase = null): base(gammaBase)
         {
@@ -23,6 +22,8 @@ namespace Gamma.ViewModels
                 PlaceName = p.Name
             }));
             Find();
+            RefreshCommand = FindCommand;
+            EditItemCommand = OpenDocBrokeCommand;
         }
 
         public List<Place> PlacesList { get; set; }
@@ -146,12 +147,17 @@ namespace Gamma.ViewModels
                         Number = d.Number,
                         DocId = d.DocID,
                         Date = d.Date,
-                        PlaceStore = x.Name,
-                        PlaceDiscover = db.Name
+                        PlaceStore = db.Name,
+                        PlaceDiscover = x.Name
                     });
             }
                 
         }
+
+        public DelegateCommand NewItemCommand { get; }
+        public DelegateCommand<object> EditItemCommand { get; }
+        public DelegateCommand DeleteItemCommand { get; }
+        public DelegateCommand RefreshCommand { get; }
     }
 
     public class DocBrokeListItem{

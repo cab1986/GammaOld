@@ -11,18 +11,18 @@
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                            <dxg:GridColumn Header="Вес, т" FieldName="Weight" Width="80" FixedWidth="True">
+                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
                             <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:N0} т" />
+                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
                         </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} т"/>
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} кг"/>
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"

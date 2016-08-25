@@ -100,7 +100,7 @@ namespace Gamma.ViewModels
         private string _name;
         private Users User { get; set; }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             
             User.Login = Login;
@@ -121,6 +121,7 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
             if (_isNewUser)
                 DB.RecreateUserInDb(User.UserID, Password, GammaBase);
+            return true;
         }
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global

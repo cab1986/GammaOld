@@ -61,7 +61,6 @@ D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraLayout.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraPrinting.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.SqlServer.xml
-D:\CProjects\Gamma\Gamma\bin\Debug\FastReport.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Pdf.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.Ribbon.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.DocumentViewer.v16.1.Core.xml
@@ -269,3 +268,8 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
+D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.exe.manifest
+D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.application
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.TrustInfo.xml
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.manifest
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.application

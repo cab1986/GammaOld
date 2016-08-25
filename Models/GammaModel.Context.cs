@@ -59,7 +59,6 @@ namespace Gamma.Models
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<ProductStates> ProductStates { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
-        public virtual DbSet<Rests> Rests { get; set; }
         public virtual DbSet<RolePermits> RolePermits { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SourceSpools> SourceSpools { get; set; }
@@ -89,24 +88,27 @@ namespace Gamma.Models
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DbSet<DocShipments> DocShipments { get; set; }
-        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
-        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
-        public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
         public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
-        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
         public virtual DbSet<Places> Places { get; set; }
-        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocBroke> DocBroke { get; set; }
+        public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
+        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
+        public virtual DbSet<Rests> Rests { get; set; }
+        public virtual DbSet<DocMovement> DocMovement { get; set; }
+        public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
+        public virtual DbSet<PlaceZones> PlaceZones { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -646,6 +648,44 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GroupPackSpools_Result>("GroupPackSpools", docIDParameter);
+        }
+    
+        public virtual ObjectResult<string> ValidateGroupPackBeforeSave(Nullable<System.Guid> nomenclatureID, Nullable<System.Guid> characteristicID, Nullable<decimal> diameter, Nullable<decimal> weight, Nullable<int> countRolls)
+        {
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            var diameterParameter = diameter.HasValue ?
+                new ObjectParameter("Diameter", diameter) :
+                new ObjectParameter("Diameter", typeof(decimal));
+    
+            var weightParameter = weight.HasValue ?
+                new ObjectParameter("Weight", weight) :
+                new ObjectParameter("Weight", typeof(decimal));
+    
+            var countRollsParameter = countRolls.HasValue ?
+                new ObjectParameter("CountRolls", countRolls) :
+                new ObjectParameter("CountRolls", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateGroupPackBeforeSave", nomenclatureIDParameter, characteristicIDParameter, diameterParameter, weightParameter, countRollsParameter);
+        }
+    
+        public virtual ObjectResult<string> CheckAddedGroupPackSpool(Nullable<System.Guid> addedProductId, Nullable<System.Guid> baseProductId)
+        {
+            var addedProductIdParameter = addedProductId.HasValue ?
+                new ObjectParameter("AddedProductId", addedProductId) :
+                new ObjectParameter("AddedProductId", typeof(System.Guid));
+    
+            var baseProductIdParameter = baseProductId.HasValue ?
+                new ObjectParameter("BaseProductId", baseProductId) :
+                new ObjectParameter("BaseProductId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CheckAddedGroupPackSpool", addedProductIdParameter, baseProductIdParameter);
         }
     }
 }

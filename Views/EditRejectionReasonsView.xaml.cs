@@ -15,9 +15,9 @@ namespace Gamma.Views
             InitializeComponent();
         }
 
-        public EditRejectionReasonsView(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
+        public EditRejectionReasonsView(BrokeProduct brokeProduct)
         {
-            DataContext = new EditRejectionReasonsViewModel(rejectionReasons);
+            DataContext = new EditRejectionReasonsViewModel(brokeProduct);
             InitializeComponent();
         }
     }

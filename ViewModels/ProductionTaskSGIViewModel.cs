@@ -133,7 +133,7 @@ namespace Gamma.ViewModels
                     "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
                     "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
-        public override void SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
         {
             SaveToModel();
                 var productionTaskBatch =
@@ -142,7 +142,7 @@ namespace Gamma.ViewModels
                 if (productionTaskBatch == null)
                 {
                     MessageBox.Show("Не удалось сохранить задание!");
-                    return;
+                    return false;
                 }
                 ProductionTasks productionTask;
                 if (productionTaskBatch.ProductionTasks.Count == 0)
@@ -162,7 +162,7 @@ namespace Gamma.ViewModels
             if (NomenclatureID == null)
             {
                 MessageBox.Show("Вы попытались сохранить задание без номенклатуры. Оно не будет сохранено");
-                return;
+                return false;
             }
                 productionTask.C1CNomenclatureID = (Guid)NomenclatureID;
                 productionTask.C1CCharacteristicID = CharacteristicID;
@@ -171,6 +171,7 @@ namespace Gamma.ViewModels
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
                 GammaBase.SaveChanges();
+            return true;
         }
         private decimal _madeQuantiy;
         /// <summary>

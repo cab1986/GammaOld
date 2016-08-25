@@ -340,7 +340,7 @@
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="StateID" Type="tinyint" Nullable="false" />
-    <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
     <Property Name="Comment" Type="varchar" MaxLength="1000" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
@@ -417,9 +417,7 @@
       <PropertyRef Name="DocID" />
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="InPlaceID" Type="int" Nullable="false" />
-    <Property Name="InPlaceZoneID" Type="int" />
-    <Property Name="InPlaceZoneCellID" Type="int" />
+    <Property Name="InPlaceID" Type="int" />
     <Property Name="OutPlaceID" Type="int" />
   </EntityType>
   <EntityType Name="DocProduction">
@@ -437,7 +435,7 @@
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
   </EntityType>
@@ -501,6 +499,14 @@
     <Property Name="DocTypeID" Type="int" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
     <Property Name="Movement" Type="int" />
+  </EntityType>
+  <EntityType Name="DocUnpackWithdrawals">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="DocWithdrawalID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocWithdrawalID" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
   <EntityType Name="DocWithdrawal">
     <Key>
@@ -622,6 +628,22 @@
     <Property Name="1CPlaceID" Type="uniqueidentifier" />
     <Property Name="UnwindersCount" Type="int" />
   </EntityType>
+  <EntityType Name="PlaceZoneCells">
+    <Key>
+      <PropertyRef Name="PlaceZoneCellID" />
+    </Key>
+    <Property Name="PlaceZoneCellID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PlaceZoneID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PlaceZones">
+    <Key>
+      <PropertyRef Name="PlaceZoneID" />
+    </Key>
+    <Property Name="PlaceZoneID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PlaceID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="1000" Nullable="false" />
+  </EntityType>
   <EntityType Name="PostTypes">
     <Key>
       <PropertyRef Name="PostTypeID" />
@@ -681,7 +703,7 @@
     <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-    <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Precision="18" Scale="3" Nullable="false" />
     <Property Name="DateBegin" Type="datetime" />
     <Property Name="DateEnd" Type="datetime" />
   </EntityType>
@@ -715,6 +737,14 @@
     <Property Name="IsEndProtected" Type="bit" />
     <Property Name="GroupPackConfig" Type="varchar" MaxLength="8000" />
   </EntityType>
+  <EntityType Name="ProductKindRejectionReasons">
+    <Key>
+      <PropertyRef Name="ProductKindID" />
+      <PropertyRef Name="1CRejectionReasonID" />
+    </Key>
+    <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
+    <Property Name="1CRejectionReasonID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
   <EntityType Name="ProductKinds">
     <Key>
       <PropertyRef Name="ProductKindID" />
@@ -727,7 +757,7 @@
       <PropertyRef Name="ProductPalletItemID" />
     </Key>
     <Property Name="ProductPalletItemID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Quantity" Type="int" />
@@ -757,6 +787,7 @@
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="RealFormat" Type="int" />
     <Property Name="Diameter" Type="int" Nullable="false" />
+    <Property Name="Weight" Type="int" Nullable="false" />
     <Property Name="DecimalWeight" Type="decimal" Precision="15" Scale="5" Nullable="false" />
     <Property Name="Length" Type="decimal" Precision="8" Scale="2" />
     <Property Name="RealBasisWeight" Type="decimal" Precision="10" Scale="4" />
@@ -770,6 +801,7 @@
     <Property Name="StateID" Type="tinyint" Nullable="false" />
     <Property Name="1CQualityID" Type="uniqueidentifier" />
     <Property Name="Name" Type="varchar" MaxLength="50" />
+    <Property Name="BrokeActInfo" Type="nvarchar" MaxLength="4000" />
   </EntityType>
   <EntityType Name="Reports">
     <Key>
@@ -786,8 +818,6 @@
     </Key>
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PlaceID" Type="int" />
-    <Property Name="PlaceZoneID" Type="int" />
-    <Property Name="PlaceZoneCellID" Type="int" />
     <Property Name="Quantity" Type="int" />
   </EntityType>
   <EntityType Name="RolePermits">
@@ -945,9 +975,9 @@
       <PropertyRef Name="DocID" />
       <PropertyRef Name="ProductID" />
       <PropertyRef Name="Date" />
-      <PropertyRef Name="PlaceID" />
-      <PropertyRef Name="ShiftID" />
       <PropertyRef Name="StateID" />
+      <PropertyRef Name="ProductKindID" />
+      <PropertyRef Name="ProductionQuantity" />
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
@@ -961,14 +991,15 @@
     <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
     <Property Name="BaseMeasureUnit" Type="varchar" MaxLength="250" />
     <Property Name="BaseMeasureUnitQuantity" Type="decimal" Precision="20" Scale="10" />
+    <Property Name="ProductionQuantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
     <Property Name="GrossQuantity" Type="decimal" Precision="10" Scale="4" />
     <Property Name="BaseMeasureUnitGrossQuantity" Type="decimal" Precision="15" Scale="9" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
     <Property Name="Place" Type="varchar" MaxLength="64" />
-    <Property Name="PlaceID" Type="int" Nullable="false" />
-    <Property Name="PlaceGroupID" Type="smallint" />
-    <Property Name="ShiftID" Type="tinyint" Nullable="false" />
+    <Property Name="PlaceID" Type="int" />
+    <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
+    <Property Name="ShiftID" Type="tinyint" />
     <Property Name="StateID" Type="tinyint" Nullable="false" />
     <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="2" />
     <Property Name="RejectionReason" Type="varchar" MaxLength="100" />
@@ -1689,9 +1720,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_DocBrokeProductRejectionReasons_DocBrokeProducts">
-    <End Role="DocBrokeProducts" Type="Self.DocBrokeProducts" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
+    <End Role="DocBrokeProducts" Type="Self.DocBrokeProducts" Multiplicity="1" />
     <End Role="DocBrokeProductRejectionReasons" Type="Self.DocBrokeProductRejectionReasons" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="DocBrokeProducts">
@@ -1837,7 +1866,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_DocMovement_Places">
-    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
     <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Places">
@@ -1933,30 +1962,6 @@
       </Principal>
       <Dependent Role="DocProduction">
         <PropertyRef Name="ProductionTaskID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocProductionProducts_1CCharacteristics">
-    <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
-    <End Role="DocProductionProducts" Type="Self.DocProductionProducts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="1CCharacteristics">
-        <PropertyRef Name="1CCharacteristicID" />
-      </Principal>
-      <Dependent Role="DocProductionProducts">
-        <PropertyRef Name="1CCharacteristicID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocProductionProducts_1CNomenclature">
-    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
-    <End Role="DocProductionProducts" Type="Self.DocProductionProducts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="1CNomenclature">
-        <PropertyRef Name="1CNomenclatureID" />
-      </Principal>
-      <Dependent Role="DocProductionProducts">
-        <PropertyRef Name="1CNomenclatureID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2134,6 +2139,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocUnpackWithdrawals_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocUnpackWithdrawals" Type="Self.DocUnpackWithdrawals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocUnpackWithdrawals">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocUnpackWithdrawals_DocWithdrawal">
+    <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
+    <End Role="DocUnpackWithdrawals" Type="Self.DocUnpackWithdrawals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocWithdrawal">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocUnpackWithdrawals">
+        <PropertyRef Name="DocWithdrawalID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DocWithdrawal_Docs">
     <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
     <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="0..1" />
@@ -2280,18 +2309,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Places_1CPlaces">
-    <End Role="1CPlaces" Type="Self.1CPlaces" Multiplicity="0..1" />
-    <End Role="Places" Type="Self.Places" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="1CPlaces">
-        <PropertyRef Name="1CPlaceID" />
-      </Principal>
-      <Dependent Role="Places">
-        <PropertyRef Name="1CPlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Places_Branches">
     <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
     <End Role="Places" Type="Self.Places" Multiplicity="*" />
@@ -2325,6 +2342,30 @@
       </Principal>
       <Dependent Role="Places">
         <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PlaceZoneCells_PlaceZones">
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="1" />
+    <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZones">
+        <PropertyRef Name="PlaceZoneID" />
+      </Principal>
+      <Dependent Role="PlaceZoneCells">
+        <PropertyRef Name="PlaceZoneID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PlaceZones_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="PlaceZones">
+        <PropertyRef Name="PlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2502,6 +2543,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ProductKindRejectionReasons_1CRejectionReasons">
+    <End Role="1CRejectionReasons" Type="Self.1CRejectionReasons" Multiplicity="1" />
+    <End Role="ProductKindRejectionReasons" Type="Self.ProductKindRejectionReasons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CRejectionReasons">
+        <PropertyRef Name="1CRejectionReasonID" />
+      </Principal>
+      <Dependent Role="ProductKindRejectionReasons">
+        <PropertyRef Name="1CRejectionReasonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ProductKindRejectionReasons_ProductKinds">
+    <End Role="ProductKinds" Type="Self.ProductKinds" Multiplicity="1" />
+    <End Role="ProductKindRejectionReasons" Type="Self.ProductKindRejectionReasons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductKinds">
+        <PropertyRef Name="ProductKindID" />
+      </Principal>
+      <Dependent Role="ProductKindRejectionReasons">
+        <PropertyRef Name="ProductKindID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ProductPalletItems_1CCharacteristics">
     <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
     <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
@@ -2527,7 +2592,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductPalletItems_ProductPallets">
-    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="1" />
+    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="0..1" />
     <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductPallets">
@@ -2826,6 +2891,10 @@
   <Function Name="CharacteristicLayerNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
     <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="CheckAddedGroupPackSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="AddedProductId" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="BaseProductId" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="CheckProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
@@ -2833,18 +2902,6 @@
   <Function Name="CheckSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
-  </Function>
-  <Function Name="CreateDocBrokeWithBrokeDecision" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
-    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
-    <Parameter Name="BrokeQuantity" Type="decimal" Mode="In" />
-    <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
-    <Parameter Name="PrintName" Type="varchar" Mode="In" />
-    <Parameter Name="PlaceID" Type="int" Mode="In" />
-  </Function>
-  <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="SpoolID" Type="uniqueidentifier" Mode="In" />
-    <Parameter Name="PrintName" Type="varchar" Mode="In" />
   </Function>
   <Function Name="CreateRemainderSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
@@ -2878,11 +2935,6 @@
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ShiftID" Type="int" Mode="In" />
     <Parameter Name="CloseDate" Type="datetime" Mode="In" />
-  </Function>
-  <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="SearchString" Type="varchar" Mode="In" />
-    <Parameter Name="Id" Type="int" Mode="In" />
-    <Parameter Name="FilterByPlaceGroup" Type="bit" Mode="In" />
   </Function>
   <Function Name="FindProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="BatchKindID" Type="int" Mode="In" />
@@ -3033,6 +3085,13 @@
   <Function Name="UploadDocCloseShiftReportTo1C" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="ValidateGroupPackBeforeSave" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="Diameter" Type="decimal" Mode="In" />
+    <Parameter Name="Weight" Type="decimal" Mode="In" />
+    <Parameter Name="CountRolls" Type="int" Mode="In" />
+  </Function>
   <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PlaceID" Type="int" Mode="In" />
@@ -3086,6 +3145,7 @@
     <EntitySet Name="DocShipmentOrderInfo" EntityType="Self.DocShipmentOrderInfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocShipments" EntityType="Self.DocShipments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocUnpackWithdrawals" EntityType="Self.DocUnpackWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawalProducts" EntityType="Self.DocWithdrawalProducts" Schema="dbo" store:Type="Tables" />
@@ -3099,6 +3159,8 @@
     <EntitySet Name="PlaceGroup1CNomenclature" EntityType="Self.PlaceGroup1CNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PlaceZoneCells" EntityType="Self.PlaceZoneCells" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PlaceZones" EntityType="Self.PlaceZones" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PostTypes" EntityType="Self.PostTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
@@ -3108,6 +3170,7 @@
     <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ProductKindRejectionReasons" EntityType="Self.ProductKindRejectionReasons" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductKinds" EntityType="Self.ProductKinds" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductPalletItems" EntityType="Self.ProductPalletItems" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProductPallets" EntityType="Self.ProductPallets" Schema="dbo" store:Type="Tables" />
@@ -3185,6 +3248,7 @@
     [vProductsInfo].[Quantity] AS [Quantity], 
     [vProductsInfo].[BaseMeasureUnit] AS [BaseMeasureUnit], 
     [vProductsInfo].[BaseMeasureUnitQuantity] AS [BaseMeasureUnitQuantity], 
+    [vProductsInfo].[ProductionQuantity] AS [ProductionQuantity], 
     [vProductsInfo].[GrossQuantity] AS [GrossQuantity], 
     [vProductsInfo].[BaseMeasureUnitGrossQuantity] AS [BaseMeasureUnitGrossQuantity], 
     [vProductsInfo].[NomenclatureName] AS [NomenclatureName], 
@@ -3517,14 +3581,6 @@
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="DocProduction" EntitySet="DocProduction" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocProductionProducts_1CCharacteristics" Association="Self.FK_DocProductionProducts_1CCharacteristics">
-      <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
-      <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocProductionProducts_1CNomenclature" Association="Self.FK_DocProductionProducts_1CNomenclature">
-      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
-      <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
-    </AssociationSet>
     <AssociationSet Name="FK_DocProductionProducts_DocProduction" Association="Self.FK_DocProductionProducts_DocProduction">
       <End Role="DocProduction" EntitySet="DocProduction" />
       <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
@@ -3581,6 +3637,14 @@
       <End Role="Persons" EntitySet="Persons" />
       <End Role="DocShipments" EntitySet="DocShipments" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocUnpackWithdrawals_Docs" Association="Self.FK_DocUnpackWithdrawals_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocUnpackWithdrawals" EntitySet="DocUnpackWithdrawals" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocUnpackWithdrawals_DocWithdrawal" Association="Self.FK_DocUnpackWithdrawals_DocWithdrawal">
+      <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+      <End Role="DocUnpackWithdrawals" EntitySet="DocUnpackWithdrawals" />
+    </AssociationSet>
     <AssociationSet Name="FK_DocWithdrawal_Docs" Association="Self.FK_DocWithdrawal_Docs">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
@@ -3629,10 +3693,6 @@
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
     </AssociationSet>
-    <AssociationSet Name="FK_Places_1CPlaces" Association="Self.FK_Places_1CPlaces">
-      <End Role="1CPlaces" EntitySet="1CPlaces" />
-      <End Role="Places" EntitySet="Places" />
-    </AssociationSet>
     <AssociationSet Name="FK_Places_Branches" Association="Self.FK_Places_Branches">
       <End Role="Branches" EntitySet="Branches" />
       <End Role="Places" EntitySet="Places" />
@@ -3644,6 +3704,14 @@
     <AssociationSet Name="FK_Places_PlaceGroups1" Association="Self.FK_Places_PlaceGroups1">
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="Places" EntitySet="Places" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlaceZoneCells_PlaceZones" Association="Self.FK_PlaceZoneCells_PlaceZones">
+      <End Role="PlaceZones" EntitySet="PlaceZones" />
+      <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlaceZones_Places" Association="Self.FK_PlaceZones_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="PlaceZones" EntitySet="PlaceZones" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="Self.FK_ProductGroupPacks_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -3700,6 +3768,14 @@
     <AssociationSet Name="FK_ProductionTaskWR_ProductionTasks" Association="Self.FK_ProductionTaskWR_ProductionTasks">
       <End Role="ProductionTasks" EntitySet="ProductionTasks" />
       <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductKindRejectionReasons_1CRejectionReasons" Association="Self.FK_ProductKindRejectionReasons_1CRejectionReasons">
+      <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
+      <End Role="ProductKindRejectionReasons" EntitySet="ProductKindRejectionReasons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ProductKindRejectionReasons_ProductKinds" Association="Self.FK_ProductKindRejectionReasons_ProductKinds">
+      <End Role="ProductKinds" EntitySet="ProductKinds" />
+      <End Role="ProductKindRejectionReasons" EntitySet="ProductKindRejectionReasons" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductPalletItems_1CCharacteristics" Association="Self.FK_ProductPalletItems_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />

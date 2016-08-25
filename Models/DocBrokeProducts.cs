@@ -26,7 +26,7 @@ namespace Gamma.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
-        public virtual Products Products { get; set; }
         public virtual DocBroke DocBroke { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

@@ -36,8 +36,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.DocumentViewer.v16.1.Core.dl
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.RichEdit.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraBars.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraTreeList.v16.1.dll
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Bars.dll
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Editor.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Office.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Drawing.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.xml
@@ -61,7 +59,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraLayout.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraPrinting.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.xml
-D:\CProjects\Gamma\Gamma\bin\Release\FastReport.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Ribbon.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.DocumentViewer.v16.1.Core.xml
@@ -268,3 +265,11 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.licenses
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
+D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Bars.dll
+D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Editor.dll
+D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe.manifest
+D:\CProjects\Gamma\Gamma\bin\Release\Gamma.application
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.manifest
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.application
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.TrustInfo.xml

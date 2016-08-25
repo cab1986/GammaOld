@@ -12,9 +12,9 @@
 			SelectedItem="{Binding SelectedProductionTaskBatch}" HorizontalAlignment="Stretch" AllowLiveDataShaping="False" SelectionMode="Cell" UseLayoutRounding="False" >
             <dxg:GridControl.Bands >
                 <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center" VisibleIndex="0">
-                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="100" VisibleIndex="0" FixedWidth="True"/>
-                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="120" FixedWidth="False" VisibleIndex="1"/>
-                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="100" FixedWidth="False" VisibleIndex="2"/>
+                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="80" VisibleIndex="0" FixedWidth="True" SortOrder="Descending" SortIndex="0"/>
+                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="50" FixedWidth="False" VisibleIndex="1" />
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="40" FixedWidth="False" VisibleIndex="2"/>
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Номенклатура и раскрой" HorizontalHeaderContentAlignment="Center" VisibleIndex="1">
                     <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" AllowBestFit="True" VisibleIndex="3">
@@ -56,7 +56,7 @@
                     <dxg:GridColumn Binding="{Binding Format[9], Mode=TwoWay}" Header="10" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="30"/>
                     <dxg:GridColumn Binding="{Binding Format[10], Mode=TwoWay}" Header="11" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="31"/>
                     <dxg:GridColumn Binding="{Binding Format[11], Mode=TwoWay}" Header="12" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="32"/>
-                    <dxg:GridColumn Binding="{Binding Format[12], Mode=TwoWay}" Header="13" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="33" SortOrder="Ascending" SortIndex="0"/>
+                    <dxg:GridColumn Binding="{Binding Format[12], Mode=TwoWay}" Header="13" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="33"/>
                     <dxg:GridColumn Binding="{Binding Format[13], Mode=TwoWay}" Header="14" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="34"/>
                     <dxg:GridColumn Binding="{Binding Format[14], Mode=TwoWay}" Header="15" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="35"/>
                     <dxg:GridColumn Binding="{Binding Format[15], Mode=TwoWay}" Header="16" dxg:BandBase.GridRow="2" AllowBestFit="True" Width="50" FixedWidth="True" VisibleIndex="36"/>
@@ -65,10 +65,10 @@
                     <dxg:GridColumn Binding="{Binding EnumColor}" Visible="False" />
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Выполнение" VisibleIndex="2">
-                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" FixedWidth="False" Width="120" VisibleIndex="38">
+                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" FixedWidth="False" Width="50" VisibleIndex="38">
                         <dxg:GridColumn.CellTemplate>
                             <DataTemplate>
-                                <dxe:TextEdit x:Name="PART_Editor" FontSize="24" />
+                                <dxe:TextEdit x:Name="PART_Editor" FontSize="24" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>

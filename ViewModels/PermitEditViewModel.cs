@@ -105,10 +105,9 @@ namespace Gamma.ViewModels
         }
         public PermitTables SelectedPermitTable { get; set; }
 
-        public override void SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(gammaBase);
             if (_isNewPermit)
             {
                 gammaBase.Permits.Add(Permit);
@@ -125,6 +124,7 @@ namespace Gamma.ViewModels
             }
             Permit.PermitTables = PermitTables;
             gammaBase.SaveChanges();
+            return true;
         }
     }
 }

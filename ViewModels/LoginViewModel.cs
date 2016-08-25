@@ -53,8 +53,8 @@ namespace Gamma.ViewModels
         public LoginViewModel()
         {
             var appSettings = GammaSettings.Get();
-            Host = appSettings.HostName;
-            DataBase = appSettings.DbName;
+            Host = string.IsNullOrEmpty(appSettings.HostName)? "gamma" : appSettings.HostName;
+            DataBase = string.IsNullOrEmpty(appSettings.DbName) ? "gammanew" : appSettings.DbName;
             Login = appSettings.User;
             UseScanner = appSettings.UseScanner;
             LoginCommand = new DelegateCommand(Authenticate, CanExecute);

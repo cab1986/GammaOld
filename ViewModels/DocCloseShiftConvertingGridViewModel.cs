@@ -222,10 +222,9 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="docId">ID документа закрытия смены</param>
         /// <param name="gammaBase">Контекст БД(в процедуре использован private GammaBase)</param>
-        public override void SaveToModel(Guid docId, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid docId, GammaEntities gammaBase = null)
         {
-            if (IsReadOnly) return;
-            base.SaveToModel(docId, gammaBase);
+            if (IsReadOnly) return true;
             var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftWithdrawals)
                 .Include(d => d.DocCloseShiftSamples)
                 .First(d => d.DocID == docId);
@@ -289,6 +288,7 @@ namespace Gamma.ViewModels
                 });
             }
             GammaBase.SaveChanges();
+            return true;
         }
 
         public class Sample

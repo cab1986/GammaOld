@@ -54,8 +54,7 @@
             </dxlc:LayoutItem>
             <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
         </dxlc:LayoutControl>
-        <dxg:GridControl EnableSmartColumnsGeneration="False" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" 
-                         AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False">
+        <dxg:GridControl EnableSmartColumnsGeneration="False" Grid.Row="2" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AllowLiveDataShaping="False" >
             <dxg:GridControl.TotalSummary>
                 <dxg:GridSummaryItem FieldName="Quantity" SummaryType ="Sum" ShowInColumn="Quantity" DisplayFormat="Всего: {0:0.###}"/>
                 <dxg:GridSummaryItem SummaryType="Count" ShowInColumn="Number" />

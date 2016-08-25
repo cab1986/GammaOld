@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="82" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="90" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -37,7 +37,6 @@
         <EntityTypeShape EntityType="GammaModel.ProductPallets" Width="1.5" PointX="17.25" PointY="76.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.ProductStates" Width="1.5" PointX="15" PointY="80.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.Reports" Width="1.5" PointX="5.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="GammaModel.Rests" Width="1.5" PointX="10.75" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.RolePermits" Width="1.5" PointX="9.75" PointY="31.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.Roles" Width="1.5" PointX="7.5" PointY="60.625" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.SourceSpools" Width="1.5" PointX="25.75" PointY="47.875" IsExpanded="true" />
@@ -161,14 +160,6 @@
         <AssociationConnector Association="GammaModel.FK_DocShipments_1CDocShipmentOrder" />
         <AssociationConnector Association="GammaModel.FK_DocShipments_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocShipments_Persons" />
-        <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="21.5" PointY="63.875" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_ProductPallets" />
-        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.5" PointX="19.5" PointY="53.25" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
         <EntityTypeShape EntityType="GammaModel.MaterialTypes" Width="1.5" PointX="5.25" PointY="47.75" />
         <AssociationConnector Association="GammaModel.MaterialTypeNomenclature" />
         <EntityTypeShape EntityType="GammaModel.DocShipmentOrderInfo" Width="1.5" PointX="20.5" PointY="21.125" />
@@ -176,58 +167,73 @@
         <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_Persons" />
         <EntityTypeShape EntityType="GammaModel.Branches" Width="1.5" PointX="5.25" PointY="63.75" />
         <AssociationConnector Association="GammaModel.FK_Branches_Enterprises" />
-        <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="14.25" PointY="57.375" />
-        <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeProducts" Width="1.5" PointX="23.5" PointY="39.875" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeProductRejectionReasons" Width="1.5" PointX="25.75" PointY="40" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProductRejectionReasons_DocBrokeProducts" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProductRejectionReasons_1CRejectionReasons" />
-        <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="9.75" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeDecisionProducts" Width="1.5" PointX="24.75" PointY="61.625" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_ProductStates" />
         <EntityTypeShape EntityType="GammaModel.Places" Width="1.5" PointX="7.5" PointY="53.375" />
         <AssociationConnector Association="GammaModel.FK_Places_Branches" />
         <AssociationConnector Association="GammaModel.FK_Places_Departments" />
-        <AssociationConnector Association="GammaModel.FK_DocMovement_Places" />
-        <AssociationConnector Association="GammaModel.FK_DocMovement_Places1" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Places" />
         <AssociationConnector Association="GammaModel.FK_Docs_Places" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Places" />
         <AssociationConnector Association="GammaModel.FK_Places_PlaceGroups1" />
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_Places" />
-        <AssociationConnector Association="GammaModel.FK_Rests_Places" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_Places" />
         <AssociationConnector Association="GammaModel.FK_SpoolInstallLog_Places" />
         <AssociationConnector Association="GammaModel.UserPlaces" />
-        <EntityTypeShape EntityType="GammaModel.Products" Width="1.5" PointX="24.25" PointY="65.625" />
+        <EntityTypeShape EntityType="GammaModel.ProductKinds" Width="1.5" PointX="10.375" PointY="0.875" />
+        <EntityTypeShape EntityType="GammaModel.C1CPlaces" Width="1.5" PointX="5.25" PointY="57.125" />
+        <AssociationConnector Association="GammaModel.FK_Places_1CPlaces" />
+        <EntityTypeShape EntityType="GammaModel.DocWithdrawalProducts" Width="1.5" PointX="27.5" PointY="64" />
+        <AssociationConnector Association="GammaModel.FK_DocWithdrawalProducts_DocWithdrawal" />
+        <EntityTypeShape EntityType="GammaModel.DocProducts" Width="1.5" PointX="27.5" PointY="60.875" />
+        <AssociationConnector Association="GammaModel.FK_DocProducts_Docs" />
+        <EntityTypeShape EntityType="GammaModel.DocProductionProducts" Width="1.5" PointX="27.5" PointY="56.75" />
+        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_DocProduction" />
+        <EntityTypeShape EntityType="GammaModel.DocBroke" Width="1.5" PointX="14.25" PointY="61.125" />
+        <AssociationConnector Association="GammaModel.FK_DocBroke_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBroke" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_DocBroke" />
+        <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="9.75" />
+        <AssociationConnector Association="GammaModel.ProductKindRejectionReasons" />
+        <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="21.5" PointY="63.875" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_ProductPallets" />
+        <EntityTypeShape EntityType="GammaModel.Rests" Width="1.5" PointX="30.5" PointY="60.625" />
+        <AssociationConnector Association="GammaModel.FK_Rests_Places" />
+        <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="14.25" PointY="57.875" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_Places" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_Places1" />
+        <EntityTypeShape EntityType="GammaModel.PlaceZoneCells" Width="1.5" PointX="12" PointY="68.625" />
+        <EntityTypeShape EntityType="GammaModel.PlaceZones" Width="1.5" PointX="9.75" PointY="68.5" />
+        <EntityTypeShape EntityType="GammaModel.Products" Width="1.5" PointX="23.25" PointY="33.875" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_Products" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocWithdrawalProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_PlaceZones_Places" />
+        <AssociationConnector Association="GammaModel.FK_PlaceZoneCells_PlaceZones" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_Products" />
+        <AssociationConnector Association="GammaModel.FK_Products_ProductKinds" />
         <AssociationConnector Association="GammaModel.FK_ProductPallets_Products1" />
         <AssociationConnector Association="GammaModel.FK_Products_ProductStates" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_Products" />
         <AssociationConnector Association="GammaModel.FK_Rests_Products" />
         <AssociationConnector Association="GammaModel.FK_SpoolInstallLog_Products" />
-        <EntityTypeShape EntityType="GammaModel.ProductKinds" Width="1.5" PointX="10.375" PointY="0.875" />
-        <AssociationConnector Association="GammaModel.FK_Products_ProductKinds" />
-        <EntityTypeShape EntityType="GammaModel.C1CPlaces" Width="1.5" PointX="5.25" PointY="57.125" />
+        <AssociationConnector Association="GammaModel.DocUnpackWithdrawals" />
+        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.5" PointX="19.5" PointY="53.125" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
-        <AssociationConnector Association="GammaModel.FK_Places_1CPlaces" />
-        <EntityTypeShape EntityType="GammaModel.DocWithdrawalProducts" Width="1.5" PointX="27.5" PointY="64" />
-        <AssociationConnector Association="GammaModel.FK_DocWithdrawalProducts_DocWithdrawal" />
-        <AssociationConnector Association="GammaModel.FK_DocWithdrawalProducts_Products" />
-        <EntityTypeShape EntityType="GammaModel.DocProducts" Width="1.5" PointX="27.5" PointY="60.875" />
-        <AssociationConnector Association="GammaModel.FK_DocProducts_Docs" />
-        <AssociationConnector Association="GammaModel.FK_DocProducts_Products" />
-        <EntityTypeShape EntityType="GammaModel.DocProductionProducts" Width="1.5" PointX="27.5" PointY="56.75" />
-        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_DocProduction" />
-        <AssociationConnector Association="GammaModel.FK_DocProductionProducts_Products" />
-        <EntityTypeShape EntityType="GammaModel.DocBroke" Width="1.5" PointX="14.25" PointY="61.125" />
-        <AssociationConnector Association="GammaModel.FK_DocBroke_Docs" />
-        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBroke" />
-        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_DocBroke" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

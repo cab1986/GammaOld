@@ -26,14 +26,15 @@ namespace Gamma.Models
         public Nullable<decimal> Quantity { get; set; }
         public string BaseMeasureUnit { get; set; }
         public Nullable<decimal> BaseMeasureUnitQuantity { get; set; }
+        public decimal ProductionQuantity { get; set; }
         public Nullable<decimal> GrossQuantity { get; set; }
         public Nullable<decimal> BaseMeasureUnitGrossQuantity { get; set; }
         public string NomenclatureName { get; set; }
         public string ShortNomenclatureName { get; set; }
         public string Place { get; set; }
-        public int PlaceID { get; set; }
-        public Nullable<short> PlaceGroupID { get; set; }
-        public byte ShiftID { get; set; }
+        public Nullable<int> PlaceID { get; set; }
+        public short PlaceGroupID { get; set; }
+        public Nullable<byte> ShiftID { get; set; }
         public byte StateID { get; set; }
         public Nullable<decimal> ChangeStateQuantity { get; set; }
         public string RejectionReason { get; set; }

@@ -109,15 +109,14 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="itemID">ProductionTaskID</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            base.SaveToModel(itemID, gammaBase);
             var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
             if (productionTask == null)
             {
                 MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
             if (productionTask.ProductionTaskSGB == null)
             {
@@ -130,6 +129,7 @@ namespace Gamma.ViewModels
             productionTask.ProductionTaskSGB.TechSpecification = TechSpecification;
             productionTask.ProductionTaskSGB.QualitySpecification = QualitySpecification;
             gammaBase.SaveChanges();
+            return true;
         }
 
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductionTaskSGB");

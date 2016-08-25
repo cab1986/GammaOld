@@ -28,13 +28,13 @@ namespace Gamma
 
     public class EditRejectionReasonsMessage
     {
-        public EditRejectionReasonsMessage(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
+        public EditRejectionReasonsMessage(BrokeProduct product)
         {
-            RejectionReasons = rejectionReasons;
-           
+            BrokeProduct = product;
+
         }
         
-        public ItemsChangeObservableCollection<RejectionReason> RejectionReasons { get; set; }
+        public BrokeProduct BrokeProduct { get; set; }
     }
 
     public class OpenDocBrokeMessage
@@ -247,9 +247,9 @@ namespace Gamma
 
 
 
-        public static void EditRejectionReasons(ItemsChangeObservableCollection<RejectionReason> rejectionReasons)
+        public static void EditRejectionReasons(BrokeProduct product)
         {
-            Messenger.Default.Send(new EditRejectionReasonsMessage(rejectionReasons));
+            Messenger.Default.Send(new EditRejectionReasonsMessage(product));
         }
 
         public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchID, DateTime dateBegin)

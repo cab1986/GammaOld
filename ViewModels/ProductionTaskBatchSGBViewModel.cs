@@ -152,16 +152,16 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionTaskWrView");
             }
         }
-        public override void SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            base.SaveToModel(itemID, gammaBase);
             FirstView?.SaveToModel(itemID);
             SecondView?.SaveToModel(itemID);
             var productionTask = FirstView as IProductionTask;
-            if (productionTask == null) return;
+            if (productionTask == null) return true;
             var productionTaskID = productionTask.ProductionTaskID;
 //            if (ProductionTaskSGBView != null) ProductionTaskSGBView.SaveToModel(productionTaskID);
             ProductionTaskWrView?.SaveToModel(productionTaskID);
+            return true;
         }
 
         public override bool CanSaveExecute()
