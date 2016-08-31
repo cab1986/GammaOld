@@ -487,6 +487,7 @@
           <Property Name="ActivePersonID" Type="int" />
           <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="ShiftID" Type="tinyint" />
+          <Property Name="IsShipped" Type="bit" />
         </EntityType>
         <EntityType Name="DocShipments">
           <Key>
@@ -5331,15 +5332,6 @@
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
             <Parameter Name="PrintName" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="DocShipmentOrderInfo" EntityType="GammaModel.DocShipmentOrderInfo" />
-          <AssociationSet Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder" Association="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder">
-            <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
-            <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocShipmentOrderInfo_Persons" Association="GammaModel.FK_DocShipmentOrderInfo_Persons">
-            <End Role="Persons" EntitySet="Persons" />
-            <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
-          </AssociationSet>
           <EntitySet Name="Branches" EntityType="GammaModel.Branches" />
           <AssociationSet Name="FK_Branches_Enterprises" Association="GammaModel.FK_Branches_Enterprises">
             <End Role="Enterprises" EntitySet="Enterprises" />
@@ -5592,6 +5584,15 @@
             <Parameter Name="AddedProductId" Mode="In" Type="Guid" />
             <Parameter Name="BaseProductId" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="DocShipmentOrderInfo" EntityType="GammaModel.DocShipmentOrderInfo" />
+          <AssociationSet Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder" Association="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder">
+            <End Role="C1CDocShipmentOrder" EntitySet="C1CDocShipmentOrder" />
+            <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocShipmentOrderInfo_Persons" Association="GammaModel.FK_DocShipmentOrderInfo_Persons">
+            <End Role="Persons" EntitySet="Persons" />
+            <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -6984,41 +6985,6 @@
           <Property Type="String" Name="OldNomenclature" Nullable="true" MaxLength="255" />
           <Property Type="Int64" Name="OldProductId" Nullable="true" />
         </ComplexType>
-        <EntityType Name="DocShipmentOrderInfo">
-          <Key>
-            <PropertyRef Name="C1CDocShipmentOrderID" />
-          </Key>
-          <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
-          <Property Name="ActivePersonID" Type="Int32" />
-          <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ShiftID" Type="Byte" />
-          <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder" FromRole="DocShipmentOrderInfo" ToRole="C1CDocShipmentOrder" />
-          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipmentOrderInfo_Persons" FromRole="DocShipmentOrderInfo" ToRole="Persons" />
-        </EntityType>
-        <Association Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder">
-          <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="1" />
-          <End Type="GammaModel.DocShipmentOrderInfo" Role="DocShipmentOrderInfo" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="C1CDocShipmentOrder">
-              <PropertyRef Name="C1CDocShipmentOrderID" />
-            </Principal>
-            <Dependent Role="DocShipmentOrderInfo">
-              <PropertyRef Name="C1CDocShipmentOrderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocShipmentOrderInfo_Persons">
-          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="0..1" />
-          <End Type="GammaModel.DocShipmentOrderInfo" Role="DocShipmentOrderInfo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Persons">
-              <PropertyRef Name="PersonID" />
-            </Principal>
-            <Dependent Role="DocShipmentOrderInfo">
-              <PropertyRef Name="ActivePersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Branches">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -7927,6 +7893,42 @@
             </Principal>
             <Dependent Role="C1CMainSpecifications">
               <PropertyRef Name="C1CSpecificationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocShipmentOrderInfo">
+          <Key>
+            <PropertyRef Name="C1CDocShipmentOrderID" />
+          </Key>
+          <Property Name="C1CDocShipmentOrderID" Type="Guid" Nullable="false" />
+          <Property Name="ActivePersonID" Type="Int32" />
+          <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ShiftID" Type="Byte" />
+          <Property Name="IsShipped" Type="Boolean" />
+          <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder" FromRole="DocShipmentOrderInfo" ToRole="C1CDocShipmentOrder" />
+          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipmentOrderInfo_Persons" FromRole="DocShipmentOrderInfo" ToRole="Persons" />
+        </EntityType>
+        <Association Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder">
+          <End Type="GammaModel.C1CDocShipmentOrder" Role="C1CDocShipmentOrder" Multiplicity="1" />
+          <End Type="GammaModel.DocShipmentOrderInfo" Role="DocShipmentOrderInfo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDocShipmentOrder">
+              <PropertyRef Name="C1CDocShipmentOrderID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderInfo">
+              <PropertyRef Name="C1CDocShipmentOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocShipmentOrderInfo_Persons">
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="0..1" />
+          <End Type="GammaModel.DocShipmentOrderInfo" Role="DocShipmentOrderInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persons">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderInfo">
+              <PropertyRef Name="ActivePersonID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -9001,16 +9003,6 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SaveOldProductToNewBase" FunctionName="GammaDBModel.SaveOldProductToNewBase" />
           <FunctionImportMapping FunctionImportName="UnpackGroupPack" FunctionName="GammaDBModel.UnpackGroupPack" />
-          <EntitySetMapping Name="DocShipmentOrderInfo">
-            <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderInfo">
-              <MappingFragment StoreEntitySet="DocShipmentOrderInfo">
-                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
-                <ScalarProperty Name="ActivePersonID" ColumnName="ActivePersonID" />
-                <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Branches">
             <EntityTypeMapping TypeName="GammaModel.Branches">
               <MappingFragment StoreEntitySet="Branches">
@@ -9305,6 +9297,17 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="CheckAddedGroupPackSpool" FunctionName="GammaDBModel.CheckAddedGroupPackSpool" />
+          <EntitySetMapping Name="DocShipmentOrderInfo">
+            <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderInfo">
+              <MappingFragment StoreEntitySet="DocShipmentOrderInfo">
+                <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+                <ScalarProperty Name="ActivePersonID" ColumnName="ActivePersonID" />
+                <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

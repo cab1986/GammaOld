@@ -63,6 +63,9 @@
                         <dxe:SpinEdit EditValue="{Binding ShiftId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
                                       AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
                     </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Отгружено" Width="80">
+                        <dxe:CheckEdit EditValue="{Binding IsShipped, UpdateSourceTrigger=PropertyChanged}"/>
+                    </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem LabelPosition="Top" Label="Состав приказа" VerticalAlignment="Stretch">
                     <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding DocShipmentOrderGoods}">

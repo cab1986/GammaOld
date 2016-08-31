@@ -56,7 +56,7 @@
                 <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
             </dxg:GridControl.View>
             <dxg:GridControl.Columns>
-                <dxg:GridColumn Header="Номер отгрузки" FieldName="Number" VisibleIndex="0" />
+                <dxg:GridColumn Header="Номер приказа" FieldName="Number" VisibleIndex="0" />
                 <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="1" SortIndex="0" SortOrder="Descending"/>
                 <dxg:GridColumn Header="Получатель" FieldName="Consignee" VisibleIndex="2" />
                 <dxg:GridColumn Header="Номер ТС" FieldName="VehicleNumber" VisibleIndex="3" />

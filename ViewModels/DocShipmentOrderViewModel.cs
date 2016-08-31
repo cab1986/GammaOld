@@ -36,11 +36,14 @@ namespace Gamma.ViewModels
                 VehicleNumber = docShipmentOrderInfo.DocShipmentOrderInfo.VehicleNumber;
                 ActivePersonId = docShipmentOrderInfo.DocShipmentOrderInfo.ActivePersonID;
                 ShiftId = docShipmentOrderInfo.DocShipmentOrderInfo.ShiftID;
+                IsShipped = docShipmentOrderInfo.DocShipmentOrderInfo.IsShipped ?? false;
             }
             FillDocShipmentOrderGoods(docShipmentOrderId);
-            IsReadOnly = !DB.HaveWriteAccess("DocShipmentOrderInfo");
+            IsReadOnly = !DB.HaveWriteAccess("DocShipmentOrderInfo") || IsShipped;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
+
+        public bool IsShipped { get; set; }
 
         public string Title { get; set; }
 
@@ -110,6 +113,7 @@ namespace Gamma.ViewModels
             docShipmentOrderInfo.VehicleNumber = VehicleNumber;
             docShipmentOrderInfo.ActivePersonID = ActivePersonId;
             docShipmentOrderInfo.ShiftID = ShiftId;
+            docShipmentOrderInfo.IsShipped = IsShipped;
             GammaBase.SaveChanges();
             return true;
         }

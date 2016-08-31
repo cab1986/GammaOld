@@ -18,6 +18,7 @@ namespace Gamma.Models
         public Nullable<int> ActivePersonID { get; set; }
         public string VehicleNumber { get; set; }
         public Nullable<byte> ShiftID { get; set; }
+        public Nullable<bool> IsShipped { get; set; }
     
         public virtual C1CDocShipmentOrder C1CDocShipmentOrder { get; set; }
         public virtual Persons Persons { get; set; }

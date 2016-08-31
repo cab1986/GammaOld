@@ -92,9 +92,9 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.C1CDocShipmentOrder.Where(d => !d.Posted && 
+                            gammaBase.C1CDocShipmentOrder.Where(d => (d.DocShipmentOrderInfo == null || (d.DocShipmentOrderInfo.IsShipped == null || !(bool)d.DocShipmentOrderInfo.IsShipped)) && 
                             gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
-                            .OrderByDescending(d => d.C1CDate)
+                            .OrderByDescending(d => d.C1CDate).Take(500)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1CDocShipmentOrderID,

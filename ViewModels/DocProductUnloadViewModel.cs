@@ -220,16 +220,10 @@ namespace Gamma.ViewModels
         private Guid ProductionTaskID { get; set; }
         private ObservableCollection<Products> Products { get; set; }
         private ObservableCollection<ProductSpools> ProductSpools { get; set; }
-        private Guid? _vmid = Guid.NewGuid();
-        public Guid? VMID
-        {
-            get
-            {
-                return _vmid;
-            }
-        }
+        public Guid? VMID { get; } = Guid.NewGuid();
 
         private byte? _breakNumber;
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public byte? BreakNumber
         {

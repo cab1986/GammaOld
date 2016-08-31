@@ -8,7 +8,7 @@ namespace Gamma.Models
 {
     public class EditBrokeDecisionItem: DbEditItemWithNomenclatureViewModel
     {
-        public EditBrokeDecisionItem(string name, Gamma.ProductState productState, ItemsChangeObservableCollection<BrokeDecisionProduct> decisionProducts, bool canChooseNomenclature = false)
+        public EditBrokeDecisionItem(string name, ProductState productState, ItemsChangeObservableCollection<BrokeDecisionProduct> decisionProducts, bool canChooseNomenclature = false)
         {
             Name = name;
             ProductState = productState;
@@ -38,7 +38,7 @@ namespace Gamma.Models
                     {
                         value = BrokeDecisionProduct.MaxQuantity - sumQuantity;
                         if (IsChecked)
-                            BrokeDecisionProducts.Remove(productNeedsDecision);
+                            BrokeDecisionProducts.Remove(productNeedsDecision);                          
                     }
                     else if (IsChecked)
                     {
@@ -74,6 +74,7 @@ namespace Gamma.Models
                 {
                     BrokeDecisionProduct.NomenclatureId = NomenclatureID;
                 }
+                RaisePropertyChanged("NomenclatureID");
             }
         }
 
@@ -92,6 +93,7 @@ namespace Gamma.Models
                 {
                     BrokeDecisionProduct.CharacteristicId = CharacteristicID;
                 }
+                RaisePropertyChanged("CharacteristicID");
             }
         }
 
@@ -118,11 +120,20 @@ namespace Gamma.Models
             set
             {
                 if (_isChecked == value) return;
-                if (value && ProductState != ProductState.Broke && BrokeDecisionProducts.Any(p => p.ProductState != ProductState 
-                    && p.ProductState != ProductState.Broke && p.ProductState != ProductState.NeedsDecision)) return;
+                if (BrokeDecisionProduct == null)
+                {
+                    _isChecked = value;
+                    RaisePropertyChanged("IsChecked");
+                    return;
+                }
+                if (value && ProductState != ProductState.Broke && 
+                    (
+                        BrokeDecisionProducts.Any(p => p.ProductState != ProductState 
+                        && p.ProductId == BrokeDecisionProduct.ProductId
+                        && p.ProductState != ProductState.Broke && p.ProductState != ProductState.NeedsDecision)
+                    )) return;
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
-                if (BrokeDecisionProduct == null) return;
                 var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(
                         bp =>
                             bp.ProductId == BrokeDecisionProduct.ProductId &&
@@ -192,7 +203,7 @@ namespace Gamma.Models
 
         public string Name { get; set; }
 
-        private Gamma.ProductState ProductState { get; set; }
+        private ProductState ProductState { get; set; }
 
         private BrokeDecisionProduct _brokeDecisionProduct;
 
@@ -202,6 +213,11 @@ namespace Gamma.Models
             set
             {
                 _brokeDecisionProduct = value;
+                if (_brokeDecisionProduct != null)
+                {
+                    NomenclatureID = _brokeDecisionProduct.NomenclatureId;
+                    CharacteristicID = _brokeDecisionProduct.CharacteristicId;
+                }
                 RaisePropertyChanged("BrokeDecisionProduct");
             }
         }

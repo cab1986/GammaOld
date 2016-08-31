@@ -1066,16 +1066,6 @@
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="SaveOldProductToNewBase" FunctionName="GammaDBModel.SaveOldProductToNewBase" />
     <FunctionImportMapping FunctionImportName="UnpackGroupPack" FunctionName="GammaDBModel.UnpackGroupPack" />
-    <EntitySetMapping Name="DocShipmentOrderInfo">
-      <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderInfo">
-        <MappingFragment StoreEntitySet="DocShipmentOrderInfo">
-          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
-          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
-          <ScalarProperty Name="ActivePersonID" ColumnName="ActivePersonID" />
-          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Branches">
       <EntityTypeMapping TypeName="GammaModel.Branches">
         <MappingFragment StoreEntitySet="Branches">
@@ -1370,5 +1360,16 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="CheckAddedGroupPackSpool" FunctionName="GammaDBModel.CheckAddedGroupPackSpool" />
+    <EntitySetMapping Name="DocShipmentOrderInfo">
+      <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderInfo">
+        <MappingFragment StoreEntitySet="DocShipmentOrderInfo">
+          <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+          <ScalarProperty Name="ActivePersonID" ColumnName="ActivePersonID" />
+          <ScalarProperty Name="C1CDocShipmentOrderID" ColumnName="1CDocShipmentOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

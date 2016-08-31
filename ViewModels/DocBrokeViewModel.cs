@@ -7,6 +7,7 @@ using System.Data.Entity;
 using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using Gamma.Attributes;
@@ -83,8 +84,17 @@ namespace Gamma.ViewModels
             OpenProductCommand = new DelegateCommand(OpenProduct);
             IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
+            BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
         }
 
+        private void DecisionProductsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null && e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(SelectedBrokeDecisionProduct))
+            {
+                SelectedBrokeDecisionProduct =
+                    BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == SelectedBrokeDecisionProduct.ProductId);
+            }
+        }
 
         private void PrintReport(PrintReportMessage msg)
         {
@@ -128,7 +138,7 @@ namespace Gamma.ViewModels
                 })))
             {
                 Date = product.Date,
-                NomenclatureName = product.NomenclatureName,
+                NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
                 Number = product.Number,
                 Place = product.Place,
                 ShiftId = product.ShiftID,
@@ -219,17 +229,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("BrokeProducts");
             }
         }
-        private ItemsChangeObservableCollection<BrokeDecisionProduct> _brokeDecisionProducts = new ItemsChangeObservableCollection<BrokeDecisionProduct>();
 
-        public ItemsChangeObservableCollection<BrokeDecisionProduct> BrokeDecisionProducts
-        {
-            get { return _brokeDecisionProducts; }
-            set
-            {
-                _brokeDecisionProducts = value;
-                RaisePropertyChanged("BrokeDecisionProducts");
-            }
-        }
+        public ItemsChangeObservableCollection<BrokeDecisionProduct> BrokeDecisionProducts { get; set; } = new ItemsChangeObservableCollection<BrokeDecisionProduct>();
 
         public override bool CanSaveExecute()
         {
@@ -269,6 +270,12 @@ namespace Gamma.ViewModels
             set
             {
                 if (Equals(_selectedBrokeDecisionProduct, value)) return;
+                if (_selectedBrokeDecisionProduct != null && value != null && _selectedBrokeDecisionProduct.ProductId == value.ProductId)
+                {
+                    _selectedBrokeDecisionProduct = value;
+                    RaisePropertyChanged("SelectedBrokeDecisionProduct");
+                    return;
+                }
                 _selectedBrokeDecisionProduct = value;
                 InternalUsageProduct.BrokeDecisionProduct = null;
                 InternalUsageProduct.IsChecked = false;
@@ -297,29 +304,29 @@ namespace Gamma.ViewModels
                     switch (product.ProductState)
                     {
                         case ProductState.Broke:
-                            BrokeProduct.IsChecked = true;
                             BrokeProduct.Quantity = product.Quantity;
                             BrokeProduct.BrokeDecisionProduct = product;
+                            BrokeProduct.IsChecked = true;
                             break;
                         case ProductState.Good:
-                            GoodProduct.IsChecked = true;
                             GoodProduct.Quantity = product.Quantity;
                             GoodProduct.BrokeDecisionProduct = product;
+                            GoodProduct.IsChecked = true;
                             break;
                         case ProductState.InternalUsage:
-                            InternalUsageProduct.IsChecked = true;
                             InternalUsageProduct.Quantity = product.Quantity;
                             InternalUsageProduct.BrokeDecisionProduct = product;
+                            InternalUsageProduct.IsChecked = true;
                             break;
                         case ProductState.Limited:
-                            LimitedProduct.IsChecked = true;
                             LimitedProduct.Quantity = product.Quantity;
                             LimitedProduct.BrokeDecisionProduct = product;
+                            LimitedProduct.IsChecked = true;
                             break;
                         case ProductState.Repack:
-                            RepackProduct.IsChecked = true;
                             RepackProduct.Quantity = product.Quantity;
                             RepackProduct.BrokeDecisionProduct = product;
+                            RepackProduct.IsChecked = true;
                             break;
                     }
                 }
@@ -338,6 +345,7 @@ namespace Gamma.ViewModels
                 if (RepackProduct.BrokeDecisionProduct == null)
                     RepackProduct.BrokeDecisionProduct =
                         CreateNewBrokeDecisionProductWithState(SelectedBrokeDecisionProduct, ProductState.Repack);
+                RaisePropertyChanged("SelectedBrokeDecisionProduct");
             }
         }
 

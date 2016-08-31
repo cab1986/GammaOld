@@ -20,7 +20,18 @@ namespace Gamma.Models
                 Decision = _productState.GetAttributeOfType<DescriptionAttribute>().Description;
             }
         }
-        public string NomenclatureName { get; set; }
+
+        private string _nomenclatureName;
+
+        public string NomenclatureName
+        {
+            get { return _nomenclatureName; }
+            set
+            {
+                _nomenclatureName = value;
+                RaisePropertyChanged("NomenclatureName");
+            }
+        }
 
         private decimal _quantity;
 
@@ -37,8 +48,32 @@ namespace Gamma.Models
         public string Comment { get; set; }
         public string Number { get; set; }
         public string Decision { get; private set; }
-        public Guid? NomenclatureId { get; set; }
-        public Guid? CharacteristicId { get; set; }
+
+        private Guid? _nomenclatureId;
+
+        public Guid? NomenclatureId
+        {
+            get { return _nomenclatureId; }
+            set
+            {
+                _nomenclatureId = value;
+                RaisePropertyChanged("NomenclatureId");
+            }
+        }
+
+        private Guid? _characteristicId;
+
+        public Guid? CharacteristicId
+        {
+            get { return _characteristicId; }
+            set
+            {
+                _characteristicId = value;
+                RaisePropertyChanged("CharacteristicId");
+            }
+        }
+        
+
         public string MeasureUnit { get; set; }
 
         protected bool Equals(BrokeDecisionProduct other)

@@ -128,6 +128,7 @@
                                                     </dxe:ButtonEditSettings>
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
+                                            <dxg:GridColumn FieldName="RejectionReasonCommentsString" Header="Причины" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="Date" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="Place" Header="Производственный участок" Width="100" FixedWidth="True" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="PrintName" Header="Виновник" AllowEditing="False"/>
@@ -141,7 +142,6 @@
                         <dxlc:LayoutControl Orientation="Vertical">
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">
                                 <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" SelectedItem="{Binding SelectedBrokeDecisionProduct}" dxlc:LayoutControl.UseDesiredHeightAsMaxHeight="True"
-                                                 CurrentItem = "{Binding SelectedBrokeDecisionProduct}" 
                                                  DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}" >
                                     <dxg:GridControl.View>
                                         <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False" BestFitMode="Smart"/>

@@ -89,7 +89,6 @@ namespace Gamma.Models
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DbSet<DocShipments> DocShipments { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
-        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
         public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
@@ -109,6 +108,7 @@ namespace Gamma.Models
         public virtual DbSet<PlaceZones> PlaceZones { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {

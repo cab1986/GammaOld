@@ -20,6 +20,17 @@ namespace Gamma.Models
         public string Description { get; set; }
 
         public string FullDescription { get; set; }
-        public string Comment { get; set; }
+
+        private string _comment;
+
+        public string Comment
+        {
+            get { return _comment; }
+            set
+            {
+                _comment = value;
+                RaisePropertyChanged("Comment");
+            }
+        }
     }
 }

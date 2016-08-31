@@ -482,6 +482,7 @@
     <Property Name="ActivePersonID" Type="int" />
     <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
     <Property Name="ShiftID" Type="tinyint" />
+    <Property Name="IsShipped" Type="bit" />
   </EntityType>
   <EntityType Name="DocShipments">
     <Key>

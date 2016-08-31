@@ -84,7 +84,7 @@ namespace Gamma.ViewModels
             var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
             docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight/1000;
             docWithdrawalProduct.CompleteWithdrawal = false;
-            docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
+  //          docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
             GammaBase.SaveChanges();
             ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
         }
@@ -221,7 +221,7 @@ namespace Gamma.ViewModels
             var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
             docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity;
             docWithdrawalProduct.CompleteWithdrawal = true;
-            docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
+ //           docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
             GammaBase.SaveChanges();
         }
 

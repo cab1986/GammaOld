@@ -38,7 +38,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>31</ApplicationRevision>
+    <ApplicationRevision>33</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -536,6 +536,7 @@
     <Compile Include="Models\SpoolInstallLog.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SpoolPathPM.cs" />
     <Compile Include="Models\SpoolRemainder.cs" />
     <Compile Include="Common\UIServices.cs" />
     <Compile Include="Common\ViewsManager.cs" />
@@ -641,6 +642,7 @@
     <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGIViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskWRViewModel.cs" />
+    <Compile Include="ViewModels\QualityReportPMViewModel.cs" />
     <Compile Include="ViewModels\SaveImplementedViewModel.cs" />
     <Compile Include="ViewModels\DBEditItemWithNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftPMGridViewModel.cs" />

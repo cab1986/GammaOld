@@ -162,9 +162,6 @@
         <AssociationConnector Association="GammaModel.FK_DocShipments_Persons" />
         <EntityTypeShape EntityType="GammaModel.MaterialTypes" Width="1.5" PointX="5.25" PointY="47.75" />
         <AssociationConnector Association="GammaModel.MaterialTypeNomenclature" />
-        <EntityTypeShape EntityType="GammaModel.DocShipmentOrderInfo" Width="1.5" PointX="20.5" PointY="21.125" />
-        <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder" />
-        <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_Persons" />
         <EntityTypeShape EntityType="GammaModel.Branches" Width="1.5" PointX="5.25" PointY="63.75" />
         <AssociationConnector Association="GammaModel.FK_Branches_Enterprises" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeProducts" Width="1.5" PointX="23.5" PointY="39.875" />
@@ -234,6 +231,9 @@
         <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
         <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
+        <EntityTypeShape EntityType="GammaModel.DocShipmentOrderInfo" Width="1.5" PointX="20.5" PointY="21" />
+        <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder" />
+        <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_Persons" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

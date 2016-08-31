@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Gamma.Models
         {
             RejectionReasons = rejectionReasons;
             RejectionReasonsString = FormRejectionReasonsString(RejectionReasons);
+            RejectionReasonCommentsString = FormRejectionReasonCommentsString(RejectionReasons);
             RejectionReasons.CollectionChanged += FormRejectionReasonString;
         }
 
@@ -21,6 +23,7 @@ namespace Gamma.Models
         {
             if (RejectionReasons == null) return;
             RejectionReasonsString = FormRejectionReasonsString(RejectionReasons);
+            RejectionReasonCommentsString = FormRejectionReasonCommentsString(RejectionReasons);
         }
 
         public Guid ProductId { get; set; }
@@ -42,6 +45,18 @@ namespace Gamma.Models
             }
         }
 
+        private string _rejectionReasonCommentsString;
+
+        public string RejectionReasonCommentsString
+        {
+            get { return _rejectionReasonCommentsString; }
+            set
+            {
+                _rejectionReasonCommentsString = value;
+                RaisePropertyChanged("RejectionReasonCommentsString");
+            }
+        }
+
         public DateTime? Date { get; set; }
         public string Place { get; set; }
         public byte? ShiftId { get; set; }
@@ -49,9 +64,9 @@ namespace Gamma.Models
 
         public ItemsChangeObservableCollection<RejectionReason> RejectionReasons { get; }
 
-        private string FormRejectionReasonsString(ObservableCollection<RejectionReason> list, GammaEntities gammaDb = null)
+        private string FormRejectionReasonsString(IEnumerable<RejectionReason> list, GammaEntities gammaDb = null)
         {
-            var sbuilder = new StringBuilder();
+            var sbuilderReason = new StringBuilder();
             using (var gammaBase = DB.GammaDb)
             {
                 foreach (var reason in list)
@@ -60,12 +75,23 @@ namespace Gamma.Models
                         gammaBase.C1CRejectionReasons.FirstOrDefault(
                             r => r.C1CRejectionReasonID == reason.RejectionReasonID)?.Description;
                     if (description == null) continue;
-                    sbuilder.Append(description);
-                    sbuilder.Append(Environment.NewLine);
+                    sbuilderReason.Append(description);
+                    sbuilderReason.Append(Environment.NewLine);
                 }
             }
                 
-            return sbuilder.ToString();
+            return sbuilderReason.ToString();
+        }
+
+        private string FormRejectionReasonCommentsString(IEnumerable<RejectionReason> list)
+        {
+            var sbuilderReason = new StringBuilder();
+            foreach (var reason in list.Where(reason => reason.Comment != null))
+                {
+                    sbuilderReason.Append(reason.Comment);
+                    sbuilderReason.Append(Environment.NewLine);
+                }
+            return sbuilderReason.ToString();
         }
     }
 }

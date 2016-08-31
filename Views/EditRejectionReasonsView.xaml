@@ -40,7 +40,7 @@
                     </dxg:GridColumn.EditSettings>
 
                 </dxg:GridColumn>
-                <dxg:GridColumn FieldName="Comment" Header="Примечание"/>
+                <dxg:GridColumn FieldName="Comment" Header="Причина"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False"/>

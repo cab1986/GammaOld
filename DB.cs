@@ -82,16 +82,21 @@ namespace Gamma
                 );
         }
 
-/*
-        public static ObservableCollection<Place> GetPlaces(PlaceGroups placeGroup)
+        /*
+                public static ObservableCollection<Place> GetPlaces(PlaceGroups placeGroup)
+                {
+                    return new ObservableCollection<Place>
+                    (from places in GammaBase.Places
+                     where places.PlaceGroupID == (short)placeGroup
+                     select new Place { PlaceID = places.PlaceID, PlaceName = places.Name }
+                    );
+                }
+        */
+
+        public static string GetProductNomenclatureNameBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
         {
-            return new ObservableCollection<Place>
-            (from places in GammaBase.Places
-             where places.PlaceGroupID == (short)placeGroup
-             select new Place { PlaceID = places.PlaceID, PlaceName = places.Name }
-            );
+            return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.GetProductNomenclatureNameBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();
         }
-*/
 
         public static decimal CalculateSpoolWeightBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
         {
