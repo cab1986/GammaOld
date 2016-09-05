@@ -150,7 +150,7 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterial()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.OpenNomenclature(MaterialTypes.MaterialsSGI);
+            MessageManager.FindNomenclature(MaterialTypes.MaterialsSGI);
         }
 
         private void SetMaterialNomenclature(Nomenclature1CMessage msg)

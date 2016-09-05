@@ -7,9 +7,11 @@
         xmlns:g="clr-namespace:Gamma"
         xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:common="clr-namespace:Gamma.Common"
-        x:Class="Gamma.Views.NomenclatureView"
+        xmlns:vm="clr-namespace:Gamma.ViewModels"
+        x:Class="Gamma.Views.NomenclatureFindView"
         mc:Ignorable="d ignore"
-        common:WindowSettings.Save="True">
+        common:WindowSettings.Save="True"
+        d:DataContext="{d:DesignInstance Type=vm:NomenclatureFindViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="75" />

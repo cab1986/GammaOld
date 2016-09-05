@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using Gamma.Interfaces;
 using Gamma.Attributes;
+using System.Data.Entity;
 
 namespace Gamma.ViewModels
 {
@@ -22,20 +23,14 @@ namespace Gamma.ViewModels
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             var productSpool =
-                GammaBase.ProductSpools.FirstOrDefault(
-                    ps =>
-                        ps.Products.DocProductionProducts.FirstOrDefault().DocProduction.Docs.PlaceID ==
-                        WorkSession.PlaceID &&
-                        ps.Products.DocProductionProducts.FirstOrDefault().DocProduction.Docs.ShiftID ==
-                        WorkSession.ShiftID);
-/*                
-                (from d in GammaBase.Docs
-                                where d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID
-                                join dp in GammaBase.DocProducts on d.DocID equals dp.DocID
-                                join ps in GammaBase.ProductSpools on dp.ProductID equals ps.ProductID
-                                orderby d.Date descending
-                                select ps).FirstOrDefault();
-                                */
+                GammaBase.Docs.Where(
+                    d =>
+                        d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID &&
+                        d.DocTypeID == (int) DocTypes.DocProduction)
+                    .OrderByDescending(d => d.Date)
+                    .FirstOrDefault()?
+                    .DocProduction.DocProductionProducts.FirstOrDefault()?
+                    .Products.ProductSpools;
             if (productSpool == null) return;
             NomenclatureID = productSpool.C1CNomenclatureID;
             CharacteristicID = productSpool.C1CCharacteristicID;
@@ -61,7 +56,7 @@ namespace Gamma.ViewModels
             }
             Quantity = DocCloseShiftRemainder.Quantity;
         }
-        private bool IsConfirmed { get; set; }
+        private bool IsConfirmed { get; }
         private DocCloseShiftRemainders DocCloseShiftRemainder { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Quantity { get; set; }
@@ -96,7 +91,9 @@ namespace Gamma.ViewModels
                     new DocProductionProducts()
                     {
                         DocID = docID,
-                        ProductID = productid
+                        ProductID = productid,
+                        C1CNomenclatureID = NomenclatureID,
+                        C1CCharacteristicID = CharacteristicID
                     }
                 };
                 var docProduction = new Docs()
@@ -126,6 +123,21 @@ namespace Gamma.ViewModels
             else if (DocCloseShiftRemainder != null)
             {
                 DocCloseShiftRemainder.Quantity = Quantity;
+                if (
+                    gammaBase.DocProductionProducts.Any(
+                        d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))
+                {
+                    var docProductionProduct =
+                        gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools)
+                            .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
+                    if (docProductionProduct != null && NomenclatureID != null)
+                    {
+                        docProductionProduct.C1CNomenclatureID = NomenclatureID;
+                        docProductionProduct.C1CCharacteristicID = CharacteristicID;
+                        docProductionProduct.Products.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
+                        docProductionProduct.Products.ProductSpools.C1CCharacteristicID = CharacteristicID;
+                    }
+                }
             } 
             gammaBase.SaveChanges();
             return true;

@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
         private void ChooseNomenclature()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
-            MessageManager.OpenNomenclature(PlaceGroupID);
+            MessageManager.FindNomenclature(PlaceGroupID);
         }
 
         protected virtual void NomenclatureChanged(Nomenclature1CMessage msg)

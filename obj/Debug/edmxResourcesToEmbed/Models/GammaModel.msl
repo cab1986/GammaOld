@@ -1371,5 +1371,32 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="FindNomenclatureByStringWithFilter" FunctionName="GammaDBModel.FindNomenclatureByStringWithFilter">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.FindNomenclatureByStringWithFilter_Result2">
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="Get1CDocShipmentOrders" FunctionName="GammaDBModel.Get1CDocShipmentOrders" />
+    <EntitySetMapping Name="BarcodeTypes">
+      <EntityTypeMapping TypeName="GammaModel.BarcodeTypes">
+        <MappingFragment StoreEntitySet="BarcodeTypes">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BarcodeTypeID" ColumnName="BarcodeTypeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NomenclatureBarcodes">
+      <EntityTypeMapping TypeName="GammaModel.NomenclatureBarcodes">
+        <MappingFragment StoreEntitySet="NomenclatureBarcodes">
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="BarcodeTypeID" ColumnName="BarcodeTypeID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

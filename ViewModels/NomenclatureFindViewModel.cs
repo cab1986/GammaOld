@@ -13,18 +13,19 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     ///  </summary>
-    public class NomenclatureViewModel : RootViewModel
+    public class NomenclatureFindViewModel : RootViewModel
     {
-        private NomenclatureViewModel(GammaEntities gammaBase = null)
+        private NomenclatureFindViewModel(GammaEntities gammaBase = null)
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             FindNomenclatureByStringCommand = new DelegateCommand(FindNomenclatureByString);
         }
         /// <summary>
-        /// Initializes a new instance of the NomenclatureViewModel class.
+        /// Initializes a new instance of the NomenclatureFindViewModel class.
         /// </summary>
         /// <param name="placeGroupID">ID группы переделов</param>
-        public NomenclatureViewModel(int placeGroupID, GammaEntities gammaBase = null): this(gammaBase)
+        /// <param name="nomenclatureEdit">Признак того, что при выборе номенклатуры должно открыться окно данной номенклатуры</param>
+        public NomenclatureFindViewModel(int placeGroupID, bool nomenclatureEdit = false, GammaEntities gammaBase = null): this(gammaBase)
         {
             FilterID = placeGroupID;
             FilterByPlaceGroup = true;
@@ -39,16 +40,22 @@ namespace Gamma.ViewModels
                                             ParentFolderID = nf.ParentID
                                         })
                                     );
-            ChooseSelectedNomenclature = new DelegateCommand(ChooseNomenclature);
+            ChooseSelectedNomenclature = nomenclatureEdit ? new DelegateCommand(EditSelectedNomnenclature) : new DelegateCommand(ChooseNomenclature);
         }
 
-        public NomenclatureViewModel(PlaceGroups placeGroup): this((int)placeGroup) { }
+        private void EditSelectedNomnenclature()
+        {
+            if (SelectedNomenclature == null) return;
+            MessageManager.NomenclatureEdit(SelectedNomenclature.Nomenclature1CID);
+        }
+        
+        public NomenclatureFindViewModel(PlaceGroups placeGroup): this((int)placeGroup) { }
 
         /// <summary>
-        /// Инициализация новой NomenclatureViewModel
+        /// Инициализация новой NomenclatureFindViewModel
         /// </summary>
         /// <param name="materialType">Материалы какого цеха</param>
-        public NomenclatureViewModel(MaterialTypes materialType, GammaEntities gammaBase = null): this(gammaBase)
+        public NomenclatureFindViewModel(MaterialTypes materialType, GammaEntities gammaBase = null): this(gammaBase)
         {
             FilterID = (int) materialType;
             Nomenclature1CFolders = new ReadOnlyObservableCollection<Nomenclature1CFolder>
@@ -193,6 +200,7 @@ namespace Gamma.ViewModels
         }
 
         public DelegateCommand ChooseSelectedNomenclature { get; private set; }
+
         private void ChooseNomenclature()
         {
             if (SelectedNomenclature == null) return;

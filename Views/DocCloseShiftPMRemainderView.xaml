@@ -6,9 +6,11 @@
              xmlns:g="clr-namespace:Gamma"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              x:Class="Gamma.Views.DocCloseShiftPMRemainderView" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftPMRemainderViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Vertical">
@@ -21,7 +23,7 @@
                     <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID}"
                                       DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Переходящий остаток" LabelPosition="Top">
+                <dxlc:LayoutItem Label="Переходящий остаток, кг" LabelPosition="Top">
                     <dxe:PopupCalcEdit EditValue="{Binding Quantity}" AllowDefaultButton="False" />
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>

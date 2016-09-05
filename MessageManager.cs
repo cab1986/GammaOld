@@ -26,6 +26,16 @@ namespace Gamma
         public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие
     }
 
+    public class NomenclatureEditMessage
+    {
+        public NomenclatureEditMessage(Guid nomenclatureId)
+        {
+            NomenclatureId = nomenclatureId;
+        }
+
+        public Guid NomenclatureId { get; }
+    }
+
     public class EditRejectionReasonsMessage
     {
         public EditRejectionReasonsMessage(BrokeProduct product)
@@ -92,17 +102,20 @@ namespace Gamma
     }
     public class OpenNomenclatureMessage  
     {
-        public OpenNomenclatureMessage(int placeGroupID)
+        public OpenNomenclatureMessage(int placeGroupID, bool nomenclatureEdit = false)
         {
             ID = placeGroupID;
             IsPlaceGroupFilter = true;
+            NomenclatureEdit = nomenclatureEdit;
         }
 
-        public OpenNomenclatureMessage(MaterialTypes materialType)
+        public OpenNomenclatureMessage(MaterialTypes materialType, bool nomenclatureEdit = false)
         {
             ID = (int) materialType;
+            NomenclatureEdit = nomenclatureEdit;
         }
 
+        public bool NomenclatureEdit { get; }
         public int ID { get; private set; }
         public bool IsPlaceGroupFilter { get; private set; }
     }
@@ -210,6 +223,11 @@ namespace Gamma
     }
     public static class MessageManager
     {
+        public static void NomenclatureEdit(Guid nomenclatureId)
+        {
+            Messenger.Default.Send(new NomenclatureEditMessage(nomenclatureId));
+        }
+
         public static void EditUser(GammaEntities gammaBase = null)
         {
             Messenger.Default.Send(new UserEditMessage(gammaBase));
@@ -265,14 +283,14 @@ namespace Gamma
             Messenger.Default.Send(new OpenMainMessage());
         }
 
-        public static void OpenNomenclature(int placeGroupID)
+        public static void FindNomenclature(int placeGroupID, bool nomenclatureEdit = false)
         {
-            Messenger.Default.Send(new OpenNomenclatureMessage(placeGroupID));
+            Messenger.Default.Send(new OpenNomenclatureMessage(placeGroupID, nomenclatureEdit));
         }
 
-        public static void OpenNomenclature(MaterialTypes materialType)
+        public static void FindNomenclature(MaterialTypes materialType, bool nomenclatureEdit = false)
         {
-            Messenger.Default.Send(new OpenNomenclatureMessage(materialType));
+            Messenger.Default.Send(new OpenNomenclatureMessage(materialType, nomenclatureEdit));
         }
 
         public static void OpenProductionTask(OpenProductionTaskBatchMessage msg)

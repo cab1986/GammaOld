@@ -212,7 +212,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGIView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskWRView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\RoleEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\UserEditView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskPMView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskRWView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksSGBView.g.cs
@@ -254,7 +253,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskWRView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\UserEditView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskPMView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskRWView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBatchView.baml
@@ -271,5 +269,8 @@ D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.application
-D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.TrustInfo.xml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureEditView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureFindView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureEditView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\NomenclatureFindView.baml

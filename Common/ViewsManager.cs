@@ -27,6 +27,12 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenImportOldProductsMessage>(this, OpenImportOldProducts);
             Messenger.Default.Register<OpenDocBrokeMessage>(this, OpenDocBroke);
             Messenger.Default.Register<EditRejectionReasonsMessage>(this, EditRejectionReasonsDialog);
+            Messenger.Default.Register<NomenclatureEditMessage>(this, NomenclatureEdit);
+        }
+
+        private void NomenclatureEdit(NomenclatureEditMessage msg)
+        {
+            new NomenclatureEditView(msg.NomenclatureId).Show();
         }
 
         private void EditRejectionReasonsDialog(EditRejectionReasonsMessage msg)
@@ -75,9 +81,9 @@ namespace Gamma.Common
         private static void OpenNomenclature(OpenNomenclatureMessage msg)
         {
             if (msg.IsPlaceGroupFilter)
-                new NomenclatureView(msg.ID).Show();
+                new NomenclatureFindView(msg.ID, msg.NomenclatureEdit).Show();
             else
-                new NomenclatureView((MaterialTypes)msg.ID).Show();
+                new NomenclatureFindView((MaterialTypes)msg.ID).Show();
         }
         private void OpenDocProduct(OpenDocProductMessage msg)
         {

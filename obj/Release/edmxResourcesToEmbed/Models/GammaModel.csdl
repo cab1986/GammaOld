@@ -1537,11 +1537,6 @@
       <End Role="DocProduction" EntitySet="DocProduction" />
       <End Role="DocProductionProducts" EntitySet="DocProductionProducts" />
     </AssociationSet>
-    <FunctionImport Name="FindNomenclatureByStringWithFilter" ReturnType="Collection(GammaModel.FindNomenclatureByStringWithFilter_Result1)">
-      <Parameter Name="SearchString" Mode="In" Type="String" />
-      <Parameter Name="Id" Mode="In" Type="Int32" />
-      <Parameter Name="FilterByPlaceGroup" Mode="In" Type="Boolean" />
-    </FunctionImport>
     <FunctionImport Name="GetProductRelations" ReturnType="Collection(GammaModel.GetProductRelations_Result2)">
       <Parameter Name="ProductID" Mode="In" Type="Guid" />
     </FunctionImport>
@@ -1699,6 +1694,26 @@
     <AssociationSet Name="FK_DocShipmentOrderInfo_Persons" Association="GammaModel.FK_DocShipmentOrderInfo_Persons">
       <End Role="Persons" EntitySet="Persons" />
       <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
+    </AssociationSet>
+    <FunctionImport Name="FindNomenclatureByStringWithFilter" ReturnType="Collection(GammaModel.FindNomenclatureByStringWithFilter_Result2)">
+      <Parameter Name="SearchString" Mode="In" Type="String" />
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="FilterByPlaceGroup" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="Get1CDocShipmentOrders" />
+    <EntitySet Name="BarcodeTypes" EntityType="GammaModel.BarcodeTypes" />
+    <EntitySet Name="NomenclatureBarcodes" EntityType="GammaModel.NomenclatureBarcodes" />
+    <AssociationSet Name="FK_NomenclatureBarcodes_1CCharacteristics" Association="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics">
+      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="NomenclatureBarcodes" EntitySet="NomenclatureBarcodes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NomenclatureBarcodes_1CNomenclature" Association="GammaModel.FK_NomenclatureBarcodes_1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="NomenclatureBarcodes" EntitySet="NomenclatureBarcodes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NomenclatureBarcodes_BarcodeTypes" Association="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes">
+      <End Role="BarcodeTypes" EntitySet="BarcodeTypes" />
+      <End Role="NomenclatureBarcodes" EntitySet="NomenclatureBarcodes" />
     </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
@@ -1910,6 +1925,7 @@
     <NavigationProperty Name="DocProductionProducts" Relationship="GammaModel.FK_DocProductionProducts_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocProductionProducts" />
     <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductPalletItems" />
     <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CMainSpecifications" />
+    <NavigationProperty Name="NomenclatureBarcodes" Relationship="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="NomenclatureBarcodes" />
   </EntityType>
   <EntityType Name="C1CNomenclature">
     <Key>
@@ -1947,6 +1963,7 @@
     <NavigationProperty Name="DocProductionProducts" Relationship="GammaModel.FK_DocProductionProducts_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocProductionProducts" />
     <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductPalletItems" />
     <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CMainSpecifications" />
+    <NavigationProperty Name="NomenclatureBarcodes" Relationship="GammaModel.FK_NomenclatureBarcodes_1CNomenclature" FromRole="C1CNomenclature" ToRole="NomenclatureBarcodes" />
   </EntityType>
   <EntityType Name="C1CSpecifications">
     <Key>
@@ -4036,6 +4053,67 @@
       </Principal>
       <Dependent Role="DocShipmentOrderInfo">
         <PropertyRef Name="ActivePersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="FindNomenclatureByStringWithFilter_Result2">
+    <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+  </ComplexType>
+  <EntityType Name="BarcodeTypes">
+    <Key>
+      <PropertyRef Name="BarcodeTypeID" />
+    </Key>
+    <Property Name="BarcodeTypeID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="NomenclatureBarcodes" Relationship="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes" FromRole="BarcodeTypes" ToRole="NomenclatureBarcodes" />
+  </EntityType>
+  <EntityType Name="NomenclatureBarcodes">
+    <Key>
+      <PropertyRef Name="C1CNomenclatureID" />
+      <PropertyRef Name="C1CCharacteristicID" />
+    </Key>
+    <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+    <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+    <Property Name="BarcodeTypeID" Type="Int32" />
+    <Property Name="Barcode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" FromRole="NomenclatureBarcodes" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_NomenclatureBarcodes_1CNomenclature" FromRole="NomenclatureBarcodes" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="BarcodeTypes" Relationship="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes" FromRole="NomenclatureBarcodes" ToRole="BarcodeTypes" />
+  </EntityType>
+  <Association Name="FK_NomenclatureBarcodes_1CCharacteristics">
+    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+    <End Type="GammaModel.NomenclatureBarcodes" Role="NomenclatureBarcodes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CCharacteristics">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="NomenclatureBarcodes">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NomenclatureBarcodes_1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+    <End Type="GammaModel.NomenclatureBarcodes" Role="NomenclatureBarcodes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CNomenclature">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="NomenclatureBarcodes">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NomenclatureBarcodes_BarcodeTypes">
+    <End Type="GammaModel.BarcodeTypes" Role="BarcodeTypes" Multiplicity="0..1" />
+    <End Type="GammaModel.NomenclatureBarcodes" Role="NomenclatureBarcodes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BarcodeTypes">
+        <PropertyRef Name="BarcodeTypeID" />
+      </Principal>
+      <Dependent Role="NomenclatureBarcodes">
+        <PropertyRef Name="BarcodeTypeID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

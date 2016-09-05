@@ -215,7 +215,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGIView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskWRView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\RoleEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\UserEditView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskPMView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.g.cs
@@ -257,7 +256,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskWRView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\UserEditView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskPMView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchView.baml
@@ -273,3 +271,7 @@ D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.TrustInfo.xml
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.application
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureFindView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureFindView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureEditView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureEditView.baml

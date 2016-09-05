@@ -7,7 +7,7 @@ namespace Gamma.Dialogs
     /// <summary>
     /// Interaction logic for ChoosePrintNameDialog.xaml
     /// </summary>
-    public partial class ChoosePrintNameDialog
+    public partial class ChoosePrintNameDialog : Window
     {
         public ChoosePrintNameDialog(GammaEntities gammaBase = null)
         {

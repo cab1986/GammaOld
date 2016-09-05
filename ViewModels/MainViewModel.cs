@@ -65,6 +65,7 @@ namespace Gamma.ViewModels
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
+                EditPlaceGroupNomenclatureCommand = new DelegateCommand<int>(EditPlaceGroupNomenclature);
                 PrintReportCommand = new DelegateCommand<Guid>(PrintReport);
                 OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders, DB.HaveReadAccess("DocShipments"));
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
@@ -167,6 +168,11 @@ namespace Gamma.ViewModels
             NewItemCommand = ((PlaceProductsViewModel) CurrentView).CreateNewProductCommand;
             EditItemCommand = ((PlaceProductsViewModel) CurrentView).OpenDocProductCommand;
             DeleteItemCommand = ((PlaceProductsViewModel) CurrentView).DeleteProductCommand;
+        }
+
+        private void EditPlaceGroupNomenclature(int placeGroupId)
+        {
+            MessageManager.FindNomenclature(placeGroupId, true);
         }
 
         private void PrintReport(Guid reportId)
@@ -308,6 +314,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenDocBrokeListCommand { get; private set; }
         public DelegateCommand<Guid> PrintReportCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
+        public DelegateCommand<int> EditPlaceGroupNomenclatureCommand { get; private set; }
         public List<ReportItem> Reports { get; set; }
 
         public class PlaceProduct

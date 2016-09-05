@@ -38,7 +38,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>33</ApplicationRevision>
+    <ApplicationRevision>38</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -203,6 +203,9 @@
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Models\BarcodeTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Branches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -359,6 +362,9 @@
     <Compile Include="Models\FindNomenclatureByStringWithFilter_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FindNomenclatureByStringWithFilter_Result2.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FindProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -446,6 +452,10 @@
     <Compile Include="Models\Nomenclature.cs" />
     <Compile Include="Models\Nomenclature1C.cs" />
     <Compile Include="Models\Nomenclature1CFolder.cs" />
+    <Compile Include="Models\NomenclatureBarcode.cs" />
+    <Compile Include="Models\NomenclatureBarcodes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pallet.cs" />
     <Compile Include="Models\Permits.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
@@ -635,6 +645,7 @@
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
+    <Compile Include="ViewModels\NomenclatureEditViewModel.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
@@ -659,7 +670,7 @@
     <Compile Include="ViewModels\ProductionTasksSGIViewModel.cs" />
     <Compile Include="ViewModels\RoleEditViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
-    <Compile Include="ViewModels\NomenclatureViewModel.cs" />
+    <Compile Include="ViewModels\NomenclatureFindViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskPMViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskRWViewModel.cs" />
     <Compile Include="ViewModels\ProductionTasksSGBViewModel.cs" />
@@ -749,6 +760,9 @@
     <Compile Include="Views\MaterialTypesNomenclatureView.xaml.cs">
       <DependentUpon>MaterialTypesNomenclatureView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NomenclatureEditView.xaml.cs">
+      <DependentUpon>NomenclatureEditView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PermitEditView.xaml.cs">
       <DependentUpon>PermitEditView.xaml</DependentUpon>
     </Compile>
@@ -782,8 +796,8 @@
     <Compile Include="Views\UserEditView.xaml.cs">
       <DependentUpon>UserEditView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NomenclatureView.xaml.cs">
-      <DependentUpon>NomenclatureView.xaml</DependentUpon>
+    <Compile Include="Views\NomenclatureFindView.xaml.cs">
+      <DependentUpon>NomenclatureFindView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTaskPMView.xaml.cs">
       <DependentUpon>ProductionTaskPMView.xaml</DependentUpon>
@@ -921,6 +935,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\NomenclatureEditView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PermitEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -965,8 +983,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NomenclatureView.xaml">
-      <SubType>Form</SubType>
+    <Page Include="Views\NomenclatureFindView.xaml">
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProductionTaskPMView.xaml">

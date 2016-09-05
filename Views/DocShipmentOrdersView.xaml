@@ -8,6 +8,8 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              x:Class="Gamma.Views.DocShipmentOrdersView"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocShipmentOrdersViewModel}}"
@@ -28,44 +30,45 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <dxlc:LayoutControl>
-            <dxlc:LayoutItem Label="Диапозон:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" x:Name="IntervalList" IsTextEditable="False"/>
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Номер:">
-                <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Дата с:">
-                <dxe:DateEdit EditValue="{Binding DateBegin}" Style="{StaticResource DisableTextEdit}" />
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="по:">
-                <dxe:DateEdit EditValue="{Binding DateEnd}" Style="{StaticResource DisableTextEdit}" />
-            </dxlc:LayoutItem>
-            <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
-        </dxlc:LayoutControl>
-        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" Name="gridControl">
-            <dxmvvm:Interaction.Behaviors>
-                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocShipmentOrderCommand}" />
-            </dxmvvm:Interaction.Behaviors>
-            <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
-            </dxg:GridControl.View>
-            <dxg:GridControl.Columns>
-                <dxg:GridColumn Header="Номер приказа" FieldName="Number" VisibleIndex="0" />
-                <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="1" SortIndex="0" SortOrder="Descending"/>
-                <dxg:GridColumn Header="Получатель" FieldName="Consignee" VisibleIndex="2" />
-                <dxg:GridColumn Header="Номер ТС" FieldName="VehicleNumber" VisibleIndex="3" />
-                <dxg:GridColumn Header="Собирает" FieldName="ActivePerson" VisibleIndex="4" />
-            </dxg:GridControl.Columns>
-            <dxg:GridControl.DetailDescriptor>
-                <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding DocShipmentOrderGoods}">
-                    <dxg:GridControl>
-                        <dxg:GridControl.Columns>
+    <dxb:BarManager>
+        <dxb:BarManager.Bars>
+            <dxb:Bar AllowCustomizationMenu="False" AllowQuickCustomization="False" >
+                <dxb:BarButtonItem Content="Принудительная выгрузка приказов из 1С" Command="{Binding Get1CDocShipmentOrdersCommand}" Glyph="{dx:DXImage Image=Down_16x16.png}" LargeGlyph="{dx:DXImage Image=Down_32x32.png}" BarItemDisplayMode="ContentAndGlyph" GlyphSize="Small"/>
+            </dxb:Bar>
+        </dxb:BarManager.Bars>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <dxlc:LayoutControl>
+                <dxlc:LayoutItem Label="Диапозон:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" x:Name="IntervalList" IsTextEditable="False"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Номер:">
+                    <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дата с:">
+                    <dxe:DateEdit EditValue="{Binding DateBegin}" Style="{StaticResource DisableTextEdit}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="по:">
+                    <dxe:DateEdit EditValue="{Binding DateEnd}" Style="{StaticResource DisableTextEdit}" />
+                </dxlc:LayoutItem>
+                <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
+            </dxlc:LayoutControl>
+            <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" x:Name="GridControl">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocShipmentOrderCommand}" />
+                </dxmvvm:Interaction.Behaviors>
+                <dxg:GridControl.View>
+                    <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
+                </dxg:GridControl.View>
+                <dxg:GridControl.DetailDescriptor>
+                    <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding DocShipmentOrderGoods}">
+                        <dxg:GridControl>
+                            <dxg:GridControl.View>
+                                <dxg:TableView AutoWidth="True" AllowEditing="False"/>
+                            </dxg:GridControl.View>
                             <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName"/>
                             <dxg:GridColumn Header="Кол-во" FieldName="Quantity" />
                             <dxg:GridColumn Header="Собрано" FieldName="CollectedQuantity">
@@ -73,13 +76,15 @@
                                     <dxe:TextEditSettings DisplayFormat="0.###"/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                        </dxg:GridControl.Columns>
-                        <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" AllowEditing="False"/>
-                        </dxg:GridControl.View>
-                    </dxg:GridControl>
-                </dxg:DataControlDetailDescriptor>
-            </dxg:GridControl.DetailDescriptor>
-        </dxg:GridControl>
-    </Grid>
+                        </dxg:GridControl>
+                    </dxg:DataControlDetailDescriptor>
+                </dxg:GridControl.DetailDescriptor>
+                <dxg:GridColumn Header="Номер приказа" FieldName="Number" VisibleIndex="0" />
+                <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="1" SortIndex="0" SortOrder="Descending"/>
+                <dxg:GridColumn Header="Получатель" FieldName="Consignee" VisibleIndex="2" />
+                <dxg:GridColumn Header="Номер ТС" FieldName="VehicleNumber" VisibleIndex="3" />
+                <dxg:GridColumn Header="Собирает" FieldName="ActivePerson" VisibleIndex="4" />
+            </dxg:GridControl>
+        </Grid>
+    </dxb:BarManager>
 </UserControl>

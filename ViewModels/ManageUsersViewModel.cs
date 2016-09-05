@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Collections.Generic;
 using DevExpress.Mvvm;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -200,6 +201,7 @@ namespace Gamma.ViewModels
 
         private void RecreateAllRolesPermits()
         {
+            UIServices.SetBusyState();
             foreach (var role in Roles)
             {
                 DB.RecreateRolePermits(role.RoleID);

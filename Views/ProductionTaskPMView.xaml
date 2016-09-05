@@ -12,6 +12,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
     x:Class="Gamma.Views.ProductionTaskPMView"
         mc:Ignorable="d ignore"
+    d:DataContext="{d:DesignInstance Type=vm:ProductionTaskPMViewModel, IsDesignTimeCreatable=False}"
         >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolVis" />
@@ -22,11 +23,7 @@
     <dxlc:LayoutGroup Header="Задание БДМ" View="GroupBox" Orientation="Vertical" >
         <dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
-                <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}" Mask="g" MaskUseAsDisplayFormat="True">
-                    <dxe:DateEdit.StyleSettings>
-                        <dxe:DateEditPickerStyleSettings></dxe:DateEditPickerStyleSettings>
-                    </dxe:DateEdit.StyleSettings>
-                    </dxe:DateEdit>
+                <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}" Mask="g" MaskUseAsDisplayFormat="True" />
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="80">
                 <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" 

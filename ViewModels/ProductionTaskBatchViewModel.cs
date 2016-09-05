@@ -293,7 +293,8 @@ namespace Gamma.ViewModels
         public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("ProductionTaskSGB")) return true;
-            var productionTaskBatch = gammaBase.ProductionTaskBatches.Find(ProductionTaskBatchID);
+            gammaBase = gammaBase ?? DB.GammaDb;
+            var productionTaskBatch = gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == ProductionTaskBatchID);
             if (productionTaskBatch == null)
             {
                 productionTaskBatch = new ProductionTaskBatches()
@@ -524,7 +525,6 @@ namespace Gamma.ViewModels
                             gammaBase.SaveChanges();
                             ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, true);
                             RefreshProduction();
-                        
                         break;
                 }
             }

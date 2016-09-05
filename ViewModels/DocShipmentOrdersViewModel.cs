@@ -17,6 +17,8 @@ namespace Gamma.ViewModels
             Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
             FindCommand = new DelegateCommand(Find);
             RefreshCommand = FindCommand;
+            EditItemCommand = OpenDocShipmentOrderCommand;
+            Get1CDocShipmentOrdersCommand = new DelegateCommand(Get1CDocShipmentOrders);
  //           CanChangePerson = DB.HaveWriteAccess("DocShipmentOrderInfo");
 /*            Persons = GammaBase.Persons.Where(p => p.PostTypeID == (int) PersonTypes.Loader).Select(p => new Person
             {
@@ -81,6 +83,18 @@ namespace Gamma.ViewModels
         public DocShipmentOrder SelectedDocShipmentOrder { get; set; }
 
         public DelegateCommand OpenDocShipmentOrderCommand { get; private set; }
+
+        public DelegateCommand Get1CDocShipmentOrdersCommand { get; private set; }
+
+        private void Get1CDocShipmentOrders()
+        {
+            UIServices.SetBusyState();
+            using (var db = DB.GammaDb)
+            {
+                db.Get1CDocShipmentOrders();
+            }
+            Find();
+        }
 
         private void Find()
         {

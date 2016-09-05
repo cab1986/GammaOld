@@ -109,6 +109,8 @@ namespace Gamma.Models
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
+        public virtual DbSet<BarcodeTypes> BarcodeTypes { get; set; }
+        public virtual DbSet<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -606,23 +608,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecision", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, printNameParameter, placeIDParameter);
         }
     
-        public virtual ObjectResult<FindNomenclatureByStringWithFilter_Result1> FindNomenclatureByStringWithFilter(string searchString, Nullable<int> id, Nullable<bool> filterByPlaceGroup)
-        {
-            var searchStringParameter = searchString != null ?
-                new ObjectParameter("SearchString", searchString) :
-                new ObjectParameter("SearchString", typeof(string));
-    
-            var idParameter = id.HasValue ?
-                new ObjectParameter("Id", id) :
-                new ObjectParameter("Id", typeof(int));
-    
-            var filterByPlaceGroupParameter = filterByPlaceGroup.HasValue ?
-                new ObjectParameter("FilterByPlaceGroup", filterByPlaceGroup) :
-                new ObjectParameter("FilterByPlaceGroup", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result1>("FindNomenclatureByStringWithFilter", searchStringParameter, idParameter, filterByPlaceGroupParameter);
-        }
-    
         public virtual ObjectResult<GetProductRelations_Result2> GetProductRelations(Nullable<System.Guid> productID)
         {
             var productIDParameter = productID.HasValue ?
@@ -686,6 +671,28 @@ namespace Gamma.Models
                 new ObjectParameter("BaseProductId", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CheckAddedGroupPackSpool", addedProductIdParameter, baseProductIdParameter);
+        }
+    
+        public virtual ObjectResult<FindNomenclatureByStringWithFilter_Result2> FindNomenclatureByStringWithFilter(string searchString, Nullable<int> id, Nullable<bool> filterByPlaceGroup)
+        {
+            var searchStringParameter = searchString != null ?
+                new ObjectParameter("SearchString", searchString) :
+                new ObjectParameter("SearchString", typeof(string));
+    
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var filterByPlaceGroupParameter = filterByPlaceGroup.HasValue ?
+                new ObjectParameter("FilterByPlaceGroup", filterByPlaceGroup) :
+                new ObjectParameter("FilterByPlaceGroup", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result2>("FindNomenclatureByStringWithFilter", searchStringParameter, idParameter, filterByPlaceGroupParameter);
+        }
+    
+        public virtual int Get1CDocShipmentOrders()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CDocShipmentOrders");
         }
     }
 }

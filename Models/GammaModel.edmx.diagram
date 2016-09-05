@@ -234,6 +234,11 @@
         <EntityTypeShape EntityType="GammaModel.DocShipmentOrderInfo" Width="1.5" PointX="20.5" PointY="21" />
         <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder" />
         <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_Persons" />
+        <EntityTypeShape EntityType="GammaModel.BarcodeTypes" Width="1.5" PointX="17.25" PointY="40.5" />
+        <EntityTypeShape EntityType="GammaModel.NomenclatureBarcodes" Width="1.5" PointX="19.5" PointY="57.125" />
+        <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

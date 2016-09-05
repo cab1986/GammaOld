@@ -2,6 +2,9 @@
 
 namespace Gamma.ViewModels
 {
+    /// <summary>
+    /// Класс обертка для viewmodel задания
+    /// </summary>
     public class ProductionTaskBatchWrapperViewModel: RootViewModel
     {
         public ProductionTaskBatchWrapperViewModel(OpenProductionTaskBatchMessage msg)
