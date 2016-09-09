@@ -46,9 +46,9 @@
                          AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False" SelectedItem="{Binding SelectedDocBroke}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
-                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="110" >
                     <dxg:GridColumn.EditSettings>
-                        <dxe:DateEditSettings Mask="g"/>
+                        <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Место обнаружения" FieldName="PlaceDiscover"/>

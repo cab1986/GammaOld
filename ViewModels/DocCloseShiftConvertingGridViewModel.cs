@@ -271,7 +271,10 @@ namespace Gamma.ViewModels
                 });
             }
             docCloseShift.DocCloseShiftDocs.Clear();
-            docCloseShift.DocCloseShiftDocs = DocCloseShiftDocs;
+            foreach (var doc in DocCloseShiftDocs)
+            {
+                docCloseShift.DocCloseShiftDocs.Add(doc);
+            }
             GammaBase.DocWithdrawalMaterials.RemoveRange(
                 docCloseShift.DocCloseShiftWithdrawals.FirstOrDefault()?.DocWithdrawalMaterials);
             docWithdrawalId = docCloseShift.DocCloseShiftWithdrawals.First().DocID;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Models;
@@ -11,7 +10,7 @@ namespace Gamma
     {
         public ContextMessage(GammaEntities gammaBase = null)
         {
-            GammaBase = null;
+            GammaBase = gammaBase;
         }
 
         public GammaEntities GammaBase { get; set; }
@@ -200,7 +199,6 @@ namespace Gamma
     public class PermitChangedMessage  { }
     public class RoleChangedMessage  { }
     
-//    public class ParentSaveMessage { }
     public class OpenManageUsersMessage { }
     public class OpenDocCloseShiftMessage
     {

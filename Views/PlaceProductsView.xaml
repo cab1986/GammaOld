@@ -70,7 +70,7 @@
                 <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
                 <dxg:GridColumn Header="{Binding QuantityHeader}" FieldName="Quantity" FixedWidth="True" Width="100" >
                     <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>
+                        <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
             </dxg:GridControl.Columns>

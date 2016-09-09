@@ -43,7 +43,7 @@ namespace Gamma.ViewModels
                     DeleteProductText = "Удалить съем";
                     break;
                 case PlaceGroups.Convertings:
-                    QuantityHeader = "Кол-во, шт";
+                    QuantityHeader = "Кол-во, рул";
                     NewProductText = "Создать новую паллету";
                     DeleteProductText = "Удалить паллету";
                     break;
@@ -67,6 +67,9 @@ namespace Gamma.ViewModels
                         && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
                 case PlaceGroups.Wr:
                     return DB.HaveWriteAccess("ProductGroupPacks")
+                        && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
+                case PlaceGroups.Convertings:
+                    return DB.HaveWriteAccess("ProductPallets")
                         && (WorkSession.PlaceGroup == PlaceGroups.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
                 default:
                     return false;
@@ -98,8 +101,27 @@ namespace Gamma.ViewModels
                 case PlaceGroups.Wr:
                     DeleteGroupPack();
                     break;
+                case PlaceGroups.Convertings:
+                    DeletePallet();
+                    break;
             }
         }
+
+        private void DeletePallet()
+        {
+            var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить паллету № " + SelectedProduct.Number + " ?", "Удаление паллеты",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (dlgResult == MessageBoxResult.No) return;
+            var delResult = GammaBase.DeletePallet(SelectedProduct.ProductID).FirstOrDefault();
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+                Products.Remove(SelectedProduct);
+        }
+
+
         private void DeleteGroupPack()
         {
             var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить упаковку № " + SelectedProduct.Number + " ?", "Удаление тамбура",
@@ -113,6 +135,7 @@ namespace Gamma.ViewModels
             else
                 Products.Remove(SelectedProduct);
         }
+
         private void DeleteSpool()
         {
             var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить тамбур № " + SelectedProduct.Number + " ?", "Удаление тамбура",

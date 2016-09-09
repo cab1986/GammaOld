@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using DevExpress.Mvvm;
+using Gamma.Common;
 
 namespace Gamma
 {
@@ -8,6 +9,7 @@ namespace Gamma
     {
         protected MvvmWindow(): base()
         {
+            UIServices.SetBusyState();
             Closed += MVVMWindow_Closed;
         }
 

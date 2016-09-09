@@ -118,6 +118,8 @@ namespace Gamma {
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public static void Main() {
+            SplashScreen splashScreen = new SplashScreen("kbemusedsrv_7641.ico");
+            splashScreen.Show(true);
             Gamma.App app = new Gamma.App();
             app.InitializeComponent();
             app.Run();

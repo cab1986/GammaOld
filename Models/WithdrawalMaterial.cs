@@ -111,6 +111,7 @@ namespace Gamma.Models
         public string NomenclatureName { get; set; }
         public decimal BaseQuantity { get; set; }
         public decimal Quantity { get; set; }
+        public bool IsFloatValue { get; set; }
         /// <summary>
         /// Можно ли менять количество
         /// </summary>

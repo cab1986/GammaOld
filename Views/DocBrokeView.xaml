@@ -71,7 +71,7 @@
                         <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Дата">
-                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" />
+                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" Mask="g" MaskUseAsDisplayFormat="True" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Место обнаружения" LabelPosition="Top">
                         <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId, ValidatesOnDataErrors=True}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>

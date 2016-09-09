@@ -1246,9 +1246,6 @@
       <Parameter Name="ShiftID" Mode="In" Type="Int32" />
       <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
     </FunctionImport>
-    <FunctionImport Name="GetMaterialNomenclatureFolders" ReturnType="Collection(GammaModel.GetMaterialNomenclatureFolders_Result)">
-      <Parameter Name="MaterialTypeID" Mode="In" Type="Int32" />
-    </FunctionImport>
     <EntitySet Name="ProductionTaskRWCutting" EntityType="GammaModel.ProductionTaskRWCutting" />
     <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
       <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -1715,6 +1712,12 @@
       <End Role="BarcodeTypes" EntitySet="BarcodeTypes" />
       <End Role="NomenclatureBarcodes" EntitySet="NomenclatureBarcodes" />
     </AssociationSet>
+    <FunctionImport Name="GetMaterialNomenclatureFolders" ReturnType="Collection(GammaModel.GetMaterialNomenclatureFolders_Result1)">
+      <Parameter Name="MaterialTypeID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="DeletePallet" ReturnType="Collection(String)">
+      <Parameter Name="ProductID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -4117,4 +4120,14 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="GetMaterialNomenclatureFolders1_Result">
+    <Property Type="Guid" Name="FolderID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+    <Property Type="Guid" Name="ParentID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="GetMaterialNomenclatureFolders_Result1">
+    <Property Type="Guid" Name="FolderID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+    <Property Type="Guid" Name="ParentID" Nullable="true" />
+  </ComplexType>
 </Schema>

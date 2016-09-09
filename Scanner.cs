@@ -51,7 +51,8 @@ namespace Gamma
 
         private static void BarcodeReceive(object sender, SerialDataReceivedEventArgs e)
         {
-            string receivedData = _comPort.ReadLine();
+            var receivedData = _comPort.ReadLine();
+            receivedData = receivedData.Trim(' ', '\n', '\r', '\t');
             // Посылаем данные в основной поток приложения
             Application.Current.Dispatcher.Invoke(new Action(() => Messenger.Default.Send(new BarcodeMessage { Barcode = receivedData }))) ;
         }

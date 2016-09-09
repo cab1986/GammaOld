@@ -1,9 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using DevExpress.Mvvm.DataAnnotations;
-using DevExpress.Mvvm.POCO;
 using Gamma.Common;
 
 namespace Gamma.ViewModels
@@ -44,10 +41,12 @@ namespace Gamma.ViewModels
         [Required(ErrorMessage = @"Поле не может быть пустым")]
         public string Password { get; set; }
 
+        /*
         public static LoginViewModel Create()
         {
             return ViewModelSource.Create(() => new LoginViewModel());
         }
+        */
 
         
         public LoginViewModel()

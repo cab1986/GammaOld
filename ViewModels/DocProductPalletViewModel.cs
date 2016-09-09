@@ -95,7 +95,7 @@ namespace Gamma.ViewModels
                         new DocProductionProducts
                         {
                             DocID = itemID,
-                            ProductID = productId
+                            ProductID = productId,
                         }
                     }
                 };
@@ -113,7 +113,15 @@ namespace Gamma.ViewModels
                 PalletItems.Where(
                     p => !gammaBase.ProductPalletItems.Where(prodItem => prodItem.ProductID == product.ProductID)
                         .Select(prodItem => prodItem.ProductPalletItemID).Contains(p.ProductPalletItemId));
-            foreach (var palItem in palItemsToAdd)
+            var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
+            var productPalletItems = palItemsToAdd as IList<ProductPalletItem> ?? palItemsToAdd.ToList();
+            if (docProductionProduct != null && productPalletItems.Any())
+            {
+                docProductionProduct.C1CNomenclatureID = productPalletItems.First().NomenclatureId;
+                docProductionProduct.C1CCharacteristicID = productPalletItems.First().CharacteristicId;
+                docProductionProduct.Quantity = productPalletItems.First().Quantity;
+            }
+            foreach (var palItem in productPalletItems)
             {
                 product.ProductPallets.ProductPalletItems.Add(new ProductPalletItems()
                 {

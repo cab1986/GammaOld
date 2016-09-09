@@ -1,6 +1,8 @@
 D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.exe.config
 D:\CProjects\Gamma\Gamma\bin\Debug\Russian.frl
 D:\CProjects\Gamma\Gamma\bin\Debug\ngeninstall.bat
+D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.exe.manifest
+D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.application
 D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.pdb
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Data.v16.1.dll
@@ -27,7 +29,9 @@ D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraLayout.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraPrinting.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\EntityFramework.SqlServer.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\FastReport.Bars.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\FastReport.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\FastReport.Editor.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Pdf.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Charts.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.CodeParser.v16.1.dll
@@ -36,8 +40,6 @@ D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Xpf.DocumentViewer.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.RichEdit.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraBars.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.XtraTreeList.v16.1.dll
-D:\CProjects\Gamma\Gamma\bin\Debug\FastReport.Bars.dll
-D:\CProjects\Gamma\Gamma\bin\Debug\FastReport.Editor.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Office.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Pdf.v16.1.Drawing.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\DevExpress.Data.v16.1.xml
@@ -161,7 +163,6 @@ D:\CProjects\Gamma\Gamma\bin\Debug\de\DevExpress.Office.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\es\DevExpress.Office.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ja\DevExpress.Office.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ru\DevExpress.Office.v16.1.Core.resources.dll
-D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\ChangeSpoolDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\ChoosePrintNameDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\FilterDateReportDialog.baml
@@ -175,7 +176,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\RoleEditView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ReportListView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\SourceSpoolsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\ChangeSpoolDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\ChoosePrintNameDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\FilterDateReportDialog.g.cs
@@ -204,6 +204,7 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\LoginView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\MainView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ManageUsersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\MaterialTypesNomenclatureView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PermitEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PlaceGroupsNomenclatureView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PlaceProductsView.g.cs
@@ -215,6 +216,7 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGIView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskWRView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\RoleEditView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\UserEditView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureFindView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskPMView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksSGBView.g.cs
@@ -249,6 +251,7 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ImportOldProductsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\LoginView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\MainView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ManageUsersView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureEditView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\PlaceProductsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchWindowView.baml
@@ -256,22 +259,19 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGBView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskSGIView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskWRView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\UserEditView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureFindView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskPMView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskRWView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBatchView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\SourceSpoolsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\WarehousePersonsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.g.resources
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.Properties.Resources.resources
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csproj.GenerateResource.Cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.licenses
-D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
-D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
-D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.exe.manifest
-D:\CProjects\Gamma\Gamma\bin\Debug\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.TrustInfo.xml
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.application
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureFindView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureFindView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureEditView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\NomenclatureEditView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache

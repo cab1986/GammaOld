@@ -1398,5 +1398,15 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetMaterialNomenclatureFolders" FunctionName="GammaDBModel.GetMaterialNomenclatureFolders">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetMaterialNomenclatureFolders_Result1">
+          <ScalarProperty Name="FolderID" ColumnName="FolderID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="DeletePallet" FunctionName="GammaDBModel.DeletePallet" />
   </EntityContainerMapping>
 </Mapping>

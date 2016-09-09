@@ -5,6 +5,7 @@ using System.Windows;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using DevExpress.Mvvm;
 using Gamma.Attributes;
 using Gamma.Models;
 
@@ -29,6 +30,7 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
+            PrintExampleCommand = new DelegateCommand(PrintExample);
         }
         /// <summary>
         /// Открытие задания для редактирования
@@ -44,6 +46,7 @@ namespace Gamma.ViewModels
                 NomenclatureID = productionTask.C1CNomenclatureID;
                 CharacteristicID = productionTask.C1CCharacteristicID;
                 Quantity = (int)productionTask.Quantity;
+                PlaceID = productionTask.PlaceID;
             }
             ProductionTaskStateID =
                 DB.GammaDb.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
@@ -51,8 +54,19 @@ namespace Gamma.ViewModels
                     .FirstOrDefault();
             IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
         }
+
+        public event Func<GammaEntities,bool> PrintExampleEvent;
+
+        public DelegateCommand PrintExampleCommand { get; private set; }
+
+        private void PrintExample()
+        {
+            PrintExampleEvent?.Invoke(GammaBase); // Вызывает сохранение батча, при этом productionTaskID получает значение
+            ReportManager.PrintReport("PalletExample","Examples",ProductionTaskId);
+        }
+
+        private Guid ProductionTaskId { get; set; }
         
-        // ReSharper disable once MemberCanBePrivate.Global
         public byte ProductionTaskStateID { get; set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -171,6 +185,7 @@ namespace Gamma.ViewModels
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
                 GammaBase.SaveChanges();
+            ProductionTaskId = productionTask.ProductionTaskID;
             return true;
         }
         private decimal _madeQuantiy;

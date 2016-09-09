@@ -95,8 +95,7 @@ namespace Gamma.ViewModels
                     dp => dp.Products.BarCode == msg.Barcode);
             if (docProductionProducts == null) return;
             GammaBase.Entry(docProductionProducts).Reload();
-//            docProductionProducts.IsInConfirmed = true;
-            //docProductionProducts.Docs.IsConfirmed = true;
+            docProductionProducts.DocProduction.Docs.IsConfirmed = true;
             string message;
             switch (docProductionProducts.Products.ProductKindID)
             {
@@ -286,13 +285,16 @@ namespace Gamma.ViewModels
                     break;
                case BatchKinds.SGI:
                     CurrentView = new ProductionTaskSGIViewModel(ProductionTaskBatchID);
+                    ((ProductionTaskSGIViewModel)CurrentView).PrintExampleEvent += SaveToModel;
                     break;
             }
         }
 
+        
+
         public override bool SaveToModel(GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("ProductionTaskSGB")) return true;
+            if (!DB.HaveWriteAccess("ProductionTaskBatches")) return true;
             gammaBase = gammaBase ?? DB.GammaDb;
             var productionTaskBatch = gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == ProductionTaskBatchID);
             if (productionTaskBatch == null)
@@ -478,7 +480,10 @@ namespace Gamma.ViewModels
                                         new DocProductionProducts
                                         {
                                             DocID = docID,
-                                            ProductID = productId
+                                            ProductID = productId,
+                                            C1CNomenclatureID = (Guid)productionTask.C1CNomenclatureID,
+                                            C1CCharacteristicID = (Guid)productionTask.C1CCharacteristicID,
+                                            Quantity = baseQuantity
                                         }
                                     }
                                 }
@@ -523,7 +528,7 @@ namespace Gamma.ViewModels
                                 docWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
                             gammaBase.SaveChanges();
-                            ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, true);
+                            ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
                             RefreshProduction();
                         break;
                 }
@@ -666,7 +671,7 @@ namespace Gamma.ViewModels
         public Dictionary<byte, string> TaskStates { get; set; }
         public Dictionary<byte, string> ProcessModels { get; set; }
         public bool ChangeStateReadOnly { get; set; }
-        public string Title { get; set; }
+        public string Title { get; private set; }
         private bool SourceSpoolsCorrect()
         {
             var dialogResult = MessageBoxResult.None;

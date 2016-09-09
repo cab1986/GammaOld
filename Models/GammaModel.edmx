@@ -2980,6 +2980,9 @@
         <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="DeletePallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="DeleteSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -3070,6 +3073,9 @@
         </Function>
         <Function Name="GetLastFormat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetMaterialNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MaterialTypeID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
@@ -5212,9 +5218,6 @@
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="GetMaterialNomenclatureFolders" ReturnType="Collection(GammaModel.GetMaterialNomenclatureFolders_Result)">
-          <Parameter Name="MaterialTypeID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="ProductionTaskRWCutting" EntityType="GammaModel.ProductionTaskRWCutting" />
           <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics">
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -5681,6 +5684,12 @@
             <End Role="BarcodeTypes" EntitySet="BarcodeTypes" />
             <End Role="NomenclatureBarcodes" EntitySet="NomenclatureBarcodes" />
           </AssociationSet>
+          <FunctionImport Name="GetMaterialNomenclatureFolders" ReturnType="Collection(GammaModel.GetMaterialNomenclatureFolders_Result1)">
+          <Parameter Name="MaterialTypeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeletePallet" ReturnType="Collection(String)">
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -8083,6 +8092,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetMaterialNomenclatureFolders1_Result">
+          <Property Type="Guid" Name="FolderID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetMaterialNomenclatureFolders_Result1">
+          <Property Type="Guid" Name="FolderID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="255" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -9486,6 +9505,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetMaterialNomenclatureFolders" FunctionName="GammaDBModel.GetMaterialNomenclatureFolders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetMaterialNomenclatureFolders_Result1">
+                <ScalarProperty Name="FolderID" ColumnName="FolderID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeletePallet" FunctionName="GammaDBModel.DeletePallet" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

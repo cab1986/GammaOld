@@ -53,7 +53,7 @@ namespace Gamma
             }
             return bar;
         }
-        public static void PrintReport(Guid reportid, Guid? paramId = null, bool showPreview = true)
+        public static void PrintReport(Guid reportid, Guid? paramId = null, bool showPreview = true, int numCopies = 1)
         {
             using (var report = new Report())
             {
@@ -81,20 +81,22 @@ namespace Gamma
                 else
                 {
                     report.PrintSettings.ShowDialog = false;
+                    report.PrintSettings.Copies = numCopies;
                     report.Print();
                 }
             }
         }
-        public static void PrintReport(string reportName, string reportFolder = null, Guid? paramID = null, bool showPreview = true)
+        public static void PrintReport(string reportName, string reportFolder = null, Guid? paramID = null, bool showPreview = true, int numCopies = 1)
         {
             var parentId = GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
             var reports = GammaBase.Reports.Where(r => r.Name == reportName && (parentId == null || r.ParentID == parentId)).
                 Select(r => r.ReportID).ToList();
             if (reports.Count == 1)
             {
-                PrintReport(reports[0], paramID, showPreview);
+                PrintReport(reports[0], paramID, showPreview, numCopies);
             }
         }
+
         public static void DesignReport(Guid reportid)
         {
             CurrentReportID = reportid;

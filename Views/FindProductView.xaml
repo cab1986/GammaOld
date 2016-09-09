@@ -81,7 +81,7 @@
                     <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" />
                     <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="50" FixedWidth="True">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                            <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn FieldName="Place" Header="Передел" Width="60" FixedWidth="True"/>

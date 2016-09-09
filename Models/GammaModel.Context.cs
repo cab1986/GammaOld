@@ -458,15 +458,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingMaterials_Result>("FillDocCloseShiftConvertingMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     
-        public virtual ObjectResult<GetMaterialNomenclatureFolders_Result> GetMaterialNomenclatureFolders(Nullable<int> materialTypeID)
-        {
-            var materialTypeIDParameter = materialTypeID.HasValue ?
-                new ObjectParameter("MaterialTypeID", materialTypeID) :
-                new ObjectParameter("MaterialTypeID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMaterialNomenclatureFolders_Result>("GetMaterialNomenclatureFolders", materialTypeIDParameter);
-        }
-    
         public virtual ObjectResult<GetBatchProducts_Result> GetBatchProducts(Nullable<System.Guid> productionTaskBatchID)
         {
             var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
@@ -693,6 +684,24 @@ namespace Gamma.Models
         public virtual int Get1CDocShipmentOrders()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CDocShipmentOrders");
+        }
+    
+        public virtual ObjectResult<GetMaterialNomenclatureFolders_Result1> GetMaterialNomenclatureFolders(Nullable<int> materialTypeID)
+        {
+            var materialTypeIDParameter = materialTypeID.HasValue ?
+                new ObjectParameter("MaterialTypeID", materialTypeID) :
+                new ObjectParameter("MaterialTypeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMaterialNomenclatureFolders_Result1>("GetMaterialNomenclatureFolders", materialTypeIDParameter);
+        }
+    
+        public virtual ObjectResult<string> DeletePallet(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletePallet", productIDParameter);
         }
     }
 }
