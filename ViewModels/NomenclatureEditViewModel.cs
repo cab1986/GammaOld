@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
+using System.Data.Entity;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
@@ -12,7 +12,10 @@ namespace Gamma.ViewModels
         public NomenclatureEditViewModel(Guid nomenclatureId, GammaEntities gammaBase = null) : base(gammaBase)
         {
             BarcodeTypes = GammaBase.BarcodeTypes.ToList();
-            NomenclatureName = GammaBase.C1CNomenclature.First(n => n.C1CNomenclatureID == nomenclatureId).Name;
+            NomenclatureId = nomenclatureId;
+            var nomenclature = GammaBase.C1CNomenclature.Include(n => n.NomenclatureGammaInfo).First(n => n.C1CNomenclatureID == nomenclatureId);
+            NomenclatureName = nomenclature.Name;
+            PTMText = nomenclature.NomenclatureGammaInfo?.TextPTM;
             NomenclatureBarcodes = new ObservableCollection<NomenclatureBarcode>
                 (
                     GammaBase.C1CCharacteristics.Where(c => c.C1CNomenclatureID == nomenclatureId).Select(c => new NomenclatureBarcode
@@ -36,16 +39,30 @@ namespace Gamma.ViewModels
             }
         }
 
+        private Guid NomenclatureId { get; }
+
+        public string PTMText { get; set; }
+
         public string NomenclatureName { get; set; }
 
         public ObservableCollection<NomenclatureBarcode> NomenclatureBarcodes { get; set; }
 
         public List<BarcodeTypes> BarcodeTypes { get; }
-      
+        
         public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             if (!DB.HaveWriteAccess("NomenclatureBarcodes")) return true;
             gammaBase = gammaBase ?? DB.GammaDb;
+            var gammaInfo = gammaBase.NomenclatureGammaInfo.FirstOrDefault(n => n.C1CNomenclatureID == NomenclatureId);
+            if (gammaInfo == null)
+            {
+                gammaInfo = new NomenclatureGammaInfo()
+                {
+                    C1CNomenclatureID = NomenclatureId
+                };
+                gammaBase.NomenclatureGammaInfo.Add(gammaInfo);
+            }
+            gammaInfo.TextPTM = PTMText;
             foreach (var nomenclatureBarcode in NomenclatureBarcodes)
             {
                 var bcode =

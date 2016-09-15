@@ -3,7 +3,7 @@ using System.Data.Entity;
 
 namespace Gamma.Models
 {
-    public partial class GammaEntities : DbContext
+    public partial class GammaEntities
     {
         public GammaEntities(string connection)
             : base(connection)

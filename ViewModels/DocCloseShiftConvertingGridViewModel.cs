@@ -92,8 +92,8 @@ namespace Gamma.ViewModels
             ClearGrid();
             DocCloseShiftDocs = new ObservableCollection<Docs>(GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
-                    d.Date >= SqlFunctions.DateAdd("hh", -1, SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(CloseDate))) &&
-                    d.Date <= SqlFunctions.DateAdd("hh", 1, SqlFunctions.DateAdd("hh", -1, DB.GetShiftEndTime(CloseDate))) &&
+                    d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                    d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(SqlFunctions.DateAdd("hh",-1,CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)));
             Pallets = new ObservableCollection<Pallet>(GammaBase.FillDocCloseShiftConvertingPallets(PlaceID, ShiftID, CloseDate).Select(p => new Pallet()
             {

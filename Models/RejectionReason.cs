@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using DevExpress.Mvvm;
 
 namespace Gamma.Models

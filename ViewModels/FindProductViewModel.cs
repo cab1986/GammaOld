@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Gamma.Common;
 using Gamma.Models;
 
@@ -41,7 +42,7 @@ namespace Gamma.ViewModels
                               PlaceName = p.Name,
                               PlaceID = p.PlaceID
                           }
-                          ).ToList<Place>();
+                          ).ToList();
             SelectedPlaces = new List<Object>(PlacesList);
         }
 
@@ -118,7 +119,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Barcode");
             }
         }
-        public void BarcodeReceived(BarcodeMessage msg)
+
+        private void BarcodeReceived(BarcodeMessage msg)
         {
             if (!IsActive) return;
             ResetSearch();
@@ -200,6 +202,13 @@ namespace Gamma.ViewModels
                 }
                 );
             }
+            if (FoundProducts.Count == 0 && ButtonPanelVisible)
+            {
+                MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
+            }
+            if (FoundProducts.Count != 1 || !ButtonPanelVisible) return;
+            Messenger.Default.Send(new ChoosenProductMessage { ProductID = FoundProducts.First().ProductID });
+            CloseWindow();
         }
 
         private void ResetSearch()
@@ -241,8 +250,8 @@ namespace Gamma.ViewModels
             }
         }
         public List<Place> PlacesList { get; set; }
-        private List<Object> _selectedPlaces = new List<Object>();
-        public List<Object> SelectedPlaces // Object требует визуальный компонент
+        private List<object> _selectedPlaces = new List<object>();
+        public List<object> SelectedPlaces // Object требует визуальный компонент
         {
             get
             {
@@ -284,11 +293,13 @@ namespace Gamma.ViewModels
         }
         private DateTime? _dateBegin;
         private DateTime? _dateEnd;
+
         public DelegateCommand ChooseProductCommand { get; set; }
+
         private void ChooseProduct()
         {
             if (SelectedProduct == null) return;
-            Messenger.Default.Send<ChoosenProductMessage>(new ChoosenProductMessage { ProductID = (Guid)SelectedProduct.ProductID });
+            Messenger.Default.Send(new ChoosenProductMessage { ProductID = SelectedProduct.ProductID });
             CloseWindow();
         }
         public DelegateCommand ActivatedCommand { get; private set; }
@@ -307,8 +318,6 @@ namespace Gamma.ViewModels
                     break;
                 case (ProductKinds.ProductPallet):
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
-                    break;
-                default:
                     break;
             }
         }

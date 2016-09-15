@@ -7,7 +7,7 @@ namespace Gamma.Common
 {
     public class AsyncObservableCollection<T> : ObservableCollection<T>
     {
-        private AsyncOperation _asyncOp = null;
+        private AsyncOperation _asyncOp;
 
         public AsyncObservableCollection()
         {

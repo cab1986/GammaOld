@@ -1,6 +1,4 @@
-﻿using System;
-using Gamma.Common;
-using Gamma.Models;
+﻿using Gamma.Models;
 using Gamma.ViewModels;
 
 namespace Gamma.Views

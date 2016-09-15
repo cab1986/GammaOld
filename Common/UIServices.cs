@@ -36,7 +36,7 @@ namespace Gamma.Common
                 Mouse.OverrideCursor = busy ? Cursors.Wait : null;
                 if (_isBusy)
                 {
-                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, dispatcherTimer_Tick, System.Windows.Application.Current.Dispatcher);
+                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.Background, dispatcherTimer_Tick, Application.Current.Dispatcher);
                 }
             }
         }
@@ -49,11 +49,9 @@ namespace Gamma.Common
         private static void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             var dispatcherTimer = sender as DispatcherTimer;
-            if (dispatcherTimer != null)
-            {
-                SetBusyState(false);
-                dispatcherTimer.Stop();
-            }
+            if (dispatcherTimer == null) return;
+            SetBusyState(false);
+            dispatcherTimer.Stop();
         }
     }
 }

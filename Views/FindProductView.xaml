@@ -7,8 +7,10 @@
         xmlns:g="clr-namespace:Gamma"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
               xmlns:common="clr-namespace:Gamma.Common"
+              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
               x:Class="Gamma.Views.FindProductView"
         mc:Ignorable="d ignore"
+        d:DataContext="{d:DesignInstance Type=viewModels:FindProductViewModel, IsDesignTimeCreatable=False}"
         Title="Поиск изделий"
         common:WindowSettings.Save="True">
     <dxmvvm:Interaction.Behaviors>

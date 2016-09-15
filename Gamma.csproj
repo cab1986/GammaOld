@@ -38,7 +38,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>54</ApplicationRevision>
+    <ApplicationRevision>60</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -204,6 +204,7 @@
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\RECT.cs" />
     <Compile Include="Models\BarcodeTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -461,6 +462,9 @@
     <Compile Include="Models\Nomenclature1CFolder.cs" />
     <Compile Include="Models\NomenclatureBarcode.cs" />
     <Compile Include="Models\NomenclatureBarcodes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\NomenclatureGammaInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Pallet.cs" />
@@ -1113,7 +1117,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

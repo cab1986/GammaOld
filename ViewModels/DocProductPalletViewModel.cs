@@ -133,6 +133,7 @@ namespace Gamma.ViewModels
                 });
             }
             gammaBase.SaveChanges();
+            MessageManager.ProductChanged(product.ProductID);
             return true;
         }
     }

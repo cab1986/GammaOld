@@ -101,16 +101,17 @@ namespace Gamma.Models
         public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocBroke> DocBroke { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
-        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
         public virtual DbSet<PlaceZones> PlaceZones { get; set; }
         public virtual DbSet<Products> Products { get; set; }
-        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<BarcodeTypes> BarcodeTypes { get; set; }
         public virtual DbSet<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
+        public virtual DbSet<NomenclatureGammaInfo> NomenclatureGammaInfo { get; set; }
+        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
+        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {

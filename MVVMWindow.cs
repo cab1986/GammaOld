@@ -7,7 +7,7 @@ namespace Gamma
 {
     public class MvvmWindow : Window
     {
-        protected MvvmWindow(): base()
+        protected MvvmWindow()
         {
             UIServices.SetBusyState();
             Closed += MVVMWindow_Closed;

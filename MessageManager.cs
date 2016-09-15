@@ -69,7 +69,12 @@ namespace Gamma
     }
     public class ProductChangedMessage
     {
-        public Guid ProductID;
+        public ProductChangedMessage(Guid productId)
+        {
+            ProductID = productId;
+        }
+
+        public Guid ProductID { get; private set; }
     }
 
     public class OpenDocShipmentOrderMessage
@@ -256,6 +261,11 @@ namespace Gamma
             Messenger.Default.Send(new OpenDocShipmentOrderMessage(docShipmentOrderId));
         }
 
+        public static void ProductChanged(Guid productId)
+        {
+            Messenger.Default.Send(new ProductChangedMessage(productId));
+        }
+
         public static void ProductionTaskRwNomenclatureChanged(Guid productionTaskBatchID, List<Nomenclature> nomenclatureIds)
         {
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureIds));
@@ -368,6 +378,7 @@ namespace Gamma
         }
         public static void OpenDocCloseShifts(PlaceGroups placeGroup)
         {
+            UIServices.SetBusyState();
             Messenger.Default.Send(new OpenDocCloseShiftsMessage { PlaceGroup = placeGroup });
         }
         public static void ConfigureComPort()

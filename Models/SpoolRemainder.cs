@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.SqlServer;
 using System.Linq;
 using Gamma.Attributes;
 using Gamma.Interfaces;
@@ -47,9 +46,17 @@ namespace Gamma.Models
 
         }
 
-        private decimal GetRemainderMaxWeight(Guid productid, DateTime date)
+        private decimal GetRemainderMaxWeight(Guid productId, DateTime docDate)
         {
-            return DB.CalculateSpoolWeightBeforeDate(productid, date, GammaBase)*1000;
+            var date =
+                GammaBase.DocWithdrawalProducts.Where(
+                    dw => dw.ProductID == productId && dw.DocWithdrawal.Docs.Date < docDate)
+                    .OrderByDescending(dw => dw.DocWithdrawal.Docs.Date)
+                    .Select(dw => dw.DocWithdrawal.Docs)
+                    .FirstOrDefault()?
+                    .Date;
+            date = date ?? docDate;
+            return DB.CalculateSpoolWeightBeforeDate(productId, (DateTime)date, GammaBase)*1000;
         }
 
         public bool IsReadOnly { get; set; }

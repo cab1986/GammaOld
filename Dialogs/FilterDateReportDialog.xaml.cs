@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Printing.IndexedProperties;
 using System.Windows;
 
 namespace Gamma.Dialogs

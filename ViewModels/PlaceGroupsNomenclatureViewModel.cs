@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Gamma.Common;
 using System.Collections.ObjectModel;
 using DevExpress.Mvvm;
 using Gamma.Models;

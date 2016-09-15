@@ -120,6 +120,7 @@
     <Property Name="Name" Type="varchar" MaxLength="255" />
     <Property Name="IsArchive" Type="bit" />
     <Property Name="IsFolder" Type="bit" Nullable="false" />
+    <Property Name="Marking" Type="nvarchar" MaxLength="25" />
   </EntityType>
   <EntityType Name="1CNomenclatureAnalogs">
     <Key>
@@ -254,6 +255,9 @@
     <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
     <Property Name="Amount" Type="decimal" Precision="15" Scale="3" />
     <Property Name="WithdrawByFact" Type="bit" />
+    <Property Name="LinkKey" Type="decimal" Precision="5" Scale="0" />
+    <Property Name="SelectionType" Type="decimal" Precision="20" Scale="0" />
+    <Property Name="1CPropertyID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="1CSpecificationOutputNomenclature">
     <Key>
@@ -587,6 +591,13 @@
     <Property Name="BarcodeTypeID" Type="int" />
     <Property Name="Barcode" Type="varchar" MaxLength="50" />
   </EntityType>
+  <EntityType Name="NomenclatureGammaInfo">
+    <Key>
+      <PropertyRef Name="1CNomenclatureID" />
+    </Key>
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="TextPTM" Type="varchar" MaxLength="8000" />
+  </EntityType>
   <EntityType Name="Permits">
     <Key>
       <PropertyRef Name="PermitID" />
@@ -775,7 +786,7 @@
       <PropertyRef Name="ProductPalletItemID" />
     </Key>
     <Property Name="ProductPalletItemID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ProductID" Type="uniqueidentifier" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Quantity" Type="int" />
@@ -953,7 +964,7 @@
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="varchar" MaxLength="30" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
-    <Property Name="CollectedQuantity" Type="decimal" Precision="38" Scale="9" Nullable="false" />
+    <Property Name="CollectedQuantity" Type="decimal" Precision="38" Scale="4" Nullable="false" />
     <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
@@ -1019,7 +1030,7 @@
     <Property Name="PlaceGroupID" Type="smallint" Nullable="false" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="StateID" Type="tinyint" Nullable="false" />
-    <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="5" />
     <Property Name="RejectionReason" Type="varchar" MaxLength="100" />
     <Property Name="IsConfirmed" Type="bit" />
     <Property Name="IsWrittenOff" Type="bit" />
@@ -1586,6 +1597,18 @@
       </Principal>
       <Dependent Role="1CSpecificationInputNomenclature">
         <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CSpecificationInputNomenclature_1CProperties">
+    <End Role="1CProperties" Type="Self.1CProperties" Multiplicity="0..1" />
+    <End Role="1CSpecificationInputNomenclature" Type="Self.1CSpecificationInputNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CProperties">
+        <PropertyRef Name="1CPropertyID" />
+      </Principal>
+      <Dependent Role="1CSpecificationInputNomenclature">
+        <PropertyRef Name="1CPropertyID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2325,6 +2348,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_NomenclatureGammaInfo_1CNomenclature">
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+    <End Role="NomenclatureGammaInfo" Type="Self.NomenclatureGammaInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="1CNomenclature">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="NomenclatureGammaInfo">
+        <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_PermitTables_Permits">
     <End Role="Permits" Type="Self.Permits" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -2646,7 +2681,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_ProductPalletItems_ProductPallets">
-    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="0..1" />
+    <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="1" />
     <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="ProductPallets">
@@ -3221,6 +3256,7 @@
     <EntitySet Name="MaterialTypeNomenclature" EntityType="Self.MaterialTypeNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MaterialTypes" EntityType="Self.MaterialTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NomenclatureBarcodes" EntityType="Self.NomenclatureBarcodes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="NomenclatureGammaInfo" EntityType="Self.NomenclatureGammaInfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PermitTables" EntityType="Self.PermitTables" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Persons" EntityType="Self.Persons" Schema="dbo" store:Type="Tables" />
@@ -3521,6 +3557,10 @@
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
     </AssociationSet>
+    <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CProperties" Association="Self.FK_1CSpecificationInputNomenclature_1CProperties">
+      <End Role="1CProperties" EntitySet="1CProperties" />
+      <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
+    </AssociationSet>
     <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CSpecifications1" Association="Self.FK_1CSpecificationInputNomenclature_1CSpecifications1">
       <End Role="1CSpecifications" EntitySet="1CSpecifications" />
       <End Role="1CSpecificationInputNomenclature" EntitySet="1CSpecificationInputNomenclature" />
@@ -3760,6 +3800,10 @@
     <AssociationSet Name="FK_NomenclatureBarcodes_BarcodeTypes" Association="Self.FK_NomenclatureBarcodes_BarcodeTypes">
       <End Role="BarcodeTypes" EntitySet="BarcodeTypes" />
       <End Role="NomenclatureBarcodes" EntitySet="NomenclatureBarcodes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NomenclatureGammaInfo_1CNomenclature" Association="Self.FK_NomenclatureGammaInfo_1CNomenclature">
+      <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+      <End Role="NomenclatureGammaInfo" EntitySet="NomenclatureGammaInfo" />
     </AssociationSet>
     <AssociationSet Name="FK_PermitTables_Permits" Association="Self.FK_PermitTables_Permits">
       <End Role="Permits" EntitySet="Permits" />

@@ -15,8 +15,9 @@
     <dxlc:LayoutControl UseLayoutRounding="True" >
         <dxlc:LayoutGroup  View="Group" Background="#FFEBECEF" >
                 <dxlc:LayoutItem Label="Раскат 1" LabelPosition="Top">
-                    <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder1Nomenclature}" ToolTip="{Binding Unwinder1Nomenclature}" Foreground="White" FontSize="16">
-                        <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="1"/>
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder1Nomenclature}" ToolTip="{Binding Unwinder1Nomenclature}" 
+                                    Foreground="White" FontSize="16" IsReadOnly="True" IsTextEditable="False">
+                    <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="1"/>
                         <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="1"/>
                         <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="1"/>
                         <dxe:ButtonEdit.Style>
@@ -32,7 +33,8 @@
                     </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Раскат 2" LabelPosition="Top" Visibility="{Binding Unwinder2Visible, Converter={StaticResource BooleanToVisibility}}">
-                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder2Nomenclature}" ToolTip="{Binding Unwinder2Nomenclature}" Foreground="White" FontSize="16">
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder2Nomenclature}" ToolTip="{Binding Unwinder2Nomenclature}" IsReadOnly="True" IsTextEditable="False"
+                                Foreground="White" FontSize="16">
                         <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="2"/>
                         <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="2"/>
                         <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="2"/>
@@ -58,7 +60,8 @@
                         </Style.Triggers>
                     </Style>
                 </dxlc:LayoutItem.Style>
-                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder3Nomenclature}" ToolTip="{Binding Unwinder3Nomenclature}" Foreground="White" FontSize="16">
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder3Nomenclature}" ToolTip="{Binding Unwinder3Nomenclature}" IsReadOnly="True" IsTextEditable="False"
+                                Foreground="White" FontSize="16">
                         <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="3"/>
                         <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="3"/>
                         <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="3"/>

@@ -29,6 +29,7 @@ namespace Gamma.ViewModels
             ProcessModels = new ProcessModels().ToDictionary();
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
             ShowProductCommand = new DelegateCommand(ShowProduct,() => SelectedProductionTaskProduct != null);
+            DeleteProdutCommand = new DelegateCommand(DeleteProduct, () => SelectedProductionTaskProduct != null);
             if (msg.ProductionTaskBatchID == null)
             {
                 Date = DB.CurrentDateTime;
@@ -70,6 +71,7 @@ namespace Gamma.ViewModels
                     break;
                 case BatchKinds.SGI:
                     NewProductText = "Печать этикетки";
+                    ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroups.Other;
                     break;
 
             }
@@ -77,12 +79,90 @@ namespace Gamma.ViewModels
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
-
+            Messenger.Default.Register<ProductChangedMessage>(this, ProductChanged);
         }
+
+        public DelegateCommand DeleteProdutCommand { get; private set; }
+
+        private void DeleteProduct()
+        {
+            if (SelectedProductionTaskProduct == null) return;
+            if (WorkSession.ShiftID != 0 && SelectedProductionTaskProduct.PlaceID != WorkSession.PlaceID && SelectedProductionTaskProduct.ShiftID != WorkSession.ShiftID)
+            {
+                MessageBox.Show("Вы не можете удалить продукцию другой смены или другого передела");
+                return;
+            }
+            if (MessageBox.Show(
+                "Вы уверены, что хотите удалить продукт № " + SelectedProductionTaskProduct.Number + "?",
+                "Удаление продукта", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+            switch (SelectedProductionTaskProduct.ProductKind)
+            {
+                    case ProductKinds.ProductSpool:
+                        if (DB.HaveWriteAccess("ProductSpools"))
+                        {
+                            GammaBase.DeleteSpool(SelectedProductionTaskProduct.ProductID);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не достаточно прав для удаления тамбура");
+                        }
+                        break;
+                    case ProductKinds.ProductGroupPack:
+                        if (DB.HaveWriteAccess("ProductGroupPacks"))
+                        {
+                            GammaBase.DeleteGroupPack(SelectedProductionTaskProduct.ProductID);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не достаточно прав для удаления групповой упаковки");
+                        }
+                        break;
+                    case ProductKinds.ProductPallet:
+                        if (DB.HaveWriteAccess("ProductPallets"))
+                        {
+                            GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Не достаточно прав для удаления паллеты");
+                        }
+                        break;
+            }
+        }
+
 
         public override bool IsValid => base.IsValid && (!PartyControl || (PartyControl && ContractorId != null));
 
         private bool IsActive { get; set; } = true;
+
+        private void ProductChanged(ProductChangedMessage msg)
+        {
+            var product = ProductionTaskProducts.FirstOrDefault(p => p.ProductID == msg.ProductID);
+            if (product == null) return;
+            using (var gammaBase = DB.GammaDb)
+            {
+                var info = gammaBase.vProductsInfo.FirstOrDefault(p => p.ProductID == product.ProductID);
+                if (info == null) return;
+                product.NomenclatureID = info.C1CNomenclatureID;
+                product.CharacteristicID = info.C1CCharacteristicID;
+                product.NomenclatureName = info.NomenclatureName;
+                product.Quantity = info.Quantity;
+                if (product.IsConfirmed == (info.IsConfirmed ?? false)) return;
+                product.IsConfirmed = info.IsConfirmed ?? false;
+                var view = CurrentView as ProductionTaskSGIViewModel;
+                if (view != null)
+                {
+                    view.MadeQuantity =
+                        _productionTaskProducts.Where(p => p.IsConfirmed).Sum(p => p.Quantity ?? 0);
+                }
+            }
+
+        }
+
         /// <summary>
         /// Действие при получении шк от сканера
         /// </summary>
@@ -429,7 +509,7 @@ namespace Gamma.ViewModels
                             MessageBox.Show("Нет активных раскатов", "Не установлен тамбур", MessageBoxButton.OK,
                                 MessageBoxImage.Information);
                             return;
-                        }                      
+                        }
                             var currentDateTime = DB.CurrentDateTime;
                             var productionTask =
                                 gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
@@ -609,7 +689,10 @@ namespace Gamma.ViewModels
                     return;
             }
         }
-        private ItemsChangeObservableCollection<ProductInfo> _productionTaskProducts;
+
+        public bool ExpandProductionTaskProducts { get; private set; }
+
+        private ItemsChangeObservableCollection<ProductInfo> _productionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>();
         public ItemsChangeObservableCollection<ProductInfo> ProductionTaskProducts
         {
             get

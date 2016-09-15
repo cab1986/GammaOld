@@ -21,6 +21,7 @@ namespace Gamma.Models
             this.C1CNomenclatureProperties = new HashSet<C1CNomenclatureProperties>();
             this.C1CPropertyValues = new HashSet<C1CPropertyValues>();
             this.GammaProperties = new HashSet<GammaProperties>();
+            this.C1CSpecificationInputNomenclature = new HashSet<C1CSpecificationInputNomenclature>();
         }
     
         public System.Guid C1CPropertyID { get; set; }
@@ -36,5 +37,7 @@ namespace Gamma.Models
         public virtual ICollection<C1CPropertyValues> C1CPropertyValues { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GammaProperties> GammaProperties { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CSpecificationInputNomenclature> C1CSpecificationInputNomenclature { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO.Ports;
 using System.Windows;
 using Gamma.Models;
@@ -21,8 +22,8 @@ namespace Gamma.ViewModels
         public ComPortSettingsViewModel()
         {
             ComPortsList = new List<string>(SerialPort.GetPortNames());
-            BaudRatesList = new List<int>(new int[] { 75, 150, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400 });
-            DataBitsList = new List<int>(new int[] { 5, 6, 7, 8 });
+            BaudRatesList = new List<int>(new[] { 75, 150, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400 });
+            DataBitsList = new List<int>(new[] { 5, 6, 7, 8 });
             StopBitsList = new StopBits().ToDictionary();
             ParityList = new Parity().ToDictionary();
             HandShakeList = new Handshake().ToDictionary();
@@ -78,7 +79,7 @@ namespace Gamma.ViewModels
         {
             if (Scales.IsReady)
             {
-                Weight = Scales.GetWeight().ToString();
+                Weight = Scales.GetWeight().ToString(CultureInfo.InvariantCulture);
             }
             else
             {

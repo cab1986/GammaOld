@@ -85,12 +85,14 @@
                     <dxb:BarManager>
                         <dxb:BarManager.Bars>
                             <dxb:Bar>
-                                <dxb:BarButtonItem Content="BarButtonItem" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshProductionCommand}"/>
+                                <dxb:BarButtonItem Content="Обновить" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshProductionCommand}"/>
+                                <dxb:BarButtonItem Content="Удалить продукт" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteProdutCommand}"
+                                                   LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" GlyphSize="Small"/>
                             </dxb:Bar>
                         </dxb:BarManager.Bars>
                     </dxb:BarManager>
                     <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}"
-                                     SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}" AutoExpandAllGroups="True">
+                                     SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}" AutoExpandAllGroups="{Binding ExpandProductionTaskProducts}">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn FieldName="Place" Header="Передел" GroupIndex="0" />
                             <dxg:GridColumn FieldName="ProductID" Visible="False"/>

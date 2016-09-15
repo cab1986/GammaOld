@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="90" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="57" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -198,10 +198,6 @@
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_DocBroke" />
         <EntityTypeShape EntityType="GammaModel.vProductsInfo" Width="1.5" PointX="0.75" PointY="9.75" />
         <AssociationConnector Association="GammaModel.ProductKindRejectionReasons" />
-        <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="21.5" PointY="63.875" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_ProductPallets" />
         <EntityTypeShape EntityType="GammaModel.Rests" Width="1.5" PointX="30.5" PointY="60.625" />
         <AssociationConnector Association="GammaModel.FK_Rests_Places" />
         <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="14.25" PointY="57.875" />
@@ -226,11 +222,6 @@
         <AssociationConnector Association="GammaModel.FK_Rests_Products" />
         <AssociationConnector Association="GammaModel.FK_SpoolInstallLog_Products" />
         <AssociationConnector Association="GammaModel.DocUnpackWithdrawals" />
-        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.5" PointX="19.5" PointY="53.125" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
         <EntityTypeShape EntityType="GammaModel.DocShipmentOrderInfo" Width="1.5" PointX="20.5" PointY="21" />
         <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_1CDocShipmentOrder" />
         <AssociationConnector Association="GammaModel.FK_DocShipmentOrderInfo_Persons" />
@@ -239,6 +230,18 @@
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes" />
+        <EntityTypeShape EntityType="GammaModel.NomenclatureGammaInfo" Width="1.5" PointX="5.25" PointY="51.125" />
+        <AssociationConnector Association="GammaModel.FK_NomenclatureGammaInfo_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CProperties" />
+        <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="21.5" PointY="64.875" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_ProductPallets" />
+        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.5" PointX="19.5" PointY="53.125" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

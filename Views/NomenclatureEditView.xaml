@@ -26,6 +26,9 @@
                 <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
                     <dxe:TextEdit TextWrapping="Wrap" EditValue="{Binding NomenclatureName}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Текст для ЧТМ" LabelPosition="Top">
+                    <dxe:TextEdit TextWrapping="Wrap" EditValue="{Binding PTMText}" />
+                </dxlc:LayoutItem>
                 <dxlc:LayoutItem LabelPosition="Top" Label="Штрих-кода" VerticalAlignment="Stretch">
                     <dxg:GridControl ItemsSource="{Binding NomenclatureBarcodes, UpdateSourceTrigger=PropertyChanged}" >
                         <dxg:GridControl.View>
