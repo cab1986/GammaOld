@@ -431,6 +431,33 @@
     <Property Name="InPlaceID" Type="int" />
     <Property Name="OutPlaceID" Type="int" />
   </EntityType>
+  <EntityType Name="DocMovementOrder">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CDocID" Type="uniqueidentifier" />
+    <Property Name="PlaceFrom" Type="int" />
+    <Property Name="PlaceTo" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DocMovementOrderDocs">
+    <Key>
+      <PropertyRef Name="DocMovementOrderID" />
+      <PropertyRef Name="DocMovementID" />
+    </Key>
+    <Property Name="DocMovementOrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DocMovementOrderNomenclature">
+    <Key>
+      <PropertyRef Name="DocMovementOrderNomenclatureID" />
+    </Key>
+    <Property Name="DocMovementOrderNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocID" Type="uniqueidentifier" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="Amount" Type="decimal" Precision="18" Scale="5" />
+  </EntityType>
   <EntityType Name="DocProduction">
     <Key>
       <PropertyRef Name="DocID" />
@@ -478,6 +505,7 @@
     <Property Name="Number" Type="varchar" MaxLength="50" />
     <Property Name="IsConfirmed" Type="bit" Nullable="false" />
     <Property Name="UserID" Type="uniqueidentifier" />
+    <Property Name="PersonID" Type="int" />
     <Property Name="PrintName" Type="varchar" MaxLength="255" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="ShiftID" Type="tinyint" />
@@ -1930,6 +1958,78 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocMovementOrder_Docs">
+    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+    <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Docs">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocMovementOrder">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovementOrder_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovementOrder">
+        <PropertyRef Name="PlaceFrom" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovementOrder_Places1">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovementOrder">
+        <PropertyRef Name="PlaceTo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovementOrderDocs_DocMovement">
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="1" />
+    <End Role="DocMovementOrderDocs" Type="Self.DocMovementOrderDocs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocMovement">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocMovementOrderDocs">
+        <PropertyRef Name="DocMovementID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovementOrderDocs_DocMovementOrder">
+    <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="1" />
+    <End Role="DocMovementOrderDocs" Type="Self.DocMovementOrderDocs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocMovementOrder">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocMovementOrderDocs">
+        <PropertyRef Name="DocMovementOrderID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovementOrderNomenclature_DocMovementOrder">
+    <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="0..1" />
+    <End Role="DocMovementOrderNomenclature" Type="Self.DocMovementOrderNomenclature" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocMovementOrder">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocMovementOrderNomenclature">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DocProductChangeState_1CRejectionReasons">
     <End Role="1CRejectionReasons" Type="Self.1CRejectionReasons" Multiplicity="0..1" />
     <End Role="DocChangeStateProducts" Type="Self.DocChangeStateProducts" Multiplicity="*" />
@@ -2093,6 +2193,18 @@
       </Principal>
       <Dependent Role="Docs">
         <PropertyRef Name="DocTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Docs_Persons">
+    <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
+    <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Persons">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="Docs">
+        <PropertyRef Name="PersonID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3087,6 +3199,9 @@
   <Function Name="GetDocCloseShiftWRGroupPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="GetDocMovementOrderProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="GetDocRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
@@ -3239,6 +3354,9 @@
     <EntitySet Name="DocCloseShiftSamples" EntityType="Self.DocCloseShiftSamples" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocMovementOrder" EntityType="Self.DocMovementOrder" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocMovementOrderDocs" EntityType="Self.DocMovementOrderDocs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocMovementOrderNomenclature" EntityType="Self.DocMovementOrderNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProduction" EntityType="Self.DocProduction" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProductionProducts" EntityType="Self.DocProductionProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
@@ -3665,6 +3783,30 @@
       <End Role="Places" EntitySet="Places" />
       <End Role="DocMovement" EntitySet="DocMovement" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocMovementOrder_Docs" Association="Self.FK_DocMovementOrder_Docs">
+      <End Role="Docs" EntitySet="Docs" />
+      <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovementOrder_Places" Association="Self.FK_DocMovementOrder_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovementOrder_Places1" Association="Self.FK_DocMovementOrder_Places1">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovementOrderDocs_DocMovement" Association="Self.FK_DocMovementOrderDocs_DocMovement">
+      <End Role="DocMovement" EntitySet="DocMovement" />
+      <End Role="DocMovementOrderDocs" EntitySet="DocMovementOrderDocs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovementOrderDocs_DocMovementOrder" Association="Self.FK_DocMovementOrderDocs_DocMovementOrder">
+      <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
+      <End Role="DocMovementOrderDocs" EntitySet="DocMovementOrderDocs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovementOrderNomenclature_DocMovementOrder" Association="Self.FK_DocMovementOrderNomenclature_DocMovementOrder">
+      <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
+      <End Role="DocMovementOrderNomenclature" EntitySet="DocMovementOrderNomenclature" />
+    </AssociationSet>
     <AssociationSet Name="FK_DocProductChangeState_1CRejectionReasons" Association="Self.FK_DocProductChangeState_1CRejectionReasons">
       <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
       <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
@@ -3715,6 +3857,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_Docs_DocTypes" Association="Self.FK_Docs_DocTypes">
       <End Role="DocTypes" EntitySet="DocTypes" />
+      <End Role="Docs" EntitySet="Docs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Docs_Persons" Association="Self.FK_Docs_Persons">
+      <End Role="Persons" EntitySet="Persons" />
       <End Role="Docs" EntitySet="Docs" />
     </AssociationSet>
     <AssociationSet Name="FK_Docs_Places" Association="Self.FK_Docs_Places">

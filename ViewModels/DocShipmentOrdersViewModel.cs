@@ -161,9 +161,9 @@ namespace Gamma.ViewModels
             {
                 foreach (var docShipmentOrder in docShipmentOrders)
                 {
-                    docShipmentOrder.DocShipmentOrderGoods = new ObservableCollection<DocShipmentGood>(gammaBase.vDocShipmentOrders
+                    docShipmentOrder.DocShipmentOrderGoods = new ObservableCollection<DocNomenclatureItem>(gammaBase.vDocShipmentOrders
                         .Where(d => d.C1CDocShipmentOrderID == docShipmentOrder.DocShipmentOrderId)
-                        .Select(d => new DocShipmentGood()
+                        .Select(d => new DocNomenclatureItem()
                         {
                             NomenclatureName = d.NomenclatureName,
                             Quantity = d.Quantity,
@@ -174,74 +174,5 @@ namespace Gamma.ViewModels
         }
 
 //        public List<Person> Persons { get; set; }
-    }
-
-
-
-    public class Person
-    {
-        public int PersonId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class DocShipmentOrder
-    {
-        public Guid DocShipmentOrderId { get; set; }
-        public string Number { get; set; }
-        public DateTime Date { get; set; }
-        public string Consignee { get; set; }
-        public string VehicleNumber { get; set; }
-        public string ActivePerson { get; set; }
-        /*
-        private int? _activePersonId;
-
-        public int? ActivePersonId
-        {
-            get { return _activePersonId; }
-            set
-            {
-                if (_activePersonId == value) return;
-                _activePersonId = value;
-                SetActivePersonOrder(DocShipmentOrderId, _activePersonId);
-            }
-        }
-
-        private void SetActivePersonOrder(Guid docShipmentOrderId, int? activePersonId)
-        {
-            using (var gammaBase = DB.GammaDb)
-            {
-                var activeOrder =
-                    gammaBase.DocShipmentOrderInfo.FirstOrDefault(ao => ao.C1CDocShipmentOrderID == docShipmentOrderId);               
-                if (activeOrder == null)
-                {
-                    activeOrder = new DocShipmentOrderInfo
-                    {
-                        C1CDocShipmentOrderID = docShipmentOrderId
-                    };
-                    gammaBase.DocShipmentOrderInfo.Add(activeOrder);
-                }
-                activeOrder.ActivePersonID = activePersonId;
-
-                // На случай, если в базе уже удален приказ с данным ID
-                try
-                {
-                    gammaBase.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    
-                }
-                
-            }
-        }
-        */
-        public ObservableCollection<DocShipmentGood> DocShipmentOrderGoods { get; set; }
-    }
-
-    public class DocShipmentGood
-    {
-        public string NomenclatureName { get; set; }
-        public string Quantity { get; set; }
-        public decimal CollectedQuantity { get; set; }
     }
 }

@@ -111,7 +111,8 @@ namespace Gamma
         DocChangeState,
         DocShipment,
         DocUnpack,
-        DocBroke
+        DocBroke,
+        DocMovementOrder
     }
     public enum PermissionMark
     {

@@ -93,6 +93,16 @@ namespace Gamma
                 }
         */
 
+
+        public static string GetNextDocNumber(DocTypes docType, int placeId, int shiftId, GammaEntities gammaBase = null)
+        {
+            return
+                (gammaBase ?? GammaDb).Database.SqlQuery<string>(
+                    $"SELECT dbo.GetNextDocNumber('{(int) docType}', '{placeId}', '{shiftId}')")
+                    .AsEnumerable()
+                    .FirstOrDefault();
+        }
+
         public static string GetProductNomenclatureNameBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
         {
             return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.GetProductNomenclatureNameBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();

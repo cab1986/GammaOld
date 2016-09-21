@@ -27,6 +27,8 @@ namespace Gamma.Models
             this.DocMovement = new HashSet<DocMovement>();
             this.DocMovement1 = new HashSet<DocMovement>();
             this.PlaceZones = new HashSet<PlaceZones>();
+            this.DocMovementOrder = new HashSet<DocMovementOrder>();
+            this.DocMovementOrder1 = new HashSet<DocMovementOrder>();
         }
     
         public int PlaceID { get; set; }
@@ -67,5 +69,9 @@ namespace Gamma.Models
         public virtual ICollection<DocMovement> DocMovement1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceZones> PlaceZones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovementOrder> DocMovementOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovementOrder> DocMovementOrder1 { get; set; }
     }
 }

@@ -14,6 +14,12 @@ namespace Gamma.Models
     
     public partial class DocMovement
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocMovement()
+        {
+            this.DocMovementOrder = new HashSet<DocMovementOrder>();
+        }
+    
         public System.Guid DocID { get; set; }
         public Nullable<int> InPlaceID { get; set; }
         public Nullable<int> OutPlaceID { get; set; }
@@ -21,5 +27,7 @@ namespace Gamma.Models
         public virtual Docs Docs { get; set; }
         public virtual Places Places { get; set; }
         public virtual Places Places1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovementOrder> DocMovementOrder { get; set; }
     }
 }

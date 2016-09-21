@@ -25,6 +25,16 @@ namespace Gamma
         public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие
     }
 
+    public class EditDocMovementOrderMessage
+    {
+        public EditDocMovementOrderMessage(Guid? docId = null)
+        {
+            DocId = docId;
+        }
+
+        public Guid? DocId { get; private set; }
+    }
+
     public class NomenclatureEditMessage
     {
         public NomenclatureEditMessage(Guid nomenclatureId)
@@ -40,7 +50,6 @@ namespace Gamma
         public EditRejectionReasonsMessage(BrokeProduct product)
         {
             BrokeProduct = product;
-
         }
         
         public BrokeProduct BrokeProduct { get; set; }
@@ -106,7 +115,7 @@ namespace Gamma
     }
     public class OpenNomenclatureMessage  
     {
-        public OpenNomenclatureMessage(int placeGroupID, bool nomenclatureEdit = false)
+        public OpenNomenclatureMessage(int? placeGroupID, bool nomenclatureEdit = false)
         {
             ID = placeGroupID;
             IsPlaceGroupFilter = true;
@@ -120,7 +129,7 @@ namespace Gamma
         }
 
         public bool NomenclatureEdit { get; }
-        public int ID { get; private set; }
+        public int? ID { get; private set; }
         public bool IsPlaceGroupFilter { get; private set; }
     }
     public class ProductionTaskRwMessage
@@ -212,6 +221,8 @@ namespace Gamma
         public DateTime? CloseDate;
         public byte? ShiftID;
     }
+
+
     public class OpenPlaceGroupsNomenclatureMessage  { }
     public class OpenMaterialTypesNomenclatureMessage { }
     public class OpenWarehousePersonsMessage { }
@@ -291,7 +302,7 @@ namespace Gamma
             Messenger.Default.Send(new OpenMainMessage());
         }
 
-        public static void FindNomenclature(int placeGroupID, bool nomenclatureEdit = false)
+        public static void FindNomenclature(int? placeGroupID, bool nomenclatureEdit = false)
         {
             Messenger.Default.Send(new OpenNomenclatureMessage(placeGroupID, nomenclatureEdit));
         }
@@ -357,8 +368,11 @@ namespace Gamma
             });
         }
 
-
-
+        public static void OpenDocMovementOrder(Guid? docId = null)
+        {
+            Messenger.Default.Send(new EditDocMovementOrderMessage(docId));
+        }
+        
         public static void OpenFindProduct(ProductKinds productKind, bool chooseProduct = false, bool allowChangeProductKind = false)
         {
             Messenger.Default.Send(new FindProductMessage

@@ -39,6 +39,9 @@
         <DataTemplate DataType="{x:Type vm:DocShipmentOrdersViewModel}">
             <views:DocShipmentOrdersView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocMovementOrdersViewModel}">
+            <views:DocMovementOrdersView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
@@ -81,6 +84,7 @@
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Склад">
                         <dxb:BarButtonItem Content="Приказы на отгрузку" Command="{Binding OpenDocShipmentOrdersCommand}"/>
+                        <dxb:BarButtonItem Content="Внутренние перемещения" Command="{Binding OpenDocMovementOrdersCommand}"/>
                         <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
                         <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />
                     </dxb:BarSubItem>

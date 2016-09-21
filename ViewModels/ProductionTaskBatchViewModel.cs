@@ -174,7 +174,7 @@ namespace Gamma.ViewModels
                 .FirstOrDefault(
                     dp => dp.Products.BarCode == msg.Barcode);
             if (docProductionProducts == null) return;
-            GammaBase.Entry(docProductionProducts).Reload();
+            GammaBase.Entry(docProductionProducts.DocProduction.Docs).Reload();
             docProductionProducts.DocProduction.Docs.IsConfirmed = true;
             string message;
             switch (docProductionProducts.Products.ProductKindID)

@@ -41,6 +41,7 @@ namespace Gamma.Models
         public string Comment { get; set; }
         public Nullable<bool> IsFromOldGamma { get; set; }
         public Nullable<bool> IsMarked { get; set; }
+        public Nullable<int> PersonID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }
@@ -69,5 +70,7 @@ namespace Gamma.Models
         public virtual DocMovement DocMovement { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawal> DocWithdrawal2 { get; set; }
+        public virtual DocMovementOrder DocMovementOrder { get; set; }
+        public virtual Persons Persons { get; set; }
     }
 }

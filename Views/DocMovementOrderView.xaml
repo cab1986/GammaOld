@@ -1,0 +1,105 @@
+﻿<gamma:MvvmWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gamma.Views"
+        xmlns:gamma="clr-namespace:Gamma"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:common="clr-namespace:Gamma.Common"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        x:Class="Gamma.Views.DocMovementOrderView"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocMovementOrderViewModel}}"
+        common:WindowSettings.Save="True"
+        Title="Внутреннее перемещение" Height="600" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="28" />
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Orientation="Horizontal">
+            <dxlc:LayoutGroup Orientation="Vertical" View="GroupBox" Width="200" Header="Документ" >
+                <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Number}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
+                    <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Со склада" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding PlaceFrom}" ItemsSource="{Binding WareHouses}"  ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="На склад" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding PlaceTo}" ItemsSource="{Binding WareHouses}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Orientation="Vertical">
+                <dxlc:LayoutItem Label="Задание" LabelPosition="Top">
+                    <dxb:BarManager AllowCustomization="False" AllowHotCustomization="False" AllowQuickCustomization="False">
+                        <dxb:BarManager.Bars>
+                            <dxb:Bar UseWholeRow="True" ShowDragWidget="False" AllowCustomizationMenu="False" >
+                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddMovementOrderItemCommand}"
+                                                   LargeGlyph="{dx:DXImage Image=Add_32x32.png}" GlyphSize="Small" />
+                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteMovementOrderItemCommand}"
+                                                   LargeGlyph="{dx:DXImage Image=Add_32x32.png}" GlyphSize="Small" />
+                            </dxb:Bar>
+                        </dxb:BarManager.Bars>
+                        <dxg:GridControl ItemsSource="{Binding DocMovementOrderItems}" SelectedItem="{Binding SelectedMovementOrderNomenclatureItem}" 
+                                         MaxHeight="2000">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AllowGrouping="False" ShowGroupPanel="False" AutoWidth="True"/>
+                            </dxg:GridControl.View>
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName">
+                                    <dxg:GridColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <dxe:ButtonEdit AllowDefaultButton="False" x:Name="PART_Editor">
+                                                <dxe:ButtonEdit.Buttons>
+                                                    <dxe:ButtonInfo Content="..." Command="{Binding RowData.Row.ChooseNomenclatureCommand}"/>
+                                                </dxe:ButtonEdit.Buttons>
+                                            </dxe:ButtonEdit>
+                                        </DataTemplate>
+                                    </dxg:GridColumn.CellTemplate>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn Header="Характеристика" FieldName="CharacteristicID">
+                                    <dxg:GridColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <dxe:ComboBoxEdit x:Name="PART_Editor" 
+                                                              DisplayMember="CharacteristicName" 
+										                       ValueMember="CharacteristicID" ItemsSource="{Binding RowData.Row.Characteristics}"/>
+                                        </DataTemplate>
+                                    </dxg:GridColumn.CellTemplate>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn FieldName="Quantity" Header="Количество">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:SpinEditSettings IsFloatValue="True" AllowDefaultButton="False" MinValue="0" Mask="n2" Increment="0.01" MaskUseAsDisplayFormat="True" />
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn FieldName="MeasureUnit" AllowEditing="False" Header="ед. изм." Width="30"/>
+                            </dxg:GridControl.Columns>
+                        </dxg:GridControl>
+                    </dxb:BarManager>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Собранная продукция" LabelPosition="Top" VerticalAlignment="Stretch">
+                    <dxg:GridControl ItemsSource="{Binding DocMovementOrderProducts}" DesignTimeDataObjectType="{x:Type gamma:ProductInfo}" MaxHeight="2000">
+                        <dxg:GridControl.View>
+                            <dxg:TableView AutoWidth="True" />
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" GroupIndex="0" SortOrder="Ascending"/>
+                            <dxg:GridColumn FieldName="Number" Header="Номер" SortOrder="Ascending" SortIndex="0"/>
+                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60"/>
+                        </dxg:GridControl.Columns>
+                    </dxg:GridControl>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <Button Grid.Row="1" Content="OK" Command="{Binding SaveAndCloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,100,2"/>
+        <Button Grid.Row="1" Content="Отмена" Command="{Binding CloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,10,2"/>
+    </Grid>
+</gamma:MvvmWindow>

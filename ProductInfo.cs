@@ -16,7 +16,7 @@ namespace Gamma
             set
             {
                 _isConfirmed = value; 
-                RaisePropertiesChanged("IsConfirmed");
+                RaisePropertyChanged("IsConfirmed");
             }   
         }
         public Guid ProductID { get; set; }

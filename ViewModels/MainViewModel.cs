@@ -74,7 +74,9 @@ namespace Gamma.ViewModels
                     () => DB.HaveWriteAccess("MaterialType1CNomenclature"));
                 OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
                 OpenImportOldProductsCommand = new DelegateCommand(MessageManager.OpenImportOldProducts, () => DB.HaveWriteAccess("Products"));
-                OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);}
+                OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);
+                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
+            }
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroups.PM:
@@ -151,6 +153,12 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             CurrentView = new DocShipmentOrdersViewModel();
+        }
+
+        private void OpenDocMovementOrders()
+        {
+            UIServices.SetBusyState();
+            CurrentView = new DocMovementOrdersViewModel();
         }
 
         private void OpenDocBrokeList()
@@ -273,6 +281,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("BackCommand");
             }
         }
+
         private DelegateCommand _refreshCommand;
         public DelegateCommand RefreshCommand 
         {
@@ -315,6 +324,7 @@ namespace Gamma.ViewModels
         public DelegateCommand<Guid> PrintReportCommand { get; private set; }
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public DelegateCommand<int> EditPlaceGroupNomenclatureCommand { get; private set; }
+        public DelegateCommand OpenDocMovementOrdersCommand { get; private set; }
         public List<ReportItem> Reports { get; set; }
 
         public class PlaceProduct

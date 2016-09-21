@@ -11,7 +11,7 @@ namespace Gamma.Views
         /// <summary>
         /// Initializes a new instance of the NomenclatureFindView class.
         /// </summary>
-        public NomenclatureFindView(int placeGroupID, bool nomenclatureEdit)
+        public NomenclatureFindView(int? placeGroupID, bool nomenclatureEdit)
         {
             DataContext = new NomenclatureFindViewModel(placeGroupID, nomenclatureEdit);
             InitializeComponent();

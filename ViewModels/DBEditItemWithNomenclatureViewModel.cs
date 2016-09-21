@@ -40,24 +40,43 @@ namespace Gamma.ViewModels
                 _nomenclatureid = value;
                 RaisePropertyChanged("NomenclatureID");
                 SetNomenclatureName(_nomenclatureid);
+                MeasureUnit = GetMeasureUnit(_nomenclatureid);
                 Characteristics = DB.GetCharacteristics(_nomenclatureid);
+                
             }
         }
+
+        private string GetMeasureUnit(Guid? nomenclatureId)
+        {
+            if (nomenclatureId == null) return "";
+            using (var gammaBase = DB.GammaDb)
+            {
+                var measureUnit =
+                    gammaBase.C1CNomenclature.Where(n => n.C1CNomenclatureID == nomenclatureId)
+                        .Select(n => n.C1CMeasureUnitQualifiers.Name)
+                        .FirstOrDefault() ?? "";
+                return measureUnit;
+            }
+        }
+
         private string _nomenclatureName;
         [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
         public string NomenclatureName
         {
             get { return _nomenclatureName; }
-            set
+            private set
             {
                 _nomenclatureName = value;
                 RaisePropertyChanged("NomenclatureName");
             }
         }
 
+        public string MeasureUnit { get; private set; }
+
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DelegateCommand ChooseNomenclatureCommand { get; private set; }
+
         private void ChooseNomenclature()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
@@ -81,6 +100,7 @@ namespace Gamma.ViewModels
                                 where nom.C1CNomenclatureID == nomenclatureid
                                 select nom.Name).FirstOrDefault();
         }
+
         private ObservableCollection<Characteristic> _characteristics;
         public virtual ObservableCollection<Characteristic> Characteristics
         {
@@ -119,6 +139,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Группа переделов для фильтрования номенклатуры
         /// </summary>
-        protected int PlaceGroupID { get; set; }
+        protected int? PlaceGroupID { get; set; }
+
     }
 }

@@ -316,6 +316,13 @@
     <Compile Include="Models\DocMovement.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocMovementOrder.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocMovementOrderItem.cs" />
+    <Compile Include="Models\DocMovementOrderNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocProduction.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -394,6 +401,12 @@
     <Compile Include="Models\GetDocCloseShiftWRGroupPacks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetDocMovementOrderNomenclature_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetDocMovementOrderProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetDocRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -457,6 +470,7 @@
     <Compile Include="Models\MaterialTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MovementOrderNomenclatureItem.cs" />
     <Compile Include="Models\Nomenclature.cs" />
     <Compile Include="Models\Nomenclature1C.cs" />
     <Compile Include="Models\Nomenclature1CFolder.cs" />
@@ -647,8 +661,12 @@
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
+    <Compile Include="ViewModels\DocMovementOrdersViewModel.cs" />
+    <Compile Include="ViewModels\DocMovementOrderViewModel.cs" />
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
     <Compile Include="ViewModels\DocProductPalletViewModel.cs" />
+    <Compile Include="Models\DocNomenclatureItem.cs" />
+    <Compile Include="ViewModels\DocShipmentOrder.cs" />
     <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
     <Compile Include="Models\EditBrokeDecisionItem.cs" />
@@ -657,6 +675,7 @@
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\NomenclatureEditViewModel.cs" />
+    <Compile Include="ViewModels\Person.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
@@ -721,6 +740,9 @@
     <Compile Include="Views\DocCloseShiftWRGridView.xaml.cs">
       <DependentUpon>DocCloseShiftWRGridView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DocMovementOrderView.xaml.cs">
+      <DependentUpon>DocMovementOrderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocProductGroupPackView.xaml.cs">
       <DependentUpon>DocProductGroupPackView.xaml</DependentUpon>
     </Compile>
@@ -735,6 +757,9 @@
     </Compile>
     <Compile Include="Views\DocProductView.xaml.cs">
       <DependentUpon>DocProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMovementOrdersView.xaml.cs">
+      <DependentUpon>DocMovementOrdersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocShipmentOrdersView.xaml.cs">
       <DependentUpon>DocShipmentOrdersView.xaml</DependentUpon>
@@ -886,6 +911,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DocMovementOrderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DocProductGroupPackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -905,6 +934,10 @@
     <Page Include="Views\DocProductView.xaml">
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocMovementOrdersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocShipmentOrdersView.xaml">
       <SubType>Designer</SubType>
@@ -1117,7 +1150,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

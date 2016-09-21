@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
         /// <param name="placeGroupID">ID группы переделов</param>
         /// <param name="nomenclatureEdit">Признак того, что при выборе номенклатуры должно открыться окно данной номенклатуры</param>
         /// <param name="gammaBase">Контекст ДБ. Добавлен по большей части для внедрения возможности тестирования</param>
-        public NomenclatureFindViewModel(int placeGroupID, bool nomenclatureEdit = false, GammaEntities gammaBase = null): this(gammaBase)
+        public NomenclatureFindViewModel(int? placeGroupID, bool nomenclatureEdit = false, GammaEntities gammaBase = null): this(gammaBase)
         {
             FilterID = placeGroupID;
             FilterByPlaceGroup = true;
@@ -159,7 +159,8 @@ namespace Gamma.ViewModels
         /// <summary>
         /// ID группы переделов или типа материала
         /// </summary>
-        private int FilterID { get; set; }
+        private int? FilterID { get; set; }
+
         private bool FilterByPlaceGroup { get; set; }
 
         private void FindNomenclatureByString()

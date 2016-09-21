@@ -112,6 +112,8 @@ namespace Gamma.Models
         public virtual DbSet<NomenclatureGammaInfo> NomenclatureGammaInfo { get; set; }
         public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
+        public virtual DbSet<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -703,6 +705,24 @@ namespace Gamma.Models
                 new ObjectParameter("ProductID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletePallet", productIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocMovementOrderProducts_Result> GetDocMovementOrderProducts(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMovementOrderProducts_Result>("GetDocMovementOrderProducts", docIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocMovementOrderNomenclature_Result> GetDocMovementOrderNomenclature(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMovementOrderNomenclature_Result>("GetDocMovementOrderNomenclature", docIDParameter);
         }
     }
 }

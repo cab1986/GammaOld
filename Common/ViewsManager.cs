@@ -28,6 +28,12 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenDocBrokeMessage>(this, OpenDocBroke);
             Messenger.Default.Register<EditRejectionReasonsMessage>(this, EditRejectionReasonsDialog);
             Messenger.Default.Register<NomenclatureEditMessage>(this, NomenclatureEdit);
+            Messenger.Default.Register<EditDocMovementOrderMessage>(this, EditDocMovementOrder);
+        }
+
+        private void EditDocMovementOrder(EditDocMovementOrderMessage msg)
+        {
+            new DocMovementOrderView(msg.DocId).Show();
         }
 
         private void NomenclatureEdit(NomenclatureEditMessage msg)
@@ -96,11 +102,7 @@ namespace Gamma.Common
         }
         private void OpenDocCloseShifts(OpenDocCloseShiftsMessage msg)
         {
-            DocCloseShiftsView view;
-            if (msg.PlaceGroup == null)
-                view = new DocCloseShiftsView();
-            else
-                view = new DocCloseShiftsView((PlaceGroups)msg.PlaceGroup);
+            var view = msg.PlaceGroup == null ? new DocCloseShiftsView() : new DocCloseShiftsView((PlaceGroups)msg.PlaceGroup);
             view.Show();
         }
 
