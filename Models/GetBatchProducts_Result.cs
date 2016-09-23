@@ -14,7 +14,7 @@ namespace Gamma.Models
     public partial class GetBatchProducts_Result
     {
         public System.Guid DocID { get; set; }
-        public Nullable<byte> ProductKindID { get; set; }
+        public byte ProductKindID { get; set; }
         public System.Guid ProductID { get; set; }
         public string Number { get; set; }
         public System.DateTime Date { get; set; }
@@ -24,5 +24,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> NomenclatureID { get; set; }
         public Nullable<System.Guid> CharacteristicID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
+        public Nullable<int> PlaceID { get; set; }
+        public Nullable<byte> ShiftID { get; set; }
     }
 }

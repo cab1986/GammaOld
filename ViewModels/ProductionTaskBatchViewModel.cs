@@ -87,7 +87,7 @@ namespace Gamma.ViewModels
         private void DeleteProduct()
         {
             if (SelectedProductionTaskProduct == null) return;
-            if (WorkSession.ShiftID != 0 && SelectedProductionTaskProduct.PlaceID != WorkSession.PlaceID && SelectedProductionTaskProduct.ShiftID != WorkSession.ShiftID)
+            if (WorkSession.ShiftID != 0 && (SelectedProductionTaskProduct.PlaceID != WorkSession.PlaceID || SelectedProductionTaskProduct.ShiftID != WorkSession.ShiftID))
             {
                 MessageBox.Show("Вы не можете удалить продукцию другой смены или другого передела");
                 return;
@@ -668,7 +668,9 @@ namespace Gamma.ViewModels
                                                                                Quantity = taskProducts.Quantity,
                                                                                ProductID = taskProducts.ProductID,
                                                                                Place = taskProducts.Place,
-                                                                               IsConfirmed = taskProducts.IsConfirmed
+                                                                               IsConfirmed = taskProducts.IsConfirmed,
+                                                                               PlaceID = taskProducts.PlaceID,
+                                                                               ShiftID = taskProducts.ShiftID
                                                                            });
         }
         private void ShowProduct()

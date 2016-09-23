@@ -833,6 +833,8 @@
           <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
           <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>

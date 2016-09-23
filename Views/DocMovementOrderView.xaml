@@ -17,7 +17,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocMovementOrderViewModel}}"
         common:WindowSettings.Save="True"
-        Title="Внутреннее перемещение" Height="600" Width="1000">
+        Title="Заказ на перемещение" Height="600" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -36,6 +36,9 @@
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="На склад" LabelPosition="Top">
                     <dxe:ComboBoxEdit EditValue="{Binding PlaceTo}" ItemsSource="{Binding WareHouses}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Выполнен">
+                    <dxe:CheckEdit EditValue="{Binding IsConfirmed}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Vertical">
@@ -90,8 +93,15 @@
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" />
                         </dxg:GridControl.View>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого:{0:0.###}"/>
+                        </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" GroupIndex="0" SortOrder="Ascending"/>
+                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" GroupIndex="0" SortOrder="Ascending" >
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings TextWrapping="WrapWithOverflow"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
                             <dxg:GridColumn FieldName="Number" Header="Номер" SortOrder="Ascending" SortIndex="0"/>
                             <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60"/>
                         </dxg:GridControl.Columns>

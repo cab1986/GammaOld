@@ -1764,6 +1764,9 @@
     <FunctionImport Name="GetDocMovementOrderProducts" ReturnType="Collection(GammaModel.GetDocMovementOrderProducts_Result)">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
     </FunctionImport>
+    <FunctionImport Name="GetDocMovementOrderNomenclature" ReturnType="Collection(GammaModel.GetDocMovementOrderNomenclature_Result)">
+      <Parameter Name="DocID" Mode="In" Type="Guid" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -2592,7 +2595,7 @@
   </Association>
   <ComplexType Name="GetBatchProducts_Result">
     <Property Type="Guid" Name="DocID" Nullable="false" />
-    <Property Type="Byte" Name="ProductKindID" Nullable="true" />
+    <Property Type="Byte" Name="ProductKindID" Nullable="false" />
     <Property Type="Guid" Name="ProductID" Nullable="false" />
     <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
     <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
@@ -2601,7 +2604,9 @@
     <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
     <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
     <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="14" Scale="4" />
+    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="15" Scale="5" />
+    <Property Type="Int32" Name="PlaceID" Nullable="true" />
+    <Property Type="Byte" Name="ShiftID" Nullable="true" />
   </ComplexType>
   <EntityType Name="ProductSpools">
     <Key>
@@ -4223,8 +4228,8 @@
     <Property Name="PlaceFrom" Type="Int32" />
     <Property Name="PlaceTo" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocMovementOrder_Docs" FromRole="DocMovementOrder" ToRole="Docs" />
-    <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocMovementOrder_Places" FromRole="DocMovementOrder" ToRole="Places" />
-    <NavigationProperty Name="Places1" Relationship="GammaModel.FK_DocMovementOrder_Places1" FromRole="DocMovementOrder" ToRole="Places" />
+    <NavigationProperty Name="PlacesFrom" Relationship="GammaModel.FK_DocMovementOrder_Places" FromRole="DocMovementOrder" ToRole="Places" />
+    <NavigationProperty Name="PlacesTo" Relationship="GammaModel.FK_DocMovementOrder_Places1" FromRole="DocMovementOrder" ToRole="Places" />
     <NavigationProperty Name="DocMovementOrderNomenclature" Relationship="GammaModel.FK_DocMovementOrderNomenclature_DocMovementOrder" FromRole="DocMovementOrder" ToRole="DocMovementOrderNomenclature" />
     <NavigationProperty Name="DocMovement" Relationship="GammaModel.DocMovementOrderDocs" FromRole="DocMovementOrder" ToRole="DocMovement" />
   </EntityType>
@@ -4311,5 +4316,10 @@
     <Property Type="Guid" Name="ProductID" Nullable="false" />
     <Property Type="Byte" Name="ProductKindID" Nullable="false" />
     <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+  </ComplexType>
+  <ComplexType Name="GetDocMovementOrderNomenclature_Result">
+    <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+    <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+    <Property Type="Decimal" Name="CollectedQuantity" Nullable="true" Precision="38" Scale="5" />
   </ComplexType>
 </Schema>

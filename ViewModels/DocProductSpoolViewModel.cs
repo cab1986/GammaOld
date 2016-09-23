@@ -25,15 +25,15 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Инициализация информации о тамбуре
         /// </summary>
-        /// <param name="docId">ID документа</param>
+        /// <param name="productId">ID продукта</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public DocProductSpoolViewModel(Guid docId, GammaEntities gammaBase = null): base(gammaBase)
+        public DocProductSpoolViewModel(Guid productId, GammaEntities gammaBase = null): base(gammaBase)
         {
-            DocID = docId;
+            ProductId = productId;
             ShowCreateGroupPack = WorkSession.PlaceID == 21;
-            ProductId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == docId)?.ProductID ??
+            DocID = GammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
                             SqlGuidUtil.NewSequentialid();
-            var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == docId);
+            var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == DocID);
 //            States = new ProductState().ToDictionary();
             ToughnessKinds = new ToughnessKinds().ToDictionary();
             /*
@@ -275,7 +275,7 @@ namespace Gamma.ViewModels
             if (!DB.HaveWriteAccess("ProductSpools")) return true;
             var product =
                 GammaBase.Products.Include(p => p.ProductSpools).Include(p => p.DocProductionProducts)
-                    .FirstOrDefault(p => p.DocProductionProducts.Select(dp => dp.DocID).Contains(itemID));
+                    .FirstOrDefault(p => p.ProductID == ProductId);
             if (product == null)
             {
                 var id = SqlGuidUtil.NewSequentialid();
@@ -307,36 +307,7 @@ namespace Gamma.ViewModels
                     }
                 };
             }
-            /*
-            var stateId = (from d in GammaBase.DocChangeStateProducts where d.ProductID == product.ProductID
-                               orderby
-                               d.Docs.Date descending
-                                   select d.StateID).Take(1).FirstOrDefault();
-            if (stateId != StateID)
-            {
-                var docChangeId = SqlGuidUtil.NewSequentialid();
-                var doc = new Docs()
-                    {
-                        DocID = docChangeId,
-                        Date = DB.CurrentDateTime,
-                        DocTypeID = (byte)DocTypes.DocChangeState,
-                        IsConfirmed = true,
-                        UserID = WorkSession.UserID,
-                        DocChangeStateProducts = new Collection<DocChangeStateProducts>
-                        {
-                            new DocChangeStateProducts()
-                            {
-                                DocID = docChangeId,
-                                ProductID = product.ProductID,
-                                StateID = StateID ?? 0,
-                                C1CRejectionReasonID = RejectionReasonID,
-                                Quantity = Weight
-                            }
-                        }
-                    };
-                    GammaBase.Docs.Add(doc);
-            }
-            */
+            
             if (AllowEditProduct)
             {
                 product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;

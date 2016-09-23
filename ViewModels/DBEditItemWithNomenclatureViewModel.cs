@@ -64,7 +64,7 @@ namespace Gamma.ViewModels
         public string NomenclatureName
         {
             get { return _nomenclatureName; }
-            private set
+            set
             {
                 _nomenclatureName = value;
                 RaisePropertyChanged("NomenclatureName");

@@ -833,6 +833,8 @@
           <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
           <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
@@ -1460,6 +1462,15 @@
           <ScalarProperty Name="ProductID" ColumnName="ProductID" />
           <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
           <ScalarProperty Name="Number" ColumnName="Number" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDocMovementOrderNomenclature" FunctionName="GammaDBModel.GetDocMovementOrderNomenclature">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GammaModel.GetDocMovementOrderNomenclature_Result">
+          <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="CollectedQuantity" ColumnName="CollectedQuantity" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>

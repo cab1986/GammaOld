@@ -134,7 +134,7 @@ namespace Gamma.ViewModels
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = true;
-                    CurrentViewModel = new DocProductSpoolViewModel(Doc.DocID);
+                    CurrentViewModel = new DocProductSpoolViewModel(product.ProductID);
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";

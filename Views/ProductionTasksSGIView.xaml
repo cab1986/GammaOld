@@ -4,21 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.galasoft.ch/ignore"
-        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  x:Class="Gamma.Views.ProductionTasksSGIView"
-        mc:Ignorable="d ignore">
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             x:Class="Gamma.Views.ProductionTasksSGIView"
+        mc:Ignorable="d ignore"
+        d:DataContext="{d:DesignInstance Type=viewModels:ProductionTasksSGIViewModel, IsDesignTimeCreatable=False}">
 
     <Grid>
         <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskSGI}" AutoExpandAllGroups="True"
 			FontSize="24" FontWeight="Medium" >
-            <dxg:GridControl.Columns>
-                <dxg:GridColumn Binding="{Binding Number}" Header="Номер" VisibleIndex="0" Width="130" FixedWidth="True"/>
-                <dxg:GridColumn Binding="{Binding Place}" Header="Передел" GroupIndex="0" ShowGroupedColumn="False"/>
-                <dxg:GridColumn Binding="{Binding ProductionTaskBatchID}" Visible="False" />
-                <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="1" Width="150" FixedWidth="True"/>
-                <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="2" AllowBestFit="True"/>
-                <dxg:GridColumn Binding="{Binding Quantity}" Header="Задание, рул" VisibleIndex="3" Width="180" FixedWidth="True"/>
-                <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Выпущено, рул" Width="180" FixedWidth="True"/>
-            </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"
                                />
@@ -26,6 +20,17 @@
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}"/>
             </dxmvvm:Interaction.Behaviors>
+            <dxg:GridColumn Binding="{Binding Number}" Header="Номер" VisibleIndex="0" Width="130" FixedWidth="True"/>
+            <dxg:GridColumn Binding="{Binding Place}" Header="Передел" GroupIndex="0" ShowGroupedColumn="False"/>
+            <dxg:GridColumn Binding="{Binding ProductionTaskBatchID}" Visible="False" />
+            <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="1" Width="150" FixedWidth="True"/>
+            <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="2" AllowBestFit="True"/>
+            <dxg:GridColumn Binding="{Binding Quantity}" Header="Задание, рул" VisibleIndex="3" Width="180" FixedWidth="True">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Выпущено, рул" Width="180" FixedWidth="True"/>
         </dxg:GridControl>
     </Grid>
 </UserControl>

@@ -41,6 +41,7 @@ namespace Gamma.ViewModels
                 PlaceFrom = doc.DocMovementOrder.PlaceFrom;
                 Date = doc.Date;
                 Number = doc.Number;
+                IsConfirmed = doc.IsConfirmed;
                 foreach (var nomenclatureItem in doc.DocMovementOrder.DocMovementOrderNomenclature)
                 {
                     DocMovementOrderItems.Add(new DocMovementOrderNomenclatureItem
@@ -52,6 +53,7 @@ namespace Gamma.ViewModels
                     });
                 }
             }
+            RefreshProducts();
         }
 
         public DateTime Date { get; set; }
@@ -127,6 +129,8 @@ namespace Gamma.ViewModels
             }
         }
 
+        public bool IsConfirmed { get; set; }
+
         public override bool SaveToModel(GammaEntities gammaBase = null)
         {
             using (gammaBase = gammaBase ?? DB.GammaDb)
@@ -158,6 +162,7 @@ namespace Gamma.ViewModels
                 }
                 doc.Number = Number;
                 doc.Date = Date;
+                doc.IsConfirmed = IsConfirmed;
                 doc.DocMovementOrder.PlaceFrom = PlaceFrom;
                 doc.DocMovementOrder.PlaceTo = PlaceTo;
                 doc.DocMovementOrder.DocMovementOrderNomenclature = new List<DocMovementOrderNomenclature>();
