@@ -32,6 +32,7 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
+            PlaceGroupID = (int) PlaceGroups.PM;
         }
 
         public ProductionTaskPMViewModel(Guid productionTaskBatchID, bool isForRw) : this()

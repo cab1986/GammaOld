@@ -516,12 +516,14 @@
   <EntityType Name="DocShipmentOrderInfo">
     <Key>
       <PropertyRef Name="1CDocShipmentOrderID" />
+      <PropertyRef Name="KindID" />
     </Key>
     <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ActivePersonID" Type="int" />
     <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="IsShipped" Type="bit" />
+    <Property Name="KindID" Type="tinyint" Nullable="false" />
   </EntityType>
   <EntityType Name="DocShipments">
     <Key>
@@ -531,6 +533,7 @@
     <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PersonID" Type="int" />
+    <Property Name="KindID" Type="tinyint" />
   </EntityType>
   <EntityType Name="DocTypes">
     <Key>
@@ -961,6 +964,29 @@
     <Property Name="ProgramAdmin" Type="bit" />
     <Property Name="ShiftID" Type="tinyint" Nullable="false" />
     <Property Name="MobileComputer" Type="bit" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrders" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="v1COrders">
+    <Key>
+      <PropertyRef Name="1COrderID" />
+      <PropertyRef Name="IsShipped" />
+      <PropertyRef Name="OrderKindID" />
+      <PropertyRef Name="OrderType" />
+    </Key>
+    <Property Name="1COrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Date" Type="datetime" />
+    <Property Name="Number" Type="char" MaxLength="11" />
+    <Property Name="Shipper" Type="nvarchar" MaxLength="100" />
+    <Property Name="Consignee" Type="nvarchar" MaxLength="100" />
+    <Property Name="1CSubdivisionID" Type="uniqueidentifier" />
+    <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="ActivePersonID" Type="int" />
+    <Property Name="IsShipped" Type="bit" Nullable="false" />
+    <Property Name="ShiftId" Type="tinyint" />
+    <Property Name="ActivePerson" Type="nvarchar" MaxLength="255" />
+    <Property Name="OrderKindID" Type="int" Nullable="false" />
+    <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vCharacteristicSGBProperties" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -2232,18 +2258,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder">
-    <End Role="1CDocShipmentOrder" Type="Self.1CDocShipmentOrder" Multiplicity="1" />
-    <End Role="DocShipmentOrderInfo" Type="Self.DocShipmentOrderInfo" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="1CDocShipmentOrder">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Principal>
-      <Dependent Role="DocShipmentOrderInfo">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_DocShipmentOrderInfo_Persons">
     <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
     <End Role="DocShipmentOrderInfo" Type="Self.DocShipmentOrderInfo" Multiplicity="*" />
@@ -2253,18 +2267,6 @@
       </Principal>
       <Dependent Role="DocShipmentOrderInfo">
         <PropertyRef Name="ActivePersonID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipments_1CDocShipmentOrder">
-    <End Role="1CDocShipmentOrder" Type="Self.1CDocShipmentOrder" Multiplicity="1" />
-    <End Role="DocShipments" Type="Self.DocShipments" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="1CDocShipmentOrder">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Principal>
-      <Dependent Role="DocShipments">
-        <PropertyRef Name="1CDocShipmentOrderID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3104,6 +3106,10 @@
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="PrintName" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="CreateRemainderSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -3412,6 +3418,23 @@
     <EntitySet Name="UserPlaces" EntityType="Self.UserPlaces" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="v1COrders" EntityType="Self.v1COrders" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v1COrders].[1COrderID] AS [1COrderID], 
+    [v1COrders].[Date] AS [Date], 
+    [v1COrders].[Number] AS [Number], 
+    [v1COrders].[Shipper] AS [Shipper], 
+    [v1COrders].[Consignee] AS [Consignee], 
+    [v1COrders].[1CSubdivisionID] AS [1CSubdivisionID], 
+    [v1COrders].[VehicleNumber] AS [VehicleNumber], 
+    [v1COrders].[ActivePersonID] AS [ActivePersonID], 
+    [v1COrders].[IsShipped] AS [IsShipped], 
+    [v1COrders].[ShiftId] AS [ShiftId], 
+    [v1COrders].[ActivePerson] AS [ActivePerson], 
+    [v1COrders].[OrderKindID] AS [OrderKindID], 
+    [v1COrders].[OrderType] AS [OrderType]
+    FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [vCharacteristicSGBProperties].[1CCharacteristicID] AS [1CCharacteristicID], 
@@ -3874,17 +3897,9 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Docs" EntitySet="Docs" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder" Association="Self.FK_DocShipmentOrderInfo_1CDocShipmentOrder">
-      <End Role="1CDocShipmentOrder" EntitySet="1CDocShipmentOrder" />
-      <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
-    </AssociationSet>
     <AssociationSet Name="FK_DocShipmentOrderInfo_Persons" Association="Self.FK_DocShipmentOrderInfo_Persons">
       <End Role="Persons" EntitySet="Persons" />
       <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipments_1CDocShipmentOrder" Association="Self.FK_DocShipments_1CDocShipmentOrder">
-      <End Role="1CDocShipmentOrder" EntitySet="1CDocShipmentOrder" />
-      <End Role="DocShipments" EntitySet="DocShipments" />
     </AssociationSet>
     <AssociationSet Name="FK_DocShipments_Docs" Association="Self.FK_DocShipments_Docs">
       <End Role="Docs" EntitySet="Docs" />

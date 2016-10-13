@@ -18,7 +18,6 @@ namespace Gamma.Models
         public C1CDocShipmentOrder()
         {
             this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
-            this.DocShipments = new HashSet<DocShipments>();
         }
     
         public System.Guid C1CDocShipmentOrderID { get; set; }
@@ -37,8 +36,5 @@ namespace Gamma.Models
         public virtual C1CWarehouses C1CWarehouses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocShipments> DocShipments { get; set; }
-        public virtual DocShipmentOrderInfo DocShipmentOrderInfo { get; set; }
     }
 }

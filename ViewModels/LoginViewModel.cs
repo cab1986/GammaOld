@@ -1,5 +1,7 @@
-﻿using DevExpress.Mvvm;
+﻿using System.Collections.Generic;
+using DevExpress.Mvvm;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Windows;
 using Gamma.Common;
 
@@ -33,6 +35,8 @@ namespace Gamma.ViewModels
             set;
         }
 
+        public List<string> Hosts { get; private set; } = new List<string>();
+
         public DelegateCommand LoginCommand { get; private set; }
 
         [Required(ErrorMessage = @"Поле не может быть пустым")]
@@ -52,7 +56,10 @@ namespace Gamma.ViewModels
         public LoginViewModel()
         {
             var appSettings = GammaSettings.Get();
-            Host = string.IsNullOrEmpty(appSettings.HostName)? "gamma" : appSettings.HostName;
+            Hosts = appSettings.Hosts;
+            if (Hosts.Count > 0 && !Hosts.Contains(appSettings.HostName)) Host = Hosts.First();
+            else
+            Host = string.IsNullOrEmpty(appSettings.HostName) ? "gamma" : appSettings.HostName;
             DataBase = string.IsNullOrEmpty(appSettings.DbName) ? "gammanew" : appSettings.DbName;
             Login = appSettings.User;
             UseScanner = appSettings.UseScanner;
@@ -83,6 +90,7 @@ namespace Gamma.ViewModels
             MessageManager.OpenMain();
             CloseWindow();
         }
+
         public bool UseScanner { get; set; }
 
         public override void Dispose()

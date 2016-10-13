@@ -14,7 +14,7 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:common="clr-namespace:Gamma.Common"
         x:Class="Gamma.Views.ProductionTaskBatchView"
-        mc:Ignorable="d ignore" d:DesignHeight="900" d:DesignWidth="1500"
+        mc:Ignorable="d ignore" d:DesignHeight="900" d:DesignWidth="1700"
         common:WindowSettings.Save="True"
         d:DataContext="{d:DesignInstance Type=vm:ProductionTaskBatchViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>

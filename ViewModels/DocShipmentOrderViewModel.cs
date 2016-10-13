@@ -18,8 +18,8 @@ namespace Gamma.ViewModels
             Persons = GammaBase.Persons.ToList();
             DocShipmentOrderID = docShipmentOrderId;
             var docShipmentOrderInfo =
-                GammaBase.C1CDocShipmentOrder.Include(d => d.DocShipmentOrderInfo).Include(d => d.C1CConsignees)
-                    .FirstOrDefault(d => d.C1CDocShipmentOrderID == docShipmentOrderId);
+                GammaBase.v1COrders
+                    .FirstOrDefault(d => d.C1COrderID == docShipmentOrderId);
             if (docShipmentOrderInfo == null)
             {
                 MessageBox.Show("Не удалось найти приказ в базе", "Ошибка получения приказа", MessageBoxButton.OK,
@@ -27,17 +27,14 @@ namespace Gamma.ViewModels
                 CloseWindow();
                 return;
             }
-            Date = docShipmentOrderInfo.C1CDate;
-            Number = docShipmentOrderInfo.C1CNumber;
-            Consignee = docShipmentOrderInfo.C1CConsignees.Description;
-            Title = $"Приказ на отгрузку № {Number}";
-            if (docShipmentOrderInfo.DocShipmentOrderInfo != null)
-            {
-                VehicleNumber = docShipmentOrderInfo.DocShipmentOrderInfo.VehicleNumber;
-                ActivePersonId = docShipmentOrderInfo.DocShipmentOrderInfo.ActivePersonID;
-                ShiftId = docShipmentOrderInfo.DocShipmentOrderInfo.ShiftID;
-                IsShipped = docShipmentOrderInfo.DocShipmentOrderInfo.IsShipped ?? false;
-            }
+            Date = docShipmentOrderInfo.Date;
+            Number = docShipmentOrderInfo.Number;
+            Consignee = docShipmentOrderInfo.Consignee;
+            Title = $"{docShipmentOrderInfo.OrderType} № {Number}";
+            VehicleNumber = docShipmentOrderInfo.VehicleNumber;
+            ActivePersonId = docShipmentOrderInfo.ActivePersonID;
+            ShiftId = docShipmentOrderInfo.ShiftId;
+            IsShipped = docShipmentOrderInfo.IsShipped;
             FillDocShipmentOrderGoods(docShipmentOrderId);
             IsReadOnly = !DB.HaveWriteAccess("DocShipmentOrderInfo") || IsShipped;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);

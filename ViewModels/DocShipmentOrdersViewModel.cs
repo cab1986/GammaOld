@@ -106,48 +106,53 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.C1CDocShipmentOrder.Where(d => (d.DocShipmentOrderInfo == null || (d.DocShipmentOrderInfo.IsShipped == null || !(bool)d.DocShipmentOrderInfo.IsShipped)) && 
-                            gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
-                            .OrderByDescending(d => d.C1CDate).Take(500)
+                            gammaBase.v1COrders.Where(d => !d.IsShipped && 
+                            gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CSubdivisionID)
+                            .OrderByDescending(d => d.Date).Take(500)
                             .Select(d => new DocShipmentOrder
                             {
-                                DocShipmentOrderId = d.C1CDocShipmentOrderID,
-                                Number = d.C1CNumber,
-                                Date = d.C1CDate ?? DB.CurrentDateTime,
-                                VehicleNumber = d.DocShipmentOrderInfo.VehicleNumber,
-                                Consignee = d.C1CConsignees.Description,
-                                ActivePerson = d.DocShipmentOrderInfo.Persons.Name,
+                                DocShipmentOrderId = d.C1COrderID,
+                                Number = d.Number,
+                                Date = d.Date ?? DB.CurrentDateTime,
+                                VehicleNumber = d.VehicleNumber,
+                                Consignee = d.Consignee,
+                                ActivePerson = d.ActivePerson,
+                                OrderType = d.OrderType
                             }));
                         break;
                     case 1:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.C1CDocShipmentOrder
-                            .Where(d => gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
-                            .OrderByDescending(d => d.C1CDate).Take(500)
+                            gammaBase.v1COrders.Where(d =>
+                            gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CSubdivisionID)
+                            .OrderByDescending(d => d.Date).Take(500)
                             .Select(d => new DocShipmentOrder
                             {
-                                DocShipmentOrderId = d.C1CDocShipmentOrderID,
-                                Number = d.C1CNumber,
-                                Date = d.C1CDate ?? DB.CurrentDateTime,
-                                Consignee = d.C1CConsignees.Description,
-                                ActivePerson = d.DocShipmentOrderInfo.Persons.Name,
+                                DocShipmentOrderId = d.C1COrderID,
+                                Number = d.Number,
+                                Date = d.Date ?? DB.CurrentDateTime,
+                                VehicleNumber = d.VehicleNumber,
+                                Consignee = d.Consignee,
+                                ActivePerson = d.ActivePerson,
+                                OrderType = d.OrderType
                             }));
                         break;
                     case 2:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.C1CDocShipmentOrder.Where(d =>
-                                (Number == null || d.C1CNumber.Contains(Number)) &&
-                                (d.C1CDate >= DateBegin || DateBegin == null) &&
-                                (d.C1CDate <= DateEnd || DateEnd == null) &&
-                                gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CWarehouses.C1CSubdivisionID)
-                                .OrderByDescending(d => d.C1CDate).Take(500)
+                            gammaBase.v1COrders.Where(d =>
+                                (Number == null || d.Number.Contains(Number)) &&
+                                (d.Date >= DateBegin || DateBegin == null) &&
+                                (d.Date <= DateEnd || DateEnd == null) &&
+                                gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CSubdivisionID)
+                                .OrderByDescending(d => d.Date).Take(500)
                                 .Select(d => new DocShipmentOrder
                                 {
-                                    DocShipmentOrderId = d.C1CDocShipmentOrderID,
-                                    Number = d.C1CNumber,
-                                    Date = d.C1CDate ?? DB.CurrentDateTime,
-                                    Consignee = d.C1CConsignees.Description,
-                                    ActivePerson = d.DocShipmentOrderInfo.Persons.Name,
+                                    DocShipmentOrderId = d.C1COrderID,
+                                    Number = d.Number,
+                                    Date = d.Date ?? DB.CurrentDateTime,
+                                    VehicleNumber = d.VehicleNumber,
+                                    Consignee = d.Consignee,
+                                    ActivePerson = d.ActivePerson,
+                                    OrderType = d.OrderType
                                 }));
                         break;
                 }

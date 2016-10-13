@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.IO;
@@ -18,6 +19,7 @@ namespace Gamma
         public ComPort ScalesComPort = new ComPort();
 
         //Параметры подключения к бд
+        public List<string> Hosts = new List<string>();
         public string HostName = "";
         public string DbName = "";
         public string User = "";
@@ -52,13 +54,17 @@ namespace Gamma
                     _gammaSettings = new GammaSettings();
                 }
             }
-
+            if (!string.IsNullOrEmpty(_gammaSettings.HostName) &&
+                !_gammaSettings.Hosts.Contains(_gammaSettings.HostName))
+            {
+                _gammaSettings.Hosts.Add(_gammaSettings.HostName);
+            }
             return _gammaSettings;
         }
 
         public static void SetConnectionString(string dataSource, string dbName, string user = "", string password = "")
         {
-            var appSettings = GammaSettings.Get();
+            var appSettings = Get();
             appSettings.HostName = dataSource;
             appSettings.DbName = dbName;
             appSettings.User = user;
@@ -86,6 +92,11 @@ namespace Gamma
         public static void Serialize()
         {
             var appSettings = Get();
+            if (!appSettings.Hosts.Contains(appSettings.HostName))
+            {
+                appSettings.Hosts.Add(appSettings.HostName);
+            }
+
             var folderPath = Path.GetDirectoryName(FileName);
             if (folderPath == null) return;
             if (!Directory.Exists(folderPath))
@@ -99,6 +110,7 @@ namespace Gamma
             }
         }
         public static string SqlConnectionString { get; private set; }
+
         [Serializable]
         public class ComPort
         {

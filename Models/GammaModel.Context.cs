@@ -87,7 +87,6 @@ namespace Gamma.Models
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
-        public virtual DbSet<DocShipments> DocShipments { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
@@ -106,7 +105,6 @@ namespace Gamma.Models
         public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
         public virtual DbSet<PlaceZones> PlaceZones { get; set; }
         public virtual DbSet<Products> Products { get; set; }
-        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
         public virtual DbSet<BarcodeTypes> BarcodeTypes { get; set; }
         public virtual DbSet<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
         public virtual DbSet<NomenclatureGammaInfo> NomenclatureGammaInfo { get; set; }
@@ -114,6 +112,9 @@ namespace Gamma.Models
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
         public virtual DbSet<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
+        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
+        public virtual DbSet<DocShipments> DocShipments { get; set; }
+        public virtual DbSet<v1COrders> v1COrders { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -547,19 +548,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SaveOldProductToNewBase", idParameter, productKindIdParameter, nomenclatureIDParameter, characteristicIDParameter);
         }
     
-        public virtual ObjectResult<Nullable<System.Guid>> CreateGroupPackWithSpool(Nullable<System.Guid> spoolID, string printName)
-        {
-            var spoolIDParameter = spoolID.HasValue ?
-                new ObjectParameter("SpoolID", spoolID) :
-                new ObjectParameter("SpoolID", typeof(System.Guid));
-    
-            var printNameParameter = printName != null ?
-                new ObjectParameter("PrintName", printName) :
-                new ObjectParameter("PrintName", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateGroupPackWithSpool", spoolIDParameter, printNameParameter);
-        }
-    
         public virtual int UnpackGroupPack(Nullable<System.Guid> productID, string printName)
         {
             var productIDParameter = productID.HasValue ?
@@ -723,6 +711,19 @@ namespace Gamma.Models
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMovementOrderNomenclature_Result>("GetDocMovementOrderNomenclature", docIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> CreateGroupPackWithSpool(Nullable<System.Guid> productID, string printName)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateGroupPackWithSpool", productIDParameter, printNameParameter);
         }
     }
 }

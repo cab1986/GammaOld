@@ -32,7 +32,9 @@
 				g:PasswordBoxHelper.BindPassword = "True" g:PasswordBoxHelper.BoundPassword="{Binding Password, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  />
             <Button Command="{Binding LoginCommand}" Margin="0,0,94,10" Height="23" VerticalAlignment="Bottom" Grid.Column="1" HorizontalAlignment="Right" Width="79" Content="OK"/>
             <Button Command ="{Binding CloseCommand}" Height="23" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Grid.Column="1" Content="Отмена"/>
-            <TextBox Text="{Binding Host, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="0" Margin="9,24,10,0" Height="23" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+            <ComboBox SelectedValue="{Binding Host}" Grid.Column="0" Margin="9,24,10,0" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="2" 
+                      Text="{Binding Host, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                      ItemsSource="{Binding Hosts}" IsEditable="True" IsManipulationEnabled="True"/>
             <Label Height="28" Margin="9,-1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Grid.ColumnSpan="2" Content="Хост" Grid.Column="0"/>
             <Label Height="28" HorizontalAlignment="Left" Margin="9,60,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Content="База" Grid.Column="0"/>
             <TextBox Text="{Binding DataBase, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" 

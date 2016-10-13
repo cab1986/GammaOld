@@ -9,8 +9,8 @@
         xmlns:views="clr-namespace:Gamma.Views"
         x:Class="Gamma.Views.ProductionTaskBatchWindowView"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="900" Width="1200"
-        common:WindowSettings.Save="True">
+        Title="{Binding Title}" Height="900" Width="1500"
+        common:WindowSettings.Save="True" MinWidth="1300">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:ProductionTaskBatchViewModel}">
             <views:ProductionTaskBatchView />

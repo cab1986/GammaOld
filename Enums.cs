@@ -29,7 +29,11 @@ namespace Gamma
         [Description("БДМ=>Упаковка")]
         PMWr,
         [Description("БДМ=>ПРС=>Упаковка")]
-        PMRwWr
+        PMRwWr,
+        [Description("ПРС")]
+        Rw,
+        [Description("ПРС=>Упаковка")]
+        RwWr
         
     }
     public enum BatchKinds { SGB, SGI }

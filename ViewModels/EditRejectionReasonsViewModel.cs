@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using DevExpress.Mvvm;
@@ -17,8 +16,8 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 RejectionReasonsList = new List<RejectionReason>(gammaBase.C1CRejectionReasons
-                    .Where(r => (!r.IsFolder??true) && (!r.IsMarked??true) && r.ParentID != null
-                    && gammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == (int)brokeProduct.ProductKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))
+                    .Where(r => (!r.IsFolder??true) && (!r.IsMarked??true) && (r.ParentID == null || (r.ParentID != null
+                    && gammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == (int)brokeProduct.ProductKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))))
                     .Select(r => new RejectionReason
                 {
                     RejectionReasonID = r.C1CRejectionReasonID,

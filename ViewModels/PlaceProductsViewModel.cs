@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
             Intervals = new List<string> {"Последние 500", "За мою смену", "За последний день", "Поиск"};
             FindCommand = new DelegateCommand(Find);
             OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
-            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.Wr);
+            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroups.Wr && WorkSession.PlaceGroup == PlaceGroup);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
             PlaceGroup = (PlaceGroups)(GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault()??0);

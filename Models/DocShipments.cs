@@ -17,8 +17,8 @@ namespace Gamma.Models
         public System.Guid C1CDocShipmentOrderID { get; set; }
         public System.Guid DocID { get; set; }
         public Nullable<int> PersonID { get; set; }
+        public Nullable<byte> KindID { get; set; }
     
-        public virtual C1CDocShipmentOrder C1CDocShipmentOrder { get; set; }
         public virtual Docs Docs { get; set; }
         public virtual Persons Persons { get; set; }
     }

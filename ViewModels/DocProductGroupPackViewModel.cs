@@ -40,7 +40,9 @@ namespace Gamma.ViewModels
                 MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
+                UIServices.SetBusyState();
                 GammaBase.UnpackGroupPack(ProductId, WorkSession.PrintName);
+                MessageBox.Show("Упаковка уничтожена, рулоны возвращены на остатки");
             }
         }
 

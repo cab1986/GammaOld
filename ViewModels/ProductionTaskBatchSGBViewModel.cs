@@ -96,6 +96,22 @@ namespace Gamma.ViewModels
                         SecondView = null;
                         ProductionTaskWrView = ProductionTaskWrView ?? new ProductionTaskWrViewModel(ProductionTaskBatchID);
                         break;
+                    case (byte)ProcessModels.Rw:
+                        if (!(FirstView is ProductionTaskRwViewModel))
+                        {
+                            FirstView = new ProductionTaskRwViewModel(ProductionTaskBatchID);
+                        }
+                        SecondView = null;
+                        ProductionTaskWrView = null;
+                        break;
+                    case (byte)ProcessModels.RwWr:
+                        if (!(FirstView is ProductionTaskRwViewModel))
+                        {
+                            FirstView = new ProductionTaskRwViewModel(ProductionTaskBatchID);
+                        }
+                        SecondView = null;
+                        ProductionTaskWrView = ProductionTaskWrView ?? new ProductionTaskWrViewModel(ProductionTaskBatchID);
+                        break;
                 }
             }
         }
