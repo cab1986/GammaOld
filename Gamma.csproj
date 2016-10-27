@@ -312,14 +312,21 @@
     <Compile Include="Models\DocCloseShiftSamples.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DocInProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DocMovement.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocMovementOrder.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocMovementOrderItem.cs" />
+    <Compile Include="Models\MovementGood.cs" />
+    <Compile Include="Models\MovementItem.cs" />
     <Compile Include="Models\DocMovementOrderNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DocOutProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocProduction.cs">
@@ -340,7 +347,7 @@
     <Compile Include="Models\DocShipmentOrderInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocShipments.cs">
+    <Compile Include="Models\DocShipmentOrders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DocTypes.cs">
@@ -584,13 +591,19 @@
     <Compile Include="Models\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\v1COrderGoods.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\v1COrders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vCharacteristicSGBProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vDocShipmentOrders.cs">
+    <Compile Include="Models\vDocMovementGoods.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vDocMovementProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vProductionTaskBatches.cs">
@@ -658,6 +671,7 @@
     <Compile Include="Models\BrokeDecisionProduct.cs" />
     <Compile Include="Models\BrokeProduct.cs" />
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
@@ -665,10 +679,12 @@
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
     <Compile Include="ViewModels\DocMovementOrdersViewModel.cs" />
     <Compile Include="ViewModels\DocMovementOrderViewModel.cs" />
+    <Compile Include="ViewModels\DocMovementsViewModel.cs" />
+    <Compile Include="ViewModels\DocMovementViewModel.cs" />
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
     <Compile Include="ViewModels\DocProductPalletViewModel.cs" />
     <Compile Include="Models\DocNomenclatureItem.cs" />
-    <Compile Include="ViewModels\DocShipmentOrder.cs" />
+    <Compile Include="Models\DocShipmentOrder.cs" />
     <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
     <Compile Include="Models\EditBrokeDecisionItem.cs" />
@@ -676,8 +692,9 @@
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
+    <Compile Include="Models\MovementProduct.cs" />
     <Compile Include="ViewModels\NomenclatureEditViewModel.cs" />
-    <Compile Include="ViewModels\Person.cs" />
+    <Compile Include="Models\Person.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
@@ -741,6 +758,12 @@
     </Compile>
     <Compile Include="Views\DocCloseShiftWRGridView.xaml.cs">
       <DependentUpon>DocCloseShiftWRGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMovementsView.xaml.cs">
+      <DependentUpon>DocMovementsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMovementView.xaml.cs">
+      <DependentUpon>DocMovementView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocMovementOrderView.xaml.cs">
       <DependentUpon>DocMovementOrderView.xaml</DependentUpon>
@@ -912,6 +935,14 @@
     <Page Include="Views\DocCloseShiftWRGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocMovementsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocMovementView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocMovementOrderView.xaml">
       <SubType>Designer</SubType>

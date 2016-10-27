@@ -4,6 +4,7 @@ namespace Gamma.Models
     {
         public string NomenclatureName { get; set; }
         public string Quantity { get; set; }
-        public decimal CollectedQuantity { get; set; }
+        public decimal OutQuantity { get; set; }
+        public decimal InQuantity { get; set; }
     }
 }

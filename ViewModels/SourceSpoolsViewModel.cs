@@ -20,48 +20,51 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the SourceSpoolsViewModel class.
         /// </summary>
-        public SourceSpoolsViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public SourceSpoolsViewModel(GammaEntities gammaDb = null): base(gammaDb)
         {
             if (!DB.HaveWriteAccess("SourceSpools"))
             {
                 SourceSpoolsVisible = Visibility.Collapsed;
                 return;
-            } 
-            if (WorkSession.PlaceGroup == PlaceGroups.Rw || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
-            else SourceSpoolsVisible = Visibility.Collapsed;
-            ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
-            DeleteSpoolCommand = new DelegateCommand<byte>(DeleteSpool);
-            ChooseSpoolCommand = new DelegateCommand<byte>(ChooseSpool);
-            SourceSpools = GammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
-            if (SourceSpools == null)
-            {
-                SourceSpools = new SourceSpools() { PlaceID = WorkSession.PlaceID };
-                GammaBase.SourceSpools.Add(SourceSpools);
-                GammaBase.SaveChanges();
             }
-            else
+            using (var gammaBase = DB.GammaDb)
             {
-                Unwinder1ProductID = SourceSpools.Unwinder1Spool;
-                Unwinder2ProductID = SourceSpools.Unwinder2Spool;
-                Unwinder3ProductID = SourceSpools.Unwinder3Spool;
-                Unwinder1Active = SourceSpools.Unwinder1Active ?? false;
-                Unwinder2Active = SourceSpools.Unwinder2Active ?? false;
-                Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
-            }
-            var unwindersCount = DB.GetUnwindersCount(WorkSession.PlaceID, GammaBase);
-            switch (unwindersCount)
-            {
-                case 1:
-                    Unwinder2Visible = false;
-                    Unwinder3Visible = false;
-                    break;
-                case 2:
-                    Unwinder3Visible = false;
-                    break;
-                default:
-                    Unwinder3Visible = true;
-                    Unwinder2Visible = true;
-                    break;
+                if (WorkSession.PlaceGroup == PlaceGroups.Rw || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
+                else SourceSpoolsVisible = Visibility.Collapsed;
+                ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
+                DeleteSpoolCommand = new DelegateCommand<byte>(DeleteSpool);
+                ChooseSpoolCommand = new DelegateCommand<byte>(ChooseSpool);
+                SourceSpools = gammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
+                if (SourceSpools == null)
+                {
+                    SourceSpools = new SourceSpools() { PlaceID = WorkSession.PlaceID };
+                    gammaBase.SourceSpools.Add(SourceSpools);
+                    gammaBase.SaveChanges();
+                }
+                else
+                {
+                    Unwinder1ProductID = SourceSpools.Unwinder1Spool;
+                    Unwinder2ProductID = SourceSpools.Unwinder2Spool;
+                    Unwinder3ProductID = SourceSpools.Unwinder3Spool;
+                    Unwinder1Active = SourceSpools.Unwinder1Active ?? false;
+                    Unwinder2Active = SourceSpools.Unwinder2Active ?? false;
+                    Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
+                }
+                var unwindersCount = DB.GetUnwindersCount(WorkSession.PlaceID, gammaBase);
+                switch (unwindersCount)
+                {
+                    case 1:
+                        Unwinder2Visible = false;
+                        Unwinder3Visible = false;
+                        break;
+                    case 2:
+                        Unwinder3Visible = false;
+                        break;
+                    default:
+                        Unwinder3Visible = true;
+                        Unwinder2Visible = true;
+                        break;
+                }
             }
         }
         public DelegateCommand<byte> ChooseSpoolCommand {get; set;}
@@ -72,64 +75,71 @@ namespace Gamma.ViewModels
         {
             CurrentUnwinder = unum;
             Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
-            MessageManager.OpenFindProduct(ProductKinds.ProductSpool,true);
+            MessageManager.OpenFindProduct(ProductKind.ProductSpool,true);
         }
         private void CreateRemainderSpool(Guid productId, decimal weight)
         {
             UIServices.SetBusyState();
-            var docWithdrawalProduct =
-                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
+            using (var gammaBase = DB.GammaDb)
+            {
+                var docWithdrawalProduct =
+                gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
                     .FirstOrDefault(d => d.ProductID == productId);
-            if (docWithdrawalProduct == null) return;
-            var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
-            docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight/1000;
-            docWithdrawalProduct.CompleteWithdrawal = false;
-  //          docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
-            GammaBase.SaveChanges();
-            ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
+                if (docWithdrawalProduct == null) return;
+                var product = gammaBase.vProductsInfo.First(p => p.ProductID == productId);
+                docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight / 1000;
+                docWithdrawalProduct.CompleteWithdrawal = false;
+                //          docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
+                gammaBase.SaveChanges();
+                ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
+            }
         }
 
         private byte CurrentUnwinder { get; set; }
+
         private void SourceSpoolChanged(ChoosenProductMessage msg)
         {
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
-            var isWrittenOff = GammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
-            if (isWrittenOff??false)
+            using (var gammaBase = DB.GammaDb)
             {
-                MessageBox.Show("Нельзя повторно использовать списанный тамбур", "Списанный тамбур", MessageBoxButton.OK, MessageBoxImage.Hand);
-                return;
+                var isWrittenOff = gammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
+                if (isWrittenOff ?? false)
+                {
+                    MessageBox.Show("Нельзя повторно использовать списанный тамбур", "Списанный тамбур", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    return;
+                }
+                if (Unwinder1ProductID == msg.ProductID || Unwinder2ProductID == msg.ProductID || Unwinder3ProductID == msg.ProductID)
+                {
+                    MessageBox.Show("Данный тамбур уже установлен на раскат", "На раскате", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    return;
+                }
+                switch (CurrentUnwinder)
+                {
+                    case 1:
+                        if (Unwinder1ProductID != null)
+                            DeleteSpool(1);
+                        Unwinder1ProductID = msg.ProductID;
+                        SourceSpools.Unwinder1Spool = msg.ProductID;
+                        SourceSpools.Unwinder1Active = Unwinder1Active;
+                        break;
+                    case 2:
+                        if (Unwinder2ProductID != null)
+                            DeleteSpool(2);
+                        Unwinder2ProductID = msg.ProductID;
+                        SourceSpools.Unwinder2Spool = msg.ProductID;
+                        SourceSpools.Unwinder2Active = Unwinder2Active;
+                        break;
+                    case 3:
+                        if (Unwinder3ProductID != null)
+                            DeleteSpool(3);
+                        Unwinder3ProductID = msg.ProductID;
+                        SourceSpools.Unwinder3Spool = msg.ProductID;
+                        SourceSpools.Unwinder3Active = Unwinder3Active;
+                        break;
+                }
+                gammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
+                gammaBase.SaveChanges();
             }
-            if (Unwinder1ProductID == msg.ProductID || Unwinder2ProductID == msg.ProductID || Unwinder3ProductID == msg.ProductID)
-            {
-                MessageBox.Show("Данный тамбур уже установлен на раскат", "На раскате", MessageBoxButton.OK, MessageBoxImage.Hand);
-                return;
-            }
-            switch (CurrentUnwinder)
-            {
-                case 1:
-                    if (Unwinder1ProductID != null)
-                        DeleteSpool(1);
-                    Unwinder1ProductID = msg.ProductID;
-                    SourceSpools.Unwinder1Spool = msg.ProductID;
-                    SourceSpools.Unwinder1Active = Unwinder1Active;
-                    break;
-                case 2:
-                    if (Unwinder2ProductID != null)
-                        DeleteSpool(2);
-                    Unwinder2ProductID = msg.ProductID;
-                    SourceSpools.Unwinder2Spool = msg.ProductID;
-                    SourceSpools.Unwinder2Active = Unwinder2Active;
-                    break;
-                case 3:
-                    if (Unwinder3ProductID != null)
-                        DeleteSpool(3);
-                    Unwinder3ProductID = msg.ProductID;
-                    SourceSpools.Unwinder3Spool = msg.ProductID;
-                    SourceSpools.Unwinder3Active = Unwinder3Active;
-                    break;
-            }
-            GammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
-            GammaBase.SaveChanges();
         }
         private void DeleteSpool(byte unum)
         {

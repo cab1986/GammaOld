@@ -282,7 +282,7 @@ namespace Gamma.ViewModels
                 product = new Products
                 {
                     ProductID = id,
-                    ProductKindID = (int)ProductKinds.ProductSpool,
+                    ProductKindID = (int)ProductKind.ProductSpool,
                 };
                 GammaBase.Products.Add(product);
             }

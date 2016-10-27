@@ -20,7 +20,7 @@ namespace Gamma
             }   
         }
         public Guid ProductID { get; set; }
-        public ProductKinds ProductKind { get; set; }
+        public ProductKind ProductKind { get; set; }
         public string Number { get; set; }
         public DateTime? Date { get; set; }
         public string NomenclatureName { get; set; }

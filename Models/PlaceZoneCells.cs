@@ -14,10 +14,21 @@ namespace Gamma.Models
     
     public partial class PlaceZoneCells
     {
-        public int PlaceZoneCellID { get; set; }
-        public int PlaceZoneID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PlaceZoneCells()
+        {
+            this.DocInProducts = new HashSet<DocInProducts>();
+            this.DocOutProducts = new HashSet<DocOutProducts>();
+        }
+    
+        public System.Guid PlaceZoneCellID { get; set; }
+        public Nullable<System.Guid> PlaceZoneID { get; set; }
         public string Name { get; set; }
     
         public virtual PlaceZones PlaceZones { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocInProducts> DocInProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
     }
 }

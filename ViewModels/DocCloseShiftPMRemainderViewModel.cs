@@ -74,7 +74,7 @@ namespace Gamma.ViewModels
                 var product = new Products()
                 {
                     ProductID = productid,
-                    ProductKindID = (byte)ProductKinds.ProductSpool,
+                    ProductKindID = (byte)ProductKind.ProductSpool,
                     ProductSpools = new ProductSpools()
                     {
                         C1CCharacteristicID = CharacteristicID,

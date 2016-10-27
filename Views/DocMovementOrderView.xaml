@@ -32,17 +32,17 @@
                     <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Со склада" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding PlaceFrom}" ItemsSource="{Binding WareHouses}"  ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                    <dxe:ComboBoxEdit EditValue="{Binding PlaceFrom, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding WareHouses}"  ValueMember="PlaceID" DisplayMember="PlaceName"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="На склад" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding PlaceTo}" ItemsSource="{Binding WareHouses}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                    <dxe:ComboBoxEdit EditValue="{Binding PlaceTo, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding WareHouses}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Выполнен">
                     <dxe:CheckEdit EditValue="{Binding IsConfirmed}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Vertical">
-                <dxlc:LayoutItem Label="Задание" LabelPosition="Top">
+                <dxlc:LayoutItem Label="Задание" LabelPosition="Top" VerticalAlignment="Stretch">
                     <dxb:BarManager AllowCustomization="False" AllowHotCustomization="False" AllowQuickCustomization="False">
                         <dxb:BarManager.Bars>
                             <dxb:Bar UseWholeRow="True" ShowDragWidget="False" AllowCustomizationMenu="False" >
@@ -83,29 +83,32 @@
                                         <dxe:SpinEditSettings IsFloatValue="True" AllowDefaultButton="False" MinValue="0" Mask="n2" Increment="0.01" MaskUseAsDisplayFormat="True" />
                                     </dxg:GridColumn.EditSettings>
                                 </dxg:GridColumn>
+                                <dxg:GridColumn FieldName="OutQuantity" Header="Отправлено" AllowEditing="False"/>
+                                <dxg:GridColumn FieldName="InQuantity" Header="Получено" AllowEditing="False"/>
                                 <dxg:GridColumn FieldName="MeasureUnit" AllowEditing="False" Header="ед. изм." Width="30"/>
                             </dxg:GridControl.Columns>
+                            <dxg:GridControl.DetailDescriptor>
+                                <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Products}">
+                                    <dxg:GridControl>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" AutoWidth="True" />
+                                        </dxg:GridControl.View>
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn Header="Номер продукта" FieldName="Number" AllowEditing="False"/>
+                                            <dxg:GridColumn Header="Количество" FieldName="Quantity" AllowEditing="False">
+                                                <dxg:GridColumn.EditSettings>
+                                                    <dxe:TextEditSettings DisplayFormat="0.###" />
+                                                </dxg:GridColumn.EditSettings>
+                                            </dxg:GridColumn>
+                                            <dxg:GridColumn Header="Отгружено" FieldName="IsShipped" AllowEditing="False"/>
+                                            <dxg:GridColumn Header="Получено" FieldName="IsAccepted" AllowEditing="False"/>
+                                            <dxg:GridColumn Header="Принято" FieldName="IsConfirmed" />
+                                        </dxg:GridControl.Columns>
+                                    </dxg:GridControl>
+                                </dxg:DataControlDetailDescriptor>
+                            </dxg:GridControl.DetailDescriptor>
                         </dxg:GridControl>
                     </dxb:BarManager>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Собранная продукция" LabelPosition="Top" VerticalAlignment="Stretch">
-                    <dxg:GridControl ItemsSource="{Binding DocMovementOrderProducts}" DesignTimeDataObjectType="{x:Type gamma:ProductInfo}" MaxHeight="2000">
-                        <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" />
-                        </dxg:GridControl.View>
-                        <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого:{0:0.###}"/>
-                        </dxg:GridControl.GroupSummary>
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" GroupIndex="0" SortOrder="Ascending" >
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings TextWrapping="WrapWithOverflow"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="Number" Header="Номер" SortOrder="Ascending" SortIndex="0"/>
-                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60"/>
-                        </dxg:GridControl.Columns>
-                    </dxg:GridControl>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

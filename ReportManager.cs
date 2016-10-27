@@ -8,6 +8,7 @@ using Gamma.Dialogs;
 using Gamma.Models;
 using FastReport.Design;
 using System.Security.Cryptography;
+using Gamma.Common;
 
 namespace Gamma
 {
@@ -55,6 +56,7 @@ namespace Gamma
         }
         public static void PrintReport(Guid reportid, Guid? paramId = null, bool showPreview = true, int numCopies = 1)
         {
+            UIServices.SetBusyState();
             using (var report = new Report())
             {
                 var reportTemplate = (from rep in GammaBase.Templates where rep.ReportID == reportid select rep.Template).FirstOrDefault();

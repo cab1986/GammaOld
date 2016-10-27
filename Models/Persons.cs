@@ -17,22 +17,21 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Persons()
         {
-            this.Docs = new HashSet<Docs>();
-            this.DocShipmentOrderInfo = new HashSet<DocShipmentOrderInfo>();
-            this.DocShipments = new HashSet<DocShipments>();
+            this.DocInProducts = new HashSet<DocInProducts>();
+            this.DocOutProducts = new HashSet<DocOutProducts>();
         }
     
-        public int PersonID { get; set; }
+        public System.Guid PersonID { get; set; }
+        public Nullable<int> BranchID { get; set; }
         public Nullable<int> PostTypeID { get; set; }
         public string Name { get; set; }
         public string Barcode { get; set; }
         public string Password { get; set; }
     
+        public virtual Branches Branches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docs> Docs { get; set; }
+        public virtual ICollection<DocInProducts> DocInProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocShipments> DocShipments { get; set; }
+        public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
     }
 }

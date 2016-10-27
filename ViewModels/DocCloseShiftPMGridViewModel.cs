@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Data.Entity.SqlServer;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -31,8 +32,7 @@ namespace Gamma.ViewModels
                         Nomenclature = sp.Nomenclature,
                         Number = sp.Number,
                         ProductID = sp.ProductID,
-                        //TODO Убрать проверку при переводе всех переделов на тонны
-                        Weight = (sp.Weight > 10 ? sp.Weight : sp.Weight*1000)??0
+                        Weight = sp.Weight??0*1000
                     }
                     );
                 DocCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
@@ -58,6 +58,7 @@ namespace Gamma.ViewModels
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         public void FillGrid()
         {
+            UIServices.SetBusyState();
             ClearGrid();
             DocCloseShiftDocs = new ObservableCollection<Docs>(GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && 
@@ -79,7 +80,7 @@ namespace Gamma.ViewModels
                             Nomenclature = ps.NomenclatureName,
                             Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.ProductionQuantity
+                            Weight = ps.ProductionQuantity*1000
                         }).FirstOrDefault()
                     );
             }

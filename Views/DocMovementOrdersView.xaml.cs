@@ -21,7 +21,7 @@ namespace Gamma.Views
             int rowHandle = ((GridControl)e.NewView.DataControl).GetMasterRowHandle();
             if (DataControlBase.InvalidRowHandle == rowHandle)
                 return;
-            vm.SelectedDocMovementOrderItem = GridControl.GetRow(rowHandle) as DocMovementOrderItem;
+            vm.SelectedDocMovementOrderItem = GridControl.GetRow(rowHandle) as MovementItem;
         }
     }
 }

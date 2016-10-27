@@ -26,7 +26,7 @@ namespace Gamma.Views
 
         public DocMovementOrderView(Guid? docId = null)
         {
-            DataContext = docId == null ? new DocMovementOrderViewModel() : new DocMovementOrderViewModel((Guid) docId);
+            DataContext = docId == null ? new DocMovementOrderViewModel() : new DocMovementOrderViewModel((Guid)docId);
             InitializeComponent();
         }
     }

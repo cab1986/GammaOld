@@ -18,14 +18,20 @@ namespace Gamma.Models
         public PlaceZones()
         {
             this.PlaceZoneCells = new HashSet<PlaceZoneCells>();
+            this.DocInProducts = new HashSet<DocInProducts>();
+            this.DocOutProducts = new HashSet<DocOutProducts>();
         }
     
-        public int PlaceZoneID { get; set; }
-        public int PlaceID { get; set; }
+        public System.Guid PlaceZoneID { get; set; }
+        public Nullable<int> PlaceID { get; set; }
         public string Name { get; set; }
     
-        public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceZoneCells> PlaceZoneCells { get; set; }
+        public virtual Places Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocInProducts> DocInProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
     }
 }

@@ -12,14 +12,13 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class vDocShipmentOrders
+    public partial class vDocMovementGoods
     {
-        public System.Guid C1CDocShipmentOrderID { get; set; }
+        public System.Guid DocMovementID { get; set; }
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public string Quantity { get; set; }
         public string NomenclatureName { get; set; }
-        public decimal CollectedQuantity { get; set; }
-        public string ShortNomenclatureName { get; set; }
+        public Nullable<decimal> OutQuantity { get; set; }
+        public Nullable<decimal> InQuantity { get; set; }
     }
 }

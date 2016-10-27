@@ -22,7 +22,9 @@ namespace Gamma.ViewModels
         {
             GammaBase = gammaBase ?? DB.GammaDb;
         }
+
         protected GammaEntities GammaBase { get; set; }
+
         protected void CloseWindow()
         {
             DB.RollBack();

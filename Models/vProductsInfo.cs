@@ -41,5 +41,6 @@ namespace Gamma.Models
         public Nullable<bool> IsConfirmed { get; set; }
         public Nullable<bool> IsWrittenOff { get; set; }
         public string State { get; set; }
+        public Nullable<System.Guid> C1CQualityID { get; set; }
     }
 }

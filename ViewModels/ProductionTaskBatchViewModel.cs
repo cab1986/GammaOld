@@ -101,7 +101,7 @@ namespace Gamma.ViewModels
             }
             switch (SelectedProductionTaskProduct.ProductKind)
             {
-                    case ProductKinds.ProductSpool:
+                    case ProductKind.ProductSpool:
                         if (DB.HaveWriteAccess("ProductSpools"))
                         {
                             GammaBase.DeleteSpool(SelectedProductionTaskProduct.ProductID);
@@ -111,7 +111,7 @@ namespace Gamma.ViewModels
                             MessageBox.Show("Не достаточно прав для удаления тамбура");
                         }
                         break;
-                    case ProductKinds.ProductGroupPack:
+                    case ProductKind.ProductGroupPack:
                         if (DB.HaveWriteAccess("ProductGroupPacks"))
                         {
                             GammaBase.DeleteGroupPack(SelectedProductionTaskProduct.ProductID);
@@ -121,7 +121,7 @@ namespace Gamma.ViewModels
                             MessageBox.Show("Не достаточно прав для удаления групповой упаковки");
                         }
                         break;
-                    case ProductKinds.ProductPallet:
+                    case ProductKind.ProductPallet:
                         if (DB.HaveWriteAccess("ProductPallets"))
                         {
                             GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
@@ -179,13 +179,13 @@ namespace Gamma.ViewModels
             string message;
             switch (docProductionProducts.Products.ProductKindID)
             {
-                case (byte)ProductKinds.ProductSpool:
+                case (byte)ProductKind.ProductSpool:
                     message = $"Тамбур №{docProductionProducts.Products.Number} подтвержден";
                     break;
-                case (byte)ProductKinds.ProductPallet:
+                case (byte)ProductKind.ProductPallet:
                     message = $"Паллета №{docProductionProducts.Products.Number} подтверждена";
                     break;
-                case (byte)ProductKinds.ProductGroupPack:
+                case (byte)ProductKind.ProductGroupPack:
                     message = $"Групповая упаковка №{docProductionProducts.Products.Number} подтверждена";
                     break;
                 default:
@@ -523,7 +523,7 @@ namespace Gamma.ViewModels
                             var product = new Products()
                             {
                                 ProductID = productId,
-                                ProductKindID = (byte)ProductKinds.ProductPallet,
+                                ProductKindID = (byte)ProductKind.ProductPallet,
                                 ProductPallets = new ProductPallets()
                                 {
                                     ProductID = productId,
@@ -659,7 +659,7 @@ namespace Gamma.ViewModels
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
                                                                            select new ProductInfo { 
                                                                                DocID = taskProducts.DocID,
-                                                                               ProductKind = (ProductKinds)taskProducts.ProductKindID,
+                                                                               ProductKind = (ProductKind)taskProducts.ProductKindID,
                                                                                CharacteristicID = taskProducts.CharacteristicID,
                                                                                NomenclatureID = taskProducts.NomenclatureID,
                                                                                Date = taskProducts.Date,
@@ -677,13 +677,13 @@ namespace Gamma.ViewModels
         {
             switch (SelectedProductionTaskProduct.ProductKind)
             {
-                case ProductKinds.ProductSpool:
+                case ProductKind.ProductSpool:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProductionTaskProduct.ProductID);
                     break;
-                case ProductKinds.ProductGroupPack:
+                case ProductKind.ProductGroupPack:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProductionTaskProduct.ProductID);
                     break;
-                case ProductKinds.ProductPallet:
+                case ProductKind.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.ProductID);
                     break;
                 default:

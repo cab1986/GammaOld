@@ -23,6 +23,8 @@ namespace Gamma.Models
             this.DocProducts = new HashSet<DocProducts>();
             this.DocWithdrawalProducts = new HashSet<DocWithdrawalProducts>();
             this.SpoolInstallLog = new HashSet<SpoolInstallLog>();
+            this.DocInProducts = new HashSet<DocInProducts>();
+            this.DocOutProducts = new HashSet<DocOutProducts>();
         }
     
         public System.Guid ProductID { get; set; }
@@ -42,12 +44,16 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual ProductGroupPacks ProductGroupPacks { get; set; }
-        public virtual ProductKinds ProductKinds { get; set; }
         public virtual ProductPallets ProductPallets { get; set; }
         public virtual ProductStates ProductStates { get; set; }
         public virtual ProductSpools ProductSpools { get; set; }
         public virtual Rests Rests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SpoolInstallLog> SpoolInstallLog { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocInProducts> DocInProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
+        public virtual ProductKinds ProductKinds { get; set; }
     }
 }

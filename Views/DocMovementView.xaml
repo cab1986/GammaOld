@@ -1,0 +1,73 @@
+﻿<gamma:MvvmWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gamma.Views"
+        xmlns:gamma="clr-namespace:Gamma"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:common="clr-namespace:Gamma.Common"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:models="clr-namespace:Gamma.Models"
+        x:Class="Gamma.Views.DocMovementView"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocMovementViewModel}}"
+        common:WindowSettings.Save="True"
+        Title="Заказ на перемещение" Height="600" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="28" />
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Orientation="Horizontal">
+            <dxlc:LayoutGroup Orientation="Vertical" View="GroupBox" Width="200" Header="Документ" >
+                <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Number}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
+                    <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Со склада" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding OutPlaceId}" ItemsSource="{Binding Warehouses}"  ValueMember="PlaceID" DisplayMember="PlaceName" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="На склад" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding InPlaceId}" ItemsSource="{Binding Warehouses}" ValueMember="PlaceID" DisplayMember="PlaceName" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Выполнен">
+                    <dxe:CheckEdit EditValue="{Binding IsConfirmed}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Orientation="Vertical">
+                <dxlc:LayoutItem Label="Перемещено" LabelPosition="Top" VerticalAlignment="Stretch">
+                    <dxg:GridControl ItemsSource="{Binding MovementProducts}" DesignTimeDataObjectType="{x:Type models:MovementProduct}" MaxHeight="2000">
+                        <dxg:GridControl.View>
+                            <dxg:TableView AutoWidth="True" />
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого:{0:0.###}"/>
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" GroupIndex="0" SortOrder="Ascending" AllowEditing="False">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings TextWrapping="WrapWithOverflow"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="Number" Header="Номер" SortOrder="Ascending" SortIndex="0" AllowEditing="False"/>
+                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60" AllowEditing="False"/>
+                            <dxg:GridColumn AllowEditing="False" FieldName="IsShipped" Header="Отправлено"/>
+                            <dxg:GridColumn FieldName="IsAccepted" Header="Получено" AllowEditing="False"/>
+                            <dxg:GridColumn FieldName="IsConfirmed" Header="Принято" AllowEditing="True"/>
+                        </dxg:GridControl.Columns>
+                    </dxg:GridControl>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <Button Grid.Row="1" Content="OK" Command="{Binding SaveAndCloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,100,2"/>
+        <Button Grid.Row="1" Content="Отмена" Command="{Binding CloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,10,2"/>
+    </Grid>
+</gamma:MvvmWindow>

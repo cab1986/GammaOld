@@ -17,17 +17,26 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DocMovement()
         {
-            this.DocMovementOrder = new HashSet<DocMovementOrder>();
+            this.DocInProducts = new HashSet<DocInProducts>();
+            this.DocOutProducts = new HashSet<DocOutProducts>();
         }
     
         public System.Guid DocID { get; set; }
-        public Nullable<int> InPlaceID { get; set; }
         public Nullable<int> OutPlaceID { get; set; }
+        public Nullable<int> InPlaceID { get; set; }
+        public Nullable<int> TransferPlaceID { get; set; }
+        public Nullable<System.Guid> DocOrderID { get; set; }
+        public Nullable<byte> OrderTypeID { get; set; }
+        public Nullable<System.DateTime> OutDate { get; set; }
+        public Nullable<System.DateTime> InDate { get; set; }
     
-        public virtual Docs Docs { get; set; }
-        public virtual Places Places { get; set; }
-        public virtual Places Places1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocMovementOrder> DocMovementOrder { get; set; }
+        public virtual ICollection<DocInProducts> DocInProducts { get; set; }
+        public virtual Docs Docs { get; set; }
+        public virtual Places OutPlaces { get; set; }
+        public virtual Places TransferPlaces { get; set; }
+        public virtual Places InPlaces { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
     }
 }

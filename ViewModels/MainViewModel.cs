@@ -67,7 +67,8 @@ namespace Gamma.ViewModels
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
                 EditPlaceGroupNomenclatureCommand = new DelegateCommand<int>(EditPlaceGroupNomenclature);
                 PrintReportCommand = new DelegateCommand<Guid>(PrintReport);
-                OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders, DB.HaveReadAccess("DocShipments"));
+                OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders, DB.HaveReadAccess("DocShipmentInfo"));
+                OpenDocInOrdersCommand = new DelegateCommand(OpenDocInOrders, DB.HaveReadAccess("DocShipmentInfo"));
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
                 OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
@@ -76,6 +77,7 @@ namespace Gamma.ViewModels
                 OpenImportOldProductsCommand = new DelegateCommand(MessageManager.OpenImportOldProducts, () => DB.HaveWriteAccess("Products"));
                 OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);
                 OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
+                OpenDocMovementsCommand = new DelegateCommand(OpenDocMovements);
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -155,10 +157,24 @@ namespace Gamma.ViewModels
             CurrentView = new DocShipmentOrdersViewModel();
         }
 
+        public DelegateCommand OpenDocInOrdersCommand { get; private set; }
+
+        private void OpenDocInOrders()
+        {
+            UIServices.SetBusyState();
+            CurrentView = new DocShipmentOrdersViewModel(false);
+        }
+
         private void OpenDocMovementOrders()
         {
             UIServices.SetBusyState();
             CurrentView = new DocMovementOrdersViewModel();
+        }
+
+        private void OpenDocMovements()
+        {
+            UIServices.SetBusyState();
+            CurrentView = new DocMovementsViewModel();
         }
 
         private void OpenDocBrokeList()
@@ -325,6 +341,7 @@ namespace Gamma.ViewModels
         public ObservableCollection<PlaceProduct> PlaceProducts { get; set; }
         public DelegateCommand<int> EditPlaceGroupNomenclatureCommand { get; private set; }
         public DelegateCommand OpenDocMovementOrdersCommand { get; private set; }
+        public DelegateCommand OpenDocMovementsCommand { get; private set; }
         public List<ReportItem> Reports { get; set; }
 
         public class PlaceProduct

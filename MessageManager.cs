@@ -35,6 +35,16 @@ namespace Gamma
         public Guid? DocId { get; private set; }
     }
 
+    public class EditDocMovementMessage
+    {
+        public EditDocMovementMessage(Guid docId)
+        {
+            DocId = docId;
+        }
+
+        public Guid DocId { get; private set; }
+    }
+
     public class NomenclatureEditMessage
     {
         public NomenclatureEditMessage(Guid nomenclatureId)
@@ -160,7 +170,7 @@ namespace Gamma
     public class FindProductMessage
     {
         public bool ChooseProduct;
-        public ProductKinds ProductKind;
+        public ProductKind ProductKind;
         public bool AllowChangeProductKind = true;
     }
     public class ConfigureComPortMessage  { }
@@ -318,17 +328,17 @@ namespace Gamma
             Messenger.Default.Send(msg);
         }
 
-        public static void OpenDocProduct(ProductKinds productKind, Guid productId)
+        public static void OpenDocProduct(ProductKind productKind, Guid productId)
         {
             switch (productKind)
             {
-                case ProductKinds.ProductSpool:
+                case ProductKind.ProductSpool:
                     OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                     break;
-                case ProductKinds.ProductGroupPack:
+                case ProductKind.ProductGroupPack:
                     OpenDocProduct(DocProductKinds.DocProductGroupPack, productId);
                     break;
-                case ProductKinds.ProductPallet:
+                case ProductKind.ProductPallet:
                     OpenDocProduct(DocProductKinds.DocProductPallet, productId);
                     break;
             }
@@ -372,8 +382,13 @@ namespace Gamma
         {
             Messenger.Default.Send(new EditDocMovementOrderMessage(docId));
         }
+
+        public static void OpenDocMovement(Guid docId)
+        {
+            Messenger.Default.Send(new EditDocMovementMessage(docId));
+        }
         
-        public static void OpenFindProduct(ProductKinds productKind, bool chooseProduct = false, bool allowChangeProductKind = false)
+        public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, bool allowChangeProductKind = false)
         {
             Messenger.Default.Send(new FindProductMessage
             {

@@ -59,8 +59,9 @@ namespace Gamma.ViewModels
         private void DeletePerson()
         {
             if (SelectedPerson == null) return;
-            if (GammaBase.DocShipments.Any(d => d.PersonID == SelectedPerson.PersonId) ||
-                GammaBase.DocShipmentOrderInfo.Any(d => d.ActivePersonID == SelectedPerson.PersonId))
+            if (GammaBase.DocShipmentOrders.Any(d => d.OutActivePersonID == SelectedPerson.PersonId || d.InActivePersonID == SelectedPerson.PersonId) ||
+                GammaBase.DocInProducts.Any(d => d.PersonID == SelectedPerson.PersonId) ||
+                GammaBase.DocOutProducts.Any(d => d.PersonID == SelectedPerson.PersonId))
             {
                 MessageBox.Show("Данный сотрудник уже собирал приказы или ему назначен приказ. Удалить невозможно",
                     "Удаление", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -73,7 +74,7 @@ namespace Gamma.ViewModels
 
         private void RefreshPersons()
         {
-            Persons = new ObservableCollection<Person>(GammaBase.Persons.Where(p => p.PostTypeID == 1).Select(p => new Person
+            Persons = new ObservableCollection<Person>(GammaBase.Persons.Where(p => p.PostTypeID == 1 && p.BranchID == WorkSession.BranchID).Select(p => new Person
             {
                 PersonId = p.PersonID,
                 Name = p.Name

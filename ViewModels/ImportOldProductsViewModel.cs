@@ -12,7 +12,7 @@ namespace Gamma.ViewModels
     {
         public ImportOldProductsViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
-            ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKinds));
+            ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKind));
             SaveCommand = new DelegateCommand(Save, () => ProductId == null && !string.IsNullOrWhiteSpace(OldNomenclature));
             FindCommand = new DelegateCommand(Find, () => !string.IsNullOrWhiteSpace(Number));
         }

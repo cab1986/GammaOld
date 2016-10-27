@@ -18,20 +18,17 @@ namespace Gamma.Models
         public DocMovementOrder()
         {
             this.DocMovementOrderNomenclature = new HashSet<DocMovementOrderNomenclature>();
-            this.DocMovement = new HashSet<DocMovement>();
         }
     
         public System.Guid DocID { get; set; }
         public Nullable<System.Guid> C1CDocID { get; set; }
-        public Nullable<int> PlaceFrom { get; set; }
-        public int PlaceTo { get; set; }
+        public Nullable<int> OutPlaceID { get; set; }
+        public Nullable<int> InPlaceID { get; set; }
     
         public virtual Docs Docs { get; set; }
         public virtual Places PlacesFrom { get; set; }
         public virtual Places PlacesTo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocMovement> DocMovement { get; set; }
     }
 }

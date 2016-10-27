@@ -47,7 +47,7 @@
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Состояние">
                                     <dxe:ComboBoxEdit Width="150" IsTextEditable="False" 
-                                                      ItemsSource="{Binding TaskStates}" EditValue="{Binding ProductionTaskStateID}" 
+                                                      ItemsSource="{Binding TaskStates}" EditValue="{Binding ProductionTaskStateID, UpdateSourceTrigger=PropertyChanged}" 
                                                       DisplayMember="Value" ValueMember="Key" IsReadOnly="{Binding ChangeStateReadOnly}"/>
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Модель процесса" Visibility="{Binding ProcessModelVisible}">

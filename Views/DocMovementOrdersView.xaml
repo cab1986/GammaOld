@@ -73,7 +73,12 @@
                         </dxg:GridControl.View>
                         <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName"/>
                         <dxg:GridColumn Header="Кол-во" FieldName="Quantity" />
-                        <dxg:GridColumn Header="Собрано" FieldName="CollectedQuantity">
+                        <dxg:GridColumn Header="Отправлено" FieldName="OutQuantity">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:TextEditSettings DisplayFormat="0.###"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn Header="Получено" FieldName="InQuantity">
                             <dxg:GridColumn.EditSettings>
                                 <dxe:TextEditSettings DisplayFormat="0.###"/>
                             </dxg:GridColumn.EditSettings>

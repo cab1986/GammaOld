@@ -20,7 +20,5 @@ namespace Gamma.Models
         public Nullable<byte> ShiftID { get; set; }
         public Nullable<bool> IsShipped { get; set; }
         public byte KindID { get; set; }
-    
-        public virtual Persons Persons { get; set; }
     }
 }

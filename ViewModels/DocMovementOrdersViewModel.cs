@@ -33,14 +33,14 @@ namespace Gamma.ViewModels
             Find();
         }
 
-        private ObservableCollection<DocMovementOrderItem> _docMovementOrderItems;
+        private ObservableCollection<MovementItem> _docMovementOrderItems;
         private DateTime? _filterDateBegin;
         private DateTime? _filterDateEnd;
         private string _filterNumber;
         private int? _filterPlaceTo;
         private int? _filterPlaceFrom;
 
-        public ObservableCollection<DocMovementOrderItem> DocMovementOrderItems
+        public ObservableCollection<MovementItem> DocMovementOrderItems
         {
             get { return _docMovementOrderItems; }
             set
@@ -107,7 +107,7 @@ namespace Gamma.ViewModels
 
         public List<string> Intervals { get; private set; }
 
-        public DocMovementOrderItem SelectedDocMovementOrderItem { get; set; }
+        public MovementItem SelectedDocMovementOrderItem { get; set; }
 
         private void CreateNewDocMovementOrder()
         {
@@ -123,9 +123,9 @@ namespace Gamma.ViewModels
                 switch (IntervalId)
                 {
                     case 0:
-                        DocMovementOrderItems = new ObservableCollection<DocMovementOrderItem>(
+                        DocMovementOrderItems = new ObservableCollection<MovementItem>(
                             gammaBase.DocMovementOrder.OrderByDescending(d => d.Docs.Date).Take(500)
-                            .Select(d => new DocMovementOrderItem
+                            .Select(d => new MovementItem
                             {
                                 DocId = d.Docs.DocID,
                                 Date = d.Docs.Date,
@@ -135,16 +135,16 @@ namespace Gamma.ViewModels
                             }));
                         break;
                     case 1:
-                        DocMovementOrderItems = new ObservableCollection<DocMovementOrderItem>(
+                        DocMovementOrderItems = new ObservableCollection<MovementItem>(
                             gammaBase.DocMovementOrder
                             .Where(d =>
-                                (FilterPlaceTo == null || d.PlaceTo == FilterPlaceTo) &&
-                                (FilterPlaceFrom == null || d.PlaceFrom == FilterPlaceFrom) &&
+                                (FilterPlaceTo == null || d.InPlaceID == FilterPlaceTo) &&
+                                (FilterPlaceFrom == null || d.OutPlaceID == FilterPlaceFrom) &&
                                 (FilterDateBegin == null || d.Docs.Date >= FilterDateBegin) &&
                                 (FilterDateEnd == null || d.Docs.Date <= FilterDateEnd) &&
                                 (FilterNumber == null || d.Docs.Number.Contains(FilterNumber)) 
                                 ).OrderByDescending(d => d.Docs.Date).Take(500)
-                                .Select(d => new DocMovementOrderItem
+                                .Select(d => new MovementItem
                                 {
                                     DocId = d.Docs.DocID,
                                     Date = d.Docs.Date,
@@ -162,7 +162,8 @@ namespace Gamma.ViewModels
                             {
                                 NomenclatureName = d.NomenclatureName,
                                 Quantity = (d.Quantity ?? 0).ToString(CultureInfo.InvariantCulture),
-                                CollectedQuantity = d.CollectedQuantity ?? 0
+                                OutQuantity = d.OutQuantity??0,
+                                InQuantity = d.InQuantity ?? 0
                             }));
                 }
             }

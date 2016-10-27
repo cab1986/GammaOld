@@ -42,29 +42,61 @@
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
             <dxlc:LayoutControl Orientation="Vertical">
                 <dxlc:LayoutGroup Orientation="Horizontal">
-                    <dxlc:LayoutItem Label="Номер отгрузки" LabelPosition="Top" Width="150">
-                        <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem LabelPosition="Top" Label="Дата" Width="150">
-                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True"/>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem LabelPosition="Top" Label="Получатель">
-                        <dxe:TextEdit EditValue="{Binding Consignee}" IsReadOnly="True"/>
-                    </dxlc:LayoutItem>
+                    <dxlc:LayoutGroup Orientation="Vertical">
+                        <dxlc:LayoutItem Label="Номер документа" LabelPosition="Top" Width="150">
+                            <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem LabelPosition="Top" Label="Дата" Width="150">
+                            <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup Orientation="Vertical">
+                        <dxlc:LayoutItem LabelPosition="Top" Label="Отправитель">
+                            <dxe:TextEdit EditValue="{Binding Shipper}" IsReadOnly="True"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem LabelPosition="Top" Label="Получатель">
+                            <dxe:TextEdit EditValue="{Binding Consignee}" IsReadOnly="True"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
-                <dxlc:LayoutGroup Orientation="Horizontal">
-                    <dxlc:LayoutItem Label="Номер транспортного средства">
-                        <dxe:TextEdit EditValue="{Binding VehicleNumber}" />
+                <dxlc:LayoutGroup Orientation="Horizontal" Header="Отгрузка" View="GroupBox">
+                    <dxlc:LayoutItem Label="Дата отгрузки" Width="200">
+                        <dxe:DateEdit EditValue="{Binding DateOut}" Mask="g" MaskUseAsDisplayFormat="True" IsReadOnly="{Binding DenyEditOut}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Номер ТС">
+                        <dxe:TextEdit EditValue="{Binding VehicleNumber}" IsReadOnly="{Binding DenyEditOut}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Склад отгрузки">
+                        <dxe:ComboBoxEdit EditValue="{Binding OutPlaceId, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding PlacesOut}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Груз собирает">
-                        <dxe:ComboBoxEdit EditValue="{Binding ActivePersonId}" ItemsSource="{Binding Persons}" ValueMember="PersonID" DisplayMember="Name"/>
+                        <dxe:ComboBoxEdit EditValue="{Binding ActivePersonOutId}" ItemsSource="{Binding PersonsOut}" ValueMember="PersonID" DisplayMember="Name"
+                                          IsReadOnly="{Binding DenyEditOut}"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Смена №" Width="100">
-                        <dxe:SpinEdit EditValue="{Binding ShiftId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
-                                      AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
+                        <dxe:SpinEdit EditValue="{Binding ShiftOutId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
+                                      AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False" IsReadOnly="{Binding DenyEditOut}"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Отгружено" Width="80">
-                        <dxe:CheckEdit EditValue="{Binding IsShipped, UpdateSourceTrigger=PropertyChanged}"/>
+                        <dxe:CheckEdit EditValue="{Binding IsShipped, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditOut}"/>
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Orientation="Horizontal" Header="Приемка" View="GroupBox" Visibility="{Binding InVisibible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                    <dxlc:LayoutItem Label="Дата приемки" Width="200">
+                        <dxe:DateEdit EditValue="{Binding DateIn}" Mask="g" MaskUseAsDisplayFormat="True" IsReadOnly="{Binding DenyEditIn}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Склад приемки">
+                        <dxe:ComboBoxEdit EditValue="{Binding InPlaceId, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding PlacesIn}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Груз собирает">
+                        <dxe:ComboBoxEdit EditValue="{Binding ActivePersonInId}" ItemsSource="{Binding PersonsIn}" ValueMember="PersonID" DisplayMember="Name" IsReadOnly="{Binding DenyEditIn}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Смена №" Width="100">
+                        <dxe:SpinEdit EditValue="{Binding ShiftInId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
+                                      AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False" IsReadOnly="{Binding DenyEditIn}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Принято" Width="80">
+                        <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditIn}"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem LabelPosition="Top" Label="Состав приказа" VerticalAlignment="Stretch">
@@ -72,9 +104,14 @@
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
                             <dxg:GridColumn Header="Необходимо собрать" FieldName="Amount" Width="60"/>
-                            <dxg:GridColumn Header="Собрано" FieldName="CollectedQuantity" Width="60" >
+                            <dxg:GridColumn Header="Отгружено" FieldName="OutQuantity" Width="60" >
                                 <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                    <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="Принято" FieldName="InQuantity" Width="60" Visible="{Binding InVisibible}">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
                         </dxg:GridControl.Columns>
@@ -84,13 +121,19 @@
                         <dxg:GridControl.DetailDescriptor>
                             <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding DocShipmentOrderProducts}">
                                 <dxg:GridControl>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" AutoWidth="True" />
+                                    </dxg:GridControl.View>
                                     <dxg:GridControl.Columns>
-                                        <dxg:GridColumn Header="Номер продукта" FieldName="Number" />
-                                        <dxg:GridColumn Header="Количество" FieldName="Quantity" >
+                                        <dxg:GridColumn Header="Номер продукта" FieldName="Number" AllowEditing="False"/>
+                                        <dxg:GridColumn Header="Количество" FieldName="Quantity" AllowEditing="False">
                                             <dxg:GridColumn.EditSettings>
-                                                <dxe:TextEditSettings DisplayFormat="0.###"/>
+                                                <dxe:TextEditSettings DisplayFormat="0.###" />
                                             </dxg:GridColumn.EditSettings>
                                         </dxg:GridColumn>
+                                        <dxg:GridColumn Header="Отгружено" FieldName="IsShipped" AllowEditing="False"/>
+                                        <dxg:GridColumn Header="Получено" FieldName="IsAccepted" Visible="{Binding InVisibible}" AllowEditing="False"/>
+                                        <dxg:GridColumn Header="Принято" FieldName="IsConfirmed" Visible="{Binding InVisibible}"/>
                                     </dxg:GridControl.Columns>
                                 </dxg:GridControl>
                             </dxg:DataControlDetailDescriptor>

@@ -153,6 +153,14 @@ namespace Gamma
                     .First();
         }
 
+        public static bool AllowEditDoc(Guid docId, GammaEntities gammaBase = null)
+        {
+            return
+                (gammaBase ?? GammaDb).Database.SqlQuery<bool>($"SELECT dbo.AllowEditDoc('{docId}')")
+                    .AsEnumerable()
+                    .First();
+        }
+
         public static ObservableCollection<string> BaseTables
         { 
             get

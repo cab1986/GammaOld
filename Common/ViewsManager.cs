@@ -29,6 +29,12 @@ namespace Gamma.Common
             Messenger.Default.Register<EditRejectionReasonsMessage>(this, EditRejectionReasonsDialog);
             Messenger.Default.Register<NomenclatureEditMessage>(this, NomenclatureEdit);
             Messenger.Default.Register<EditDocMovementOrderMessage>(this, EditDocMovementOrder);
+            Messenger.Default.Register<EditDocMovementMessage>(this, EditDocMovement);
+        }
+
+        private void EditDocMovement(EditDocMovementMessage msg)
+        {
+            new DocMovementView(msg.DocId).Show();
         }
 
         private void EditDocMovementOrder(EditDocMovementOrderMessage msg)

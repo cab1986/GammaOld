@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
         private FindProductViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
             Messenger.Default.Register<BarcodeMessage>(this,BarcodeReceived);
-            ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKinds));
+            ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKind));
             ProductKindsList.Add("Все");
             States = Functions.EnumDescriptionsToList(typeof(ProductState));
             States.Add("Любое");
@@ -154,7 +154,7 @@ namespace Gamma.ViewModels
                             Date = pinfo.Date,
                             NomenclatureID = pinfo.C1CNomenclatureID,
                             NomenclatureName = pinfo.NomenclatureName,
-                            ProductKind = (ProductKinds)pinfo.ProductKindID,
+                            ProductKind = (ProductKind)pinfo.ProductKindID,
                             Quantity = pinfo.Quantity,
                             ShiftID = pinfo.ShiftID,
                             Place = pinfo.Place,
@@ -193,7 +193,7 @@ namespace Gamma.ViewModels
                     Date = pinfo.Date,
                     NomenclatureID = pinfo.C1CNomenclatureID,
                     NomenclatureName = pinfo.NomenclatureName,
-                    ProductKind = (ProductKinds)pinfo.ProductKindID,
+                    ProductKind = (ProductKind)pinfo.ProductKindID,
                     Quantity = pinfo.Quantity,
                     ShiftID = pinfo.ShiftID,
                     State = pinfo.State,
@@ -310,13 +310,13 @@ namespace Gamma.ViewModels
         {
             switch (SelectedProduct.ProductKind)
             {
-                case (ProductKinds.ProductSpool):
+                case (ProductKind.ProductSpool):
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductID);
                     break;
-                case (ProductKinds.ProductGroupPack):
+                case (ProductKind.ProductGroupPack):
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductID);
                     break;
-                case (ProductKinds.ProductPallet):
+                case (ProductKind.ProductPallet):
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
                     break;
             }

@@ -275,7 +275,11 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrderView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrderView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrdersView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrderView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementsView.baml

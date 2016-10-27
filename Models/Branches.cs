@@ -17,6 +17,7 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Branches()
         {
+            this.Persons = new HashSet<Persons>();
             this.Places = new HashSet<Places>();
         }
     
@@ -30,6 +31,8 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CSubdivisionID { get; set; }
     
         public virtual Enterprises Enterprises { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Persons> Persons { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Places> Places { get; set; }
     }

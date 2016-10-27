@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Common;
@@ -11,8 +13,9 @@ namespace Gamma.ViewModels
 {
     class DocShipmentOrdersViewModel : RootViewModel, IItemManager
     {
-        public DocShipmentOrdersViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public DocShipmentOrdersViewModel(bool isOutOrders = true, GammaEntities gammaBase = null) : base(gammaBase)
         {
+            IsOutOrders = isOutOrders;
             OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveWriteAccess("DocShipmentOrderInfo"));
             Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
             FindCommand = new DelegateCommand(Find);
@@ -32,6 +35,7 @@ namespace Gamma.ViewModels
 
         private void OpenDocShipmentOrder()
         {
+            UIServices.SetBusyState();
             if (SelectedDocShipmentOrder == null) return;
             var docShipmentOrderId = SelectedDocShipmentOrder.DocShipmentOrderId; //(row as DocShipmentOrder)?.DocShipmentOrderId;
 //            if (docShipmentOrderId == null) return;
@@ -54,7 +58,11 @@ namespace Gamma.ViewModels
         public List<string> Intervals { get; private set; }
         private int _intervalId;
 
-        // ReSharper disable once MemberCanBePrivate.Global
+        /// <summary>
+        /// Отгрузки или заказы, по которым надо принять
+        /// </summary>
+        private bool IsOutOrders { get; set; }
+
         public int IntervalId
         {
             get { return _intervalId; }
@@ -106,8 +114,9 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.v1COrders.Where(d => !d.IsShipped && 
-                            gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CSubdivisionID)
+                            gammaBase.v1COrders.Where(d => ((!d.IsShipped && IsOutOrders) || (!(d.IsConfirmed??false) && !IsOutOrders)) &&
+                            ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
+                            ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))))
                             .OrderByDescending(d => d.Date).Take(500)
                             .Select(d => new DocShipmentOrder
                             {
@@ -115,15 +124,17 @@ namespace Gamma.ViewModels
                                 Number = d.Number,
                                 Date = d.Date ?? DB.CurrentDateTime,
                                 VehicleNumber = d.VehicleNumber,
+                                Shipper = d.Shipper,
                                 Consignee = d.Consignee,
-                                ActivePerson = d.ActivePerson,
+                                ActivePerson = IsOutOrders?d.OutActivePerson:d.InActivePerson,
                                 OrderType = d.OrderType
                             }));
                         break;
                     case 1:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
                             gammaBase.v1COrders.Where(d =>
-                            gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CSubdivisionID)
+                            (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
+                            (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))
                             .OrderByDescending(d => d.Date).Take(500)
                             .Select(d => new DocShipmentOrder
                             {
@@ -131,8 +142,9 @@ namespace Gamma.ViewModels
                                 Number = d.Number,
                                 Date = d.Date ?? DB.CurrentDateTime,
                                 VehicleNumber = d.VehicleNumber,
+                                Shipper = d.Shipper,
                                 Consignee = d.Consignee,
-                                ActivePerson = d.ActivePerson,
+                                ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
                                 OrderType = d.OrderType
                             }));
                         break;
@@ -142,7 +154,11 @@ namespace Gamma.ViewModels
                                 (Number == null || d.Number.Contains(Number)) &&
                                 (d.Date >= DateBegin || DateBegin == null) &&
                                 (d.Date <= DateEnd || DateEnd == null) &&
-                                gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CSubdivisionID)
+                                (
+                                    (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders)
+                                    ||
+                                    (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders)
+                                ))
                                 .OrderByDescending(d => d.Date).Take(500)
                                 .Select(d => new DocShipmentOrder
                                 {
@@ -150,8 +166,9 @@ namespace Gamma.ViewModels
                                     Number = d.Number,
                                     Date = d.Date ?? DB.CurrentDateTime,
                                     VehicleNumber = d.VehicleNumber,
+                                    Shipper = d.Shipper,
                                     Consignee = d.Consignee,
-                                    ActivePerson = d.ActivePerson,
+                                    ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
                                     OrderType = d.OrderType
                                 }));
                         break;
@@ -166,13 +183,13 @@ namespace Gamma.ViewModels
             {
                 foreach (var docShipmentOrder in docShipmentOrders)
                 {
-                    docShipmentOrder.DocShipmentOrderGoods = new ObservableCollection<DocNomenclatureItem>(gammaBase.vDocShipmentOrders
-                        .Where(d => d.C1CDocShipmentOrderID == docShipmentOrder.DocShipmentOrderId)
+                    docShipmentOrder.DocShipmentOrderGoods = new ObservableCollection<DocNomenclatureItem>(gammaBase.v1COrderGoods
+                        .Where(d => d.DocOrderID == docShipmentOrder.DocShipmentOrderId)
                         .Select(d => new DocNomenclatureItem()
                         {
                             NomenclatureName = d.NomenclatureName,
-                            Quantity = d.Quantity,
-                            CollectedQuantity = d.CollectedQuantity
+                            Quantity = IsOutOrders?d.Quantity:SqlFunctions.StringConvert(d.OutQuantity),
+                            InQuantity = IsOutOrders?(d.OutQuantity??0):(d.InQuantity??0)
                         }));
                 }
             }

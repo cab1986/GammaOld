@@ -26,7 +26,7 @@ namespace Gamma.Models
         }
 
         public Guid ProductId { get; set; }
-        public Gamma.ProductKinds ProductKind { get; set; }
+        public Gamma.ProductKind ProductKind { get; set; }
         public string NomenclatureName { get; set; }
         public string Number { get; set; }
         public string BaseMeasureUnit { get; set; }

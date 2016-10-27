@@ -82,39 +82,43 @@ namespace Gamma.Models
         public virtual DbSet<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
         public virtual DbSet<C1CWarehouses> C1CWarehouses { get; set; }
         public virtual DbSet<PostTypes> PostTypes { get; set; }
-        public virtual DbSet<vDocShipmentOrders> vDocShipmentOrders { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
-        public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
         public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
         public virtual DbSet<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
-        public virtual DbSet<ProductKinds> ProductKinds { get; set; }
-        public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
         public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocBroke> DocBroke { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
-        public virtual DbSet<DocMovement> DocMovement { get; set; }
-        public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
-        public virtual DbSet<PlaceZones> PlaceZones { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<BarcodeTypes> BarcodeTypes { get; set; }
         public virtual DbSet<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
         public virtual DbSet<NomenclatureGammaInfo> NomenclatureGammaInfo { get; set; }
         public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
-        public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
         public virtual DbSet<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
+        public virtual DbSet<Persons> Persons { get; set; }
+        public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
+        public virtual DbSet<PlaceZones> PlaceZones { get; set; }
+        public virtual DbSet<Places> Places { get; set; }
+        public virtual DbSet<DocInProducts> DocInProducts { get; set; }
+        public virtual DbSet<DocOutProducts> DocOutProducts { get; set; }
+        public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
+        public virtual DbSet<DocMovement> DocMovement { get; set; }
+        public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
         public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
-        public virtual DbSet<DocShipments> DocShipments { get; set; }
+        public virtual DbSet<DocShipmentOrders> DocShipmentOrders { get; set; }
+        public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
         public virtual DbSet<v1COrders> v1COrders { get; set; }
+        public virtual DbSet<vDocMovementProducts> vDocMovementProducts { get; set; }
+        public virtual DbSet<vDocMovementGoods> vDocMovementGoods { get; set; }
+        public virtual DbSet<ProductKinds> ProductKinds { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -561,35 +565,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UnpackGroupPack", productIDParameter, printNameParameter);
         }
     
-        public virtual int CreateDocBrokeWithBrokeDecision(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> brokeQuantity, Nullable<System.Guid> rejectionReasonID, string printName, Nullable<int> placeID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            var productIDParameter = productID.HasValue ?
-                new ObjectParameter("ProductID", productID) :
-                new ObjectParameter("ProductID", typeof(System.Guid));
-    
-            var brokeQuantityParameter = brokeQuantity.HasValue ?
-                new ObjectParameter("BrokeQuantity", brokeQuantity) :
-                new ObjectParameter("BrokeQuantity", typeof(decimal));
-    
-            var rejectionReasonIDParameter = rejectionReasonID.HasValue ?
-                new ObjectParameter("RejectionReasonID", rejectionReasonID) :
-                new ObjectParameter("RejectionReasonID", typeof(System.Guid));
-    
-            var printNameParameter = printName != null ?
-                new ObjectParameter("PrintName", printName) :
-                new ObjectParameter("PrintName", typeof(string));
-    
-            var placeIDParameter = placeID.HasValue ?
-                new ObjectParameter("PlaceID", placeID) :
-                new ObjectParameter("PlaceID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecision", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, printNameParameter, placeIDParameter);
-        }
-    
         public virtual ObjectResult<GetProductRelations_Result2> GetProductRelations(Nullable<System.Guid> productID)
         {
             var productIDParameter = productID.HasValue ?
@@ -724,6 +699,35 @@ namespace Gamma.Models
                 new ObjectParameter("PrintName", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateGroupPackWithSpool", productIDParameter, printNameParameter);
+        }
+    
+        public virtual int CreateDocBrokeWithBrokeDecision(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> brokeQuantity, Nullable<System.Guid> rejectionReasonID, string printName, Nullable<int> placeID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var brokeQuantityParameter = brokeQuantity.HasValue ?
+                new ObjectParameter("BrokeQuantity", brokeQuantity) :
+                new ObjectParameter("BrokeQuantity", typeof(decimal));
+    
+            var rejectionReasonIDParameter = rejectionReasonID.HasValue ?
+                new ObjectParameter("RejectionReasonID", rejectionReasonID) :
+                new ObjectParameter("RejectionReasonID", typeof(System.Guid));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecision", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, printNameParameter, placeIDParameter);
         }
     }
 }

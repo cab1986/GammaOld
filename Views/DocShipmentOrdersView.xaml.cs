@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using DevExpress.Xpf.Grid;
+using Gamma.Models;
 using Gamma.ViewModels;
 
 namespace Gamma.Views

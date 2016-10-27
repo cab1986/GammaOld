@@ -82,9 +82,10 @@
                 <dxg:GridColumn Header="Номер приказа" FieldName="Number" VisibleIndex="0" />
                 <dxg:GridColumn Header="Тип приказа" FieldName ="OrderType" VisibleIndex="1" />
                 <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"/>
-                <dxg:GridColumn Header="Получатель" FieldName="Consignee" VisibleIndex="3" />
-                <dxg:GridColumn Header="Номер ТС" FieldName="VehicleNumber" VisibleIndex="4" />
-                <dxg:GridColumn Header="Собирает" FieldName="ActivePerson" VisibleIndex="5" />
+                <dxg:GridColumn Header="Отправитель" FieldName="Shipper" VisibleIndex="3" />
+                <dxg:GridColumn Header="Получатель" FieldName="Consignee" VisibleIndex="4" />
+                <dxg:GridColumn Header="Номер ТС" FieldName="VehicleNumber" VisibleIndex="5" />
+                <dxg:GridColumn Header="Собирает" FieldName="ActivePerson" VisibleIndex="6" />
             </dxg:GridControl>
         </Grid>
     </dxb:BarManager>

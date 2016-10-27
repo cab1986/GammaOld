@@ -181,7 +181,7 @@ namespace Gamma.ViewModels
 
         private void AddSpool()
         {
-            MessageManager.OpenFindProduct(ProductKinds.ProductSpool, true);
+            MessageManager.OpenFindProduct(ProductKind.ProductSpool, true);
             Messenger.Default.Register<ChoosenProductMessage>(this, AddChoosenSpool);
         }
         private void DeleteSpool()
@@ -331,7 +331,7 @@ namespace Gamma.ViewModels
                 product = new Products()
                 {
                     ProductID = productId,
-                    ProductKindID = (byte)ProductKinds.ProductGroupPack,
+                    ProductKindID = (byte)ProductKind.ProductGroupPack,
                     ProductGroupPacks = new ProductGroupPacks(),
                     DocProductionProducts = new List<DocProductionProducts>()
                     {

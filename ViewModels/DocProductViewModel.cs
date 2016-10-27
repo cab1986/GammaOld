@@ -75,10 +75,10 @@ namespace Gamma.ViewModels
                         ProductID = SqlGuidUtil.NewSequentialid(),
                         ProductKindID =
                             msg.DocProductKind == (byte) DocProductKinds.DocProductSpool
-                                ? (byte) ProductKinds.ProductSpool
+                                ? (byte) ProductKind.ProductSpool
                                 : msg.DocProductKind == DocProductKinds.DocProductGroupPack
-                                    ? (byte) ProductKinds.ProductGroupPack
-                                    : (byte) ProductKinds.ProductPallet
+                                    ? (byte) ProductKind.ProductGroupPack
+                                    : (byte) ProductKind.ProductPallet
                     };
                     GammaBase.Products.Add(product);
                     DocProduction.DocProductionProducts = new List<DocProductionProducts>()
@@ -125,6 +125,7 @@ namespace Gamma.ViewModels
                     GetProductRelations(product.ProductID);
                     State = product.ProductStates?.Name ?? "Годная";
                 }
+                AllowEditDoc = DB.AllowEditDoc(Doc.DocID);
             }
             // Создаем дочернюю viewmodel в зависимости от типа изделия
             switch (msg.DocProductKind)
@@ -166,7 +167,7 @@ namespace Gamma.ViewModels
                 Select(p => p.ProductionTaskBatches.FirstOrDefault()).FirstOrDefault();
             if (productionTaskBatch != null) ProductionTaskBatchID = productionTaskBatch.ProductionTaskBatchID;
             DocDate = Doc.Date;
-            IsConfirmed = Doc.IsConfirmed;
+            IsConfirmed = Doc.IsConfirmed || !AllowEditDoc;
             PrintName = Doc.PrintName;
             ShiftID = Doc.ShiftID.ToString();
             Place = GammaBase.Places.FirstOrDefault(p => p.PlaceID == Doc.PlaceID)?.Name;
@@ -179,7 +180,7 @@ namespace Gamma.ViewModels
             OpenProductRelationCommand = new DelegateCommand(OpenProductRelation, () => SelectedRelation != null);
             AddToDocBrokeCommand = new DelegateCommand(AddToDocBroke, () => IsValid);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
-            IsReadOnly = !(DB.HaveWriteAccess("DocProductionProducts") && (!IsConfirmed || IsValid));
+            IsReadOnly = !DB.HaveWriteAccess("DocProductionProducts") || (IsConfirmed && IsValid);
         }
 
         public bool AllowAddToBrokeAction { get; set; }
@@ -304,6 +305,9 @@ namespace Gamma.ViewModels
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime DocDate { get; set; }
         private bool _isConfirmed;
+
+        private bool AllowEditDoc { get; set; }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public bool IsConfirmed 
         {
@@ -313,9 +317,14 @@ namespace Gamma.ViewModels
             }
             set
             {
+                if (!AllowEditDoc && _isConfirmed)
+                {
+                    MessageBox.Show("Правка невозможна. Продукция уже в выработке или с ней связаны другие документы");
+                    return;
+                }
                 if (value && !IsValid)
                     _isConfirmed = false;
-                else
+                else 
             	    _isConfirmed = value;
                 RaisePropertyChanged("IsConfirmed");
             }
@@ -425,13 +434,13 @@ namespace Gamma.ViewModels
                 default:
                     switch (SelectedRelation.ProductKindID)
                     {
-                        case (int)ProductKinds.ProductSpool:
+                        case (int)ProductKind.ProductSpool:
                             MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedRelation.ProductID);
                             break;
-                        case (int)ProductKinds.ProductGroupPack:
+                        case (int)ProductKind.ProductGroupPack:
                             MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedRelation.ProductID);
                             break;
-                        case (int)ProductKinds.ProductPallet:
+                        case (int)ProductKind.ProductPallet:
                             MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedRelation.ProductID);
                             break;
                     }

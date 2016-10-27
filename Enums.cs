@@ -37,7 +37,7 @@ namespace Gamma
         
     }
     public enum BatchKinds { SGB, SGI }
-    public enum ProductKinds 
+    public enum ProductKind
     { 
         [Description("Тамбура")]
         ProductSpool, 
@@ -143,5 +143,12 @@ namespace Gamma
     public enum PersonTypes
     {
         Loader = 1
+    }
+
+    public enum MovementOrderType
+    {
+        ShipmentOrer,
+        InternalOrder,
+        MovementOrder
     }
 }

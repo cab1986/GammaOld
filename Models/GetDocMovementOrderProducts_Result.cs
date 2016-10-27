@@ -20,5 +20,9 @@ namespace Gamma.Models
         public System.Guid ProductID { get; set; }
         public byte ProductKindID { get; set; }
         public string Number { get; set; }
+        public Nullable<bool> IsShipped { get; set; }
+        public Nullable<bool> IsAccepted { get; set; }
+        public Nullable<bool> IsConfirmed { get; set; }
+        public System.Guid DocMovementID { get; set; }
     }
 }

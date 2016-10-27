@@ -423,13 +423,31 @@
     <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="DocWithdrawalID" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
+  <EntityType Name="DocInProducts">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="IsConfirmed" Type="bit" />
+    <Property Name="PlaceZoneID" Type="uniqueidentifier" />
+    <Property Name="PlaceZoneCellID" Type="uniqueidentifier" />
+    <Property Name="PersonID" Type="uniqueidentifier" />
+    <Property Name="Date" Type="datetime" />
+  </EntityType>
   <EntityType Name="DocMovement">
     <Key>
       <PropertyRef Name="DocID" />
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="InPlaceID" Type="int" />
     <Property Name="OutPlaceID" Type="int" />
+    <Property Name="InPlaceID" Type="int" />
+    <Property Name="TransferPlaceID" Type="int" />
+    <Property Name="DocOrderID" Type="uniqueidentifier" />
+    <Property Name="OrderTypeID" Type="tinyint" />
+    <Property Name="OutDate" Type="datetime" />
+    <Property Name="InDate" Type="datetime" />
   </EntityType>
   <EntityType Name="DocMovementOrder">
     <Key>
@@ -437,16 +455,8 @@
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CDocID" Type="uniqueidentifier" />
-    <Property Name="PlaceFrom" Type="int" />
-    <Property Name="PlaceTo" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="DocMovementOrderDocs">
-    <Key>
-      <PropertyRef Name="DocMovementOrderID" />
-      <PropertyRef Name="DocMovementID" />
-    </Key>
-    <Property Name="DocMovementOrderID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="OutPlaceID" Type="int" />
+    <Property Name="InPlaceID" Type="int" />
   </EntityType>
   <EntityType Name="DocMovementOrderNomenclature">
     <Key>
@@ -457,6 +467,18 @@
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
     <Property Name="Amount" Type="decimal" Precision="18" Scale="5" />
+  </EntityType>
+  <EntityType Name="DocOutProducts">
+    <Key>
+      <PropertyRef Name="DocID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PlaceZoneID" Type="uniqueidentifier" />
+    <Property Name="PlaceZoneCellID" Type="uniqueidentifier" />
+    <Property Name="PersonID" Type="uniqueidentifier" />
+    <Property Name="Date" Type="datetime" />
   </EntityType>
   <EntityType Name="DocProduction">
     <Key>
@@ -516,21 +538,31 @@
   <EntityType Name="DocShipmentOrderInfo">
     <Key>
       <PropertyRef Name="1CDocShipmentOrderID" />
+      <PropertyRef Name="KindID" />
     </Key>
     <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ActivePersonID" Type="int" />
     <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="IsShipped" Type="bit" />
+    <Property Name="KindID" Type="tinyint" Nullable="false" />
   </EntityType>
-  <EntityType Name="DocShipments">
+  <EntityType Name="DocShipmentOrders">
     <Key>
-      <PropertyRef Name="1CDocShipmentOrderID" />
-      <PropertyRef Name="DocID" />
+      <PropertyRef Name="DocOrderID" />
     </Key>
-    <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="PersonID" Type="int" />
+    <Property Name="DocOrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="OrderTypeID" Type="tinyint" />
+    <Property Name="VehicleNumber" Type="nchar" MaxLength="50" />
+    <Property Name="IsShipped" Type="bit" />
+    <Property Name="OutPlaceID" Type="int" />
+    <Property Name="OutActivePersonID" Type="uniqueidentifier" />
+    <Property Name="OutShiftID" Type="tinyint" />
+    <Property Name="OutDate" Type="datetime" />
+    <Property Name="InPlaceID" Type="int" />
+    <Property Name="InActivePersonID" Type="uniqueidentifier" />
+    <Property Name="InShiftID" Type="tinyint" />
+    <Property Name="InDate" Type="datetime" />
   </EntityType>
   <EntityType Name="DocTypes">
     <Key>
@@ -647,7 +679,8 @@
     <Key>
       <PropertyRef Name="PersonID" />
     </Key>
-    <Property Name="PersonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="BranchID" Type="int" />
     <Property Name="PostTypeID" Type="int" />
     <Property Name="Name" Type="nvarchar" MaxLength="255" />
     <Property Name="Barcode" Type="nvarchar" MaxLength="20" />
@@ -673,7 +706,7 @@
       <PropertyRef Name="PlaceID" />
     </Key>
     <Property Name="PlaceID" Type="int" Nullable="false" />
-    <Property Name="PlaceGuid" Type="uniqueidentifier" />
+    <Property Name="PlaceGuid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="BranchID" Type="int" Nullable="false" />
     <Property Name="BranchUnitID" Type="int" />
     <Property Name="Name" Type="varchar" MaxLength="64" />
@@ -682,6 +715,8 @@
     <Property Name="PlaceGroupID" Type="smallint" />
     <Property Name="IsProductionPlace" Type="bit" />
     <Property Name="IsWarehouse" Type="bit" />
+    <Property Name="IsTransitWarehouse" Type="bit" />
+    <Property Name="IsShipmentWarehouse" Type="bit" />
     <Property Name="1CPlaceID" Type="uniqueidentifier" />
     <Property Name="UnwindersCount" Type="int" />
   </EntityType>
@@ -689,16 +724,16 @@
     <Key>
       <PropertyRef Name="PlaceZoneCellID" />
     </Key>
-    <Property Name="PlaceZoneCellID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="PlaceZoneID" Type="int" Nullable="false" />
+    <Property Name="PlaceZoneCellID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PlaceZoneID" Type="uniqueidentifier" />
     <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
   </EntityType>
   <EntityType Name="PlaceZones">
     <Key>
       <PropertyRef Name="PlaceZoneID" />
     </Key>
-    <Property Name="PlaceZoneID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="PlaceID" Type="int" Nullable="false" />
+    <Property Name="PlaceZoneID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="PlaceID" Type="int" />
     <Property Name="Name" Type="varchar" MaxLength="1000" Nullable="false" />
   </EntityType>
   <EntityType Name="PostTypes">
@@ -963,6 +998,57 @@
     <Property Name="MobileComputer" Type="bit" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrderGoods" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="v1COrderGoods">
+    <Key>
+      <PropertyRef Name="DocOrderID" />
+    </Key>
+    <Property Name="DocOrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CQualityID" Type="uniqueidentifier" />
+    <Property Name="Quantity" Type="varchar" MaxLength="30" />
+    <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+    <Property Name="OutQuantity" Type="decimal" Precision="38" Scale="5" />
+    <Property Name="InQuantity" Type="decimal" Precision="38" Scale="5" />
+    <Property Name="AcceptedQuantity" Type="decimal" Precision="38" Scale="5" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrders" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="v1COrders">
+    <Key>
+      <PropertyRef Name="1COrderID" />
+      <PropertyRef Name="OutBranchID" />
+      <PropertyRef Name="IsShipped" />
+      <PropertyRef Name="OrderKindID" />
+      <PropertyRef Name="OrderType" />
+    </Key>
+    <Property Name="1COrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Date" Type="datetime" />
+    <Property Name="Number" Type="char" MaxLength="11" />
+    <Property Name="Shipper" Type="nvarchar" MaxLength="100" />
+    <Property Name="Consignee" Type="nvarchar" MaxLength="100" />
+    <Property Name="1COutSubdivisionID" Type="uniqueidentifier" />
+    <Property Name="OutBranchID" Type="int" Nullable="false" />
+    <Property Name="1CInSubdivisionID" Type="uniqueidentifier" />
+    <Property Name="InBranchID" Type="int" />
+    <Property Name="OutDate" Type="datetime" />
+    <Property Name="InDate" Type="datetime" />
+    <Property Name="VehicleNumber" Type="nchar" MaxLength="50" />
+    <Property Name="IsShipped" Type="bit" Nullable="false" />
+    <Property Name="IsConfirmed" Type="bit" />
+    <Property Name="InActivePersonID" Type="uniqueidentifier" />
+    <Property Name="InActivePerson" Type="nvarchar" MaxLength="255" />
+    <Property Name="InShiftId" Type="tinyint" />
+    <Property Name="InPlaceID" Type="int" />
+    <Property Name="OutActivePersonID" Type="uniqueidentifier" />
+    <Property Name="OutActivePerson" Type="nvarchar" MaxLength="255" />
+    <Property Name="OutShiftID" Type="tinyint" />
+    <Property Name="OutPlaceID" Type="int" />
+    <Property Name="OrderKindID" Type="int" Nullable="false" />
+    <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vCharacteristicSGBProperties" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
   <EntityType Name="vCharacteristicSGBProperties">
     <Key>
@@ -981,19 +1067,47 @@
     <Property Name="CoreDiameterNumeric" Type="int" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vDocShipmentOrders" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-  <EntityType Name="vDocShipmentOrders">
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.vDocMovementGoods" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="vDocMovementGoods">
     <Key>
-      <PropertyRef Name="1CDocShipmentOrderID" />
-      <PropertyRef Name="CollectedQuantity" />
+      <PropertyRef Name="DocMovementID" />
     </Key>
-    <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-    <Property Name="Quantity" Type="varchar" MaxLength="30" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
-    <Property Name="CollectedQuantity" Type="decimal" Precision="38" Scale="4" Nullable="false" />
+    <Property Name="OutQuantity" Type="decimal" Precision="38" Scale="5" />
+    <Property Name="InQuantity" Type="decimal" Precision="38" Scale="5" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.vDocMovementProducts" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="vDocMovementProducts">
+    <Key>
+      <PropertyRef Name="DocMovementID" />
+      <PropertyRef Name="ProductID" />
+      <PropertyRef Name="ProductKindID" />
+    </Key>
+    <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
+    <Property Name="DocOrderID" Type="uniqueidentifier" />
+    <Property Name="OrderTypeID" Type="tinyint" />
+    <Property Name="InPlaceID" Type="int" />
+    <Property Name="OutPlaceID" Type="int" />
+    <Property Name="IsShipped" Type="bit" />
+    <Property Name="IsAccepted" Type="bit" />
+    <Property Name="IsConfirmed" Type="bit" />
+    <Property Name="OutDate" Type="datetime" />
+    <Property Name="InDate" Type="datetime" />
+    <Property Name="OutPersonID" Type="uniqueidentifier" />
+    <Property Name="InPersonID" Type="uniqueidentifier" />
+    <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CQualityID" Type="uniqueidentifier" />
+    <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
+    <Property Name="Number" Type="varchar" MaxLength="20" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -1031,9 +1145,9 @@
     <Key>
       <PropertyRef Name="DocID" />
       <PropertyRef Name="ProductID" />
+      <PropertyRef Name="ProductKindID" />
       <PropertyRef Name="Date" />
       <PropertyRef Name="StateID" />
-      <PropertyRef Name="ProductKindID" />
       <PropertyRef Name="ProductionQuantity" />
     </Key>
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
@@ -1059,6 +1173,7 @@
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="StateID" Type="tinyint" Nullable="false" />
     <Property Name="ChangeStateQuantity" Type="decimal" Precision="18" Scale="5" />
+    <Property Name="1CQualityID" Type="uniqueidentifier" />
     <Property Name="RejectionReason" Type="varchar" MaxLength="100" />
     <Property Name="IsConfirmed" Type="bit" />
     <Property Name="IsWrittenOff" Type="bit" />
@@ -1922,6 +2037,66 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_DocInProducts_DocMovement">
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="1" />
+    <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocMovement">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocInProducts">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocInProducts_Persons">
+    <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
+    <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Persons">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="DocInProducts">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocInProducts_PlaceZoneCells1">
+    <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="0..1" />
+    <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZoneCells">
+        <PropertyRef Name="PlaceZoneCellID" />
+      </Principal>
+      <Dependent Role="DocInProducts">
+        <PropertyRef Name="PlaceZoneCellID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocInProducts_PlaceZones1">
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
+    <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZones">
+        <PropertyRef Name="PlaceZoneID" />
+      </Principal>
+      <Dependent Role="DocInProducts">
+        <PropertyRef Name="PlaceZoneID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocInProducts_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="DocInProducts">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_DocMovement_Docs">
     <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
     <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="0..1" />
@@ -1942,11 +2117,11 @@
         <PropertyRef Name="PlaceID" />
       </Principal>
       <Dependent Role="DocMovement">
-        <PropertyRef Name="InPlaceID" />
+        <PropertyRef Name="OutPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocMovement_Places1">
+  <Association Name="FK_DocMovement_Places2">
     <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
     <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="*" />
     <ReferentialConstraint>
@@ -1954,7 +2129,19 @@
         <PropertyRef Name="PlaceID" />
       </Principal>
       <Dependent Role="DocMovement">
-        <PropertyRef Name="OutPlaceID" />
+        <PropertyRef Name="TransferPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocMovement_Places3">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="DocMovement">
+        <PropertyRef Name="InPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -1970,7 +2157,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocMovementOrder_Places">
+  <Association Name="FK_DocMovementOrder_Places2">
     <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
     <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="*" />
     <ReferentialConstraint>
@@ -1978,43 +2165,19 @@
         <PropertyRef Name="PlaceID" />
       </Principal>
       <Dependent Role="DocMovementOrder">
-        <PropertyRef Name="PlaceFrom" />
+        <PropertyRef Name="OutPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocMovementOrder_Places1">
-    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+  <Association Name="FK_DocMovementOrder_Places3">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
     <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Places">
         <PropertyRef Name="PlaceID" />
       </Principal>
       <Dependent Role="DocMovementOrder">
-        <PropertyRef Name="PlaceTo" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocMovementOrderDocs_DocMovement">
-    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="1" />
-    <End Role="DocMovementOrderDocs" Type="Self.DocMovementOrderDocs" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="DocMovement">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocMovementOrderDocs">
-        <PropertyRef Name="DocMovementID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocMovementOrderDocs_DocMovementOrder">
-    <End Role="DocMovementOrder" Type="Self.DocMovementOrder" Multiplicity="1" />
-    <End Role="DocMovementOrderDocs" Type="Self.DocMovementOrderDocs" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="DocMovementOrder">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocMovementOrderDocs">
-        <PropertyRef Name="DocMovementOrderID" />
+        <PropertyRef Name="InPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2027,6 +2190,66 @@
       </Principal>
       <Dependent Role="DocMovementOrderNomenclature">
         <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocOutProducts_DocMovement">
+    <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="1" />
+    <End Role="DocOutProducts" Type="Self.DocOutProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocMovement">
+        <PropertyRef Name="DocID" />
+      </Principal>
+      <Dependent Role="DocOutProducts">
+        <PropertyRef Name="DocID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocOutProducts_Persons">
+    <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
+    <End Role="DocOutProducts" Type="Self.DocOutProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Persons">
+        <PropertyRef Name="PersonID" />
+      </Principal>
+      <Dependent Role="DocOutProducts">
+        <PropertyRef Name="PersonID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocOutProducts_PlaceZoneCells1">
+    <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="0..1" />
+    <End Role="DocOutProducts" Type="Self.DocOutProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZoneCells">
+        <PropertyRef Name="PlaceZoneCellID" />
+      </Principal>
+      <Dependent Role="DocOutProducts">
+        <PropertyRef Name="PlaceZoneCellID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocOutProducts_PlaceZones1">
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
+    <End Role="DocOutProducts" Type="Self.DocOutProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZones">
+        <PropertyRef Name="PlaceZoneID" />
+      </Principal>
+      <Dependent Role="DocOutProducts">
+        <PropertyRef Name="PlaceZoneID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DocOutProducts_Products">
+    <End Role="Products" Type="Self.Products" Multiplicity="1" />
+    <End Role="DocOutProducts" Type="Self.DocOutProducts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="ProductID" />
+      </Principal>
+      <Dependent Role="DocOutProducts">
+        <PropertyRef Name="ProductID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2196,18 +2419,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Docs_Persons">
-    <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
-    <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Persons">
-        <PropertyRef Name="PersonID" />
-      </Principal>
-      <Dependent Role="Docs">
-        <PropertyRef Name="PersonID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Docs_Places">
     <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
     <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
@@ -2229,66 +2440,6 @@
       </Principal>
       <Dependent Role="Docs">
         <PropertyRef Name="UserID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder">
-    <End Role="1CDocShipmentOrder" Type="Self.1CDocShipmentOrder" Multiplicity="1" />
-    <End Role="DocShipmentOrderInfo" Type="Self.DocShipmentOrderInfo" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="1CDocShipmentOrder">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Principal>
-      <Dependent Role="DocShipmentOrderInfo">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipmentOrderInfo_Persons">
-    <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
-    <End Role="DocShipmentOrderInfo" Type="Self.DocShipmentOrderInfo" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Persons">
-        <PropertyRef Name="PersonID" />
-      </Principal>
-      <Dependent Role="DocShipmentOrderInfo">
-        <PropertyRef Name="ActivePersonID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipments_1CDocShipmentOrder">
-    <End Role="1CDocShipmentOrder" Type="Self.1CDocShipmentOrder" Multiplicity="1" />
-    <End Role="DocShipments" Type="Self.DocShipments" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="1CDocShipmentOrder">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Principal>
-      <Dependent Role="DocShipments">
-        <PropertyRef Name="1CDocShipmentOrderID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipments_Docs">
-    <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
-    <End Role="DocShipments" Type="Self.DocShipments" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Docs">
-        <PropertyRef Name="DocID" />
-      </Principal>
-      <Dependent Role="DocShipments">
-        <PropertyRef Name="DocID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocShipments_Persons">
-    <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
-    <End Role="DocShipments" Type="Self.DocShipments" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Persons">
-        <PropertyRef Name="PersonID" />
-      </Principal>
-      <Dependent Role="DocShipments">
-        <PropertyRef Name="PersonID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2486,6 +2637,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Persons_Branches">
+    <End Role="Branches" Type="Self.Branches" Multiplicity="0..1" />
+    <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Branches">
+        <PropertyRef Name="BranchID" />
+      </Principal>
+      <Dependent Role="Persons">
+        <PropertyRef Name="BranchID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
     <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
     <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
@@ -2507,6 +2670,18 @@
       </Principal>
       <Dependent Role="PlaceGroup1CNomenclature">
         <PropertyRef Name="PlaceGroupID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Places_1CPlaces">
+    <End Role="1CPlaces" Type="Self.1CPlaces" Multiplicity="0..1" />
+    <End Role="Places" Type="Self.Places" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CPlaces">
+        <PropertyRef Name="1CPlaceID" />
+      </Principal>
+      <Dependent Role="Places">
+        <PropertyRef Name="1CPlaceID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2546,8 +2721,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_PlaceZoneCells_PlaceZones">
-    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="1" />
+  <Association Name="FK_PlaceZoneCells_PlaceZones1">
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
     <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="PlaceZones">
@@ -2558,8 +2733,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_PlaceZones_Places">
-    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+  <Association Name="FK_PlaceZones_Places1">
+    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
     <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Places">
@@ -3104,6 +3279,14 @@
     <Parameter Name="PlaceID" Type="int" Mode="In" />
     <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="CreateDocBrokeWithBrokeDecision" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="BrokeQuantity" Type="decimal" Mode="In" />
+    <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="PrintName" Type="varchar" Mode="In" />
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+  </Function>
   <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="PrintName" Type="varchar" Mode="In" />
@@ -3360,17 +3543,18 @@
     <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftSamples" EntityType="Self.DocCloseShiftSamples" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocInProducts" EntityType="Self.DocInProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovementOrder" EntityType="Self.DocMovementOrder" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="DocMovementOrderDocs" EntityType="Self.DocMovementOrderDocs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocMovementOrderNomenclature" EntityType="Self.DocMovementOrderNomenclature" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocOutProducts" EntityType="Self.DocOutProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProduction" EntityType="Self.DocProduction" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProductionProducts" EntityType="Self.DocProductionProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocShipmentOrderInfo" EntityType="Self.DocShipmentOrderInfo" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="DocShipments" EntityType="Self.DocShipments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DocShipmentOrders" EntityType="Self.DocShipmentOrders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocUnpackWithdrawals" EntityType="Self.DocUnpackWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
@@ -3416,6 +3600,47 @@
     <EntitySet Name="UserPlaces" EntityType="Self.UserPlaces" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="v1COrderGoods" EntityType="Self.v1COrderGoods" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v1COrderGoods].[DocOrderID] AS [DocOrderID], 
+    [v1COrderGoods].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [v1COrderGoods].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [v1COrderGoods].[1CQualityID] AS [1CQualityID], 
+    [v1COrderGoods].[Quantity] AS [Quantity], 
+    [v1COrderGoods].[NomenclatureName] AS [NomenclatureName], 
+    [v1COrderGoods].[OutQuantity] AS [OutQuantity], 
+    [v1COrderGoods].[InQuantity] AS [InQuantity], 
+    [v1COrderGoods].[AcceptedQuantity] AS [AcceptedQuantity]
+    FROM [dbo].[v1COrderGoods] AS [v1COrderGoods]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v1COrders" EntityType="Self.v1COrders" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v1COrders].[1COrderID] AS [1COrderID], 
+    [v1COrders].[Date] AS [Date], 
+    [v1COrders].[Number] AS [Number], 
+    [v1COrders].[Shipper] AS [Shipper], 
+    [v1COrders].[Consignee] AS [Consignee], 
+    [v1COrders].[1COutSubdivisionID] AS [1COutSubdivisionID], 
+    [v1COrders].[OutBranchID] AS [OutBranchID], 
+    [v1COrders].[1CInSubdivisionID] AS [1CInSubdivisionID], 
+    [v1COrders].[InBranchID] AS [InBranchID], 
+    [v1COrders].[OutDate] AS [OutDate], 
+    [v1COrders].[InDate] AS [InDate], 
+    [v1COrders].[VehicleNumber] AS [VehicleNumber], 
+    [v1COrders].[IsShipped] AS [IsShipped], 
+    [v1COrders].[IsConfirmed] AS [IsConfirmed], 
+    [v1COrders].[InActivePersonID] AS [InActivePersonID], 
+    [v1COrders].[InActivePerson] AS [InActivePerson], 
+    [v1COrders].[InShiftId] AS [InShiftId], 
+    [v1COrders].[InPlaceID] AS [InPlaceID], 
+    [v1COrders].[OutActivePersonID] AS [OutActivePersonID], 
+    [v1COrders].[OutActivePerson] AS [OutActivePerson], 
+    [v1COrders].[OutShiftID] AS [OutShiftID], 
+    [v1COrders].[OutPlaceID] AS [OutPlaceID], 
+    [v1COrders].[OrderKindID] AS [OrderKindID], 
+    [v1COrders].[OrderType] AS [OrderType]
+    FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [vCharacteristicSGBProperties].[1CCharacteristicID] AS [1CCharacteristicID], 
@@ -3431,16 +3656,40 @@
     [vCharacteristicSGBProperties].[CoreDiameterNumeric] AS [CoreDiameterNumeric]
     FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
     </EntitySet>
-    <EntitySet Name="vDocShipmentOrders" EntityType="Self.vDocShipmentOrders" store:Type="Views" store:Schema="dbo">
+    <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
-    [vDocShipmentOrders].[1CDocShipmentOrderID] AS [1CDocShipmentOrderID], 
-    [vDocShipmentOrders].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [vDocShipmentOrders].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [vDocShipmentOrders].[Quantity] AS [Quantity], 
-    [vDocShipmentOrders].[NomenclatureName] AS [NomenclatureName], 
-    [vDocShipmentOrders].[CollectedQuantity] AS [CollectedQuantity], 
-    [vDocShipmentOrders].[ShortNomenclatureName] AS [ShortNomenclatureName]
-    FROM [dbo].[vDocShipmentOrders] AS [vDocShipmentOrders]</DefiningQuery>
+    [vDocMovementGoods].[DocMovementID] AS [DocMovementID], 
+    [vDocMovementGoods].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vDocMovementGoods].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vDocMovementGoods].[NomenclatureName] AS [NomenclatureName], 
+    [vDocMovementGoods].[OutQuantity] AS [OutQuantity], 
+    [vDocMovementGoods].[InQuantity] AS [InQuantity]
+    FROM [dbo].[vDocMovementGoods] AS [vDocMovementGoods]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vDocMovementProducts" EntityType="Self.vDocMovementProducts" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vDocMovementProducts].[DocMovementID] AS [DocMovementID], 
+    [vDocMovementProducts].[ProductID] AS [ProductID], 
+    [vDocMovementProducts].[ProductKindID] AS [ProductKindID], 
+    [vDocMovementProducts].[DocOrderID] AS [DocOrderID], 
+    [vDocMovementProducts].[OrderTypeID] AS [OrderTypeID], 
+    [vDocMovementProducts].[InPlaceID] AS [InPlaceID], 
+    [vDocMovementProducts].[OutPlaceID] AS [OutPlaceID], 
+    [vDocMovementProducts].[IsShipped] AS [IsShipped], 
+    [vDocMovementProducts].[IsAccepted] AS [IsAccepted], 
+    [vDocMovementProducts].[IsConfirmed] AS [IsConfirmed], 
+    [vDocMovementProducts].[OutDate] AS [OutDate], 
+    [vDocMovementProducts].[InDate] AS [InDate], 
+    [vDocMovementProducts].[OutPersonID] AS [OutPersonID], 
+    [vDocMovementProducts].[InPersonID] AS [InPersonID], 
+    [vDocMovementProducts].[Quantity] AS [Quantity], 
+    [vDocMovementProducts].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vDocMovementProducts].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vDocMovementProducts].[1CQualityID] AS [1CQualityID], 
+    [vDocMovementProducts].[NomenclatureName] AS [NomenclatureName], 
+    [vDocMovementProducts].[ShortNomenclatureName] AS [ShortNomenclatureName], 
+    [vDocMovementProducts].[Number] AS [Number]
+    FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
@@ -3488,6 +3737,7 @@
     [vProductsInfo].[ShiftID] AS [ShiftID], 
     [vProductsInfo].[StateID] AS [StateID], 
     [vProductsInfo].[ChangeStateQuantity] AS [ChangeStateQuantity], 
+    [vProductsInfo].[1CQualityID] AS [1CQualityID], 
     [vProductsInfo].[RejectionReason] AS [RejectionReason], 
     [vProductsInfo].[IsConfirmed] AS [IsConfirmed], 
     [vProductsInfo].[IsWrittenOff] AS [IsWrittenOff], 
@@ -3778,6 +4028,26 @@
       <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
       <End Role="DocCloseShiftWithdrawals" EntitySet="DocCloseShiftWithdrawals" />
     </AssociationSet>
+    <AssociationSet Name="FK_DocInProducts_DocMovement" Association="Self.FK_DocInProducts_DocMovement">
+      <End Role="DocMovement" EntitySet="DocMovement" />
+      <End Role="DocInProducts" EntitySet="DocInProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocInProducts_Persons" Association="Self.FK_DocInProducts_Persons">
+      <End Role="Persons" EntitySet="Persons" />
+      <End Role="DocInProducts" EntitySet="DocInProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocInProducts_PlaceZoneCells1" Association="Self.FK_DocInProducts_PlaceZoneCells1">
+      <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
+      <End Role="DocInProducts" EntitySet="DocInProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocInProducts_PlaceZones1" Association="Self.FK_DocInProducts_PlaceZones1">
+      <End Role="PlaceZones" EntitySet="PlaceZones" />
+      <End Role="DocInProducts" EntitySet="DocInProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocInProducts_Products" Association="Self.FK_DocInProducts_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="DocInProducts" EntitySet="DocInProducts" />
+    </AssociationSet>
     <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocMovement" EntitySet="DocMovement" />
@@ -3786,7 +4056,11 @@
       <End Role="Places" EntitySet="Places" />
       <End Role="DocMovement" EntitySet="DocMovement" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocMovement_Places1" Association="Self.FK_DocMovement_Places1">
+    <AssociationSet Name="FK_DocMovement_Places2" Association="Self.FK_DocMovement_Places2">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="DocMovement" EntitySet="DocMovement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocMovement_Places3" Association="Self.FK_DocMovement_Places3">
       <End Role="Places" EntitySet="Places" />
       <End Role="DocMovement" EntitySet="DocMovement" />
     </AssociationSet>
@@ -3794,25 +4068,37 @@
       <End Role="Docs" EntitySet="Docs" />
       <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocMovementOrder_Places" Association="Self.FK_DocMovementOrder_Places">
+    <AssociationSet Name="FK_DocMovementOrder_Places2" Association="Self.FK_DocMovementOrder_Places2">
       <End Role="Places" EntitySet="Places" />
       <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocMovementOrder_Places1" Association="Self.FK_DocMovementOrder_Places1">
+    <AssociationSet Name="FK_DocMovementOrder_Places3" Association="Self.FK_DocMovementOrder_Places3">
       <End Role="Places" EntitySet="Places" />
       <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocMovementOrderDocs_DocMovement" Association="Self.FK_DocMovementOrderDocs_DocMovement">
-      <End Role="DocMovement" EntitySet="DocMovement" />
-      <End Role="DocMovementOrderDocs" EntitySet="DocMovementOrderDocs" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocMovementOrderDocs_DocMovementOrder" Association="Self.FK_DocMovementOrderDocs_DocMovementOrder">
-      <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
-      <End Role="DocMovementOrderDocs" EntitySet="DocMovementOrderDocs" />
     </AssociationSet>
     <AssociationSet Name="FK_DocMovementOrderNomenclature_DocMovementOrder" Association="Self.FK_DocMovementOrderNomenclature_DocMovementOrder">
       <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
       <End Role="DocMovementOrderNomenclature" EntitySet="DocMovementOrderNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocOutProducts_DocMovement" Association="Self.FK_DocOutProducts_DocMovement">
+      <End Role="DocMovement" EntitySet="DocMovement" />
+      <End Role="DocOutProducts" EntitySet="DocOutProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocOutProducts_Persons" Association="Self.FK_DocOutProducts_Persons">
+      <End Role="Persons" EntitySet="Persons" />
+      <End Role="DocOutProducts" EntitySet="DocOutProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocOutProducts_PlaceZoneCells1" Association="Self.FK_DocOutProducts_PlaceZoneCells1">
+      <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
+      <End Role="DocOutProducts" EntitySet="DocOutProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocOutProducts_PlaceZones1" Association="Self.FK_DocOutProducts_PlaceZones1">
+      <End Role="PlaceZones" EntitySet="PlaceZones" />
+      <End Role="DocOutProducts" EntitySet="DocOutProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DocOutProducts_Products" Association="Self.FK_DocOutProducts_Products">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="DocOutProducts" EntitySet="DocOutProducts" />
     </AssociationSet>
     <AssociationSet Name="FK_DocProductChangeState_1CRejectionReasons" Association="Self.FK_DocProductChangeState_1CRejectionReasons">
       <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
@@ -3866,10 +4152,6 @@
       <End Role="DocTypes" EntitySet="DocTypes" />
       <End Role="Docs" EntitySet="Docs" />
     </AssociationSet>
-    <AssociationSet Name="FK_Docs_Persons" Association="Self.FK_Docs_Persons">
-      <End Role="Persons" EntitySet="Persons" />
-      <End Role="Docs" EntitySet="Docs" />
-    </AssociationSet>
     <AssociationSet Name="FK_Docs_Places" Association="Self.FK_Docs_Places">
       <End Role="Places" EntitySet="Places" />
       <End Role="Docs" EntitySet="Docs" />
@@ -3877,26 +4159,6 @@
     <AssociationSet Name="FK_Docs_Users" Association="Self.FK_Docs_Users">
       <End Role="Users" EntitySet="Users" />
       <End Role="Docs" EntitySet="Docs" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipmentOrderInfo_1CDocShipmentOrder" Association="Self.FK_DocShipmentOrderInfo_1CDocShipmentOrder">
-      <End Role="1CDocShipmentOrder" EntitySet="1CDocShipmentOrder" />
-      <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipmentOrderInfo_Persons" Association="Self.FK_DocShipmentOrderInfo_Persons">
-      <End Role="Persons" EntitySet="Persons" />
-      <End Role="DocShipmentOrderInfo" EntitySet="DocShipmentOrderInfo" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipments_1CDocShipmentOrder" Association="Self.FK_DocShipments_1CDocShipmentOrder">
-      <End Role="1CDocShipmentOrder" EntitySet="1CDocShipmentOrder" />
-      <End Role="DocShipments" EntitySet="DocShipments" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipments_Docs" Association="Self.FK_DocShipments_Docs">
-      <End Role="Docs" EntitySet="Docs" />
-      <End Role="DocShipments" EntitySet="DocShipments" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocShipments_Persons" Association="Self.FK_DocShipments_Persons">
-      <End Role="Persons" EntitySet="Persons" />
-      <End Role="DocShipments" EntitySet="DocShipments" />
     </AssociationSet>
     <AssociationSet Name="FK_DocUnpackWithdrawals_Docs" Association="Self.FK_DocUnpackWithdrawals_Docs">
       <End Role="Docs" EntitySet="Docs" />
@@ -3962,6 +4224,10 @@
       <End Role="Permits" EntitySet="Permits" />
       <End Role="PermitTables" EntitySet="PermitTables" />
     </AssociationSet>
+    <AssociationSet Name="FK_Persons_Branches" Association="Self.FK_Persons_Branches">
+      <End Role="Branches" EntitySet="Branches" />
+      <End Role="Persons" EntitySet="Persons" />
+    </AssociationSet>
     <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
@@ -3969,6 +4235,10 @@
     <AssociationSet Name="FK_PlaceGroup1CNomenclature_PlaceGroups" Association="Self.FK_PlaceGroup1CNomenclature_PlaceGroups">
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Places_1CPlaces" Association="Self.FK_Places_1CPlaces">
+      <End Role="1CPlaces" EntitySet="1CPlaces" />
+      <End Role="Places" EntitySet="Places" />
     </AssociationSet>
     <AssociationSet Name="FK_Places_Branches" Association="Self.FK_Places_Branches">
       <End Role="Branches" EntitySet="Branches" />
@@ -3982,11 +4252,11 @@
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="Places" EntitySet="Places" />
     </AssociationSet>
-    <AssociationSet Name="FK_PlaceZoneCells_PlaceZones" Association="Self.FK_PlaceZoneCells_PlaceZones">
+    <AssociationSet Name="FK_PlaceZoneCells_PlaceZones1" Association="Self.FK_PlaceZoneCells_PlaceZones1">
       <End Role="PlaceZones" EntitySet="PlaceZones" />
       <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
     </AssociationSet>
-    <AssociationSet Name="FK_PlaceZones_Places" Association="Self.FK_PlaceZones_Places">
+    <AssociationSet Name="FK_PlaceZones_Places1" Association="Self.FK_PlaceZones_Places1">
       <End Role="Places" EntitySet="Places" />
       <End Role="PlaceZones" EntitySet="PlaceZones" />
     </AssociationSet>

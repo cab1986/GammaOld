@@ -159,13 +159,4 @@ namespace Gamma.ViewModels
         public DelegateCommand DeleteItemCommand { get; }
         public DelegateCommand RefreshCommand { get; }
     }
-
-    public class DocBrokeListItem{
-        public Guid DocId { get; set; }
-        public string Number { get; set; }
-        public DateTime Date { get; set; }
-        public string PlaceDiscover { get; set; }
-        public string PlaceStore { get; set; }
-    }
-
 }

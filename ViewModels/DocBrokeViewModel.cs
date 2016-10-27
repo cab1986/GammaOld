@@ -145,7 +145,7 @@ namespace Gamma.ViewModels
                 BaseMeasureUnit = product.BaseMeasureUnit,
                 PrintName = product.PrintName,
                 ProductId = product.ProductID, 
-                ProductKind = (ProductKinds)product.ProductKindID,
+                ProductKind = (ProductKind)product.ProductKindID,
                 Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity??0 : docBrokeProductInfo.Quantity??0
             };
             brokeProducts.Add(brokeProduct);
@@ -190,7 +190,7 @@ namespace Gamma.ViewModels
         private void ChooseProductToAdd()
         {
             Messenger.Default.Register<ChoosenProductMessage>(this, AddChoosenProduct);
-            MessageManager.OpenFindProduct(ProductKinds.ProductSpool, true, true);
+            MessageManager.OpenFindProduct(ProductKind.ProductSpool, true, true);
         }
 
         private void AddChoosenProduct(ChoosenProductMessage msg)
