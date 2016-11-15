@@ -145,10 +145,17 @@ namespace Gamma
         Loader = 1
     }
 
-    public enum MovementOrderType
+    public enum OrderType
     {
         ShipmentOrer,
         InternalOrder,
         MovementOrder
+    }
+
+    public enum SourceSpoolsCheckResult
+    {
+        Correct,
+        Block,
+        Warning
     }
 }

@@ -124,25 +124,25 @@ namespace Gamma.ViewModels
                 var products = gammaBase.GetDocMovementOrderProducts(docId).ToList();
                 foreach (var good in movementGoods)
                 {
-                    good.Products =
+                    good.Products = new ItemsChangeObservableCollection<MovementProduct>(
                         products.Where(
                             p =>
                                 p.C1CNomenclatureID == good.NomenclatureID &&
                                 p.C1CCharacteristicID == good.CharacteristicID)
                             .Select(p => new MovementProduct
                             {
-                                Quantity = p.Quantity??0,
+                                Quantity = p.Quantity ?? 0,
                                 NomenclatureId = p.C1CNomenclatureID,
                                 CharacteristicId = p.C1CCharacteristicID,
                                 ProductId = p.ProductID,
                                 IsConfirmed = p.IsConfirmed,
                                 Number = p.Number,
                                 NomenclatureName = p.NomenclatureName,
-                                IsShipped = p.IsShipped??false,
-                                ProductKind = (ProductKind)p.ProductKindID,
-                                IsAccepted = p.IsAccepted??false,
+                                IsShipped = p.IsShipped ?? false,
+                                ProductKind = (ProductKind) p.ProductKindID,
+                                IsAccepted = p.IsAccepted ?? false,
                                 DocMovementId = p.DocMovementID
-                            }).ToList();
+                            }));
                 }
             }
         }

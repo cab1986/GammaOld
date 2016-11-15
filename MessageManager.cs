@@ -110,18 +110,28 @@ namespace Gamma
     /// </summary>
     public class OpenDocProductMessage
     {
+        public OpenDocProductMessage(DocProductKinds docProductKind, bool isNewProduct = false, Guid? Id = null,
+            SourceSpoolsCheckResult checkResult = SourceSpoolsCheckResult.Correct)
+        {
+            DocProductKind = docProductKind;
+            ID = Id;
+            IsNewProduct = isNewProduct;
+            CheckResult = checkResult;
+        }
         /// <summary>
         /// Вид продукции
         /// </summary>
-        public DocProductKinds DocProductKind;
+        public DocProductKinds DocProductKind { get; private set; }
         /// <summary>
         /// Идентификатор продукции (для Unload - DocID, для остальных ProductId)
         /// </summary>
-        public Guid? ID;
+        public Guid? ID { get; private set; }
+
         /// <summary>
         /// Создание нового продукта
         /// </summary>
-        public bool IsNewProduct;
+        public bool IsNewProduct { get; private set; }
+        public SourceSpoolsCheckResult CheckResult { get; private set; }
     }
     public class OpenNomenclatureMessage  
     {
@@ -347,12 +357,11 @@ namespace Gamma
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenDocProductMessage
-            {
-                    DocProductKind = docProductKind,
-                    ID = id,
-                    IsNewProduct = false
-                });
+            Messenger.Default.Send(new OpenDocProductMessage(
+                    docProductKind,
+                    false,
+                    id)
+                );
         }
 
         public static void OpenDocBroke(Guid docId, Guid? productId = null)
@@ -438,14 +447,12 @@ namespace Gamma
             Messenger.Default.Send(new OpenImportOldProductsMessage());
         }
 
-        public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null)
+        public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null, SourceSpoolsCheckResult checkResult = SourceSpoolsCheckResult.Correct)
         {
-            Messenger.Default.Send(new OpenDocProductMessage
-            {
-                    DocProductKind = docProductKind,
-                    ID = id,
-                    IsNewProduct = true
-                });
+            Messenger.Default.Send(new OpenDocProductMessage(
+                docProductKind,
+                true, id,
+                checkResult));
         }
 
     }

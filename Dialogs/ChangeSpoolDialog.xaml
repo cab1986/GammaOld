@@ -12,6 +12,17 @@
             <dxlc:LayoutItem>
                 <RadioButton Content="    Полностью переработан" GroupName="State" VerticalAlignment="Top" Name="RadioCompletly" Checked="RadioCompletly_Checked" />
             </dxlc:LayoutItem>
+            <RadioButton GroupName="State" VerticalAlignment="Top" Name="RadioReminder" HorizontalContentAlignment="Stretch" Checked="RadioReminder_Checked">
+                <dxlc:LayoutControl >
+                    <Label Content="Переработан с остатком:" VerticalAlignment="Center" DockPanel.Dock="Right" Width="150"/>
+                    <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
+                        <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
+                            <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="EdtRemainderWeight" HorizontalContentAlignment="Stretch"
+                                              IsEnabled="{Binding ElementName=RadioReminder, Path=IsChecked}"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutControl>
+            </RadioButton>
             <dxlc:LayoutItem HorizontalContentAlignment="Stretch">
                 <RadioButton GroupName="State" HorizontalContentAlignment="Stretch"  Name="RadioBroke" Checked="RadioBroke_Checked">
                     <dxlc:LayoutControl>
@@ -31,19 +42,8 @@
                     </dxlc:LayoutControl>
                 </RadioButton>
             </dxlc:LayoutItem>
-            <RadioButton GroupName="State" VerticalAlignment="Top" Name="RadioReminder" HorizontalContentAlignment="Stretch" Checked="RadioReminder_Checked">
-                <dxlc:LayoutControl >
-                    <Label Content="Переработан с остатком:" VerticalAlignment="Center" DockPanel.Dock="Right" Width="150"/>
-                    <dxlc:LayoutGroup Orientation="Vertical" View="Group" DockPanel.Dock="Right">
-                            <dxlc:LayoutItem Label="Вес" LabelPosition="Top" HorizontalContentAlignment="Stretch">
-                                <dxe:SpinEdit AllowDefaultButton="False" IsFloatValue="False" Name="EdtRemainderWeight" HorizontalContentAlignment="Stretch"
-                                              IsEnabled="{Binding ElementName=RadioReminder, Path=IsChecked}"/>
-                            </dxlc:LayoutItem>
-                        </dxlc:LayoutGroup>
-                </dxlc:LayoutControl>
-            </RadioButton>
         </dxlc:LayoutControl>
-        <Button Content="OK" Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,95,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
-        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="1"  Width="80" HorizontalAlignment="Right" Margin="0,0,10,0" />
+        <Button Content="OK" Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="5,5,95,5" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="1"  Width="80" HorizontalAlignment="Right" Margin="5,5,10,5" />
     </Grid>
 </Window>

@@ -40,6 +40,24 @@
     <Property Name="INN" Type="nvarchar" MaxLength="12" />
     <Property Name="KPP" Type="nvarchar" MaxLength="9" />
   </EntityType>
+  <EntityType Name="1CDocInternalOrders">
+    <Key>
+      <PropertyRef Name="1CDocInternalOrderID" />
+    </Key>
+    <Property Name="1CDocInternalOrderID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Marked" Type="bit" />
+    <Property Name="Posted" Type="bit" />
+    <Property Name="1CDate" Type="datetime" />
+    <Property Name="1CNumber" Type="char" MaxLength="11" />
+    <Property Name="1CTransportPointStartID" Type="uniqueidentifier" />
+    <Property Name="1CTransportPointFinishID" Type="uniqueidentifier" />
+    <Property Name="DateStartFrom" Type="datetime" />
+    <Property Name="DateStartTo" Type="datetime" />
+    <Property Name="DateFinishFrom" Type="datetime" />
+    <Property Name="DateFinishTo" Type="datetime" />
+    <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
+    <Property Name="1CWarehouseUnloadID" Type="uniqueidentifier" />
+  </EntityType>
   <EntityType Name="1CDocShipmentOrder">
     <Key>
       <PropertyRef Name="1CDocShipmentOrderID" />
@@ -487,6 +505,7 @@
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductionTaskID" Type="uniqueidentifier" />
     <Property Name="InPlaceID" Type="int" />
+    <Property Name="HasWarnings" Type="bit" />
   </EntityType>
   <EntityType Name="DocProductionProducts">
     <Key>
@@ -527,25 +546,12 @@
     <Property Name="Number" Type="varchar" MaxLength="50" />
     <Property Name="IsConfirmed" Type="bit" Nullable="false" />
     <Property Name="UserID" Type="uniqueidentifier" />
-    <Property Name="PersonID" Type="int" />
     <Property Name="PrintName" Type="varchar" MaxLength="255" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="ShiftID" Type="tinyint" />
     <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="Comment" Type="varchar" MaxLength="8000" />
     <Property Name="IsFromOldGamma" Type="bit" />
-  </EntityType>
-  <EntityType Name="DocShipmentOrderInfo">
-    <Key>
-      <PropertyRef Name="1CDocShipmentOrderID" />
-      <PropertyRef Name="KindID" />
-    </Key>
-    <Property Name="1CDocShipmentOrderID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="ActivePersonID" Type="int" />
-    <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
-    <Property Name="ShiftID" Type="tinyint" />
-    <Property Name="IsShipped" Type="bit" />
-    <Property Name="KindID" Type="tinyint" Nullable="false" />
   </EntityType>
   <EntityType Name="DocShipmentOrders">
     <Key>
@@ -1009,9 +1015,11 @@
     <Property Name="1CQualityID" Type="uniqueidentifier" />
     <Property Name="Quantity" Type="varchar" MaxLength="30" />
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+    <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
     <Property Name="OutQuantity" Type="decimal" Precision="38" Scale="5" />
     <Property Name="InQuantity" Type="decimal" Precision="38" Scale="5" />
     <Property Name="AcceptedQuantity" Type="decimal" Precision="38" Scale="5" />
+    <Property Name="IsOrderNomenclature" Type="bit" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrders" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -1108,6 +1116,7 @@
     <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
     <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
     <Property Name="Number" Type="varchar" MaxLength="20" />
+    <Property Name="BarCode" Type="varchar" MaxLength="20" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -1248,6 +1257,30 @@
       </Principal>
       <Dependent Role="1CCharacteristics">
         <PropertyRef Name="1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocInternalOrders_1CWarehouses">
+    <End Role="1CWarehouses" Type="Self.1CWarehouses" Multiplicity="0..1" />
+    <End Role="1CDocInternalOrders" Type="Self.1CDocInternalOrders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CWarehouses">
+        <PropertyRef Name="1CWarehouseID" />
+      </Principal>
+      <Dependent Role="1CDocInternalOrders">
+        <PropertyRef Name="1CWarehouseLoadID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CDocInternalOrders_1CWarehouses1">
+    <End Role="1CWarehouses" Type="Self.1CWarehouses" Multiplicity="0..1" />
+    <End Role="1CDocInternalOrders" Type="Self.1CDocInternalOrders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="1CWarehouses">
+        <PropertyRef Name="1CWarehouseID" />
+      </Principal>
+      <Dependent Role="1CDocInternalOrders">
+        <PropertyRef Name="1CWarehouseUnloadID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3508,6 +3541,7 @@
     <EntitySet Name="1CCharacteristicProperties" EntityType="Self.1CCharacteristicProperties" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CCharacteristics" EntityType="Self.1CCharacteristics" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CContractors" EntityType="Self.1CContractors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="1CDocInternalOrders" EntityType="Self.1CDocInternalOrders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CDocShipmentOrder" EntityType="Self.1CDocShipmentOrder" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CDocShipmentOrderGoods" EntityType="Self.1CDocShipmentOrderGoods" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CEnumGroupTypes" EntityType="Self.1CEnumGroupTypes" Schema="dbo" store:Type="Tables" />
@@ -3553,7 +3587,6 @@
     <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="DocShipmentOrderInfo" EntityType="Self.DocShipmentOrderInfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocShipmentOrders" EntityType="Self.DocShipmentOrders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocUnpackWithdrawals" EntityType="Self.DocUnpackWithdrawals" Schema="dbo" store:Type="Tables" />
@@ -3608,9 +3641,11 @@
     [v1COrderGoods].[1CQualityID] AS [1CQualityID], 
     [v1COrderGoods].[Quantity] AS [Quantity], 
     [v1COrderGoods].[NomenclatureName] AS [NomenclatureName], 
+    [v1COrderGoods].[ShortNomenclatureName] AS [ShortNomenclatureName], 
     [v1COrderGoods].[OutQuantity] AS [OutQuantity], 
     [v1COrderGoods].[InQuantity] AS [InQuantity], 
-    [v1COrderGoods].[AcceptedQuantity] AS [AcceptedQuantity]
+    [v1COrderGoods].[AcceptedQuantity] AS [AcceptedQuantity], 
+    [v1COrderGoods].[IsOrderNomenclature] AS [IsOrderNomenclature]
     FROM [dbo].[v1COrderGoods] AS [v1COrderGoods]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="v1COrders" EntityType="Self.v1COrders" store:Type="Views" store:Schema="dbo">
@@ -3688,7 +3723,8 @@
     [vDocMovementProducts].[1CQualityID] AS [1CQualityID], 
     [vDocMovementProducts].[NomenclatureName] AS [NomenclatureName], 
     [vDocMovementProducts].[ShortNomenclatureName] AS [ShortNomenclatureName], 
-    [vDocMovementProducts].[Number] AS [Number]
+    [vDocMovementProducts].[Number] AS [Number], 
+    [vDocMovementProducts].[BarCode] AS [BarCode]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -3767,6 +3803,14 @@
     <AssociationSet Name="FK_1CCharacteristics_1CNomenclature" Association="Self.FK_1CCharacteristics_1CNomenclature">
       <End Role="1CNomenclature" EntitySet="1CNomenclature" />
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocInternalOrders_1CWarehouses" Association="Self.FK_1CDocInternalOrders_1CWarehouses">
+      <End Role="1CWarehouses" EntitySet="1CWarehouses" />
+      <End Role="1CDocInternalOrders" EntitySet="1CDocInternalOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CDocInternalOrders_1CWarehouses1" Association="Self.FK_1CDocInternalOrders_1CWarehouses1">
+      <End Role="1CWarehouses" EntitySet="1CWarehouses" />
+      <End Role="1CDocInternalOrders" EntitySet="1CDocInternalOrders" />
     </AssociationSet>
     <AssociationSet Name="FK_1CDocShipmentOrder_1CContractors" Association="Self.FK_1CDocShipmentOrder_1CContractors">
       <End Role="1CContractors" EntitySet="1CContractors" />

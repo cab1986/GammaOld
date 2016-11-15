@@ -88,7 +88,7 @@
                     <dxb:BarSubItem Content="Склад">
                         <dxb:BarButtonItem Content="Отгрузки" Command="{Binding OpenDocShipmentOrdersCommand}"/>
                         <dxb:BarButtonItem Content="Приемка" Command="{Binding OpenDocInOrdersCommand}" />
-                        <dxb:BarButtonItem Content="Заказы на внутреннее перемещение" Command="{Binding OpenDocMovementOrdersCommand}"/>
+                        <dxb:BarButtonItem Content="Заказы на внутреннее перемещение" Command="{Binding OpenDocMovementOrdersCommand}" IsVisible="False" />
                         <dxb:BarButtonItem Content="Перемещения" Command="{Binding OpenDocMovementsCommand}"/>
                         <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
                         <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />

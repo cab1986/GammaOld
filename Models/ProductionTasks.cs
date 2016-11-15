@@ -17,9 +17,9 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProductionTasks()
         {
-            this.DocProduction = new HashSet<DocProduction>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
+            this.DocProduction = new HashSet<DocProduction>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
@@ -34,13 +34,13 @@ namespace Gamma.Models
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocProduction> DocProduction { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual ProductionTaskWR ProductionTaskWR { get; set; }
         public virtual ProductionTaskSGB ProductionTaskSGB { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
         public virtual Places Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocProduction> DocProduction { get; set; }
     }
 }

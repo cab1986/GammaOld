@@ -43,8 +43,6 @@ namespace Gamma.Models
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<DocChangeStateProducts> DocChangeStateProducts { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
-        public virtual DbSet<DocProduction> DocProduction { get; set; }
-        public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<DocTypes> DocTypes { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual DbSet<Enterprises> Enterprises { get; set; }
@@ -112,13 +110,15 @@ namespace Gamma.Models
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
-        public virtual DbSet<DocShipmentOrderInfo> DocShipmentOrderInfo { get; set; }
-        public virtual DbSet<DocShipmentOrders> DocShipmentOrders { get; set; }
-        public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
         public virtual DbSet<v1COrders> v1COrders { get; set; }
         public virtual DbSet<vDocMovementProducts> vDocMovementProducts { get; set; }
         public virtual DbSet<vDocMovementGoods> vDocMovementGoods { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
+        public virtual DbSet<DocShipmentOrders> DocShipmentOrders { get; set; }
+        public virtual DbSet<C1CDocInternalOrders> C1CDocInternalOrders { get; set; }
+        public virtual DbSet<Docs> Docs { get; set; }
+        public virtual DbSet<DocProduction> DocProduction { get; set; }
+        public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {

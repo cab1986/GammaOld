@@ -35,5 +35,6 @@ namespace Gamma.Models
         public string NomenclatureName { get; set; }
         public string ShortNomenclatureName { get; set; }
         public string Number { get; set; }
+        public string BarCode { get; set; }
     }
 }

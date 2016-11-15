@@ -279,3 +279,7 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrderView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrderView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrdersView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementsView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementView.baml

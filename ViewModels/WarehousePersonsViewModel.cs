@@ -47,11 +47,14 @@ namespace Gamma.ViewModels
                 MessageBox.Show("Новое имя не заполнено", "Ошибка имени", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 return;
             }
-            GammaBase.Persons.Add(new Persons
+            var person = new Persons()
             {
+                PersonID = SqlGuidUtil.NewSequentialid(),
                 Name = NewPersonName,
-                PostTypeID = 1
-            });
+                PostTypeID = 1,
+                BranchID = WorkSession.BranchID
+            };
+            GammaBase.Persons.Add(person);
             GammaBase.SaveChanges();
             RefreshPersons();
         }

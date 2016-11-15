@@ -33,10 +33,17 @@
                     <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Со склада" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding OutPlaceId}" ItemsSource="{Binding Warehouses}"  ValueMember="PlaceID" DisplayMember="PlaceName" IsReadOnly="True"/>
+                    <dxe:TextEdit EditValue="{Binding OutPlace}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="На склад" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding InPlaceId}" ItemsSource="{Binding Warehouses}" ValueMember="PlaceID" DisplayMember="PlaceName" IsReadOnly="True"/>
+                <dxlc:LayoutItem Label="На склад" LabelPosition="Top" Visibility="{Binding IsInVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dxe:TextEdit EditValue="{Binding InPlace}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Основание" LabelPosition="Top">
+                    <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding DocOrderInfo}" IsReadOnly="True">
+                        <dxe:ButtonEdit.Buttons>
+                            <dxe:ButtonInfo Command="{Binding OpendDocOrderCommand}" Content="i"/>
+                        </dxe:ButtonEdit.Buttons>
+                    </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Выполнен">
                     <dxe:CheckEdit EditValue="{Binding IsConfirmed}" IsReadOnly="True"/>
@@ -44,9 +51,17 @@
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Vertical">
                 <dxlc:LayoutItem Label="Перемещено" LabelPosition="Top" VerticalAlignment="Stretch">
-                    <dxg:GridControl ItemsSource="{Binding MovementProducts}" DesignTimeDataObjectType="{x:Type models:MovementProduct}" MaxHeight="2000">
+                    <dxb:BarManager>
+                        <dxb:BarManager.Bars>
+                            <dxb:Bar AllowCustomizationMenu="False" AllowQuickCustomization="False" >
+                                <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" BarItemDisplayMode="Default" GlyphSize="Small"
+                                                   Command="{Binding DeleteProductCommand}"/>
+                            </dxb:Bar>
+                        </dxb:BarManager.Bars>
+                        <dxg:GridControl ItemsSource="{Binding MovementProducts}" DesignTimeDataObjectType="{x:Type models:MovementProduct}" MaxHeight="2000"
+                                         SelectedItem="{Binding SelectedProduct}" >
                         <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" />
+                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True"/>
                         </dxg:GridControl.View>
                         <dxg:GridControl.GroupSummary>
                             <dxg:GridSummaryItem FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого:{0:0.###}"/>
@@ -60,10 +75,18 @@
                             <dxg:GridColumn FieldName="Number" Header="Номер" SortOrder="Ascending" SortIndex="0" AllowEditing="False"/>
                             <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60" AllowEditing="False"/>
                             <dxg:GridColumn AllowEditing="False" FieldName="IsShipped" Header="Отправлено"/>
-                            <dxg:GridColumn FieldName="IsAccepted" Header="Получено" AllowEditing="False"/>
-                            <dxg:GridColumn FieldName="IsConfirmed" Header="Принято" AllowEditing="True"/>
+                            <dxg:GridColumn FieldName="IsAccepted" Header="Получено" AllowEditing="False" Visible="{Binding IsInVisible}"/>
+                            <dxg:GridColumn FieldName="IsConfirmed" Header="Принято" AllowEditing="True" Visible="{Binding IsInVisible}">
+                                <dxg:GridColumn.HeaderCustomizationAreaTemplate>
+                                    <DataTemplate>
+                                        <dxe:CheckEdit EditValue="{Binding Path=CheckAll}" 
+                                                       DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext}"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.HeaderCustomizationAreaTemplate>
+                            </dxg:GridColumn>
                         </dxg:GridControl.Columns>
                     </dxg:GridControl>
+                    </dxb:BarManager>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

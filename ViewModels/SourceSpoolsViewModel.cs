@@ -27,19 +27,18 @@ namespace Gamma.ViewModels
                 SourceSpoolsVisible = Visibility.Collapsed;
                 return;
             }
-            using (var gammaBase = DB.GammaDb)
-            {
+            
                 if (WorkSession.PlaceGroup == PlaceGroups.Rw || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
                 else SourceSpoolsVisible = Visibility.Collapsed;
                 ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
                 DeleteSpoolCommand = new DelegateCommand<byte>(DeleteSpool);
                 ChooseSpoolCommand = new DelegateCommand<byte>(ChooseSpool);
-                SourceSpools = gammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
+                SourceSpools = GammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
                 if (SourceSpools == null)
                 {
                     SourceSpools = new SourceSpools() { PlaceID = WorkSession.PlaceID };
-                    gammaBase.SourceSpools.Add(SourceSpools);
-                    gammaBase.SaveChanges();
+                    GammaBase.SourceSpools.Add(SourceSpools);
+                    GammaBase.SaveChanges();
                 }
                 else
                 {
@@ -50,7 +49,7 @@ namespace Gamma.ViewModels
                     Unwinder2Active = SourceSpools.Unwinder2Active ?? false;
                     Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
                 }
-                var unwindersCount = DB.GetUnwindersCount(WorkSession.PlaceID, gammaBase);
+                var unwindersCount = DB.GetUnwindersCount(WorkSession.PlaceID, GammaBase);
                 switch (unwindersCount)
                 {
                     case 1:
@@ -65,7 +64,6 @@ namespace Gamma.ViewModels
                         Unwinder2Visible = true;
                         break;
                 }
-            }
         }
         public DelegateCommand<byte> ChooseSpoolCommand {get; set;}
         public DelegateCommand<byte> DeleteSpoolCommand {get; set;}
@@ -80,19 +78,16 @@ namespace Gamma.ViewModels
         private void CreateRemainderSpool(Guid productId, decimal weight)
         {
             UIServices.SetBusyState();
-            using (var gammaBase = DB.GammaDb)
-            {
                 var docWithdrawalProduct =
-                gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
+                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
                     .FirstOrDefault(d => d.ProductID == productId);
                 if (docWithdrawalProduct == null) return;
-                var product = gammaBase.vProductsInfo.First(p => p.ProductID == productId);
+                var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
                 docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight / 1000;
                 docWithdrawalProduct.CompleteWithdrawal = false;
                 //          docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
-                gammaBase.SaveChanges();
+                GammaBase.SaveChanges();
                 ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
-            }
         }
 
         private byte CurrentUnwinder { get; set; }
@@ -100,9 +95,8 @@ namespace Gamma.ViewModels
         private void SourceSpoolChanged(ChoosenProductMessage msg)
         {
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
-            using (var gammaBase = DB.GammaDb)
-            {
-                var isWrittenOff = gammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
+            
+                var isWrittenOff = GammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
                 if (isWrittenOff ?? false)
                 {
                     MessageBox.Show("Нельзя повторно использовать списанный тамбур", "Списанный тамбур", MessageBoxButton.OK, MessageBoxImage.Hand);
@@ -137,9 +131,8 @@ namespace Gamma.ViewModels
                         SourceSpools.Unwinder3Active = Unwinder3Active;
                         break;
                 }
-                gammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
-                gammaBase.SaveChanges();
-            }
+                GammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
+                GammaBase.SaveChanges();
         }
         private void DeleteSpool(byte unum)
         {
@@ -237,6 +230,7 @@ namespace Gamma.ViewModels
 
         private void BrokeProduct(Guid productId, decimal weight, Guid? rejectionReasonId)
         {
+            UIServices.SetBusyState();
             var docID = SqlGuidUtil.NewSequentialid();
             GammaBase.CreateDocBrokeWithBrokeDecision(docID, productId, weight/1000, rejectionReasonId,
                 WorkSession.PrintName, WorkSession.PlaceID);

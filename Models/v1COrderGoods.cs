@@ -20,8 +20,10 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CQualityID { get; set; }
         public string Quantity { get; set; }
         public string NomenclatureName { get; set; }
+        public string ShortNomenclatureName { get; set; }
         public Nullable<decimal> OutQuantity { get; set; }
         public Nullable<decimal> InQuantity { get; set; }
         public Nullable<decimal> AcceptedQuantity { get; set; }
+        public Nullable<bool> IsOrderNomenclature { get; set; }
     }
 }

@@ -418,6 +418,7 @@ namespace Gamma.ViewModels
                         Select(p => p.ProductionTasks.FirstOrDefault(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).ProductionTaskID).
                         FirstOrDefault();
                 Guid productId;
+                var checkResult = SourceSpoolsCheckResult.Correct;
                 switch (BatchKind)
                 {
                     case BatchKinds.SGB:
@@ -489,20 +490,17 @@ namespace Gamma.ViewModels
                                     MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, notConfirmedDocUnload.DocID);
                                     return;
                                 }
-                                if (!SourceSpoolsCorrect()) return;
-                                //                            var checkResult = DB.CheckSourceSpools(WorkSession.PlaceID, productionTaskID);
-                                //                            if (checkResult != "")
-                                //                            {
-                                //                                var dlgResult = MessageBox.Show(checkResult + "Вы уверены, что хотите продолжить?", "Проверка тамбуров", 
-                                //                                    MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                                //                                if (dlgResult == MessageBoxResult.No) return;
-                                //                            }
+                                checkResult = SourceSpoolsCorrect(WorkSession.PlaceID, productionTaskID);
                                 break;
                         }
-                        MessageManager.CreateNewProduct(docProductKind, productionTaskID);
+                        if (checkResult == SourceSpoolsCheckResult.Block) return;
+                        MessageManager.CreateNewProduct(docProductKind, productionTaskID, checkResult);
                         break;
                     // Действия для конвертингов
                     case BatchKinds.SGI:
+                        checkResult = SourceSpoolsCorrect(WorkSession.PlaceID, productionTaskID);
+                        if (checkResult == SourceSpoolsCheckResult.Block) return;
+                        /*
                         var activeSourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
                         if (activeSourceSpools.Count == 0)
                         {
@@ -510,6 +508,7 @@ namespace Gamma.ViewModels
                                 MessageBoxImage.Information);
                             return;
                         }
+                        */
                             var currentDateTime = DB.CurrentDateTime;
                             var productionTask =
                                 gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
@@ -555,6 +554,7 @@ namespace Gamma.ViewModels
                                     DocID = docID,
                                     InPlaceID = WorkSession.PlaceID,
                                     ProductionTaskID = productionTask.ProductionTaskID,
+                                    HasWarnings = checkResult == SourceSpoolsCheckResult.Warning,
                                     DocProductionProducts = new List<DocProductionProducts>
                                     {
                                         new DocProductionProducts
@@ -757,44 +757,36 @@ namespace Gamma.ViewModels
         public Dictionary<byte, string> ProcessModels { get; set; }
         public bool ChangeStateReadOnly { get; set; }
         public string Title { get; private set; }
-        private bool SourceSpoolsCorrect()
+
+        private SourceSpoolsCheckResult SourceSpoolsCorrect(int placeId, Guid productionTaskId)
         {
-            var dialogResult = MessageBoxResult.None;
             using (var gammaBase = DB.GammaDb)
             {
-                var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
+                var sourceSpools = gammaBase.GetActiveSourceSpools(placeId).ToList();
                 if (sourceSpools.Count == 0)
                 {
                     MessageBox.Show("Нет активных раскатов");
-                    return false;
+                    return SourceSpoolsCheckResult.Block;
                 }
+                /*
                 if (!gammaBase.ProductionTaskRWCutting.Any(ptrw => ptrw.ProductionTasks.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == ProductionTaskBatchID))
                 {
                     MessageBox.Show("В задании не указан раскрой");
                     return false;
                 }
-                var productionTaskId =
-                    gammaBase.ProductionTasks
-                        .FirstOrDefault(pt => pt.PlaceGroupID == (int) WorkSession.PlaceGroup
-                                                          &&
-                                                          pt.ProductionTaskBatches.Select(p => p.ProductionTaskBatchID)
-                                                              .Contains(ProductionTaskBatchID))?
-                        .ProductionTaskID;
-                var result = gammaBase.CheckProductionTaskSourceSpools(WorkSession.PlaceID, productionTaskId).First();
+                */
+                var result = gammaBase.CheckProductionTaskSourceSpools(placeId, productionTaskId).First();
                 var resultMessage = result.ResultMessage;
-                if (!string.IsNullOrWhiteSpace(resultMessage))
+                if (string.IsNullOrWhiteSpace(resultMessage) && !result.BlockCreation)
+                    return SourceSpoolsCheckResult.Correct;
+                if (result.BlockCreation)
                 {
-                    if (result.BlockCreation)
-                    {
-                        MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.OK,
-                            MessageBoxImage.Error);
-                    }
-                    else
-                    {
-                        dialogResult = MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    }
+                    MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    return SourceSpoolsCheckResult.Block;
                 }
-                return !result.BlockCreation || dialogResult == MessageBoxResult.Yes;
+                var dialogResult = MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                return dialogResult == MessageBoxResult.Yes ? SourceSpoolsCheckResult.Warning : SourceSpoolsCheckResult.Block;
             }
         }
     }

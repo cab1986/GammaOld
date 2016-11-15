@@ -28,9 +28,17 @@ namespace Gamma.ViewModels
         public DocProductUnloadViewModel(Guid docID, bool newProduct, GammaEntities gammaBase = null) : base(gammaBase)
         {
             DocID = docID;
-            ProductionTaskID =
-                    (Guid)GammaBase.DocProduction.Where(d => d.DocID == docID).Select(d => d.ProductionTaskID).First();
-            GetProductionTaskRwInfo(ProductionTaskID);
+            var productionTaskID =
+                    GammaBase.DocProduction.Where(d => d.DocID == docID).Select(d => d.ProductionTaskID).FirstOrDefault();
+            if (productionTaskID == null)
+            {
+                MessageBox.Show("Не удалось получить информацию о задании");
+            }
+            else
+            {
+                ProductionTaskID = (Guid)productionTaskID;
+                GetProductionTaskRwInfo(ProductionTaskID);
+            }
             CreateSpoolsCommand = new DelegateCommand(CreateSpools, CanCreateSpools);EditSpoolCommand = new DelegateCommand(EditSpool);
             Bars.Add(ReportManager.GetReportBar("Unload", VMID));
             if (newProduct)  // Если новый съем то получаем раскрой из задания DocProduction и инициализруем коллекцию тамбуров съема

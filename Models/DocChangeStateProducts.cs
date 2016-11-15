@@ -21,7 +21,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> C1CRejectionReasonID { get; set; }
     
         public virtual C1CRejectionReasons C1CRejectionReasons { get; set; }
-        public virtual Docs Docs { get; set; }
         public virtual ProductStates ProductStates { get; set; }
+        public virtual Docs Docs { get; set; }
     }
 }

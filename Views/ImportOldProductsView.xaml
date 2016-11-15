@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
         <dxlc:LayoutControl Orientation="Vertical">
             <dxlc:LayoutGroup Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Вид продукции" LabelPosition="Top" Width="100">
+                <dxlc:LayoutItem Label="Вид продукции" LabelPosition="Top" Width="170">
                     <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Номер" LabelPosition="Top">

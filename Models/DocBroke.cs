@@ -26,10 +26,10 @@ namespace Gamma.Models
         public Nullable<System.Guid> PlaceStoreID { get; set; }
         public Nullable<bool> IsInFuturePeriod { get; set; }
     
-        public virtual Docs Docs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeProducts> DocBrokeProducts { get; set; }
+        public virtual Docs Docs { get; set; }
     }
 }

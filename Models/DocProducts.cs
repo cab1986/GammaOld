@@ -19,7 +19,7 @@ namespace Gamma.Models
         public Nullable<bool> IsInConfirmed { get; set; }
         public Nullable<bool> IsOutConfirmed { get; set; }
     
-        public virtual Docs Docs { get; set; }
         public virtual Products Products { get; set; }
+        public virtual Docs Docs { get; set; }
     }
 }

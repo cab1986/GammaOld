@@ -17,20 +17,21 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DocProduction()
         {
-            this.DocWithdrawal = new HashSet<DocWithdrawal>();
             this.DocProductionProducts = new HashSet<DocProductionProducts>();
+            this.DocWithdrawal = new HashSet<DocWithdrawal>();
         }
     
         public System.Guid DocID { get; set; }
         public Nullable<System.Guid> ProductionTaskID { get; set; }
         public Nullable<int> InPlaceID { get; set; }
+        public Nullable<bool> HasWarnings { get; set; }
     
         public virtual Docs Docs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
+        public virtual Places Places { get; set; }
         public virtual ProductionTasks ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
-        public virtual Places Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
     }
 }

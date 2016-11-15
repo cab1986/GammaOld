@@ -5,7 +5,8 @@ using System.Collections.ObjectModel;
 using Gamma.Models;
 using System.Linq;
 using Gamma.Interfaces;
-using Gamma.Attributes;using System.Windows;
+using Gamma.Attributes;
+using System.Windows;
 using System.Data.Entity;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -66,7 +67,8 @@ namespace Gamma.ViewModels
                 {
                     DocID = Doc.DocID,
                     InPlaceID = WorkSession.PlaceID,
-                    ProductionTaskID = msg.ID
+                    ProductionTaskID = msg.ID,
+                    HasWarnings = msg.CheckResult == SourceSpoolsCheckResult.Warning
                 };
                 if (msg.DocProductKind != DocProductKinds.DocProductUnload)
                 {
@@ -306,7 +308,7 @@ namespace Gamma.ViewModels
         public DateTime DocDate { get; set; }
         private bool _isConfirmed;
 
-        private bool AllowEditDoc { get; set; }
+        private bool AllowEditDoc { get; set; } = true;
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public bool IsConfirmed 

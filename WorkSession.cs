@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -26,7 +27,8 @@ namespace Gamma
                                      placeGroupID = u.Places.FirstOrDefault().PlaceGroupID, u.ShiftID, u.DBAdmin,
                                      programAdmin = u.ProgramAdmin,
                                      u.Places.FirstOrDefault().BranchID,
-                                     u.Places.FirstOrDefault().IsProductionPlace
+                                     u.Places.FirstOrDefault().IsProductionPlace,
+                                     u.Places
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -40,6 +42,8 @@ namespace Gamma
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroups)userInfo.placeGroupID;
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
+                PlaceIds = userInfo.Places.Select(p => p.PlaceID).ToList();
+                BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
             }
         }
         public static bool DBAdmin
@@ -61,6 +65,9 @@ namespace Gamma
         {
             get; private set;
         }
+
+        public static List<int> PlaceIds { get; private set; }
+        public static List<int> BranchIds { get; private set; }
 
         public static bool IsProductionPlace { get; private set; }
         public static PlaceGroups PlaceGroup { get; private set; }

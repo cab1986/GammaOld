@@ -18,6 +18,8 @@ namespace Gamma.Models
         public C1CWarehouses()
         {
             this.C1CDocShipmentOrder = new HashSet<C1CDocShipmentOrder>();
+            this.C1CDocInternalOrders = new HashSet<C1CDocInternalOrders>();
+            this.C1CDocInternalOrders1 = new HashSet<C1CDocInternalOrders>();
         }
     
         public System.Guid C1CWarehouseID { get; set; }
@@ -34,5 +36,9 @@ namespace Gamma.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CDocInternalOrders> C1CDocInternalOrders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CDocInternalOrders> C1CDocInternalOrders1 { get; set; }
     }
 }

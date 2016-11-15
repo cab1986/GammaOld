@@ -75,7 +75,7 @@
                                 <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Дата производства" LabelPosition="Top">
-                                <dxe:DateEdit EditValue="{Binding DocDate}" IsReadOnly="True"/>
+                                <dxe:DateEdit EditValue="{Binding DocDate}" IsReadOnly="True" Mask="g" MaskUseAsDisplayFormat="True"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="По заданию" LabelPosition="Top">
                                 <dxe:ButtonEdit IsReadOnly="True" AllowDefaultButton="False" EditValue="{Binding ProductionTaskInfo}">

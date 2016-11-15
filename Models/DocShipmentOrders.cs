@@ -21,10 +21,10 @@ namespace Gamma.Models
         public Nullable<int> OutPlaceID { get; set; }
         public Nullable<System.Guid> OutActivePersonID { get; set; }
         public Nullable<byte> OutShiftID { get; set; }
+        public Nullable<System.DateTime> OutDate { get; set; }
         public Nullable<int> InPlaceID { get; set; }
         public Nullable<System.Guid> InActivePersonID { get; set; }
         public Nullable<byte> InShiftID { get; set; }
-        public Nullable<System.DateTime> OutDate { get; set; }
         public Nullable<System.DateTime> InDate { get; set; }
     }
 }
