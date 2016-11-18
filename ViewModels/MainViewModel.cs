@@ -92,7 +92,7 @@ namespace Gamma.ViewModels
                     CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb);
                     break;
             }
-            var places = GammaBase.Places.Where(p => p.IsProductionPlace == true).Select(p => p);
+            var places = GammaBase.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
             PlaceProducts = new ObservableCollection<PlaceProduct>();
             foreach (var place in places)
             {

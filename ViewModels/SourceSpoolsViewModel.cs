@@ -133,7 +133,9 @@ namespace Gamma.ViewModels
                 }
                 GammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
                 GammaBase.SaveChanges();
+            if (WorkSession.PlaceGroup != PlaceGroups.Convertings) return;
         }
+
         private void DeleteSpool(byte unum)
         {
             switch (unum)
@@ -247,18 +249,39 @@ namespace Gamma.ViewModels
             {
                 case 1:
                     Unwinder1Active = !Unwinder1Active;
+                    GammaBase.SaveChanges();
+                    if (Unwinder1Active) CheckSourceSpools();
                     break;
                 case 2:
                     Unwinder2Active = !Unwinder2Active;
+                    GammaBase.SaveChanges();
+                    if (Unwinder2Active) CheckSourceSpools();
                     break;
                 case 3:
                     Unwinder3Active = !Unwinder3Active;
-                    break;
-                default:
+                    GammaBase.SaveChanges();
+                    if (Unwinder3Active) CheckSourceSpools();
                     break;
             }
-            GammaBase.SaveChanges();
         }
+
+        private void CheckSourceSpools()
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var productionTaskID =
+                    gammaBase.ActiveProductionTasks.FirstOrDefault(pt => pt.PlaceID == WorkSession.PlaceID)?
+                        .ProductionTaskID;
+                if (productionTaskID == null) return;
+                var checkResult = gammaBase.CheckProductionTaskSourceSpools(WorkSession.PlaceID, productionTaskID).FirstOrDefault();
+                if (!string.IsNullOrEmpty(checkResult?.ResultMessage))
+                {
+                    MessageBox.Show(checkResult.ResultMessage, "Предупреждение", MessageBoxButton.OK,
+                        MessageBoxImage.Asterisk);
+                }
+            }
+        }
+
         private bool _unwinder1Active;
         public bool Unwinder1Active
         {

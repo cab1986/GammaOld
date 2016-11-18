@@ -25,10 +25,10 @@ namespace Gamma.Models
         public Nullable<int> OutPlaceID { get; set; }
         public Nullable<int> InPlaceID { get; set; }
     
-        public virtual Places PlacesFrom { get; set; }
-        public virtual Places PlacesTo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual Places PlacesFrom { get; set; }
+        public virtual Places PlacesTo { get; set; }
     }
 }

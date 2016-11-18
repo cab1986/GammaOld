@@ -38,21 +38,34 @@ namespace Gamma.ViewModels
         /// <param name="productionTaskBatchID">id пакета заданий(для СГИ одно задание)</param>
         public ProductionTaskSGIViewModel(Guid productionTaskBatchID) : this()
         {
-            var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Convertings).FirstOrDefault();
-            if (productionTask != null)
+            using (var gammaBase = DB.GammaDb)
             {
-                DateBegin = productionTask.DateBegin;
-                DateEnd = productionTask.DateEnd;
-                NomenclatureID = productionTask.C1CNomenclatureID;
-                CharacteristicID = productionTask.C1CCharacteristicID;
-                Quantity = (int)productionTask.Quantity;
-                PlaceID = productionTask.PlaceID;
+                var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Convertings).FirstOrDefault();
+                if (productionTask != null)
+                {
+                    DateBegin = productionTask.DateBegin;
+                    DateEnd = productionTask.DateEnd;
+                    NomenclatureID = productionTask.C1CNomenclatureID;
+                    CharacteristicID = productionTask.C1CCharacteristicID;
+                    Quantity = (int)productionTask.Quantity;
+                    PlaceID = productionTask.PlaceID;
+                    if (productionTask.PlaceID == WorkSession.PlaceID)
+                    {
+                        var checkResult = gammaBase.CheckProductionTaskSourceSpools(productionTask.PlaceID,
+                            productionTask.ProductionTaskID).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(checkResult?.ResultMessage))
+                        {
+                            MessageBox.Show(checkResult.ResultMessage, "Предупреждение", MessageBoxButton.OK,
+                                MessageBoxImage.Asterisk);
+                        }
+                    }
+                }
+                ProductionTaskStateID =
+                    gammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
+                        .Select(p => p.ProductionTaskStateID)
+                        .FirstOrDefault();
+                IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
             }
-            ProductionTaskStateID =
-                DB.GammaDb.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
-                    .Select(p => p.ProductionTaskStateID)
-                    .FirstOrDefault();
-            IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
         }
 
         public event Func<GammaEntities,bool> PrintExampleEvent;

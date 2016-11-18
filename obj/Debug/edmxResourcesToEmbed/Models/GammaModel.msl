@@ -1309,34 +1309,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Places">
-      <EntityTypeMapping TypeName="GammaModel.Places">
-        <MappingFragment StoreEntitySet="Places">
-          <ScalarProperty Name="UnwindersCount" ColumnName="UnwindersCount" />
-          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
-          <ScalarProperty Name="IsShipmentWarehouse" ColumnName="IsShipmentWarehouse" />
-          <ScalarProperty Name="IsTransitWarehouse" ColumnName="IsTransitWarehouse" />
-          <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
-          <ScalarProperty Name="IsProductionPlace" ColumnName="IsProductionPlace" />
-          <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
-          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-          <ScalarProperty Name="NameEng" ColumnName="NameEng" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="BranchUnitID" ColumnName="BranchUnitID" />
-          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-          <ScalarProperty Name="PlaceGuid" ColumnName="PlaceGuid" />
-          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <AssociationSetMapping Name="UserPlaces" TypeName="GammaModel.UserPlaces" StoreEntitySet="UserPlaces">
-      <EndProperty Name="Users">
-        <ScalarProperty Name="UserID" ColumnName="UserID" />
-      </EndProperty>
-      <EndProperty Name="Places">
-        <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
-      </EndProperty>
-    </AssociationSetMapping>
     <EntitySetMapping Name="DocInProducts">
       <EntityTypeMapping TypeName="GammaModel.DocInProducts">
         <MappingFragment StoreEntitySet="DocInProducts">
@@ -1598,5 +1570,43 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="ActiveProductionTasks">
+      <EntityTypeMapping TypeName="GammaModel.ActiveProductionTasks">
+        <MappingFragment StoreEntitySet="ActiveProductionTasks">
+          <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Places">
+      <EntityTypeMapping TypeName="GammaModel.Places">
+        <MappingFragment StoreEntitySet="Places">
+          <ScalarProperty Name="IsRemotePrinting" ColumnName="IsRemotePrinting" />
+          <ScalarProperty Name="UnwindersCount" ColumnName="UnwindersCount" />
+          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+          <ScalarProperty Name="IsShipmentWarehouse" ColumnName="IsShipmentWarehouse" />
+          <ScalarProperty Name="IsTransitWarehouse" ColumnName="IsTransitWarehouse" />
+          <ScalarProperty Name="IsWarehouse" ColumnName="IsWarehouse" />
+          <ScalarProperty Name="IsProductionPlace" ColumnName="IsProductionPlace" />
+          <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+          <ScalarProperty Name="NameEng" ColumnName="NameEng" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BranchUnitID" ColumnName="BranchUnitID" />
+          <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+          <ScalarProperty Name="PlaceGuid" ColumnName="PlaceGuid" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UserPlaces" TypeName="GammaModel.UserPlaces" StoreEntitySet="UserPlaces">
+      <EndProperty Name="Users">
+        <ScalarProperty Name="UserID" ColumnName="UserID" />
+      </EndProperty>
+      <EndProperty Name="Places">
+        <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="MakeProductionTaskActiveForPlace" FunctionName="GammaDBModel.MakeProductionTaskActiveForPlace" />
   </EntityContainerMapping>
 </Mapping>

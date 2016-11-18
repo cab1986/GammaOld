@@ -315,6 +315,13 @@
     <Property Name="Transit" Type="bit" />
     <Property Name="ResponsibleStorage" Type="bit" />
   </EntityType>
+  <EntityType Name="ActiveProductionTasks">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="int" Nullable="false" />
+    <Property Name="ProductionTaskID" Type="uniqueidentifier" />
+  </EntityType>
   <EntityType Name="BarcodeTypes">
     <Key>
       <PropertyRef Name="BarcodeTypeID" />
@@ -725,6 +732,7 @@
     <Property Name="IsShipmentWarehouse" Type="bit" />
     <Property Name="1CPlaceID" Type="uniqueidentifier" />
     <Property Name="UnwindersCount" Type="int" />
+    <Property Name="IsRemotePrinting" Type="bit" />
   </EntityType>
   <EntityType Name="PlaceZoneCells">
     <Key>
@@ -1833,6 +1841,30 @@
       </Principal>
       <Dependent Role="1CSpecificationOutputNomenclature">
         <PropertyRef Name="1CSpecificationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ActiveProductionTasks_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="ActiveProductionTasks" Type="Self.ActiveProductionTasks" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="ActiveProductionTasks">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ActiveProductionTasks_ProductionTasks">
+    <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="0..1" />
+    <End Role="ActiveProductionTasks" Type="Self.ActiveProductionTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
+      </Principal>
+      <Dependent Role="ActiveProductionTasks">
+        <PropertyRef Name="ProductionTaskID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3501,6 +3533,10 @@
   <Function Name="GroupPackSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
   </Function>
+  <Function Name="MakeProductionTaskActiveForPlace" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceID" Type="int" Mode="In" />
+    <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+  </Function>
   <Function Name="msp_UserPermit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="TableName" Type="varchar" Mode="In" />
   </Function>
@@ -3564,6 +3600,7 @@
     <EntitySet Name="1CSpecificationOutputNomenclature" EntityType="Self.1CSpecificationOutputNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CSpecifications" EntityType="Self.1CSpecifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="1CWarehouses" EntityType="Self.1CWarehouses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ActiveProductionTasks" EntityType="Self.ActiveProductionTasks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="BarcodeTypes" EntityType="Self.BarcodeTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
@@ -3995,6 +4032,14 @@
     <AssociationSet Name="FK_1CSpecificationOutputNomenclature_1CSpecifications1" Association="Self.FK_1CSpecificationOutputNomenclature_1CSpecifications1">
       <End Role="1CSpecifications" EntitySet="1CSpecifications" />
       <End Role="1CSpecificationOutputNomenclature" EntitySet="1CSpecificationOutputNomenclature" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ActiveProductionTasks_Places" Association="Self.FK_ActiveProductionTasks_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="ActiveProductionTasks" EntitySet="ActiveProductionTasks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ActiveProductionTasks_ProductionTasks" Association="Self.FK_ActiveProductionTasks_ProductionTasks">
+      <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+      <End Role="ActiveProductionTasks" EntitySet="ActiveProductionTasks" />
     </AssociationSet>
     <AssociationSet Name="FK_BatchProductionTasks_ProductionTaskBatches" Association="Self.FK_BatchProductionTasks_ProductionTaskBatches">
       <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />

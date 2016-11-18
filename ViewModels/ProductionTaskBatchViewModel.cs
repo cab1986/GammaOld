@@ -23,6 +23,10 @@ namespace Gamma.ViewModels
         {
             Contractors = GammaBase.C1CContractors.Where(c => c.IsBuyer ?? false).ToList();
             ProductionTaskBatchID = msg.ProductionTaskBatchID ?? SqlGuidUtil.NewSequentialid();
+            if (!WorkSession.IsRemotePrinting && WorkSession.PlaceGroup == PlaceGroups.Convertings)
+            {
+                MakeProductionTaskActiveForPlace();
+            }
             ChangeStateReadOnly = !DB.HaveWriteAccess("ProductionTasks");
             BatchKind = msg.BatchKind;
             TaskStates = new ProductionTaskStates().ToDictionary();
@@ -70,12 +74,13 @@ namespace Gamma.ViewModels
                     //                    PlaceGroupID = (int)PlaceGroups.RW;
                     break;
                 case BatchKinds.SGI:
-                    NewProductText = "Печать этикетки";
+                    NewProductText = WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать этикетки";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroups.Other;
                     break;
 
             }
-            CreateNewProductCommand = new DelegateCommand(CreateNewProduct,CanCreateNewProduct);
+            CreateNewProductCommand = !WorkSession.IsRemotePrinting ? new DelegateCommand(CreateNewProduct, CanCreateNewProduct) 
+                : new DelegateCommand(CreateNewProduct, DB.HaveWriteAccess("ActiveProductionTasks"));
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
@@ -356,6 +361,7 @@ namespace Gamma.ViewModels
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
         }
+
         private void ChangeCurrentView(BatchKinds batchKind)
         {
             switch (batchKind)
@@ -408,6 +414,15 @@ namespace Gamma.ViewModels
             productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID;
         }
 */
+
+        private void MakeProductionTaskActiveForPlace()
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
+            }
+        }
+
         //Создание нового продукта
         private void CreateNewProduct()
         {
@@ -608,7 +623,7 @@ namespace Gamma.ViewModels
                                 docWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
                             gammaBase.SaveChanges();
-                            ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
+ //                           ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
                             RefreshProduction();
                         break;
                 }

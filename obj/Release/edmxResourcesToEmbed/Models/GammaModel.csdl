@@ -4342,8 +4342,8 @@
     <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
     <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawal_Docs" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="DocWithdrawalMaterials" Relationship="GammaModel.FK_DocWithdrawalMaterials_Docs" FromRole="Docs" ToRole="DocWithdrawalMaterials" />
-    <NavigationProperty Name="DocCloseShift" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
-    <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
+    <NavigationProperty Name="DocCloseShiftDocs" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs" ToRole="Docs1" />
+    <NavigationProperty Name="DocCloseShift" Relationship="GammaModel.DocCloseShiftDocs" FromRole="Docs1" ToRole="Docs" />
     <NavigationProperty Name="DocCloseShiftWithdrawals" Relationship="GammaModel.DocCloseShiftWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="DocUnpackWithdrawals" Relationship="GammaModel.DocUnpackWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
     <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />

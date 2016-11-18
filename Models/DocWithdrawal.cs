@@ -31,7 +31,6 @@ namespace Gamma.Models
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
-        public virtual Places Places { get; set; }
         public virtual Docs Docs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> DocCloseShift { get; set; }
@@ -39,5 +38,6 @@ namespace Gamma.Models
         public virtual ICollection<Docs> DocUnpack { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

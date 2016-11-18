@@ -104,7 +104,6 @@ namespace Gamma.Models
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
         public virtual DbSet<PlaceZones> PlaceZones { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<DocInProducts> DocInProducts { get; set; }
         public virtual DbSet<DocOutProducts> DocOutProducts { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
@@ -119,6 +118,8 @@ namespace Gamma.Models
         public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<DocProduction> DocProduction { get; set; }
         public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
+        public virtual DbSet<ActiveProductionTasks> ActiveProductionTasks { get; set; }
+        public virtual DbSet<Places> Places { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -728,6 +729,19 @@ namespace Gamma.Models
                 new ObjectParameter("PlaceID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecision", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, printNameParameter, placeIDParameter);
+        }
+    
+        public virtual int MakeProductionTaskActiveForPlace(Nullable<int> placeID, Nullable<System.Guid> productionTaskBatchID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MakeProductionTaskActiveForPlace", placeIDParameter, productionTaskBatchIDParameter);
         }
     }
 }

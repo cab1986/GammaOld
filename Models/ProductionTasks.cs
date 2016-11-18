@@ -20,6 +20,7 @@ namespace Gamma.Models
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
             this.DocProduction = new HashSet<DocProduction>();
+            this.ActiveProductionTasks = new HashSet<ActiveProductionTasks>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
@@ -39,8 +40,10 @@ namespace Gamma.Models
         public virtual ProductionTaskSGB ProductionTaskSGB { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
-        public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ActiveProductionTasks> ActiveProductionTasks { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

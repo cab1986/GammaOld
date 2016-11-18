@@ -32,11 +32,11 @@ namespace Gamma.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocInProducts> DocInProducts { get; set; }
-        public virtual Places OutPlaces { get; set; }
-        public virtual Places TransferPlaces { get; set; }
-        public virtual Places InPlaces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual Places OutPlaces { get; set; }
+        public virtual Places Places1 { get; set; }
+        public virtual Places InPlaces { get; set; }
     }
 }

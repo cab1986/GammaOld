@@ -44,6 +44,7 @@ namespace Gamma
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
                 PlaceIds = userInfo.Places.Select(p => p.PlaceID).ToList();
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
+                IsRemotePrinting = userInfo.Places.FirstOrDefault()?.IsRemotePrinting ?? false;
             }
         }
         public static bool DBAdmin
@@ -65,6 +66,8 @@ namespace Gamma
         {
             get; private set;
         }
+
+        public static bool IsRemotePrinting { get; private set; }
 
         public static List<int> PlaceIds { get; private set; }
         public static List<int> BranchIds { get; private set; }
