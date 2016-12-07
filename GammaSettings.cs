@@ -79,6 +79,7 @@ namespace Gamma
             sqlBuilder.ApplicationName = "EntityFramework";
             sqlBuilder.PersistSecurityInfo = true;
             sqlBuilder.MultipleActiveResultSets = true;
+            sqlBuilder.ConnectTimeout = 300;
 
             var entityConnectionStringBuilder = new EntityConnectionStringBuilder();
             entityConnectionStringBuilder.Provider = "System.Data.SqlClient";

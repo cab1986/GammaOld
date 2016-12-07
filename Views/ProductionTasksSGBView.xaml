@@ -91,6 +91,9 @@
                         <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '2'" ApplyToRow="True" FieldName="EnumColor">
                             <dx:Format Background="#FFECE20C"/>
                         </dxg:FormatCondition>
+                        <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '3'" ApplyToRow="True" FieldName="EnumColor">
+                            <dx:Format Background="HotPink" />
+                        </dxg:FormatCondition>
                     </dxg:TableView.FormatConditions>
                 </dxg:TableView>
             </dxg:GridControl.View>

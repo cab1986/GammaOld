@@ -75,7 +75,7 @@
                                 <dxe:ComboBoxEdit EditValue="{Binding ActivePersonOutId}" ItemsSource="{Binding PersonsOut}" ValueMember="PersonID" DisplayMember="Name"
                                           IsReadOnly="{Binding DenyEditOut}"/>
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Номер ТС" Width="120">
+                            <dxlc:LayoutItem Label="Номер ТС" Width="160">
                                 <dxe:TextEdit EditValue="{Binding VehicleNumber}" IsReadOnly="{Binding DenyEditOut}"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Смена №" Width="100">

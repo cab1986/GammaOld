@@ -118,8 +118,8 @@ namespace Gamma.ViewModels
             Doc.IsConfirmed = IsConfirmed;
             GammaBase.SaveChanges();
             IsNewDoc = false;
-            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
+            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;
             if (currenGridViewModel != null && currenGridViewModel.IsChanged)
                 DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);

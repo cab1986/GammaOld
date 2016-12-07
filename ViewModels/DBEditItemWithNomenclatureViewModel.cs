@@ -111,9 +111,17 @@ namespace Gamma.ViewModels
             set
             {
                 _characteristics = value;
-                if (Characteristics.Count == 1) CharacteristicID = Characteristics[0].CharacteristicID;
-                else if (CharacteristicID != null && !Characteristics.Select(c => c.CharacteristicID).Contains((Guid)CharacteristicID))
+                if (Characteristics != null)
+                {
+                    if (Characteristics.Count == 1) CharacteristicID = Characteristics[0].CharacteristicID;
+                    else if (CharacteristicID != null &&
+                             !Characteristics.Select(c => c.CharacteristicID).Contains((Guid) CharacteristicID))
+                        CharacteristicID = null;
+                }
+                else
+                {
                     CharacteristicID = null;
+                }
                 RaisePropertyChanged("Characteristics");
             }
         }

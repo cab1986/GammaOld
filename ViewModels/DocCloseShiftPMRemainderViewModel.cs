@@ -47,7 +47,7 @@ namespace Gamma.ViewModels
                 IsConfirmed = doc.IsConfirmed;
                 return;
             }
-            IsConfirmed = DocCloseShiftRemainder.Docs.IsConfirmed;
+            IsConfirmed = DocCloseShiftRemainder.DocCloseShifts.IsConfirmed;
             var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == DocCloseShiftRemainder.ProductID);
             if (productSpool != null)
             {

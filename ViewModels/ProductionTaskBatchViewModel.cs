@@ -587,43 +587,44 @@ namespace Gamma.ViewModels
                             var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
                             foreach (var spoolId in sourceSpools.Where(s => s != null))
                             {
-                                var docWithdrawal =
-                                    gammaBase.DocWithdrawal
-                                        .FirstOrDefault(d => d.Docs.DocWithdrawal.DocWithdrawalProducts.Select(dp => dp.ProductID).Contains((Guid)spoolId));
-                                if (docWithdrawal == null)
+                                var docWithdrawalProduct =
+                                    gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal).Include(d => d.DocWithdrawal.Docs)
+                                    .Include(d => d.DocWithdrawal.DocProduction)
+                                    .FirstOrDefault(d => d.ProductID == spoolId
+                                                                                        && d.Quantity == null &&
+                                                                                        (d.CompleteWithdrawal == null ||
+                                                                                         d.CompleteWithdrawal == false));
+                                if (docWithdrawalProduct == null)
                                 {
                                     var docWithdrawalid = SqlGuidUtil.NewSequentialid();
-                                    docWithdrawal = new DocWithdrawal()
+                                    docWithdrawalProduct = new DocWithdrawalProducts
                                     {
                                         DocID = docWithdrawalid,
-                                        OutPlaceID = WorkSession.PlaceID,
-                                        Docs = new Docs()
+                                        ProductID = (Guid)spoolId,
+                                        DocWithdrawal = new DocWithdrawal
                                         {
-                                            DocID = docWithdrawalid,
-                                            Date = currentDateTime,
-                                            DocTypeID = (int)DocTypes.DocWithdrawal,
-                                            PlaceID = WorkSession.PlaceID,
-                                            UserID = WorkSession.UserID,
-                                            ShiftID = WorkSession.ShiftID,
-                                            PrintName = WorkSession.PrintName,
-                                            IsConfirmed = false
-                                        },
-                                        DocWithdrawalProducts = new List<DocWithdrawalProducts>
-                                        {
-                                            new DocWithdrawalProducts
+                                            DocID =  docWithdrawalid,
+                                            OutPlaceID = WorkSession.PlaceID,
+                                            Docs = new Docs()
                                             {
                                                 DocID = docWithdrawalid,
-                                                ProductID = (Guid)spoolId
+                                                Date = currentDateTime,
+                                                DocTypeID = (int)DocTypes.DocWithdrawal,
+                                                PlaceID = WorkSession.PlaceID,
+                                                UserID = WorkSession.UserID,
+                                                ShiftID = WorkSession.ShiftID,
+                                                PrintName = WorkSession.PrintName,
+                                                IsConfirmed = false
                                             }
                                         }
                                     };
-                                    gammaBase.DocWithdrawal.Add(docWithdrawal);
+                                    gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
                                 }
-                                if (docWithdrawal.DocProduction == null) docWithdrawal.DocProduction = new List<DocProduction>();
-                                docWithdrawal.DocProduction.Add(doc.DocProduction);
+                                if (docWithdrawalProduct.DocWithdrawal.DocProduction == null) docWithdrawalProduct.DocWithdrawal.DocProduction = new List<DocProduction>();
+                                docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
                             gammaBase.SaveChanges();
- //                           ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
+                            ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
                             RefreshProduction();
                         break;
                 }

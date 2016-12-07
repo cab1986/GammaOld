@@ -10,18 +10,12 @@
 namespace Gamma.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DocCloseShiftRemainders
+    public partial class GetSpecificationInputNomenclature_Result
     {
-        public System.Guid DocCloseShiftRemainderID { get; set; }
-        public System.Guid DocID { get; set; }
-        public Nullable<System.Guid> ProductID { get; set; }
-        public decimal Quantity { get; set; }
-        public Nullable<bool> IsSourceProduct { get; set; }
-        public Nullable<System.Guid> DocWithdrawalID { get; set; }
-    
-        public virtual Docs DocWithdrawals { get; set; }
-        public virtual Docs DocCloseShifts { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public string NomenclatureName { get; set; }
+        public string CharacteristicName { get; set; }
     }
 }

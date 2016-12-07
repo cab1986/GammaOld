@@ -12,16 +12,11 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DocCloseShiftRemainders
+    public partial class vPlacePropertiesValues
     {
-        public System.Guid DocCloseShiftRemainderID { get; set; }
-        public System.Guid DocID { get; set; }
-        public Nullable<System.Guid> ProductID { get; set; }
-        public decimal Quantity { get; set; }
-        public Nullable<bool> IsSourceProduct { get; set; }
-        public Nullable<System.Guid> DocWithdrawalID { get; set; }
-    
-        public virtual Docs DocWithdrawals { get; set; }
-        public virtual Docs DocCloseShifts { get; set; }
+        public int PlaceID { get; set; }
+        public string Place { get; set; }
+        public Nullable<decimal> Format { get; set; }
+        public Nullable<decimal> CoreDiameter { get; set; }
     }
 }

@@ -128,7 +128,7 @@ namespace Gamma.ViewModels
                                 Consignee = d.Consignee,
                                 ActivePerson = IsOutOrders?d.OutActivePerson:d.InActivePerson,
                                 OrderType = d.OrderType
-                            }));
+                }));
                         break;
                     case 1:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
@@ -177,7 +177,7 @@ namespace Gamma.ViewModels
             FillDocShipmentOrdersWithGoods(DocShipmentOrders);
         }
 
-        private void FillDocShipmentOrdersWithGoods(ObservableCollection<DocShipmentOrder> docShipmentOrders)
+        private void FillDocShipmentOrdersWithGoods(IEnumerable<DocShipmentOrder> docShipmentOrders)
         {
             using (var gammaBase = DB.GammaDb)
             {

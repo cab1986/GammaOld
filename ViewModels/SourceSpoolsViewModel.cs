@@ -75,19 +75,45 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
             MessageManager.OpenFindProduct(ProductKind.ProductSpool,true);
         }
+
         private void CreateRemainderSpool(Guid productId, decimal weight)
         {
             UIServices.SetBusyState();
                 var docWithdrawalProduct =
                 GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
                     .FirstOrDefault(d => d.ProductID == productId);
-                if (docWithdrawalProduct == null) return;
-                var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
-                docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight / 1000;
-                docWithdrawalProduct.CompleteWithdrawal = false;
-                //          docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
-                GammaBase.SaveChanges();
-                ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
+            if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
+            {
+                var docId = SqlGuidUtil.NewSequentialid();
+                docWithdrawalProduct = new DocWithdrawalProducts
+                {
+                    DocID = docId,
+                    ProductID = productId,
+                    DocWithdrawal = new DocWithdrawal
+                    {
+                        DocID = docId,
+                        OutPlaceID = WorkSession.PlaceID,
+                        Docs = new Docs
+                        {
+                            DocID = docId,
+                            IsConfirmed = true,
+                            Date = DB.CurrentDateTime,
+                            DocTypeID = (int)DocTypes.DocWithdrawal,
+                            PlaceID = WorkSession.PlaceID,
+                            PrintName = WorkSession.PrintName,
+                            ShiftID = WorkSession.ShiftID,
+                            UserID = WorkSession.UserID
+                        }
+                    }
+                };
+                GammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+            };
+            var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
+            docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight / 1000;
+            docWithdrawalProduct.CompleteWithdrawal = false;
+            docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
+            GammaBase.SaveChanges();
+            ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
         }
 
         private byte CurrentUnwinder { get; set; }
@@ -221,11 +247,38 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             var docWithdrawalProduct =
                 GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                    .FirstOrDefault(d => d.ProductID == productId && d.Quantity == null && (d.CompleteWithdrawal == null || d.CompleteWithdrawal == false));
-            if (docWithdrawalProduct == null) return;
+                    .FirstOrDefault(d => d.ProductID == productId);
+            if (docWithdrawalProduct?.CompleteWithdrawal == true) return;
+            if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null)
+            {
+                var docId = SqlGuidUtil.NewSequentialid();
+                docWithdrawalProduct = new DocWithdrawalProducts
+                {
+                    DocID = docId,
+                    ProductID = productId,
+                    DocWithdrawal = new DocWithdrawal
+                    {
+                        DocID = docId,
+                        OutPlaceID = WorkSession.PlaceID,
+                        Docs = new Docs
+                        {
+                            DocID = docId,
+                            IsConfirmed = true,
+                            Date = DB.CurrentDateTime,
+                            DocTypeID = (int)DocTypes.DocWithdrawal,
+                            PlaceID = WorkSession.PlaceID,
+                            PrintName = WorkSession.PrintName,
+                            ShiftID = WorkSession.ShiftID,
+                            UserID = WorkSession.UserID
+                        }
+                    }
+                };
+                GammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+            };
             var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
             docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity;
             docWithdrawalProduct.CompleteWithdrawal = true;
+            docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
  //           docWithdrawalProduct.DocWithdrawal.Docs.Date = DB.CurrentDateTime;
             GammaBase.SaveChanges();
         }
@@ -250,17 +303,17 @@ namespace Gamma.ViewModels
                 case 1:
                     Unwinder1Active = !Unwinder1Active;
                     GammaBase.SaveChanges();
-                    if (Unwinder1Active) CheckSourceSpools();
+                    if (Unwinder1Active && WorkSession.PlaceGroup == PlaceGroups.Convertings) CheckSourceSpools();
                     break;
                 case 2:
                     Unwinder2Active = !Unwinder2Active;
                     GammaBase.SaveChanges();
-                    if (Unwinder2Active) CheckSourceSpools();
+                    if (Unwinder2Active && WorkSession.PlaceGroup == PlaceGroups.Convertings) CheckSourceSpools();
                     break;
                 case 3:
                     Unwinder3Active = !Unwinder3Active;
                     GammaBase.SaveChanges();
-                    if (Unwinder3Active) CheckSourceSpools();
+                    if (Unwinder3Active && WorkSession.PlaceGroup == PlaceGroups.Convertings) CheckSourceSpools();
                     break;
             }
         }
@@ -426,16 +479,19 @@ namespace Gamma.ViewModels
         private SourceSpools SourceSpools { get; set; }
         private bool CheckSpoolIsUsed(Guid? productId)
         {
-            return
-                GammaBase.DocWithdrawalProducts.Any(
+            var isUsed = GammaBase.DocWithdrawalProducts.Any(
                     dw =>
                         dw.ProductID == productId && dw.Quantity == null &&
                         (dw.CompleteWithdrawal == null || dw.CompleteWithdrawal == false));
-//                .DocWithdrawal.Any(dw => dw.DocWithdrawalProducts.
-//            GammaBase.DocWithdrawalProducts.Where
-//                (dp => dp.ProductID == productId).Select(dp => dp.DocID).Contains(dw.DocID));
+            if (isUsed) return true;
+            var number = GammaBase.Products.First(p => p.ProductID == productId).Number;
+            return 
+                MessageBox.Show($"Из тамбура № {number} изготовлена продукция?", "Переботка тамбура", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                == MessageBoxResult.Yes;
         }
+
         private Visibility _sourceSpoolsVisible;
+
         public Visibility SourceSpoolsVisible
         {
             get

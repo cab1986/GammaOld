@@ -42,7 +42,6 @@ namespace Gamma.Models
         public virtual DbSet<C1CSpecificationOutputNomenclature> C1CSpecificationOutputNomenclature { get; set; }
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<DocChangeStateProducts> DocChangeStateProducts { get; set; }
-        public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DbSet<DocTypes> DocTypes { get; set; }
         public virtual DbSet<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual DbSet<Enterprises> Enterprises { get; set; }
@@ -120,6 +119,8 @@ namespace Gamma.Models
         public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
         public virtual DbSet<ActiveProductionTasks> ActiveProductionTasks { get; set; }
         public virtual DbSet<Places> Places { get; set; }
+        public virtual DbSet<vPlacePropertiesValues> vPlacePropertiesValues { get; set; }
+        public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -476,19 +477,6 @@ namespace Gamma.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchProducts_Result>("GetBatchProducts", productionTaskBatchIDParameter);
         }
     
-        public virtual ObjectResult<CheckProductionTaskSourceSpools_Result> CheckProductionTaskSourceSpools(Nullable<int> placeID, Nullable<System.Guid> productionTaskID)
-        {
-            var placeIDParameter = placeID.HasValue ?
-                new ObjectParameter("PlaceID", placeID) :
-                new ObjectParameter("PlaceID", typeof(int));
-    
-            var productionTaskIDParameter = productionTaskID.HasValue ?
-                new ObjectParameter("ProductionTaskID", productionTaskID) :
-                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckProductionTaskSourceSpools_Result>("CheckProductionTaskSourceSpools", placeIDParameter, productionTaskIDParameter);
-        }
-    
         public virtual ObjectResult<GetCharacteristicsForProdTaskPM_Result> GetCharacteristicsForProdTaskPM(Nullable<System.Guid> nomenclatureID, string color, string buyer, Nullable<int> placeID)
         {
             var nomenclatureIDParameter = nomenclatureID.HasValue ?
@@ -742,6 +730,36 @@ namespace Gamma.Models
                 new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MakeProductionTaskActiveForPlace", placeIDParameter, productionTaskBatchIDParameter);
+        }
+    
+        public virtual ObjectResult<CheckProductionTaskSourceSpools_Result1> CheckProductionTaskSourceSpools(Nullable<int> placeID, Nullable<System.Guid> productionTaskID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckProductionTaskSourceSpools_Result1>("CheckProductionTaskSourceSpools", placeIDParameter, productionTaskIDParameter);
+        }
+    
+        public virtual ObjectResult<GetSpecificationInputNomenclature_Result> GetSpecificationInputNomenclature(Nullable<System.Guid> nomenclatureID, Nullable<System.Guid> characteristicID, Nullable<int> placeGroupID)
+        {
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            var placeGroupIDParameter = placeGroupID.HasValue ?
+                new ObjectParameter("PlaceGroupID", placeGroupID) :
+                new ObjectParameter("PlaceGroupID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpecificationInputNomenclature_Result>("GetSpecificationInputNomenclature", nomenclatureIDParameter, characteristicIDParameter, placeGroupIDParameter);
         }
     }
 }

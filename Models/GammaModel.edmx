@@ -434,6 +434,7 @@
           <Property Name="ProductID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
           <Property Name="IsSourceProduct" Type="bit" />
+          <Property Name="DocWithdrawalID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocCloseShiftSamples">
           <Key>
@@ -1130,6 +1131,17 @@
           <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
           <Property Name="Number" Type="varchar" MaxLength="20" />
           <Property Name="BarCode" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.vPlacePropertiesValues" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vPlacePropertiesValues">
+          <Key>
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="Place" Type="varchar" MaxLength="64" />
+          <Property Name="Format" Type="decimal" Precision="20" Scale="5" />
+          <Property Name="CoreDiameter" Type="decimal" Precision="20" Scale="5" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -2033,6 +2045,18 @@
             </Principal>
             <Dependent Role="DocCloseShiftDocs">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftRemainders_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="0..1" />
+          <End Role="DocCloseShiftRemainders" Type="Self.DocCloseShiftRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftRemainders">
+              <PropertyRef Name="DocWithdrawalID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3526,6 +3550,11 @@
         <Function Name="GetShiftEndTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
           <Parameter Name="Date" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="GetSpecificationInputNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetSpoolCoreWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="decimal">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -3769,6 +3798,14 @@
     [vDocMovementProducts].[Number] AS [Number], 
     [vDocMovementProducts].[BarCode] AS [BarCode]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vPlacePropertiesValues" EntityType="Self.vPlacePropertiesValues" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vPlacePropertiesValues].[PlaceID] AS [PlaceID], 
+    [vPlacePropertiesValues].[Place] AS [Place], 
+    [vPlacePropertiesValues].[Format] AS [Format], 
+    [vPlacePropertiesValues].[CoreDiameter] AS [CoreDiameter]
+    FROM [dbo].[vPlacePropertiesValues] AS [vPlacePropertiesValues]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -4098,6 +4135,10 @@
           <AssociationSet Name="FK_DocCloseShiftDocs_Docs3" Association="Self.FK_DocCloseShiftDocs_Docs3">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftRemainders_Docs" Association="Self.FK_DocCloseShiftRemainders_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="Self.FK_DocCloseShiftRemainders_Docs1">
             <End Role="Docs" EntitySet="Docs" />
@@ -4739,17 +4780,6 @@
           <NavigationProperty Name="ProductStates" Relationship="Self.FK_DocProductChangeState_ProductStates" FromRole="DocChangeStateProducts" ToRole="ProductStates" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocProductChangeState_Docs" FromRole="DocChangeStateProducts" ToRole="Docs" />
         </EntityType>
-        <EntityType Name="DocCloseShiftRemainders">
-          <Key>
-            <PropertyRef Name="DocCloseShiftRemainderID" />
-          </Key>
-          <Property Name="DocCloseShiftRemainderID" Type="Guid" Nullable="false" />
-          <Property Name="DocID" Type="Guid" Nullable="false" />
-          <Property Name="ProductID" Type="Guid" />
-          <Property Name="Quantity" Type="Decimal" Precision="20" Scale="5" Nullable="false" />
-          <Property Name="IsSourceProduct" Type="Boolean" />
-          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
-        </EntityType>
         <EntityType Name="DocTypes">
           <Key>
             <PropertyRef Name="DocTypeID" />
@@ -5270,7 +5300,6 @@
           <EntitySet Name="C1CSpecificationOutputNomenclature" EntityType="Self.C1CSpecificationOutputNomenclature" />
           <EntitySet Name="Departments" EntityType="Self.Departments" />
           <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" />
-          <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" />
           <EntitySet Name="DocTypes" EntityType="Self.DocTypes" />
           <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" />
           <EntitySet Name="Enterprises" EntityType="Self.Enterprises" />
@@ -5728,10 +5757,6 @@
             <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
           </AssociationSet>
-          <FunctionImport Name="CheckProductionTaskSourceSpools" ReturnType="Collection(GammaModel.CheckProductionTaskSourceSpools_Result)">
-            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
-            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
-          </FunctionImport>
           <FunctionImport Name="GetCharacteristicsForProdTaskPM" ReturnType="Collection(GammaModel.GetCharacteristicsForProdTaskPM_Result)">
             <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
             <Parameter Name="Color" Mode="In" Type="String" />
@@ -6055,10 +6080,6 @@
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocChangeStateProducts" EntitySet="DocChangeStateProducts" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="GammaModel.FK_DocCloseShiftRemainders_Docs1">
-            <End Role="Docs" EntitySet="Docs" />
-            <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
-          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftSamples_Docs" Association="GammaModel.FK_DocCloseShiftSamples_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
@@ -6207,6 +6228,25 @@
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
           </FunctionImport>
+          <FunctionImport Name="CheckProductionTaskSourceSpools" ReturnType="Collection(GammaModel.CheckProductionTaskSourceSpools_Result1)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="GetSpecificationInputNomenclature" ReturnType="Collection(GammaModel.GetSpecificationInputNomenclature_Result)">
+            <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
+            <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
+            <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="vPlacePropertiesValues" EntityType="GammaModel.vPlacePropertiesValues" />
+          <EntitySet Name="DocCloseShiftRemainders" EntityType="GammaModel.DocCloseShiftRemainders" />
+          <AssociationSet Name="FK_DocCloseShiftRemainders_Docs" Association="GammaModel.FK_DocCloseShiftRemainders_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="GammaModel.FK_DocCloseShiftRemainders_Docs1">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -8653,7 +8693,6 @@
           <Property Name="IsFromOldGamma" Type="Boolean" />
           <NavigationProperty Name="DocBroke" Relationship="GammaModel.FK_DocBroke_Docs" FromRole="Docs" ToRole="DocBroke" />
           <NavigationProperty Name="DocChangeStateProducts" Relationship="GammaModel.FK_DocProductChangeState_Docs" FromRole="Docs" ToRole="DocChangeStateProducts" />
-          <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_Docs" FromRole="Docs" ToRole="DocCloseShiftSamples" />
           <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_Docs" FromRole="Docs" ToRole="DocMovement" />
           <NavigationProperty Name="DocMovementOrder" Relationship="GammaModel.FK_DocMovementOrder_Docs" FromRole="Docs" ToRole="DocMovementOrder" />
@@ -8668,6 +8707,8 @@
           <NavigationProperty Name="DocUnpackWithdrawals" Relationship="GammaModel.DocUnpackWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
+          <NavigationProperty Name="DocWithdrawalRemainder" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
+          <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -8691,18 +8732,6 @@
               <PropertyRef Name="DocID" />
             </Principal>
             <Dependent Role="DocChangeStateProducts">
-              <PropertyRef Name="DocID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocCloseShiftRemainders_Docs1">
-          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-          <End Type="GammaModel.DocCloseShiftRemainders" Role="DocCloseShiftRemainders" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Docs">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocCloseShiftRemainders">
               <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
@@ -9169,6 +9198,62 @@
           <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
           <End Type="GammaModel.Users" Role="Users" Multiplicity="*" />
         </Association>
+        <ComplexType Name="CheckProductionTaskSourceSpools_Result1">
+          <Property Type="String" Name="ResultMessage" Nullable="false" MaxLength="255" />
+          <Property Type="Boolean" Name="BlockCreation" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetSpecificationInputNomenclature_Result">
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <EntityType Name="vPlacePropertiesValues">
+          <Key>
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="PlaceID" Type="Int32" Nullable="false" />
+          <Property Name="Place" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Format" Type="Decimal" Precision="20" Scale="5" />
+          <Property Name="CoreDiameter" Type="Decimal" Precision="20" Scale="5" />
+        </EntityType>
+        <EntityType Name="DocCloseShiftRemainders">
+          <Key>
+            <PropertyRef Name="DocCloseShiftRemainderID" />
+          </Key>
+          <Property Name="DocCloseShiftRemainderID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
+          <Property Name="IsSourceProduct" Type="Boolean" />
+          <Property Name="DocWithdrawalID" Type="Guid" />
+          <NavigationProperty Name="DocWithdrawals" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+          <NavigationProperty Name="DocCloseShifts" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+        </EntityType>
+        <Association Name="FK_DocCloseShiftRemainders_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftRemainders" Role="DocCloseShiftRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftRemainders">
+              <PropertyRef Name="DocWithdrawalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftRemainders_Docs1">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftRemainders" Role="DocCloseShiftRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftRemainders">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -9343,17 +9428,6 @@
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="StateID" ColumnName="StateID" />
                 <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DocCloseShiftRemainders">
-            <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRemainders">
-              <MappingFragment StoreEntitySet="DocCloseShiftRemainders">
-                <ScalarProperty Name="DocCloseShiftRemainderID" ColumnName="DocCloseShiftRemainderID" />
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="IsSourceProduct" ColumnName="IsSourceProduct" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -10104,14 +10178,6 @@
               <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="CheckProductionTaskSourceSpools" FunctionName="GammaDBModel.CheckProductionTaskSourceSpools">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.CheckProductionTaskSourceSpools_Result">
-                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
-                <ScalarProperty Name="BlockCreation" ColumnName="BlockCreation" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetCharacteristicsForProdTaskPM" FunctionName="GammaDBModel.GetCharacteristicsForProdTaskPM">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GammaModel.GetCharacteristicsForProdTaskPM_Result">
@@ -10782,6 +10848,46 @@
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="MakeProductionTaskActiveForPlace" FunctionName="GammaDBModel.MakeProductionTaskActiveForPlace" />
+          <FunctionImportMapping FunctionImportName="CheckProductionTaskSourceSpools" FunctionName="GammaDBModel.CheckProductionTaskSourceSpools">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.CheckProductionTaskSourceSpools_Result1">
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="BlockCreation" ColumnName="BlockCreation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetSpecificationInputNomenclature" FunctionName="GammaDBModel.GetSpecificationInputNomenclature">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetSpecificationInputNomenclature_Result">
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="CharacteristicName" ColumnName="CharacteristicName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="vPlacePropertiesValues">
+            <EntityTypeMapping TypeName="GammaModel.vPlacePropertiesValues">
+              <MappingFragment StoreEntitySet="vPlacePropertiesValues">
+                <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
+                <ScalarProperty Name="Format" ColumnName="Format" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocCloseShiftRemainders">
+            <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRemainders">
+              <MappingFragment StoreEntitySet="DocCloseShiftRemainders">
+                <ScalarProperty Name="DocWithdrawalID" ColumnName="DocWithdrawalID" />
+                <ScalarProperty Name="IsSourceProduct" ColumnName="IsSourceProduct" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocCloseShiftRemainderID" ColumnName="DocCloseShiftRemainderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

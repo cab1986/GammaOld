@@ -60,15 +60,11 @@ namespace Gamma.ViewModels
                     PrintName = WorkSession.PrintName,
                     DocProduction = new DocProduction
                     {
-                        DocID = docId
+                        DocID = docId,
+                        InPlaceID = WorkSession.PlaceID,
+                        ProductionTaskID = msg.ID,
+                        HasWarnings = msg.CheckResult == SourceSpoolsCheckResult.Warning
                     }
-                };
-                DocProduction = new DocProduction()
-                {
-                    DocID = Doc.DocID,
-                    InPlaceID = WorkSession.PlaceID,
-                    ProductionTaskID = msg.ID,
-                    HasWarnings = msg.CheckResult == SourceSpoolsCheckResult.Warning
                 };
                 if (msg.DocProductKind != DocProductKinds.DocProductUnload)
                 {
@@ -83,7 +79,7 @@ namespace Gamma.ViewModels
                                     : (byte) ProductKind.ProductPallet
                     };
                     GammaBase.Products.Add(product);
-                    DocProduction.DocProductionProducts = new List<DocProductionProducts>()
+                    Doc.DocProduction.DocProductionProducts = new List<DocProductionProducts>()
                     {
                         new DocProductionProducts()
                         {
@@ -93,7 +89,6 @@ namespace Gamma.ViewModels
                         }
                     };
                 }
-                Doc.DocProduction = DocProduction;
                 GammaBase.Docs.Add(Doc);
                 GammaBase.SaveChanges(); // Сохранение в бд
                 GammaBase.Entry(Doc).Reload(); // Получение обновленного документа(с номером из базы)
@@ -105,7 +100,6 @@ namespace Gamma.ViewModels
                 if (msg.DocProductKind == DocProductKinds.DocProductUnload)
                 {
                     Doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == msg.ID);
-                    DocProduction = Doc.DocProduction;
                     GetDocRelations(Doc.DocID);
                 }
                 else
@@ -113,7 +107,6 @@ namespace Gamma.ViewModels
                     Doc =
                             GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocProduction.DocProductionProducts.Select(dp => dp.ProductID).Contains((Guid)msg.ID) &&
                                     d.DocTypeID == (byte)DocTypes.DocProduction);
-                    DocProduction = Doc.DocProduction;
                     product =
                         GammaBase.Products.Include(p => p.ProductStates)
                             .First(p => p.ProductID == msg.ID);
@@ -165,7 +158,7 @@ namespace Gamma.ViewModels
                     CloseWindow();
                     return;
             }
-            var productionTaskBatch = GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == DocProduction.ProductionTaskID).
+            var productionTaskBatch = GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == Doc.DocProduction.ProductionTaskID).
                 Select(p => p.ProductionTaskBatches.FirstOrDefault()).FirstOrDefault();
             if (productionTaskBatch != null) ProductionTaskBatchID = productionTaskBatch.ProductionTaskBatchID;
             DocDate = Doc.Date;
@@ -410,7 +403,7 @@ namespace Gamma.ViewModels
         }
 
         private Docs Doc { get; set; }
-        private DocProduction DocProduction { get; set; }
+
         public override sealed bool IsValid => base.IsValid && (CurrentViewModel?.IsValid ?? false);
 
         public bool IsReadOnly { get; set; }

@@ -10,18 +10,10 @@
 namespace Gamma.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DocCloseShiftRemainders
+    public partial class CheckProductionTaskSourceSpools_Result1
     {
-        public System.Guid DocCloseShiftRemainderID { get; set; }
-        public System.Guid DocID { get; set; }
-        public Nullable<System.Guid> ProductID { get; set; }
-        public decimal Quantity { get; set; }
-        public Nullable<bool> IsSourceProduct { get; set; }
-        public Nullable<System.Guid> DocWithdrawalID { get; set; }
-    
-        public virtual Docs DocWithdrawals { get; set; }
-        public virtual Docs DocCloseShifts { get; set; }
+        public string ResultMessage { get; set; }
+        public bool BlockCreation { get; set; }
     }
 }

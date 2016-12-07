@@ -39,6 +39,47 @@ namespace Gamma.ViewModels
         {
             ProductionTaskBatchID = productionTaskBatchID;
             IsForRw = isForRw;
+            if (isForRw)
+            {
+                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+                if (productionTaskRw != null)
+                {
+                    var nomenclatures =
+                        GammaBase.ProductionTaskRWCutting.Where(
+                            pt => pt.ProductionTaskID == productionTaskRw.ProductionTaskID).Select(pt => 
+                            new {
+                                pt.C1CNomenclatureID,
+                                pt.C1CCharacteristicID
+                            }).Distinct().ToList();
+/*
+                    var characteristicID = nomenclatures.FirstOrDefault()?.C1CCharacteristicID;
+                    if (characteristicID != null)
+                    {
+                        var rwCharacteristic = GammaBase.vCharacteristicSGBProperties.FirstOrDefault(p => p.C1CCharacteristicID == characteristicID);                       
+                            Color = rwCharacteristic?.Color;
+                            Buyer = rwCharacteristic?.Buyer;
+                    }
+ */                   
+                    SpecificationNomenclature = new ObservableCollection<Nomenclature>();
+                    var inputNomenclatures = nomenclatures.Select(nomenclature => new ObservableCollection<Nomenclature>(
+                        GammaBase.GetSpecificationInputNomenclature(nomenclature.C1CNomenclatureID, nomenclature.C1CCharacteristicID, (byte)PlaceGroups.PM)
+                        .Where(n => n.C1CNomenclatureID != null && n.C1CCharacteristicID != null)
+                        .Select(n => new Nomenclature()
+                        {
+                            NomenclatureID = (Guid)n.C1CNomenclatureID,
+                            CharacteristicID = (Guid)n.C1CCharacteristicID,
+                            NomenclatureName = n.NomenclatureName,
+                            CharacteristicName = n.CharacteristicName
+                        }))).ToList();
+                    foreach (var inputNomenclature in inputNomenclatures)
+                        {
+                            SpecificationNomenclature = SpecificationNomenclature.Count == 0 ?
+                                inputNomenclature : new ObservableCollection<Nomenclature>(SpecificationNomenclature.Intersect(inputNomenclature));
+                        }
+                    
+                    
+                }
+            }
             var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.PM).FirstOrDefault();
             if (productionTask != null)
             {
@@ -55,29 +96,8 @@ namespace Gamma.ViewModels
             {
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel();
             }
-            if (isForRw)
-            {
-                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
-                if (productionTaskRw != null)
-                {
-                    var nomenclatureIds =
-                        GammaBase.ProductionTaskRWCutting.Where(
-                            pt => pt.ProductionTaskID == productionTaskRw.ProductionTaskID).Select(pt => pt.C1CNomenclatureID).Distinct().ToList();
-                    SpecificationNomenclature = new ObservableCollection<Nomenclature1C>();
-                    foreach (var nomenclatureId in nomenclatureIds)
-                    {
-                        var inputNomenclature = new ObservableCollection<Nomenclature1C>(
-                        GammaBase.GetInputNomenclature(nomenclatureId, (byte)PlaceGroups.PM).Select(n => new Nomenclature1C()
-                        {
-                            Name = n.Name,
-                            NomenclatureID = (Guid)n.C1CNomenclatureID
-                        }));
-                        SpecificationNomenclature = SpecificationNomenclature.Count == 0 ? 
-                            inputNomenclature : new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(inputNomenclature));
-                    }
-                }
-            }
         }
+
         protected override bool CanChooseNomenclature()
         {
             return base.CanChooseNomenclature() && !IsReadOnly;
@@ -123,39 +143,46 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsConfirmed { get; set; }
+
         private void ProductionTaskRwChanged(ProductionTaskRwMessage msg)
         {
             if (msg.ProductionTaskBatchID != ProductionTaskBatchID) return;
-            if (msg.Nomenclatures?.Count > 0)
+            if (msg.Nomenclatures != null && msg.Nomenclatures.Count == 0)
             {
-                SpecificationNomenclature = new ObservableCollection<Nomenclature1C>();
+                SpecificationNomenclature = null;
+            }
+            if (msg.Nomenclatures?.Count > 0 && msg.Nomenclatures.All(n => n.CharacteristicID != null))
+            {
+ //               NomenclatureList = new ObservableCollection<Nomenclature1C>();
                 foreach (var nomenclature in msg.Nomenclatures)
                 {
-                    Color = "";
+//                    Color = "";
                     if (nomenclature != null)
                     {
-                        var specificationNomenclature = new ObservableCollection<Nomenclature1C>(
-                            DB.GammaDb.GetInputNomenclature(nomenclature.NomenclatureID, (byte)PlaceGroups.PM)
-                                .Select(n => new Nomenclature1C()
+                        var specificationNomenclature = new ObservableCollection<Nomenclature>(
+                            DB.GammaDb.GetSpecificationInputNomenclature(nomenclature.NomenclatureID, nomenclature.CharacteristicID, (byte)PlaceGroups.PM)
+                                .Select(n => new Nomenclature()
                                 {
-                                    Name = n.Name,
-                                    NomenclatureID = (Guid)n.C1CNomenclatureID
+                                    NomenclatureID = (Guid)n.C1CNomenclatureID,
+                                    CharacteristicID = (Guid)n.C1CCharacteristicID,
+                                    NomenclatureName = n.NomenclatureName,
+                                    CharacteristicName = n.CharacteristicName
                                 }));
-                        SpecificationNomenclature = SpecificationNomenclature.Count == 0 ? specificationNomenclature 
-                            : new ObservableCollection<Nomenclature1C>(SpecificationNomenclature.Intersect(specificationNomenclature));
+                        SpecificationNomenclature = SpecificationNomenclature == null || SpecificationNomenclature.Count == 0 ? specificationNomenclature 
+                            : new ObservableCollection<Nomenclature>(SpecificationNomenclature.Intersect(specificationNomenclature));
                     }
-                    var charProperties = GammaBase.vCharacteristicSGBProperties.FirstOrDefault(
-                        p => p.C1CCharacteristicID == nomenclature.CharacteristicID);
-                    if (charProperties == null) continue;
-                    Color = charProperties.Color;
-                    Buyer = charProperties.Buyer;
+//                    var charProperties = GammaBase.vCharacteristicSGBProperties.FirstOrDefault(
+//                        p => p.C1CCharacteristicID == nomenclature.CharacteristicID);
+//                    if (charProperties == null) continue;
+//                    Color = charProperties.Color;
+//                    Buyer = charProperties.Buyer;
                 }
-                if (SpecificationNomenclature.Count == 1)
+                if (SpecificationNomenclature?.Count == 1)
                 {
                     NomenclatureID = SpecificationNomenclature[0].NomenclatureID;
                 }
-                else if ((NomenclatureID != null && !SpecificationNomenclature.Select(s => s.NomenclatureID).Contains((Guid)NomenclatureID)) 
-                    || SpecificationNomenclature.Count == 0)
+                else if ((NomenclatureID != null && (!SpecificationNomenclature?.Select(s => s.NomenclatureID).Contains((Guid)NomenclatureID) ?? false)) 
+                    || SpecificationNomenclature?.Count == 0)
                 {
                     NomenclatureID = null;
                 }                   
@@ -179,26 +206,82 @@ namespace Gamma.ViewModels
             }
         }
 
+        private ObservableCollection<Nomenclature1C> _nomenclatureList;
+
+        public ObservableCollection<Nomenclature1C> NomenclatureList
+        {
+            get
+            {
+                return _nomenclatureList;
+            }
+            set
+            {
+                _nomenclatureList = value;
+                if (NomenclatureList == null || NomenclatureList?.Count == 0)
+                {
+                    NomenclatureID = null;
+                }
+                else if (NomenclatureID != null &&
+                    !NomenclatureList.Select(nl => nl.NomenclatureID).Contains((Guid) NomenclatureID))
+                {
+                    NomenclatureID = NomenclatureList.Select(nl => nl.NomenclatureID).FirstOrDefault();
+                }
+                else if (NomenclatureList?.Count == 1)
+                {
+                    NomenclatureID = NomenclatureList.First().NomenclatureID;
+                }
+                RaisePropertyChanged("NomenclatureList");
+            }
+        } 
+
         private void SetCharacteristics()
         {
-            if (NomenclatureID == null) return;
-            Characteristics = new ObservableCollection<Characteristic>(GammaBase.GetCharacteristicsForProdTaskPM(NomenclatureID, Color??"",Buyer??"", PlaceID)
-                .Select(c => new Characteristic()
-                {
-                    CharacteristicID = c.C1CCharacteristicID,
-                    CharacteristicName = c.CharacteristicName
-                }));
+            if (NomenclatureID == null)
+            {
+                CharacteristicID = null;
+                Characteristics = null;
+                return;
+            }
+            ObservableCollection<Characteristic> characteristics = null;
+            if (IsForRw)
+            {
+                if (SpecificationNomenclature == null || !SpecificationNomenclature.Any()) return;
+                characteristics =
+                    new ObservableCollection<Characteristic>(
+                        SpecificationNomenclature.Where(
+                            sn => sn.NomenclatureID == NomenclatureID && sn.CharacteristicID != null)
+                            .Select(sn => new Characteristic
+                            {
+                                CharacteristicID = (Guid) sn.CharacteristicID,
+                                CharacteristicName = sn.CharacteristicName
+                            }));
+
+            }
+            else characteristics = Characteristics;
+            using (var gammaBase = DB.GammaDb)
+            {
+                var charIds = characteristics.Select(c => c.CharacteristicID).ToList();
+                Characteristics =new ObservableCollection<Characteristic>(
+                    characteristics.Intersect(
+                        gammaBase.vCharacteristicSGBProperties.Where(
+                            cp => charIds.Contains(cp.C1CCharacteristicID)
+                                  && cp.FormatNumeric >= Format && cp.CoreDiameterNumeric == CoreDiameter && cp.LayerNumberNumeric == 1)
+                            .Select(cp => new Characteristic
+                            {
+                                CharacteristicID = cp.C1CCharacteristicID
+                            })));
+            }
         }
 
         /// <summary>
         /// Цвет для фильтрации характеристик
         /// </summary>
-        private string Color { get; set; }
+//        private string Color { get; set; }
 
         /// <summary>
         /// Контрагент для фильтрации характеристик
         /// </summary>
-        private string Buyer { get; set; }
+//        private string Buyer { get; set; }
 
         /*
         public override ObservableCollection<Characteristic> Characteristics
@@ -230,8 +313,8 @@ namespace Gamma.ViewModels
         public Guid ProductionTaskID { get; set; }
         public ProductionTaskSGBViewModel ProductionTaskSGBViewModel { get; private set; }
 
-        private ObservableCollection<Nomenclature1C> _specificationNomenclature;
-        public ObservableCollection<Nomenclature1C> SpecificationNomenclature
+        private ObservableCollection<Nomenclature> _specificationNomenclature;
+        public ObservableCollection<Nomenclature> SpecificationNomenclature
         {
             get
             {
@@ -240,7 +323,17 @@ namespace Gamma.ViewModels
             set
             {
             	_specificationNomenclature = value;
-                RaisePropertyChanged("SpecificationNomenclature");
+                if (SpecificationNomenclature?.Count > 0)
+                {
+                    NomenclatureList =
+                        new ObservableCollection<Nomenclature1C>(
+                            SpecificationNomenclature.Select(sn => new Nomenclature1C
+                            {
+                                NomenclatureID = (Guid) sn.NomenclatureID,
+                                Name = sn.NomenclatureName
+                            }).Distinct());
+                }
+                else NomenclatureList = null;
             }
         }
         
@@ -277,6 +370,7 @@ namespace Gamma.ViewModels
             set
             {
             	_placeID = value;
+                GetLimitParamters(PlaceID);
                 SetCharacteristics();
                 RaisePropertyChanged("Places");
             }
@@ -294,7 +388,29 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Places");
             }
         }
+
+        private void GetLimitParamters(int placeId)
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var placeProperties = gammaBase.vPlacePropertiesValues.FirstOrDefault(pv => pv.PlaceID == placeId);
+                if (placeProperties != null)
+                {
+                    Format = placeProperties.Format;
+                    CoreDiameter = placeProperties.CoreDiameter;
+                }
+                else
+                {
+                    Format = null;
+                    CoreDiameter = null;
+                }
+            }
+        }
+
         private Guid ProductionTaskBatchID { get; set; }
+
+        private decimal? Format { get; set; }
+        private decimal? CoreDiameter { get; set; }
 /*        private Characteristic _selectedCharacteristic;
         [Required(ErrorMessage="Необходимо выбрать характеристику")]
         public Characteristic SelectedCharacteristic

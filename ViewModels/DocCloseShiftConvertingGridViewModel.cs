@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
                 Number = d.Number
             }));
             var doc = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == docId);
-            DocCloseShiftDocs = new ObservableCollection<Docs>(doc.DocCloseShiftDocs);
+//            DocCloseShiftDocs = new ObservableCollection<Docs>(doc.DocCloseShiftDocs);
             PlaceID = (int)doc.PlaceID;
             ShiftID = doc.ShiftID??0;
             CloseDate = doc.Date;
@@ -179,7 +179,8 @@ namespace Gamma.ViewModels
             DocCloseShiftDocs?.Clear();
             WithdrawalMaterials?.Clear();
             Samples?.Clear();
-            IsChanged = true;
+                IsChanged = true;
+            GammaBase.SaveChanges();
         }
 
         private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();
@@ -270,10 +271,18 @@ namespace Gamma.ViewModels
                         .FirstOrDefault(c => c.C1CCharacteristicID == sample.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient??1
                 });
             }
-            docCloseShift.DocCloseShiftDocs.Clear();
-            foreach (var doc in DocCloseShiftDocs)
+            if (IsChanged)
             {
-                docCloseShift.DocCloseShiftDocs.Add(doc);
+                docCloseShift.DocCloseShiftDocs.Clear();
+                var docCloseShiftDocs = GammaBase.Docs.
+                    Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
+                        d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                        d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                        (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal));
+                foreach (var doc in docCloseShiftDocs)
+                {
+                    docCloseShift.DocCloseShiftDocs.Add(doc);
+                }
             }
             GammaBase.DocWithdrawalMaterials.RemoveRange(
                 docCloseShift.DocCloseShiftWithdrawals.FirstOrDefault()?.DocWithdrawalMaterials);

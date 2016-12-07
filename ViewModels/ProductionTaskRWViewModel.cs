@@ -57,7 +57,7 @@ namespace Gamma.ViewModels
             {
                 Cuttings.Remove(SelectedCutting);
                 TotalFormat = Cuttings.Sum(cutting => cutting.BaseFormat * cutting.Quantity).ToString();
-                MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => new Nomenclature()
+                MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Where(c => c.NomenclatureID != null && c.CharacteristicID != null).Select(c => new Nomenclature()
                 {
                     NomenclatureID = c.NomenclatureID,
                     CharacteristicID = c.CharacteristicID
@@ -118,7 +118,7 @@ namespace Gamma.ViewModels
                             SelectedCutting.CharacteristicID = null;
                         }
                     }
-                    MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => new Nomenclature
+                    MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Where(c => c.NomenclatureID != null && c.CharacteristicID != null).Select(c => new Nomenclature
                     {
                         NomenclatureID = c.NomenclatureID,
                         CharacteristicID = c.CharacteristicID
@@ -266,7 +266,7 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Unregister<Nomenclature1CMessage>(this);
             SelectedCutting.NomenclatureID = msg.Nomenclature1CID;
-            MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Select(c => new Nomenclature
+            MessageManager.ProductionTaskRwNomenclatureChanged(ProductionTaskBatchID, Cuttings.Where(c => c.NomenclatureID != null && c.CharacteristicID != null).Select(c => new Nomenclature
             {
                 NomenclatureID = c.NomenclatureID,
                 CharacteristicID = c.CharacteristicID

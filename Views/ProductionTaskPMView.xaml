@@ -25,12 +25,21 @@
             <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
                 <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}" Mask="g" MaskUseAsDisplayFormat="True" />
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="80">
+            <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="130">
+                <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}" Mask="G" MaskUseAsDisplayFormat="True" />
+            </dxlc:LayoutItem>
+            <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="440" HorizontalAlignment="Left" />
+            <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="80" HorizontalAlignment="Right" >
                 <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" 
                                   ValueMember="PlaceID" DisplayMember="PlaceName" />
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding IsForRw, Converter={StaticResource BoolVis}}" Name="ComboNom">
-                <dxe:ComboBoxEdit EditValue="{Binding NomenclatureID, ValidatesOnDataErrors=True}" ItemsSource="{Binding SpecificationNomenclature}"
+            <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="80" HorizontalAlignment="Right">
+                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" 
+                              EditValueType="{x:Type sys:Decimal}" MaskUseAsDisplayFormat="True"/>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
+        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding IsForRw, Converter={StaticResource BoolVis}}" Name="ComboNom">
+                <dxe:ComboBoxEdit EditValue="{Binding NomenclatureID, ValidatesOnDataErrors=True}" ItemsSource="{Binding NomenclatureList}"
                                   ValueMember="NomenclatureID" DisplayMember="Name" MinWidth="300"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
@@ -47,21 +56,10 @@
                     <dxe:ButtonInfo Content="..." IsDefaultButton="True" Command="{Binding ChooseNomenclatureCommand}" />
                 </dxe:ButtonEdit>
             </dxlc:LayoutItem>
-        </dxlc:LayoutGroup>
-        <dxlc:LayoutGroup Orientation="Horizontal">
-            <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="130">
-                <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}" Mask="G" MaskUseAsDisplayFormat="True" />
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="80">
-                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" 
-                              EditValueType="{x:Type sys:Decimal}" MaskUseAsDisplayFormat="True"/>
-            </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
-                <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
+        <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
+            <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
                                   DisplayMember="CharacteristicName" ValueMember="CharacteristicID" MinWidth="200"/>
-            </dxlc:LayoutItem>
-            <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="440" HorizontalAlignment="Right" />
-        </dxlc:LayoutGroup>
+        </dxlc:LayoutItem>
     </dxlc:LayoutGroup>
     <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior/>

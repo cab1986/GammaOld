@@ -7,10 +7,12 @@ namespace Gamma.Models
 {
     public class SpoolRemainder: ICheckedAccess
     {
-        public SpoolRemainder(DateTime docDate,GammaEntities gammaBase = null)
+        public SpoolRemainder(DateTime docDate, Guid? productId, bool isSourceProduct, GammaEntities gammaBase = null)
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             DocDate = docDate;
+            IsSourceProduct = isSourceProduct;
+            ProductID = productId;            
         }
 
         private DateTime DocDate { get; set; }
@@ -60,5 +62,7 @@ namespace Gamma.Models
         }
 
         public bool IsReadOnly { get; set; }
+        public bool IsSourceProduct { get; set; }
+        public Guid? DocWithdrawalId { get; set; }
     }
 }

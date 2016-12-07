@@ -160,7 +160,7 @@ namespace Gamma.ViewModels
                     MaxQuantity = product.BaseMeasureUnitQuantity ?? 1000000,
                     ProductId = product.ProductID,
                     Number = product.Number,
-                    NomenclatureName = product.NomenclatureName,
+                    NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date), //product.NomenclatureName,
                     ProductState = ProductState.NeedsDecision,
                     MeasureUnit = product.BaseMeasureUnit
                 });
@@ -177,7 +177,7 @@ namespace Gamma.ViewModels
                         ProductState = (ProductState)decisionProduct.StateID,
                         ProductId = decisionProduct.ProductID,
                         Number = product.Number,
-                        NomenclatureName = product.NomenclatureName,
+                        NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
                         Comment = decisionProduct.Comment,
                         NomenclatureId = decisionProduct.C1CNomenclatureID,
                         CharacteristicId = decisionProduct.C1CCharacteristicID

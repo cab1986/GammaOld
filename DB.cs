@@ -29,16 +29,27 @@ namespace Gamma
         {
             get
             {
-                if (Connection != null) return new GammaEntities(Connection);
+                GammaEntities context = null;
+                if (Connection != null)
+                {
+                    context = new GammaEntities(Connection);
+                    context.Database.CommandTimeout = 300;
+                    return context;
+                }
                 Connection = new EntityConnection(GammaSettings.ConnectionString);
-                Connection.Open();              
-                return new GammaEntities(Connection);
+                Connection.Open();
+                context = new GammaEntities(Connection);
+                context.Database.CommandTimeout = 300;
+                return context;
             }
         }
 
+
+
         public static bool Initialize()
         {
-            GammaBase = new GammaEntities(GammaSettings.ConnectionString);       
+            GammaBase = new GammaEntities(GammaSettings.ConnectionString);
+            GammaBase.Database.CommandTimeout = 300;      
             try
             {
                 GammaBase.Database.Connection.Open();
@@ -289,11 +300,5 @@ namespace Gamma
             throw new NotSupportedException("Direct calls are not supported");
         }
 
-    }
-
-    public class Characteristic
-    {
-        public Guid CharacteristicID { get; set; }
-        public string CharacteristicName { get; set; }
     }
 }
