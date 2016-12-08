@@ -66,9 +66,9 @@ namespace Gamma.ViewModels
             foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, remainder.ProductID, remainder.IsSourceProduct ?? false)
             {
                 Weight = (int) remainder.Quantity,
-                IsReadOnly = IsConfirmed,
+                IsReadOnly = IsConfirmed || (remainder.DocWithdrawalID != null && !DB.AllowEditDoc((Guid)remainder.DocWithdrawalID)),
                 Index = SpoolRemainders.Count,
-                DocWithdrawalId = remainder.DocID
+                DocWithdrawalId = remainder.DocWithdrawalID
             }))
             {
                 if (spoolRemainder.MaxWeight < spoolRemainder.Weight) spoolRemainder.MaxWeight = spoolRemainder.Weight;
@@ -97,7 +97,8 @@ namespace Gamma.ViewModels
                     {
                         DocID = itemID,
                         DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
-                        ProductID = remainder.ProductID
+                        ProductID = remainder.ProductID,
+                        IsSourceProduct = remainder.IsSourceProduct
                     };
                     gammaBase.DocCloseShiftRemainders.Add(docRemainder);
                 }
@@ -146,9 +147,12 @@ namespace Gamma.ViewModels
                             gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
                         }
                     };
-                    var product = gammaBase.vProductsInfo.First(p => p.ProductID == remainder.ProductID);
-                    docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - remainder.Weight / 1000;
-                    docWithdrawalProduct.CompleteWithdrawal = false;
+                    if (DB.AllowEditDoc(docWithdrawalProduct.DocID))
+                    {
+                        docWithdrawalProduct.Quantity = (remainder.MaxWeight  - remainder.Weight) / 1000;
+                        docWithdrawalProduct.CompleteWithdrawal = false;
+                        docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
+                    }
                     docRemainder.DocWithdrawalID = docWithdrawalProduct.DocID;
                     remainder.DocWithdrawalId = docWithdrawalProduct.DocID;
                 }
@@ -171,6 +175,6 @@ namespace Gamma.ViewModels
         }
 
         private bool IsConfirmed { get; set; }
-        public bool IsReadOnly => !((DB.HaveWriteAccess("DocCloseShiftRemainders") || WorkSession.DBAdmin) && !IsConfirmed);
+        public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftRemainders") && !IsConfirmed);
     }
 }

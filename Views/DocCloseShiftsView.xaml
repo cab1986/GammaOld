@@ -37,7 +37,7 @@
             <Button Content="Найти" Command="{Binding FindDocCloseShiftsCommand}" Height="25" Width="80" VerticalAlignment="Bottom"/>
         </dxlc:LayoutControl>
         <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocCloseShifts}" EnableSmartColumnsGeneration="True" 
-                         SelectedItem="{Binding SelectedDocCloseShift}" AutoExpandAllGroups="True">
+                         SelectedItem="{Binding SelectedDocCloseShift}" AutoExpandAllGroups="False">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn GroupIndex="0" Header="Передел" FieldName="Place" />
                 <dxg:GridColumn Header="Дата" FieldName="Date" >

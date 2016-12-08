@@ -100,7 +100,7 @@ namespace Gamma.ViewModels
                 ShiftID = d.ShiftID ?? 0,
                 Place = d.Places.Name
             }
-            ).Take(100));
+            ).Take(120));
         }
 
         public DateTime? DateBegin { get; set; }
