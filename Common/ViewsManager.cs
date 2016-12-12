@@ -30,6 +30,13 @@ namespace Gamma.Common
             Messenger.Default.Register<NomenclatureEditMessage>(this, NomenclatureEdit);
             Messenger.Default.Register<EditDocMovementOrderMessage>(this, EditDocMovementOrder);
             Messenger.Default.Register<EditDocMovementMessage>(this, EditDocMovement);
+            Messenger.Default.Register<OpenPlaceZonesMessage>(this, OpenPlaceZones);
+        }
+
+        private void OpenPlaceZones(OpenPlaceZonesMessage msg)
+        {
+            UIServices.SetBusyState();
+            new PlaceZonesView().Show();
         }
 
         private void EditDocMovement(EditDocMovementMessage msg)
@@ -108,7 +115,7 @@ namespace Gamma.Common
         }
         private void OpenDocCloseShifts(OpenDocCloseShiftsMessage msg)
         {
-            var view = msg.PlaceGroup == null ? new DocCloseShiftsView() : new DocCloseShiftsView((PlaceGroups)msg.PlaceGroup);
+            var view = msg.PlaceGroup == null ? new DocCloseShiftsView() : new DocCloseShiftsView((PlaceGroup)msg.PlaceGroup);
             view.Show();
         }
 

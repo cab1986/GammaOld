@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using DevExpress.Mvvm;
 
-namespace Gamma
+namespace Gamma.Models
 {
     public class ProductInfo : ViewModelBase
     {
@@ -31,6 +30,6 @@ namespace Gamma
         public string State { get; set; }
         public string Place { get; set; }
         public int? PlaceID { get; set; }
-        public PlaceGroups PlaceGroup { get; set; }
+        public PlaceGroup PlaceGroup { get; set; }
     }
 }

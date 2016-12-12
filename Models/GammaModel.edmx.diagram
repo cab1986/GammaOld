@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="69" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="103" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -191,25 +191,10 @@
         <EntityTypeShape EntityType="GammaModel.DocMovementOrderNomenclature" Width="1.5" PointX="18.75" PointY="81.25" />
         <EntityTypeShape EntityType="GammaModel.Persons" Width="1.5" PointX="7.5" PointY="66.75" />
         <AssociationConnector Association="GammaModel.FK_Persons_Branches" />
-        <EntityTypeShape EntityType="GammaModel.PlaceZoneCells" Width="1.5" PointX="26.25" PointY="30.75" />
-        <EntityTypeShape EntityType="GammaModel.PlaceZones" Width="1.5" PointX="24" PointY="30.75" />
-        <AssociationConnector Association="GammaModel.FK_PlaceZoneCells_PlaceZones1" />
-        <EntityTypeShape EntityType="GammaModel.DocInProducts" Width="1.5" PointX="31.5" PointY="45.75" />
-        <EntityTypeShape EntityType="GammaModel.DocOutProducts" Width="1.5" PointX="28.5" PointY="47.875" />
-        <AssociationConnector Association="GammaModel.FK_DocInProducts_Persons" />
-        <AssociationConnector Association="GammaModel.FK_DocInProducts_PlaceZoneCells1" />
-        <AssociationConnector Association="GammaModel.FK_DocInProducts_PlaceZones1" />
-        <AssociationConnector Association="GammaModel.FK_DocInProducts_Products" />
-        <AssociationConnector Association="GammaModel.FK_DocOutProducts_Persons" />
-        <AssociationConnector Association="GammaModel.FK_DocOutProducts_PlaceZoneCells1" />
-        <AssociationConnector Association="GammaModel.FK_DocOutProducts_PlaceZones1" />
-        <AssociationConnector Association="GammaModel.FK_DocOutProducts_Products" />
         <EntityTypeShape EntityType="GammaModel.C1CPlaces" Width="1.5" PointX="2.25" PointY="64.5" />
         <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
         <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="14.25" PointY="64.25" />
         <EntityTypeShape EntityType="GammaModel.DocMovementOrder" Width="1.5" PointX="14.25" PointY="72.875" />
-        <AssociationConnector Association="GammaModel.FK_DocInProducts_DocMovement" />
-        <AssociationConnector Association="GammaModel.FK_DocOutProducts_DocMovement" />
         <AssociationConnector Association="GammaModel.FK_DocMovementOrderNomenclature_DocMovementOrder" />
         <EntityTypeShape EntityType="GammaModel.v1COrders" Width="1.5" PointX="9.375" PointY="11.75" />
         <EntityTypeShape EntityType="GammaModel.vDocMovementProducts" Width="1.5" PointX="11.375" PointY="11.75" />
@@ -257,7 +242,6 @@
         <AssociationConnector Association="GammaModel.FK_Docs_Places" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Places" />
         <AssociationConnector Association="GammaModel.FK_Places_PlaceGroups1" />
-        <AssociationConnector Association="GammaModel.FK_PlaceZones_Places1" />
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_Places" />
         <AssociationConnector Association="GammaModel.FK_Rests_Places" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_Places" />
@@ -267,6 +251,20 @@
         <EntityTypeShape EntityType="GammaModel.DocCloseShiftRemainders" Width="1.5" PointX="14.25" PointY="57.25" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Docs1" />
+        <EntityTypeShape EntityType="GammaModel.PlaceZones" Width="1.5" PointX="9.75" PointY="72.875" />
+        <AssociationConnector Association="GammaModel.FK_PlaceZones_Places1" />
+        <AssociationConnector Association="GammaModel.FK_PlaceZones_PlaceZones" />
+        <AssociationConnector Association="GammaModel.FK_Rests_PlaceZones" />
+        <EntityTypeShape EntityType="GammaModel.DocInProducts" Width="1.5" PointX="30.5" PointY="52.375" />
+        <EntityTypeShape EntityType="GammaModel.DocOutProducts" Width="1.5" PointX="30.5" PointY="56.5" />
+        <AssociationConnector Association="GammaModel.FK_DocInProducts_DocMovement" />
+        <AssociationConnector Association="GammaModel.FK_DocInProducts_Persons" />
+        <AssociationConnector Association="GammaModel.FK_DocInProducts_PlaceZones1" />
+        <AssociationConnector Association="GammaModel.FK_DocInProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocOutProducts_DocMovement" />
+        <AssociationConnector Association="GammaModel.FK_DocOutProducts_Persons" />
+        <AssociationConnector Association="GammaModel.FK_DocOutProducts_PlaceZones1" />
+        <AssociationConnector Association="GammaModel.FK_DocOutProducts_Products" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

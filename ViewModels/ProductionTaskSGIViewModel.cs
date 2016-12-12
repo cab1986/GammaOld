@@ -22,8 +22,8 @@ namespace Gamma.ViewModels
         public ProductionTaskSGIViewModel(GammaEntities gammaBase = null)
         {
             GammaBase = gammaBase ?? DB.GammaDb;            
-            PlaceGroupID = (int)PlaceGroups.Convertings;
-            Places = new ObservableCollection<Place> (GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.Convertings).
+            PlaceGroupID = (int)PlaceGroup.Convertings;
+            Places = new ObservableCollection<Place> (GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID,PlaceName = p.Name
@@ -40,7 +40,7 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDb)
             {
-                var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Convertings).FirstOrDefault();
+                var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Convertings).FirstOrDefault();
                 if (productionTask != null)
                 {
                     DateBegin = productionTask.DateBegin;
@@ -140,7 +140,7 @@ namespace Gamma.ViewModels
                 GammaBase.C1CMainSpecifications.Any(
                     ms => ms.C1CNomenclatureID == NomenclatureID && !ms.C1CPlaceID.HasValue))
             {
-                Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.Convertings
+                Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings
                     && p.BranchID == WorkSession.BranchID).Select(p => new Place()
                     {
                         PlaceID = p.PlaceID,
@@ -149,7 +149,7 @@ namespace Gamma.ViewModels
                 return;
             }
             Places = new ObservableCollection<Place>(GammaBase.C1CMainSpecifications.Where(ms => ms.C1CNomenclatureID == NomenclatureID 
-                && ms.C1CPlaces.Places.FirstOrDefault().BranchID == WorkSession.BranchID && ms.C1CPlaces.Places.FirstOrDefault().PlaceGroupID == (short)PlaceGroups.Convertings)
+                && ms.C1CPlaces.Places.FirstOrDefault().BranchID == WorkSession.BranchID && ms.C1CPlaces.Places.FirstOrDefault().PlaceGroupID == (short)PlaceGroup.Convertings)
                 .Select(ms => new Place()
                 {
                     PlaceID = ms.C1CPlaces.Places.FirstOrDefault().PlaceID,
@@ -177,7 +177,7 @@ namespace Gamma.ViewModels
                     productionTask = new ProductionTasks()
                     {
                         ProductionTaskID = SqlGuidUtil.NewSequentialid(),
-                        PlaceGroupID = (short)PlaceGroups.Convertings
+                        PlaceGroupID = (short)PlaceGroup.Convertings
                     };
                     productionTaskBatch.ProductionTasks.Add(productionTask);
 

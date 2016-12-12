@@ -35,7 +35,7 @@ namespace Gamma.ViewModels
             Places.Insert(0, new Place() { PlaceName = "Все" });
             FindDocCloseShifts();
         }
-        public DocCloseShiftsViewModel(PlaceGroups placeGroup, GammaEntities gammaBase = null)
+        public DocCloseShiftsViewModel(PlaceGroup placeGroup, GammaEntities gammaBase = null)
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();

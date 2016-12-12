@@ -25,11 +25,11 @@ namespace Gamma.Models
             this.DocProduction = new HashSet<DocProduction>();
             this.Docs = new HashSet<Docs>();
             this.DocWithdrawal = new HashSet<DocWithdrawal>();
-            this.PlaceZones = new HashSet<PlaceZones>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
             this.Rests = new HashSet<Rests>();
             this.SpoolInstallLog = new HashSet<SpoolInstallLog>();
             this.Users = new HashSet<Users>();
+            this.PlaceZones = new HashSet<PlaceZones>();
         }
     
         public int PlaceID { get; set; }
@@ -70,8 +70,6 @@ namespace Gamma.Models
         public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual PlaceGroups PlaceGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlaceZones> PlaceZones { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Rests> Rests { get; set; }
@@ -80,5 +78,7 @@ namespace Gamma.Models
         public virtual ICollection<SpoolInstallLog> SpoolInstallLog { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PlaceZones> PlaceZones { get; set; }
     }
 }

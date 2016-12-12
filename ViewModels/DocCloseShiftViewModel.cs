@@ -37,17 +37,17 @@ namespace Gamma.ViewModels
             var placeGroupID = GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
             switch (placeGroupID)
             {
-                case (short)PlaceGroups.PM:
+                case (short)PlaceGroup.PM:
                     CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftPMRemainderViewModel() : new DocCloseShiftPMRemainderViewModel((Guid)msg.DocID);
                     break;
-                case (short)PlaceGroups.Wr:
+                case (short)PlaceGroup.Wr:
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
                     break;
-                case (short)PlaceGroups.Rw:
+                case (short)PlaceGroup.Rw:
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     break;
-                case (short)PlaceGroups.Convertings:
+                case (short)PlaceGroup.Convertings:
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel()
@@ -60,7 +60,7 @@ namespace Gamma.ViewModels
                 FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed);
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed);
             }
-            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && placeGroupID == (int)PlaceGroups.PM);
+            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && placeGroupID == (int)PlaceGroup.PM);
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 

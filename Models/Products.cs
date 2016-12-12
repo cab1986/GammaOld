@@ -50,10 +50,10 @@ namespace Gamma.Models
         public virtual Rests Rests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SpoolInstallLog> SpoolInstallLog { get; set; }
+        public virtual ProductKinds ProductKinds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocInProducts> DocInProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
-        public virtual ProductKinds ProductKinds { get; set; }
     }
 }

@@ -18,14 +18,12 @@ namespace Gamma.Models
         public System.Guid ProductID { get; set; }
         public Nullable<bool> IsConfirmed { get; set; }
         public Nullable<System.Guid> PlaceZoneID { get; set; }
-        public Nullable<System.Guid> PlaceZoneCellID { get; set; }
         public Nullable<System.Guid> PersonID { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     
+        public virtual DocMovement DocMovement { get; set; }
         public virtual Persons Persons { get; set; }
-        public virtual PlaceZoneCells PlaceZoneCells { get; set; }
         public virtual PlaceZones PlaceZones { get; set; }
         public virtual Products Products { get; set; }
-        public virtual DocMovement DocMovement { get; set; }
     }
 }

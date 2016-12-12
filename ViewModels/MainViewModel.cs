@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
                     CurrentView = PreviousView;
                     PreviousView = null;
                 }, () => PreviousView != null);
-                OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroups>(MessageManager.OpenDocCloseShifts);
+                OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroup>(MessageManager.OpenDocCloseShifts);
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
@@ -78,17 +78,18 @@ namespace Gamma.ViewModels
                 OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);
                 OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
                 OpenDocMovementsCommand = new DelegateCommand(OpenDocMovements);
+                OpenPlaceZonesCommand = new DelegateCommand(OpenPlaceZones);
             }
             switch (WorkSession.PlaceGroup)
             {
-                case PlaceGroups.PM:
-                case PlaceGroups.Rw:
+                case PlaceGroup.PM:
+                case PlaceGroup.Rw:
                     CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb);
                     break;
-                case PlaceGroups.Wr:
+                case PlaceGroup.Wr:
                     OpenPlaceProducts(WorkSession.PlaceID);
                     break;
-                case PlaceGroups.Convertings:
+                case PlaceGroup.Convertings:
                     CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb);
                     break;
             }
@@ -298,6 +299,13 @@ namespace Gamma.ViewModels
             }
         }
 
+        public DelegateCommand OpenPlaceZonesCommand { get; private set; }
+
+        private void OpenPlaceZones()
+        {
+            MessageManager.OpenPlaceZones();
+        }
+
         private DelegateCommand _refreshCommand;
         public DelegateCommand RefreshCommand 
         {
@@ -329,7 +337,7 @@ namespace Gamma.ViewModels
         public DelegateCommand ManageUsersCommand { get; set; }
         public DelegateCommand ConfigureComPortCommand { get; set; }
         public DelegateCommand CloseShiftCommand { get; set; }
-        public DelegateCommand<PlaceGroups> OpenDocCloseShiftsCommand { get; private set; }
+        public DelegateCommand<PlaceGroup> OpenDocCloseShiftsCommand { get; private set; }
         public DelegateCommand FindProductionTaskCommand { get; private set; }
         public DelegateCommand<int> OpenPlaceProductsCommand { get; private set; }
         public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }

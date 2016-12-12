@@ -60,10 +60,10 @@
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Документы">
                         <dxb:BarSubItem Content="Закрытия смен">
-                            <dxb:BarButtonItem Content="Закрытия смен БДМ" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.PM}" />
-                            <dxb:BarButtonItem Content="Закрытия смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.Rw}" />
-                            <dxb:BarButtonItem Content="Закрытия смен упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.Wr}" />
-                            <dxb:BarButtonItem Content="Закрытия смен конвертингов" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroups.Convertings}" />
+                            <dxb:BarButtonItem Content="Закрытия смен БДМ" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.PM}" />
+                            <dxb:BarButtonItem Content="Закрытия смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Rw}" />
+                            <dxb:BarButtonItem Content="Закрытия смен упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Wr}" />
+                            <dxb:BarButtonItem Content="Закрытия смен конвертингов" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Convertings}" />
                         </dxb:BarSubItem>
                         <dxb:BarSubItem Content="Отчеты" ItemLinksSource="{Binding Reports}">
                             <dxb:BarSubItem.ItemTemplate>
@@ -92,6 +92,7 @@
                         <dxb:BarButtonItem Content="Перемещения" Command="{Binding OpenDocMovementsCommand}"/>
                         <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
                         <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />
+                        <dxb:BarButtonItem Content="Зонирование складов" Command="{Binding OpenPlaceZonesCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Номенклатура">
                         <dxb:BarButtonItem Content="Номенклатура СГИ" Command="{Binding EditPlaceGroupNomenclatureCommand}" CommandParameter="2"/>

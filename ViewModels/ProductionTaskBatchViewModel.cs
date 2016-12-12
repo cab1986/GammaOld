@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
         {
             Contractors = GammaBase.C1CContractors.Where(c => c.IsBuyer ?? false).ToList();
             ProductionTaskBatchID = msg.ProductionTaskBatchID ?? SqlGuidUtil.NewSequentialid();
-            if (!WorkSession.IsRemotePrinting && WorkSession.PlaceGroup == PlaceGroups.Convertings)
+            if (!WorkSession.IsRemotePrinting && WorkSession.PlaceGroup == PlaceGroup.Convertings)
             {
                 MakeProductionTaskActiveForPlace();
             }
@@ -61,13 +61,13 @@ namespace Gamma.ViewModels
                     ProcessModelVisible = Visibility.Visible;
                     switch (WorkSession.PlaceGroup)
                     {
-                        case PlaceGroups.PM:
+                        case PlaceGroup.PM:
                             NewProductText = "Создать новый тамбур";
                             break;
-                        case PlaceGroups.Rw:
+                        case PlaceGroup.Rw:
                             NewProductText = "Создать новый съём";
                             break;
-                        case PlaceGroups.Wr:
+                        case PlaceGroup.Wr:
                             NewProductText = "Создать групповую упаковку";
                             break;
                     }
@@ -75,7 +75,7 @@ namespace Gamma.ViewModels
                     break;
                 case BatchKinds.SGI:
                     NewProductText = WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать этикетки";
-                    ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroups.Other;
+                    ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
                     break;
 
             }
@@ -439,7 +439,7 @@ namespace Gamma.ViewModels
                     case BatchKinds.SGB:
                         switch (WorkSession.PlaceGroup)
                         {
-                            case PlaceGroups.PM:
+                            case PlaceGroup.PM:
                                 docProductKind = DocProductKinds.DocProductSpool;
                                 // Проверка на наличие тамбура с предыдущей смены
                                 var curDate = DB.CurrentDateTime;
@@ -494,7 +494,7 @@ namespace Gamma.ViewModels
                                     return;
                                 }
                                 break;
-                            case PlaceGroups.Rw:
+                            case PlaceGroup.Rw:
                                 docProductKind = DocProductKinds.DocProductUnload;
                                 // Проверка на наличие неподтвержденного съема
                                 var notConfirmedDocUnload = gammaBase.Docs.Where(d => d.PlaceID == WorkSession.PlaceID
@@ -527,7 +527,7 @@ namespace Gamma.ViewModels
                             var currentDateTime = DB.CurrentDateTime;
                             var productionTask =
                                 gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
-                                    (short)PlaceGroups.Convertings).FirstOrDefault();
+                                    (short)PlaceGroup.Convertings).FirstOrDefault();
                             if (productionTask == null) return;
                             var baseQuantity =
                             (int)(gammaBase.C1CCharacteristics.Where(

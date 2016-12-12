@@ -16,7 +16,7 @@ namespace Gamma.Views
             this.DataContext = new DocCloseShiftsViewModel();
             InitializeComponent();
         }
-        public DocCloseShiftsView(PlaceGroups placeGroup)
+        public DocCloseShiftsView(PlaceGroup placeGroup)
         {
             this.DataContext = new DocCloseShiftsViewModel(placeGroup);
             InitializeComponent();

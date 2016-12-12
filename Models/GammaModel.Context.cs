@@ -101,10 +101,6 @@ namespace Gamma.Models
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
         public virtual DbSet<Persons> Persons { get; set; }
-        public virtual DbSet<PlaceZoneCells> PlaceZoneCells { get; set; }
-        public virtual DbSet<PlaceZones> PlaceZones { get; set; }
-        public virtual DbSet<DocInProducts> DocInProducts { get; set; }
-        public virtual DbSet<DocOutProducts> DocOutProducts { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
         public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
@@ -121,6 +117,9 @@ namespace Gamma.Models
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<vPlacePropertiesValues> vPlacePropertiesValues { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
+        public virtual DbSet<PlaceZones> PlaceZones { get; set; }
+        public virtual DbSet<DocInProducts> DocInProducts { get; set; }
+        public virtual DbSet<DocOutProducts> DocOutProducts { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {
@@ -760,6 +759,15 @@ namespace Gamma.Models
                 new ObjectParameter("PlaceGroupID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpecificationInputNomenclature_Result>("GetSpecificationInputNomenclature", nomenclatureIDParameter, characteristicIDParameter, placeGroupIDParameter);
+        }
+    
+        public virtual ObjectResult<string> DeletPlaceZone(Nullable<System.Guid> placeZoneID)
+        {
+            var placeZoneIDParameter = placeZoneID.HasValue ?
+                new ObjectParameter("PlaceZoneID", placeZoneID) :
+                new ObjectParameter("PlaceZoneID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletPlaceZone", placeZoneIDParameter);
         }
     }
 }

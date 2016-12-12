@@ -458,7 +458,6 @@
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="IsConfirmed" Type="bit" />
     <Property Name="PlaceZoneID" Type="uniqueidentifier" />
-    <Property Name="PlaceZoneCellID" Type="uniqueidentifier" />
     <Property Name="PersonID" Type="uniqueidentifier" />
     <Property Name="Date" Type="datetime" />
   </EntityType>
@@ -502,7 +501,6 @@
     <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PlaceZoneID" Type="uniqueidentifier" />
-    <Property Name="PlaceZoneCellID" Type="uniqueidentifier" />
     <Property Name="PersonID" Type="uniqueidentifier" />
     <Property Name="Date" Type="datetime" />
   </EntityType>
@@ -735,21 +733,14 @@
     <Property Name="UnwindersCount" Type="int" />
     <Property Name="IsRemotePrinting" Type="bit" />
   </EntityType>
-  <EntityType Name="PlaceZoneCells">
-    <Key>
-      <PropertyRef Name="PlaceZoneCellID" />
-    </Key>
-    <Property Name="PlaceZoneCellID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="PlaceZoneID" Type="uniqueidentifier" />
-    <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
-  </EntityType>
   <EntityType Name="PlaceZones">
     <Key>
       <PropertyRef Name="PlaceZoneID" />
     </Key>
     <Property Name="PlaceZoneID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="PlaceID" Type="int" />
+    <Property Name="PlaceID" Type="int" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="1000" Nullable="false" />
+    <Property Name="PlaceZoneParentID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="PostTypes">
     <Key>
@@ -926,6 +917,7 @@
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="PlaceID" Type="int" />
     <Property Name="Quantity" Type="int" />
+    <Property Name="PlaceZoneID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="RolePermits">
     <Key>
@@ -1103,6 +1095,7 @@
       <PropertyRef Name="DocMovementID" />
       <PropertyRef Name="ProductID" />
       <PropertyRef Name="ProductKindID" />
+      <PropertyRef Name="DocDate" />
     </Key>
     <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
@@ -1118,6 +1111,7 @@
     <Property Name="InDate" Type="datetime" />
     <Property Name="OutPersonID" Type="uniqueidentifier" />
     <Property Name="InPersonID" Type="uniqueidentifier" />
+    <Property Name="DocDate" Type="datetime" Nullable="false" />
     <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
     <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
@@ -2150,18 +2144,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_DocInProducts_PlaceZoneCells1">
-    <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="0..1" />
-    <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="PlaceZoneCells">
-        <PropertyRef Name="PlaceZoneCellID" />
-      </Principal>
-      <Dependent Role="DocInProducts">
-        <PropertyRef Name="PlaceZoneCellID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_DocInProducts_PlaceZones1">
     <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
     <End Role="DocInProducts" Type="Self.DocInProducts" Multiplicity="*" />
@@ -2303,18 +2285,6 @@
       </Principal>
       <Dependent Role="DocOutProducts">
         <PropertyRef Name="PersonID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_DocOutProducts_PlaceZoneCells1">
-    <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="0..1" />
-    <End Role="DocOutProducts" Type="Self.DocOutProducts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="PlaceZoneCells">
-        <PropertyRef Name="PlaceZoneCellID" />
-      </Principal>
-      <Dependent Role="DocOutProducts">
-        <PropertyRef Name="PlaceZoneCellID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -2810,20 +2780,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_PlaceZoneCells_PlaceZones1">
-    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
-    <End Role="PlaceZoneCells" Type="Self.PlaceZoneCells" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="PlaceZones">
-        <PropertyRef Name="PlaceZoneID" />
-      </Principal>
-      <Dependent Role="PlaceZoneCells">
-        <PropertyRef Name="PlaceZoneID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_PlaceZones_Places1">
-    <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
     <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Places">
@@ -2831,6 +2789,18 @@
       </Principal>
       <Dependent Role="PlaceZones">
         <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PlaceZones_PlaceZones">
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
+    <End Role="PlaceZones1" Type="Self.PlaceZones" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZones">
+        <PropertyRef Name="PlaceZoneID" />
+      </Principal>
+      <Dependent Role="PlaceZones1">
+        <PropertyRef Name="PlaceZoneParentID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3164,6 +3134,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Rests_PlaceZones">
+    <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="0..1" />
+    <End Role="Rests" Type="Self.Rests" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PlaceZones">
+        <PropertyRef Name="PlaceZoneID" />
+      </Principal>
+      <Dependent Role="Rests">
+        <PropertyRef Name="PlaceZoneID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Rests_Products">
     <End Role="Products" Type="Self.Products" Multiplicity="1" />
     <End Role="Rests" Type="Self.Rests" Multiplicity="0..1" />
@@ -3405,6 +3387,9 @@
   </Function>
   <Function Name="DeleteUnload" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+  </Function>
+  <Function Name="DeletPlaceZone" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PlaceZoneID" Type="uniqueidentifier" Mode="In" />
   </Function>
   <Function Name="FillDocCloseShiftConvertingMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="PlaceID" Type="int" Mode="In" />
@@ -3671,7 +3656,6 @@
     <EntitySet Name="PlaceGroup1CNomenclature" EntityType="Self.PlaceGroup1CNomenclature" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="PlaceZoneCells" EntityType="Self.PlaceZoneCells" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PlaceZones" EntityType="Self.PlaceZones" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PostTypes" EntityType="Self.PostTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" Schema="dbo" store:Type="Tables" />
@@ -3783,6 +3767,7 @@
     [vDocMovementProducts].[InDate] AS [InDate], 
     [vDocMovementProducts].[OutPersonID] AS [OutPersonID], 
     [vDocMovementProducts].[InPersonID] AS [InPersonID], 
+    [vDocMovementProducts].[DocDate] AS [DocDate], 
     [vDocMovementProducts].[Quantity] AS [Quantity], 
     [vDocMovementProducts].[1CNomenclatureID] AS [1CNomenclatureID], 
     [vDocMovementProducts].[1CCharacteristicID] AS [1CCharacteristicID], 
@@ -4166,10 +4151,6 @@
       <End Role="Persons" EntitySet="Persons" />
       <End Role="DocInProducts" EntitySet="DocInProducts" />
     </AssociationSet>
-    <AssociationSet Name="FK_DocInProducts_PlaceZoneCells1" Association="Self.FK_DocInProducts_PlaceZoneCells1">
-      <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
-      <End Role="DocInProducts" EntitySet="DocInProducts" />
-    </AssociationSet>
     <AssociationSet Name="FK_DocInProducts_PlaceZones1" Association="Self.FK_DocInProducts_PlaceZones1">
       <End Role="PlaceZones" EntitySet="PlaceZones" />
       <End Role="DocInProducts" EntitySet="DocInProducts" />
@@ -4216,10 +4197,6 @@
     </AssociationSet>
     <AssociationSet Name="FK_DocOutProducts_Persons" Association="Self.FK_DocOutProducts_Persons">
       <End Role="Persons" EntitySet="Persons" />
-      <End Role="DocOutProducts" EntitySet="DocOutProducts" />
-    </AssociationSet>
-    <AssociationSet Name="FK_DocOutProducts_PlaceZoneCells1" Association="Self.FK_DocOutProducts_PlaceZoneCells1">
-      <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
       <End Role="DocOutProducts" EntitySet="DocOutProducts" />
     </AssociationSet>
     <AssociationSet Name="FK_DocOutProducts_PlaceZones1" Association="Self.FK_DocOutProducts_PlaceZones1">
@@ -4382,13 +4359,13 @@
       <End Role="PlaceGroups" EntitySet="PlaceGroups" />
       <End Role="Places" EntitySet="Places" />
     </AssociationSet>
-    <AssociationSet Name="FK_PlaceZoneCells_PlaceZones1" Association="Self.FK_PlaceZoneCells_PlaceZones1">
-      <End Role="PlaceZones" EntitySet="PlaceZones" />
-      <End Role="PlaceZoneCells" EntitySet="PlaceZoneCells" />
-    </AssociationSet>
     <AssociationSet Name="FK_PlaceZones_Places1" Association="Self.FK_PlaceZones_Places1">
       <End Role="Places" EntitySet="Places" />
       <End Role="PlaceZones" EntitySet="PlaceZones" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PlaceZones_PlaceZones" Association="Self.FK_PlaceZones_PlaceZones">
+      <End Role="PlaceZones" EntitySet="PlaceZones" />
+      <End Role="PlaceZones1" EntitySet="PlaceZones" />
     </AssociationSet>
     <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="Self.FK_ProductGroupPacks_1CCharacteristics">
       <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -4496,6 +4473,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_Rests_Places" Association="Self.FK_Rests_Places">
       <End Role="Places" EntitySet="Places" />
+      <End Role="Rests" EntitySet="Rests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Rests_PlaceZones" Association="Self.FK_Rests_PlaceZones">
+      <End Role="PlaceZones" EntitySet="PlaceZones" />
       <End Role="Rests" EntitySet="Rests" />
     </AssociationSet>
     <AssociationSet Name="FK_Rests_Products" Association="Self.FK_Rests_Products">

@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
         /// </summary>        
         public ProductionTaskPMViewModel() : base(DB.GammaDb)
         {
-            Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroups.PM).
+            Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.PM).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID,
@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
-            PlaceGroupID = (int) PlaceGroups.PM;
+            PlaceGroupID = (int) PlaceGroup.PM;
         }
 
         public ProductionTaskPMViewModel(Guid productionTaskBatchID, bool isForRw) : this()
@@ -41,7 +41,7 @@ namespace Gamma.ViewModels
             IsForRw = isForRw;
             if (isForRw)
             {
-                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Rw).FirstOrDefault();
                 if (productionTaskRw != null)
                 {
                     var nomenclatures =
@@ -62,7 +62,7 @@ namespace Gamma.ViewModels
  */                   
                     SpecificationNomenclature = new ObservableCollection<Nomenclature>();
                     var inputNomenclatures = nomenclatures.Select(nomenclature => new ObservableCollection<Nomenclature>(
-                        GammaBase.GetSpecificationInputNomenclature(nomenclature.C1CNomenclatureID, nomenclature.C1CCharacteristicID, (byte)PlaceGroups.PM)
+                        GammaBase.GetSpecificationInputNomenclature(nomenclature.C1CNomenclatureID, nomenclature.C1CCharacteristicID, (byte)PlaceGroup.PM)
                         .Where(n => n.C1CNomenclatureID != null && n.C1CCharacteristicID != null)
                         .Select(n => new Nomenclature()
                         {
@@ -80,7 +80,7 @@ namespace Gamma.ViewModels
                     
                 }
             }
-            var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.PM).FirstOrDefault();
+            var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.PM).FirstOrDefault();
             if (productionTask != null)
             {
                 DateBegin = productionTask.DateBegin;
@@ -160,7 +160,7 @@ namespace Gamma.ViewModels
                     if (nomenclature != null)
                     {
                         var specificationNomenclature = new ObservableCollection<Nomenclature>(
-                            DB.GammaDb.GetSpecificationInputNomenclature(nomenclature.NomenclatureID, nomenclature.CharacteristicID, (byte)PlaceGroups.PM)
+                            DB.GammaDb.GetSpecificationInputNomenclature(nomenclature.NomenclatureID, nomenclature.CharacteristicID, (byte)PlaceGroup.PM)
                                 .Select(n => new Nomenclature()
                                 {
                                     NomenclatureID = (Guid)n.C1CNomenclatureID,
@@ -437,14 +437,14 @@ namespace Gamma.ViewModels
                     return true;
                 }
                 var productionTaskTemp =
-                    gammaBase.GetProductionTaskByBatchID(itemId, (short) PlaceGroups.PM).FirstOrDefault();
+                    gammaBase.GetProductionTaskByBatchID(itemId, (short) PlaceGroup.PM).FirstOrDefault();
                 if (productionTaskTemp == null)
                 {
                     ProductionTaskID = SqlGuidUtil.NewSequentialid();
                     productionTask = new ProductionTasks()
                     {
                         ProductionTaskID = ProductionTaskID,
-                        PlaceGroupID = (short) PlaceGroups.PM
+                        PlaceGroupID = (short) PlaceGroup.PM
                     };
                     productionTaskBatch.ProductionTasks.Add(productionTask);
                 }

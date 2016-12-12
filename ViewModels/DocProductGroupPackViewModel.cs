@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
             AddSpoolCommand = new DelegateCommand(AddSpool, () => !IsReadOnly);
             DeleteSpoolCommand = new DelegateCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly);
             OpenSpoolCommand = new DelegateCommand(OpenSpool, () => SelectedSpool != null);
-            UnpackCommand = new DelegateCommand(Unpack, () => !IsNewGroupPack && ProductId != null && WorkSession.PlaceGroup == PlaceGroups.Wr);
+            UnpackCommand = new DelegateCommand(Unpack, () => !IsNewGroupPack && ProductId != null && WorkSession.PlaceGroup == PlaceGroup.Wr);
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
         }

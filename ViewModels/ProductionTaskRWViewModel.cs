@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
         public ProductionTaskRwViewModel(Guid productionTaskBatchID, GammaEntities gammaBase = null) : base(gammaBase)
         {
             ProductionTaskBatchID = productionTaskBatchID;
-            var productionTask = GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroups.Rw).FirstOrDefault();
+            var productionTask = GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Rw).FirstOrDefault();
 //            ProductionTask = gammaBase.ProductionTasks.
 //                Include("ProductionTaskRWCutting").Include("ProductionTaskBatches").Include("ProductionTaskSGB").
 //                Where(pt => pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID).FirstOrDefault();
@@ -149,7 +149,7 @@ namespace Gamma.ViewModels
                 productionTaskRw = new ProductionTasks()
                 {
                     ProductionTaskID = ProductionTaskID,
-                    PlaceGroupID = (short)PlaceGroups.Rw,
+                    PlaceGroupID = (short)PlaceGroup.Rw,
                     ProductionTaskRWCutting = new List<ProductionTaskRWCutting>(),
                     ProductionTaskBatches = new List<ProductionTaskBatches> { GammaBase.ProductionTaskBatches.First(ptb => ptb.ProductionTaskBatchID == productionTaskBatchID) }
                 };
@@ -259,7 +259,7 @@ namespace Gamma.ViewModels
         private void ChooseNomenclature()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
-            MessageManager.FindNomenclature((int)PlaceGroups.Rw);
+            MessageManager.FindNomenclature((int)PlaceGroup.Rw);
         }
 
         private void NomenclatureChanged(Nomenclature1CMessage msg)

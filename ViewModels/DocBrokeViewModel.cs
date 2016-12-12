@@ -280,7 +280,7 @@ namespace Gamma.ViewModels
                 InternalUsageProduct.BrokeDecisionProduct = null;
                 InternalUsageProduct.IsChecked = false;
                 InternalUsageProduct.Quantity = 0;
-                InternalUsageProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
+                InternalUsageProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
                 GoodProduct.BrokeDecisionProduct = null;
                 GoodProduct.IsChecked = false;
                 GoodProduct.Quantity = 0;
@@ -288,7 +288,7 @@ namespace Gamma.ViewModels
                 LimitedProduct.BrokeDecisionProduct = null;
                 LimitedProduct.IsChecked = false;
                 LimitedProduct.Quantity = 0;
-                LimitedProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
+                LimitedProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
                 BrokeProduct.BrokeDecisionProduct = null;
                 BrokeProduct.IsChecked = false;
                 BrokeProduct.Quantity = 0;
@@ -296,7 +296,7 @@ namespace Gamma.ViewModels
                 RepackProduct.BrokeDecisionProduct = null;
                 RepackProduct.IsChecked = false;
                 RepackProduct.Quantity = 0;
-                RepackProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroups.Other || IsReadOnly;
+                RepackProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
                 if (value == null) return;
                 var products = BrokeDecisionProducts.Where(p => p.ProductId == value.ProductId).ToList();
                 foreach (var product in products)

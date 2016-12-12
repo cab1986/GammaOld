@@ -35,6 +35,8 @@ namespace Gamma
         public Guid? DocId { get; private set; }
     }
 
+    public class OpenPlaceZonesMessage { }
+
     public class EditDocMovementMessage
     {
         public EditDocMovementMessage(Guid docId)
@@ -249,7 +251,7 @@ namespace Gamma
     public class OpenImportOldProductsMessage { }
     public class OpenDocCloseShiftsMessage 
     {
-        public PlaceGroups? PlaceGroup;
+        public PlaceGroup? PlaceGroup;
     }
     public class FindProductionTaskBatchMessage
     {
@@ -414,7 +416,7 @@ namespace Gamma
         {
             Messenger.Default.Send(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
         }
-        public static void OpenDocCloseShifts(PlaceGroups placeGroup)
+        public static void OpenDocCloseShifts(PlaceGroup placeGroup)
         {
             UIServices.SetBusyState();
             Messenger.Default.Send(new OpenDocCloseShiftsMessage { PlaceGroup = placeGroup });
@@ -453,6 +455,11 @@ namespace Gamma
                 docProductKind,
                 true, id,
                 checkResult));
+        }
+
+        public static void OpenPlaceZones()
+        {
+            Messenger.Default.Send(new OpenPlaceZonesMessage());
         }
 
     }

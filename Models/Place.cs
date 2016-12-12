@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gamma
+namespace Gamma.Models
 {
     public class Place
     {

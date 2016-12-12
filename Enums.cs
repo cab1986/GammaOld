@@ -49,7 +49,7 @@ namespace Gamma
     /// <summary>
     /// Группы переделов. Привязаны к таблице в базе, менять только вместе!
     /// </summary>
-    public enum PlaceGroups { PM, Rw, Convertings, Wr, Other, Warehouses }
+    public enum PlaceGroup { PM, Rw, Convertings, Wr, Other, Warehouses }
     /// <summary>
     /// Качество продукта
     /// </summary>

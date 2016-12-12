@@ -23,7 +23,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>\\server7\shares\Общая папка\Gamma\</PublishUrl>
+    <PublishUrl>\\server7\shares\Общая папка\GammaRostov\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -33,11 +33,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
+    <UpdateUrl>\\Solomon\Server\_Общая\GammaNew\</UpdateUrl>
     <ProductName>Gamma</ProductName>
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>9</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -513,9 +514,7 @@
     <Compile Include="Models\Places.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PlaceZoneCells.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\PlaceZone.cs" />
     <Compile Include="Models\PlaceZones.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -669,8 +668,8 @@
     </Compile>
     <Compile Include="Models\GammaModelManualConstructor.cs" />
     <Compile Include="MVVMWindow.cs" />
-    <Compile Include="Place.cs" />
-    <Compile Include="ProductInfo.cs" />
+    <Compile Include="Models\Place.cs" />
+    <Compile Include="Models\ProductInfo.cs" />
     <Compile Include="Models\ProductionTaskBatch.cs" />
     <Compile Include="Models\RejectionReason.cs" />
     <Compile Include="ReportManager.cs" />
@@ -710,6 +709,7 @@
     <Compile Include="Models\Person.cs" />
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
+    <Compile Include="ViewModels\PlaceZonesViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchWrapperViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
@@ -845,6 +845,9 @@
     </Compile>
     <Compile Include="Views\PlaceProductsView.xaml.cs">
       <DependentUpon>PlaceProductsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceZonesView.xaml.cs">
+      <DependentUpon>PlaceZonesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTaskBatchSGBView.xaml.cs">
       <DependentUpon>ProductionTaskBatchSGBView.xaml</DependentUpon>
@@ -1041,6 +1044,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PlaceZonesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ProductionTaskBatchSGBView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1196,7 +1203,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

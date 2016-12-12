@@ -40,7 +40,7 @@ namespace Gamma
                 PlaceID = userInfo.PlaceID;
                 BranchID = userInfo.BranchID;
                 ShiftID = userInfo.ShiftID;
-                PlaceGroup = (PlaceGroups)userInfo.placeGroupID;
+                PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
                 PlaceIds = userInfo.Places.Select(p => p.PlaceID).ToList();
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
@@ -73,7 +73,7 @@ namespace Gamma
         public static List<int> BranchIds { get; private set; }
 
         public static bool IsProductionPlace { get; private set; }
-        public static PlaceGroups PlaceGroup { get; private set; }
+        public static PlaceGroup PlaceGroup { get; private set; }
         public static string PrintName { get; set; }
     }
 }

@@ -283,3 +283,5 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementsView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceZonesView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceZonesView.baml

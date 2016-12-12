@@ -28,7 +28,7 @@ namespace Gamma.ViewModels
                 return;
             }
             
-                if (WorkSession.PlaceGroup == PlaceGroups.Rw || WorkSession.PlaceGroup == PlaceGroups.Convertings) SourceSpoolsVisible = Visibility.Visible;
+                if (WorkSession.PlaceGroup == PlaceGroup.Rw || WorkSession.PlaceGroup == PlaceGroup.Convertings) SourceSpoolsVisible = Visibility.Visible;
                 else SourceSpoolsVisible = Visibility.Collapsed;
                 ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
                 DeleteSpoolCommand = new DelegateCommand<byte>(DeleteSpool);
@@ -159,7 +159,7 @@ namespace Gamma.ViewModels
                 }
                 GammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
                 GammaBase.SaveChanges();
-            if (WorkSession.PlaceGroup != PlaceGroups.Convertings) return;
+            if (WorkSession.PlaceGroup != PlaceGroup.Convertings) return;
         }
 
         private void DeleteSpool(byte unum)
@@ -303,17 +303,17 @@ namespace Gamma.ViewModels
                 case 1:
                     Unwinder1Active = !Unwinder1Active;
                     GammaBase.SaveChanges();
-                    if (Unwinder1Active && WorkSession.PlaceGroup == PlaceGroups.Convertings) CheckSourceSpools();
+                    if (Unwinder1Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
                     break;
                 case 2:
                     Unwinder2Active = !Unwinder2Active;
                     GammaBase.SaveChanges();
-                    if (Unwinder2Active && WorkSession.PlaceGroup == PlaceGroups.Convertings) CheckSourceSpools();
+                    if (Unwinder2Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
                     break;
                 case 3:
                     Unwinder3Active = !Unwinder3Active;
                     GammaBase.SaveChanges();
-                    if (Unwinder3Active && WorkSession.PlaceGroup == PlaceGroups.Convertings) CheckSourceSpools();
+                    if (Unwinder3Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
                     break;
             }
         }

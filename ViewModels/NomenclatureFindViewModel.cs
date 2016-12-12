@@ -50,7 +50,7 @@ namespace Gamma.ViewModels
             MessageManager.NomenclatureEdit(SelectedNomenclature.Nomenclature1CID);
         }
         
-        public NomenclatureFindViewModel(PlaceGroups placeGroup): this((int)placeGroup) { }
+        public NomenclatureFindViewModel(PlaceGroup placeGroup): this((int)placeGroup) { }
 
         /// <summary>
         /// Инициализация новой NomenclatureFindViewModel

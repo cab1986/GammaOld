@@ -22,8 +22,8 @@ namespace Gamma.ViewModels
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
             var date = DB.CurrentDateTime;
             var sourceSpools = gammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeID);
-            var placeGroup = (PlaceGroups) gammaBase.Places.First(p => p.PlaceID == placeID).PlaceGroupID;
-            var isSourceProduct = placeGroup == PlaceGroups.Convertings || placeGroup == PlaceGroups.Rw;
+            var placeGroup = (PlaceGroup) gammaBase.Places.First(p => p.PlaceID == placeID).PlaceGroupID;
+            var isSourceProduct = placeGroup == PlaceGroup.Convertings || placeGroup == PlaceGroup.Rw;
             if (sourceSpools == null) return;
             if (sourceSpools.Unwinder1Spool != null)
             {

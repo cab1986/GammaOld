@@ -17,21 +17,26 @@ namespace Gamma.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PlaceZones()
         {
-            this.PlaceZoneCells = new HashSet<PlaceZoneCells>();
+            this.PlaceZones1 = new HashSet<PlaceZones>();
+            this.Rests = new HashSet<Rests>();
             this.DocInProducts = new HashSet<DocInProducts>();
             this.DocOutProducts = new HashSet<DocOutProducts>();
         }
     
         public System.Guid PlaceZoneID { get; set; }
-        public Nullable<int> PlaceID { get; set; }
+        public int PlaceID { get; set; }
         public string Name { get; set; }
+        public Nullable<System.Guid> PlaceZoneParentID { get; set; }
     
+        public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PlaceZoneCells> PlaceZoneCells { get; set; }
+        public virtual ICollection<PlaceZones> PlaceZones1 { get; set; }
+        public virtual PlaceZones PlaceZones2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rests> Rests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocInProducts> DocInProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
-        public virtual Places Places { get; set; }
     }
 }
