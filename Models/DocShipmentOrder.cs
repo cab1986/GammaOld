@@ -13,6 +13,7 @@ namespace Gamma.Models
         public string VehicleNumber { get; set; }
         public string ActivePerson { get; set; }
         public string OrderType { get; set; }
+        public DateTime? OutDate { get; set; }
         
         public ObservableCollection<DocNomenclatureItem> DocShipmentOrderGoods { get; set; }
     }

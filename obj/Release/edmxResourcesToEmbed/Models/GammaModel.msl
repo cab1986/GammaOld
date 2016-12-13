@@ -1309,36 +1309,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="v1COrders">
-      <EntityTypeMapping TypeName="GammaModel.v1COrders">
-        <MappingFragment StoreEntitySet="v1COrders">
-          <ScalarProperty Name="OrderType" ColumnName="OrderType" />
-          <ScalarProperty Name="OrderKindID" ColumnName="OrderKindID" />
-          <ScalarProperty Name="OutPlaceID" ColumnName="OutPlaceID" />
-          <ScalarProperty Name="OutShiftID" ColumnName="OutShiftID" />
-          <ScalarProperty Name="OutActivePerson" ColumnName="OutActivePerson" />
-          <ScalarProperty Name="OutActivePersonID" ColumnName="OutActivePersonID" />
-          <ScalarProperty Name="InPlaceID" ColumnName="InPlaceID" />
-          <ScalarProperty Name="InShiftId" ColumnName="InShiftId" />
-          <ScalarProperty Name="InActivePerson" ColumnName="InActivePerson" />
-          <ScalarProperty Name="InActivePersonID" ColumnName="InActivePersonID" />
-          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
-          <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
-          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
-          <ScalarProperty Name="InDate" ColumnName="InDate" />
-          <ScalarProperty Name="OutDate" ColumnName="OutDate" />
-          <ScalarProperty Name="InBranchID" ColumnName="InBranchID" />
-          <ScalarProperty Name="C1CInSubdivisionID" ColumnName="1CInSubdivisionID" />
-          <ScalarProperty Name="OutBranchID" ColumnName="OutBranchID" />
-          <ScalarProperty Name="C1COutSubdivisionID" ColumnName="1COutSubdivisionID" />
-          <ScalarProperty Name="Consignee" ColumnName="Consignee" />
-          <ScalarProperty Name="Shipper" ColumnName="Shipper" />
-          <ScalarProperty Name="Number" ColumnName="Number" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="C1COrderID" ColumnName="1COrderID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="vDocMovementProducts">
       <EntityTypeMapping TypeName="GammaModel.vDocMovementProducts">
         <MappingFragment StoreEntitySet="vDocMovementProducts">
@@ -1396,24 +1366,6 @@
         <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
       </EndProperty>
     </AssociationSetMapping>
-    <EntitySetMapping Name="DocShipmentOrders">
-      <EntityTypeMapping TypeName="GammaModel.DocShipmentOrders">
-        <MappingFragment StoreEntitySet="DocShipmentOrders">
-          <ScalarProperty Name="InDate" ColumnName="InDate" />
-          <ScalarProperty Name="InShiftID" ColumnName="InShiftID" />
-          <ScalarProperty Name="InActivePersonID" ColumnName="InActivePersonID" />
-          <ScalarProperty Name="InPlaceID" ColumnName="InPlaceID" />
-          <ScalarProperty Name="OutDate" ColumnName="OutDate" />
-          <ScalarProperty Name="OutShiftID" ColumnName="OutShiftID" />
-          <ScalarProperty Name="OutActivePersonID" ColumnName="OutActivePersonID" />
-          <ScalarProperty Name="OutPlaceID" ColumnName="OutPlaceID" />
-          <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
-          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
-          <ScalarProperty Name="OrderTypeID" ColumnName="OrderTypeID" />
-          <ScalarProperty Name="DocOrderID" ColumnName="DocOrderID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="C1CDocInternalOrders">
       <EntityTypeMapping TypeName="GammaModel.C1CDocInternalOrders">
         <MappingFragment StoreEntitySet="1CDocInternalOrders">
@@ -1622,5 +1574,57 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="DeletPlaceZone" FunctionName="GammaDBModel.DeletPlaceZone" />
+    <EntitySetMapping Name="DocShipmentOrders">
+      <EntityTypeMapping TypeName="GammaModel.DocShipmentOrders">
+        <MappingFragment StoreEntitySet="DocShipmentOrders">
+          <ScalarProperty Name="DriverDocument" ColumnName="DriverDocument" />
+          <ScalarProperty Name="Driver" ColumnName="Driver" />
+          <ScalarProperty Name="InDate" ColumnName="InDate" />
+          <ScalarProperty Name="InShiftID" ColumnName="InShiftID" />
+          <ScalarProperty Name="InActivePersonID" ColumnName="InActivePersonID" />
+          <ScalarProperty Name="InPlaceID" ColumnName="InPlaceID" />
+          <ScalarProperty Name="OutDate" ColumnName="OutDate" />
+          <ScalarProperty Name="OutShiftID" ColumnName="OutShiftID" />
+          <ScalarProperty Name="OutActivePersonID" ColumnName="OutActivePersonID" />
+          <ScalarProperty Name="OutPlaceID" ColumnName="OutPlaceID" />
+          <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
+          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+          <ScalarProperty Name="OrderTypeID" ColumnName="OrderTypeID" />
+          <ScalarProperty Name="DocOrderID" ColumnName="DocOrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v1COrders">
+      <EntityTypeMapping TypeName="GammaModel.v1COrders">
+        <MappingFragment StoreEntitySet="v1COrders">
+          <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+          <ScalarProperty Name="OrderKindID" ColumnName="OrderKindID" />
+          <ScalarProperty Name="OutPlaceID" ColumnName="OutPlaceID" />
+          <ScalarProperty Name="OutShiftID" ColumnName="OutShiftID" />
+          <ScalarProperty Name="OutActivePerson" ColumnName="OutActivePerson" />
+          <ScalarProperty Name="OutActivePersonID" ColumnName="OutActivePersonID" />
+          <ScalarProperty Name="InPlaceID" ColumnName="InPlaceID" />
+          <ScalarProperty Name="InShiftId" ColumnName="InShiftId" />
+          <ScalarProperty Name="InActivePerson" ColumnName="InActivePerson" />
+          <ScalarProperty Name="InActivePersonID" ColumnName="InActivePersonID" />
+          <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+          <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
+          <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+          <ScalarProperty Name="DriverDocument" ColumnName="DriverDocument" />
+          <ScalarProperty Name="Driver" ColumnName="Driver" />
+          <ScalarProperty Name="InDate" ColumnName="InDate" />
+          <ScalarProperty Name="OutDate" ColumnName="OutDate" />
+          <ScalarProperty Name="InBranchID" ColumnName="InBranchID" />
+          <ScalarProperty Name="C1CInSubdivisionID" ColumnName="1CInSubdivisionID" />
+          <ScalarProperty Name="OutBranchID" ColumnName="OutBranchID" />
+          <ScalarProperty Name="C1COutSubdivisionID" ColumnName="1COutSubdivisionID" />
+          <ScalarProperty Name="Consignee" ColumnName="Consignee" />
+          <ScalarProperty Name="Shipper" ColumnName="Shipper" />
+          <ScalarProperty Name="Number" ColumnName="Number" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="C1COrderID" ColumnName="1COrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

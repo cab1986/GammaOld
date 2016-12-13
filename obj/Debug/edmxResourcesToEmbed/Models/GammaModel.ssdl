@@ -575,6 +575,8 @@
     <Property Name="InActivePersonID" Type="uniqueidentifier" />
     <Property Name="InShiftID" Type="tinyint" />
     <Property Name="InDate" Type="datetime" />
+    <Property Name="Driver" Type="varchar" MaxLength="255" />
+    <Property Name="DriverDocument" Type="varchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="DocTypes">
     <Key>
@@ -1043,6 +1045,8 @@
     <Property Name="InBranchID" Type="int" />
     <Property Name="OutDate" Type="datetime" />
     <Property Name="InDate" Type="datetime" />
+    <Property Name="Driver" Type="varchar" MaxLength="255" />
+    <Property Name="DriverDocument" Type="varchar" MaxLength="255" />
     <Property Name="VehicleNumber" Type="nchar" MaxLength="50" />
     <Property Name="IsShipped" Type="bit" Nullable="false" />
     <Property Name="IsConfirmed" Type="bit" />
@@ -3711,6 +3715,8 @@
     [v1COrders].[InBranchID] AS [InBranchID], 
     [v1COrders].[OutDate] AS [OutDate], 
     [v1COrders].[InDate] AS [InDate], 
+    [v1COrders].[Driver] AS [Driver], 
+    [v1COrders].[DriverDocument] AS [DriverDocument], 
     [v1COrders].[VehicleNumber] AS [VehicleNumber], 
     [v1COrders].[IsShipped] AS [IsShipped], 
     [v1COrders].[IsConfirmed] AS [IsConfirmed], 

@@ -1432,7 +1432,6 @@
       <End Role="DocMovementOrder" EntitySet="DocMovementOrder" />
       <End Role="DocMovementOrderNomenclature" EntitySet="DocMovementOrderNomenclature" />
     </AssociationSet>
-    <EntitySet Name="v1COrders" EntityType="GammaModel.v1COrders" />
     <EntitySet Name="vDocMovementProducts" EntityType="GammaModel.vDocMovementProducts" />
     <EntitySet Name="vDocMovementGoods" EntityType="GammaModel.vDocMovementGoods" />
     <EntitySet Name="ProductKinds" EntityType="GammaModel.ProductKinds" />
@@ -1444,7 +1443,6 @@
       <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
       <End Role="ProductKinds" EntitySet="ProductKinds" />
     </AssociationSet>
-    <EntitySet Name="DocShipmentOrders" EntityType="GammaModel.DocShipmentOrders" />
     <EntitySet Name="C1CDocInternalOrders" EntityType="GammaModel.C1CDocInternalOrders" />
     <AssociationSet Name="FK_1CDocInternalOrders_1CWarehouses" Association="GammaModel.FK_1CDocInternalOrders_1CWarehouses">
       <End Role="C1CWarehouses" EntitySet="C1CWarehouses" />
@@ -1676,6 +1674,8 @@
     <FunctionImport Name="DeletPlaceZone" ReturnType="Collection(String)">
       <Parameter Name="PlaceZoneID" Mode="In" Type="Guid" />
     </FunctionImport>
+    <EntitySet Name="DocShipmentOrders" EntityType="GammaModel.DocShipmentOrders" />
+    <EntitySet Name="v1COrders" EntityType="GammaModel.v1COrders" />
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -3757,39 +3757,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="v1COrders">
-    <Key>
-      <PropertyRef Name="C1COrderID" />
-      <PropertyRef Name="OutBranchID" />
-      <PropertyRef Name="IsShipped" />
-      <PropertyRef Name="OrderKindID" />
-      <PropertyRef Name="OrderType" />
-    </Key>
-    <Property Name="C1COrderID" Type="Guid" Nullable="false" />
-    <Property Name="Date" Type="DateTime" Precision="3" />
-    <Property Name="Number" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
-    <Property Name="Shipper" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="Consignee" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="C1COutSubdivisionID" Type="Guid" />
-    <Property Name="OutBranchID" Type="Int32" Nullable="false" />
-    <Property Name="C1CInSubdivisionID" Type="Guid" />
-    <Property Name="InBranchID" Type="Int32" />
-    <Property Name="OutDate" Type="DateTime" Precision="3" />
-    <Property Name="InDate" Type="DateTime" Precision="3" />
-    <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-    <Property Name="IsShipped" Type="Boolean" Nullable="false" />
-    <Property Name="IsConfirmed" Type="Boolean" />
-    <Property Name="InActivePersonID" Type="Guid" />
-    <Property Name="InActivePerson" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="InShiftId" Type="Byte" />
-    <Property Name="InPlaceID" Type="Int32" />
-    <Property Name="OutActivePersonID" Type="Guid" />
-    <Property Name="OutActivePerson" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="OutShiftID" Type="Byte" />
-    <Property Name="OutPlaceID" Type="Int32" />
-    <Property Name="OrderKindID" Type="Int32" Nullable="false" />
-    <Property Name="OrderType" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
-  </EntityType>
   <EntityType Name="vDocMovementProducts">
     <Key>
       <PropertyRef Name="DocMovementID" />
@@ -3857,23 +3824,6 @@
     <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="*" />
     <End Type="GammaModel.ProductKinds" Role="ProductKinds" Multiplicity="*" />
   </Association>
-  <EntityType Name="DocShipmentOrders">
-    <Key>
-      <PropertyRef Name="DocOrderID" />
-    </Key>
-    <Property Name="DocOrderID" Type="Guid" Nullable="false" />
-    <Property Name="OrderTypeID" Type="Byte" />
-    <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-    <Property Name="IsShipped" Type="Boolean" />
-    <Property Name="OutPlaceID" Type="Int32" />
-    <Property Name="OutActivePersonID" Type="Guid" />
-    <Property Name="OutShiftID" Type="Byte" />
-    <Property Name="OutDate" Type="DateTime" Precision="3" />
-    <Property Name="InPlaceID" Type="Int32" />
-    <Property Name="InActivePersonID" Type="Guid" />
-    <Property Name="InShiftID" Type="Byte" />
-    <Property Name="InDate" Type="DateTime" Precision="3" />
-  </EntityType>
   <EntityType Name="C1CDocInternalOrders">
     <Key>
       <PropertyRef Name="C1CDocInternalOrderID" />
@@ -4663,4 +4613,58 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="DocShipmentOrders">
+    <Key>
+      <PropertyRef Name="DocOrderID" />
+    </Key>
+    <Property Name="DocOrderID" Type="Guid" Nullable="false" />
+    <Property Name="OrderTypeID" Type="Byte" />
+    <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="IsShipped" Type="Boolean" />
+    <Property Name="OutPlaceID" Type="Int32" />
+    <Property Name="OutActivePersonID" Type="Guid" />
+    <Property Name="OutShiftID" Type="Byte" />
+    <Property Name="OutDate" Type="DateTime" Precision="3" />
+    <Property Name="InPlaceID" Type="Int32" />
+    <Property Name="InActivePersonID" Type="Guid" />
+    <Property Name="InShiftID" Type="Byte" />
+    <Property Name="InDate" Type="DateTime" Precision="3" />
+    <Property Name="Driver" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="DriverDocument" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="v1COrders">
+    <Key>
+      <PropertyRef Name="C1COrderID" />
+      <PropertyRef Name="OutBranchID" />
+      <PropertyRef Name="IsShipped" />
+      <PropertyRef Name="OrderKindID" />
+      <PropertyRef Name="OrderType" />
+    </Key>
+    <Property Name="C1COrderID" Type="Guid" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Precision="3" />
+    <Property Name="Number" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+    <Property Name="Shipper" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Consignee" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="C1COutSubdivisionID" Type="Guid" />
+    <Property Name="OutBranchID" Type="Int32" Nullable="false" />
+    <Property Name="C1CInSubdivisionID" Type="Guid" />
+    <Property Name="InBranchID" Type="Int32" />
+    <Property Name="OutDate" Type="DateTime" Precision="3" />
+    <Property Name="InDate" Type="DateTime" Precision="3" />
+    <Property Name="Driver" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="DriverDocument" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="IsShipped" Type="Boolean" Nullable="false" />
+    <Property Name="IsConfirmed" Type="Boolean" />
+    <Property Name="InActivePersonID" Type="Guid" />
+    <Property Name="InActivePerson" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="InShiftId" Type="Byte" />
+    <Property Name="InPlaceID" Type="Int32" />
+    <Property Name="OutActivePersonID" Type="Guid" />
+    <Property Name="OutActivePerson" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="OutShiftID" Type="Byte" />
+    <Property Name="OutPlaceID" Type="Int32" />
+    <Property Name="OrderKindID" Type="Int32" Nullable="false" />
+    <Property Name="OrderType" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

@@ -127,7 +127,8 @@ namespace Gamma.ViewModels
                                 Shipper = d.Shipper,
                                 Consignee = d.Consignee,
                                 ActivePerson = IsOutOrders?d.OutActivePerson:d.InActivePerson,
-                                OrderType = d.OrderType
+                                OrderType = d.OrderType,
+                                OutDate = d.OutDate
                 }));
                         break;
                     case 1:
@@ -145,7 +146,8 @@ namespace Gamma.ViewModels
                                 Shipper = d.Shipper,
                                 Consignee = d.Consignee,
                                 ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
-                                OrderType = d.OrderType
+                                OrderType = d.OrderType,
+                                OutDate = d.OutDate
                             }));
                         break;
                     case 2:
@@ -169,7 +171,8 @@ namespace Gamma.ViewModels
                                     Shipper = d.Shipper,
                                     Consignee = d.Consignee,
                                     ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
-                                    OrderType = d.OrderType
+                                    OrderType = d.OrderType,
+                                    OutDate = d.OutDate
                                 }));
                         break;
                 }

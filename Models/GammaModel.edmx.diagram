@@ -196,13 +196,11 @@
         <EntityTypeShape EntityType="GammaModel.DocMovement" Width="1.5" PointX="14.25" PointY="64.25" />
         <EntityTypeShape EntityType="GammaModel.DocMovementOrder" Width="1.5" PointX="14.25" PointY="72.875" />
         <AssociationConnector Association="GammaModel.FK_DocMovementOrderNomenclature_DocMovementOrder" />
-        <EntityTypeShape EntityType="GammaModel.v1COrders" Width="1.5" PointX="9.375" PointY="11.75" />
         <EntityTypeShape EntityType="GammaModel.vDocMovementProducts" Width="1.5" PointX="11.375" PointY="11.75" />
         <EntityTypeShape EntityType="GammaModel.vDocMovementGoods" Width="1.5" PointX="3.375" PointY="9.75" />
         <EntityTypeShape EntityType="GammaModel.ProductKinds" Width="1.5" PointX="10.375" PointY="0.875" />
         <AssociationConnector Association="GammaModel.FK_Products_ProductKinds" />
         <AssociationConnector Association="GammaModel.ProductKindRejectionReasons" />
-        <EntityTypeShape EntityType="GammaModel.DocShipmentOrders" Width="1.5" PointX="10.375" PointY="3.75" />
         <EntityTypeShape EntityType="GammaModel.C1CDocInternalOrders" Width="1.5" PointX="18.25" PointY="35.125" />
         <AssociationConnector Association="GammaModel.FK_1CDocInternalOrders_1CWarehouses" />
         <AssociationConnector Association="GammaModel.FK_1CDocInternalOrders_1CWarehouses1" />
@@ -265,6 +263,8 @@
         <AssociationConnector Association="GammaModel.FK_DocOutProducts_Persons" />
         <AssociationConnector Association="GammaModel.FK_DocOutProducts_PlaceZones1" />
         <AssociationConnector Association="GammaModel.FK_DocOutProducts_Products" />
+        <EntityTypeShape EntityType="GammaModel.DocShipmentOrders" Width="1.5" PointX="10.375" PointY="3.75" />
+        <EntityTypeShape EntityType="GammaModel.v1COrders" Width="1.5" PointX="7.375" PointY="11.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

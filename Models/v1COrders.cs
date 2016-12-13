@@ -25,6 +25,8 @@ namespace Gamma.Models
         public Nullable<int> InBranchID { get; set; }
         public Nullable<System.DateTime> OutDate { get; set; }
         public Nullable<System.DateTime> InDate { get; set; }
+        public string Driver { get; set; }
+        public string DriverDocument { get; set; }
         public string VehicleNumber { get; set; }
         public bool IsShipped { get; set; }
         public Nullable<bool> IsConfirmed { get; set; }

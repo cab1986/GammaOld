@@ -271,6 +271,33 @@ namespace Gamma.ViewModels
                 case 2:
                     var endTime = DB.CurrentDateTime;
                     var beginTime = endTime.AddDays(-1);
+ /*                   var products = from vpi in GammaBase.vProductsInfo
+                        where vpi.PlaceID == PlaceID &&
+                              vpi.Date >= beginTime && vpi.Date <= endTime
+                        orderby vpi.Date descending
+                        select new ProductInfo
+                        {
+                            CharacteristicID = vpi.C1CCharacteristicID,
+                            Date = vpi.Date,
+                            DocID = vpi.DocID,
+                            NomenclatureID = vpi.C1CNomenclatureID,
+                            NomenclatureName = vpi.NomenclatureName,
+                            Number = vpi.Number,
+                            Place = vpi.Place,
+                            ProductID = vpi.ProductID,
+                            ProductKind = (ProductKind) vpi.ProductKindID,
+                            Quantity = vpi.ProductionQuantity,
+                            ShiftID = vpi.ShiftID,
+                            State = vpi.State,
+                            PlaceID = vpi.PlaceID,
+                            PlaceGroup = (PlaceGroup) vpi.PlaceGroupID
+                        };
+                    Products = new ObservableCollection<ProductInfo>();
+                    foreach (var product in products)
+                    {
+                        Products.Add(product);
+                    }*/
+
                     Products = new ObservableCollection<ProductInfo>
                     (
                         from vpi in GammaBase.vProductsInfo

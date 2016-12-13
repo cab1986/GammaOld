@@ -63,28 +63,38 @@
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutGroup Orientation="Horizontal" Header="Отгрузка" View="GroupBox">
-                            <dxlc:LayoutItem Label="Дата отгрузки" Width="200">
-                                <dxe:DateEdit EditValue="{Binding DateOut}" Mask="g" MaskUseAsDisplayFormat="True" IsReadOnly="{Binding DenyEditOut}"/>
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Склад отгрузки" Width="250">
-                                <dxe:ComboBoxEdit EditValue="{Binding OutPlaceId, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding PlacesOut}" ValueMember="PlaceID" DisplayMember="PlaceName"
-                                                  IsReadOnly="{Binding DenyEditOut}"/>
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Груз собирает">
-                                <dxe:ComboBoxEdit EditValue="{Binding ActivePersonOutId}" ItemsSource="{Binding PersonsOut}" ValueMember="PersonID" DisplayMember="Name"
-                                          IsReadOnly="{Binding DenyEditOut}"/>
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Номер ТС" Width="160">
-                                <dxe:TextEdit EditValue="{Binding VehicleNumber}" IsReadOnly="{Binding DenyEditOut}"/>
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Смена №" Width="100">
-                                <dxe:SpinEdit EditValue="{Binding ShiftOutId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
-                                      AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False" IsReadOnly="{Binding DenyEditOut}"/>
-                            </dxlc:LayoutItem>
-                            <dxlc:LayoutItem Label="Отгружено" Width="80">
-                                <dxe:CheckEdit EditValue="{Binding IsShipped, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditOut}"/>
-                            </dxlc:LayoutItem>
+                        <dxlc:LayoutGroup Header="Отгрузка" View="GroupBox" Orientation="Vertical">
+                            <dxlc:LayoutGroup Orientation="Horizontal" >
+                                <dxlc:LayoutItem Label="Дата отгрузки" Width="200">
+                                    <dxe:DateEdit EditValue="{Binding DateOut}" Mask="g" MaskUseAsDisplayFormat="True" IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Склад отгрузки" Width="250">
+                                    <dxe:ComboBoxEdit EditValue="{Binding OutPlaceId, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding PlacesOut}" ValueMember="PlaceID" DisplayMember="PlaceName"
+                                                      IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Груз собирает">
+                                    <dxe:ComboBoxEdit EditValue="{Binding ActivePersonOutId}" ItemsSource="{Binding PersonsOut}" ValueMember="PersonID" DisplayMember="Name"
+                                              IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Смена №" Width="100">
+                                    <dxe:SpinEdit EditValue="{Binding ShiftOutId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
+                                          AllowNullInput="True" EditValueType="{x:Type sys:Byte}" IsFloatValue="False" IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Отгружено" Width="80">
+                                    <dxe:CheckEdit EditValue="{Binding IsShipped, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                            </dxlc:LayoutGroup>
+                            <dxlc:LayoutGroup Orientation="Horizontal">
+                                <dxlc:LayoutItem Label="Водитель" Width="200">
+                                    <dxe:TextEdit EditValue="{Binding Driver}" IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Доверенность" Width="250">
+                                    <dxe:TextEdit EditValue="{Binding DriverDocument}" IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                                <dxlc:LayoutItem Label="Номер ТС" Width="250">
+                                    <dxe:TextEdit EditValue="{Binding VehicleNumber}" IsReadOnly="{Binding DenyEditOut}"/>
+                                </dxlc:LayoutItem>
+                            </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
                         <dxlc:LayoutGroup Orientation="Horizontal" Header="Приемка" View="GroupBox" Visibility="{Binding InVisibible, Converter={StaticResource BooleanToVisibilityConverter}}" >
                             <dxlc:LayoutItem Label="Дата приемки" Width="200">

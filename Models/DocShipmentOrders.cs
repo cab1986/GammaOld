@@ -26,5 +26,7 @@ namespace Gamma.Models
         public Nullable<System.Guid> InActivePersonID { get; set; }
         public Nullable<byte> InShiftID { get; set; }
         public Nullable<System.DateTime> InDate { get; set; }
+        public string Driver { get; set; }
+        public string DriverDocument { get; set; }
     }
 }

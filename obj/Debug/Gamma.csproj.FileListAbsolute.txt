@@ -284,3 +284,6 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
+D:\CProjects\Gamma\Gamma\bin\Debug\ru\EntityFramework.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache

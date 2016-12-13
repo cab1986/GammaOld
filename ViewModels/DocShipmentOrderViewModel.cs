@@ -60,8 +60,9 @@ namespace Gamma.ViewModels
                         PlaceGuid = p.PlaceGuid,
                         PlaceName = p.Name
                     }).ToList();
-
             OrderKindId = (byte) docShipmentOrderInfo.OrderKindID;
+            Driver = docShipmentOrderInfo.Driver;
+            DriverDocument = docShipmentOrderInfo.DriverDocument;
             Date = docShipmentOrderInfo.Date;
             DateOut = docShipmentOrderInfo.OutDate;
             DateIn = docShipmentOrderInfo.InDate;
@@ -99,6 +100,10 @@ namespace Gamma.ViewModels
             DocShipmentOrderGoods.CollectionChanged +=DocShipmentOrderGoodsOnCollectionChanged;
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
         }
+
+        public string Driver { get; set; }
+
+        public string DriverDocument { get; set; }
 
         public MovementProduct SelectedProduct { get; set; }
 
@@ -300,6 +305,8 @@ namespace Gamma.ViewModels
                 doc.InPlaceID = InPlaceId;
                 doc.InActivePersonID = ActivePersonInId;
                 doc.OutActivePersonID = ActivePersonOutId;
+                doc.Driver = Driver;
+                doc.DriverDocument = DriverDocument;
                 foreach (var docMovement in Movements.Select(movement => gammaBase.Docs.FirstOrDefault(d => d.DocID == movement.DocId)).Where(docMovement => docMovement != null))
                 {
                     docMovement.IsConfirmed = IsConfirmed;
