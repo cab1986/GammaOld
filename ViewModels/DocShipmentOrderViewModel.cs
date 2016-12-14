@@ -69,6 +69,7 @@ namespace Gamma.ViewModels
             Number = docShipmentOrderInfo.Number;
             Shipper = docShipmentOrderInfo.Shipper;
             Consignee = docShipmentOrderInfo.Consignee;
+            Buyer = docShipmentOrderInfo.Buyer;
             Title = $"{docShipmentOrderInfo.OrderType} № {Number}";
             VehicleNumber = docShipmentOrderInfo.VehicleNumber;
             ActivePersonOutId = docShipmentOrderInfo.OutActivePersonID;
@@ -263,6 +264,7 @@ namespace Gamma.ViewModels
         public string Number { get; set; }
         public string Shipper { get; set; }
         public string Consignee { get; set; }
+        public string Buyer { get; set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public string VehicleNumber { get; set; }

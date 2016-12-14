@@ -4645,6 +4645,7 @@
     <Property Name="Number" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
     <Property Name="Shipper" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Consignee" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Buyer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="C1COutSubdivisionID" Type="Guid" />
     <Property Name="OutBranchID" Type="Int32" Nullable="false" />
     <Property Name="C1CInSubdivisionID" Type="Guid" />

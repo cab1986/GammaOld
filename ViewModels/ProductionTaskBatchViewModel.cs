@@ -104,6 +104,7 @@ namespace Gamma.ViewModels
             {
                 return;
             }
+
             switch (SelectedProductionTaskProduct.ProductKind)
             {
                     case ProductKind.ProductSpool:

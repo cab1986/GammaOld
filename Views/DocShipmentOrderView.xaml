@@ -58,8 +58,8 @@
                                 <dxlc:LayoutItem LabelPosition="Top" Label="Отправитель">
                                     <dxe:TextEdit EditValue="{Binding Shipper}" IsReadOnly="True"/>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem LabelPosition="Top" Label="Получатель">
-                                    <dxe:TextEdit EditValue="{Binding Consignee}" IsReadOnly="True"/>
+                                <dxlc:LayoutItem LabelPosition="Top" Label="Покупатель">
+                                    <dxe:TextEdit EditValue="{Binding Buyer}" IsReadOnly="True"/>
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>

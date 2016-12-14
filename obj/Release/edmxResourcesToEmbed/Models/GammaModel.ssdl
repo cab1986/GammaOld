@@ -1039,6 +1039,7 @@
     <Property Name="Number" Type="char" MaxLength="11" />
     <Property Name="Shipper" Type="nvarchar" MaxLength="100" />
     <Property Name="Consignee" Type="nvarchar" MaxLength="100" />
+    <Property Name="Buyer" Type="nvarchar" MaxLength="100" />
     <Property Name="1COutSubdivisionID" Type="uniqueidentifier" />
     <Property Name="OutBranchID" Type="int" Nullable="false" />
     <Property Name="1CInSubdivisionID" Type="uniqueidentifier" />
@@ -3709,6 +3710,7 @@
     [v1COrders].[Number] AS [Number], 
     [v1COrders].[Shipper] AS [Shipper], 
     [v1COrders].[Consignee] AS [Consignee], 
+    [v1COrders].[Buyer] AS [Buyer], 
     [v1COrders].[1COutSubdivisionID] AS [1COutSubdivisionID], 
     [v1COrders].[OutBranchID] AS [OutBranchID], 
     [v1COrders].[1CInSubdivisionID] AS [1CInSubdivisionID], 

@@ -37,6 +37,7 @@ namespace Gamma
         
     }
     public enum BatchKinds { SGB, SGI }
+
     public enum ProductKind
     { 
         [Description("Тамбура")]

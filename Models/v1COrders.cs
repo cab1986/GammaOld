@@ -19,6 +19,7 @@ namespace Gamma.Models
         public string Number { get; set; }
         public string Shipper { get; set; }
         public string Consignee { get; set; }
+        public string Buyer { get; set; }
         public Nullable<System.Guid> C1COutSubdivisionID { get; set; }
         public int OutBranchID { get; set; }
         public Nullable<System.Guid> C1CInSubdivisionID { get; set; }

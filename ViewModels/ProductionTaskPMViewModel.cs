@@ -83,6 +83,7 @@ namespace Gamma.ViewModels
             var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.PM).FirstOrDefault();
             if (productionTask != null)
             {
+                PlaceID = productionTask.PlaceID ?? PlaceID;
                 DateBegin = productionTask.DateBegin;
                 DateEnd = productionTask.DateEnd;
                 TaskQuantity = productionTask.Quantity;
@@ -90,7 +91,6 @@ namespace Gamma.ViewModels
                 CharacteristicID = (Guid)productionTask.C1CCharacteristicID;
                 IsConfirmed = productionTask.IsActual;
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
-                PlaceID = productionTask.PlaceID ?? PlaceID;
             }
             else
             {
@@ -257,7 +257,7 @@ namespace Gamma.ViewModels
                             }));
 
             }
-            else characteristics = Characteristics;
+            else characteristics = DB.GetCharacteristics(NomenclatureID);
             using (var gammaBase = DB.GammaDb)
             {
                 var charIds = characteristics.Select(c => c.CharacteristicID).ToList();

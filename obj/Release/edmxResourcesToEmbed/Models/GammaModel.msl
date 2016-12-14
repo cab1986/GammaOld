@@ -1618,6 +1618,7 @@
           <ScalarProperty Name="C1CInSubdivisionID" ColumnName="1CInSubdivisionID" />
           <ScalarProperty Name="OutBranchID" ColumnName="OutBranchID" />
           <ScalarProperty Name="C1COutSubdivisionID" ColumnName="1COutSubdivisionID" />
+          <ScalarProperty Name="Buyer" ColumnName="Buyer" />
           <ScalarProperty Name="Consignee" ColumnName="Consignee" />
           <ScalarProperty Name="Shipper" ColumnName="Shipper" />
           <ScalarProperty Name="Number" ColumnName="Number" />

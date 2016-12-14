@@ -126,6 +126,7 @@ namespace Gamma.ViewModels
                                 VehicleNumber = d.VehicleNumber,
                                 Shipper = d.Shipper,
                                 Consignee = d.Consignee,
+                                Buyer = d.Buyer,
                                 ActivePerson = IsOutOrders?d.OutActivePerson:d.InActivePerson,
                                 OrderType = d.OrderType,
                                 OutDate = d.OutDate
@@ -145,6 +146,7 @@ namespace Gamma.ViewModels
                                 VehicleNumber = d.VehicleNumber,
                                 Shipper = d.Shipper,
                                 Consignee = d.Consignee,
+                                Buyer = d.Buyer,
                                 ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
                                 OrderType = d.OrderType,
                                 OutDate = d.OutDate
@@ -170,6 +172,7 @@ namespace Gamma.ViewModels
                                     VehicleNumber = d.VehicleNumber,
                                     Shipper = d.Shipper,
                                     Consignee = d.Consignee,
+                                    Buyer = d.Buyer,
                                     ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
                                     OrderType = d.OrderType,
                                     OutDate = d.OutDate
