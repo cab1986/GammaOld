@@ -12,18 +12,14 @@ namespace Gamma.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class C1CMainSpecifications
+    public partial class CurrentPlaceUsers
     {
-        public System.Guid C1CMainSpecificationID { get; set; }
-        public System.DateTime Period { get; set; }
-        public System.Guid C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public System.Guid C1CSpecificationID { get; set; }
-        public Nullable<System.Guid> C1CPlaceID { get; set; }
+        public int PlaceID { get; set; }
+        public System.Guid UserID { get; set; }
+        public byte ShiftID { get; set; }
+        public string PrintName { get; set; }
     
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual C1CPlaces C1CPlaces { get; set; }
-        public virtual C1CSpecifications C1CSpecifications { get; set; }
+        public virtual Places Places { get; set; }
+        public virtual Users Users { get; set; }
     }
 }

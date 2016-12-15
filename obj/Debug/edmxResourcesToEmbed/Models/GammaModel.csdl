@@ -450,6 +450,7 @@
     <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Users_PostTypes" FromRole="Users" ToRole="PostTypes" />
     <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
     <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
+    <NavigationProperty Name="CurrentPlaceUsers" Relationship="GammaModel.FK_CurrentPlaceUsers_Users" FromRole="Users" ToRole="CurrentPlaceUsers" />
   </EntityType>
   <EntityType Name="vProductionTaskBatches">
     <Key>
@@ -1384,19 +1385,6 @@
       <End Role="ProductPallets" EntitySet="ProductPallets" />
       <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
     </AssociationSet>
-    <EntitySet Name="C1CMainSpecifications" EntityType="GammaModel.C1CMainSpecifications" />
-    <AssociationSet Name="FK_1CMainSpecifications_1CCharacteristics" Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics">
-      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-    </AssociationSet>
-    <AssociationSet Name="FK_1CMainSpecifications_1CNomenclature" Association="GammaModel.FK_1CMainSpecifications_1CNomenclature">
-      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-    </AssociationSet>
-    <AssociationSet Name="FK_1CMainSpecifications_1CSpecifications" Association="GammaModel.FK_1CMainSpecifications_1CSpecifications">
-      <End Role="C1CSpecifications" EntitySet="C1CSpecifications" />
-      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-    </AssociationSet>
     <EntitySet Name="DocMovementOrderNomenclature" EntityType="GammaModel.DocMovementOrderNomenclature" />
     <FunctionImport Name="GetDocMovementOrderProducts" ReturnType="Collection(GammaModel.GetDocMovementOrderProducts_Result)">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
@@ -1414,10 +1402,6 @@
       <End Role="Persons" EntitySet="Persons" />
     </AssociationSet>
     <EntitySet Name="C1CPlaces" EntityType="GammaModel.C1CPlaces" />
-    <AssociationSet Name="FK_1CMainSpecifications_1CPlaces" Association="GammaModel.FK_1CMainSpecifications_1CPlaces">
-      <End Role="C1CPlaces" EntitySet="C1CPlaces" />
-      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-    </AssociationSet>
     <FunctionImport Name="CreateDocBrokeWithBrokeDecision">
       <Parameter Name="DocID" Mode="In" Type="Guid" />
       <Parameter Name="ProductID" Mode="In" Type="Guid" />
@@ -1676,6 +1660,33 @@
     </FunctionImport>
     <EntitySet Name="DocShipmentOrders" EntityType="GammaModel.DocShipmentOrders" />
     <EntitySet Name="v1COrders" EntityType="GammaModel.v1COrders" />
+    <EntitySet Name="CurrentPlaceUsers" EntityType="GammaModel.CurrentPlaceUsers" />
+    <AssociationSet Name="FK_CurrentPlaceUsers_Places" Association="GammaModel.FK_CurrentPlaceUsers_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CurrentPlaceUsers_Users" Association="GammaModel.FK_CurrentPlaceUsers_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
+    </AssociationSet>
+    <EntitySet Name="v1CWorkingSpecifications" EntityType="GammaModel.v1CWorkingSpecifications" />
+    <EntitySet Name="C1CMainSpecifications" EntityType="GammaModel.C1CMainSpecifications" />
+    <AssociationSet Name="FK_1CMainSpecifications_1CCharacteristics" Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics">
+      <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CNomenclature" Association="GammaModel.FK_1CMainSpecifications_1CNomenclature">
+      <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CPlaces" Association="GammaModel.FK_1CMainSpecifications_1CPlaces">
+      <End Role="C1CPlaces" EntitySet="C1CPlaces" />
+      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_1CMainSpecifications_1CSpecifications" Association="GammaModel.FK_1CMainSpecifications_1CSpecifications">
+      <End Role="C1CSpecifications" EntitySet="C1CSpecifications" />
+      <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CreateUnloadSpools_Result">
     <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -3582,57 +3593,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="C1CMainSpecifications">
-    <Key>
-      <PropertyRef Name="C1CMainSpecificationID" />
-    </Key>
-    <Property Name="C1CMainSpecificationID" Type="Guid" Nullable="false" />
-    <Property Name="Period" Type="DateTime" Precision="3" />
-    <Property Name="C1CNomenclatureID" Type="Guid" />
-    <Property Name="C1CCharacteristicID" Type="Guid" />
-    <Property Name="C1CSpecificationID" Type="Guid" />
-    <Property Name="C1CPlaceID" Type="Guid" />
-    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CMainSpecifications" ToRole="C1CCharacteristics" />
-    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CMainSpecifications" ToRole="C1CNomenclature" />
-    <NavigationProperty Name="C1CSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CSpecifications" FromRole="C1CMainSpecifications" ToRole="C1CSpecifications" />
-    <NavigationProperty Name="C1CPlaces" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CMainSpecifications" ToRole="C1CPlaces" />
-  </EntityType>
-  <Association Name="FK_1CMainSpecifications_1CCharacteristics">
-    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CCharacteristics">
-        <PropertyRef Name="C1CCharacteristicID" />
-      </Principal>
-      <Dependent Role="C1CMainSpecifications">
-        <PropertyRef Name="C1CCharacteristicID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_1CMainSpecifications_1CNomenclature">
-    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CNomenclature">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Principal>
-      <Dependent Role="C1CMainSpecifications">
-        <PropertyRef Name="C1CNomenclatureID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_1CMainSpecifications_1CSpecifications">
-    <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CSpecifications">
-        <PropertyRef Name="C1CSpecificationID" />
-      </Principal>
-      <Dependent Role="C1CMainSpecifications">
-        <PropertyRef Name="C1CSpecificationID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="DocMovementOrderNomenclature">
     <Key>
       <PropertyRef Name="DocMovementOrderNomenclatureID" />
@@ -3698,21 +3658,9 @@
     <Property Name="Folder" Type="Boolean" />
     <Property Name="ParentID" Type="Guid" />
     <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CPlaces" ToRole="C1CMainSpecifications" />
     <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_1CPlaces" FromRole="C1CPlaces" ToRole="Places" />
+    <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CPlaces" ToRole="C1CMainSpecifications" />
   </EntityType>
-  <Association Name="FK_1CMainSpecifications_1CPlaces">
-    <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
-    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="C1CPlaces">
-        <PropertyRef Name="C1CPlaceID" />
-      </Principal>
-      <Dependent Role="C1CMainSpecifications">
-        <PropertyRef Name="C1CPlaceID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="DocMovement">
     <Key>
       <PropertyRef Name="DocID" />
@@ -4158,6 +4106,7 @@
     <NavigationProperty Name="SpoolInstallLog" Relationship="GammaModel.FK_SpoolInstallLog_Places" FromRole="Places" ToRole="SpoolInstallLog" />
     <NavigationProperty Name="Users" Relationship="GammaModel.UserPlaces" FromRole="Places" ToRole="Users" />
     <NavigationProperty Name="PlaceZones" Relationship="GammaModel.FK_PlaceZones_Places1" FromRole="Places" ToRole="PlaceZones" />
+    <NavigationProperty Name="CurrentPlaceUsers" Relationship="GammaModel.FK_CurrentPlaceUsers_Places" FromRole="Places" ToRole="CurrentPlaceUsers" />
   </EntityType>
   <Association Name="FK_Places_1CPlaces">
     <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -4645,6 +4594,7 @@
     <Property Name="Number" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
     <Property Name="Shipper" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Consignee" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Buyer" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="C1COutSubdivisionID" Type="Guid" />
     <Property Name="OutBranchID" Type="Int32" Nullable="false" />
     <Property Name="C1CInSubdivisionID" Type="Guid" />
@@ -4667,4 +4617,114 @@
     <Property Name="OrderKindID" Type="Int32" Nullable="false" />
     <Property Name="OrderType" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
   </EntityType>
+  <EntityType Name="CurrentPlaceUsers">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Guid" Nullable="false" />
+    <Property Name="ShiftID" Type="Byte" Nullable="false" />
+    <Property Name="PrintName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Places" Relationship="GammaModel.FK_CurrentPlaceUsers_Places" FromRole="CurrentPlaceUsers" ToRole="Places" />
+    <NavigationProperty Name="Users" Relationship="GammaModel.FK_CurrentPlaceUsers_Users" FromRole="CurrentPlaceUsers" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK_CurrentPlaceUsers_Places">
+    <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+    <End Type="GammaModel.CurrentPlaceUsers" Role="CurrentPlaceUsers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="CurrentPlaceUsers">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CurrentPlaceUsers_Users">
+    <End Type="GammaModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="GammaModel.CurrentPlaceUsers" Role="CurrentPlaceUsers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="CurrentPlaceUsers">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="v1CWorkingSpecifications">
+    <Key>
+      <PropertyRef Name="Period" />
+      <PropertyRef Name="C1CNomenclatureID" />
+      <PropertyRef Name="C1CSpecificationID" />
+    </Key>
+    <Property Name="Period" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="C1CPlaceID" Type="Guid" />
+    <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
+  </EntityType>
+  <EntityType Name="C1CMainSpecifications">
+    <Key>
+      <PropertyRef Name="C1CMainSpecificationID" />
+    </Key>
+    <Property Name="C1CMainSpecificationID" Type="Guid" Nullable="false" />
+    <Property Name="Period" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+    <Property Name="C1CCharacteristicID" Type="Guid" />
+    <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
+    <Property Name="C1CPlaceID" Type="Guid" />
+    <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CMainSpecifications" ToRole="C1CCharacteristics" />
+    <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CMainSpecifications" ToRole="C1CNomenclature" />
+    <NavigationProperty Name="C1CPlaces" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CMainSpecifications" ToRole="C1CPlaces" />
+    <NavigationProperty Name="C1CSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CSpecifications" FromRole="C1CMainSpecifications" ToRole="C1CSpecifications" />
+  </EntityType>
+  <Association Name="FK_1CMainSpecifications_1CCharacteristics">
+    <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CCharacteristics">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Principal>
+      <Dependent Role="C1CMainSpecifications">
+        <PropertyRef Name="C1CCharacteristicID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMainSpecifications_1CNomenclature">
+    <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CNomenclature">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Principal>
+      <Dependent Role="C1CMainSpecifications">
+        <PropertyRef Name="C1CNomenclatureID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMainSpecifications_1CPlaces">
+    <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
+    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CPlaces">
+        <PropertyRef Name="C1CPlaceID" />
+      </Principal>
+      <Dependent Role="C1CMainSpecifications">
+        <PropertyRef Name="C1CPlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_1CMainSpecifications_1CSpecifications">
+    <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="1" />
+    <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="C1CSpecifications">
+        <PropertyRef Name="C1CSpecificationID" />
+      </Principal>
+      <Dependent Role="C1CMainSpecifications">
+        <PropertyRef Name="C1CSpecificationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

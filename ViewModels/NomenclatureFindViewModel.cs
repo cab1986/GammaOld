@@ -1,5 +1,6 @@
 ﻿using DevExpress.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Gamma.Common;
@@ -122,13 +123,11 @@ namespace Gamma.ViewModels
             get { return _selectedNomenclatureFolder; }
             set
             {
-                if (_selectedNomenclatureFolder != value)
-                {
-                    _selectedNomenclatureFolder = value;
-                    if (value != null)
-                        GetNomenclature(value.FolderID);
-                    RaisePropertyChanged("SelectedNomenclatureFolder");
-                }
+                if (_selectedNomenclatureFolder == value) return;
+                _selectedNomenclatureFolder = value;
+                if (value != null)
+                    GetNomenclature(value.FolderID);
+                RaisePropertyChanged("SelectedNomenclatureFolder");
             }
         }
 
@@ -166,15 +165,30 @@ namespace Gamma.ViewModels
         private void FindNomenclatureByString()
         {
             if (SearchString == string.Empty) return;
+            var nomenclature =
+                FilterBySpecification(
+                    GammaBase.FindNomenclatureByStringWithFilter(SearchString, FilterID, FilterByPlaceGroup)
+                        .Select(n => new Nomenclature1C
+                        {
+                            Nomenclature1CID = n.C1CNomenclatureID,
+                            Name = n.Name
+                        }).ToList());
             Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>(
                 new ObservableCollection<Nomenclature1C>(
-                    GammaBase.FindNomenclatureByStringWithFilter(SearchString, FilterID, FilterByPlaceGroup)
-                    .Select(n => new Nomenclature1C
-                    {
-                        Nomenclature1CID = n.C1CNomenclatureID,
-                        Name = n.Name
-                    })
+                        nomenclature
                     ));
+        }
+
+        private List<Nomenclature1C> FilterBySpecification(List<Nomenclature1C> nomenclature)
+        {
+            if (!FilterByPlaceGroup || FilterID == null) return nomenclature;
+            var placeIds = GammaBase.Places.Where(p => p.PlaceGroupID == FilterID).Select(p => p.C1CPlaceID).ToList();
+            var nomenclatureIds =
+                GammaBase.v1CWorkingSpecifications.Where(ws => placeIds.Contains(ws.C1CPlaceID))
+                    .Select(ws => ws.C1CNomenclatureID)
+                    .ToList();
+            nomenclature = nomenclature.Where(n => nomenclatureIds.Contains(n.Nomenclature1CID)).ToList();
+            return nomenclature;
         }
 
         private string _searchString;
@@ -189,16 +203,17 @@ namespace Gamma.ViewModels
             }
         }
 
-        private void GetNomenclature(Guid folderid)
+        private void GetNomenclature(Guid folderId)
         {
-            Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>
-            (new ObservableCollection<Nomenclature1C>(
-                from nom in GammaBase.C1CNomenclature where nom.C1CParentID == folderid && !nom.IsFolder && !(bool)nom.IsArchive
+            var nomenclature = (
+                from nom in GammaBase.C1CNomenclature where nom.C1CParentID == folderId && !nom.IsFolder && !(bool)nom.IsArchive               
                 select
-        new Nomenclature1C
-        {
-            Name = nom.Name,Nomenclature1CID = nom.C1CNomenclatureID
-        }));
+                new Nomenclature1C
+                {
+                    Name = nom.Name,Nomenclature1CID = nom.C1CNomenclatureID
+                }).ToList();
+            nomenclature = FilterBySpecification(nomenclature);
+            Nomenclature = new ReadOnlyObservableCollection<Nomenclature1C>(new ObservableCollection<Nomenclature1C>(nomenclature));
         }
 
         public DelegateCommand ChooseSelectedNomenclature { get; private set; }

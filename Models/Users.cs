@@ -20,6 +20,7 @@ namespace Gamma.Models
             this.UserPrintNames = new HashSet<UserPrintNames>();
             this.Docs = new HashSet<Docs>();
             this.Places = new HashSet<Places>();
+            this.CurrentPlaceUsers = new HashSet<CurrentPlaceUsers>();
         }
     
         public System.Guid UserID { get; set; }
@@ -44,5 +45,7 @@ namespace Gamma.Models
         public virtual ICollection<Docs> Docs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Places> Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CurrentPlaceUsers> CurrentPlaceUsers { get; set; }
     }
 }

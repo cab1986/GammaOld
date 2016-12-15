@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>\\server7\shares\Общая папка\GammaRostov\|\\server7\shares\Общая папка\Gamma\|\\SERVER7\shares\Общая папка\Gamma\|\\SERVER7\shares\ASUTP\Gamma\Gammav2\|\\server2.sgbi.local\asutp\Полиданов\publish\</PublishUrlHistory>
+    <PublishUrlHistory>\\server7\shares\Общая папка\Gamma\|\\server7\shares\Общая папка\GammaRostov\|\\SERVER7\shares\Общая папка\Gamma\|\\SERVER7\shares\ASUTP\Gamma\Gammav2\|\\server2.sgbi.local\asutp\Полиданов\publish\</PublishUrlHistory>
     <InstallUrlHistory>\\server7\shares\Общая папка\Gamma\|\\Solomon\Server\_Общая\GammaNew\|\\solomon\_Общая\GammaNew\|\\server7\shares\Общая папка\GammaRostov\</InstallUrlHistory>
     <SupportUrlHistory />
     <UpdateUrlHistory>\\Solomon\Server\_Общая\GammaNew\|\\solomon\_Общая\GammaNew\|\\server7\shares\ASUTP\Gamma\Gammav2\</UpdateUrlHistory>

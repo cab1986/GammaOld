@@ -1210,18 +1210,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="C1CMainSpecifications">
-      <EntityTypeMapping TypeName="GammaModel.C1CMainSpecifications">
-        <MappingFragment StoreEntitySet="1CMainSpecifications">
-          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
-          <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
-          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-          <ScalarProperty Name="Period" ColumnName="Period" />
-          <ScalarProperty Name="C1CMainSpecificationID" ColumnName="1CMainSpecificationID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="DocMovementOrderNomenclature">
       <EntityTypeMapping TypeName="GammaModel.DocMovementOrderNomenclature">
         <MappingFragment StoreEntitySet="DocMovementOrderNomenclature">
@@ -1618,11 +1606,45 @@
           <ScalarProperty Name="C1CInSubdivisionID" ColumnName="1CInSubdivisionID" />
           <ScalarProperty Name="OutBranchID" ColumnName="OutBranchID" />
           <ScalarProperty Name="C1COutSubdivisionID" ColumnName="1COutSubdivisionID" />
+          <ScalarProperty Name="Buyer" ColumnName="Buyer" />
           <ScalarProperty Name="Consignee" ColumnName="Consignee" />
           <ScalarProperty Name="Shipper" ColumnName="Shipper" />
           <ScalarProperty Name="Number" ColumnName="Number" />
           <ScalarProperty Name="Date" ColumnName="Date" />
           <ScalarProperty Name="C1COrderID" ColumnName="1COrderID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CurrentPlaceUsers">
+      <EntityTypeMapping TypeName="GammaModel.CurrentPlaceUsers">
+        <MappingFragment StoreEntitySet="CurrentPlaceUsers">
+          <ScalarProperty Name="PrintName" ColumnName="PrintName" />
+          <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v1CWorkingSpecifications">
+      <EntityTypeMapping TypeName="GammaModel.v1CWorkingSpecifications">
+        <MappingFragment StoreEntitySet="v1CWorkingSpecifications">
+          <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Period" ColumnName="Period" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="C1CMainSpecifications">
+      <EntityTypeMapping TypeName="GammaModel.C1CMainSpecifications">
+        <MappingFragment StoreEntitySet="1CMainSpecifications">
+          <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+          <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+          <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+          <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+          <ScalarProperty Name="Period" ColumnName="Period" />
+          <ScalarProperty Name="C1CMainSpecificationID" ColumnName="1CMainSpecificationID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

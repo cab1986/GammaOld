@@ -105,10 +105,10 @@
             <PropertyRef Name="1CMainSpecificationID" />
           </Key>
           <Property Name="1CMainSpecificationID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Period" Type="datetime" />
-          <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+          <Property Name="Period" Type="datetime" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-          <Property Name="1CSpecificationID" Type="uniqueidentifier" />
+          <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CPlaceID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CMeasureUnitQualifiers">
@@ -354,6 +354,15 @@
           <Property Name="WebInfo" Type="varchar" MaxLength="8000" />
           <Property Name="QualityContacts" Type="varchar" MaxLength="8000" />
           <Property Name="1CSubdivisionID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="CurrentPlaceUsers">
+          <Key>
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ShiftID" Type="tinyint" Nullable="false" />
+          <Property Name="PrintName" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Departments">
           <Key>
@@ -1068,6 +1077,20 @@
           <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1CWorkingSpecifications" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="v1CWorkingSpecifications">
+          <Key>
+            <PropertyRef Name="Period" />
+            <PropertyRef Name="1CNomenclatureID" />
+            <PropertyRef Name="1CSpecificationID" />
+          </Key>
+          <Property Name="Period" Type="datetime" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="1CPlaceID" Type="uniqueidentifier" />
+          <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vCharacteristicSGBProperties" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
@@ -1430,7 +1453,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_1CMainSpecifications_1CNomenclature">
-          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="1CNomenclature">
@@ -1454,7 +1477,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_1CMainSpecifications_1CSpecifications">
-          <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="0..1" />
+          <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="1" />
           <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="1CSpecifications">
@@ -1922,6 +1945,30 @@
             </Principal>
             <Dependent Role="Branches">
               <PropertyRef Name="EnterpriseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrentPlaceUsers_Places">
+          <End Role="Places" Type="Self.Places" Multiplicity="1" />
+          <End Role="CurrentPlaceUsers" Type="Self.CurrentPlaceUsers" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="CurrentPlaceUsers">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrentPlaceUsers_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="CurrentPlaceUsers" Type="Self.CurrentPlaceUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="CurrentPlaceUsers">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3629,6 +3676,7 @@
           <EntitySet Name="BarcodeTypes" EntityType="Self.BarcodeTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrentPlaceUsers" EntityType="Self.CurrentPlaceUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBroke" EntityType="Self.DocBroke" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBrokeDecisionProducts" EntityType="Self.DocBrokeDecisionProducts" Schema="dbo" store:Type="Tables" />
@@ -3739,6 +3787,15 @@
     [v1COrders].[OrderKindID] AS [OrderKindID], 
     [v1COrders].[OrderType] AS [OrderType]
     FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v1CWorkingSpecifications" EntityType="Self.v1CWorkingSpecifications" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v1CWorkingSpecifications].[Period] AS [Period], 
+    [v1CWorkingSpecifications].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [v1CWorkingSpecifications].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [v1CWorkingSpecifications].[1CPlaceID] AS [1CPlaceID], 
+    [v1CWorkingSpecifications].[1CSpecificationID] AS [1CSpecificationID]
+    FROM [dbo].[v1CWorkingSpecifications] AS [v1CWorkingSpecifications]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -4088,6 +4145,14 @@
           <AssociationSet Name="FK_Branches_Enterprises" Association="Self.FK_Branches_Enterprises">
             <End Role="Enterprises" EntitySet="Enterprises" />
             <End Role="Branches" EntitySet="Branches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrentPlaceUsers_Places" Association="Self.FK_CurrentPlaceUsers_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrentPlaceUsers_Users" Association="Self.FK_CurrentPlaceUsers_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
           </AssociationSet>
           <AssociationSet Name="FK_DocBroke_Docs" Association="Self.FK_DocBroke_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -5008,6 +5073,7 @@
           <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Users_PostTypes" FromRole="Users" ToRole="PostTypes" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Users" FromRole="Users" ToRole="Docs" />
           <NavigationProperty Name="Places" Relationship="GammaModel.UserPlaces" FromRole="Users" ToRole="Places" />
+          <NavigationProperty Name="CurrentPlaceUsers" Relationship="GammaModel.FK_CurrentPlaceUsers_Users" FromRole="Users" ToRole="CurrentPlaceUsers" />
         </EntityType>
         <EntityType Name="vProductionTaskBatches">
           <Key>
@@ -5942,19 +6008,6 @@
             <End Role="ProductPallets" EntitySet="ProductPallets" />
             <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
           </AssociationSet>
-          <EntitySet Name="C1CMainSpecifications" EntityType="GammaModel.C1CMainSpecifications" />
-          <AssociationSet Name="FK_1CMainSpecifications_1CCharacteristics" Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics">
-            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-          </AssociationSet>
-          <AssociationSet Name="FK_1CMainSpecifications_1CNomenclature" Association="GammaModel.FK_1CMainSpecifications_1CNomenclature">
-            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-          </AssociationSet>
-          <AssociationSet Name="FK_1CMainSpecifications_1CSpecifications" Association="GammaModel.FK_1CMainSpecifications_1CSpecifications">
-            <End Role="C1CSpecifications" EntitySet="C1CSpecifications" />
-            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-          </AssociationSet>
           <EntitySet Name="DocMovementOrderNomenclature" EntityType="GammaModel.DocMovementOrderNomenclature" />
           <FunctionImport Name="GetDocMovementOrderProducts" ReturnType="Collection(GammaModel.GetDocMovementOrderProducts_Result)">
           <Parameter Name="DocID" Mode="In" Type="Guid" />
@@ -5972,10 +6025,6 @@
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
           <EntitySet Name="C1CPlaces" EntityType="GammaModel.C1CPlaces" />
-          <AssociationSet Name="FK_1CMainSpecifications_1CPlaces" Association="GammaModel.FK_1CMainSpecifications_1CPlaces">
-            <End Role="C1CPlaces" EntitySet="C1CPlaces" />
-            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
-          </AssociationSet>
           <FunctionImport Name="CreateDocBrokeWithBrokeDecision">
             <Parameter Name="DocID" Mode="In" Type="Guid" />
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
@@ -6234,6 +6283,33 @@
           </FunctionImport>
           <EntitySet Name="DocShipmentOrders" EntityType="GammaModel.DocShipmentOrders" />
           <EntitySet Name="v1COrders" EntityType="GammaModel.v1COrders" />
+          <EntitySet Name="CurrentPlaceUsers" EntityType="GammaModel.CurrentPlaceUsers" />
+          <AssociationSet Name="FK_CurrentPlaceUsers_Places" Association="GammaModel.FK_CurrentPlaceUsers_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CurrentPlaceUsers_Users" Association="GammaModel.FK_CurrentPlaceUsers_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
+          </AssociationSet>
+          <EntitySet Name="v1CWorkingSpecifications" EntityType="GammaModel.v1CWorkingSpecifications" />
+          <EntitySet Name="C1CMainSpecifications" EntityType="GammaModel.C1CMainSpecifications" />
+          <AssociationSet Name="FK_1CMainSpecifications_1CCharacteristics" Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CMainSpecifications_1CNomenclature" Association="GammaModel.FK_1CMainSpecifications_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CMainSpecifications_1CPlaces" Association="GammaModel.FK_1CMainSpecifications_1CPlaces">
+            <End Role="C1CPlaces" EntitySet="C1CPlaces" />
+            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CMainSpecifications_1CSpecifications" Association="GammaModel.FK_1CMainSpecifications_1CSpecifications">
+            <End Role="C1CSpecifications" EntitySet="C1CSpecifications" />
+            <End Role="C1CMainSpecifications" EntitySet="C1CMainSpecifications" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -8140,57 +8216,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="C1CMainSpecifications">
-          <Key>
-            <PropertyRef Name="C1CMainSpecificationID" />
-          </Key>
-          <Property Name="C1CMainSpecificationID" Type="Guid" Nullable="false" />
-          <Property Name="Period" Type="DateTime" Precision="3" />
-          <Property Name="C1CNomenclatureID" Type="Guid" />
-          <Property Name="C1CCharacteristicID" Type="Guid" />
-          <Property Name="C1CSpecificationID" Type="Guid" />
-          <Property Name="C1CPlaceID" Type="Guid" />
-          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CMainSpecifications" ToRole="C1CCharacteristics" />
-          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CMainSpecifications" ToRole="C1CNomenclature" />
-          <NavigationProperty Name="C1CSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CSpecifications" FromRole="C1CMainSpecifications" ToRole="C1CSpecifications" />
-          <NavigationProperty Name="C1CPlaces" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CMainSpecifications" ToRole="C1CPlaces" />
-        </EntityType>
-        <Association Name="FK_1CMainSpecifications_1CCharacteristics">
-          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
-          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CCharacteristics">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="C1CMainSpecifications">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_1CMainSpecifications_1CNomenclature">
-          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
-          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CNomenclature">
-              <PropertyRef Name="C1CNomenclatureID" />
-            </Principal>
-            <Dependent Role="C1CMainSpecifications">
-              <PropertyRef Name="C1CNomenclatureID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_1CMainSpecifications_1CSpecifications">
-          <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="0..1" />
-          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CSpecifications">
-              <PropertyRef Name="C1CSpecificationID" />
-            </Principal>
-            <Dependent Role="C1CMainSpecifications">
-              <PropertyRef Name="C1CSpecificationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="DocMovementOrderNomenclature">
           <Key>
             <PropertyRef Name="DocMovementOrderNomenclatureID" />
@@ -8256,21 +8281,9 @@
           <Property Name="Folder" Type="Boolean" />
           <Property Name="ParentID" Type="Guid" />
           <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CPlaces" ToRole="C1CMainSpecifications" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_1CPlaces" FromRole="C1CPlaces" ToRole="Places" />
+          <NavigationProperty Name="C1CMainSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CPlaces" ToRole="C1CMainSpecifications" />
         </EntityType>
-        <Association Name="FK_1CMainSpecifications_1CPlaces">
-          <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
-          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CPlaces">
-              <PropertyRef Name="C1CPlaceID" />
-            </Principal>
-            <Dependent Role="C1CMainSpecifications">
-              <PropertyRef Name="C1CPlaceID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="DocMovement">
           <Key>
             <PropertyRef Name="DocID" />
@@ -8716,6 +8729,7 @@
           <NavigationProperty Name="SpoolInstallLog" Relationship="GammaModel.FK_SpoolInstallLog_Places" FromRole="Places" ToRole="SpoolInstallLog" />
           <NavigationProperty Name="Users" Relationship="GammaModel.UserPlaces" FromRole="Places" ToRole="Users" />
           <NavigationProperty Name="PlaceZones" Relationship="GammaModel.FK_PlaceZones_Places1" FromRole="Places" ToRole="PlaceZones" />
+          <NavigationProperty Name="CurrentPlaceUsers" Relationship="GammaModel.FK_CurrentPlaceUsers_Places" FromRole="Places" ToRole="CurrentPlaceUsers" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -9226,6 +9240,116 @@
           <Property Name="OrderKindID" Type="Int32" Nullable="false" />
           <Property Name="OrderType" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="CurrentPlaceUsers">
+          <Key>
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="PlaceID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="ShiftID" Type="Byte" Nullable="false" />
+          <Property Name="PrintName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Places" Relationship="GammaModel.FK_CurrentPlaceUsers_Places" FromRole="CurrentPlaceUsers" ToRole="Places" />
+          <NavigationProperty Name="Users" Relationship="GammaModel.FK_CurrentPlaceUsers_Users" FromRole="CurrentPlaceUsers" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_CurrentPlaceUsers_Places">
+          <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+          <End Type="GammaModel.CurrentPlaceUsers" Role="CurrentPlaceUsers" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="CurrentPlaceUsers">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CurrentPlaceUsers_Users">
+          <End Type="GammaModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="GammaModel.CurrentPlaceUsers" Role="CurrentPlaceUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="CurrentPlaceUsers">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="v1CWorkingSpecifications">
+          <Key>
+            <PropertyRef Name="Period" />
+            <PropertyRef Name="C1CNomenclatureID" />
+            <PropertyRef Name="C1CSpecificationID" />
+          </Key>
+          <Property Name="Period" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CPlaceID" Type="Guid" />
+          <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="C1CMainSpecifications">
+          <Key>
+            <PropertyRef Name="C1CMainSpecificationID" />
+          </Key>
+          <Property Name="C1CMainSpecificationID" Type="Guid" Nullable="false" />
+          <Property Name="Period" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
+          <Property Name="C1CPlaceID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CMainSpecifications" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CMainSpecifications" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="C1CPlaces" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CMainSpecifications" ToRole="C1CPlaces" />
+          <NavigationProperty Name="C1CSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CSpecifications" FromRole="C1CMainSpecifications" ToRole="C1CSpecifications" />
+        </EntityType>
+        <Association Name="FK_1CMainSpecifications_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="C1CMainSpecifications">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CMainSpecifications_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="C1CMainSpecifications">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CMainSpecifications_1CPlaces">
+          <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CPlaces">
+              <PropertyRef Name="C1CPlaceID" />
+            </Principal>
+            <Dependent Role="C1CMainSpecifications">
+              <PropertyRef Name="C1CPlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CMainSpecifications_1CSpecifications">
+          <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="1" />
+          <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CSpecifications">
+              <PropertyRef Name="C1CSpecificationID" />
+            </Principal>
+            <Dependent Role="C1CMainSpecifications">
+              <PropertyRef Name="C1CSpecificationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -10441,18 +10565,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="C1CMainSpecifications">
-            <EntityTypeMapping TypeName="GammaModel.C1CMainSpecifications">
-              <MappingFragment StoreEntitySet="1CMainSpecifications">
-                <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
-                <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="Period" ColumnName="Period" />
-                <ScalarProperty Name="C1CMainSpecificationID" ColumnName="1CMainSpecificationID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="DocMovementOrderNomenclature">
             <EntityTypeMapping TypeName="GammaModel.DocMovementOrderNomenclature">
               <MappingFragment StoreEntitySet="DocMovementOrderNomenclature">
@@ -10855,6 +10967,39 @@
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="C1COrderID" ColumnName="1COrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrentPlaceUsers">
+            <EntityTypeMapping TypeName="GammaModel.CurrentPlaceUsers">
+              <MappingFragment StoreEntitySet="CurrentPlaceUsers">
+                <ScalarProperty Name="PrintName" ColumnName="PrintName" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v1CWorkingSpecifications">
+            <EntityTypeMapping TypeName="GammaModel.v1CWorkingSpecifications">
+              <MappingFragment StoreEntitySet="v1CWorkingSpecifications">
+                <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+                <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C1CMainSpecifications">
+            <EntityTypeMapping TypeName="GammaModel.C1CMainSpecifications">
+              <MappingFragment StoreEntitySet="1CMainSpecifications">
+                <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+                <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="C1CMainSpecificationID" ColumnName="1CMainSpecificationID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

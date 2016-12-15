@@ -32,6 +32,23 @@ namespace Gamma.ViewModels
                 {
                     WorkSession.PrintName = dialog.PrintName;
                 }
+                if (WorkSession.PlaceGroup == PlaceGroup.Convertings)
+                {
+                    var placeCurrentUser =
+                        GammaBase.CurrentPlaceUsers.FirstOrDefault(pu => pu.PlaceID == WorkSession.PlaceID);
+                    if (placeCurrentUser == null)
+                    {
+                        placeCurrentUser = new CurrentPlaceUsers
+                        {
+                            PlaceID = WorkSession.PlaceID
+                        };
+                        GammaBase.CurrentPlaceUsers.Add(placeCurrentUser);
+                    }
+                    placeCurrentUser.UserID = WorkSession.UserID;
+                    placeCurrentUser.ShiftID = WorkSession.ShiftID;
+                    placeCurrentUser.PrintName = WorkSession.PrintName;
+                    GammaBase.SaveChanges();
+                }
             }
             StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Пользователь: {2}, Имя для печати: {3}", settings.HostName, settings.DbName, 
                 settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл");

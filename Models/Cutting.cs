@@ -23,7 +23,15 @@ namespace Gamma.Models
                         gammaBase.C1CNomenclature.Include(n => n.C1CCharacteristics)
                             .First(n => n.C1CNomenclatureID == _nomenclatureID);
                     NomenclatureName = nomInfo.Name;
-                    Characteristics = new ObservableCollection<C1CCharacteristics>(nomInfo.C1CCharacteristics.OrderBy(c => c.Name));
+                    var characteristicIds =
+                        gammaBase.v1CWorkingSpecifications.Where(
+                            ws => gammaBase.Places.Where(p => p.PlaceGroupID == (int) PlaceGroup.Rw)
+                                .Select(p => p.C1CPlaceID)
+                                .ToList().Contains(ws.C1CPlaceID) && ws.C1CNomenclatureID == NomenclatureID)
+                            .Select(ws => ws.C1CCharacteristicID)
+                            .ToList();                        
+                    Characteristics = new ObservableCollection<C1CCharacteristics>(
+                        nomInfo.C1CCharacteristics.Where(c => characteristicIds.Contains(c.C1CCharacteristicID)).OrderBy(c => c.Name));
                 }
             }
         }

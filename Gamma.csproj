@@ -23,7 +23,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>\\server7\shares\Общая папка\GammaRostov\</PublishUrl>
+    <PublishUrl>\\server7\shares\Общая папка\Gamma\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -33,12 +33,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
-    <UpdateUrl>\\Solomon\Server\_Общая\GammaNew\</UpdateUrl>
     <ProductName>Gamma</ProductName>
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>16</ApplicationRevision>
+    <ApplicationRevision>18</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -203,9 +202,6 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
-    <Compile Include="Models\Characteristic.cs" />
-    <Compile Include="Common\AsyncObservableCollection.cs" />
-    <Compile Include="Common\RECT.cs" />
     <Compile Include="Models\ActiveProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -287,6 +283,9 @@
     <Compile Include="Models\C1CWarehouses.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Characteristic.cs" />
+    <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\RECT.cs" />
     <Compile Include="Models\CheckProductionTaskSourceSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -294,6 +293,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CreateUnloadSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CurrentPlaceUsers.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Cutting.cs" />
@@ -332,11 +334,6 @@
     <Compile Include="Models\DocMovementOrder.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetSpecificationInputNomenclature_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MovementGood.cs" />
-    <Compile Include="Models\MovementItem.cs" />
     <Compile Include="Models\DocMovementOrderNomenclature.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -478,6 +475,9 @@
     <Compile Include="Models\GetProductRelations_Result2.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetSpecificationInputNomenclature_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetSpoolRejectionReasons_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -487,6 +487,8 @@
     <Compile Include="Models\MaterialTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MovementGood.cs" />
+    <Compile Include="Models\MovementItem.cs" />
     <Compile Include="Models\MovementOrderNomenclatureItem.cs" />
     <Compile Include="Models\Nomenclature.cs" />
     <Compile Include="Models\Nomenclature1C.cs" />
@@ -604,6 +606,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\v1COrders.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\v1CWorkingSpecifications.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vCharacteristicSGBProperties.cs">

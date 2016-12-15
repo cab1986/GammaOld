@@ -100,10 +100,10 @@
       <PropertyRef Name="1CMainSpecificationID" />
     </Key>
     <Property Name="1CMainSpecificationID" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="Period" Type="datetime" />
-    <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+    <Property Name="Period" Type="datetime" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-    <Property Name="1CSpecificationID" Type="uniqueidentifier" />
+    <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
     <Property Name="1CPlaceID" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="1CMeasureUnitQualifiers">
@@ -349,6 +349,15 @@
     <Property Name="WebInfo" Type="varchar" MaxLength="8000" />
     <Property Name="QualityContacts" Type="varchar" MaxLength="8000" />
     <Property Name="1CSubdivisionID" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="CurrentPlaceUsers">
+    <Key>
+      <PropertyRef Name="PlaceID" />
+    </Key>
+    <Property Name="PlaceID" Type="int" Nullable="false" />
+    <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ShiftID" Type="tinyint" Nullable="false" />
+    <Property Name="PrintName" Type="varchar" MaxLength="500" />
   </EntityType>
   <EntityType Name="Departments">
     <Key>
@@ -1063,6 +1072,20 @@
     <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1CWorkingSpecifications" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="v1CWorkingSpecifications">
+    <Key>
+      <PropertyRef Name="Period" />
+      <PropertyRef Name="1CNomenclatureID" />
+      <PropertyRef Name="1CSpecificationID" />
+    </Key>
+    <Property Name="Period" Type="datetime" Nullable="false" />
+    <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+    <Property Name="1CPlaceID" Type="uniqueidentifier" />
+    <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vCharacteristicSGBProperties" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
   <EntityType Name="vCharacteristicSGBProperties">
     <Key>
@@ -1424,7 +1447,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_1CMainSpecifications_1CNomenclature">
-    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+    <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
     <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CNomenclature">
@@ -1448,7 +1471,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_1CMainSpecifications_1CSpecifications">
-    <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="0..1" />
+    <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="1" />
     <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="1CSpecifications">
@@ -1916,6 +1939,30 @@
       </Principal>
       <Dependent Role="Branches">
         <PropertyRef Name="EnterpriseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CurrentPlaceUsers_Places">
+    <End Role="Places" Type="Self.Places" Multiplicity="1" />
+    <End Role="CurrentPlaceUsers" Type="Self.CurrentPlaceUsers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Places">
+        <PropertyRef Name="PlaceID" />
+      </Principal>
+      <Dependent Role="CurrentPlaceUsers">
+        <PropertyRef Name="PlaceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CurrentPlaceUsers_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="CurrentPlaceUsers" Type="Self.CurrentPlaceUsers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="CurrentPlaceUsers">
+        <PropertyRef Name="UserID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3623,6 +3670,7 @@
     <EntitySet Name="BarcodeTypes" EntityType="Self.BarcodeTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CurrentPlaceUsers" EntityType="Self.CurrentPlaceUsers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocBroke" EntityType="Self.DocBroke" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="DocBrokeDecisionProducts" EntityType="Self.DocBrokeDecisionProducts" Schema="dbo" store:Type="Tables" />
@@ -3733,6 +3781,15 @@
     [v1COrders].[OrderKindID] AS [OrderKindID], 
     [v1COrders].[OrderType] AS [OrderType]
     FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v1CWorkingSpecifications" EntityType="Self.v1CWorkingSpecifications" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v1CWorkingSpecifications].[Period] AS [Period], 
+    [v1CWorkingSpecifications].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [v1CWorkingSpecifications].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [v1CWorkingSpecifications].[1CPlaceID] AS [1CPlaceID], 
+    [v1CWorkingSpecifications].[1CSpecificationID] AS [1CSpecificationID]
+    FROM [dbo].[v1CWorkingSpecifications] AS [v1CWorkingSpecifications]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
@@ -4082,6 +4139,14 @@
     <AssociationSet Name="FK_Branches_Enterprises" Association="Self.FK_Branches_Enterprises">
       <End Role="Enterprises" EntitySet="Enterprises" />
       <End Role="Branches" EntitySet="Branches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CurrentPlaceUsers_Places" Association="Self.FK_CurrentPlaceUsers_Places">
+      <End Role="Places" EntitySet="Places" />
+      <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CurrentPlaceUsers_Users" Association="Self.FK_CurrentPlaceUsers_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="CurrentPlaceUsers" EntitySet="CurrentPlaceUsers" />
     </AssociationSet>
     <AssociationSet Name="FK_DocBroke_Docs" Association="Self.FK_DocBroke_Docs">
       <End Role="Docs" EntitySet="Docs" />
