@@ -1,7 +1,10 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma
@@ -144,7 +147,7 @@ namespace Gamma
             NomenclatureEdit = nomenclatureEdit;
         }
 
-        public OpenNomenclatureMessage(MaterialTypes materialType, bool nomenclatureEdit = false)
+        public OpenNomenclatureMessage(MaterialType materialType, bool nomenclatureEdit = false)
         {
             ID = (int) materialType;
             NomenclatureEdit = nomenclatureEdit;
@@ -329,7 +332,7 @@ namespace Gamma
             Messenger.Default.Send(new OpenNomenclatureMessage(placeGroupID, nomenclatureEdit));
         }
 
-        public static void FindNomenclature(MaterialTypes materialType, bool nomenclatureEdit = false)
+        public static void FindNomenclature(MaterialType materialType, bool nomenclatureEdit = false)
         {
             Messenger.Default.Send(new OpenNomenclatureMessage(materialType, nomenclatureEdit));
         }

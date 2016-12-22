@@ -106,6 +106,9 @@
                             <dxb:BarButtonItem Content="Настройка COM-порта" Command="{Binding ConfigureComPortCommand}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
+                    <dxb:BarSubItem Content="Помощь">
+                        <dxb:BarButtonItem Content="О программе" Command="{Binding ShowProgrammInfoCommand}"/>
+                    </dxb:BarSubItem>
                 </dxb:Bar>
                 <dxb:Bar Caption="" AllowHide="False" AllowQuickCustomization="False" AllowCustomizationMenu="False" UseWholeRow="True" >
                     <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding NewItemCommand}" />

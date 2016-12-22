@@ -1,10 +1,12 @@
-﻿using System;
-using Gamma.Models;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Linq;
 using System.Collections.ObjectModel;
 using Gamma.Interfaces;
 using Gamma.Attributes;
 using System.Data.Entity;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {

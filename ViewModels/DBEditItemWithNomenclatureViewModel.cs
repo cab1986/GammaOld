@@ -1,10 +1,13 @@
-﻿using DevExpress.Mvvm;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Gamma.Attributes;
+using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma.ViewModels

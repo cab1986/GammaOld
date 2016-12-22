@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using DevExpress.Mvvm;
+using Gamma.Entities;
 using Gamma.Models;
 using Gamma.ViewModels;
 

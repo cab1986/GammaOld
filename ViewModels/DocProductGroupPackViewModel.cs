@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gamma.Interfaces;
@@ -10,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Gamma.Models;
 using Gamma.Common;
 using System.Data.Entity;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
@@ -78,6 +81,7 @@ namespace Gamma.ViewModels
                 }
                 NomenclatureID = Spools[0].NomenclatureID;
                 CharacteristicID = Spools[0].CharacteristicID;
+                ProductState = Spools[0].ProductState;
                 Diameter = DB.GetSpoolDiameter(Spools[0].ProductID);
                 CoreWeight = BaseCoreWeight * Spools.Count;
             }
@@ -200,6 +204,7 @@ namespace Gamma.ViewModels
                                  DocID = p.DocID,
                                  CharacteristicID = (Guid)p.C1CCharacteristicID,
                                  NomenclatureID = (Guid)p.C1CNomenclatureID,
+                                 ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
                                  Weight = p.Quantity ?? 0,
@@ -230,6 +235,7 @@ namespace Gamma.ViewModels
                                  DocID = p.DocID,
                                  CharacteristicID = (Guid)p.C1CCharacteristicID,
                                  NomenclatureID = (Guid)p.C1CNomenclatureID,
+                                 ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
                                  Weight = p.Quantity ?? 0,
@@ -255,8 +261,9 @@ namespace Gamma.ViewModels
                 PlaceProductionid = spool.PlaceProductionid;
                 NomenclatureID = spool.NomenclatureID;
                 CharacteristicID = spool.CharacteristicID;
+                ProductState = spool.ProductState;
                 BaseCoreWeight = DB.GetSpoolCoreWeight(spool.ProductID);
-                Diameter = DB.GetSpoolDiameter(spool.ProductID);              
+                Diameter = DB.GetSpoolDiameter(spool.ProductID);
                 Spools.Add(spool);
                 CoreWeight = BaseCoreWeight * Spools.Count;
             }
@@ -285,6 +292,7 @@ namespace Gamma.ViewModels
         private int? PlaceProductionid { get; set; }
         private Guid NomenclatureID {get; set; }
         private Guid CharacteristicID { get; set; }
+        private ProductState ProductState { get; set; }
         private ObservableCollection<PaperBase> _spools;
         public ObservableCollection<PaperBase> Spools
         {
@@ -342,18 +350,6 @@ namespace Gamma.ViewModels
                         }
                     }
                 };
-/*          
-                doc.DocProduction.DocProductionProducts.Add(new DocProductionProducts()
-                {
-                    Products = product,
-                    ProductID = productId,
-                    DocID = doc.DocID,
-                    Quantity = (decimal)Weight/1000,
-                    C1CNomenclatureID = NomenclatureID,
-                    C1CCharacteristicID = CharacteristicID
-                });
-                */
-//                GammaBase.Products.Add(product);
             }
             if (product.ProductGroupPacks == null) product.ProductGroupPacks = new ProductGroupPacks() { ProductID = product.ProductID };
             if (product.DocProductionProducts == null)
@@ -374,6 +370,7 @@ namespace Gamma.ViewModels
                 docProductionProduct.C1CNomenclatureID = NomenclatureID;
                 docProductionProduct.C1CCharacteristicID = CharacteristicID;
             }
+            product.StateID = (byte) ProductState;
             product.ProductGroupPacks.C1CNomenclatureID = NomenclatureID;
             product.ProductGroupPacks.C1CCharacteristicID = CharacteristicID;
             product.ProductGroupPacks.Weight = (decimal)Weight/1000;

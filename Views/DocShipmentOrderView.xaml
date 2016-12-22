@@ -123,9 +123,10 @@
                                                            Command="{Binding DeleteProductCommand}" BarItemDisplayMode="Default" GlyphSize="Small"/>
                                     </dxb:Bar>
                                 </dxb:BarManager.Bars>
-                                <dxg:GridControl EnableSmartColumnsGeneration="True" ItemsSource="{Binding DocShipmentOrderGoods}">
-                                <dxg:GridControl.Columns>
+                                <common:GridControlWithState ItemsSource="{Binding DocShipmentOrderGoods}" >
+                                    <dxg:GridControl.Columns>
                                     <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
+                                    <dxg:GridColumn Header="Качество" FieldName="Quality"/>
                                     <dxg:GridColumn Header="Необходимо собрать" FieldName="Amount" Width="60"/>
                                     <dxg:GridColumn Header="Отгружено" FieldName="OutQuantity" Width="60" >
                                         <dxg:GridColumn.EditSettings>
@@ -145,7 +146,7 @@
                                     </dxg:GridColumn>
                                 </dxg:GridControl.Columns>
                                 <dxg:GridControl.View>
-                                    <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" AutoWidth="True" AllowEditing="False"/>
+                                    <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" AutoWidth="True" AllowEditing="False" BestFitMode="Smart" />
                                 </dxg:GridControl.View>
                                 <dxg:GridControl.DetailDescriptor>
                                     <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Products}">
@@ -162,13 +163,14 @@
                                                     </dxg:GridColumn.EditSettings>
                                                 </dxg:GridColumn>
                                                 <dxg:GridColumn Header="Отгружено" FieldName="IsShipped" AllowEditing="False"/>
+                                                <dxg:GridColumn Header="Отгрузил" FieldName="OutPerson" AllowEditing="False"/>
                                                 <dxg:GridColumn Header="Получено" FieldName="IsAccepted" Visible="{Binding InVisibible}" AllowEditing="False"/>
                                                 <dxg:GridColumn Header="Принято" FieldName="IsConfirmed" Visible="{Binding InVisibible}" />
                                             </dxg:GridControl.Columns>
                                         </dxg:GridControl>
                                     </dxg:DataControlDetailDescriptor>
                                 </dxg:GridControl.DetailDescriptor>
-                                </dxg:GridControl>
+                                </common:GridControlWithState>
                             </dxb:BarManager>
                         </dxlc:LayoutItem>
                     </dxlc:LayoutControl>

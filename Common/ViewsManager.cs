@@ -1,4 +1,6 @@
-﻿using Gamma.Views;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using Gamma.Views;
 using DevExpress.Mvvm;
 
 namespace Gamma.Common
@@ -102,7 +104,7 @@ namespace Gamma.Common
             if (msg.IsPlaceGroupFilter)
                 new NomenclatureFindView(msg.ID, msg.NomenclatureEdit).Show();
             else
-                new NomenclatureFindView((MaterialTypes)msg.ID).Show();
+                new NomenclatureFindView((MaterialType)msg.ID).Show();
         }
         private void OpenDocProduct(OpenDocProductMessage msg)
         {

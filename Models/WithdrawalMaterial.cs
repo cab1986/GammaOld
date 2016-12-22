@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -36,7 +38,7 @@ namespace Gamma.Models
                             Coefficient = 1,
                             NomenclatureName = nomenclatureInfo.Name,
                             MeasureUnit = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault()?.Name,
-                            MeasureUnitID = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault().C1CMeasureUnitID,
+                            MeasureUnitID = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault()?.C1CMeasureUnitID,
                             IsMarked = nomenclatureInfo.IsArchive ?? false
                         }); 
                         var analogs =

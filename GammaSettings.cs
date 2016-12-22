@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
@@ -20,7 +22,7 @@ namespace Gamma
 
         //Параметры подключения к бд
         public List<string> Hosts = new List<string>();
-        public string HostName = "";
+        public string HostName = "gamma";
         public string DbName = "";
         public string User = "";
 
@@ -33,6 +35,7 @@ namespace Gamma
             get { return _connectionstring;}
             private set { _connectionstring = value; }
         }
+
         private GammaSettings()
         { 
             
@@ -47,7 +50,15 @@ namespace Gamma
                 {
                     var strSetting = new FileStream(FileName, FileMode.Open);
                     var serializer = new XmlSerializer(typeof(GammaSettings));
-                    _gammaSettings = (GammaSettings)serializer.Deserialize(strSetting);
+                    try
+                    {
+                        _gammaSettings = (GammaSettings)serializer.Deserialize(strSetting);
+                    }
+                    catch
+                    {
+                        _gammaSettings = new GammaSettings();
+                    }
+                    
                 }
                 else
                 {
@@ -85,7 +96,7 @@ namespace Gamma
             entityConnectionStringBuilder.Provider = "System.Data.SqlClient";
             entityConnectionStringBuilder.ProviderConnectionString = sqlBuilder.ToString();
             SqlConnectionString = entityConnectionStringBuilder.ProviderConnectionString;
-            entityConnectionStringBuilder.Metadata = "res://*/Models.GammaModel.csdl|res://*/Models.GammaModel.ssdl|res://*/Models.GammaModel.msl";
+            entityConnectionStringBuilder.Metadata = "res://*/Entities.GammaModel.csdl|res://*/Entities.GammaModel.ssdl|res://*/Entities.GammaModel.msl";
 
             ConnectionString = entityConnectionStringBuilder.ToString();
         }

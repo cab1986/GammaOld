@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -6,6 +8,7 @@ using System.Data.Entity.SqlServer;
 using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Interfaces;
 using Gamma.Models;
 
@@ -150,7 +153,7 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterial()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialTypes.MaterialsSGI);
+            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
         }
 
         private void SetMaterialNomenclature(Nomenclature1CMessage msg)

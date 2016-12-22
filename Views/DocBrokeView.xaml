@@ -99,22 +99,24 @@
                                                                Command="{Binding DeleteProductCommand}"/>
                                         </dxb:Bar>
                                     </dxb:BarManager.Bars>
-                                    <dxg:GridControl ItemsSource="{Binding BrokeProducts}" SelectedItem="{Binding SelectedBrokeProduct}">
+                                    <dxg:GridControl ItemsSource="{Binding BrokeProducts}" SelectedItem="{Binding SelectedBrokeProduct}"  >
                                         <dxmvvm:Interaction.Behaviors>
                                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
                                         </dxmvvm:Interaction.Behaviors>
                                         <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}" ScrollViewer.CanContentScroll="True" />
+                                            <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}" ScrollViewer.CanContentScroll="True" 
+                                                           EnableImmediatePosting="True"/>
                                         </dxg:GridControl.View>
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False" >
+                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False" AllowBestFit="True" >
                                                 <dxg:GridColumn.EditSettings>
                                                     <dxe:TextEditSettings TextWrapping="WrapWithOverflow"/>
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="Number" Header="Номер" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="Quantity" Header="Количество" Width="80" FixedWidth="True" AllowEditing="False">
+                                            <dxg:GridColumn FieldName="Number" Header="Номер" AllowEditing="False" SortOrder="Ascending" SortIndex="0"
+                                                            Width="120" FixedWidth="True"/>
+                                            <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="40" FixedWidth="True" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
                                                 <dxg:GridColumn.EditSettings>
                                                     <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>
                                                 </dxg:GridColumn.EditSettings>
@@ -129,9 +131,18 @@
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
                                             <dxg:GridColumn FieldName="RejectionReasonCommentsString" Header="Причины" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="Date" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="Place" Header="Производственный участок" Width="100" FixedWidth="True" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="PrintName" Header="Виновник" AllowEditing="False"/>
+                                            <dxg:GridColumn FieldName="Date" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False" />
+                                            <dxg:GridColumn FieldName="BrokePlaceId" Header="Участок-виновник" ReadOnly="{Binding IsReadOnly}" Width="100">
+                                                <dxg:GridColumn.EditSettings>
+                                                    <dxe:ComboBoxEditSettings ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                                                </dxg:GridColumn.EditSettings>
+                                            </dxg:GridColumn>
+                                            <dxg:GridColumn FieldName="BrokeShiftId" Header="Смена-виновник" ReadOnly="{Binding IsReadOnly}" Width="65" FixedWidth="True">
+                                                <dxg:GridColumn.EditSettings>
+                                                    <dxe:SpinEditSettings MaxValue="4" MinValue="1"/>
+                                                </dxg:GridColumn.EditSettings>
+                                            </dxg:GridColumn>
+                                            <dxg:GridColumn FieldName="PrintName" Header="ФИО" ReadOnly="{Binding IsReadOnly}" Width="140" FixedWidth="True"/>
                                         </dxg:GridControl.Columns>
                                     </dxg:GridControl>
                                 </dxb:BarManager>
@@ -148,7 +159,7 @@
                                     </dxg:GridControl.View>
                                     <dxg:GridControl.Columns>
                                         <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" VisibleIndex="0"/>
-                                        <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" />
+                                        <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" SortOrder="Ascending" SortIndex="0"/>
                                         <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="80" FixedWidth="True" VisibleIndex="2">
                                             <dxg:GridColumn.EditSettings>
                                                 <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>

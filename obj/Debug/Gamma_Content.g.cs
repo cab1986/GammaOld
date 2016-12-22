@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("russian.frl")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("models/gammamodel.context.tt")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("models/gammamodel.tt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("entities/gammamodel.context.tt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("entities/gammamodel.tt")]
 
 

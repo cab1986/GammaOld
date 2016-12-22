@@ -17,7 +17,7 @@ namespace Gamma.Views
             InitializeComponent();
         }
 
-        public NomenclatureFindView(MaterialTypes materialType)
+        public NomenclatureFindView(MaterialType materialType)
         {
             DataContext = new NomenclatureFindViewModel(materialType);
             InitializeComponent();

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using DevExpress.Mvvm;
 
 namespace Gamma.Models
@@ -14,6 +16,10 @@ namespace Gamma.Models
         public Guid NomenclatureID { get; set; }
         public string Number { get; set; }
         public string Nomenclature { get; set; }
+        /// <summary>
+        /// Качество бумаги-основы
+        /// </summary>
+        public ProductState ProductState { get; set; }
         private decimal _weight;
         public decimal Weight
         {

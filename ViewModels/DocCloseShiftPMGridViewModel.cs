@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Linq;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
@@ -6,6 +8,7 @@ using Gamma.Models;
 using DevExpress.Mvvm;
 using System.Data.Entity.SqlServer;
 using Gamma.Common;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
@@ -80,7 +83,7 @@ namespace Gamma.ViewModels
                             Nomenclature = ps.NomenclatureName,
                             Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.ProductionQuantity*1000
+                            Weight = ps.ProductionQuantity??0*1000
                         }).FirstOrDefault()
                     );
             }

@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
@@ -94,7 +96,7 @@ namespace Gamma.ViewModels
                 MessageBox.Show("Нельзя удалить продукт, который уже получен или принят");
                 return;
             }
-            if (SelectedProduct == null || SelectedProduct.IsConfirmed == true || SelectedProduct.IsAccepted) return;
+//            if (SelectedProduct == null || SelectedProduct.IsConfirmed == true || SelectedProduct.IsAccepted) return;
             if (MessageBox.Show("Вы уверены, что хотите удалить данный продукт из приказа?", "Удаление",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
             using (var gammaBase = DB.GammaDb)

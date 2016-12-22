@@ -1,10 +1,13 @@
-﻿using DevExpress.Mvvm;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
@@ -144,7 +147,7 @@ namespace Gamma.ViewModels
                 (
                     (
                         from pinfo in GammaBase.vProductsInfo
-                        where pinfo.BarCode == Barcode && (!ButtonPanelVisible || (ButtonPanelVisible && !(pinfo.IsWrittenOff??false)))
+                        where pinfo.BarCode == Barcode && (!ButtonPanelVisible || !(pinfo.IsWrittenOff??false))
                         select new ProductInfo
                         {
                             DocID = pinfo.DocID,

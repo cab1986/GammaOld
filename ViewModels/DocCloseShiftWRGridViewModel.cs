@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Linq;
 using Gamma.Interfaces;
 using System.Collections.ObjectModel;
@@ -7,6 +9,7 @@ using DevExpress.Mvvm;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using Gamma.Common;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {

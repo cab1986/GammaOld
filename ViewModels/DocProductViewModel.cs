@@ -1,4 +1,6 @@
-﻿using DevExpress.Mvvm;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel; 
@@ -8,6 +10,7 @@ using Gamma.Interfaces;
 using Gamma.Attributes;
 using System.Windows;
 using System.Data.Entity;
+using Gamma.Entities;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -389,6 +392,18 @@ namespace Gamma.ViewModels
                 return;
             }
             if (!SaveToModel()) return;
+            using (var gammaBase = DB.GammaDb)
+                {
+                    var state =
+                        (ProductState) (gammaBase.vProductsInfo.FirstOrDefault(p => p.DocID == Doc.DocID 
+                            && p.NomenclatureKindID == 1)?.StateID ?? 0);
+                    if (state == ProductState.Limited)
+                    {
+                        MessageBox.Show(@"Продукт ограниченно годен. Не забудьте наклеить синий амбалаж",
+                            "Ограниченно годен",
+                            MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    }
+                }
             var spoolViewModel = CurrentViewModel as DocProductSpoolViewModel;
             ReportManager.PrintReport(msg.ReportID, spoolViewModel?.ProductId ?? Doc.DocID);
         }

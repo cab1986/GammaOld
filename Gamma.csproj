@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>18</ApplicationRevision>
+    <ApplicationRevision>23</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -165,6 +165,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -202,289 +203,289 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
-    <Compile Include="Models\ActiveProductionTasks.cs">
+    <Compile Include="Entities\ActiveProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\BarcodeTypes.cs">
+    <Compile Include="Entities\BarcodeTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Branches.cs">
+    <Compile Include="Entities\Branches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CCharacteristicProperties.cs">
+    <Compile Include="Entities\C1CCharacteristicProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CCharacteristics.cs">
+    <Compile Include="Entities\C1CCharacteristics.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CContractors.cs">
+    <Compile Include="Entities\C1CContractors.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CDocInternalOrders.cs">
+    <Compile Include="Entities\C1CDocInternalOrders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CDocShipmentOrder.cs">
+    <Compile Include="Entities\C1CDocShipmentOrder.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CDocShipmentOrderGoods.cs">
+    <Compile Include="Entities\C1CDocShipmentOrderGoods.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CEnumGroupTypes.cs">
+    <Compile Include="Entities\C1CEnumGroupTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CMainSpecifications.cs">
+    <Compile Include="Entities\C1CMainSpecifications.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CMeasureUnitQualifiers.cs">
+    <Compile Include="Entities\C1CMeasureUnitQualifiers.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CMeasureUnits.cs">
+    <Compile Include="Entities\C1CMeasureUnits.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CNomenclature.cs">
+    <Compile Include="Entities\C1CNomenclature.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CNomenclatureAnalogs.cs">
+    <Compile Include="Entities\C1CNomenclatureAnalogs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CNomenclatureGroups.cs">
+    <Compile Include="Entities\C1CNomenclatureGroups.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CNomenclatureProperties.cs">
+    <Compile Include="Entities\C1CNomenclatureProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CPlaces.cs">
+    <Compile Include="Entities\C1CPlaces.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CProperties.cs">
+    <Compile Include="Entities\C1CProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CPropertyValueGammaPropertyValue.cs">
+    <Compile Include="Entities\C1CPropertyValueGammaPropertyValue.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CPropertyValues.cs">
+    <Compile Include="Entities\C1CPropertyValues.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CQuality.cs">
+    <Compile Include="Entities\C1CQuality.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CRejectionReasons.cs">
+    <Compile Include="Entities\C1CRejectionReasons.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CSpecificationInputNomenclature.cs">
+    <Compile Include="Entities\C1CSpecificationInputNomenclature.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CSpecificationOutputNomenclature.cs">
+    <Compile Include="Entities\C1CSpecificationOutputNomenclature.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CSpecifications.cs">
+    <Compile Include="Entities\C1CSpecifications.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\C1CWarehouses.cs">
+    <Compile Include="Entities\C1CWarehouses.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\RECT.cs" />
-    <Compile Include="Models\CheckProductionTaskSourceSpools_Result.cs">
+    <Compile Include="Entities\CheckProductionTaskSourceSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CheckProductionTaskSourceSpools_Result1.cs">
+    <Compile Include="Entities\CheckProductionTaskSourceSpools_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CreateUnloadSpools_Result.cs">
+    <Compile Include="Entities\CreateUnloadSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CurrentPlaceUsers.cs">
+    <Compile Include="Entities\CurrentPlaceUsers.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
-    <Compile Include="Models\Departments.cs">
+    <Compile Include="Entities\Departments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocBroke.cs">
+    <Compile Include="Entities\DocBroke.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocBrokeDecisionProducts.cs">
+    <Compile Include="Entities\DocBrokeDecisionProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocBrokeProductRejectionReasons.cs">
+    <Compile Include="Entities\DocBrokeProductRejectionReasons.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocBrokeProducts.cs">
+    <Compile Include="Entities\DocBrokeProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocChangeStateProducts.cs">
+    <Compile Include="Entities\DocChangeStateProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocCloseShiftRemainders.cs">
+    <Compile Include="Entities\DocCloseShiftRemainders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocCloseShiftSamples.cs">
+    <Compile Include="Entities\DocCloseShiftSamples.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocInProducts.cs">
+    <Compile Include="Entities\DocInProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocMovement.cs">
+    <Compile Include="Entities\DocMovement.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocMovementOrder.cs">
+    <Compile Include="Entities\DocMovementOrder.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocMovementOrderNomenclature.cs">
+    <Compile Include="Entities\DocMovementOrderNomenclature.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocOutProducts.cs">
+    <Compile Include="Entities\DocOutProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocProduction.cs">
+    <Compile Include="Entities\DocProduction.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocProductionProducts.cs">
+    <Compile Include="Entities\DocProductionProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocProducts.cs">
+    <Compile Include="Entities\DocProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocRelations_Result.cs">
+    <Compile Include="Entities\DocRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Docs.cs">
+    <Compile Include="Entities\Docs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocShipmentOrders.cs">
+    <Compile Include="Entities\DocShipmentOrders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocTypes.cs">
+    <Compile Include="Entities\DocTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocWithdrawal.cs">
+    <Compile Include="Entities\DocWithdrawal.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocWithdrawalMaterials.cs">
+    <Compile Include="Entities\DocWithdrawalMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\DocWithdrawalProducts.cs">
+    <Compile Include="Entities\DocWithdrawalProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Enterprises.cs">
+    <Compile Include="Entities\Enterprises.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FillDocCloseShiftConvertingMaterials_Result.cs">
+    <Compile Include="Entities\FillDocCloseShiftConvertingMaterials_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FillDocCloseShiftConvertingPallets_Result.cs">
+    <Compile Include="Entities\FillDocCloseShiftConvertingPallets_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FindNomenclatureByStringWithFilter_Result.cs">
+    <Compile Include="Entities\FindNomenclatureByStringWithFilter_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FindNomenclatureByStringWithFilter_Result1.cs">
+    <Compile Include="Entities\FindNomenclatureByStringWithFilter_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FindNomenclatureByStringWithFilter_Result2.cs">
+    <Compile Include="Entities\FindNomenclatureByStringWithFilter_Result2.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FindProductionTasks_Result.cs">
+    <Compile Include="Entities\FindProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GammaProperties.cs">
+    <Compile Include="Entities\GammaProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetBatchProducts_Result.cs">
+    <Compile Include="Entities\GetBatchProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetCharacteristicsForPM_Result.cs">
+    <Compile Include="Entities\GetCharacteristicsForPM_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetCharacteristicsForProdTaskPM_Result.cs">
+    <Compile Include="Entities\GetCharacteristicsForProdTaskPM_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetCharPropsDescriptions_Result.cs">
+    <Compile Include="Entities\GetCharPropsDescriptions_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetDocCloseShiftConvertingPallets_Result.cs">
+    <Compile Include="Entities\GetDocCloseShiftConvertingPallets_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetDocCloseShiftPMSpools_Result.cs">
+    <Compile Include="Entities\GetDocCloseShiftPMSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetDocCloseShiftWRGroupPacks_Result.cs">
+    <Compile Include="Entities\GetDocCloseShiftWRGroupPacks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetDocMovementOrderNomenclature_Result.cs">
+    <Compile Include="Entities\GetDocMovementOrderNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetDocMovementOrderProducts_Result.cs">
+    <Compile Include="Entities\GetDocMovementOrderProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetDocRelations_Result.cs">
+    <Compile Include="Entities\GetDocRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetGroupPackSpools_Result.cs">
+    <Compile Include="Entities\GetGroupPackSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetInputNomenclature_Result.cs">
+    <Compile Include="Entities\GetInputNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetMaterialNomenclatureFolders1_Result.cs">
+    <Compile Include="Entities\GetMaterialNomenclatureFolders1_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetMaterialNomenclatureFolders_Result.cs">
+    <Compile Include="Entities\GetMaterialNomenclatureFolders_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetMaterialNomenclatureFolders_Result1.cs">
+    <Compile Include="Entities\GetMaterialNomenclatureFolders_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetNomenclatureFolders_Result.cs">
+    <Compile Include="Entities\GetNomenclatureFolders_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetOldProductInfo_Result.cs">
+    <Compile Include="Entities\GetOldProductInfo_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskBatchProducts_Result.cs">
+    <Compile Include="Entities\GetProductionTaskBatchProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskBatchSGBCuttings_Result.cs">
+    <Compile Include="Entities\GetProductionTaskBatchSGBCuttings_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskBatchSGBProperties_Result.cs">
+    <Compile Include="Entities\GetProductionTaskBatchSGBProperties_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskBatchWRProperties_Result.cs">
+    <Compile Include="Entities\GetProductionTaskBatchWRProperties_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskByBatchID_Result.cs">
+    <Compile Include="Entities\GetProductionTaskByBatchID_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTaskProducts_Result.cs">
+    <Compile Include="Entities\GetProductionTaskProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductionTasks_Result.cs">
+    <Compile Include="Entities\GetProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductRelations_Result.cs">
+    <Compile Include="Entities\GetProductRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductRelations_Result1.cs">
+    <Compile Include="Entities\GetProductRelations_Result1.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetProductRelations_Result2.cs">
+    <Compile Include="Entities\GetProductRelations_Result2.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetSpecificationInputNomenclature_Result.cs">
+    <Compile Include="Entities\GetSpecificationInputNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GetSpoolRejectionReasons_Result.cs">
+    <Compile Include="Entities\GetSpoolRejectionReasons_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GroupPackSpools_Result.cs">
+    <Compile Include="Entities\GroupPackSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\MaterialTypes.cs">
+    <Compile Include="Entities\MaterialTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MovementGood.cs" />
@@ -494,98 +495,99 @@
     <Compile Include="Models\Nomenclature1C.cs" />
     <Compile Include="Models\Nomenclature1CFolder.cs" />
     <Compile Include="Models\NomenclatureBarcode.cs" />
-    <Compile Include="Models\NomenclatureBarcodes.cs">
+    <Compile Include="Entities\NomenclatureBarcodes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\NomenclatureGammaInfo.cs">
+    <Compile Include="Entities\NomenclatureGammaInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Pallet.cs" />
-    <Compile Include="Models\Permits.cs">
+    <Compile Include="Entities\Permits.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PermitTables.cs">
+    <Compile Include="Entities\PermitTables.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Persons.cs">
+    <Compile Include="Entities\Persons.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PlaceGroups.cs">
+    <Compile Include="Entities\PlaceGroups.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Places.cs">
+    <Compile Include="Entities\Places.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PlaceZone.cs" />
-    <Compile Include="Models\PlaceZones.cs">
+    <Compile Include="Entities\PlaceZones.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PostTypes.cs">
+    <Compile Include="Entities\PostTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProcessModels.cs">
+    <Compile Include="Entities\ProcessModels.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductGroupPacks.cs">
+    <Compile Include="Entities\ProductGroupPacks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskBatches.cs">
+    <Compile Include="Entities\ProductionTaskBatches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskRWCutting.cs">
+    <Compile Include="Entities\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTasks.cs">
+    <Compile Include="Entities\ProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskSGB.cs">
+    <Compile Include="Entities\ProductionTaskSGB.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskStates.cs">
+    <Compile Include="Entities\ProductionTaskStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductionTaskWR.cs">
+    <Compile Include="Entities\ProductionTaskWR.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductKinds.cs">
+    <Compile Include="Entities\ProductKinds.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductPalletItems.cs">
+    <Compile Include="Entities\ProductPalletItems.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductPallets.cs">
+    <Compile Include="Entities\ProductPallets.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductRelation.cs" />
     <Compile Include="Common\RequiredCollectionAttribute.cs" />
-    <Compile Include="Models\ProductRelations_Result.cs">
+    <Compile Include="Entities\ProductRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Products.cs">
+    <Compile Include="Entities\Products.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductSpools.cs">
+    <Compile Include="Entities\ProductSpools.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductStates.cs">
+    <Compile Include="Entities\ProductStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Reports.cs">
+    <Compile Include="Models\QualityReportItem.cs" />
+    <Compile Include="Entities\Reports.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Rests.cs">
+    <Compile Include="Entities\Rests.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RolePermits.cs">
+    <Compile Include="Entities\RolePermits.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Roles.cs">
+    <Compile Include="Entities\Roles.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SourceSpools.cs">
+    <Compile Include="Entities\SourceSpools.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SpoolInstallLog.cs">
+    <Compile Include="Entities\SpoolInstallLog.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SpoolPathPM.cs" />
@@ -593,43 +595,43 @@
     <Compile Include="Common\UIServices.cs" />
     <Compile Include="Common\ViewsManager.cs" />
     <Compile Include="Common\WindowSettings.cs" />
-    <Compile Include="Models\Templates.cs">
+    <Compile Include="Entities\Templates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\UserPrintNames.cs">
+    <Compile Include="Entities\UserPrintNames.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Users.cs">
+    <Compile Include="Entities\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\v1COrderGoods.cs">
+    <Compile Include="Entities\v1COrderGoods.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\v1COrders.cs">
+    <Compile Include="Entities\v1COrders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\v1CWorkingSpecifications.cs">
+    <Compile Include="Entities\v1CWorkingSpecifications.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vCharacteristicSGBProperties.cs">
+    <Compile Include="Entities\vCharacteristicSGBProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vDocMovementGoods.cs">
+    <Compile Include="Entities\vDocMovementGoods.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vDocMovementProducts.cs">
+    <Compile Include="Entities\vDocMovementProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vPlacePropertiesValues.cs">
+    <Compile Include="Entities\vPlacePropertiesValues.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vProductionTaskBatches.cs">
+    <Compile Include="Entities\vProductionTaskBatches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vProductionTaskProducts.cs">
+    <Compile Include="Entities\vProductionTaskProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vProductsInfo.cs">
+    <Compile Include="Entities\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\WithdrawalMaterial.cs" />
@@ -656,22 +658,22 @@
     <Compile Include="Interfaces\IProductionTask.cs" />
     <Compile Include="Interfaces\IProductionTaskBatch.cs" />
     <Compile Include="Interfaces\IValidationExceptionHandler.cs" />
-    <Compile Include="Models\GammaModel.Context.cs">
+    <Compile Include="Entities\GammaModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GammaModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GammaModel.cs">
+    <Compile Include="Entities\GammaModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GammaModel.Designer.cs">
+    <Compile Include="Entities\GammaModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GammaModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\GammaModelManualConstructor.cs" />
+    <Compile Include="Entities\GammaModelManualConstructor.cs" />
     <Compile Include="MVVMWindow.cs" />
     <Compile Include="Models\Place.cs" />
     <Compile Include="Models\ProductInfo.cs" />
@@ -1139,12 +1141,12 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
-    <EntityDeploy Include="Models\GammaModel.edmx">
+    <EntityDeploy Include="Entities\GammaModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>GammaModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="Gamma_TemporaryKey.pfx" />
-    <None Include="Models\GammaModel.edmx.diagram">
+    <None Include="Entities\GammaModel.edmx.diagram">
       <DependentUpon>GammaModel.edmx</DependentUpon>
     </None>
     <None Include="ngeninstall.bat">
@@ -1193,12 +1195,12 @@
     <AdditionalFiles Include="AppSettings.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
-    <Content Include="Models\GammaModel.Context.tt">
+    <Content Include="Entities\GammaModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>GammaModel.edmx</DependentUpon>
       <LastGenOutput>GammaModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\GammaModel.tt">
+    <Content Include="Entities\GammaModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>GammaModel.edmx</DependentUpon>
       <LastGenOutput>GammaModel.cs</LastGenOutput>

@@ -1,3 +1,5 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 using System;
 using DevExpress.Mvvm;
 
@@ -12,6 +14,7 @@ namespace Gamma.Models
         public decimal Quantity { get; set; }
         public bool IsShipped { get; set; }
         public bool IsAccepted { get; set; }
+        public string OutPerson { get; set; }
 
         private bool? _isConfirmed;
         

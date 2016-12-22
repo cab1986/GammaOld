@@ -1,11 +1,13 @@
-﻿using Gamma.Interfaces;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using Gamma.Interfaces;
 using System.Linq;
-using Gamma.Models;
 using System;
 using Gamma.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using System.Data.Entity;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {

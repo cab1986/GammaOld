@@ -10,6 +10,7 @@
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:common="clr-namespace:Gamma.Common"
              x:Class="Gamma.Views.DocShipmentOrdersView"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocShipmentOrdersViewModel}}"
@@ -56,7 +57,7 @@
                 </dxlc:LayoutItem>
                 <Button Content="Поиск" Command="{Binding FindCommand}" Width="60"/>
             </dxlc:LayoutControl>
-            <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" x:Name="GridControl">
+            <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocShipmentOrders}" SelectedItem="{Binding SelectedDocShipmentOrder}" x:Name="GridControl" >
                 <dxmvvm:Interaction.Behaviors>
                     <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenDocShipmentOrderCommand}" />
                 </dxmvvm:Interaction.Behaviors>
@@ -70,6 +71,7 @@
                                 <dxg:TableView AutoWidth="True" AllowEditing="False"/>
                             </dxg:GridControl.View>
                             <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName"/>
+                            <dxg:GridColumn Header="Качество" FieldName = "Quality" Width="120"/>
                             <dxg:GridColumn Header="Кол-во" FieldName="Quantity" />
                             <dxg:GridColumn Header="Собрано" FieldName="InQuantity">
                                 <dxg:GridColumn.EditSettings>

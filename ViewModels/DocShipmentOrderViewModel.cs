@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.Entity;
@@ -7,6 +9,7 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Gamma.Attributes;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Interfaces;
 using Gamma.Models;
 
@@ -198,7 +201,8 @@ namespace Gamma.ViewModels
                         NomenclatureName = d.NomenclatureName,
                         Amount = d.Quantity,
                         OutQuantity = d.OutQuantity??0,
-                        InQuantity = d.InQuantity??0
+                        InQuantity = d.InQuantity??0,
+                        Quality = d.Quality
                     }));
             foreach (var good in DocShipmentOrderGoods)
             {
@@ -212,7 +216,8 @@ namespace Gamma.ViewModels
                         IsShipped = dm.IsShipped??false,
                         IsAccepted = dm.IsAccepted??false,
                         IsConfirmed = dm.IsConfirmed,
-                        DocMovementId = dm.DocMovementID
+                        DocMovementId = dm.DocMovementID,
+                        OutPerson = dm.OutPerson
                     }));
             }
             IsConfirmed = DocShipmentOrderGoods.SelectMany(g => g.Products).Any(p => p.IsConfirmed ?? false);

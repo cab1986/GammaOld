@@ -1,4 +1,6 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gamma.Common;
@@ -11,6 +13,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using Gamma.Attributes;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
@@ -27,6 +30,7 @@ namespace Gamma.ViewModels
                     PlaceID = p.PlaceID,
                     PlaceName = p.Name
                 }).ToList();
+            BrokePlaces = DiscoverPlaces;
             StorePlaces = GammaBase.Places.Where(p => p.IsWarehouse??false)
                 .Select(p => new Place
                 {
@@ -135,19 +139,22 @@ namespace Gamma.ViewModels
                 {
                     RejectionReasonID = d.C1CRejectionReasonID,
                     Comment = d.Comment
-                })))
+                })), docBrokeProductInfo?.BrokePlaceID, docBrokeProductInfo?.BrokeShiftID, docBrokeProductInfo?.BrokePrintName)
             {
                 Date = product.Date,
                 NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
                 Number = product.Number,
                 Place = product.Place,
+                ProductionPlaceId = (int)product.PlaceID,
+                ProductionPrintName = product.PrintName,
                 ShiftId = product.ShiftID,
                 BaseMeasureUnit = product.BaseMeasureUnit,
-                PrintName = product.PrintName,
                 ProductId = product.ProductID, 
                 ProductKind = (ProductKind)product.ProductKindID,
                 Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity??0 : docBrokeProductInfo.Quantity??0
             };
+            if (brokeProduct.BrokePlaceId == brokeProduct.ProductionPlaceId && brokeProduct.PrintName == null)
+                brokeProduct.PrintName = brokeProduct.ProductionPrintName;
             brokeProducts.Add(brokeProduct);
 #endregion AddBrokeProduct
 #region AddBrokeDecisionProduct
@@ -201,6 +208,7 @@ namespace Gamma.ViewModels
 
         public List<Place> DiscoverPlaces { get; set; }
         public List<Place> StorePlaces { get; set; }
+        public List<Place> BrokePlaces { get; set; }
 
         public bool IsConfirmed { get; set; }
         
@@ -445,6 +453,9 @@ namespace Gamma.ViewModels
                         ProductID = docBrokeProduct.ProductId,
                         DocID = doc.DocID,
                         Quantity = docBrokeProduct.Quantity,
+                        BrokePlaceID = docBrokeProduct.BrokePlaceId,
+                        BrokeShiftID = docBrokeProduct.BrokeShiftId,
+                        BrokePrintName = docBrokeProduct.PrintName,
                         DocBrokeProductRejectionReasons = new List<DocBrokeProductRejectionReasons>()
                     };
                     foreach (var reason in docBrokeProduct.RejectionReasons)

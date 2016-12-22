@@ -1,4 +1,6 @@
-﻿using DevExpress.Mvvm;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using DevExpress.Mvvm;
 using Gamma.Common;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using System.Data.Entity.SqlServer;
+using Gamma.Entities;
 using Gamma.Models;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -170,8 +173,10 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroup.Wr:
+                    var curDate = DB.CurrentDateTime;
                     var lastGroupPack = GammaBase.Docs.Include(d => d.DocProduction.DocProductionProducts)
-                        .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction)
+                        .Where(d => d.PlaceID == WorkSession.PlaceID && d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (byte)DocTypes.DocProduction
+                            && d.Date >= SqlFunctions.DateAdd("hh",-12, curDate))
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
                     if (lastGroupPack != null)

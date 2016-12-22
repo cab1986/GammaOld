@@ -1,10 +1,12 @@
-﻿using DevExpress.Mvvm;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using DevExpress.Mvvm;
 using System;
 using System.Linq;
 using Gamma.Interfaces;
-using Gamma.Models;
 using System.Collections.ObjectModel;
 using Gamma.Common;
+using Gamma.Entities;
 
 // ReSharper disable MemberCanBePrivate.Global
 

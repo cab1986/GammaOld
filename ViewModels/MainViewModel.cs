@@ -1,3 +1,5 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 using System;
 using System.Collections.Generic;
 using DevExpress.Mvvm;
@@ -5,8 +7,12 @@ using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Common;
 using System.Collections.ObjectModel;
+using System.Reflection;
+using System.Windows;
 using Gamma.Dialogs;
 using Gamma.Models;
+using System.Deployment.Application;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
@@ -96,6 +102,7 @@ namespace Gamma.ViewModels
                 OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
                 OpenDocMovementsCommand = new DelegateCommand(OpenDocMovements);
                 OpenPlaceZonesCommand = new DelegateCommand(OpenPlaceZones);
+                ShowProgrammInfoCommand = new DelegateCommand(ShowProgrammInfo);
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -314,6 +321,22 @@ namespace Gamma.ViewModels
                 _backCommand = value;
                 RaisePropertyChanged("BackCommand");
             }
+        }
+
+        public DelegateCommand ShowProgrammInfoCommand { get; private set; }
+
+        private void ShowProgrammInfo()
+        {
+            string version;
+            try
+            {
+                version = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            catch
+            {
+                version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+            MessageBox.Show(@"Текущая версия приложения " + version);
         }
 
         public DelegateCommand OpenPlaceZonesCommand { get; private set; }

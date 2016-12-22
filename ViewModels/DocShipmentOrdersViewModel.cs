@@ -1,11 +1,13 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.SqlServer;
-using System.Globalization;
 using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Interfaces;
 using Gamma.Models;
 
@@ -17,7 +19,7 @@ namespace Gamma.ViewModels
         {
             IsOutOrders = isOutOrders;
             OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveWriteAccess("DocShipmentOrderInfo"));
-            Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
+            Intervals = new List<string> { "Активные", "Последние 100", "Поиск" };
             FindCommand = new DelegateCommand(Find);
             RefreshCommand = FindCommand;
             EditItemCommand = OpenDocShipmentOrderCommand;
@@ -117,7 +119,7 @@ namespace Gamma.ViewModels
                             gammaBase.v1COrders.Where(d => ((!d.IsShipped && IsOutOrders) || (!(d.IsConfirmed??false) && !IsOutOrders)) &&
                             ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
                             ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))))
-                            .OrderByDescending(d => d.Date).Take(500)
+                            .OrderByDescending(d => d.Date).Take(100)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1COrderID,
@@ -137,7 +139,7 @@ namespace Gamma.ViewModels
                             gammaBase.v1COrders.Where(d =>
                             (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
                             (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))
-                            .OrderByDescending(d => d.Date).Take(500)
+                            .OrderByDescending(d => d.Date).Take(100)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1COrderID,
@@ -163,7 +165,7 @@ namespace Gamma.ViewModels
                                     ||
                                     (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders)
                                 ))
-                                .OrderByDescending(d => d.Date).Take(500)
+                                .OrderByDescending(d => d.Date).Take(100)
                                 .Select(d => new DocShipmentOrder
                                 {
                                     DocShipmentOrderId = d.C1COrderID,
@@ -187,15 +189,27 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDb)
             {
+                var orderIds = docShipmentOrders.Select(d => d.DocShipmentOrderId).ToList();
+                var shipmentOrderGoods = gammaBase.v1COrderGoods
+                    .Where(d => d.DocOrderID != null && orderIds.Contains((Guid)d.DocOrderID))
+                    .Select(d => new
+                    {
+                        d.DocOrderID,
+                        d.NomenclatureName,
+                        Quantity = IsOutOrders ? d.Quantity : SqlFunctions.StringConvert(d.OutQuantity),
+                        InQuantity = IsOutOrders ? (d.OutQuantity ?? 0) : (d.InQuantity ?? 0),
+                        d.Quality
+                    }).ToList();
                 foreach (var docShipmentOrder in docShipmentOrders)
                 {
-                    docShipmentOrder.DocShipmentOrderGoods = new ObservableCollection<DocNomenclatureItem>(gammaBase.v1COrderGoods
-                        .Where(d => d.DocOrderID == docShipmentOrder.DocShipmentOrderId)
-                        .Select(d => new DocNomenclatureItem()
+                    docShipmentOrder.DocShipmentOrderGoods = new ObservableCollection<DocNomenclatureItem>(
+                        shipmentOrderGoods.Where(g => g.DocOrderID == docShipmentOrder.DocShipmentOrderId)
+                        .Select(g => new DocNomenclatureItem
                         {
-                            NomenclatureName = d.NomenclatureName,
-                            Quantity = IsOutOrders?d.Quantity:SqlFunctions.StringConvert(d.OutQuantity),
-                            InQuantity = IsOutOrders?(d.OutQuantity??0):(d.InQuantity??0)
+                            NomenclatureName = g.NomenclatureName,
+                            Quantity = g.Quantity,
+                            InQuantity = g.InQuantity,
+                            Quality = g.Quality
                         }));
                 }
             }

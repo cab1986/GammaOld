@@ -2,6 +2,7 @@
 using System.Data.Entity.Core.EntityClient;
 using Effort;
 using Effort.DataLoaders;
+using Gamma.Entities;
 using Gamma.Models;
 using Gamma.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

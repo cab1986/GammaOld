@@ -1,4 +1,6 @@
-﻿using Gamma.Attributes;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using Gamma.Attributes;
 using DevExpress.Mvvm;
 using System;
 using Gamma.Interfaces;
@@ -8,6 +10,7 @@ using System.Windows;
 using System.Collections.Generic;
 using System.Data.Entity;
 using Gamma.Common;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
@@ -510,6 +513,15 @@ namespace Gamma.ViewModels
                                 break;
                         }
                         if (checkResult == SourceSpoolsCheckResult.Block) return;
+                        var sourceIds = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
+                        if (
+                            gammaBase.Products.Where(p => sourceIds.Contains(p.ProductID))
+                                .Any(p => p.StateID == (int) ProductState.Limited))
+                        {
+                            MessageBox.Show(
+                                @"Исходные тамбура ограниченно годны. Возможно потребуется принятие решения по выпущенной продукции.",
+                                @"Ограниченно годны", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
                         MessageManager.CreateNewProduct(docProductKind, productionTaskID, checkResult);
                         break;
                     // Действия для конвертингов

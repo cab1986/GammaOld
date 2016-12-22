@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Gamma
@@ -17,11 +19,9 @@ namespace Gamma
         private static void OnBoundPasswordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var box = d as PasswordBox;
-            if (d == null)
-
             // only handle this event when the property is attached to a PasswordBox
             // and when the BindPassword attached property has been set to true
-            if (d == null || !GetBindPassword(d))
+            if (box == null || !GetBindPassword(d))
             {
                 return;
             }

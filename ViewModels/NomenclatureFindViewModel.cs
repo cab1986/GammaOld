@@ -1,9 +1,12 @@
-﻿using DevExpress.Mvvm;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using DevExpress.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Gamma.Common;
+using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
@@ -57,7 +60,7 @@ namespace Gamma.ViewModels
         /// Инициализация новой NomenclatureFindViewModel
         /// </summary>
         /// <param name="materialType">Материалы какого цеха</param>
-        public NomenclatureFindViewModel(MaterialTypes materialType, GammaEntities gammaBase = null): this(gammaBase)
+        public NomenclatureFindViewModel(MaterialType materialType, GammaEntities gammaBase = null): this(gammaBase)
         {
             FilterID = (int) materialType;
             Nomenclature1CFolders = new ReadOnlyObservableCollection<Nomenclature1CFolder>
