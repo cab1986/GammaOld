@@ -312,7 +312,7 @@ namespace Gamma.ViewModels
             if (AllowEditProduct)
             {
                 product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
-                product.ProductSpools.C1CCharacteristicID = CharacteristicID;
+                product.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
                 product.ProductSpools.DecimalWeight = Weight/1000;
                 var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
                 if (docProductionProduct != null)

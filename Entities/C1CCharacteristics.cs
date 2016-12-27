@@ -18,26 +18,24 @@ namespace Gamma.Entities
         public C1CCharacteristics()
         {
             this.C1CCharacteristicProperties = new HashSet<C1CCharacteristicProperties>();
-            this.C1CSpecificationInputNomenclature = new HashSet<C1CSpecificationInputNomenclature>();
-            this.C1CSpecificationOutputNomenclature = new HashSet<C1CSpecificationOutputNomenclature>();
-            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.C1CNomenclatureAnalogs = new HashSet<C1CNomenclatureAnalogs>();
             this.C1CNomenclatureAnalogs1 = new HashSet<C1CNomenclatureAnalogs>();
             this.C1CNomenclatureAnalogs2 = new HashSet<C1CNomenclatureAnalogs>();
+            this.C1CSpecificationInputNomenclature = new HashSet<C1CSpecificationInputNomenclature>();
+            this.C1CSpecificationOutputNomenclature = new HashSet<C1CSpecificationOutputNomenclature>();
+            this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
+            this.NomenclatureBarcodes = new HashSet<NomenclatureBarcodes>();
+            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
-            this.ProductSpools = new HashSet<ProductSpools>();
-            this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
-            this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
-            this.DocProductionProducts = new HashSet<DocProductionProducts>();
-            this.NomenclatureBarcodes = new HashSet<NomenclatureBarcodes>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
+            this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CMainSpecifications = new HashSet<C1CMainSpecifications>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
         public string C1CCode { get; set; }
         public Nullable<System.Guid> MeasureUnitPackage { get; set; }
         public Nullable<System.Guid> MeasureUnitPallet { get; set; }
@@ -50,35 +48,31 @@ namespace Gamma.Entities
         public virtual C1CMeasureUnits C1CMeasureUnitsPallet { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<C1CSpecificationInputNomenclature> C1CSpecificationInputNomenclature { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<C1CSpecificationOutputNomenclature> C1CSpecificationOutputNomenclature { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CSpecificationInputNomenclature> C1CSpecificationInputNomenclature { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CSpecificationOutputNomenclature> C1CSpecificationOutputNomenclature { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CMainSpecifications> C1CMainSpecifications { get; set; }
     }

@@ -121,7 +121,10 @@ namespace Gamma.ViewModels
                     }
                     GammaBase.Entry(product).Reload();
                     GetProductRelations(product.ProductID);
-                    State = product.ProductStates?.Name ?? "Годная";
+
+                    State = GammaBase.Rests.Any(r => r.ProductID == product.ProductID)
+                        ? product.ProductStates?.Name ?? "Годная"
+                        : "Списан";
                 }
                 AllowEditDoc = DB.AllowEditDoc(Doc.DocID);
             }
@@ -324,6 +327,7 @@ namespace Gamma.ViewModels
                     _isConfirmed = false;
                 else 
             	    _isConfirmed = value;
+                if (Doc != null) MessageManager.DocChanged(Doc.DocID, IsConfirmed);
                 RaisePropertyChanged("IsConfirmed");
             }
         }

@@ -160,8 +160,8 @@ namespace Gamma.ViewModels
                 product.CharacteristicID = info.C1CCharacteristicID;
                 product.NomenclatureName = info.NomenclatureName;
                 product.Quantity = info.Quantity;
-                if (product.IsConfirmed == (info.IsConfirmed ?? false)) return;
-                product.IsConfirmed = info.IsConfirmed ?? false;
+                if (product.IsConfirmed == info.IsConfirmed) return;
+                product.IsConfirmed = info.IsConfirmed;
                 var view = CurrentView as ProductionTaskSGIViewModel;
                 if (view != null)
                 {
@@ -473,7 +473,7 @@ namespace Gamma.ViewModels
                                         if (productionTaskPM != null)
                                         {
                                             productSpool.C1CNomenclatureID = (Guid)productionTaskPM.C1CNomenclatureID;
-                                            productSpool.C1CCharacteristicID = productionTaskPM.C1CCharacteristicID;
+                                            productSpool.C1CCharacteristicID = (Guid)productionTaskPM.C1CCharacteristicID;
                                         }
                                         gammaBase.SaveChanges();
                                         gammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа

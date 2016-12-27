@@ -124,16 +124,25 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDb)
             {
+                var movementIds = docMovements.Select(d => d.DocId).ToList();
+                var movementGoods = gammaBase.vDocMovementGoods.Where(d => movementIds.Contains(d.DocMovementID))
+                    .Select(d => new
+                    {
+                        d.DocMovementID,
+                        d.NomenclatureName,
+                        InQuantity = d.InQuantity ?? 0,
+                        OutQuantity = d.OutQuantity ?? 0
+                    }).ToList();
                 foreach (var docMovement in docMovements)
                 {
                     docMovement.NomenclatureItems = new ObservableCollection<DocNomenclatureItem>
                         (
-                            gammaBase.vDocMovementGoods.Where(d => d.DocMovementID == docMovement.DocId)
+                            movementGoods.Where(d => d.DocMovementID == docMovement.DocId)
                             .Select(d => new DocNomenclatureItem
                             {
                                 NomenclatureName = d.NomenclatureName,
-                                InQuantity = d.InQuantity??0,
-                                OutQuantity = d.OutQuantity??0
+                                InQuantity = d.InQuantity,
+                                OutQuantity = d.OutQuantity
                             })
                         );
                 }

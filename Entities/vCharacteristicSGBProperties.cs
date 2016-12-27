@@ -25,5 +25,6 @@ namespace Gamma.Entities
         public Nullable<int> LayerNumberNumeric { get; set; }
         public Nullable<int> CoreDiameterNumeric { get; set; }
         public string Buyer { get; set; }
+        public string TypeKind { get; set; }
     }
 }

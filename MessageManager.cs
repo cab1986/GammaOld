@@ -28,6 +28,21 @@ namespace Gamma
         public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие
     }
 
+    public class OpenQualityReportPMMessage { }
+
+    public class DocChangedMessage
+    {
+        public DocChangedMessage(Guid docId, bool isConfirmed)
+        {
+            DocId = docId;
+            IsConfirmed = isConfirmed;
+        }
+
+        public Guid DocId { get; private set; }
+        public bool IsConfirmed { get; private set; }
+
+    }
+
     public class EditDocMovementOrderMessage
     {
         public EditDocMovementOrderMessage(Guid? docId = null)
@@ -307,7 +322,15 @@ namespace Gamma
             Messenger.Default.Send(new ProductionTaskRwMessage(productionTaskBatchID, nomenclatureIds));
         }
 
+        public static void DocChanged(Guid docId, bool isConfirmed)
+        {
+            Messenger.Default.Send(new DocChangedMessage(docId, isConfirmed));
+        }
 
+        public static void OpenQualityReportPM()
+        {
+            Messenger.Default.Send(new OpenQualityReportPMMessage());
+        }
 
         public static void EditRejectionReasons(BrokeProduct product)
         {

@@ -30,9 +30,17 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenDocBrokeMessage>(this, OpenDocBroke);
             Messenger.Default.Register<EditRejectionReasonsMessage>(this, EditRejectionReasonsDialog);
             Messenger.Default.Register<NomenclatureEditMessage>(this, NomenclatureEdit);
-            Messenger.Default.Register<EditDocMovementOrderMessage>(this, EditDocMovementOrder);
+            //Messenger.Default.Register<EditDocMovementOrderMessage>(this, EditDocMovementOrder);
             Messenger.Default.Register<EditDocMovementMessage>(this, EditDocMovement);
             Messenger.Default.Register<OpenPlaceZonesMessage>(this, OpenPlaceZones);
+            Messenger.Default.Register<OpenQualityReportPMMessage>(this, OpenQualityReportPM);
+
+        }
+
+        private void OpenQualityReportPM(OpenQualityReportPMMessage msg)
+        {
+            UIServices.SetBusyState();
+            new QualityReportPMView().Show();
         }
 
         private void OpenPlaceZones(OpenPlaceZonesMessage msg)
@@ -45,11 +53,12 @@ namespace Gamma.Common
         {
             new DocMovementView(msg.DocId).Show();
         }
-
+/*
         private void EditDocMovementOrder(EditDocMovementOrderMessage msg)
         {
             new DocMovementOrderView(msg.DocId).Show();
         }
+        */
 
         private void NomenclatureEdit(NomenclatureEditMessage msg)
         {

@@ -190,13 +190,11 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftWRGridView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrderView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductGroupPackView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductPalletView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductSpoolView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductUnloadView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrderView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.g.cs
@@ -243,13 +241,11 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrderView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductGroupPackView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductPalletView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductSpoolView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductUnloadView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocMovementOrdersView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrdersView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrderView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.baml
@@ -287,3 +283,5 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.pdb
 D:\CProjects\Gamma\Gamma\bin\Debug\ru\EntityFramework.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\QualityReportPMView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\QualityReportPMView.baml

@@ -7,32 +7,24 @@ namespace Gamma.Models
 {
     public class QualityReportItem : ViewModelBase
     {
-        private bool _isSpoolBroke;
-        private bool _isGroupPackBroke;
+        private bool _isBroke;
+        public Guid ProductId { get; set; }
+        public Guid? ProductGroupPackId { get; set; }
         public DateTime Date { get; set; }
         public byte ShiftId { get; set; }
         public string NomenclatureName { get; set; }
         public string SpoolNumber { get; set; }
         public string GroupPackNumber { get; set; }
-        public decimal GroupPackWeight { get; set; }
+        public decimal Weight { get; set; }
 
-        public bool IsSpoolBroke
+        public bool IsBroke
         {
-            get { return _isSpoolBroke; }
+            get { return _isBroke; }
             set
             {
-                _isSpoolBroke = value;
-                RaisePropertyChanged("IsSpoolBroke");
-            }
-        }
-
-        public bool IsGroupPackBroke
-        {
-            get { return _isGroupPackBroke; }
-            set
-            {
-                _isGroupPackBroke = value;
-                RaisePropertyChanged("IsGroupPackBroke");
+                if (_isBroke == value) return;
+                _isBroke = value;
+                RaisePropertyChanged("IsBroke");
             }
         }
     }

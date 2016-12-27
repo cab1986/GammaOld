@@ -275,10 +275,6 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache
-D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrderView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrdersView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrderView.baml
-D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementOrdersView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocMovementsView.baml
@@ -287,3 +283,5 @@ D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceZonesView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\PlaceZonesView.baml
 D:\CProjects\Gamma\Gamma\bin\Release\ru\EntityFramework.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\ru\EntityFramework.SqlServer.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Release\Views\QualityReportPMView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\QualityReportPMView.baml

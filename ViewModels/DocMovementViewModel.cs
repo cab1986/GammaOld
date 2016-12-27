@@ -1,6 +1,7 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
@@ -8,11 +9,12 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Entities;
+using Gamma.Interfaces;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
-    public class DocMovementViewModel : SaveImplementedViewModel
+    public class DocMovementViewModel : SaveImplementedViewModel, IBarImplemented
     {
         public DocMovementViewModel(Guid docMovementId)
         {
@@ -79,6 +81,7 @@ namespace Gamma.ViewModels
             OpendDocOrderCommand = new DelegateCommand(OpenDocOrder, () => DocOrderId != null);
             MovementProducts.CollectionChanged += MovementProductsOnCollectionChanged;
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
+            Bars.Add(ReportManager.GetReportBar("DocMovement", VMID));
         }
 
         public bool DenyEditOut { get; private set; }
@@ -236,5 +239,8 @@ namespace Gamma.ViewModels
             }
             return true;
         }
+
+        public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
+        public Guid? VMID { get; } = Guid.NewGuid();
     }
 }

@@ -14,6 +14,12 @@ namespace Gamma.Entities
     
     public partial class DocShipmentOrders
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocShipmentOrders()
+        {
+            this.DocMovement = new HashSet<DocMovement>();
+        }
+    
         public System.Guid DocOrderID { get; set; }
         public Nullable<byte> OrderTypeID { get; set; }
         public string VehicleNumber { get; set; }
@@ -28,5 +34,10 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> InDate { get; set; }
         public string Driver { get; set; }
         public string DriverDocument { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovement> DocMovement { get; set; }
+        public virtual Persons Persons { get; set; }
+        public virtual Persons Persons1 { get; set; }
     }
 }

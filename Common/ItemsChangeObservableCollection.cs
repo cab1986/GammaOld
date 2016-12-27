@@ -65,13 +65,17 @@ namespace Gamma.Common
                 if (item != null)
                 {
                     item.PropertyChanged -= item_PropertyChanged;
+                    item.PropertyChanged -= ItemChanged;
                 }
             }
         }
 
+        public event PropertyChangedEventHandler ItemChanged;
+
         private void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            ItemChanged?.Invoke(sender, e);
         }
     }
 }

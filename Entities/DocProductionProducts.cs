@@ -20,9 +20,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
     
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual Products Products { get; set; }
         public virtual DocProduction DocProduction { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

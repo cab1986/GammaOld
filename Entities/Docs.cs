@@ -25,8 +25,8 @@ namespace Gamma.Entities
             this.DocCloseShift = new HashSet<Docs>();
             this.DocCloseShiftWithdrawals = new HashSet<DocWithdrawal>();
             this.DocUnpackWithdrawals = new HashSet<DocWithdrawal>();
-            this.DocWithdrawalRemainder = new HashSet<DocCloseShiftRemainders>();
             this.DocCloseShiftRemainders = new HashSet<DocCloseShiftRemainders>();
+            this.DocCloseShiftRemainders1 = new HashSet<DocCloseShiftRemainders>();
         }
     
         public System.Guid DocID { get; set; }
@@ -41,6 +41,8 @@ namespace Gamma.Entities
         public System.DateTime Date { get; set; }
         public string Comment { get; set; }
         public Nullable<bool> IsFromOldGamma { get; set; }
+        public Nullable<int> PersonID { get; set; }
+        public Nullable<byte> BranchID { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -48,11 +50,9 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DocMovement DocMovement { get; set; }
-        public virtual DocMovementOrder DocMovementOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProducts> DocProducts { get; set; }
         public virtual DocTypes DocTypes { get; set; }
-        public virtual Users Users { get; set; }
         public virtual DocWithdrawal DocWithdrawal { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
@@ -66,9 +66,11 @@ namespace Gamma.Entities
         public virtual ICollection<DocWithdrawal> DocUnpackWithdrawals { get; set; }
         public virtual DocProduction DocProduction { get; set; }
         public virtual Places Places { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocCloseShiftRemainders> DocWithdrawalRemainder { get; set; }
+        public virtual DocMovementOrder DocMovementOrder { get; set; }
+        public virtual Users Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders1 { get; set; }
     }
 }

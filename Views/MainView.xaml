@@ -39,9 +39,6 @@
         <DataTemplate DataType="{x:Type vm:DocShipmentOrdersViewModel}">
             <views:DocShipmentOrdersView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:DocMovementOrdersViewModel}">
-            <views:DocMovementOrdersView />
-        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocMovementsViewModel}">
             <views:DocMovementsView />
         </DataTemplate>
@@ -75,6 +72,7 @@
                             </dxb:BarSubItem.ItemTemplate>
                         </dxb:BarSubItem>
                         <dxb:BarButtonItem Content="Акты о браке" Command="{Binding OpenDocBrokeListCommand}"/>
+                        <dxb:BarButtonItem Content="Браковка партии БДМ" Command="{Binding OpenQualityReportPMCommand}"/>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Производство" ItemLinksSource="{Binding PlaceProducts}">
                         <dxb:BarSubItem.ItemTemplate>

@@ -21,12 +21,12 @@ namespace Gamma.Entities
         public System.DateTime Date { get; set; }
         public string BarCode { get; set; }
         public string PrintName { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public System.Guid C1CCharacteristicID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public string BaseMeasureUnit { get; set; }
         public Nullable<decimal> BaseMeasureUnitQuantity { get; set; }
-        public Nullable<decimal> ProductionQuantity { get; set; }
+        public decimal ProductionQuantity { get; set; }
         public Nullable<decimal> GrossQuantity { get; set; }
         public Nullable<decimal> BaseMeasureUnitGrossQuantity { get; set; }
         public string NomenclatureName { get; set; }
@@ -40,7 +40,7 @@ namespace Gamma.Entities
         public Nullable<decimal> ChangeStateQuantity { get; set; }
         public Nullable<System.Guid> C1CQualityID { get; set; }
         public string RejectionReason { get; set; }
-        public Nullable<bool> IsConfirmed { get; set; }
+        public bool IsConfirmed { get; set; }
         public Nullable<bool> IsWrittenOff { get; set; }
         public string State { get; set; }
     }

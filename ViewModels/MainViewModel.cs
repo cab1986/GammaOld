@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
 using Gamma.Dialogs;
-using Gamma.Models;
 using System.Deployment.Application;
 using Gamma.Entities;
 
@@ -99,10 +98,11 @@ namespace Gamma.ViewModels
                 OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
                 OpenImportOldProductsCommand = new DelegateCommand(MessageManager.OpenImportOldProducts, () => DB.HaveWriteAccess("Products"));
                 OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);
-                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
+//                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
                 OpenDocMovementsCommand = new DelegateCommand(OpenDocMovements);
                 OpenPlaceZonesCommand = new DelegateCommand(OpenPlaceZones);
                 ShowProgrammInfoCommand = new DelegateCommand(ShowProgrammInfo);
+                OpenQualityReportPMCommand = new DelegateCommand(MessageManager.OpenQualityReportPM);
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -190,11 +190,13 @@ namespace Gamma.ViewModels
             CurrentView = new DocShipmentOrdersViewModel(false);
         }
 
+        /*
         private void OpenDocMovementOrders()
         {
             UIServices.SetBusyState();
             CurrentView = new DocMovementOrdersViewModel();
         }
+        */
 
         private void OpenDocMovements()
         {
@@ -390,6 +392,7 @@ namespace Gamma.ViewModels
         public DelegateCommand<int> EditPlaceGroupNomenclatureCommand { get; private set; }
         public DelegateCommand OpenDocMovementOrdersCommand { get; private set; }
         public DelegateCommand OpenDocMovementsCommand { get; private set; }
+        public DelegateCommand OpenQualityReportPMCommand { get; private set; }
         public List<ReportItem> Reports { get; set; }
 
         public class PlaceProduct

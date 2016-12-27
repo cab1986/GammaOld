@@ -32,8 +32,8 @@ namespace Gamma.Entities
         public string OutPerson { get; set; }
         public string InPerson { get; set; }
         public Nullable<decimal> Quantity { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public System.Guid C1CCharacteristicID { get; set; }
         public Nullable<System.Guid> C1CQualityID { get; set; }
         public string NomenclatureName { get; set; }
         public string ShortNomenclatureName { get; set; }

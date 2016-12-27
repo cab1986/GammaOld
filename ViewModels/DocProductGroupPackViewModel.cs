@@ -29,6 +29,13 @@ namespace Gamma.ViewModels
             UnpackCommand = new DelegateCommand(Unpack, () => !IsNewGroupPack && ProductId != null && WorkSession.PlaceGroup == PlaceGroup.Wr);
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
+            Messenger.Default.Register<DocChangedMessage>(this, DocChanged);
+        }
+
+        private void DocChanged(DocChangedMessage msg)
+        {
+            if (DocId != msg.DocId) return;
+            IsConfirmed = msg.IsConfirmed;
         }
 
         private void Unpack()
@@ -46,11 +53,13 @@ namespace Gamma.ViewModels
                 UIServices.SetBusyState();
                 GammaBase.UnpackGroupPack(ProductId, WorkSession.PrintName);
                 MessageBox.Show("Упаковка уничтожена, рулоны возвращены на остатки");
+                IsUnpacked = true;
             }
         }
 
         public DocProductGroupPackViewModel(Guid docID) : this()
         {
+            DocId = docID;
             var doc = GammaBase.Docs.Include(d => d.DocProduction.DocProductionProducts).First(d => d.DocID == docID);
             IsConfirmed = doc.IsConfirmed;
             IsNewGroupPack = false;
@@ -101,7 +110,19 @@ namespace Gamma.ViewModels
         {
             GrossWeight = Convert.ToInt32(Scales.GetWeight());
         }
-        private bool IsConfirmed { get; set; }
+
+        private Guid? DocId { get; set; }
+
+        public bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;
+                RaisePropertyChanged("IsReadOnly"); // Нужно для реакции интерфейса
+            }
+        }
+
         public bool IsReadOnly
         {
             get 
@@ -109,6 +130,7 @@ namespace Gamma.ViewModels
                 return ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
             }
         }
+
         private Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
         {
@@ -181,7 +203,7 @@ namespace Gamma.ViewModels
         public DelegateCommand DeleteSpoolCommand { get; private set; }
         public DelegateCommand UnpackCommand { get; private set; }
 
-        
+        private bool IsUnpacked { get; set; } = false;
 
         private void AddSpool()
         {
@@ -314,7 +336,8 @@ namespace Gamma.ViewModels
         /// <param name="gammaBase">Контекст БД</param>
         public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
-            if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid) return true;
+            if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid || IsUnpacked || IsReadOnly) return true;
+            DocId = itemID;
             var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight,
                 Spools.Count).FirstOrDefault();
             if (!string.IsNullOrEmpty(result))
@@ -420,6 +443,8 @@ namespace Gamma.ViewModels
         public PaperBase SelectedSpool { get; set; }
 
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
+        private bool _isConfirmed;
+
         public ObservableCollection<BarViewModel> Bars
         {
             get

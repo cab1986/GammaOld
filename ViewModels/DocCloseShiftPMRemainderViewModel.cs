@@ -58,6 +58,7 @@ namespace Gamma.ViewModels
             }
             Quantity = DocCloseShiftRemainder.Quantity;
         }
+
         private bool IsConfirmed { get; }
         private DocCloseShiftRemainders DocCloseShiftRemainder { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -66,6 +67,7 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
         }
+
         public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
@@ -79,7 +81,7 @@ namespace Gamma.ViewModels
                     ProductKindID = (byte)ProductKind.ProductSpool,
                     ProductSpools = new ProductSpools()
                     {
-                        C1CCharacteristicID = CharacteristicID,
+                        C1CCharacteristicID = (Guid)CharacteristicID,
                         C1CNomenclatureID = (Guid)NomenclatureID,
                         Diameter = 0,
                         DecimalWeight = 0,
@@ -137,7 +139,7 @@ namespace Gamma.ViewModels
                         docProductionProduct.C1CNomenclatureID = NomenclatureID;
                         docProductionProduct.C1CCharacteristicID = CharacteristicID;
                         docProductionProduct.Products.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
-                        docProductionProduct.Products.ProductSpools.C1CCharacteristicID = CharacteristicID;
+                        docProductionProduct.Products.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
                     }
                 }
             } 

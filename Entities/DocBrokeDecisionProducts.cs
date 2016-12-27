@@ -24,6 +24,5 @@ namespace Gamma.Entities
     
         public virtual ProductStates ProductStates { get; set; }
         public virtual DocBroke DocBroke { get; set; }
-        public virtual Products Products { get; set; }
     }
 }

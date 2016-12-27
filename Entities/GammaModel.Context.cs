@@ -50,10 +50,8 @@ namespace Gamma.Entities
         public virtual DbSet<PermitTables> PermitTables { get; set; }
         public virtual DbSet<PlaceGroups> PlaceGroups { get; set; }
         public virtual DbSet<ProcessModels> ProcessModels { get; set; }
-        public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<ProductionTaskStates> ProductionTaskStates { get; set; }
         public virtual DbSet<ProductionTaskWR> ProductionTaskWR { get; set; }
-        public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<ProductStates> ProductStates { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
         public virtual DbSet<RolePermits> RolePermits { get; set; }
@@ -62,17 +60,14 @@ namespace Gamma.Entities
         public virtual DbSet<SpoolInstallLog> SpoolInstallLog { get; set; }
         public virtual DbSet<Templates> Templates { get; set; }
         public virtual DbSet<UserPrintNames> UserPrintNames { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<vProductionTaskBatches> vProductionTaskBatches { get; set; }
         public virtual DbSet<vProductionTaskProducts> vProductionTaskProducts { get; set; }
-        public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CSpecifications> C1CSpecifications { get; set; }
         public virtual DbSet<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
         public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
         public virtual DbSet<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual DbSet<ProductionTasks> ProductionTasks { get; set; }
-        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<vCharacteristicSGBProperties> vCharacteristicSGBProperties { get; set; }
         public virtual DbSet<C1CContractors> C1CContractors { get; set; }
         public virtual DbSet<C1CDocShipmentOrder> C1CDocShipmentOrder { get; set; }
@@ -88,10 +83,8 @@ namespace Gamma.Entities
         public virtual DbSet<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
         public virtual DbSet<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         public virtual DbSet<DocProducts> DocProducts { get; set; }
-        public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocBroke> DocBroke { get; set; }
         public virtual DbSet<Rests> Rests { get; set; }
-        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<BarcodeTypes> BarcodeTypes { get; set; }
         public virtual DbSet<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
         public virtual DbSet<NomenclatureGammaInfo> NomenclatureGammaInfo { get; set; }
@@ -100,28 +93,36 @@ namespace Gamma.Entities
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }
         public virtual DbSet<DocMovement> DocMovement { get; set; }
-        public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
         public virtual DbSet<vDocMovementGoods> vDocMovementGoods { get; set; }
         public virtual DbSet<ProductKinds> ProductKinds { get; set; }
         public virtual DbSet<C1CDocInternalOrders> C1CDocInternalOrders { get; set; }
         public virtual DbSet<Docs> Docs { get; set; }
         public virtual DbSet<DocProduction> DocProduction { get; set; }
         public virtual DbSet<ActiveProductionTasks> ActiveProductionTasks { get; set; }
-        public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<vPlacePropertiesValues> vPlacePropertiesValues { get; set; }
-        public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DbSet<PlaceZones> PlaceZones { get; set; }
         public virtual DbSet<DocInProducts> DocInProducts { get; set; }
         public virtual DbSet<DocOutProducts> DocOutProducts { get; set; }
         public virtual DbSet<v1COrders> v1COrders { get; set; }
         public virtual DbSet<CurrentPlaceUsers> CurrentPlaceUsers { get; set; }
         public virtual DbSet<v1CWorkingSpecifications> v1CWorkingSpecifications { get; set; }
-        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<vProductsInfo> vProductsInfo { get; set; }
         public virtual DbSet<DocShipmentOrders> DocShipmentOrders { get; set; }
         public virtual DbSet<DocBrokeProducts> DocBrokeProducts { get; set; }
         public virtual DbSet<vDocMovementProducts> vDocMovementProducts { get; set; }
         public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
+        public virtual DbSet<vPMSpoolsToGroupPack> vPMSpoolsToGroupPack { get; set; }
+        public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
+        public virtual DbSet<Places> Places { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
+        public virtual DbSet<ProductPallets> ProductPallets { get; set; }
+        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
+        public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
+        public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
+        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {

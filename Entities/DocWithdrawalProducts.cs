@@ -20,6 +20,5 @@ namespace Gamma.Entities
         public Nullable<bool> CompleteWithdrawal { get; set; }
     
         public virtual DocWithdrawal DocWithdrawal { get; set; }
-        public virtual Products Products { get; set; }
     }
 }

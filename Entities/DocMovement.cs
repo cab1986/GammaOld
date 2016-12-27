@@ -19,6 +19,7 @@ namespace Gamma.Entities
         {
             this.DocInProducts = new HashSet<DocInProducts>();
             this.DocOutProducts = new HashSet<DocOutProducts>();
+            this.DocMovementOrder = new HashSet<DocMovementOrder>();
         }
     
         public System.Guid DocID { get; set; }
@@ -31,12 +32,14 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> InDate { get; set; }
     
         public virtual Docs Docs { get; set; }
-        public virtual Places OutPlaces { get; set; }
-        public virtual Places Places1 { get; set; }
-        public virtual Places InPlaces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocInProducts> DocInProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
+        public virtual DocShipmentOrders DocShipmentOrders { get; set; }
+        public virtual Places InPlaces { get; set; }
+        public virtual Places OutPlaces { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovementOrder> DocMovementOrder { get; set; }
     }
 }

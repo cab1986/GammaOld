@@ -24,7 +24,6 @@ namespace Gamma.Entities
         public Nullable<decimal> Amount { get; set; }
         public Nullable<bool> LoadToTop { get; set; }
     
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CDocShipmentOrder C1CDocShipmentOrder { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }

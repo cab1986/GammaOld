@@ -28,7 +28,6 @@ namespace Gamma.Entities
         public string Name { get; set; }
         public Nullable<System.Guid> PlaceZoneParentID { get; set; }
     
-        public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceZones> PlaceZones1 { get; set; }
         public virtual PlaceZones PlaceZones2 { get; set; }
@@ -38,5 +37,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocInProducts> DocInProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocOutProducts> DocOutProducts { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

@@ -16,11 +16,10 @@ namespace Gamma.Entities
     {
         public System.Guid ProductID { get; set; }
         public Nullable<int> PlaceID { get; set; }
-        public Nullable<int> Quantity { get; set; }
+        public int Quantity { get; set; }
         public Nullable<System.Guid> PlaceZoneID { get; set; }
     
-        public virtual Products Products { get; set; }
-        public virtual Places Places { get; set; }
         public virtual PlaceZones PlaceZones { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

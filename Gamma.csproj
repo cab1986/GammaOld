@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>23</ApplicationRevision>
+    <ApplicationRevision>28</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -284,9 +284,6 @@
     <Compile Include="Entities\C1CWarehouses.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Characteristic.cs" />
-    <Compile Include="Common\AsyncObservableCollection.cs" />
-    <Compile Include="Common\RECT.cs" />
     <Compile Include="Entities\CheckProductionTaskSourceSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -299,9 +296,6 @@
     <Compile Include="Entities\CurrentPlaceUsers.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Cutting.cs" />
-    <Compile Include="Common\GridControlWithState.cs" />
-    <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Entities\Departments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -488,20 +482,12 @@
     <Compile Include="Entities\MaterialTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\MovementGood.cs" />
-    <Compile Include="Models\MovementItem.cs" />
-    <Compile Include="Models\MovementOrderNomenclatureItem.cs" />
-    <Compile Include="Models\Nomenclature.cs" />
-    <Compile Include="Models\Nomenclature1C.cs" />
-    <Compile Include="Models\Nomenclature1CFolder.cs" />
-    <Compile Include="Models\NomenclatureBarcode.cs" />
     <Compile Include="Entities\NomenclatureBarcodes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\NomenclatureGammaInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Pallet.cs" />
     <Compile Include="Entities\Permits.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -517,7 +503,6 @@
     <Compile Include="Entities\Places.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PlaceZone.cs" />
     <Compile Include="Entities\PlaceZones.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -557,8 +542,6 @@
     <Compile Include="Entities\ProductPallets.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ProductRelation.cs" />
-    <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Entities\ProductRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -571,7 +554,6 @@
     <Compile Include="Entities\ProductStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\QualityReportItem.cs" />
     <Compile Include="Entities\Reports.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -590,11 +572,6 @@
     <Compile Include="Entities\SpoolInstallLog.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SpoolPathPM.cs" />
-    <Compile Include="Models\SpoolRemainder.cs" />
-    <Compile Include="Common\UIServices.cs" />
-    <Compile Include="Common\ViewsManager.cs" />
-    <Compile Include="Common\WindowSettings.cs" />
     <Compile Include="Entities\Templates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -625,6 +602,9 @@
     <Compile Include="Entities\vPlacePropertiesValues.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\vPMSpoolsToGroupPack.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\vProductionTaskBatches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -634,6 +614,29 @@
     <Compile Include="Entities\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Characteristic.cs" />
+    <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\RECT.cs" />
+    <Compile Include="Models\Cutting.cs" />
+    <Compile Include="Common\GridControlWithState.cs" />
+    <Compile Include="Common\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Models\MovementGood.cs" />
+    <Compile Include="Models\MovementItem.cs" />
+    <Compile Include="Models\MovementOrderNomenclatureItem.cs" />
+    <Compile Include="Models\Nomenclature.cs" />
+    <Compile Include="Models\Nomenclature1C.cs" />
+    <Compile Include="Models\Nomenclature1CFolder.cs" />
+    <Compile Include="Models\NomenclatureBarcode.cs" />
+    <Compile Include="Models\Pallet.cs" />
+    <Compile Include="Models\PlaceZone.cs" />
+    <Compile Include="Models\ProductRelation.cs" />
+    <Compile Include="Common\RequiredCollectionAttribute.cs" />
+    <Compile Include="Models\QualityReportItem.cs" />
+    <Compile Include="Models\SpoolPathPM.cs" />
+    <Compile Include="Models\SpoolRemainder.cs" />
+    <Compile Include="Common\UIServices.cs" />
+    <Compile Include="Common\ViewsManager.cs" />
+    <Compile Include="Common\WindowSettings.cs" />
     <Compile Include="Models\WithdrawalMaterial.cs" />
     <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
@@ -696,8 +699,6 @@
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
-    <Compile Include="ViewModels\DocMovementOrdersViewModel.cs" />
-    <Compile Include="ViewModels\DocMovementOrderViewModel.cs" />
     <Compile Include="ViewModels\DocMovementsViewModel.cs" />
     <Compile Include="ViewModels\DocMovementViewModel.cs" />
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
@@ -785,9 +786,6 @@
     <Compile Include="Views\DocMovementView.xaml.cs">
       <DependentUpon>DocMovementView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DocMovementOrderView.xaml.cs">
-      <DependentUpon>DocMovementOrderView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\DocProductGroupPackView.xaml.cs">
       <DependentUpon>DocProductGroupPackView.xaml</DependentUpon>
     </Compile>
@@ -802,9 +800,6 @@
     </Compile>
     <Compile Include="Views\DocProductView.xaml.cs">
       <DependentUpon>DocProductView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DocMovementOrdersView.xaml.cs">
-      <DependentUpon>DocMovementOrdersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocShipmentOrdersView.xaml.cs">
       <DependentUpon>DocShipmentOrdersView.xaml</DependentUpon>
@@ -873,6 +868,9 @@
     </Compile>
     <Compile Include="Views\ProductionTaskWRView.xaml.cs">
       <DependentUpon>ProductionTaskWRView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QualityReportPMView.xaml.cs">
+      <DependentUpon>QualityReportPMView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RoleEditView.xaml.cs">
       <DependentUpon>RoleEditView.xaml</DependentUpon>
@@ -967,10 +965,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DocMovementOrderView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\DocProductGroupPackView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -990,10 +984,6 @@
     <Page Include="Views\DocProductView.xaml">
       <SubType>Form</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DocMovementOrdersView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocShipmentOrdersView.xaml">
       <SubType>Designer</SubType>
@@ -1076,6 +1066,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProductionTaskWRView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QualityReportPMView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1210,7 +1204,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

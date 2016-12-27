@@ -10,6 +10,7 @@ using DevExpress.Xpf.Editors;
 using System.Reflection;
 using Gamma.Attributes;
 using System.ComponentModel;
+using DevExpress.Mvvm.Native;
 using DevExpress.Mvvm.UI.Interactivity;
 
 namespace Gamma
@@ -19,29 +20,48 @@ namespace Gamma
         protected override void OnAttached()
         {
             base.OnAttached();
+            AssociatedObject.Unloaded += AssociatedObjectUnloaded;
             if (this.AssociatedObject.DataContext == null)
                 this.AssociatedObject.DataContextChanged += AssociatedObject_DataContextChanged;
             else
             {
  //               (this.AssociatedObject.DataContext as INotifyPropertyChanged).PropertyChanged += UIAuthBehavior_PropertyChanged;
-                SetReadStatus();
-            }
-                
-                
+                Initialize();
+            }              
+        }
+
+        private void AssociatedObjectUnloaded(object sender, RoutedEventArgs e)
+        {
+            CleanUp();
+        }
+
+        private void Initialize()
+        {
+            SetReadStatus();
+            var context = this.AssociatedObject.DataContext as INotifyPropertyChanged;
+            if (context == null) return;
+            context.PropertyChanged += UIAuthBehavior_PropertyChanged;
+        }
+
+        private void CleanUp()
+        {
+            AssociatedObject.DataContextChanged -= AssociatedObject_DataContextChanged;
+            var context = this.AssociatedObject.DataContext as INotifyPropertyChanged;
+            if (context == null) return;
+            context.PropertyChanged -= UIAuthBehavior_PropertyChanged;
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            AssociatedObject.DataContextChanged -= AssociatedObject_DataContextChanged;
+            CleanUp();
         }
 
         void AssociatedObject_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (this.AssociatedObject.DataContext != null)
             {
-                SetReadStatus();
- //               (this.AssociatedObject.DataContext as INotifyPropertyChanged).PropertyChanged += UIAuthBehavior_PropertyChanged;
+                Initialize();
                 this.AssociatedObject.DataContextChanged -= AssociatedObject_DataContextChanged;
             }
         }
@@ -54,15 +74,19 @@ namespace Gamma
         private void SetReadStatus()
         {
             var control = this.AssociatedObject;
-            if (control.DataContext.GetType().GetInterfaces().Contains(typeof(ICheckedAccess)))
-            {
-                if (!(control.DataContext as ICheckedAccess).IsReadOnly) return;
-                object context = AssociatedObject.DataContext;
-                Type contextType = context.GetType();
-                PropertyInfo[] properties = contextType.GetProperties();
-                WalkDownLogicalTree(control, properties);
-            }
+            if (!control.DataContext.GetType().GetInterfaces().Contains(typeof (ICheckedAccess))) return;
+//                if (!(control.DataContext as ICheckedAccess).IsReadOnly) return;
+            var checkedContext = control.DataContext as ICheckedAccess;
+            if (checkedContext == null) return;
+            IsReadOnly = checkedContext.IsReadOnly;
+            object context = AssociatedObject.DataContext;
+            Type contextType = context.GetType();
+            PropertyInfo[] properties = contextType.GetProperties();
+            WalkDownLogicalTree(control, properties);
         }
+
+        private bool IsReadOnly { get; set; }
+
         private void WalkDownLogicalTree(FrameworkElement control, PropertyInfo[] properties)
         {
             foreach (var element in LogicalTreeHelper.GetChildren(control))
@@ -105,11 +129,11 @@ namespace Gamma
                                     switch (uiAuthAttr.AuthLevel)
                                     {
                                         case UIAuthLevel.Invisible:
-                                            (frameElement as Control).Visibility = Visibility.Collapsed;
+                                            (frameElement as Control).Visibility = IsReadOnly ? Visibility.Collapsed : Visibility.Visible;
                                             break;
                                         case UIAuthLevel.ReadOnly:
-                                            if (frameElement is BaseEdit) (frameElement as BaseEdit).IsReadOnly = true;
-                                            else (frameElement as TextBox).IsReadOnly = true;
+                                            if (frameElement is BaseEdit) (frameElement as BaseEdit).IsReadOnly = IsReadOnly;
+                                            else (frameElement as TextBox).IsReadOnly = IsReadOnly;
                                             break;
                                         default:
                                             (frameElement as Control).Visibility = Visibility.Visible;

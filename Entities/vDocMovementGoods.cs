@@ -15,8 +15,8 @@ namespace Gamma.Entities
     public partial class vDocMovementGoods
     {
         public System.Guid DocMovementID { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public System.Guid C1CCharacteristicID { get; set; }
         public string NomenclatureName { get; set; }
         public Nullable<decimal> OutQuantity { get; set; }
         public Nullable<decimal> InQuantity { get; set; }

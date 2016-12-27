@@ -17,8 +17,8 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DocProduction()
         {
-            this.DocProductionProducts = new HashSet<DocProductionProducts>();
             this.DocWithdrawal = new HashSet<DocWithdrawal>();
+            this.DocProductionProducts = new HashSet<DocProductionProducts>();
         }
     
         public System.Guid DocID { get; set; }
@@ -29,9 +29,9 @@ namespace Gamma.Entities
         public virtual Docs Docs { get; set; }
         public virtual ProductionTasks ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
         public virtual Places Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
     }
 }

@@ -83,7 +83,7 @@ namespace Gamma.ViewModels
                             Nomenclature = ps.NomenclatureName,
                             Number = d.DocProduction.Docs.Number,
                             ProductID = d.ProductID,
-                            Weight = ps.ProductionQuantity??0*1000
+                            Weight = ps.ProductionQuantity*1000
                         }).FirstOrDefault()
                     );
             }

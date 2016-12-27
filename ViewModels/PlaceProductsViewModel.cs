@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
             CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroup.Wr && WorkSession.PlaceGroup == PlaceGroup);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
-            PlaceGroup = (PlaceGroup)(GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault()??0);
+            PlaceGroup = (PlaceGroup)(GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault());
             switch (PlaceGroup)
             {
                 case PlaceGroup.PM:

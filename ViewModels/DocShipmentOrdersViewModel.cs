@@ -19,7 +19,7 @@ namespace Gamma.ViewModels
         {
             IsOutOrders = isOutOrders;
             OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveWriteAccess("DocShipmentOrderInfo"));
-            Intervals = new List<string> { "Активные", "Последние 100", "Поиск" };
+            Intervals = new List<string> { "Активные", "Последние 300", "Поиск" };
             FindCommand = new DelegateCommand(Find);
             RefreshCommand = FindCommand;
             EditItemCommand = OpenDocShipmentOrderCommand;
@@ -119,7 +119,7 @@ namespace Gamma.ViewModels
                             gammaBase.v1COrders.Where(d => ((!d.IsShipped && IsOutOrders) || (!(d.IsConfirmed??false) && !IsOutOrders)) &&
                             ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
                             ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))))
-                            .OrderByDescending(d => d.Date).Take(100)
+                            .OrderByDescending(d => d.Date).Take(300)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1COrderID,
@@ -139,7 +139,7 @@ namespace Gamma.ViewModels
                             gammaBase.v1COrders.Where(d =>
                             (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
                             (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))
-                            .OrderByDescending(d => d.Date).Take(100)
+                            .OrderByDescending(d => d.Date).Take(300)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1COrderID,
@@ -165,7 +165,7 @@ namespace Gamma.ViewModels
                                     ||
                                     (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders)
                                 ))
-                                .OrderByDescending(d => d.Date).Take(100)
+                                .OrderByDescending(d => d.Date).Take(300)
                                 .Select(d => new DocShipmentOrder
                                 {
                                     DocShipmentOrderId = d.C1COrderID,

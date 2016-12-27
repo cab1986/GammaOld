@@ -19,12 +19,15 @@
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocMovementViewModel}}"
         common:WindowSettings.Save="True"
         Title="Заказ на перемещение" Height="600" Width="1000">
+    
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition />
             <RowDefinition Height="28" />
         </Grid.RowDefinitions>
-        <dxlc:LayoutControl Orientation="Horizontal">
+        <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
+        <dxlc:LayoutControl Orientation="Horizontal" Grid.Row="1">
             <dxlc:LayoutGroup Orientation="Vertical" View="GroupBox" Width="200" Header="Документ" >
                 <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding Number}" />
@@ -90,7 +93,7 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
-        <Button Grid.Row="1" Content="OK" Command="{Binding SaveAndCloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,100,2"/>
-        <Button Grid.Row="1" Content="Отмена" Command="{Binding CloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,10,2"/>
+        <Button Grid.Row="2" Content="OK" Command="{Binding SaveAndCloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,100,2"/>
+        <Button Grid.Row="2" Content="Отмена" Command="{Binding CloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,10,2"/>
     </Grid>
 </gamma:MvvmWindow>
