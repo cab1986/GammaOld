@@ -18,6 +18,11 @@ namespace Gamma.Entities
         public Products()
         {
             this.DocProductionProducts = new HashSet<DocProductionProducts>();
+            this.DocBrokeDecisionProducts = new HashSet<DocBrokeDecisionProducts>();
+            this.DocBrokeProductRejectionReasons = new HashSet<DocBrokeProductRejectionReasons>();
+            this.DocCloseShiftRemainders = new HashSet<DocCloseShiftRemainders>();
+            this.DocWithdrawalProducts = new HashSet<DocWithdrawalProducts>();
+            this.DocCloseShift = new HashSet<Docs>();
         }
     
         public System.Guid ProductID { get; set; }
@@ -33,5 +38,15 @@ namespace Gamma.Entities
         public virtual ProductSpools ProductSpools { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Docs> DocCloseShift { get; set; }
     }
 }

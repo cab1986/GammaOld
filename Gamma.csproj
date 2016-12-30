@@ -23,7 +23,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>\\server7\shares\Общая папка\Gamma\</PublishUrl>
+    <PublishUrl>\\server7\shares\Общая папка\GammaRostov\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -33,11 +33,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
+    <UpdateUrl>\\Solomon\Server\_Общая\GammaNew\</UpdateUrl>
     <ProductName>Gamma</ProductName>
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationRevision>30</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -293,6 +294,9 @@
     <Compile Include="Entities\CreateUnloadSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CreateUnloadSpools_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CurrentPlaceUsers.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -372,6 +376,18 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocCloseShiftConvertingPallets_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftRwSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftRwSpools_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftRwSpools_Result2.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftRwSpools_Result3.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FindNomenclatureByStringWithFilter_Result.cs">
@@ -697,6 +713,7 @@
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftRwGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
     <Compile Include="ViewModels\DocMovementsViewModel.cs" />
@@ -718,6 +735,7 @@
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\PlaceZonesViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTaskBalerViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchWrapperViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
@@ -767,6 +785,9 @@
     </Compile>
     <Compile Include="Views\DocCloseShiftPMRemainderView.xaml.cs">
       <DependentUpon>DocCloseShiftPMRemainderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftRwGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftRwGridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftUnwinderRemainderView.xaml.cs">
       <DependentUpon>DocCloseShiftUnwinderRemainderView.xaml</DependentUpon>
@@ -938,6 +959,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocCloseShiftPMRemainderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftRwGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

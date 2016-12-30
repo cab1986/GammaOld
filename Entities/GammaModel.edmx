@@ -437,6 +437,14 @@
           <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="DocCloseShiftProducts">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="DocCloseShiftRemainders">
           <Key>
             <PropertyRef Name="DocCloseShiftRemainderID" />
@@ -1987,6 +1995,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocBrokeDecisionProducts_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="DocBrokeDecisionProducts" Type="Self.DocBrokeDecisionProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecisionProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocBrokeDecisionProducts_ProductStates">
           <End Role="ProductStates" Type="Self.ProductStates" Multiplicity="1" />
           <End Role="DocBrokeDecisionProducts" Type="Self.DocBrokeDecisionProducts" Multiplicity="*" />
@@ -2021,6 +2041,18 @@
             </Principal>
             <Dependent Role="DocBrokeProductRejectionReasons">
               <PropertyRef Name="DocID" />
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeProductRejectionReasons_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="DocBrokeProductRejectionReasons" Type="Self.DocBrokeProductRejectionReasons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocBrokeProductRejectionReasons">
               <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2073,6 +2105,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocCloseShiftProducts_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocCloseShiftProducts" Type="Self.DocCloseShiftProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftProducts_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="DocCloseShiftProducts" Type="Self.DocCloseShiftProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocCloseShiftRemainders_Docs">
           <End Role="Docs" Type="Self.Docs" Multiplicity="0..1" />
           <End Role="DocCloseShiftRemainders" Type="Self.DocCloseShiftRemainders" Multiplicity="*" />
@@ -2094,6 +2150,18 @@
             </Principal>
             <Dependent Role="DocCloseShiftRemainders">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftRemainders_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="DocCloseShiftRemainders" Type="Self.DocCloseShiftRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftRemainders">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2620,6 +2688,18 @@
             </Principal>
             <Dependent Role="DocWithdrawalProducts">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocWithdrawalProducts_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="DocWithdrawalProducts" Type="Self.DocWithdrawalProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocWithdrawalProducts">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3373,6 +3453,7 @@
           <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="Diameter" Type="int" Mode="In" />
           <Parameter Name="BreakNumber" Type="int" Mode="In" />
+          <Parameter Name="Length" Type="decimal" Mode="In" />
         </Function>
         <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
         <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -3396,6 +3477,11 @@
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
         <Function Name="FillDocCloseShiftConvertingPallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="FillDocCloseShiftRwSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
@@ -3625,6 +3711,7 @@
           <EntitySet Name="DocBrokeProducts" EntityType="Self.DocBrokeProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocCloseShiftProducts" EntityType="Self.DocCloseShiftProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftSamples" EntityType="Self.DocCloseShiftSamples" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
@@ -4106,6 +4193,10 @@
             <End Role="DocBroke" EntitySet="DocBroke" />
             <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecisionProducts_Products" Association="Self.FK_DocBrokeDecisionProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocBrokeDecisionProducts_ProductStates" Association="Self.FK_DocBrokeDecisionProducts_ProductStates">
             <End Role="ProductStates" EntitySet="ProductStates" />
             <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
@@ -4116,6 +4207,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_DocBrokeProductRejectionReasons_DocBrokeProducts" Association="Self.FK_DocBrokeProductRejectionReasons_DocBrokeProducts">
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+            <End Role="DocBrokeProductRejectionReasons" EntitySet="DocBrokeProductRejectionReasons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeProductRejectionReasons_Products" Association="Self.FK_DocBrokeProductRejectionReasons_Products">
+            <End Role="Products" EntitySet="Products" />
             <End Role="DocBrokeProductRejectionReasons" EntitySet="DocBrokeProductRejectionReasons" />
           </AssociationSet>
           <AssociationSet Name="FK_DocBrokeProducts_DocBroke" Association="Self.FK_DocBrokeProducts_DocBroke">
@@ -4134,12 +4229,24 @@
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftProducts_Docs" Association="Self.FK_DocCloseShiftProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftProducts" EntitySet="DocCloseShiftProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftProducts_Products" Association="Self.FK_DocCloseShiftProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocCloseShiftProducts" EntitySet="DocCloseShiftProducts" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftRemainders_Docs" Association="Self.FK_DocCloseShiftRemainders_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftRemainders_Docs1" Association="Self.FK_DocCloseShiftRemainders_Docs1">
             <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftRemainders_Products" Association="Self.FK_DocCloseShiftRemainders_Products">
+            <End Role="Products" EntitySet="Products" />
             <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftSamples_1CCharacteristics" Association="Self.FK_DocCloseShiftSamples_1CCharacteristics">
@@ -4312,6 +4419,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_DocWithdrawalProducts_DocWithdrawal" Association="Self.FK_DocWithdrawalProducts_DocWithdrawal">
             <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+            <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocWithdrawalProducts_Products" Association="Self.FK_DocWithdrawalProducts_Products">
+            <End Role="Products" EntitySet="Products" />
             <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_MaterialTypeNomenclature_1CNomenclature" Association="Self.FK_MaterialTypeNomenclature_1CNomenclature">
@@ -5312,12 +5423,6 @@
             <Parameter Name="Quantity" Mode="In" Type="Int32" />
             <Parameter Name="PrintName" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="CreateUnloadSpools" ReturnType="Collection(GammaModel.CreateUnloadSpools_Result)">
-            <Parameter Name="DocID" Mode="In" Type="Guid" />
-            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
-            <Parameter Name="Diameter" Mode="In" Type="Int32" />
-            <Parameter Name="BreakNumber" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="DeleteGroupPack" ReturnType="Collection(String)">
           <Parameter Name="ProductID" Mode="In" Type="Guid" />
           </FunctionImport>
@@ -6145,6 +6250,38 @@
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecisionProducts_Products" Association="GammaModel.FK_DocBrokeDecisionProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeProductRejectionReasons_Products" Association="GammaModel.FK_DocBrokeProductRejectionReasons_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocBrokeProductRejectionReasons" EntitySet="DocBrokeProductRejectionReasons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftRemainders_Products" Association="GammaModel.FK_DocCloseShiftRemainders_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocCloseShiftRemainders" EntitySet="DocCloseShiftRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocWithdrawalProducts_Products" Association="GammaModel.FK_DocWithdrawalProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
+          </AssociationSet>
+          <AssociationSet Name="DocCloseShiftProducts" Association="GammaModel.DocCloseShiftProducts">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <FunctionImport Name="FillDocCloseShiftRwSpools" ReturnType="Collection(GammaModel.FillDocCloseShiftRwSpools_Result3)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="CreateUnloadSpools" ReturnType="Collection(GammaModel.CreateUnloadSpools_Result1)">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+            <Parameter Name="Diameter" Mode="In" Type="Int32" />
+            <Parameter Name="BreakNumber" Mode="In" Type="Int32" />
+            <Parameter Name="Length" Mode="In" Type="Decimal" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -7152,6 +7289,7 @@
           <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_1CRejectionReasons" FromRole="DocBrokeProductRejectionReasons" ToRole="C1CRejectionReasons" />
           <NavigationProperty Name="DocBrokeProducts" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_DocBrokeProducts" FromRole="DocBrokeProductRejectionReasons" ToRole="DocBrokeProducts" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_Products" FromRole="DocBrokeProductRejectionReasons" ToRole="Products" />
         </EntityType>
         <Association Name="FK_DocBrokeProductRejectionReasons_1CRejectionReasons">
           <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="1" />
@@ -7180,6 +7318,7 @@
           <Property Name="C1CCharacteristicID" Type="Guid" />
           <NavigationProperty Name="ProductStates" Relationship="GammaModel.FK_DocBrokeDecisionProducts_ProductStates" FromRole="DocBrokeDecisionProducts" ToRole="ProductStates" />
           <NavigationProperty Name="DocBroke" Relationship="GammaModel.FK_DocBrokeDecisionProducts_DocBroke" FromRole="DocBrokeDecisionProducts" ToRole="DocBroke" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeDecisionProducts_Products" FromRole="DocBrokeDecisionProducts" ToRole="Products" />
         </EntityType>
         <Association Name="FK_DocBrokeDecisionProducts_ProductStates">
           <End Type="GammaModel.ProductStates" Role="ProductStates" Multiplicity="1" />
@@ -7203,6 +7342,7 @@
           <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
           <Property Name="CompleteWithdrawal" Type="Boolean" />
           <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocWithdrawalProducts_DocWithdrawal" FromRole="DocWithdrawalProducts" ToRole="DocWithdrawal" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocWithdrawalProducts_Products" FromRole="DocWithdrawalProducts" ToRole="Products" />
         </EntityType>
         <Association Name="FK_DocWithdrawalProducts_DocWithdrawal">
           <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="1" />
@@ -7613,8 +7753,9 @@
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
           <NavigationProperty Name="DocMovementOrder" Relationship="GammaModel.FK_DocMovementOrder_Docs" FromRole="Docs" ToRole="DocMovementOrder" />
           <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
-          <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
-          <NavigationProperty Name="DocCloseShiftRemainders1" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
+          <NavigationProperty Name="DocCloseShiftRemainders2" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
+          <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
+          <NavigationProperty Name="DocCloseShiftProducts" Relationship="GammaModel.DocCloseShiftProducts" FromRole="Docs" ToRole="Products" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -8506,6 +8647,11 @@
           <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="Products" ToRole="ProductPallets" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="Products" ToRole="ProductSpools" />
           <NavigationProperty Name="DocProductionProducts" Relationship="GammaModel.FK_DocProductionProducts_Products" FromRole="Products" ToRole="DocProductionProducts" />
+          <NavigationProperty Name="DocBrokeDecisionProducts" Relationship="GammaModel.FK_DocBrokeDecisionProducts_Products" FromRole="Products" ToRole="DocBrokeDecisionProducts" />
+          <NavigationProperty Name="DocBrokeProductRejectionReasons" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_Products" FromRole="Products" ToRole="DocBrokeProductRejectionReasons" />
+          <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Products" FromRole="Products" ToRole="DocCloseShiftRemainders" />
+          <NavigationProperty Name="DocWithdrawalProducts" Relationship="GammaModel.FK_DocWithdrawalProducts_Products" FromRole="Products" ToRole="DocWithdrawalProducts" />
+          <NavigationProperty Name="DocCloseShift" Relationship="GammaModel.DocCloseShiftProducts" FromRole="Products" ToRole="Docs" />
         </EntityType>
         <Association Name="FK_ProductGroupPacks_Products">
           <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
@@ -9170,6 +9316,7 @@
           <Property Name="DocWithdrawalID" Type="Guid" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
           <NavigationProperty Name="DocCloseShifts" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocCloseShiftRemainders_Products" FromRole="DocCloseShiftRemainders" ToRole="Products" />
         </EntityType>
         <Association Name="FK_DocCloseShiftRemainders_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="0..1" />
@@ -9195,6 +9342,94 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocBrokeDecisionProducts_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.DocBrokeDecisionProducts" Role="DocBrokeDecisionProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecisionProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeProductRejectionReasons_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.DocBrokeProductRejectionReasons" Role="DocBrokeProductRejectionReasons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocBrokeProductRejectionReasons">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftRemainders_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftRemainders" Role="DocCloseShiftRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftRemainders">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocWithdrawalProducts_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.DocWithdrawalProducts" Role="DocWithdrawalProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocWithdrawalProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DocCloseShiftProducts">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="FillDocCloseShiftRwSpools_Result">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="15" Scale="5" />
+        </ComplexType>
+        <ComplexType Name="FillDocCloseShiftRwSpools_Result1">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="15" Scale="5" />
+        </ComplexType>
+        <ComplexType Name="FillDocCloseShiftRwSpools_Result2">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="15" Scale="5" />
+        </ComplexType>
+        <ComplexType Name="FillDocCloseShiftRwSpools_Result3">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="15" Scale="5" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="Guid" Name="DocID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="CreateUnloadSpools_Result1">
+          <Property Type="Guid" Name="DocID" Nullable="true" />
+          <Property Type="Guid" Name="ProductID" Nullable="true" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -9582,16 +9817,6 @@
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="CreateRemainderSpool" FunctionName="GammaDBModel.CreateRemainderSpool" />
-          <FunctionImportMapping FunctionImportName="CreateUnloadSpools" FunctionName="GammaDBModel.CreateUnloadSpools">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.CreateUnloadSpools_Result">
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="DeleteGroupPack" FunctionName="GammaDBModel.DeleteGroupPack" />
           <FunctionImportMapping FunctionImportName="DeleteSpool" FunctionName="GammaDBModel.DeleteSpool" />
           <FunctionImportMapping FunctionImportName="DeleteUnload" FunctionName="GammaDBModel.DeleteUnload" />
@@ -10887,6 +11112,37 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="DocCloseShiftProducts" TypeName="GammaModel.DocCloseShiftProducts" StoreEntitySet="DocCloseShiftProducts">
+            <EndProperty Name="Products">
+              <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+            </EndProperty>
+            <EndProperty Name="Docs">
+              <ScalarProperty Name="DocID" ColumnName="DocID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftRwSpools" FunctionName="GammaDBModel.FillDocCloseShiftRwSpools">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftRwSpools_Result3">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CreateUnloadSpools" FunctionName="GammaDBModel.CreateUnloadSpools">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.CreateUnloadSpools_Result1">
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

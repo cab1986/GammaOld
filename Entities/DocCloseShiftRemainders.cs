@@ -23,5 +23,6 @@ namespace Gamma.Entities
     
         public virtual Docs Docs { get; set; }
         public virtual Docs DocCloseShifts { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

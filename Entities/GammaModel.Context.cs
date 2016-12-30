@@ -149,27 +149,6 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateRemainderSpool", docIDParameter, productIDParameter, parentProductIDParameter, quantityParameter, printNameParameter);
         }
     
-        public virtual ObjectResult<CreateUnloadSpools_Result> CreateUnloadSpools(Nullable<System.Guid> docID, Nullable<System.Guid> productionTaskID, Nullable<int> diameter, Nullable<int> breakNumber)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            var productionTaskIDParameter = productionTaskID.HasValue ?
-                new ObjectParameter("ProductionTaskID", productionTaskID) :
-                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
-    
-            var diameterParameter = diameter.HasValue ?
-                new ObjectParameter("Diameter", diameter) :
-                new ObjectParameter("Diameter", typeof(int));
-    
-            var breakNumberParameter = breakNumber.HasValue ?
-                new ObjectParameter("BreakNumber", breakNumber) :
-                new ObjectParameter("BreakNumber", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CreateUnloadSpools_Result>("CreateUnloadSpools", docIDParameter, productionTaskIDParameter, diameterParameter, breakNumberParameter);
-        }
-    
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
             var productIDParameter = productID.HasValue ?
@@ -771,6 +750,48 @@ namespace Gamma.Entities
                 new ObjectParameter("PlaceZoneID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletPlaceZone", placeZoneIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftRwSpools_Result3> FillDocCloseShiftRwSpools(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftRwSpools_Result3>("FillDocCloseShiftRwSpools", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<CreateUnloadSpools_Result1> CreateUnloadSpools(Nullable<System.Guid> docID, Nullable<System.Guid> productionTaskID, Nullable<int> diameter, Nullable<int> breakNumber, Nullable<decimal> length)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            var diameterParameter = diameter.HasValue ?
+                new ObjectParameter("Diameter", diameter) :
+                new ObjectParameter("Diameter", typeof(int));
+    
+            var breakNumberParameter = breakNumber.HasValue ?
+                new ObjectParameter("BreakNumber", breakNumber) :
+                new ObjectParameter("BreakNumber", typeof(int));
+    
+            var lengthParameter = length.HasValue ?
+                new ObjectParameter("Length", length) :
+                new ObjectParameter("Length", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CreateUnloadSpools_Result1>("CreateUnloadSpools", docIDParameter, productionTaskIDParameter, diameterParameter, breakNumberParameter, lengthParameter);
         }
     }
 }

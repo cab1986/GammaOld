@@ -31,5 +31,6 @@ namespace Gamma.Models
             }
         }
         public int Diameter { get; set; }
+        public decimal Length { get; set; }
     }
 }

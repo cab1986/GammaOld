@@ -47,6 +47,7 @@ namespace Gamma.ViewModels
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
                     break;
                 case (short)PlaceGroup.Rw:
+                    CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     break;
                 case (short)PlaceGroup.Convertings:

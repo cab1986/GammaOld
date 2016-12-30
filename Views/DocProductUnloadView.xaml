@@ -6,8 +6,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" x:Class="Gamma.Views.DocProductUnloadView"
-             mc:Ignorable="d">
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             x:Class="Gamma.Views.DocProductUnloadView"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=viewModels:DocProductUnloadViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup View="Group" Orientation="Vertical">
@@ -34,12 +37,17 @@
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup View="Group" Height="50">
                 <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
-                    <dxe:SpinEdit EditValue="{Binding BreakNumber}" EditValueType="{x:Type sys:Byte}" MinValue="0" MaxValue="100" />
+                    <dxe:SpinEdit EditValue="{Binding BreakNumber, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Byte}" MinValue="0" MaxValue="100" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
                     <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
-                <Button Content="Создать рулоны" Command="{Binding CreateSpoolsCommand}" />
+                <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
+                    <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="1000"
+                                           EditValue="{Binding Length, UpdateSourceTrigger=PropertyChanged}" 
+                                           EditValueType="{x:Type sys:Decimal}" NullText="0"/>
+               </dxlc:LayoutItem>
+               <Button Content="Создать рулоны" Command="{Binding CreateSpoolsCommand}" />
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Рулоны" LabelPosition="Top">
                 <dxg:GridControl ItemsSource="{Binding UnloadSpools}" MaxHeight="1000" MinHeight="60" SelectedItem="{Binding SelectedUnloadSpool}" AllowLiveDataShaping="False" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" IsFilterEnabled="False" ShowAllTableValuesInCheckedFilterPopup="False">

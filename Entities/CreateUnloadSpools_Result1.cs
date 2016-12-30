@@ -10,16 +10,12 @@
 namespace Gamma.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DocWithdrawalProducts
+    public partial class CreateUnloadSpools_Result1
     {
-        public System.Guid DocID { get; set; }
-        public System.Guid ProductID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
-        public Nullable<bool> CompleteWithdrawal { get; set; }
-    
-        public virtual DocWithdrawal DocWithdrawal { get; set; }
-        public virtual Products Products { get; set; }
+        public Nullable<System.Guid> DocID { get; set; }
+        public Nullable<System.Guid> ProductID { get; set; }
+        public string Number { get; set; }
+        public string NomenclatureName { get; set; }
     }
 }

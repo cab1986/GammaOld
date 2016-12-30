@@ -264,6 +264,11 @@
         <EntityTypeShape EntityType="GammaModel.DocCloseShiftRemainders" Width="1.5" PointX="14.25" PointY="57.375" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Docs1" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeProductRejectionReasons_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocWithdrawalProducts_Products" />
+        <AssociationConnector Association="GammaModel.DocCloseShiftProducts" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

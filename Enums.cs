@@ -47,12 +47,14 @@ namespace Gamma
         [Description("Паллеты")]
         ProductPallet,
         [Description("Групповые упаковки")]
-        ProductGroupPack
+        ProductGroupPack,
+        [Description("Кипы")]
+        ProductBale
     }
     /// <summary>
     /// Группы переделов. Привязаны к таблице в базе, менять только вместе!
     /// </summary>
-    public enum PlaceGroup { PM, Rw, Convertings, Wr, Other, Warehouses }
+    public enum PlaceGroup { PM, Rw, Convertings, Wr, Other, Warehouses, Baler }
     /// <summary>
     /// Качество продукта
     /// </summary>
@@ -107,7 +109,8 @@ namespace Gamma
         DocProductSpool,
         DocProductUnload,
         DocProductPallet,
-        DocProductGroupPack
+        DocProductGroupPack,
+        DocProductBale
     }
     public enum DocTypes
     {

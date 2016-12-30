@@ -21,5 +21,6 @@ namespace Gamma.Entities
     
         public virtual C1CRejectionReasons C1CRejectionReasons { get; set; }
         public virtual DocBrokeProducts DocBrokeProducts { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

@@ -10,16 +10,13 @@
 namespace Gamma.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class DocWithdrawalProducts
+    public partial class FillDocCloseShiftRwSpools_Result1
     {
-        public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
-        public Nullable<bool> CompleteWithdrawal { get; set; }
-    
-        public virtual DocWithdrawal DocWithdrawal { get; set; }
-        public virtual Products Products { get; set; }
+        public System.Guid C1CCharacteristicID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public string NomenclatureName { get; set; }
+        public Nullable<decimal> Weight { get; set; }
     }
 }

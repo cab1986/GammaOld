@@ -75,8 +75,9 @@ namespace Gamma.ViewModels
                                                              Nomenclature = dp.Products.ProductSpools.C1CNomenclature.Name + " " + dp.Products.ProductSpools.C1CCharacteristics.Name,
                                                              CharacteristicID = (Guid)dp.Products.ProductSpools.C1CCharacteristicID,
                                                              NomenclatureID = dp.Products.ProductSpools.C1CNomenclatureID,
-                                                             Weight = dp.Products.ProductSpools.DecimalWeight*1000,
-                                                             Diameter = dp.Products.ProductSpools.Diameter
+                                                             Weight = dp.Quantity??0*1000,
+                                                             Diameter = dp.Products.ProductSpools.Diameter,
+                                                             Length = dp.Products.ProductSpools.Length??0
                                                          }
                                     );
                 ProductSpools = new ObservableCollection<ProductSpools>
@@ -124,6 +125,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Bars");
             }
         }
+
         public DelegateCommand CreateSpoolsCommand { get; private set; }
         
         private void CreateSpools()
@@ -131,7 +133,7 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             UnloadSpools.Clear();
             UnloadSpools =
-                new ObservableCollection<PaperBase>(from us in GammaBase.CreateUnloadSpools(DocID, ProductionTaskID, Diameter, BreakNumber)
+                new ObservableCollection<PaperBase>(from us in GammaBase.CreateUnloadSpools(DocID, ProductionTaskID, Diameter, BreakNumber, Length)
                 select  new PaperBase()
                 {
                     DocID = (Guid)us.DocID,
@@ -139,34 +141,8 @@ namespace Gamma.ViewModels
                     Number = us.Number,
                     Nomenclature = us.NomenclatureName
                 });
-/*            if (UnloadSpools.Count > 0) 
-            {
-                UnloadSpools.Clear();
-                GammaBase.DocProducts.RemoveRange(DocProducts);
-                GammaBase.ProductSpools.RemoveRange(ProductSpools);
-                GammaBase.Products.RemoveRange(Products);
-                DocProducts = null;
-                ProductSpools = null;
-                Products = null;
-            }
-            foreach (var cutting in Cuttings)
-            {
-                for (int i = 0; i < cutting.Quantity; i++)
-                {
-                    UnloadSpools.Add(new PaperBase
-                    {
-                        CharacteristicID = cutting.CharacteristicID,
-                        NomenclatureID = (Guid)NomenclatureID,
-                        Nomenclature = NomenclatureName + " " +
-                        Characteristics.Where(c => c.CharacteristicID == cutting.CharacteristicID).Select(c => c.CharacteristicName).First(),
-                        ProductID = SQLGuidUtil.NewSequentialid()
-                    });    
-                }
-            }
-            UnloadSpoolsSaved = false;
-            Messenger.Default.Send<ParentSaveMessage>(new ParentSaveMessage());
-*/
         }
+
         private bool UnloadSpoolsSaved { get; set; }
         private ObservableCollection<PaperBase> _unloadSpools = new ObservableCollection<PaperBase>();
         public ObservableCollection<PaperBase> UnloadSpools
@@ -249,8 +225,9 @@ namespace Gamma.ViewModels
             }
         }
         private int _diameter;
+
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(1,10000,ErrorMessage="Необходимо указать диаметр")]
+        [Range(1,10000,ErrorMessage=@"Необходимо указать диаметр")]
         public int Diameter
         {
             get
@@ -263,6 +240,19 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Diameter");
             }
         }
+
+        private decimal _length;
+
+        public decimal Length
+        {
+            get { return _length; }
+            set
+            {
+                _length = value;
+                RaisePropertyChanged("Length");
+            }
+        }
+
         private Guid DocID { get; set; }
 
         public DelegateCommand EditSpoolCommand { get; set; }

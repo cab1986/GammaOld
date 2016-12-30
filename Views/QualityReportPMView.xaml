@@ -65,8 +65,12 @@
                         <common:GridControlWithState.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowTotalSummary="True" x:Name="View" AllowBestFit="True"/>
                         </common:GridControlWithState.View>
-                        <dxg:GridColumn FieldName="Date" Header="Дата" ReadOnly="True"/>
-                        <dxg:GridColumn FieldName="ShiftId" Header="Смена" ReadOnly="True"/>
+                        <dxg:GridColumn FieldName="Date" Header="Дата БДМ" ReadOnly="True">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn FieldName="ShiftId" Header="Смена БДМ" ReadOnly="True"/>
                         <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" ReadOnly="True"/>
                         <dxg:GridColumn FieldName="SpoolNumber" Header="№ с БДМ" ReadOnly="True"/>
                         <dxg:GridColumn FieldName="GroupPackNumber" Header="№ ГУ" ReadOnly="True"/>

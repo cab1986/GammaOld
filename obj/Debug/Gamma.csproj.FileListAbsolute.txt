@@ -285,3 +285,5 @@ D:\CProjects\Gamma\Gamma\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 D:\CProjects\Gamma\Gamma\obj\Debug\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\QualityReportPMView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\QualityReportPMView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRwGridView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRwGridView.g.cs
