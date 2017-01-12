@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows;
-using DevExpress.Mvvm;
 using Gamma.Attributes;
 using Gamma.Entities;
 using Gamma.Interfaces;
@@ -29,8 +28,10 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
-            PrintExampleCommand = new DelegateCommand(PrintExample);
+//            PrintExampleCommand = new DelegateCommand(PrintExample);
         }
+        
+        
         /// <summary>
         /// Открытие задания для редактирования
         /// </summary>
@@ -42,22 +43,9 @@ namespace Gamma.ViewModels
                 var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Baler).FirstOrDefault();
                 if (productionTask != null)
                 {
-                    DateBegin = productionTask.DateBegin;
-                    DateEnd = productionTask.DateEnd;
                     NomenclatureID = productionTask.C1CNomenclatureID;
                     CharacteristicID = productionTask.C1CCharacteristicID;
-                    Quantity = (int)productionTask.Quantity;
                     PlaceID = productionTask.PlaceID;
-                    if (productionTask.PlaceID == WorkSession.PlaceID)
-                    {
-                        var checkResult = gammaBase.CheckProductionTaskSourceSpools(productionTask.PlaceID,
-                            productionTask.ProductionTaskID).FirstOrDefault();
-                        if (!string.IsNullOrEmpty(checkResult?.ResultMessage))
-                        {
-                            MessageBox.Show(checkResult.ResultMessage, "Предупреждение", MessageBoxButton.OK,
-                                MessageBoxImage.Asterisk);
-                        }
-                    }
                 }
                 ProductionTaskStateID =
                     gammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
@@ -67,6 +55,8 @@ namespace Gamma.ViewModels
             }
         }
 
+
+/*
         public event Func<GammaEntities, bool> PrintExampleEvent;
 
         public DelegateCommand PrintExampleCommand { get; private set; }
@@ -76,11 +66,13 @@ namespace Gamma.ViewModels
             PrintExampleEvent?.Invoke(GammaBase); // Вызывает сохранение батча, при этом productionTaskID получает значение
             ReportManager.PrintReport("PalletExample", "Examples", ProductionTaskId);
         }
+*/
 
         private Guid ProductionTaskId { get; set; }
 
         public byte ProductionTaskStateID { get; set; }
 
+/*
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
         public override Guid? CharacteristicID
@@ -91,6 +83,7 @@ namespace Gamma.ViewModels
                 base.CharacteristicID = value;
             }
         }
+*/
 
         private ObservableCollection<Place> _places;
 
@@ -125,13 +118,16 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("PlaceID");
             }
         }
+
+        /*
         /// <summary>
         /// Количество рулончиков в шт.
         /// </summary>
         [Range(100, int.MaxValue, ErrorMessage = @"Необходимо указать корректное количество")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public int Quantity { get; set; }
-
+        */
+/*
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)
         {
             base.NomenclatureChanged(msg);
@@ -159,6 +155,8 @@ namespace Gamma.ViewModels
                     "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
                     "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
+*/
+
         public override bool SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
         {
             SaveToModel();
@@ -192,14 +190,13 @@ namespace Gamma.ViewModels
             }
             productionTask.C1CNomenclatureID = (Guid)NomenclatureID;
             productionTask.C1CCharacteristicID = CharacteristicID;
-            productionTask.DateBegin = DateBegin;
-            productionTask.DateEnd = DateEnd;
             productionTask.PlaceID = PlaceID;
-            productionTask.Quantity = Quantity;
             GammaBase.SaveChanges();
             ProductionTaskId = productionTask.ProductionTaskID;
             return true;
         }
+
+/*
         private decimal _madeQuantiy;
         /// <summary>
         /// Кол-во выпущенных рулончиков в шт.
@@ -213,11 +210,13 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("MadeQuantity");
             }
         }
-
+*/
         protected override bool CanChooseNomenclature()
         {
             return base.CanChooseNomenclature() && !IsReadOnly;
         }
+
+        /*
         private DateTime? _dateBegin;
         /// <summary>
         /// Дата начала выполнения задания
@@ -249,6 +248,8 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("DateEnd");
             }
         }
+*/
+
         /// <summary>
         /// Статус задания в производстве или выполнено
         /// </summary>

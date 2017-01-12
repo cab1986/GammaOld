@@ -73,6 +73,8 @@ namespace Gamma.ViewModels
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb),
                     () => DB.HaveReadAccess("ProductionTasks"));
+                ShowProductionTasksBalerCommand = new DelegateCommand(() => CurrentView = new ProductionTasksBalerViewModel(), 
+                    () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb),
                     DB.HaveReadAccess("ProductionTasks"));
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
@@ -115,6 +117,9 @@ namespace Gamma.ViewModels
                     break;
                 case PlaceGroup.Convertings:
                     CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb);
+                    break;
+                case PlaceGroup.Baler:
+                    CurrentView = new ProductionTasksBalerViewModel();
                     break;
             }
             var places = GammaBase.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
@@ -264,7 +269,7 @@ namespace Gamma.ViewModels
                 DeleteItemCommand = null;
                 RefreshCommand = null;
             }
-            if (CurrentView is ProductionTasksSGBViewModel || CurrentView is ProductionTasksSGIViewModel)
+            if (CurrentView is ProductionTasksSGBViewModel || CurrentView is ProductionTasksSGIViewModel || CurrentView is ProductionTasksBalerViewModel)
                 ProductionTaskBarVisible = true;
             else ProductionTaskBarVisible = false;
         }
@@ -358,6 +363,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("RefreshCommand");
             }
         }
+
         private bool _productionTaskBarVisible;
         public bool ProductionTaskBarVisible
         {
@@ -373,8 +379,8 @@ namespace Gamma.ViewModels
         }
         public DelegateCommand ShowReportListCommand { get; private set; }
         public DelegateCommand ShowProductionTasksSGICommand { get; private set; }
-//        public DelegateCommand ShowProductionTasksPMCommand { get; private set; }
         public DelegateCommand ShowProductionTasksSGBCommand { get; private set; }
+        public DelegateCommand ShowProductionTasksBalerCommand { get; private set; }
         public DelegateCommand FindProductCommand { get; private set; }
         public DelegateCommand ManageUsersCommand { get; set; }
         public DelegateCommand ConfigureComPortCommand { get; set; }

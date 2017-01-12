@@ -30,6 +30,9 @@
         <DataTemplate DataType="{x:Type vm:ProductionTasksSGIViewModel}">
             <views:ProductionTasksSGIView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductionTasksBalerViewModel}">
+            <views:ProductionTasksBalerView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:PlaceProductsViewModel}">
             <views:PlaceProductsView />
         </DataTemplate>
@@ -54,6 +57,7 @@
                     <dxb:BarSubItem Content="Задания">
                         <dxb:BarButtonItem Content="Задания на пр-во СГБ" Command="{Binding ShowProductionTasksSGBCommand}" />
                         <dxb:BarButtonItem Content="Задания на пр-во СГИ" Command="{Binding ShowProductionTasksSGICommand}" />
+                        <dxb:BarButtonItem Content="Задания киповщика" Command ="{Binding ShowProductionTasksBalerCommand}"/>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Документы">
                         <dxb:BarSubItem Content="Закрытия смен">

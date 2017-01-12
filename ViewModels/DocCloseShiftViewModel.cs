@@ -63,7 +63,8 @@ namespace Gamma.ViewModels
                 FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed);
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed);
             }
-            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && placeGroupID == (int)PlaceGroup.PM);
+            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && 
+                (placeGroupID == (int)PlaceGroup.PM || placeGroupID == (int)PlaceGroup.Convertings));
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 

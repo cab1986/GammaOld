@@ -55,6 +55,11 @@ namespace Gamma.ViewModels
                     NewProductText = "Создать новую групповую упаковку";
                     DeleteProductText = "Удалить групповую упаковку";
                     break;
+                case PlaceGroup.Baler:
+                    QuantityHeader = "Вес нетто, т";
+                    NewProductText = "Создать новую кипу";
+                    DeleteProductText = "Удалить кипу";
+                    break;
             }
             Find();
         }
@@ -73,6 +78,9 @@ namespace Gamma.ViewModels
                         && (WorkSession.PlaceGroup == PlaceGroup.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
                 case PlaceGroup.Convertings:
                     return DB.HaveWriteAccess("ProductPallets")
+                        && (WorkSession.PlaceGroup == PlaceGroup.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
+                case PlaceGroup.Baler:
+                    return DB.HaveWriteAccess("ProductBales")
                         && (WorkSession.PlaceGroup == PlaceGroup.Other || WorkSession.PlaceID == SelectedProduct.PlaceID);
                 default:
                     return false;
@@ -107,7 +115,15 @@ namespace Gamma.ViewModels
                 case PlaceGroup.Convertings:
                     DeletePallet();
                     break;
+                case PlaceGroup.Baler:
+                    DeleteBale();
+                    break;
             }
+        }
+
+        private void DeleteBale()
+        {
+            
         }
 
         private void DeletePallet()
@@ -152,6 +168,7 @@ namespace Gamma.ViewModels
             else
                 Products.Remove(SelectedProduct);
         }
+
         private void DeleteUnload()
         {
             var delResult = GammaBase.DeleteUnload(SelectedProduct.DocID).FirstOrDefault();
@@ -168,6 +185,7 @@ namespace Gamma.ViewModels
                 }
             }
         }
+
         private void CreateNewProduct()
         {
             switch (PlaceGroup)
@@ -212,6 +230,9 @@ namespace Gamma.ViewModels
                     break;
                 case ProductKind.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
+                    break;
+                case ProductKind.ProductBale:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductBale, SelectedProduct.ProductID);
                     break;
             }
         }
@@ -358,6 +379,7 @@ namespace Gamma.ViewModels
                     break;
             }
         }
+
         public string QuantityHeader { get; set; }
         private ObservableCollection<ProductInfo> _products;
         public ObservableCollection<ProductInfo> Products

@@ -48,5 +48,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> DocCloseShift { get; set; }
+        public virtual ProductBales ProductBales { get; set; }
     }
 }

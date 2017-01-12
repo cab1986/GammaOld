@@ -795,6 +795,15 @@
           <Property Name="ProcessModelID" Type="smallint" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="ProductBales">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="Weight" Type="decimal" Precision="18" Scale="5" />
+        </EntityType>
         <EntityType Name="ProductGroupPacks">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -904,6 +913,7 @@
             <PropertyRef Name="ProductID" />
           </Key>
           <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IndexNumber" Type="int" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -2897,6 +2907,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductBales_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="ProductBales" Type="Self.ProductBales" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductBales">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductGroupPacks_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
           <End Role="ProductGroupPacks" Type="Self.ProductGroupPacks" Multiplicity="*" />
@@ -3747,6 +3769,7 @@
           <EntitySet Name="PlaceZones" EntityType="Self.PlaceZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostTypes" EntityType="Self.PostTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductBales" EntityType="Self.ProductBales" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" Schema="dbo" store:Type="Tables" />
@@ -4488,6 +4511,10 @@
           <AssociationSet Name="FK_PlaceZones_PlaceZones" Association="Self.FK_PlaceZones_PlaceZones">
             <End Role="PlaceZones" EntitySet="PlaceZones" />
             <End Role="PlaceZones1" EntitySet="PlaceZones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductBales_Products" Association="Self.FK_ProductBales_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductBales" EntitySet="ProductBales" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductGroupPacks_1CCharacteristics" Association="Self.FK_ProductGroupPacks_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -6282,6 +6309,11 @@
             <Parameter Name="BreakNumber" Mode="In" Type="Int32" />
             <Parameter Name="Length" Mode="In" Type="Decimal" />
           </FunctionImport>
+          <EntitySet Name="ProductBales" EntityType="GammaModel.ProductBales" />
+          <AssociationSet Name="FK_ProductBales_Products" Association="GammaModel.FK_ProductBales_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductBales" EntitySet="ProductBales" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -8652,6 +8684,7 @@
           <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Products" FromRole="Products" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocWithdrawalProducts" Relationship="GammaModel.FK_DocWithdrawalProducts_Products" FromRole="Products" ToRole="DocWithdrawalProducts" />
           <NavigationProperty Name="DocCloseShift" Relationship="GammaModel.DocCloseShiftProducts" FromRole="Products" ToRole="Docs" />
+          <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_Products" FromRole="Products" ToRole="ProductBales" />
         </EntityType>
         <Association Name="FK_ProductGroupPacks_Products">
           <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
@@ -8918,6 +8951,7 @@
           <Property Name="ProductID" Type="Guid" Nullable="false" />
           <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPallets" ToRole="ProductPalletItems" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="ProductPallets" ToRole="Products" />
+          <Property Name="IndexNumber" Type="Int32" />
         </EntityType>
         <Association Name="FK_ProductPalletItems_ProductPallets">
           <End Type="GammaModel.ProductPallets" Role="ProductPallets" Multiplicity="1" />
@@ -9430,6 +9464,28 @@
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
         </ComplexType>
+        <EntityType Name="ProductBales">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="Weight" Type="Decimal" Precision="18" Scale="5" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductBales_Products" FromRole="ProductBales" ToRole="Products" />
+        </EntityType>
+        <Association Name="FK_ProductBales_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.ProductBales" Role="ProductBales" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductBales">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -11011,6 +11067,7 @@
           <EntitySetMapping Name="ProductPallets">
             <EntityTypeMapping TypeName="GammaModel.ProductPallets">
               <MappingFragment StoreEntitySet="ProductPallets">
+                <ScalarProperty Name="IndexNumber" ColumnName="IndexNumber" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -11143,6 +11200,16 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="ProductBales">
+            <EntityTypeMapping TypeName="GammaModel.ProductBales">
+              <MappingFragment StoreEntitySet="ProductBales">
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

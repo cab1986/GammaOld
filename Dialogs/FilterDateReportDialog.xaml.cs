@@ -25,7 +25,7 @@ namespace Gamma.Dialogs
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             var curDate = DateTime.Today;
-            EdtDateBegin.DateTime = new DateTime(curDate.Year, curDate.Month - 1, 1);
+            EdtDateBegin.DateTime = new DateTime(curDate.Year, curDate.Month, 1).AddMonths(-1);
             EdtDateEnd.DateTime = new DateTime(curDate.Year, curDate.Month, 1).AddSeconds(-1);
         }
     }

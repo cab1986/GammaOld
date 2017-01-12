@@ -100,11 +100,24 @@ namespace Gamma
     public class CloseMessage { }
  
     public class OpenMainMessage { }
+
     public class OpenProductionTaskBatchMessage 
     {
-        public BatchKinds BatchKind { get; set; }
-        public Guid? ProductionTaskBatchID { get; set; }
-        public bool Window { get; set; } = true;
+        public OpenProductionTaskBatchMessage(BatchKinds batchKind)
+        {
+            BatchKind = batchKind;
+        }
+
+        public OpenProductionTaskBatchMessage(BatchKinds batchKind, Guid productionTaskBatchId, bool isWindow = true)
+        {
+            BatchKind = batchKind;
+            ProductionTaskBatchID = productionTaskBatchId;
+            Window = isWindow;
+        }
+
+        public BatchKinds BatchKind { get; private set; }
+        public Guid? ProductionTaskBatchID { get; private set; }
+        public bool Window { get; private set; } = true;
     }
     public class ProductChangedMessage
     {
@@ -360,10 +373,16 @@ namespace Gamma
             Messenger.Default.Send(new OpenNomenclatureMessage(materialType, nomenclatureEdit));
         }
 
-        public static void OpenProductionTask(OpenProductionTaskBatchMessage msg)
+        public static void OpenProductionTask(BatchKinds batchKind, Guid productionTaskBatchId, bool isWindow = true)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(msg);
+            Messenger.Default.Send(new OpenProductionTaskBatchMessage(batchKind, productionTaskBatchId, isWindow));
+        }
+
+        public static void NewProductionTask(BatchKinds batchKind)
+        {
+            UIServices.SetBusyState();
+            Messenger.Default.Send(new OpenProductionTaskBatchMessage(batchKind));
         }
 
         public static void OpenDocProduct(ProductKind productKind, Guid productId)

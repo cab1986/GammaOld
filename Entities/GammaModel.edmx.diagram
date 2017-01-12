@@ -269,6 +269,8 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_Products" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalProducts_Products" />
         <AssociationConnector Association="GammaModel.DocCloseShiftProducts" />
+        <EntityTypeShape EntityType="GammaModel.ProductBales" Width="1.5" PointX="22.5" PointY="37" />
+        <AssociationConnector Association="GammaModel.FK_ProductBales_Products" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

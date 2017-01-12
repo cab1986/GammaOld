@@ -57,6 +57,7 @@ namespace Gamma.ViewModels
                 RefreshProduction();
                 Title = "Задание на производство № " + Number;
             }
+
             switch (msg.BatchKind)
             {
                 case BatchKinds.SGB:
@@ -370,12 +371,15 @@ namespace Gamma.ViewModels
         {
             switch (batchKind)
             {
-               case BatchKinds.SGB:
+                case BatchKinds.SGB:
                     CurrentView = new ProductionTaskBatchSGBViewModel(ProductionTaskBatchID);
                     break;
-               case BatchKinds.SGI:
+                case BatchKinds.SGI:
                     CurrentView = new ProductionTaskSGIViewModel(ProductionTaskBatchID);
                     ((ProductionTaskSGIViewModel)CurrentView).PrintExampleEvent += SaveToModel;
+                    break;
+                case BatchKinds.Baler:
+                    CurrentView = new ProductionTaskBalerViewModel(ProductionTaskBatchID);
                     break;
             }
         }

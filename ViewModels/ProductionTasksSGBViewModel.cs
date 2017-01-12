@@ -37,18 +37,15 @@ namespace Gamma.ViewModels
         public DelegateCommand RefreshCommand { get; set; }
         private void NewItem()
         {
-            MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage 
-            { 
-                BatchKind = BatchKinds.SGB
-            });
+            MessageManager.NewProductionTask(BatchKinds.SGB);
         }
+
         private void EditItem()
         {
-            MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage
-                {
-                    ProductionTaskBatchID = SelectedProductionTaskBatch.ProductionTaskBatchID,
-                    BatchKind = BatchKinds.SGB
-                });
+            MessageManager.OpenProductionTask(
+                        BatchKinds.SGB,
+                        SelectedProductionTaskBatch.ProductionTaskBatchID
+                    );
         }
         private void DeleteItem()
         {

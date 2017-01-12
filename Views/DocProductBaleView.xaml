@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Gamma.Views.DocProductBaleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Views"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:gamma="clr-namespace:Gamma"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=viewModels:DocProductBaleViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
+            <dxlc:LayoutItem Label="Номенклатура">
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
+                    <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                </dxe:ButtonEdit>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Характеристика">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}"
+                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Вес, кг" Width="160" HorizontalAlignment="Left">
+                <dxe:SpinEdit EditValue="{Binding Weight}" EditValueType="{x:Type sys:Int32}"/>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutControl>
+    </Grid>
+    <dxmvvm:Interaction.Behaviors>
+        <gamma:UIAuthBehavior />
+    </dxmvvm:Interaction.Behaviors>
+</UserControl>

@@ -184,7 +184,7 @@ namespace Gamma.ViewModels
 
         private List<Nomenclature1C> FilterBySpecification(List<Nomenclature1C> nomenclature)
         {
-            if (!FilterByPlaceGroup || FilterID == null) return nomenclature;
+            if (!FilterByPlaceGroup || FilterID == null || (FilterByPlaceGroup && FilterID == (int)PlaceGroup.Baler)) return nomenclature;
             var placeIds = GammaBase.Places.Where(p => p.PlaceGroupID == FilterID).Select(p => p.C1CPlaceID).ToList();
             var nomenclatureIds =
                 GammaBase.v1CWorkingSpecifications.Where(ws => placeIds.Contains(ws.C1CPlaceID))

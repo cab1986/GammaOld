@@ -23,7 +23,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>\\server7\shares\Общая папка\GammaRostov\</PublishUrl>
+    <PublishUrl>\\server7\shares\Общая папка\Gamma\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -33,12 +33,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
-    <UpdateUrl>\\Solomon\Server\_Общая\GammaNew\</UpdateUrl>
     <ProductName>Gamma</ProductName>
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>30</ApplicationRevision>
+    <ApplicationRevision>31</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -204,6 +203,10 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Dialogs\SetBaleWeightDialog.xaml.cs">
+      <DependentUpon>SetBaleWeightDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DialogViewModels\SetBaleWeightDialogModel.cs" />
     <Compile Include="Entities\ActiveProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -528,6 +531,9 @@
     <Compile Include="Entities\ProcessModels.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ProductBales.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ProductGroupPacks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -645,6 +651,7 @@
     <Compile Include="Models\NomenclatureBarcode.cs" />
     <Compile Include="Models\Pallet.cs" />
     <Compile Include="Models\PlaceZone.cs" />
+    <Compile Include="Models\ProductionTaskBalerGridItem.cs" />
     <Compile Include="Models\ProductRelation.cs" />
     <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Models\QualityReportItem.cs" />
@@ -735,9 +742,11 @@
     <Compile Include="ViewModels\PlaceGroupsNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\PlaceProductsViewModel.cs" />
     <Compile Include="ViewModels\PlaceZonesViewModel.cs" />
+    <Compile Include="ViewModels\DocProductBaleViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBalerViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchSGBViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskBatchWrapperViewModel.cs" />
+    <Compile Include="ViewModels\ProductionTasksBalerViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGBViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSGIViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskWRViewModel.cs" />
@@ -807,6 +816,9 @@
     <Compile Include="Views\DocMovementView.xaml.cs">
       <DependentUpon>DocMovementView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DocProductBaleView.xaml.cs">
+      <DependentUpon>DocProductBaleView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocProductGroupPackView.xaml.cs">
       <DependentUpon>DocProductGroupPackView.xaml</DependentUpon>
     </Compile>
@@ -872,11 +884,17 @@
     <Compile Include="Views\PlaceZonesView.xaml.cs">
       <DependentUpon>PlaceZonesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProductionTaskBalerView.xaml.cs">
+      <DependentUpon>ProductionTaskBalerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProductionTaskBatchSGBView.xaml.cs">
       <DependentUpon>ProductionTaskBatchSGBView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTaskBatchWindowView.xaml.cs">
       <DependentUpon>ProductionTaskBatchWindowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductionTasksBalerView.xaml.cs">
+      <DependentUpon>ProductionTasksBalerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTasksSGIView.xaml.cs">
       <DependentUpon>ProductionTasksSGIView.xaml</DependentUpon>
@@ -938,6 +956,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\SetBaleWeightDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ComPortSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -989,6 +1011,10 @@
     <Page Include="Views\DocMovementView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DocProductBaleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocProductGroupPackView.xaml">
       <SubType>Designer</SubType>
@@ -1070,11 +1096,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ProductionTaskBalerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ProductionTaskBatchSGBView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ProductionTaskBatchWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProductionTasksBalerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

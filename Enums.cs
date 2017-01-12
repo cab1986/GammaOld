@@ -38,7 +38,7 @@ namespace Gamma
         RwWr
         
     }
-    public enum BatchKinds { SGB, SGI }
+    public enum BatchKinds { SGB, SGI, Baler }
 
     public enum ProductKind
     { 

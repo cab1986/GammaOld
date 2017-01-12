@@ -35,7 +35,7 @@ namespace Gamma.ViewModels
                                        msg.DocProductKind == DocProductKinds.DocProductUnload ||
                                        msg.DocProductKind == DocProductKinds.DocProductPallet))
                 {
-                    string productKind = "";
+                    var productKind = "";
                     switch (msg.DocProductKind)
                     {
                         case DocProductKinds.DocProductSpool:
@@ -43,6 +43,9 @@ namespace Gamma.ViewModels
                             break;
                         case DocProductKinds.DocProductUnload:
                             productKind = "Съем";
+                            break;
+                        default:
+                            productKind = "Продукт";
                             break;
                     }
                     MessageBox.Show($"Нельзя создать {productKind} без задания!");
@@ -79,7 +82,8 @@ namespace Gamma.ViewModels
                                 ? (byte) ProductKind.ProductSpool
                                 : msg.DocProductKind == DocProductKinds.DocProductGroupPack
                                     ? (byte) ProductKind.ProductGroupPack
-                                    : (byte) ProductKind.ProductPallet
+                                    : msg.DocProductKind == DocProductKinds.DocProductPallet ? (byte) ProductKind.ProductPallet
+                                    : (byte) ProductKind.ProductBale
                     };
                     GammaBase.Products.Add(product);
                     Doc.DocProduction.DocProductionProducts = new List<DocProductionProducts>()
@@ -158,6 +162,13 @@ namespace Gamma.ViewModels
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = true;
                     CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
+                    break;
+                case DocProductKinds.DocProductBale:
+                    Title = "Кипа";
+                    Number = product?.Number;
+                    Title = $"{Title} № {Number}";
+                    AllowAddToBrokeAction = false;
+                    CurrentViewModel = new DocProductBaleViewModel(product.ProductID);
                     break;
                 default:
                     MessageBox.Show("Действие не предусмотрено програмой");
@@ -282,12 +293,12 @@ namespace Gamma.ViewModels
             }
         }
         private bool IsNewDoc { get; set; }
+
         private void OpenProductionTask()
         {
-            var msg = new OpenProductionTaskBatchMessage() { ProductionTaskBatchID = ProductionTaskBatchID };
-            if (CurrentViewModel is DocProductSpoolViewModel || CurrentViewModel is DocProductUnloadViewModel 
-                || CurrentViewModel is DocProductGroupPackViewModel) msg.BatchKind = BatchKinds.SGB;else if (CurrentViewModel is DocProductPalletViewModel) msg.BatchKind = BatchKinds.SGI;
-            MessageManager.OpenProductionTask(msg);
+            var batchKind = BatchKinds.SGB;
+            if (CurrentViewModel is DocProductPalletViewModel) batchKind = BatchKinds.SGI;
+            MessageManager.OpenProductionTask(batchKind, (Guid)ProductionTaskBatchID);
         }
 
         public ObservableCollection<BarViewModel> Bars

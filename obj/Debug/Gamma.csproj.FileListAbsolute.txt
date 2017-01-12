@@ -287,3 +287,11 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\QualityReportPMView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\QualityReportPMView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRwGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRwGridView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\SetBaleWeightDialog.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBalerView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Dialogs\SetBaleWeightDialog.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTaskBalerView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksBalerView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksBalerView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductBaleView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductBaleView.baml

@@ -67,7 +67,7 @@
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
-                            <dxe:DateEdit IsReadOnly="True" EditValue="{Binding Date}" />
+                            <dxe:DateEdit IsReadOnly="True" EditValue="{Binding Date}" Mask="g" MaskUseAsDisplayFormat="True" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Подтвержден">
                             <dxe:CheckEdit EditValue="{Binding IsConfirmed}" />

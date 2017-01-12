@@ -35,11 +35,10 @@ namespace Gamma.ViewModels
                     break;
             }
             FindProductionTaskBatchCommand = new DelegateCommand(FindProductionTaskBatch);
-            OpenProductionTaskBatchCommand = new DelegateCommand(() => MessageManager.OpenProductionTask(new OpenProductionTaskBatchMessage()
-                {
-                    ProductionTaskBatchID = SelectedProductionTaskBatch.ProductionTaskBatchID,
-                    BatchKind = (BatchKinds)SelectedProductionTaskBatch.BatchKindID
-                })
+            OpenProductionTaskBatchCommand = new DelegateCommand(() => MessageManager.OpenProductionTask(
+                    (BatchKinds)SelectedProductionTaskBatch.BatchKindID,
+                    SelectedProductionTaskBatch.ProductionTaskBatchID
+                )
                     , () => SelectedProductionTaskBatch != null);
         }
 
