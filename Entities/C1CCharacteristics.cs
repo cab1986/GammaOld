@@ -26,12 +26,12 @@ namespace Gamma.Entities
             this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
             this.DocWithdrawalMaterials = new HashSet<DocWithdrawalMaterials>();
             this.NomenclatureBarcodes = new HashSet<NomenclatureBarcodes>();
-            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
             this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CMainSpecifications = new HashSet<C1CMainSpecifications>();
+            this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -64,8 +64,6 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
@@ -75,5 +73,7 @@ namespace Gamma.Entities
         public virtual ICollection<ProductSpools> ProductSpools { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CMainSpecifications> C1CMainSpecifications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
     }
 }

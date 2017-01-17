@@ -21,8 +21,8 @@ namespace Gamma.ViewModels
         public DocProductGroupPackViewModel(GammaEntities gammaBase = null) : base(gammaBase)
         {
             IsNewGroupPack = true;
-            GetGrossWeightCommand = new DelegateCommand(GetGrossWeight, () => Scales.IsReady && !IsConfirmed);
-            GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsConfirmed);
+//            GetGrossWeightCommand = new DelegateCommand(GetGrossWeight, () => Scales.IsReady && !IsConfirmed);
+            GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsReadOnly);
             AddSpoolCommand = new DelegateCommand(AddSpool, () => !IsReadOnly);
             DeleteSpoolCommand = new DelegateCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly);
             OpenSpoolCommand = new DelegateCommand(OpenSpool, () => SelectedSpool != null);
@@ -69,6 +69,7 @@ namespace Gamma.ViewModels
                 var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
                 Weight = Convert.ToInt32((productGroupPack?.Weight > 10 ? productGroupPack.Weight : productGroupPack?.Weight*1000));
                 GrossWeight = Convert.ToInt32((productGroupPack?.GrossWeight > 10 ? productGroupPack.GrossWeight : productGroupPack?.GrossWeight * 1000));
+                ManualWeightInput = productGroupPack?.ManualWeightInput ?? false;
             }
             var groupPackSpools = GammaBase.GroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
@@ -99,18 +100,27 @@ namespace Gamma.ViewModels
         private int Format { get; set; }
 */
         private bool IsNewGroupPack { get; set; }
+
         private void GetWeight()
         {
-            Weight = Convert.ToInt32(Scales.GetWeight());            
+            var weight = Scales.GetWeight();
+            if (weight == null && Scales.ComPortError)
+            {
+                MessageBox.Show("Не удалось соедениться с весами", "Ошибка весов", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                ManualWeightInput = true;
+                return;
+            }
+            GrossWeight = Convert.ToInt32(Scales.GetWeight());            
         }
 
         private Guid? ProductId { get; set; }
-
+/*
         private void GetGrossWeight()
         {
             GrossWeight = Convert.ToInt32(Scales.GetWeight());
         }
-
+*/
         private Guid? DocId { get; set; }
 
         public bool IsConfirmed
@@ -119,19 +129,25 @@ namespace Gamma.ViewModels
             set
             {
                 _isConfirmed = value;
-                RaisePropertyChanged("IsReadOnly"); // Нужно для реакции интерфейса
+                RaisePropertiesChanged("IsReadOnly", "WeightIsReadOnly"); // Нужно для реакции интерфейса
             }
         }
 
-        public bool IsReadOnly
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public bool ManualWeightInput
         {
-            get 
+            get { return _manualWeightInput; }
+            set
             {
-                return ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
+                if (!value || _manualWeightInput) return;
+                _manualWeightInput = true;
+                RaisePropertiesChanged("ManualWeightInput", "WeightIsReadOnly");
             }
         }
 
-        private Guid? _vmid = Guid.NewGuid();
+        public bool IsReadOnly => ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
+
+        private readonly Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
         {
             get
@@ -142,7 +158,9 @@ namespace Gamma.ViewModels
 
         private int _weight;
         private int _grossWeight;
-        [UIAuth(UIAuthLevel.ReadOnly)]
+
+        public bool WeightIsReadOnly => IsReadOnly || !ManualWeightInput;
+
         [Range(1,1000000,ErrorMessage=@"Значение должно быть больше 0")]
         public int Weight
         {
@@ -156,8 +174,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Weight");
             }
         }
+
         [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]
-        [UIAuth(UIAuthLevel.ReadOnly)]
         public int GrossWeight
         {
             get
@@ -167,11 +185,13 @@ namespace Gamma.ViewModels
             set
             {
             	_grossWeight = value;
+                if (!IsConfirmed) Weight = GrossWeight - (int)Math.Ceiling(CoreWeight);
                 RaisePropertyChanged("GrossWeight");
             }
         }
         private short _diameter;
-        [UIAuth(UIAuthLevel.ReadOnly)]
+
+//        [UIAuth(UIAuthLevel.ReadOnly)]
         public short Diameter
         {
             get
@@ -194,11 +214,13 @@ namespace Gamma.ViewModels
             set
             {
             	_coreWeight = value;
+                if (!IsConfirmed) Weight = GrossWeight - (int) Math.Ceiling(CoreWeight);
                 RaisePropertyChanged("CoreWeight");
             }
         }
+        
         public DelegateCommand GetWeightCommand { get; private set; }
-        public DelegateCommand GetGrossWeightCommand { get; private set; }
+//        public DelegateCommand GetGrossWeightCommand { get; private set; }
         public DelegateCommand AddSpoolCommand { get; private set; }
         public DelegateCommand DeleteSpoolCommand { get; private set; }
         public DelegateCommand UnpackCommand { get; private set; }
@@ -399,6 +421,7 @@ namespace Gamma.ViewModels
             product.ProductGroupPacks.Weight = (decimal)Weight/1000;
             product.ProductGroupPacks.GrossWeight = (decimal)GrossWeight/1000;
             product.ProductGroupPacks.Diameter = Diameter;
+            product.ProductGroupPacks.ManualWeightInput = ManualWeightInput;
             var docWithdrawal = new Docs();
             if (doc.DocProduction.DocWithdrawal.Count > 0)
             {
@@ -444,6 +467,7 @@ namespace Gamma.ViewModels
 
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
         private bool _isConfirmed;
+        private bool _manualWeightInput;
 
         public ObservableCollection<BarViewModel> Bars
         {

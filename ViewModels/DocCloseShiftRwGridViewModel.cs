@@ -35,7 +35,7 @@ namespace Gamma.ViewModels
                     GammaBase.vProductsInfo.Where(p => productIds.Contains(p.ProductID))
                     .Select(p => new PaperBase 
                     {
-                        CharacteristicID = p.C1CCharacteristicID,
+                        CharacteristicID = (Guid)p.C1CCharacteristicID,
                         NomenclatureID = p.C1CNomenclatureID,
                         Nomenclature = p.NomenclatureName,
                         Number = p.Number,

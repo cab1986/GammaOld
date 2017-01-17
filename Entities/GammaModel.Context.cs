@@ -112,7 +112,6 @@ namespace Gamma.Entities
         public virtual DbSet<vDocMovementProducts> vDocMovementProducts { get; set; }
         public virtual DbSet<v1COrderGoods> v1COrderGoods { get; set; }
         public virtual DbSet<vPMSpoolsToGroupPack> vPMSpoolsToGroupPack { get; set; }
-        public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
         public virtual DbSet<Places> Places { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
@@ -124,6 +123,7 @@ namespace Gamma.Entities
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DbSet<ProductBales> ProductBales { get; set; }
+        public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
     
         public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
         {

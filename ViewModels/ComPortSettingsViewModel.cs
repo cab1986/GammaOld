@@ -81,7 +81,8 @@ namespace Gamma.ViewModels
         {
             if (Scales.IsReady)
             {
-                Weight = Scales.GetWeight().ToString(CultureInfo.InvariantCulture);
+                var weight = Scales.GetWeight();
+                Weight = weight?.ToString(CultureInfo.InvariantCulture) ?? "Ошибка";
             }
             else
             {

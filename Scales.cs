@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 using System.IO.Ports;
+using System.Text;
+using System.Threading;
 
 namespace Gamma
 {
@@ -13,21 +15,25 @@ namespace Gamma
             var appSettings = GammaSettings.Get();
             try
             {
-                _comPort = new SerialPort(appSettings.ScalesComPort.ComPortNumber)
+                ComPort = new SerialPort(appSettings.ScalesComPort.ComPortNumber)
                 {
                     BaudRate = appSettings.ScalesComPort.BaudRate,
                     Parity = appSettings.ScalesComPort.Parity,
                     StopBits = appSettings.ScalesComPort.StopBits,
                     DataBits = appSettings.ScalesComPort.DataBits,
                     Handshake = appSettings.ScalesComPort.HandShake,
-                    NewLine = "\r\n"
+                    NewLine = "\r\n",
+                    Encoding = Encoding.ASCII,
+                    ReadTimeout = 5000
                 };
             }
             catch (Exception)
             {
                 IsReady = false;
+                ComPortError = true;
                 return;
             }
+/*
             try
             {
                 _comPort.Open();
@@ -37,49 +43,44 @@ namespace Gamma
                 IsReady = false;
                 return;
             }
-
+*/
             IsReady = true;
         }
-        private static bool _isready;
-        public static bool IsReady
-        {
-            get
-            {
-                return _isready;
-            }
-            private set { _isready = value; }
-        }
-        private static SerialPort _comPort;
-        public static double GetWeight()
+
+        public static bool ComPortError { get; private set; }
+
+        public static bool IsReady { get; private set; }
+
+        private static readonly SerialPort ComPort;
+
+        public static double? GetWeight()
         {
             DateTime start = DateTime.Now;
-            TimeSpan time = new TimeSpan();
-            if (!IsReady)
-            {
-                if (!TryToOpen()) return -1;
-            }
+            if (!TryToOpen()) return null;
             bool isStable = false;
-            double weight = 0;
+            double? weight = 0;
             do
             {
                 int number = 0;
                 var byteArray = ReadFromScales();
-                var bitArray = new BitArray(new byte[] { (byte)byteArray[3] });
+                if (byteArray == null) return null;
+                var bitArray = new BitArray(new[] { byteArray[3] });
                 if (bitArray[5]) isStable = true;
                 else 
                 {
-                    time = DateTime.Now - start;
-                    if (time.Seconds > 5)
+                    var time = DateTime.Now - start;
+                    if (time.TotalSeconds > 20)
                     {
-                        return -1;
+                        if (ComPort.IsOpen) ComPort.Close();
+                        return null;
                     }
                     continue;
                 }
-                for (int i = 0; i < 3; i++)
+                for (int i = 2; i > -1; i--)
                 {
                     number *= 100;
-                    number += (10 * ((byte)byteArray[i] >> 4));
-                    number += (byte)byteArray[i] & 0xf;
+                    number += (10 * (byteArray[i] >> 4));
+                    number += byteArray[i] & 0xf;
                 }
                 int multiplier = 0;
                 for (int i = 0; i < 3; i++)
@@ -87,35 +88,40 @@ namespace Gamma
                     multiplier *= 2;
                     multiplier += bitArray[i] ? 1 : 0;
                 }
-                weight = number / Math.Pow(10,multiplier);
+                weight = (number / Math.Pow(10,multiplier))*(bitArray[0] ? -1: 1);
+
             } while (!isStable);
-            return weight;
+            if (ComPort.IsOpen) ComPort.Close();
+            return weight < 0 ? 0 : weight;
         }
-        private static int[] ReadFromScales()
+        private static byte[] ReadFromScales()
         {
-            var byteArray = new int[4];
-            int i = -1;
-            do
+            var byteArray = ComPort.ReadLine();
+            //byteArray = byteArray.Trim(' ', '\n', '\r', '\t');
+            if (byteArray.Length < 4) return new byte[4];
+            byteArray = byteArray.Substring(byteArray.Length - 4);
+            return Encoding.ASCII.GetBytes(byteArray);
+        }
+
+        private static bool TryToOpen()
+        {
+            if (ComPort.IsOpen)
             {
-                var curByte = _comPort.ReadByte();
-                if (i >= 0)
-                {
-                    byteArray[i] = curByte;
-                    i++;
-                }
-                if (curByte == 10 || curByte == 13) i = 0;
-            } while (i < 4);
-            return byteArray;
-        }
-        public static bool TryToOpen()
-        {
+                ComPort.DiscardInBuffer();
+                Thread.Sleep(500);
+                return true;
+            }
             try
             {
-                _comPort.Open();
+                ComPort.Open();
+                ComPort.DiscardInBuffer();
+                Thread.Sleep(500);
+                ComPortError = false;
             }
             catch (Exception)
             {
                 IsReady = false;
+                ComPortError = true;
                 return false;
             }
 

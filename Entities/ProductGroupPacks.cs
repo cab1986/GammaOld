@@ -20,9 +20,10 @@ namespace Gamma.Entities
         public Nullable<decimal> Weight { get; set; }
         public Nullable<decimal> GrossWeight { get; set; }
         public Nullable<short> Diameter { get; set; }
+        public Nullable<bool> ManualWeightInput { get; set; }
     
+        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual Products Products { get; set; }
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
     }
 }

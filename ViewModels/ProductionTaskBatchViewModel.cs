@@ -145,7 +145,7 @@ namespace Gamma.ViewModels
         }
 
 
-        public override bool IsValid => base.IsValid && (!PartyControl || (PartyControl && ContractorId != null));
+        public override bool IsValid => base.IsValid && (!PartyControl || ContractorId != null);
 
         private bool IsActive { get; set; } = true;
 

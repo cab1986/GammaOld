@@ -31,7 +31,6 @@ namespace Gamma.Entities
         public byte ProductKindID { get; set; }
         public Nullable<byte> StateID { get; set; }
     
-        public virtual ProductGroupPacks ProductGroupPacks { get; set; }
         public virtual ProductKinds ProductKinds { get; set; }
         public virtual ProductStates ProductStates { get; set; }
         public virtual ProductPallets ProductPallets { get; set; }
@@ -49,5 +48,6 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> DocCloseShift { get; set; }
         public virtual ProductBales ProductBales { get; set; }
+        public virtual ProductGroupPacks ProductGroupPacks { get; set; }
     }
 }

@@ -23,7 +23,8 @@
     Exit="Application_Exit"
     DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> 
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <dxg:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <DataTemplate x:Key="SpoolRemainderTemplate">
             <dxlc:LayoutGroup Orientation="Horizontal">
                 <dxlc:LayoutItem Label="Вес остатка, кг" LabelPosition="Top" Width="80" >

@@ -22,7 +22,7 @@ namespace Gamma.Entities
         public string BarCode { get; set; }
         public string PrintName { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }
-        public System.Guid C1CCharacteristicID { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public string BaseMeasureUnit { get; set; }
         public Nullable<decimal> BaseMeasureUnitQuantity { get; set; }
