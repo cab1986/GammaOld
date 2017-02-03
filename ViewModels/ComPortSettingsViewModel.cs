@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Ports;
 using System.Windows;
+using Gamma.Common;
 using Gamma.Entities;
 
 namespace Gamma.ViewModels
@@ -81,8 +82,8 @@ namespace Gamma.ViewModels
         {
             if (Scales.IsReady)
             {
-                var weight = Scales.GetWeight();
-                Weight = weight?.ToString(CultureInfo.InvariantCulture) ?? "Ошибка";
+                Weight = Scales.Weight.ToString(CultureInfo.InvariantCulture);
+                //Weight = weight?.ToString(CultureInfo.InvariantCulture) ?? "Ошибка";
             }
             else
             {

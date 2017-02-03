@@ -322,6 +322,7 @@ namespace Gamma
 
         public static void OpenDocShipmentOrder(Guid docShipmentOrderId)
         {
+            UIServices.SetBusyState();
             Messenger.Default.Send(new OpenDocShipmentOrderMessage(docShipmentOrderId));
         }
 

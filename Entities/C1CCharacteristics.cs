@@ -29,9 +29,10 @@ namespace Gamma.Entities
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
             this.ProductPalletItems = new HashSet<ProductPalletItems>();
-            this.ProductSpools = new HashSet<ProductSpools>();
             this.C1CMainSpecifications = new HashSet<C1CMainSpecifications>();
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
+            this.ProductSpools = new HashSet<ProductSpools>();
+            this.ProductBales = new HashSet<ProductBales>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -41,6 +42,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> MeasureUnitPallet { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
+        public string PrintName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }
@@ -70,10 +72,12 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductGroupPacks> ProductGroupPacks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductSpools> ProductSpools { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductBales> ProductBales { get; set; }
     }
 }

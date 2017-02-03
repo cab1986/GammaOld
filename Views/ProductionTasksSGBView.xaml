@@ -13,10 +13,10 @@
         <common:GridControlWithState EnableSmartColumnsGeneration="False" ItemsSource="{Binding ProductionTaskBatchesSGB}" 
 			SelectedItem="{Binding SelectedProductionTaskBatch}" HorizontalAlignment="Stretch" AllowLiveDataShaping="False" SelectionMode="Cell" UseLayoutRounding="False" >
             <dxg:GridControl.Bands >
-                <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center" VisibleIndex="0">
-                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="80" VisibleIndex="0" FixedWidth="True" SortOrder="Descending" SortIndex="0"/>
-                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="50" FixedWidth="False" VisibleIndex="1" />
-                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="40" FixedWidth="False" VisibleIndex="2"/>
+                <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center" VisibleIndex="0"  >
+                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="80" VisibleIndex="0" />
+                    <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="140" VisibleIndex="1" />
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="100" VisibleIndex="2"/>
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Номенклатура и раскрой" HorizontalHeaderContentAlignment="Center" VisibleIndex="1">
                     <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" AllowBestFit="True" VisibleIndex="3">
@@ -67,14 +67,14 @@
                     <dxg:GridColumn Binding="{Binding EnumColor}" Visible="False" />
                 </dxg:GridControlBand>
                 <dxg:GridControlBand Header="Выполнение" VisibleIndex="2">
-                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" FixedWidth="False" Width="50" VisibleIndex="38">
+                    <dxg:GridColumn FieldName="TaskQuantity" Header="Задание, тн" AllowBestFit="True" Width="100" VisibleIndex="38">
                         <dxg:GridColumn.CellTemplate>
                             <DataTemplate>
                                 <dxe:TextEdit x:Name="PART_Editor" FontSize="24" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
-                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True" Width="150" FixedWidth="False" VisibleIndex="39">
+                    <dxg:GridColumn FieldName="MadeQuantity" Header="Изготовлено, тн" AllowBestFit="True" Width="250" VisibleIndex="39" SortOrder="Ascending" SortIndex="0">
                         <dxg:GridColumn.CellTemplate>
                             <DataTemplate>
                                 <dxe:TextEdit x:Name="PART_Editor" FontSize="24" />
@@ -84,7 +84,8 @@
                 </dxg:GridControlBand>
             </dxg:GridControl.Bands>
             <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" 
+                <dxg:TableView AllowPerPixelScrolling="True" ShowGroupPanel="False" AllowBestFit="True" BestFitMode="VisibleRows"
+                               BestFitArea="Rows"
 					AllowEditing="False" AutoWidth="True" TextBlock.FontSize="18" AllowMoveColumnToDropArea="False">
                     <dxg:TableView.FormatConditions>
                         <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '1'" FieldName="EnumColor" ApplyToRow="True">

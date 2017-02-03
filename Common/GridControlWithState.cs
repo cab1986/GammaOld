@@ -17,7 +17,8 @@ namespace Gamma.Common
         {
             base.OnLoaded(sender, e);
             var tableView = View as TableView;
-            tableView?.BestFitColumns();
+            tableView?.BestFitColumns();          
         }
+
     }
 }

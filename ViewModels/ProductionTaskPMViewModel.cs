@@ -267,7 +267,7 @@ namespace Gamma.ViewModels
                     characteristics.Intersect(
                         gammaBase.vCharacteristicSGBProperties.Where(
                             cp => charIds.Contains(cp.C1CCharacteristicID)
-                                  && cp.FormatNumeric >= Format && cp.CoreDiameterNumeric == CoreDiameter && cp.LayerNumberNumeric == 1)
+                                  && cp.FormatNumeric >= Format && cp.CoreDiameterNumeric >= CoreDiameter && cp.LayerNumberNumeric == 1)
                             .Select(cp => new Characteristic
                             {
                                 CharacteristicID = cp.C1CCharacteristicID

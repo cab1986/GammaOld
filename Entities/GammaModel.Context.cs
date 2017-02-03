@@ -116,39 +116,14 @@ namespace Gamma.Entities
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<C1CCharacteristics> C1CCharacteristics { get; set; }
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
-        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
-        public virtual DbSet<ProductBales> ProductBales { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
-    
-        public virtual int CreateRemainderSpool(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<System.Guid> parentProductID, Nullable<int> quantity, string printName)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            var productIDParameter = productID.HasValue ?
-                new ObjectParameter("ProductID", productID) :
-                new ObjectParameter("ProductID", typeof(System.Guid));
-    
-            var parentProductIDParameter = parentProductID.HasValue ?
-                new ObjectParameter("ParentProductID", parentProductID) :
-                new ObjectParameter("ParentProductID", typeof(System.Guid));
-    
-            var quantityParameter = quantity.HasValue ?
-                new ObjectParameter("Quantity", quantity) :
-                new ObjectParameter("Quantity", typeof(int));
-    
-            var printNameParameter = printName != null ?
-                new ObjectParameter("PrintName", printName) :
-                new ObjectParameter("PrintName", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateRemainderSpool", docIDParameter, productIDParameter, parentProductIDParameter, quantityParameter, printNameParameter);
-        }
+        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
+        public virtual DbSet<ProductBales> ProductBales { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -218,11 +193,6 @@ namespace Gamma.Entities
                 new ObjectParameter("DocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GenerateNewNumbersForDoc", docIDParameter);
-        }
-    
-        public virtual int Get1CNomenclature()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CNomenclature");
         }
     
         public virtual ObjectResult<Nullable<System.Guid>> GetActiveSourceSpools(Nullable<int> placeID)
@@ -618,11 +588,6 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindNomenclatureByStringWithFilter_Result2>("FindNomenclatureByStringWithFilter", searchStringParameter, idParameter, filterByPlaceGroupParameter);
         }
     
-        public virtual int Get1CDocShipmentOrders()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CDocShipmentOrders");
-        }
-    
         public virtual ObjectResult<GetMaterialNomenclatureFolders_Result1> GetMaterialNomenclatureFolders(Nullable<int> materialTypeID)
         {
             var materialTypeIDParameter = materialTypeID.HasValue ?
@@ -639,24 +604,6 @@ namespace Gamma.Entities
                 new ObjectParameter("ProductID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletePallet", productIDParameter);
-        }
-    
-        public virtual ObjectResult<GetDocMovementOrderProducts_Result> GetDocMovementOrderProducts(Nullable<System.Guid> docID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMovementOrderProducts_Result>("GetDocMovementOrderProducts", docIDParameter);
-        }
-    
-        public virtual ObjectResult<GetDocMovementOrderNomenclature_Result> GetDocMovementOrderNomenclature(Nullable<System.Guid> docID)
-        {
-            var docIDParameter = docID.HasValue ?
-                new ObjectParameter("DocID", docID) :
-                new ObjectParameter("DocID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMovementOrderNomenclature_Result>("GetDocMovementOrderNomenclature", docIDParameter);
         }
     
         public virtual ObjectResult<Nullable<System.Guid>> CreateGroupPackWithSpool(Nullable<System.Guid> productID, string printName)
@@ -793,6 +740,25 @@ namespace Gamma.Entities
                 new ObjectParameter("Length", typeof(decimal));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CreateUnloadSpools_Result1>("CreateUnloadSpools", docIDParameter, productionTaskIDParameter, diameterParameter, breakNumberParameter, lengthParameter);
+        }
+    
+        public virtual ObjectResult<GetDocCloseShiftBalerBales_Result> GetDocCloseShiftBalerBales(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftBalerBales_Result>("GetDocCloseShiftBalerBales", docIDParameter);
+        }
+    
+        public virtual int Get1CDocShipmentOrders()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CDocShipmentOrders");
+        }
+    
+        public virtual int Get1CNomenclature()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CNomenclature");
         }
     }
 }

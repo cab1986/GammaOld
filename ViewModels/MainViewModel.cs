@@ -244,6 +244,8 @@ namespace Gamma.ViewModels
                 MessageManager.FindProductionTaskBatch(BatchKinds.SGB);
             else if (CurrentView is ProductionTasksSGIViewModel)
                 MessageManager.FindProductionTaskBatch(BatchKinds.SGI);
+            else if (CurrentView is ProductionTasksBalerViewModel) 
+                MessageManager.FindProductionTaskBatch(BatchKinds.Baler);
         }
 
         private void CloseShift()

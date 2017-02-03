@@ -295,3 +295,5 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksBalerView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\ProductionTasksBalerView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductBaleView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductBaleView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftBalerGridView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftBalerGridView.baml

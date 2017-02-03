@@ -22,6 +22,5 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> Date { get; set; }
     
         public virtual Places Places { get; set; }
-        public virtual ProductSpools ProductSpools { get; set; }
     }
 }

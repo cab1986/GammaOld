@@ -65,6 +65,7 @@
                             <dxb:BarButtonItem Content="Закрытия смен ПРС" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Rw}" />
                             <dxb:BarButtonItem Content="Закрытия смен упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Wr}" />
                             <dxb:BarButtonItem Content="Закрытия смен конвертингов" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Convertings}" />
+                            <dxb:BarButtonItem Content="Закрытия смен киповщика" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Baler}" />
                         </dxb:BarSubItem>
                         <dxb:BarSubItem Content="Отчеты" ItemLinksSource="{Binding Reports}">
                             <dxb:BarSubItem.ItemTemplate>

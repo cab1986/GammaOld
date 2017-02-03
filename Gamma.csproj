@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>31</ApplicationRevision>
+    <ApplicationRevision>41</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -420,6 +420,9 @@
     <Compile Include="Entities\GetCharPropsDescriptions_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetDocCloseShiftBalerBales_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetDocCloseShiftConvertingPallets_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -427,12 +430,6 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetDocCloseShiftWRGroupPacks_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetDocMovementOrderNomenclature_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetDocMovementOrderProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetDocRelations_Result.cs">
@@ -636,6 +633,7 @@
     <Compile Include="Entities\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Bale.cs" />
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\RECT.cs" />
@@ -674,7 +672,7 @@
     </Compile>
     <Compile Include="Enums.cs" />
     <Compile Include="DocCloseShift.cs" />
-    <Compile Include="Functions.cs" />
+    <Compile Include="Common\Functions.cs" />
     <Compile Include="GammaSettings.cs" />
     <Compile Include="GridControlWithBands.cs" />
     <Compile Include="Interfaces\IBarImplemented.cs" />
@@ -719,6 +717,7 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftBalerViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftRwGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
@@ -785,6 +784,9 @@
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftBalerGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftBalerGridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftConvertingGridView.xaml.cs">
       <DependentUpon>DocCloseShiftConvertingGridView.xaml</DependentUpon>
@@ -969,6 +971,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocBrokeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftBalerGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1263,7 +1269,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

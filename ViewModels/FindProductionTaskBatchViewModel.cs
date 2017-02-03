@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Models;
 
@@ -32,6 +33,12 @@ namespace Gamma.ViewModels
                     break;
                 case BatchKinds.SGB:
                     Title = "Задания на БДМ";
+                    break;
+                case BatchKinds.Baler:
+                    Title = "Задания на киповщик";
+                    break;
+                default:
+                    Title = "Задания";
                     break;
             }
             FindProductionTaskBatchCommand = new DelegateCommand(FindProductionTaskBatch);

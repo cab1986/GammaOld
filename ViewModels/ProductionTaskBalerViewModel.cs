@@ -176,7 +176,7 @@ namespace Gamma.ViewModels
                 productionTask = new ProductionTasks()
                 {
                     ProductionTaskID = SqlGuidUtil.NewSequentialid(),
-                    PlaceGroupID = (short)PlaceGroup.Convertings
+                    PlaceGroupID = (short)PlaceGroup.Baler
                 };
                 productionTaskBatch.ProductionTasks.Add(productionTask);
 

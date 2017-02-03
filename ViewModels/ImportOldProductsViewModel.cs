@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using DevExpress.Mvvm;
+using Gamma.Common;
 using Gamma.Entities;
 
 namespace Gamma.ViewModels

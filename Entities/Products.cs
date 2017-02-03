@@ -23,6 +23,7 @@ namespace Gamma.Entities
             this.DocCloseShiftRemainders = new HashSet<DocCloseShiftRemainders>();
             this.DocWithdrawalProducts = new HashSet<DocWithdrawalProducts>();
             this.DocCloseShift = new HashSet<Docs>();
+            this.DocBrokeProducts = new HashSet<DocBrokeProducts>();
         }
     
         public System.Guid ProductID { get; set; }
@@ -34,7 +35,6 @@ namespace Gamma.Entities
         public virtual ProductKinds ProductKinds { get; set; }
         public virtual ProductStates ProductStates { get; set; }
         public virtual ProductPallets ProductPallets { get; set; }
-        public virtual ProductSpools ProductSpools { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -47,7 +47,10 @@ namespace Gamma.Entities
         public virtual ICollection<DocWithdrawalProducts> DocWithdrawalProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> DocCloseShift { get; set; }
-        public virtual ProductBales ProductBales { get; set; }
         public virtual ProductGroupPacks ProductGroupPacks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeProducts> DocBrokeProducts { get; set; }
+        public virtual ProductSpools ProductSpools { get; set; }
+        public virtual ProductBales ProductBales { get; set; }
     }
 }

@@ -243,6 +243,7 @@ namespace Gamma.ViewModels
 
         private decimal _length;
 
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Length
         {
             get { return _length; }

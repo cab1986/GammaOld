@@ -7,6 +7,7 @@ using Gamma.Interfaces;
 using System.Collections.ObjectModel;
 using Gamma.Common;
 using Gamma.Entities;
+using Gamma.Models;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -55,6 +56,9 @@ namespace Gamma.ViewModels
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel()
                         : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
+                    break;
+                case (short)PlaceGroup.Baler:
+                    CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);
                     break;
             }
             var grid = CurrentViewModelGrid as IFillClearGrid;

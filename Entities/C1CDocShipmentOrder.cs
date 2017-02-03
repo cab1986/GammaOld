@@ -29,6 +29,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CConsigneeID { get; set; }
         public Nullable<System.Guid> C1CShipperID { get; set; }
         public Nullable<System.Guid> C1CWarehouseID { get; set; }
+        public Nullable<System.Guid> C1CDocBuyerOrderID { get; set; }
     
         public virtual C1CContractors C1CContractors { get; set; }
         public virtual C1CContractors C1CConsignees { get; set; }

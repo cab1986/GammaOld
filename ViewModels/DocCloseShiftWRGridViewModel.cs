@@ -41,11 +41,11 @@ namespace Gamma.ViewModels
                         Weight = Convert.ToInt32(sp.Weight)
                     }
                     );
-                var docCloseShift = GammaBase.Docs.Include("DocCloseShiftDocs").FirstOrDefault(d => d.DocID == msg.DocID);
+                var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == msg.DocID);
                 DocCloseShiftDocs = new ObservableCollection<Docs>(docCloseShift.DocCloseShiftDocs);
                 CloseDate = docCloseShift.Date;
-                ShiftID = (byte)docCloseShift.ShiftID;
-                PlaceID = (byte)docCloseShift.PlaceID;
+                ShiftID = (docCloseShift.ShiftID??0);
+                PlaceID = (docCloseShift.PlaceID??-1);
             }
             ShowGroupPackCommand = new DelegateCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.ProductID),
@@ -60,28 +60,24 @@ namespace Gamma.ViewModels
                     d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).OrderByDescending(d => d.Date));
-            foreach (var doc in DocCloseShiftDocs)
+            foreach (var doc in DocCloseShiftDocs.Where(doc => doc.DocTypeID == (byte)DocTypes.DocProduction))
             {
-                if (doc.DocTypeID == (byte)DocTypes.DocProduction)
-                {
-
-                    GroupPacks.Add(
-                        (from d in GammaBase.DocProductionProducts
-                         join ps in GammaBase.ProductGroupPacks on d.ProductID equals ps.ProductID
-                         where d.DocID == doc.DocID
-                         select new PaperBase
-                         {
-                             CharacteristicID = (Guid)ps.C1CCharacteristicID,
-                             Date = doc.Date,
-                             DocID = doc.DocID,
-                             NomenclatureID = (Guid)ps.C1CNomenclatureID,
-                             Nomenclature = string.Concat(ps.C1CNomenclature.Name, " ", ps.C1CCharacteristics.Name),
-                             Number = d.DocProduction.Docs.Number,
-                             ProductID = d.ProductID,
-                             Weight = ps.Weight ?? 0
-                         }).FirstOrDefault()
+                GroupPacks.Add(
+                    (from d in GammaBase.DocProductionProducts
+                        join ps in GammaBase.ProductGroupPacks on d.ProductID equals ps.ProductID
+                        where d.DocID == doc.DocID
+                        select new PaperBase
+                        {
+                            CharacteristicID = (Guid)ps.C1CCharacteristicID,
+                            Date = doc.Date,
+                            DocID = doc.DocID,
+                            NomenclatureID = (Guid)ps.C1CNomenclatureID,
+                            Nomenclature = string.Concat(ps.C1CNomenclature.Name, " ", ps.C1CCharacteristics.Name),
+                            Number = d.DocProduction.Docs.Number,
+                            ProductID = d.ProductID,
+                            Weight = ps.Weight ?? 0
+                        }).FirstOrDefault()
                     );
-                }
             }
             IsChanged = true;
         }

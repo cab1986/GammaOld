@@ -456,6 +456,9 @@ namespace Gamma.ViewModels
                 case DocTypes.DocBroke:
                     MessageManager.OpenDocBroke(SelectedRelation.DocID);
                     break;
+                case DocTypes.DocShipment:
+                    MessageManager.OpenDocShipmentOrder(SelectedRelation.DocID);
+                    break;
                 default:
                     switch (SelectedRelation.ProductKindID)
                     {

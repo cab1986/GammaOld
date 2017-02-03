@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using DevExpress.Mvvm;
+using Gamma.Common;
 using Gamma.Entities;
 
 
@@ -72,32 +73,14 @@ namespace Gamma.ViewModels
                 RealFormat = productSpool.RealFormat;
                 RealBasisWeight = productSpool.RealBasisWeight;
                 Diameter = productSpool.Diameter;
+                CurrentDiameter = productSpool.CurrentDiameter ?? 0;
                 Length = productSpool.Length ?? 0;
+                CurrentLength = productSpool.CurrentLength ?? 0;
                 BreakNumber = productSpool.BreakNumber;
                 var productionQuantity = productSpool.Products.DocProductionProducts.FirstOrDefault()?.Quantity??0;
-                Weight = productionQuantity > 100 ? productionQuantity : productionQuantity*1000;
-                RestWeight = productSpool.DecimalWeight > 100 ? productSpool.DecimalWeight : productSpool.DecimalWeight*1000;
+                Weight = productionQuantity*1000; // перевод в кг
+                RestWeight = productSpool.DecimalWeight*1000;
                 ToughnessKindID = productSpool.ToughnessKindID ?? 1;
-/*
-                var stateInfo = (from d in GammaBase.DocChangeStateProducts
-                                 where d.ProductID == ProductId
-                                 orderby
-                                 d.Docs.Date descending
-                                 select new
-                                 {
-                                     d.StateID,
-                                     RejectionReasonID = d.C1CRejectionReasonID
-                                 }).Take(1).FirstOrDefault();
-                if (stateInfo != null)
-                {
-                    StateID = stateInfo.StateID;
-                    RejectionReasonID = stateInfo.RejectionReasonID;
-                }
-                else
-                {
-                    StateID = 0;
-                }
-                */
             }          
             Bars.Add(ReportManager.GetReportBar("Spool", VMID));
             IsConfirmed = doc.IsConfirmed && IsValid;
@@ -105,13 +88,47 @@ namespace Gamma.ViewModels
             CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
         }
 
+        private decimal? CoreDiameter { get; set; }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
         public override Guid? CharacteristicID
         {
             get { return base.CharacteristicID; }
-            set { base.CharacteristicID = value; }
+            set
+            {
+                base.CharacteristicID = value;
+                if (value == null) return;
+                using (var gammaBase = DB.GammaDb)
+                {
+                    CoreDiameter =
+                        gammaBase.vCharacteristicSGBProperties.FirstOrDefault(
+                            c => c.C1CCharacteristicID == CharacteristicID)?.CoreDiameterNumeric;
+                }
+            }
         }
+
+        public string Density
+        {
+            get { return _density; }
+            set
+            {
+                _density = value;
+                RaisePropertyChanged("Density");
+            }
+        }
+
+        public decimal CurrentLength
+        {
+            get { return _currentLength; }
+            set
+            {
+                _currentLength = value;
+                RaisePropertyChanged("CurrentLength");
+            }
+        }
+
+        
 
         public bool ShowCreateGroupPack { get; private set; }
 
@@ -127,7 +144,18 @@ namespace Gamma.ViewModels
             set
             {
                 _diameter = value;
+                GetDensity(Weight, CoreDiameter, Diameter, RealFormat);
                 RaisePropertyChanged("Diameter");
+            }
+        }
+
+        public int CurrentDiameter
+        {
+            get { return _currentDiameter; }
+            set
+            {
+                _currentDiameter = value;
+                RaisePropertyChanged("CurrentDiameter");
             }
         }
 
@@ -189,6 +217,7 @@ namespace Gamma.ViewModels
             set
             {
                 _realFormat = value;
+                GetDensity(Weight, CoreDiameter, Diameter, RealFormat);
                 RaisePropertyChanged("RealFormat");
             }
         }
@@ -219,8 +248,21 @@ namespace Gamma.ViewModels
             set
             {
                 _weight = value;
+                GetDensity(Weight, CoreDiameter, Diameter, RealFormat);
                 RaisePropertyChanged("Weight");
             }
+        }
+
+        private void GetDensity(decimal? weight, decimal? coreDiameter, decimal? diameter, decimal? format)
+        {
+            if (weight == null || coreDiameter == null || diameter == null || format == null)
+            {
+                Density = "н/д";
+                return;
+            }
+            var density = Functions.GetDensity((double) weight, (double) coreDiameter, (double) diameter,
+                (double) format);
+            Density = density == null ? "н/д" : ((int) density).ToString();
         }
 
 
@@ -360,6 +402,10 @@ namespace Gamma.ViewModels
         }
 */
         private byte _toughnessKindID = 1;
+        private decimal _currentLength;
+        private int _currentDiameter;
+        private string _density;
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public byte ToughnessKindID
         {

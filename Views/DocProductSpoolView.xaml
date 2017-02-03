@@ -21,29 +21,29 @@
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
             <dxlc:LayoutGroup View="Group" Orientation="Vertical">
                 <dxlc:LayoutItem Label="Номенклатура">
-                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
-                         <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
-                     </dxe:ButtonEdit>
+                    <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
+                        <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                    </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Характеристика">
                     <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}"
                                       DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>
-                <dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">
-                    <dxe:SpinEdit MinValue="0" AllowDefaultButton="False" EditValue="{Binding RealBasisWeight, UpdateSourceTrigger=LostFocus}" MaskUseAsDisplayFormat="True" 
+                    <dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">
+                        <dxe:SpinEdit MinValue="0" AllowDefaultButton="False" EditValue="{Binding RealBasisWeight, UpdateSourceTrigger=LostFocus}" MaskUseAsDisplayFormat="True" 
                                         EditValueType="{x:Type sys:Decimal}" ValidateOnTextInput="False" IsTextEditable="True" />
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Факт. Формат, мм" LabelPosition="Top">
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Факт. Формат, мм" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" EditValue="{Binding RealFormat, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"
                                       IsFloatValue="False"
                                            MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}" ValidateOnTextInput="False" NullText="0"/>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
                         <dxe:SpinEdit  EditValue="{Binding BreakNumber, UpdateSourceTrigger=LostFocus}" MinValue="0" MaxValue="500" ValidateOnTextInput="False"
                                    EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
-                </dxlc:LayoutItem>
-            </dxlc:LayoutGroup>
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Вес тамбура, кг" LabelPosition="Top">
                         <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="10000" 
@@ -63,7 +63,18 @@
                 </dxlc:LayoutGroup>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Horizontal" View="Group">
-                <dxlc:LayoutItem Label="Прочность" LabelPosition="Top" Width="80">
+                <dxlc:LayoutItem Label="Текущий вес, кг" LabelPosition="Top" >
+                    <dxe:TextEdit IsReadOnly="True" EditValue="{Binding RestWeight}" HorizontalContentAlignment="Right" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Текущая длина, км" LabelPosition="Top" >
+                    <dxe:TextEdit IsReadOnly="True" EditValue="{Binding CurrentLength}" HorizontalContentAlignment="Right" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Текущий диаметр, мм" LabelPosition="Top" >
+                    <dxe:TextEdit IsReadOnly="True" EditValue="{Binding CurrentDiameter}" HorizontalContentAlignment="Right" />
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Orientation="Horizontal">
+                <dxlc:LayoutItem Label="Прочность" LabelPosition="Top" Width="80" HorizontalAlignment="Left">
                     <dxe:ListBoxEdit ItemsSource="{Binding ToughnessKinds, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" EditValue="{Binding ToughnessKindID}" 
                                      ValueMember="Key" DisplayMember="Value" >
                         <dxe:ListBoxEdit.StyleSettings>
@@ -71,8 +82,8 @@
                         </dxe:ListBoxEdit.StyleSettings>
                     </dxe:ListBoxEdit>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Текущий вес тамбура, кг" LabelPosition="Top" Width="150">
-                    <dxe:TextEdit IsReadOnly="True" EditValue="{Binding RestWeight}"/>
+                <dxlc:LayoutItem Label="Плотность рулона, кг/м3" LabelPosition="Top" Width="160">
+                    <dxe:TextEdit EditValue="{Binding Density}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

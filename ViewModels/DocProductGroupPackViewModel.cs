@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Gamma.Models;
 using Gamma.Common;
 using System.Data.Entity;
+using System.Threading;
 using Gamma.Entities;
 
 namespace Gamma.ViewModels
@@ -30,6 +31,7 @@ namespace Gamma.ViewModels
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
             Messenger.Default.Register<DocChangedMessage>(this, DocChanged);
+            ManualWeightInput = !Scales.IsReady;
         }
 
         private void DocChanged(DocChangedMessage msg)
@@ -69,7 +71,7 @@ namespace Gamma.ViewModels
                 var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
                 Weight = Convert.ToInt32((productGroupPack?.Weight > 10 ? productGroupPack.Weight : productGroupPack?.Weight*1000));
                 GrossWeight = Convert.ToInt32((productGroupPack?.GrossWeight > 10 ? productGroupPack.GrossWeight : productGroupPack?.GrossWeight * 1000));
-                ManualWeightInput = productGroupPack?.ManualWeightInput ?? false;
+                _manualWeightInput = IsConfirmed ? productGroupPack?.ManualWeightInput ?? false : !Scales.IsReady || (productGroupPack?.ManualWeightInput ?? false);
             }
             var groupPackSpools = GammaBase.GroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
@@ -103,7 +105,26 @@ namespace Gamma.ViewModels
 
         private void GetWeight()
         {
-            var weight = Scales.GetWeight();
+            if (!Scales.IsReady)
+            {
+                MessageBox.Show("Не удалось соедениться с весами", "Ошибка весов", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                ManualWeightInput = true;
+                return;
+            }
+            UIServices.SetBusyState();
+            var startTime = DateTime.Now;
+            do
+            {
+                GrossWeight = (int)Scales.Weight;
+                Thread.Sleep(500);
+                if (!((DateTime.Now - startTime).TotalSeconds > 15)) continue;
+                MessageBox.Show("Вес не стабилизировался в течении 15 секунд");
+                ManualWeightInput = true;
+                break;
+            } while (!Scales.IsStable);
+//            var weight = Scales.Weight;
+/*
             if (weight == null && Scales.ComPortError)
             {
                 MessageBox.Show("Не удалось соедениться с весами", "Ошибка весов", MessageBoxButton.OK,
@@ -111,7 +132,7 @@ namespace Gamma.ViewModels
                 ManualWeightInput = true;
                 return;
             }
-            GrossWeight = Convert.ToInt32(Scales.GetWeight());            
+*/
         }
 
         private Guid? ProductId { get; set; }
@@ -298,7 +319,8 @@ namespace Gamma.ViewModels
         }
 
         private decimal BaseCoreWeight { get; set; }
-        public void AddSpoolIfCorrect(PaperBase spool)
+
+        private void AddSpoolIfCorrect(PaperBase spool)
         {
             if (Spools.Count == 0)
             {
@@ -360,11 +382,11 @@ namespace Gamma.ViewModels
         {
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid || IsUnpacked || IsReadOnly) return true;
             DocId = itemID;
-            var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight,
+           var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight,
                 Spools.Count).FirstOrDefault();
             if (!string.IsNullOrEmpty(result))
             {
-                MessageBox.Show(result, "Некорректный вес", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                MessageBox.Show(result, "Проверка упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 return false;
             }
             var doc = GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal).Include(d => d.DocProduction.DocProductionProducts)

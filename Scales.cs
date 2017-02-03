@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.IO.Ports;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -30,30 +31,58 @@ namespace Gamma
             catch (Exception)
             {
                 IsReady = false;
-                ComPortError = true;
+//                ComPortError = true;
                 return;
             }
-/*
+
             try
             {
-                _comPort.Open();
+                ComPort.Open();
             }
             catch (Exception)
             {
                 IsReady = false;
                 return;
             }
-*/
+
+            ComPort.DataReceived += WeightReceived;
+
             IsReady = true;
         }
 
-        public static bool ComPortError { get; private set; }
+        private static void WeightReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            var number = 0;
+            var byteArray = ReadFromScales();
+            if (byteArray == null) return;
+            var bitArray = new BitArray(new[] { byteArray[3] });
+            IsStable = bitArray[5];
+            // Перевод BCD в int
+            for (var i = 2; i > -1; i--)
+            {
+                number *= 100;
+                number += (10 * (byteArray[i] >> 4));
+                number += byteArray[i] & 0xf;
+            }
+            var multiplier = 0;
+            for (var i = 0; i < 3; i++)
+            {
+                multiplier *= 2;
+                multiplier += bitArray[i] ? 1 : 0;
+            }
+            Weight = (number / Math.Pow(10, multiplier)) * (bitArray[0] ? -1 : 1);
+        }
+
+        public static double Weight { get; private set; }
+        public static bool IsStable { get; private set; }
+
+//        public static bool ComPortError { get; private set; }
 
         public static bool IsReady { get; private set; }
 
         private static readonly SerialPort ComPort;
-
-        public static double? GetWeight()
+/*
+        private static double? GetWeight()
         {
             DateTime start = DateTime.Now;
             if (!TryToOpen()) return null;
@@ -72,6 +101,8 @@ namespace Gamma
                     if (time.TotalSeconds > 20)
                     {
                         if (ComPort.IsOpen) ComPort.Close();
+ //                       ComPortError = true;
+                        IsReady = false;
                         return null;
                     }
                     continue;
@@ -94,15 +125,41 @@ namespace Gamma
             if (ComPort.IsOpen) ComPort.Close();
             return weight < 0 ? 0 : weight;
         }
+*/
         private static byte[] ReadFromScales()
         {
-            var byteArray = ComPort.ReadLine();
-            //byteArray = byteArray.Trim(' ', '\n', '\r', '\t');
-            if (byteArray.Length < 4) return new byte[4];
-            byteArray = byteArray.Substring(byteArray.Length - 4);
-            return Encoding.ASCII.GetBytes(byteArray);
+            try
+            {
+                var bytesToRead = ComPort.BytesToRead;
+                if (bytesToRead < 4) return new byte[4];
+                var byteArray = new byte[bytesToRead];
+                ComPort.Read(byteArray, 0, bytesToRead);
+//                if (byteArray.Length < 4) return 
+//                if (byteArray.Length > 11) byteArray = byteArray.Substring(byteArray.Length - 11, 11);
+                var index = LastIndex(byteArray, new byte[] {13, 10}); // Поиск последнего конца строки в массиве
+                return index == null || index < 4 ? new byte[4] : byteArray.Skip((int) index - 4).Take(4).ToArray();
+                //byteArray = byteArray.Trim(' ', '\n', '\r', '\t');
+                //byteArray = byteArray.Substring(byteArray.Length - 4);
+            }
+            catch (Exception)
+            {
+                IsReady = false;
+                return null;
+            }
         }
 
+        private static int? LastIndex(byte[] array, byte[] pattern)
+        {
+            if (array.Length < pattern.Length) return null;
+            for (var i = array.Length; i > -1; i--)
+            {
+                if (array.Skip(i).Take(pattern.Length).SequenceEqual(pattern))
+                    return i;
+            }
+            return null;
+        }
+
+/*
         private static bool TryToOpen()
         {
             if (ComPort.IsOpen)
@@ -116,18 +173,18 @@ namespace Gamma
                 ComPort.Open();
                 ComPort.DiscardInBuffer();
                 Thread.Sleep(500);
-                ComPortError = false;
+                //ComPortError = false;
             }
             catch (Exception)
             {
                 IsReady = false;
-                ComPortError = true;
+                //ComPortError = true;
                 return false;
             }
 
             IsReady = true;
             return true;
         }
-        
+     */   
     }
 }

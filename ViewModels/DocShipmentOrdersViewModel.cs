@@ -96,12 +96,16 @@ namespace Gamma.ViewModels
 
         public DelegateCommand Get1CDocShipmentOrdersCommand { get; private set; }
 
+
+        /// <summary>
+        /// Принудительная выгрузка приказов из 1С
+        /// </summary>
         private void Get1CDocShipmentOrders()
         {
             UIServices.SetBusyState();
-            using (var db = DB.GammaDb)
+            using (var gammaBase = DB.GammaDb)
             {
-                db.Get1CDocShipmentOrders();
+                gammaBase.Get1CDocShipmentOrders();
             }
             Find();
         }
