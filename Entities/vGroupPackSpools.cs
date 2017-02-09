@@ -12,15 +12,10 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Rests
+    public partial class vGroupPackSpools
     {
+        public System.Guid ProductGroupPackID { get; set; }
         public System.Guid ProductID { get; set; }
-        public Nullable<int> PlaceID { get; set; }
-        public int Quantity { get; set; }
-        public Nullable<System.Guid> PlaceZoneID { get; set; }
-    
-        public virtual PlaceZones PlaceZones { get; set; }
-        public virtual Places Places { get; set; }
-        public virtual Products Products { get; set; }
+        public Nullable<System.Guid> ProductionTaskID { get; set; }
     }
 }

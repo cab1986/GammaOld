@@ -96,6 +96,7 @@
                         <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
                         <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />
                         <dxb:BarButtonItem Content="Зонирование складов" Command="{Binding OpenPlaceZonesCommand}" />
+                        <dxb:BarButtonItem Content="Комплектация паллеты" Command="{Binding ComplectPalletCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Номенклатура">
                         <dxb:BarButtonItem Content="Номенклатура СГИ" Command="{Binding EditPlaceGroupNomenclatureCommand}" CommandParameter="2"/>

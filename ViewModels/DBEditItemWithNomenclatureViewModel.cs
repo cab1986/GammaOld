@@ -32,9 +32,9 @@ namespace Gamma.ViewModels
             ChooseNomenclatureCommand = new DelegateCommand(ChooseNomenclature,CanChooseNomenclature);
         }
         private Guid? _nomenclatureid;
+
         [Required(ErrorMessage=@"Необходимо выбрать номенклатуру")]
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public virtual Guid? NomenclatureID
         {
             get { return _nomenclatureid; }

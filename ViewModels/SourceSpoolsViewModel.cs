@@ -170,6 +170,7 @@ namespace Gamma.ViewModels
             switch (unum)
             {
                 case 1:
+                   if (Unwinder1ProductID == null) return;
                    if (CheckSpoolIsUsed(Unwinder1ProductID))
                     {
                         var dialog = new ChangeSpoolDialog((Guid)Unwinder1ProductID);
@@ -194,6 +195,7 @@ namespace Gamma.ViewModels
                     Unwinder1Active = false;
                     break;
                 case 2:
+                    if (Unwinder2ProductID == null) return;
                     if (CheckSpoolIsUsed(Unwinder2ProductID))
                     {
                         var dialog = new ChangeSpoolDialog((Guid)Unwinder2ProductID);
@@ -218,6 +220,7 @@ namespace Gamma.ViewModels
                     Unwinder2Active = false;
                     break;
                 case 3:
+                    if (Unwinder3ProductID == null) return;
                     if (CheckSpoolIsUsed(Unwinder3ProductID))
                     {
                         var dialog = new ChangeSpoolDialog((Guid)Unwinder3ProductID);
@@ -304,16 +307,31 @@ namespace Gamma.ViewModels
             switch (unum)
             {
                 case 1:
+                    if (Unwinder1ProductID == null)
+                    {
+                        Unwinder1Active = false;
+                        return;
+                    }
                     Unwinder1Active = !Unwinder1Active;
                     GammaBase.SaveChanges();
                     if (Unwinder1Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
                     break;
                 case 2:
+                    if (Unwinder2ProductID == null)
+                    {
+                        Unwinder2Active = false;
+                        return;
+                    }
                     Unwinder2Active = !Unwinder2Active;
                     GammaBase.SaveChanges();
                     if (Unwinder2Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
                     break;
                 case 3:
+                    if (Unwinder3ProductID == null)
+                    {
+                        Unwinder3Active = false;
+                        return;
+                    }
                     Unwinder3Active = !Unwinder3Active;
                     GammaBase.SaveChanges();
                     if (Unwinder3Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();

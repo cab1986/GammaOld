@@ -105,6 +105,7 @@ namespace Gamma.ViewModels
                 OpenPlaceZonesCommand = new DelegateCommand(OpenPlaceZones);
                 ShowProgrammInfoCommand = new DelegateCommand(ShowProgrammInfo);
                 OpenQualityReportPMCommand = new DelegateCommand(MessageManager.OpenQualityReportPM);
+                ComplectPalletCommand = new DelegateCommand(ComplectPallet, () => DB.HaveWriteAccess("Pallets"));
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -401,6 +402,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenDocMovementOrdersCommand { get; private set; }
         public DelegateCommand OpenDocMovementsCommand { get; private set; }
         public DelegateCommand OpenQualityReportPMCommand { get; private set; }
+        public DelegateCommand ComplectPalletCommand { get; private set; }
         public List<ReportItem> Reports { get; set; }
 
         public class PlaceProduct
@@ -415,6 +417,11 @@ namespace Gamma.ViewModels
             public DelegateCommand<Guid> Command { get; set; }
             public Guid ReportId { get; set; }
             public string ReportName { get; set; }
+        }
+
+        private void ComplectPallet()
+        {
+            MessageManager.CreateNewProduct(DocProductKinds.DocProductPallet);
         }
 
     }

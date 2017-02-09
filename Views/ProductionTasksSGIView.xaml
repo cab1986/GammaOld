@@ -25,12 +25,12 @@
             <dxg:GridColumn Binding="{Binding ProductionTaskBatchID}" Visible="False" />
             <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="1" Width="150" FixedWidth="True"/>
             <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="2" AllowBestFit="True"/>
-            <dxg:GridColumn Binding="{Binding Quantity}" Header="Задание, рул" VisibleIndex="3" Width="180" FixedWidth="True">
+            <dxg:GridColumn Binding="{Binding Quantity}" Header="Задание, (рул, пач)" VisibleIndex="3" Width="180" FixedWidth="True">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Выпущено, рул" Width="180" FixedWidth="True"/>
+            <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Выпущено, (рул, пач)" Width="180" FixedWidth="True"/>
         </dxg:GridControl>
     </Grid>
 </UserControl>

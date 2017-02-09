@@ -52,5 +52,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocBrokeProducts> DocBrokeProducts { get; set; }
         public virtual ProductSpools ProductSpools { get; set; }
         public virtual ProductBales ProductBales { get; set; }
+        public virtual Rests Rests { get; set; }
     }
 }

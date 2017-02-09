@@ -32,10 +32,9 @@ namespace Gamma.ViewModels
             if (msg.IsNewProduct)
             {
                 if (msg.ID == null && (msg.DocProductKind == DocProductKinds.DocProductSpool ||
-                                       msg.DocProductKind == DocProductKinds.DocProductUnload ||
-                                       msg.DocProductKind == DocProductKinds.DocProductPallet))
+                                       msg.DocProductKind == DocProductKinds.DocProductUnload))
                 {
-                    var productKind = "";
+                    string productKind;
                     switch (msg.DocProductKind)
                     {
                         case DocProductKinds.DocProductSpool:

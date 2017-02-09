@@ -36,12 +36,12 @@ namespace Gamma.ViewModels
             switch (PlaceGroup)
             {
                 case PlaceGroup.PM:
-                    QuantityHeader = "Вес, т";
+                    QuantityHeader = "Вес, кг";
                     NewProductText = "Создать новый тамбур";
                     DeleteProductText = "Удалить тамбур";
                     break;
                 case PlaceGroup.Rw:
-                    QuantityHeader = "Вес, т";
+                    QuantityHeader = "Вес, кг";
                     NewProductText = "Создать новый съем";
                     DeleteProductText = "Удалить съем";
                     break;
@@ -51,12 +51,12 @@ namespace Gamma.ViewModels
                     DeleteProductText = "Удалить паллету";
                     break;
                 case PlaceGroup.Wr:
-                    QuantityHeader = "Вес нетто, т";
+                    QuantityHeader = "Вес нетто, кг";
                     NewProductText = "Создать новую групповую упаковку";
                     DeleteProductText = "Удалить групповую упаковку";
                     break;
                 case PlaceGroup.Baler:
-                    QuantityHeader = "Вес нетто, т";
+                    QuantityHeader = "Вес нетто, кг";
                     NewProductText = "Создать новую кипу";
                     DeleteProductText = "Удалить кипу";
                     break;
@@ -260,7 +260,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = vpi.ProductionQuantity,
+                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet?vpi.ProductionQuantity*1000 : vpi.ProductionQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,
@@ -286,7 +286,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = vpi.ProductionQuantity,
+                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,
@@ -297,33 +297,6 @@ namespace Gamma.ViewModels
                 case 2:
                     var endTime = DB.CurrentDateTime;
                     var beginTime = endTime.AddDays(-1);
- /*                   var products = from vpi in GammaBase.vProductsInfo
-                        where vpi.PlaceID == PlaceID &&
-                              vpi.Date >= beginTime && vpi.Date <= endTime
-                        orderby vpi.Date descending
-                        select new ProductInfo
-                        {
-                            CharacteristicID = vpi.C1CCharacteristicID,
-                            Date = vpi.Date,
-                            DocID = vpi.DocID,
-                            NomenclatureID = vpi.C1CNomenclatureID,
-                            NomenclatureName = vpi.NomenclatureName,
-                            Number = vpi.Number,
-                            Place = vpi.Place,
-                            ProductID = vpi.ProductID,
-                            ProductKind = (ProductKind) vpi.ProductKindID,
-                            Quantity = vpi.ProductionQuantity,
-                            ShiftID = vpi.ShiftID,
-                            State = vpi.State,
-                            PlaceID = vpi.PlaceID,
-                            PlaceGroup = (PlaceGroup) vpi.PlaceGroupID
-                        };
-                    Products = new ObservableCollection<ProductInfo>();
-                    foreach (var product in products)
-                    {
-                        Products.Add(product);
-                    }*/
-
                     Products = new ObservableCollection<ProductInfo>
                     (
                         from vpi in GammaBase.vProductsInfo
@@ -341,7 +314,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = vpi.ProductionQuantity,
+                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,
@@ -369,7 +342,7 @@ namespace Gamma.ViewModels
                             Place = vpi.Place,
                             ProductID = vpi.ProductID,
                             ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = vpi.ProductionQuantity,
+                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
                             ShiftID = vpi.ShiftID,
                             State = vpi.State,
                             PlaceID = vpi.PlaceID,

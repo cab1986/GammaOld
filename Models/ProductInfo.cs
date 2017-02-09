@@ -33,5 +33,7 @@ namespace Gamma.Models
         public string Place { get; set; }
         public int? PlaceID { get; set; }
         public PlaceGroup PlaceGroup { get; set; }
+        public bool IsWrittenOff { get; set; }
+        public bool InGroupPack { get; set; }
     }
 }

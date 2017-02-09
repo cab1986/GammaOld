@@ -289,10 +289,22 @@ namespace Gamma.ViewModels
                          select pinf).FirstOrDefault();
             if (p == null) return;
             if (!CheckAddedSpool(p.ProductID)) return;
-            if (p.IsWrittenOff??false)
+            if (p.IsWrittenOff ?? false)
             {
-                MessageBox.Show("Вы пытаететесь добавить списанный рулон");
-                return;
+                if (GammaBase.vGroupPackSpools.Where(gs => gs.ProductID == p.ProductID)
+                .Join(GammaBase.vProductsInfo,
+                    gs => gs.ProductGroupPackID,
+                    pi => pi.ProductID,
+                    (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
+                ).Any(j => !j.IsWrittenOff) ) 
+                {
+                    if (!UnpackGroupPack(p.ProductID)) return;
+                }
+                else
+                {
+                    MessageBox.Show("Вы пытаететесь добавить списанный рулон");
+                    return;
+                }
             }
             var spool = new PaperBase()
                              {
@@ -307,6 +319,35 @@ namespace Gamma.ViewModels
                                  Number = $"{p.Number} от {p.Date}"
                              };
             AddSpoolIfCorrect(spool);
+        }
+
+        /// <summary>
+        /// Распаковка упаковки, в которой находится рулон
+        /// </summary>
+        /// <param name="productId">ИД рулона</param>
+        /// <returns></returns>
+        private bool UnpackGroupPack(Guid productId)
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var groupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == productId).Join(gammaBase.Products,
+                            gs => gs.ProductGroupPackID,
+                            p => p.ProductID,
+                            (gs, p) => new { ProductId = p.ProductID, Number = p.Number }).FirstOrDefault();
+                if (groupPack == null)
+                {
+                    MessageBox.Show("Выбранный рулон в упаковке, но при поиске упаковки произошел сбой");
+                    return false;
+                }
+                var dlgResult =
+                    MessageBox.Show(
+                        $"Выбранный тамбур находится в упаковке {groupPack.Number}. Данная упаковка будет распакована. Вы согласны?",
+                        "Распаковка", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (dlgResult != MessageBoxResult.Yes) return false;
+                gammaBase.UnpackGroupPack(groupPack.ProductId, WorkSession.PrintName);
+                MessageBox.Show($"Упаковка {groupPack.Number} уничтожена");
+                return true;
+            }
         }
 
         private bool CheckAddedSpool(Guid productId)

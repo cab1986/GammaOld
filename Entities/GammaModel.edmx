@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="GammaDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GammaDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="1CCharacteristicProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1204,6 +1204,17 @@
           <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
           <Property Name="Number" Type="varchar" MaxLength="20" />
           <Property Name="BarCode" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.vGroupPackSpools" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="vGroupPackSpools">
+          <Key>
+            <PropertyRef Name="ProductGroupPackID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductGroupPackID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.vPlacePropertiesValues" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -3279,6 +3290,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Rests_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Rests" Type="Self.Rests" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="Rests">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RolePermits_Permits">
           <End Role="Permits" Type="Self.Permits" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -3902,6 +3925,13 @@
     [vDocMovementProducts].[Number] AS [Number], 
     [vDocMovementProducts].[BarCode] AS [BarCode]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vGroupPackSpools].[ProductGroupPackID] AS [ProductGroupPackID], 
+    [vGroupPackSpools].[ProductID] AS [ProductID], 
+    [vGroupPackSpools].[ProductionTaskID] AS [ProductionTaskID]
+    FROM [dbo].[vGroupPackSpools] AS [vGroupPackSpools]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vPlacePropertiesValues" EntityType="Self.vPlacePropertiesValues" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -4626,6 +4656,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Rests_PlaceZones" Association="Self.FK_Rests_PlaceZones">
             <End Role="PlaceZones" EntitySet="PlaceZones" />
+            <End Role="Rests" EntitySet="Rests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rests_Products" Association="Self.FK_Rests_Products">
+            <End Role="Products" EntitySet="Products" />
             <End Role="Rests" EntitySet="Rests" />
           </AssociationSet>
           <AssociationSet Name="FK_RolePermits_Permits" Association="Self.FK_RolePermits_Permits">
@@ -6307,6 +6341,11 @@
           </FunctionImport>
           <FunctionImport Name="Get1CDocShipmentOrders" />
           <FunctionImport Name="Get1CNomenclature" />
+          <EntitySet Name="vGroupPackSpools" EntityType="GammaModel.vGroupPackSpools" />
+          <AssociationSet Name="FK_Rests_Products" Association="GammaModel.FK_Rests_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Rests" EntitySet="Rests" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -7471,6 +7510,7 @@
           <Property Name="PlaceZoneID" Type="Guid" />
           <NavigationProperty Name="PlaceZones" Relationship="GammaModel.FK_Rests_PlaceZones" FromRole="Rests" ToRole="PlaceZones" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Rests_Places" FromRole="Rests" ToRole="Places" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_Rests_Products" FromRole="Rests" ToRole="Products" />
         </EntityType>
         <ComplexType Name="FindNomenclatureByStringWithFilter_Result2">
           <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
@@ -8639,6 +8679,7 @@
           <NavigationProperty Name="DocBrokeProducts" Relationship="GammaModel.FK_DocBrokeProducts_Products" FromRole="Products" ToRole="DocBrokeProducts" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="Products" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_Products" FromRole="Products" ToRole="ProductBales" />
+          <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Products" FromRole="Products" ToRole="Rests" />
         </EntityType>
         <Association Name="FK_Products_ProductKinds">
           <End Type="GammaModel.ProductKinds" Role="ProductKinds" Multiplicity="1" />
@@ -9505,6 +9546,27 @@
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
         </ComplexType>
+        <EntityType Name="vGroupPackSpools">
+          <Key>
+            <PropertyRef Name="ProductGroupPackID" />
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductGroupPackID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="Guid" />
+        </EntityType>
+        <Association Name="FK_Rests_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.Rests" Role="Rests" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="Rests">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -11221,6 +11283,15 @@
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Get1CDocShipmentOrders" FunctionName="GammaDBModel.Get1CDocShipmentOrders" />
           <FunctionImportMapping FunctionImportName="Get1CNomenclature" FunctionName="GammaDBModel.Get1CNomenclature" />
+          <EntitySetMapping Name="vGroupPackSpools">
+            <EntityTypeMapping TypeName="GammaModel.vGroupPackSpools">
+              <MappingFragment StoreEntitySet="vGroupPackSpools">
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductGroupPackID" ColumnName="ProductGroupPackID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

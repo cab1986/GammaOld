@@ -273,6 +273,8 @@
         <AssociationConnector Association="GammaModel.FK_ProductBales_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductBales_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductBales_Products" />
+        <EntityTypeShape EntityType="GammaModel.vGroupPackSpools" Width="1.5" PointX="12.375" PointY="5.75" />
+        <AssociationConnector Association="GammaModel.FK_Rests_Products" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -4,18 +4,48 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Gamma.Views"
-             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" x:Class="Gamma.Views.DocProductPalletView"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:dialogs="clr-namespace:Gamma.Dialogs"
+             x:Class="Gamma.Views.DocProductPalletView"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="300" d:DesignWidth="600"
+             d:DataContext="{d:DesignInstance Type=viewModels:DocProductPalletViewModel, IsDesignTimeCreatable=False}">
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:AddNomenclatureToPalletDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="500"/>
+                    <Setter Property="Height" Value="240"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+    </dxmvvm:Interaction.Behaviors>
     <Grid>
-        <dxg:GridControl EnableSmartColumnsGeneration="False" ItemsSource="{Binding PalletItems}">
-            <dxg:GridControl.Columns>
+        <dxb:BarManager>
+            <dxb:BarManager.Bars>
+                <dxb:Bar GlyphSize="Small" AllowCustomizationMenu="False" AllowQuickCustomization="False" AllowHide="False" ShowDragWidget="False">
+                    <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" GlyphSize="Small" 
+                                       Command="{Binding AddNomenclatureToPalletCommand}"/>
+                    <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" GlyphSize="Small" 
+                                       Command="{Binding DeleteNomenclatureFromPalletCommand}"/>
+                </dxb:Bar>
+            </dxb:BarManager.Bars>
+            <dxg:GridControl EnableSmartColumnsGeneration="False" ItemsSource="{Binding PalletItems}" SelectedItem="{Binding SelectedProductPalletItem}">
+                <dxg:GridControl.View>
+                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="False" AutoWidth="True" ShowGroupPanel="False" AllowEditing="False" />
+                </dxg:GridControl.View>
                 <dxg:GridColumn FieldName="NomenclatureName" Header="Изделие" VisibleIndex="1" />
-                <dxg:GridColumn FieldName="Quantity" Header="Кол-во, рул" Width="80" VisibleIndex="2" FixedWidth="True"/>
-            </dxg:GridControl.Columns>
-            <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="False" AutoWidth="True" ShowGroupPanel="False" AllowEditing="False" />
-            </dxg:GridControl.View>
-        </dxg:GridControl>
+                <dxg:GridColumn FieldName="Quantity" Header="Кол-во, (рул, пач)" Width="80" VisibleIndex="2" FixedWidth="True"/>
+            </dxg:GridControl>
+        </dxb:BarManager>
     </Grid>
 </UserControl>

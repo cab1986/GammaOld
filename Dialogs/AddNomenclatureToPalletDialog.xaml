@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Gamma.Dialogs.AddNomenclatureToPalletDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Dialogs"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dialogViewModels="clr-namespace:Gamma.DialogViewModels"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="160" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance Type=dialogViewModels:AddNomenclatureToPalletDialogModel, IsDesignTimeCreatable=False}">
+    <dxlc:LayoutControl Orientation="Vertical">
+        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+            <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" ToolTip="{Binding NomenclatureName}" IsReadOnly="True">
+                <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+            </dxe:ButtonEdit>
+        </dxlc:LayoutItem>
+        <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top">
+            <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
+        </dxlc:LayoutItem>
+        <dxlc:LayoutItem Label="Количество упаковок" Width ="160">
+            <dxe:SpinEdit EditValue="{Binding GroupPacksCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" MinValue="0" 
+                          EditValueType="{x:Type sys:Int32}"/>
+        </dxlc:LayoutItem> 
+    </dxlc:LayoutControl>
+</UserControl>
