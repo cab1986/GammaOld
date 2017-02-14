@@ -295,3 +295,7 @@ D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\SetBaleWeightDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocProductBaleView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTaskBalerView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ProductionTasksBalerView.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\AddNomenclatureToPalletDialog.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftBalerGridView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\AddNomenclatureToPalletDialog.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftBalerGridView.baml

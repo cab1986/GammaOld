@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="111" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="125" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -275,6 +275,11 @@
         <AssociationConnector Association="GammaModel.FK_ProductBales_Products" />
         <EntityTypeShape EntityType="GammaModel.vGroupPackSpools" Width="1.5" PointX="12.375" PointY="5.75" />
         <AssociationConnector Association="GammaModel.FK_Rests_Products" />
+        <EntityTypeShape EntityType="GammaModel.DocInventarisationProducts" Width="1.5" PointX="31.5" PointY="49" />
+        <AssociationConnector Association="GammaModel.FK_DocInventarisationProducts_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocInventarisationProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_Docs_Persons" />
+        <AssociationConnector Association="GammaModel.FK_Persons_PostTypes" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

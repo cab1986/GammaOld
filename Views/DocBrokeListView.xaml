@@ -46,7 +46,7 @@
                          AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False" SelectedItem="{Binding SelectedDocBroke}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
-                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="110" >
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="110" SortIndex="0" SortOrder="Descending">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>

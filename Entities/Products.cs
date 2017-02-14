@@ -24,6 +24,7 @@ namespace Gamma.Entities
             this.DocWithdrawalProducts = new HashSet<DocWithdrawalProducts>();
             this.DocCloseShift = new HashSet<Docs>();
             this.DocBrokeProducts = new HashSet<DocBrokeProducts>();
+            this.DocInventarisationProducts = new HashSet<DocInventarisationProducts>();
         }
     
         public System.Guid ProductID { get; set; }
@@ -53,5 +54,7 @@ namespace Gamma.Entities
         public virtual ProductSpools ProductSpools { get; set; }
         public virtual ProductBales ProductBales { get; set; }
         public virtual Rests Rests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocInventarisationProducts> DocInventarisationProducts { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace Gamma.Entities
         public PostTypes()
         {
             this.Users = new HashSet<Users>();
+            this.Persons = new HashSet<Persons>();
         }
     
         public int PostTypeID { get; set; }
@@ -25,5 +26,7 @@ namespace Gamma.Entities
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Persons> Persons { get; set; }
     }
 }

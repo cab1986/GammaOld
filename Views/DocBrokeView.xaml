@@ -118,7 +118,7 @@
                                             <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="40" FixedWidth="True" AllowEditing="False"/>
                                             <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
                                                 <dxg:GridColumn.EditSettings>
-                                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>
+                                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
                                                 </dxg:GridColumn.EditSettings>
                                             </dxg:GridColumn>
                                             <dxg:GridColumn FieldName="RejectionReasonsString" Header="Несоответствия, дефекты">
@@ -162,7 +162,7 @@
                                         <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" SortOrder="Ascending" SortIndex="0"/>
                                         <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="80" FixedWidth="True" VisibleIndex="2">
                                             <dxg:GridColumn.EditSettings>
-                                                <dxe:TextEditSettings MaskUseAsDisplayFormat="True" Mask="0.###" MaskType="Numeric"/>
+                                                <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
                                             </dxg:GridColumn.EditSettings>
                                         </dxg:GridColumn>
                                         <dxg:GridColumn FieldName="MeasureUnit" Width="60" Header="ед. изм." VisibleIndex="3" FixedWidth="True"/>

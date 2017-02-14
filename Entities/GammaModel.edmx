@@ -491,6 +491,15 @@
           <Property Name="PersonID" Type="uniqueidentifier" />
           <Property Name="Date" Type="datetime" />
         </EntityType>
+        <EntityType Name="DocInventarisationProducts">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="Barcode" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Barcode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="DocMovement">
           <Key>
             <PropertyRef Name="DocID" />
@@ -591,7 +600,6 @@
           <Property Name="Number" Type="varchar" MaxLength="50" />
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
           <Property Name="UserID" Type="uniqueidentifier" />
-          <Property Name="PersonID" Type="int" />
           <Property Name="PrintName" Type="varchar" MaxLength="255" />
           <Property Name="PlaceID" Type="int" />
           <Property Name="ShiftID" Type="tinyint" />
@@ -599,6 +607,7 @@
           <Property Name="Comment" Type="varchar" MaxLength="8000" />
           <Property Name="IsFromOldGamma" Type="bit" />
           <Property Name="BranchID" Type="tinyint" />
+          <Property Name="PersonGuid" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocShipmentOrders">
           <Key>
@@ -2276,6 +2285,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocInventarisationProducts_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocInventarisationProducts" Type="Self.DocInventarisationProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocInventarisationProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocInventarisationProducts_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="DocInventarisationProducts" Type="Self.DocInventarisationProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocInventarisationProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocMovement_Docs">
           <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
           <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="0..1" />
@@ -2574,6 +2607,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Docs_Persons">
+          <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
+          <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persons">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Docs">
+              <PropertyRef Name="PersonGuid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Docs_Places">
           <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
           <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
@@ -2813,6 +2858,18 @@
             </Principal>
             <Dependent Role="Persons">
               <PropertyRef Name="BranchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_PostTypes">
+          <End Role="PostTypes" Type="Self.PostTypes" Multiplicity="0..1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostTypes">
+              <PropertyRef Name="PostTypeID" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="PostTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3757,6 +3814,7 @@
           <EntitySet Name="DocCloseShiftSamples" EntityType="Self.DocCloseShiftSamples" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInProducts" EntityType="Self.DocInProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocInventarisationProducts" EntityType="Self.DocInventarisationProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovementOrder" EntityType="Self.DocMovementOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovementOrderDocs" EntityType="Self.DocMovementOrderDocs" Schema="dbo" store:Type="Tables" />
@@ -4326,6 +4384,14 @@
             <End Role="PlaceZones" EntitySet="PlaceZones" />
             <End Role="DocInProducts" EntitySet="DocInProducts" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocInventarisationProducts_Docs" Association="Self.FK_DocInventarisationProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocInventarisationProducts" EntitySet="DocInventarisationProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocInventarisationProducts_Products" Association="Self.FK_DocInventarisationProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocInventarisationProducts" EntitySet="DocInventarisationProducts" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocMovement" EntitySet="DocMovement" />
@@ -4422,6 +4488,10 @@
             <End Role="DocTypes" EntitySet="DocTypes" />
             <End Role="Docs" EntitySet="Docs" />
           </AssociationSet>
+          <AssociationSet Name="FK_Docs_Persons" Association="Self.FK_Docs_Persons">
+            <End Role="Persons" EntitySet="Persons" />
+            <End Role="Docs" EntitySet="Docs" />
+          </AssociationSet>
           <AssociationSet Name="FK_Docs_Places" Association="Self.FK_Docs_Places">
             <End Role="Places" EntitySet="Places" />
             <End Role="Docs" EntitySet="Docs" />
@@ -4500,6 +4570,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Persons_Branches" Association="Self.FK_Persons_Branches">
             <End Role="Branches" EntitySet="Branches" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_PostTypes" Association="Self.FK_Persons_PostTypes">
+            <End Role="PostTypes" EntitySet="PostTypes" />
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
@@ -6346,6 +6420,23 @@
             <End Role="Products" EntitySet="Products" />
             <End Role="Rests" EntitySet="Rests" />
           </AssociationSet>
+          <EntitySet Name="DocInventarisationProducts" EntityType="GammaModel.DocInventarisationProducts" />
+          <AssociationSet Name="FK_DocInventarisationProducts_Docs" Association="GammaModel.FK_DocInventarisationProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocInventarisationProducts" EntitySet="DocInventarisationProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocInventarisationProducts_Products" Association="GammaModel.FK_DocInventarisationProducts_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocInventarisationProducts" EntitySet="DocInventarisationProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Docs_Persons" Association="GammaModel.FK_Docs_Persons">
+            <End Role="Persons" EntitySet="Persons" />
+            <End Role="Docs" EntitySet="Docs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_PostTypes" Association="GammaModel.FK_Persons_PostTypes">
+            <End Role="PostTypes" EntitySet="PostTypes" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -7081,6 +7172,7 @@
           <Property Name="PostTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Users" Relationship="GammaModel.FK_Users_PostTypes" FromRole="PostTypes" ToRole="Users" />
+          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_PostTypes" FromRole="PostTypes" ToRole="Persons" />
         </EntityType>
         <Association Name="FK_1CDocShipmentOrder_1CContractors">
           <End Type="GammaModel.C1CContractors" Role="C1CContractors" Multiplicity="0..1" />
@@ -7654,6 +7746,8 @@
           <NavigationProperty Name="DocOutProducts" Relationship="GammaModel.FK_DocOutProducts_Persons" FromRole="Persons" ToRole="DocOutProducts" />
           <NavigationProperty Name="DocShipmentOrders" Relationship="GammaModel.FK_DocShipmentOrders_Persons" FromRole="Persons" ToRole="DocShipmentOrders" />
           <NavigationProperty Name="DocShipmentOrders1" Relationship="GammaModel.FK_DocShipmentOrders_Persons1" FromRole="Persons" ToRole="DocShipmentOrders" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Persons" FromRole="Persons" ToRole="Docs" />
+          <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Persons_PostTypes" FromRole="Persons" ToRole="PostTypes" />
         </EntityType>
         <Association Name="FK_Persons_Branches">
           <End Type="GammaModel.Branches" Role="Branches" Multiplicity="0..1" />
@@ -7798,7 +7892,6 @@
           <NavigationProperty Name="DocCloseShiftWithdrawals" Relationship="GammaModel.DocCloseShiftWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
           <NavigationProperty Name="DocUnpackWithdrawals" Relationship="GammaModel.DocUnpackWithdrawals" FromRole="Docs" ToRole="DocWithdrawal" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_Docs" FromRole="Docs" ToRole="DocProduction" />
-          <Property Name="PersonID" Type="Int32" />
           <Property Name="BranchID" Type="Byte" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
           <NavigationProperty Name="DocMovementOrder" Relationship="GammaModel.FK_DocMovementOrder_Docs" FromRole="Docs" ToRole="DocMovementOrder" />
@@ -7806,6 +7899,9 @@
           <NavigationProperty Name="DocCloseShiftRemainders2" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocCloseShiftProducts" Relationship="GammaModel.DocCloseShiftProducts" FromRole="Docs" ToRole="Products" />
+          <Property Name="PersonGuid" Type="Guid" />
+          <NavigationProperty Name="DocInventarisationProducts" Relationship="GammaModel.FK_DocInventarisationProducts_Docs" FromRole="Docs" ToRole="DocInventarisationProducts" />
+          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Docs_Persons" FromRole="Docs" ToRole="Persons" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -8680,6 +8776,7 @@
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="Products" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_Products" FromRole="Products" ToRole="ProductBales" />
           <NavigationProperty Name="Rests" Relationship="GammaModel.FK_Rests_Products" FromRole="Products" ToRole="Rests" />
+          <NavigationProperty Name="DocInventarisationProducts" Relationship="GammaModel.FK_DocInventarisationProducts_Products" FromRole="Products" ToRole="DocInventarisationProducts" />
         </EntityType>
         <Association Name="FK_Products_ProductKinds">
           <End Type="GammaModel.ProductKinds" Role="ProductKinds" Multiplicity="1" />
@@ -9564,6 +9661,65 @@
             </Principal>
             <Dependent Role="Rests">
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocInventarisationProducts">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="Barcode" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductID" Type="Guid" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocInventarisationProducts_Docs" FromRole="DocInventarisationProducts" ToRole="Docs" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocInventarisationProducts_Products" FromRole="DocInventarisationProducts" ToRole="Products" />
+        </EntityType>
+        <Association Name="FK_DocInventarisationProducts_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocInventarisationProducts" Role="DocInventarisationProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocInventarisationProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocInventarisationProducts_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="0..1" />
+          <End Type="GammaModel.DocInventarisationProducts" Role="DocInventarisationProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocInventarisationProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Docs_Persons">
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="0..1" />
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persons">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Docs">
+              <PropertyRef Name="PersonGuid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Persons_PostTypes">
+          <End Type="GammaModel.PostTypes" Role="PostTypes" Multiplicity="0..1" />
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PostTypes">
+              <PropertyRef Name="PostTypeID" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="PostTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10742,8 +10898,8 @@
           <EntitySetMapping Name="Docs">
             <EntityTypeMapping TypeName="GammaModel.Docs">
               <MappingFragment StoreEntitySet="Docs">
+                <ScalarProperty Name="PersonGuid" ColumnName="PersonGuid" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="IsFromOldGamma" ColumnName="IsFromOldGamma" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
@@ -11289,6 +11445,15 @@
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="ProductGroupPackID" ColumnName="ProductGroupPackID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocInventarisationProducts">
+            <EntityTypeMapping TypeName="GammaModel.DocInventarisationProducts">
+              <MappingFragment StoreEntitySet="DocInventarisationProducts">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -23,7 +23,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>\\server7\shares\Общая папка\Gamma\</PublishUrl>
+    <PublishUrl>\\server7\shares\gamma_update\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>41</ApplicationRevision>
+    <ApplicationRevision>45</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -332,6 +332,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocInProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocInventarisationProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocMovement.cs">
@@ -647,6 +650,7 @@
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Models\InventarisationItem.cs" />
     <Compile Include="Models\MovementGood.cs" />
     <Compile Include="Models\MovementItem.cs" />
     <Compile Include="Models\MovementOrderNomenclatureItem.cs" />
@@ -730,6 +734,7 @@
     <Compile Include="ViewModels\DocCloseShiftRwGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
+    <Compile Include="ViewModels\DocInventarisationViewModel.cs" />
     <Compile Include="ViewModels\DocMovementsViewModel.cs" />
     <Compile Include="ViewModels\DocMovementViewModel.cs" />
     <Compile Include="ViewModels\DocProductGroupPackViewModel.cs" />
