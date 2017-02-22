@@ -129,11 +129,11 @@ namespace Gamma.ViewModels
             ResetSearch();
             Barcode = msg.Barcode;
             Find(true);
-            if (ButtonPanelVisible && FoundProducts.Count == 1)
+/*            if (ButtonPanelVisible && FoundProducts.Count == 1)
             {
                 SelectedProduct = FoundProducts.First();
                 ChooseProduct();
-            }
+            }*/
         }
         public DelegateCommand FindCommand { get; private set; }
         public DelegateCommand ResetSearchCommand { get; private set; }
@@ -141,40 +141,54 @@ namespace Gamma.ViewModels
         private void Find(bool isFromScanner)
         {
             UIServices.SetBusyState();
-            if (isFromScanner)
+            using (var gammaBase = DB.GammaDb)
             {
-                FoundProducts = new ObservableCollection<ProductInfo>
-                    (
-                    (
-                        from pinfo in GammaBase.vProductsInfo
-                        where pinfo.BarCode == Barcode && (!ButtonPanelVisible || !(pinfo.IsWrittenOff ?? false))
-                        select new ProductInfo
-                        {
-                            DocID = pinfo.DocID,
-                            ProductID = pinfo.ProductID,
-                            Number = pinfo.Number,
-                            CharacteristicID = pinfo.C1CCharacteristicID,
-                            Date = pinfo.Date,
-                            NomenclatureID = pinfo.C1CNomenclatureID,
-                            NomenclatureName = pinfo.NomenclatureName,
-                            ProductKind = (ProductKind) pinfo.ProductKindID,
-                            Quantity = pinfo.Quantity,
-                            ShiftID = pinfo.ShiftID,
-                            Place = pinfo.Place,
-                            State = pinfo.State,
-                            PlaceGroup = (PlaceGroup) pinfo.PlaceGroupID
-                        }
-                        ).OrderByDescending(p => p.Date)
-                    );
-            }
-            else
-            {
-                var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
-                var selectedPlaces = new List<string>();
-                if (SelectedPlaces != null)
-                    selectedPlaces = SelectedPlaces.Cast<string>().ToList();
-                using (var gammaBase = DB.GammaDb)
+                if (isFromScanner)
                 {
+                    FoundProducts = new ObservableCollection<ProductInfo>
+                        (
+                        gammaBase.vProductsInfo.Where(pinfo =>
+                            pinfo.BarCode == Barcode 
+                            &&
+                            (!ButtonPanelVisible || !(pinfo.IsWrittenOff ?? false) ||
+                             gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
+                                 .Join(gammaBase.vProductsInfo,
+                                     gs => gs.ProductGroupPackID,
+                                     pi => pi.ProductID,
+                                     (gs, pi) => new {IsWrittenOff = pi.IsWrittenOff ?? false}
+                                 ).Any(j => !j.IsWrittenOff))
+                            ).Select(pinfo => new ProductInfo
+                            {
+                                DocID = pinfo.DocID,
+                                ProductID = pinfo.ProductID,
+                                Number = pinfo.Number,
+                                CharacteristicID = pinfo.C1CCharacteristicID,
+                                Date = pinfo.Date,
+                                NomenclatureID = pinfo.C1CNomenclatureID,
+                                NomenclatureName = pinfo.NomenclatureName,
+                                ProductKind = (ProductKind) pinfo.ProductKindID,
+                                Quantity = pinfo.Quantity,
+                                ShiftID = pinfo.ShiftID,
+                                State = pinfo.State,
+                                Place = pinfo.Place,
+                                PlaceGroup = (PlaceGroup) pinfo.PlaceGroupID,
+                                IsWrittenOff = pinfo.IsWrittenOff ?? false,
+                                InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
+                                    .Join(gammaBase.vProductsInfo,
+                                        gs => gs.ProductGroupPackID,
+                                        pi => pi.ProductID,
+                                        (gs, pi) => new {IsWrittenOff = pi.IsWrittenOff ?? false}
+                                    ).Any(j => !j.IsWrittenOff)
+                            })
+                        );
+                }
+                else
+                {
+                    var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
+                    var selectedPlaces = new List<string>();
+                    if (SelectedPlaces != null)
+                        selectedPlaces = SelectedPlaces.Cast<string>().ToList();
+
                     FoundProducts = new ObservableCollection<ProductInfo>(
                         gammaBase.vProductsInfo.Where(pinfo =>
                             (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
@@ -218,22 +232,24 @@ namespace Gamma.ViewModels
                                     ).Any(j => !j.IsWrittenOff)
                             })
                         );
-
-                    if (FoundProducts.Count == 0 && ButtonPanelVisible)
-                    {
-                        MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
-                    }
-                    if (FoundProducts.Count != 1 || !ButtonPanelVisible) return;
-                    var product = FoundProducts.First();
-                    if (product.InGroupPack)
-                    {
-                        if(!UnpackGroupPack(product.ProductID)) return;
-                    }
                 }
             }
-            Messenger.Default.Send(new ChoosenProductMessage { ProductID = FoundProducts.First().ProductID });
-            CloseWindow();
-        }
+            if (FoundProducts.Count == 0 && ButtonPanelVisible)
+            {
+                MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
+            }
+            if (FoundProducts.Count != 1 || !ButtonPanelVisible) return;
+            SelectedProduct = FoundProducts.First();
+            ChooseProduct();
+//            var product = FoundProducts.First();
+            //if (product.InGroupPack)
+            //{
+            //    if (!UnpackGroupPack(product.ProductID)) return;
+            //}
+            //Messenger.Default.Send(new ChoosenProductMessage { ProductID = FoundProducts.First().ProductID });
+            //CloseWindow();
+        }   
+        
 
         private void ResetSearch()
         {

@@ -102,11 +102,10 @@
           <Property Name="Name" Type="varchar" MaxLength="40" />
           <Property Name="Alias" Type="varchar" MaxLength="120" />
         </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.1CMainSpecifications" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="1CMainSpecifications">
-          <Key>
-            <PropertyRef Name="1CMainSpecificationID" />
-          </Key>
-          <Property Name="1CMainSpecificationID" Type="uniqueidentifier" Nullable="false" />
+          
           <Property Name="Period" Type="datetime" Nullable="false" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
@@ -441,6 +440,16 @@
           <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="DocCloseShiftNomenclatureRests">
+          <Key>
+            <PropertyRef Name="DocCloseShiftNomenclatureRestID" />
+          </Key>
+          <Property Name="DocCloseShiftNomenclatureRestID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
+        </EntityType>
         <EntityType Name="DocCloseShiftProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -469,6 +478,16 @@
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocCloseShiftWastes">
+          <Key>
+            <PropertyRef Name="DocCloseWhiftWasteID" />
+          </Key>
+          <Property Name="DocCloseWhiftWasteID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <EntityType Name="DocCloseShiftWithdrawals">
           <Key>
@@ -600,6 +619,7 @@
           <Property Name="Number" Type="varchar" MaxLength="50" />
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
           <Property Name="UserID" Type="uniqueidentifier" />
+          <Property Name="PersonID" Type="int" />
           <Property Name="PrintName" Type="varchar" MaxLength="255" />
           <Property Name="PlaceID" Type="int" />
           <Property Name="ShiftID" Type="tinyint" />
@@ -2153,6 +2173,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocCloseShiftNomenclatureRests_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+          <End Role="DocCloseShiftNomenclatureRests" Type="Self.DocCloseShiftNomenclatureRests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftNomenclatureRests">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftNomenclatureRests_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="DocCloseShiftNomenclatureRests" Type="Self.DocCloseShiftNomenclatureRests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftNomenclatureRests">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftNomenclatureRests_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocCloseShiftNomenclatureRests" Type="Self.DocCloseShiftNomenclatureRests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftNomenclatureRests">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocCloseShiftProducts_Docs">
           <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
           <End Role="DocCloseShiftProducts" Type="Self.DocCloseShiftProducts" Multiplicity="*" />
@@ -2233,6 +2289,42 @@
               <PropertyRef Name="DocID" />
             </Principal>
             <Dependent Role="DocCloseShiftSamples">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+          <End Role="DocCloseShiftWastes" Type="Self.DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="DocCloseShiftWastes" Type="Self.DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocCloseShiftWastes" Type="Self.DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
               <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
@@ -2861,18 +2953,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Persons_PostTypes">
-          <End Role="PostTypes" Type="Self.PostTypes" Multiplicity="0..1" />
-          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PostTypes">
-              <PropertyRef Name="PostTypeID" />
-            </Principal>
-            <Dependent Role="Persons">
-              <PropertyRef Name="PostTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
           <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
@@ -2966,30 +3046,6 @@
             </Principal>
             <Dependent Role="PlaceZones1">
               <PropertyRef Name="PlaceZoneParentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductBales_1CCharacteristics">
-          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
-          <End Role="ProductBales" Type="Self.ProductBales" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CCharacteristics">
-              <PropertyRef Name="1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="ProductBales">
-              <PropertyRef Name="1CCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductBales_1CNomenclature">
-          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
-          <End Role="ProductBales" Type="Self.ProductBales" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CNomenclature">
-              <PropertyRef Name="1CNomenclatureID" />
-            </Principal>
-            <Dependent Role="ProductBales">
-              <PropertyRef Name="1CNomenclatureID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3272,30 +3328,6 @@
             </Principal>
             <Dependent Role="Products">
               <PropertyRef Name="StateID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductSpools_1CCharacteristics">
-          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
-          <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CCharacteristics">
-              <PropertyRef Name="1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="ProductSpools">
-              <PropertyRef Name="1CCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductSpools_1CNomenclature">
-          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
-          <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CNomenclature">
-              <PropertyRef Name="1CNomenclatureID" />
-            </Principal>
-            <Dependent Role="ProductSpools">
-              <PropertyRef Name="1CNomenclatureID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3637,9 +3669,6 @@
         <Function Name="GetDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="GetDocCloseShiftBalerBales" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
-        </Function>
         <Function Name="GetDocCloseShiftConvertingPallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -3707,10 +3736,10 @@
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetShiftBeginTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
-          <Parameter Name="Date" Type="datetime" Mode="In" />
+          <Parameter Name="Date" Type="datetime2" Mode="In" />
         </Function>
         <Function Name="GetShiftEndTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
-          <Parameter Name="Date" Type="datetime" Mode="In" />
+          <Parameter Name="Date" Type="datetime2" Mode="In" />
         </Function>
         <Function Name="GetSpecificationInputNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
@@ -3778,7 +3807,6 @@
           <EntitySet Name="1CDocShipmentOrder" EntityType="Self.1CDocShipmentOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CDocShipmentOrderGoods" EntityType="Self.1CDocShipmentOrderGoods" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CEnumGroupTypes" EntityType="Self.1CEnumGroupTypes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="1CMainSpecifications" EntityType="Self.1CMainSpecifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMeasureUnitQualifiers" EntityType="Self.1CMeasureUnitQualifiers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMeasureUnits" EntityType="Self.1CMeasureUnits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CNomenclature" EntityType="Self.1CNomenclature" Schema="dbo" store:Type="Tables" />
@@ -3809,9 +3837,11 @@
           <EntitySet Name="DocBrokeProducts" EntityType="Self.DocBrokeProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocCloseShiftNomenclatureRests" EntityType="Self.DocCloseShiftNomenclatureRests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftProducts" EntityType="Self.DocCloseShiftProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftRemainders" EntityType="Self.DocCloseShiftRemainders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftSamples" EntityType="Self.DocCloseShiftSamples" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocCloseShiftWastes" EntityType="Self.DocCloseShiftWastes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInProducts" EntityType="Self.DocInProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInventarisationProducts" EntityType="Self.DocInventarisationProducts" Schema="dbo" store:Type="Tables" />
@@ -3871,6 +3901,15 @@
           <EntitySet Name="UserPlaces" EntityType="Self.UserPlaces" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="1CMainSpecifications" EntityType="Self.1CMainSpecifications" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [1CMainSpecifications].[Period] AS [Period], 
+    [1CMainSpecifications].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [1CMainSpecifications].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [1CMainSpecifications].[1CSpecificationID] AS [1CSpecificationID], 
+    [1CMainSpecifications].[1CPlaceID] AS [1CPlaceID]
+    FROM [dbo].[1CMainSpecifications] AS [1CMainSpecifications]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="v1COrderGoods" EntityType="Self.v1COrderGoods" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [v1COrderGoods].[DocOrderID] AS [DocOrderID], 
@@ -4340,6 +4379,18 @@
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftNomenclatureRests_1CCharacteristics" Association="Self.FK_DocCloseShiftNomenclatureRests_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocCloseShiftNomenclatureRests" EntitySet="DocCloseShiftNomenclatureRests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftNomenclatureRests_1CNomenclature" Association="Self.FK_DocCloseShiftNomenclatureRests_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocCloseShiftNomenclatureRests" EntitySet="DocCloseShiftNomenclatureRests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftNomenclatureRests_Docs" Association="Self.FK_DocCloseShiftNomenclatureRests_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftNomenclatureRests" EntitySet="DocCloseShiftNomenclatureRests" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftProducts_Docs" Association="Self.FK_DocCloseShiftProducts_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftProducts" EntitySet="DocCloseShiftProducts" />
@@ -4367,6 +4418,18 @@
           <AssociationSet Name="FK_DocCloseShiftSamples_Docs" Association="Self.FK_DocCloseShiftSamples_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CCharacteristics" Association="Self.FK_DocCloseShiftWastes_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CNomenclature" Association="Self.FK_DocCloseShiftWastes_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_Docs" Association="Self.FK_DocCloseShiftWastes_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftWithdrawals_Docs" Association="Self.FK_DocCloseShiftWithdrawals_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -4572,10 +4635,6 @@
             <End Role="Branches" EntitySet="Branches" />
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
-          <AssociationSet Name="FK_Persons_PostTypes" Association="Self.FK_Persons_PostTypes">
-            <End Role="PostTypes" EntitySet="PostTypes" />
-            <End Role="Persons" EntitySet="Persons" />
-          </AssociationSet>
           <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
             <End Role="PlaceGroup1CNomenclature" EntitySet="PlaceGroup1CNomenclature" />
@@ -4607,14 +4666,6 @@
           <AssociationSet Name="FK_PlaceZones_PlaceZones" Association="Self.FK_PlaceZones_PlaceZones">
             <End Role="PlaceZones" EntitySet="PlaceZones" />
             <End Role="PlaceZones1" EntitySet="PlaceZones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductBales_1CCharacteristics" Association="Self.FK_ProductBales_1CCharacteristics">
-            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
-            <End Role="ProductBales" EntitySet="ProductBales" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductBales_1CNomenclature" Association="Self.FK_ProductBales_1CNomenclature">
-            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
-            <End Role="ProductBales" EntitySet="ProductBales" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductBales_Products" Association="Self.FK_ProductBales_Products">
             <End Role="Products" EntitySet="Products" />
@@ -4707,14 +4758,6 @@
           <AssociationSet Name="FK_Products_ProductStates" Association="Self.FK_Products_ProductStates">
             <End Role="ProductStates" EntitySet="ProductStates" />
             <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSpools_1CCharacteristics" Association="Self.FK_ProductSpools_1CCharacteristics">
-            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductSpools_1CNomenclature" Association="Self.FK_ProductSpools_1CNomenclature">
-            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
-            <End Role="ProductSpools" EntitySet="ProductSpools" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductSpools_Products" Association="Self.FK_ProductSpools_Products">
             <End Role="Products" EntitySet="Products" />
@@ -6437,6 +6480,32 @@
             <End Role="PostTypes" EntitySet="PostTypes" />
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
+          <EntitySet Name="DocCloseShiftNomenclatureRests" EntityType="GammaModel.DocCloseShiftNomenclatureRests" />
+          <EntitySet Name="DocCloseShiftWastes" EntityType="GammaModel.DocCloseShiftWastes" />
+          <AssociationSet Name="FK_DocCloseShiftNomenclatureRests_1CCharacteristics" Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="DocCloseShiftNomenclatureRests" EntitySet="DocCloseShiftNomenclatureRests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CCharacteristics" Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftNomenclatureRests_1CNomenclature" Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocCloseShiftNomenclatureRests" EntitySet="DocCloseShiftNomenclatureRests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CNomenclature" Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftNomenclatureRests_Docs" Association="GammaModel.FK_DocCloseShiftNomenclatureRests_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftNomenclatureRests" EntitySet="DocCloseShiftNomenclatureRests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_Docs" Association="GammaModel.FK_DocCloseShiftWastes_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -6658,6 +6727,8 @@
           <Property Name="FullName" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductBales" />
+          <NavigationProperty Name="DocCloseShiftNomenclatureRests" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftNomenclatureRests" />
+          <NavigationProperty Name="DocCloseShiftWastes" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftWastes" />
         </EntityType>
         <EntityType Name="C1CSpecifications">
           <Key>
@@ -7902,6 +7973,9 @@
           <Property Name="PersonGuid" Type="Guid" />
           <NavigationProperty Name="DocInventarisationProducts" Relationship="GammaModel.FK_DocInventarisationProducts_Docs" FromRole="Docs" ToRole="DocInventarisationProducts" />
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Docs_Persons" FromRole="Docs" ToRole="Persons" />
+          <Property Name="PersonID" Type="Int32" />
+          <NavigationProperty Name="DocCloseShiftNomenclatureRests" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_Docs" FromRole="Docs" ToRole="DocCloseShiftNomenclatureRests" />
+          <NavigationProperty Name="DocCloseShiftWastes" Relationship="GammaModel.FK_DocCloseShiftWastes_Docs" FromRole="Docs" ToRole="DocCloseShiftWastes" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -8833,6 +8907,8 @@
           <Property Name="PrintName" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductBales" />
+          <NavigationProperty Name="DocCloseShiftNomenclatureRests" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftNomenclatureRests" />
+          <NavigationProperty Name="DocCloseShiftWastes" Relationship="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftWastes" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -9720,6 +9796,104 @@
             </Principal>
             <Dependent Role="Persons">
               <PropertyRef Name="PostTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocCloseShiftNomenclatureRests">
+          <Key>
+            <PropertyRef Name="DocCloseShiftNomenclatureRestID" />
+          </Key>
+          <Property Name="DocCloseShiftNomenclatureRestID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics" FromRole="DocCloseShiftNomenclatureRests" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_1CNomenclature" FromRole="DocCloseShiftNomenclatureRests" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_Docs" FromRole="DocCloseShiftNomenclatureRests" ToRole="Docs" />
+        </EntityType>
+        <EntityType Name="DocCloseShiftWastes">
+          <Key>
+            <PropertyRef Name="DocCloseWhiftWasteID" />
+          </Key>
+          <Property Name="DocCloseWhiftWasteID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics" FromRole="DocCloseShiftWastes" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" FromRole="DocCloseShiftWastes" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftWastes_Docs" FromRole="DocCloseShiftWastes" ToRole="Docs" />
+        </EntityType>
+        <Association Name="FK_DocCloseShiftNomenclatureRests_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftNomenclatureRests" Role="DocCloseShiftNomenclatureRests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftNomenclatureRests">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftWastes" Role="DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftNomenclatureRests_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftNomenclatureRests" Role="DocCloseShiftNomenclatureRests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftNomenclatureRests">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftWastes" Role="DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftNomenclatureRests_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftNomenclatureRests" Role="DocCloseShiftNomenclatureRests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftNomenclatureRests">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftWastes" Role="DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -10898,6 +11072,7 @@
           <EntitySetMapping Name="Docs">
             <EntityTypeMapping TypeName="GammaModel.Docs">
               <MappingFragment StoreEntitySet="Docs">
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="PersonGuid" ColumnName="PersonGuid" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
                 <ScalarProperty Name="IsFromOldGamma" ColumnName="IsFromOldGamma" />
@@ -11303,7 +11478,6 @@
           <EntitySetMapping Name="C1CMainSpecifications">
             <EntityTypeMapping TypeName="GammaModel.C1CMainSpecifications">
               <MappingFragment StoreEntitySet="1CMainSpecifications">
-                <ScalarProperty Name="C1CMainSpecificationID" ColumnName="1CMainSpecificationID" />
                 <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
                 <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
@@ -11424,19 +11598,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocCloseShiftBalerBales" FunctionName="GammaDBModel.GetDocCloseShiftBalerBales">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftBalerBales_Result">
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="DocID" ColumnName="DocID" />
-                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
-                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Get1CDocShipmentOrders" FunctionName="GammaDBModel.Get1CDocShipmentOrders" />
           <FunctionImportMapping FunctionImportName="Get1CNomenclature" FunctionName="GammaDBModel.Get1CNomenclature" />
           <EntitySetMapping Name="vGroupPackSpools">
@@ -11454,6 +11615,28 @@
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="Barcode" ColumnName="Barcode" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocCloseShiftNomenclatureRests">
+            <EntityTypeMapping TypeName="GammaModel.DocCloseShiftNomenclatureRests">
+              <MappingFragment StoreEntitySet="DocCloseShiftNomenclatureRests">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocCloseShiftNomenclatureRestID" ColumnName="DocCloseShiftNomenclatureRestID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocCloseShiftWastes">
+            <EntityTypeMapping TypeName="GammaModel.DocCloseShiftWastes">
+              <MappingFragment StoreEntitySet="DocCloseShiftWastes">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocCloseWhiftWasteID" ColumnName="DocCloseWhiftWasteID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

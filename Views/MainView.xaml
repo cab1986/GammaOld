@@ -45,6 +45,9 @@
         <DataTemplate DataType="{x:Type vm:DocMovementsViewModel}">
             <views:DocMovementsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocInventarisationsViewModel}">
+            <views:DocInventarisationsView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
@@ -97,6 +100,7 @@
                         <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />
                         <dxb:BarButtonItem Content="Зонирование складов" Command="{Binding OpenPlaceZonesCommand}" />
                         <dxb:BarButtonItem Content="Комплектация паллеты" Command="{Binding ComplectPalletCommand}" />
+                        <dxb:BarButtonItem Content="Инвентаризации" Command="{Binding OpenInventarisationsCommand}"/>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Номенклатура">
                         <dxb:BarButtonItem Content="Номенклатура СГИ" Command="{Binding EditPlaceGroupNomenclatureCommand}" CommandParameter="2"/>

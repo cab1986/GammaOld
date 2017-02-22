@@ -5,6 +5,7 @@ using Gamma.Interfaces;
 using Gamma.Models;
 using System.Data.Entity;
 using System.Windows;
+using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
@@ -12,6 +13,7 @@ namespace Gamma.ViewModels
     {
         public DocInventarisationViewModel(Guid docId)
         {
+            DocId = docId;
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocInventarisationProducts).Include(d => d.Persons).Include(d => d.Places)
@@ -25,17 +27,29 @@ namespace Gamma.ViewModels
                 Number = doc.Number;
                 Date = doc.Date;
                 Place = doc.Places.Name;
-                Items = new ObservableCollection<InventarisationItem>(doc.DocInventarisationProducts.Join(gammaBase.vProductsInfo.DefaultIfEmpty(),
-                        ip => ip.ProductID,
-                        p => p.ProductID, (ip,p) => new {InventarisationProduct = ip, Product = p}).Select(p => new InventarisationItem()
-                        {
-                            NomenclatureName = p.Product?.NomenclatureName??"",
-                            Barcode = p.InventarisationProduct.Barcode,
-                            Quantity = p.Product?.Quantity,
-                            MeasureUnit = p.Product?.BaseMeasureUnit
-                        }));
+                IsConfirmed = doc.IsConfirmed;
+                var productIds =
+                    doc.DocInventarisationProducts.Where(ip => ip.ProductID.HasValue)
+                        .Select(ip => ip.ProductID)
+                        .ToArray();
+                var products =
+                    gammaBase.vProductsInfo.Where(
+                        p => productIds.Contains(p.ProductID)).ToArray();
+                foreach (var ip in doc.DocInventarisationProducts)
+                {
+                    var product = products.FirstOrDefault(p => p.ProductID == ip.ProductID);
+                    Items.Add(new InventarisationItem()
+                    {
+                        NomenclatureName = product?.NomenclatureName ?? "",
+                        Number = product?.Number ?? ip.Barcode,
+                        Quantity = product?.Quantity ?? 0,
+                        MeasureUnit = product?.BaseMeasureUnit ??""
+                    });
+                }
             }
         }
+
+        private Guid DocId { get; set; }
 
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
@@ -43,6 +57,20 @@ namespace Gamma.ViewModels
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public string Place { get; set; }
-        public ObservableCollection<InventarisationItem> Items;
+        public bool IsConfirmed { get; set; }
+        public ObservableCollection<InventarisationItem> Items { get; set; } = new ObservableCollection<InventarisationItem>();
+
+        public override bool SaveToModel(GammaEntities db = null)
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var doc = gammaBase.Docs.FirstOrDefault(d => d.DocID == DocId);
+                if (doc == null) return false;
+                doc.Number = Number;
+                doc.IsConfirmed = IsConfirmed;
+                gammaBase.SaveChanges();
+            }
+            return true;
+        }
     }
 }

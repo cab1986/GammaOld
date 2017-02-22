@@ -1,5 +1,7 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+using System;
 using Gamma.Views;
 using DevExpress.Mvvm;
 
@@ -34,7 +36,14 @@ namespace Gamma.Common
             Messenger.Default.Register<EditDocMovementMessage>(this, EditDocMovement);
             Messenger.Default.Register<OpenPlaceZonesMessage>(this, OpenPlaceZones);
             Messenger.Default.Register<OpenQualityReportPMMessage>(this, OpenQualityReportPM);
+            Messenger.Default.Register<OpenDocInventarisationMessage>(this, OpenDocInventarisation);
 
+        }
+
+        private void OpenDocInventarisation(OpenDocInventarisationMessage msg)
+        {
+            UIServices.SetBusyState();
+            new DocInventarisationView(msg.DocId).Show();
         }
 
         private void OpenQualityReportPM(OpenQualityReportPMMessage msg)

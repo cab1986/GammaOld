@@ -161,33 +161,41 @@ namespace Gamma.ViewModels
             var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
             if (docBrokeDecisionProducts.Count == 0)
             {
-                brokeDecisionProducts.Add(new BrokeDecisionProduct
-                {
-                    Quantity = product.BaseMeasureUnitQuantity ?? 0,
-                    MaxQuantity = product.BaseMeasureUnitQuantity ?? 1000000,
-                    ProductId = product.ProductID,
-                    Number = product.Number,
-                    NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date), //product.NomenclatureName,
-                    ProductState = ProductState.NeedsDecision,
-                    MeasureUnit = product.BaseMeasureUnit
-                });
+                brokeDecisionProducts.Add(new BrokeDecisionProduct(
+                    product.ProductID,
+                    (ProductKind)product.ProductKindID,
+                    product.Number,
+                    ProductState.NeedsDecision,
+                    product.BaseMeasureUnitQuantity ?? 1000000,
+                    DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
+                    product.BaseMeasureUnit,
+                    product.C1CNomenclatureID,
+                    (Guid) product.C1CCharacteristicID,
+                    product.BaseMeasureUnitQuantity ?? 0
+                    )
+                );
             }
             else
             {
                 foreach (var decisionProduct in docBrokeDecisionProducts)
                 {
-                    brokeDecisionProducts.Add(new BrokeDecisionProduct
+                    brokeDecisionProducts.Add(new BrokeDecisionProduct(
+                            decisionProduct.ProductID,
+                            (ProductKind)product.ProductKindID,
+                            product.Number,
+                            (ProductState)decisionProduct.StateID,
+                            docBrokeProductInfo?.Quantity ?? 1000000,
+                            DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
+                            product.BaseMeasureUnit,
+                            product.C1CNomenclatureID,
+                            (Guid)product.C1CCharacteristicID,
+                            decisionProduct.Quantity ?? 0
+                        )
                     {
-                        Quantity = decisionProduct.Quantity??0,
-                        MaxQuantity = docBrokeProductInfo?.Quantity ?? 1000000,
-                        MeasureUnit = product.BaseMeasureUnit,
-                        ProductState = (ProductState)decisionProduct.StateID,
-                        ProductId = decisionProduct.ProductID,
-                        Number = product.Number,
-                        NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
                         Comment = decisionProduct.Comment,
                         NomenclatureId = decisionProduct.C1CNomenclatureID,
-                        CharacteristicId = decisionProduct.C1CCharacteristicID
+                        CharacteristicId = decisionProduct.C1CCharacteristicID,
+                        ProductKind = (ProductKind)product.ProductKindID
                     });
                 }
             }
@@ -381,17 +389,20 @@ namespace Gamma.ViewModels
         private BrokeDecisionProduct CreateNewBrokeDecisionProductWithState(BrokeDecisionProduct product,
             ProductState productState)
         {
-            var decisionProduct = new BrokeDecisionProduct
+            var decisionProduct = new BrokeDecisionProduct(
+                    product.ProductId,
+                    product.ProductKind,
+                    product.Number,
+                    productState,
+                    product.MaxQuantity,
+                    product.NomenclatureName,
+                    product.MeasureUnit,
+                    product.NomenclatureOldId,
+                    product.CharacteristicOldId
+                )
             {
                 CharacteristicId = product.CharacteristicId,
                 NomenclatureId = product.NomenclatureId,
-                Quantity = 0,
-                MaxQuantity = product.MaxQuantity,
-                ProductId = product.ProductId,
-                Number = product.Number,
-                NomenclatureName = product.NomenclatureName,
-                ProductState = productState,
-                MeasureUnit = product.MeasureUnit
             };
             return decisionProduct;
         }
@@ -407,6 +418,15 @@ namespace Gamma.ViewModels
         public override bool SaveToModel(GammaEntities gamma = null)
         {
             if (!DB.HaveWriteAccess("DocBroke")) return true;
+            if (
+                BrokeDecisionProducts.Any(
+                    dp =>
+                        dp.ProductState == ProductState.Repack &&
+                        (dp.NomenclatureId == null || dp.CharacteristicId == null)))
+            {
+                MessageBox.Show("При решении \"на переделку\" необходимо указать номенклатуру и характеристику");
+                return false;
+            }
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)

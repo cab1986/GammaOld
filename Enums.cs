@@ -122,7 +122,9 @@ namespace Gamma
         DocShipment,
         DocUnpack,
         DocBroke,
-        DocMovementOrder
+        DocMovementOrder,
+        DocWarehouseAccept,
+        DocInventarisation
     }
     public enum PermissionMark
     {

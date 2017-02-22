@@ -100,12 +100,13 @@ namespace Gamma.ViewModels
                 OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
                 OpenImportOldProductsCommand = new DelegateCommand(MessageManager.OpenImportOldProducts, () => DB.HaveWriteAccess("Products"));
                 OpenDocBrokeListCommand = new DelegateCommand(OpenDocBrokeList);
-//                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
+                OpenInventarisationsCommand = new DelegateCommand(OpenInventarisations);
                 OpenDocMovementsCommand = new DelegateCommand(OpenDocMovements);
                 OpenPlaceZonesCommand = new DelegateCommand(OpenPlaceZones);
                 ShowProgrammInfoCommand = new DelegateCommand(ShowProgrammInfo);
                 OpenQualityReportPMCommand = new DelegateCommand(MessageManager.OpenQualityReportPM);
                 ComplectPalletCommand = new DelegateCommand(ComplectPallet, () => DB.HaveWriteAccess("Pallets"));
+                //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
             {
@@ -147,6 +148,12 @@ namespace Gamma.ViewModels
                                                ReportName = p.Name,
                                                Command = PrintReportCommand
                                            }));
+        }
+
+        private void OpenInventarisations()
+        {
+            UIServices.SetBusyState();
+            CurrentView = new DocInventarisationsViewModel();
         }
 
         private void OpenProductionTaskBatch(OpenProductionTaskBatchMessage msg)
@@ -403,6 +410,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenDocMovementsCommand { get; private set; }
         public DelegateCommand OpenQualityReportPMCommand { get; private set; }
         public DelegateCommand ComplectPalletCommand { get; private set; }
+        public DelegateCommand OpenInventarisationsCommand { get; set; }
         public List<ReportItem> Reports { get; set; }
 
         public class PlaceProduct

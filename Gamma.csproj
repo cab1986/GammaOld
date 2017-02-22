@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>45</ApplicationRevision>
+    <ApplicationRevision>47</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -325,10 +325,16 @@
     <Compile Include="Entities\DocChangeStateProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DocCloseShiftNomenclatureRests.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DocCloseShiftRemainders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocCloseShiftSamples.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocCloseShiftWastes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocInProducts.cs">
@@ -650,6 +656,7 @@
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Models\DocInventarisation.cs" />
     <Compile Include="Models\InventarisationItem.cs" />
     <Compile Include="Models\MovementGood.cs" />
     <Compile Include="Models\MovementItem.cs" />
@@ -734,6 +741,7 @@
     <Compile Include="ViewModels\DocCloseShiftRwGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
+    <Compile Include="ViewModels\DocInventarisationsViewModel.cs" />
     <Compile Include="ViewModels\DocInventarisationViewModel.cs" />
     <Compile Include="ViewModels\DocMovementsViewModel.cs" />
     <Compile Include="ViewModels\DocMovementViewModel.cs" />
@@ -824,6 +832,12 @@
     </Compile>
     <Compile Include="Views\DocCloseShiftWRGridView.xaml.cs">
       <DependentUpon>DocCloseShiftWRGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocInventarisationsView.xaml.cs">
+      <DependentUpon>DocInventarisationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocInventarisationView.xaml.cs">
+      <DependentUpon>DocInventarisationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocMovementsView.xaml.cs">
       <DependentUpon>DocMovementsView.xaml</DependentUpon>
@@ -1024,6 +1038,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocCloseShiftWRGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocInventarisationsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocInventarisationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

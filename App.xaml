@@ -129,5 +129,6 @@
         <Style TargetType="{x:Type v:DocMovementView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:PlaceZonesView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:QualityReportPMView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
+        <Style TargetType="{x:Type v:DocInventarisationView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
     </Application.Resources>
 </Application>

@@ -29,6 +29,8 @@ namespace Gamma.Entities
             this.DocCloseShiftRemainders = new HashSet<DocCloseShiftRemainders>();
             this.DocCloseShiftProducts = new HashSet<Products>();
             this.DocInventarisationProducts = new HashSet<DocInventarisationProducts>();
+            this.DocCloseShiftNomenclatureRests = new HashSet<DocCloseShiftNomenclatureRests>();
+            this.DocCloseShiftWastes = new HashSet<DocCloseShiftWastes>();
         }
     
         public System.Guid DocID { get; set; }
@@ -45,6 +47,7 @@ namespace Gamma.Entities
         public Nullable<bool> IsFromOldGamma { get; set; }
         public Nullable<byte> BranchID { get; set; }
         public Nullable<System.Guid> PersonGuid { get; set; }
+        public Nullable<int> PersonID { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -79,5 +82,9 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocInventarisationProducts> DocInventarisationProducts { get; set; }
         public virtual Persons Persons { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftNomenclatureRests> DocCloseShiftNomenclatureRests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftWastes> DocCloseShiftWastes { get; set; }
     }
 }

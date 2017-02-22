@@ -55,6 +55,16 @@ namespace Gamma
 
     public class OpenPlaceZonesMessage { }
 
+    public class OpenDocInventarisationMessage
+    {
+        public OpenDocInventarisationMessage(Guid docId)
+        {
+            DocId = docId;
+        }
+
+        public Guid DocId { get; private set; }
+    }
+
     public class EditDocMovementMessage
     {
         public EditDocMovementMessage(Guid docId)
@@ -508,5 +518,9 @@ namespace Gamma
             Messenger.Default.Send(new OpenPlaceZonesMessage());
         }
 
+        internal static void OpenDocInventarisation(Guid docId)
+        {
+            Messenger.Default.Send(new OpenDocInventarisationMessage(docId));
+        }
     }
 }
