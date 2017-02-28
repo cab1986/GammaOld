@@ -118,7 +118,6 @@ namespace Gamma.Entities
         public virtual DbSet<ProductPallets> ProductPallets { get; set; }
         public virtual DbSet<DocProductionProducts> DocProductionProducts { get; set; }
         public virtual DbSet<DocMovementOrder> DocMovementOrder { get; set; }
-        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
@@ -127,6 +126,7 @@ namespace Gamma.Entities
         public virtual DbSet<vGroupPackSpools> vGroupPackSpools { get; set; }
         public virtual DbSet<DocInventarisationProducts> DocInventarisationProducts { get; set; }
         public virtual DbSet<DocCloseShiftNomenclatureRests> DocCloseShiftNomenclatureRests { get; set; }
+        public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<DocCloseShiftWastes> DocCloseShiftWastes { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
@@ -763,6 +763,23 @@ namespace Gamma.Entities
         public virtual int Get1CNomenclature()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Get1CNomenclature");
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftConvertingWastes_Result> FillDocCloseShiftConvertingWastes(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingWastes_Result>("FillDocCloseShiftConvertingWastes", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }
 }

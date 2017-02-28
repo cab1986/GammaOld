@@ -18,9 +18,11 @@ namespace Gamma.Entities
         public System.Guid DocID { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
+        public decimal Quantity { get; set; }
+        public System.Guid C1CMeasureUnitID { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual Docs Docs { get; set; }
     }

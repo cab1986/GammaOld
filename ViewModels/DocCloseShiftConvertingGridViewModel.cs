@@ -80,6 +80,26 @@ namespace Gamma.ViewModels
                     Quantity = ds.Quantity/ds.C1CCharacteristics.C1CMeasureUnitsPackage.Coefficient??1,
                     NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name
                 }));
+            // Получение переходных остатков
+            NomenclatureRests = new ObservableCollection<Sample>(GammaBase.DocCloseShiftNomenclatureRests.Where(dr => dr.DocID == docId)
+                .Select(dr => new Sample
+                {
+                    NomenclatureID = dr.C1CNomenclatureID,
+                    CharacteristicID = dr.C1CCharacteristicID,
+                    Quantity = dr.Quantity / dr.C1CCharacteristics.C1CMeasureUnitsPackage.Coefficient ?? 1,
+                    NomenclatureName = dr.C1CNomenclature.Name + " " + dr.C1CCharacteristics.Name
+                }));
+            // Получение отходов
+            Wastes = new ObservableCollection<Sample>(GammaBase.DocCloseShiftWastes.Where(dw => dw.DocID == docId)
+                .Select(dw => new Sample
+                {
+                    NomenclatureID = dw.C1CNomenclatureID,
+                    CharacteristicID = dw.C1CCharacteristicID,
+                    Quantity = dw.Quantity,
+                    NomenclatureName = dw.C1CNomenclature.Name + " " + dw.C1CCharacteristics.Name ?? "",
+                    MeasureUnitId = dw.C1CMeasureUnitID,
+                    MeasureUnit = dw.C1CMeasureUnits.Name
+                }));
         }
 
         public bool IsChanged { get; private set; }
@@ -89,6 +109,7 @@ namespace Gamma.ViewModels
         public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || !DB.HaveWriteAccess("DocCloseShiftSamples") || IsConfirmed;
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
+
         public void FillGrid()
         {
             UIServices.SetBusyState();
@@ -109,6 +130,14 @@ namespace Gamma.ViewModels
                 Number = p.Number
             }));
             Samples = new ObservableCollection<Sample>(Pallets
+                .Select(p => new Sample
+                {
+                    NomenclatureID = p.NomenclatureID,
+                    CharacteristicID = p.CharacteristicID,
+                    Quantity = 0,
+                    NomenclatureName = p.NomenclatureName,
+                }).Distinct());
+            NomenclatureRests = new ObservableCollection<Sample>(Pallets
                 .Select(p => new Sample
                 {
                     NomenclatureID = p.NomenclatureID,
@@ -137,8 +166,20 @@ namespace Gamma.ViewModels
                             MeasureUnit = m.MeasureUnit,
                             MeasureUnitID = m.MeasureUnitID
                         }));
+            Wastes = new ItemsChangeObservableCollection<Sample>(
+                GammaBase.FillDocCloseShiftConvertingWastes(PlaceID, ShiftID, CloseDate)
+                .Select(w => new Sample
+                {
+                    NomenclatureID = (Guid)w.NomenclatureID,
+                    CharacteristicID = w.CharacteristicID,
+                    Quantity = w.Quantity??0,
+                    NomenclatureName = w.NomenclatureName,
+                    MeasureUnitId = w.MeasureUnitID,
+                    MeasureUnit = w.MeasureUnit
+                }));
             IsChanged = true;
         }
+
         public DelegateCommand AddWithdrawalMaterialCommand { get; private set; }
         public DelegateCommand DeleteWithdrawalMaterialCommand { get; private set; }
 
@@ -210,8 +251,32 @@ namespace Gamma.ViewModels
             }
         }
 
+        public ObservableCollection<Sample> Wastes
+        {
+            get { return _wastes; }
+            set
+            {
+                _wastes = value;
+                RaisePropertyChanged("Wastes");
+            }
+        }
+
+        private ObservableCollection<Sample> _nomenclatureRests;
+
+        public ObservableCollection<Sample> NomenclatureRests
+        {
+            get { return _nomenclatureRests; }
+            set
+            {
+                _nomenclatureRests = value;
+                RaisePropertyChanged("NomenclatureRests");
+            }
+        }
+
+
         private ObservableCollection<Pallet> _pallets = new ObservableCollection<Pallet>();
-        
+        private ObservableCollection<Sample> _wastes;
+
         public ObservableCollection<Pallet> Pallets
         {
             get { return _pallets; }
@@ -230,7 +295,7 @@ namespace Gamma.ViewModels
         {
             if (IsReadOnly) return true;
             var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftWithdrawals)
-                .Include(d => d.DocCloseShiftSamples)
+                .Include(d => d.DocCloseShiftSamples).Include(d => d.DocCloseShiftWastes).Include(d => d.DocCloseShiftNomenclatureRests)
                 .First(d => d.DocID == docId);
             if (docCloseShift.DocCloseShiftDocs == null) docCloseShift.DocCloseShiftDocs = new List<Docs>();
             Guid docWithdrawalId;
@@ -238,6 +303,10 @@ namespace Gamma.ViewModels
                 docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
             if (docCloseShift.DocCloseShiftSamples == null)
                 docCloseShift.DocCloseShiftSamples = new List<DocCloseShiftSamples>();
+            if (docCloseShift.DocCloseShiftWastes == null)
+                docCloseShift.DocCloseShiftWastes = new List<DocCloseShiftWastes>();
+            if (docCloseShift.DocCloseShiftNomenclatureRests == null)
+                docCloseShift.DocCloseShiftNomenclatureRests = new List<DocCloseShiftNomenclatureRests>();
             if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
             {
                 docWithdrawalId = SqlGuidUtil.NewSequentialid();
@@ -268,10 +337,36 @@ namespace Gamma.ViewModels
                 {
                     DocID = docId,
                     C1CNomenclatureID = sample.NomenclatureID,
-                    C1CCharacteristicID = sample.CharacteristicID,
+                    C1CCharacteristicID = (Guid)sample.CharacteristicID,
                     DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
                     Quantity = sample.Quantity*GammaBase.C1CCharacteristics
                         .FirstOrDefault(c => c.C1CCharacteristicID == sample.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient??1
+                });
+            }
+            GammaBase.DocCloseShiftNomenclatureRests.RemoveRange(docCloseShift.DocCloseShiftNomenclatureRests);
+            foreach (var rest in NomenclatureRests)
+            {
+                docCloseShift.DocCloseShiftNomenclatureRests.Add(new DocCloseShiftNomenclatureRests
+                {
+                    DocID = docId,
+                    C1CNomenclatureID = rest.NomenclatureID,
+                    C1CCharacteristicID = (Guid)rest.CharacteristicID,
+                    DocCloseShiftNomenclatureRestID = SqlGuidUtil.NewSequentialid(),
+                    Quantity = rest.Quantity * GammaBase.C1CCharacteristics
+                        .FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient ?? 1
+                });
+            }
+            GammaBase.DocCloseShiftWastes.RemoveRange(docCloseShift.DocCloseShiftWastes);
+            foreach (var waste in Wastes)
+            {
+                docCloseShift.DocCloseShiftWastes.Add(new DocCloseShiftWastes
+                {
+                    DocID = docId,
+                    C1CNomenclatureID = waste.NomenclatureID,
+                    C1CCharacteristicID = waste.CharacteristicID,
+                    DocCloseWhiftWasteID = SqlGuidUtil.NewSequentialid(),
+                    C1CMeasureUnitID = (Guid)waste.MeasureUnitId,
+                    Quantity = waste.Quantity
                 });
             }
             if (IsChanged)
@@ -306,11 +401,13 @@ namespace Gamma.ViewModels
             return true;
         }
 
-        public class Sample
+        public class Sample : ViewModelBase
         {
             public Guid NomenclatureID { get; set; }
-            public Guid CharacteristicID { get; set; }
+            public Guid? CharacteristicID { get; set; }
             public string NomenclatureName { get; set; }
+            public Guid? MeasureUnitId { get; set; }
+            public string MeasureUnit { get; set; }
             public decimal Quantity { get; set; }
 
             protected bool Equals(Sample other)

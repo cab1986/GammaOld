@@ -24,6 +24,7 @@ namespace Gamma.Entities
             this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
             this.C1CCharacteristics = new HashSet<C1CCharacteristics>();
             this.C1CCharacteristics1 = new HashSet<C1CCharacteristics>();
+            this.DocCloseShiftWastes = new HashSet<DocCloseShiftWastes>();
         }
     
         public System.Guid C1CMeasureUnitID { get; set; }
@@ -49,5 +50,7 @@ namespace Gamma.Entities
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftWastes> DocCloseShiftWastes { get; set; }
     }
 }

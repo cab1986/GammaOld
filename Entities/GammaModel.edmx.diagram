@@ -237,11 +237,6 @@
         <AssociationConnector Association="GammaModel.FK_DocMovementOrder_Places1" />
         <AssociationConnector Association="GammaModel.FK_DocMovementOrderNomenclature_DocMovementOrder" />
         <AssociationConnector Association="GammaModel.DocMovementOrderDocs" />
-        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.5" PointX="19.5" PointY="52.75" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
         <EntityTypeShape EntityType="GammaModel.Users" Width="1.5" PointX="9.75" PointY="67.125" />
         <AssociationConnector Association="GammaModel.FK_CurrentPlaceUsers_Users" />
         <AssociationConnector Association="GammaModel.FK_Docs_Users" />
@@ -281,12 +276,18 @@
         <AssociationConnector Association="GammaModel.FK_Docs_Persons" />
         <AssociationConnector Association="GammaModel.FK_Persons_PostTypes" />
         <EntityTypeShape EntityType="GammaModel.DocCloseShiftNomenclatureRests" Width="1.5" PointX="25.75" PointY="43.875" />
-        <EntityTypeShape EntityType="GammaModel.DocCloseShiftWastes" Width="1.5" PointX="24.75" PointY="65.875" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_Docs" />
+        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.75" PointX="19.5" PointY="52.75" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftWastes" Width="1.5" PointX="24.75" PointY="65.5" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_Docs" />
         </Diagram>
     </edmx:Diagrams>

@@ -1,13 +1,17 @@
-﻿
+﻿D:\CProjects\Gamma\Gamma\obj\Release\GeneratedInternalTypeHelper.g.cs
 FD:\CProjects\Gamma\Gamma\App.xaml;;
+FD:\CProjects\Gamma\Gamma\Dialogs\AddNomenclatureToPalletDialog.xaml;;
 FD:\CProjects\Gamma\Gamma\Dialogs\SetBaleWeightDialog.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocBrokeListView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocBrokeView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftBalerGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftUnwinderRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocInventarisationsView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocInventarisationView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocMovementsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocMovementView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductBaleView.xaml;;
@@ -45,8 +49,4 @@ FD:\CProjects\Gamma\Gamma\Views\ProductionTasksSGBView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\SourceSpoolsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\WarehousePersonsView.xaml;;
-FD:\CProjects\Gamma\Gamma\Dialogs\AddNomenclatureToPalletDialog.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftBalerGridView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocInventarisationsView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocInventarisationView.xaml;;
 

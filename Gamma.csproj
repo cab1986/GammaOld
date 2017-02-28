@@ -394,6 +394,9 @@
     <Compile Include="Entities\FillDocCloseShiftConvertingPallets_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocCloseShiftConvertingWastes_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FillDocCloseShiftRwSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>

@@ -72,6 +72,49 @@
                     </dxg:GridControl.View>
                 </dxg:GridControl>
             </dx:DXTabItem>
+            <dx:DXTabItem Header="Остатки продукции от переходов">
+                <dxg:GridControl ItemsSource="{Binding NomenclatureRests}">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Номенклатура"/>
+                        <dxg:GridColumn FieldName="Quantity" Width="120" FixedWidth="True" Header="Кол-во групповых упаковок" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:SpinEditSettings MinValue="0" Mask="f0" MaskUseAsDisplayFormat="True" IsFloatValue="False"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" AllowGrouping="False" ShowGroupPanel="False" EnableImmediatePosting="True">
+                            <dxg:TableView.ColumnHeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </dxg:TableView.ColumnHeaderTemplate>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Отходы">
+                <dxg:GridControl ItemsSource="{Binding Wastes}">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Вид продукции"/>
+                        <dxg:GridColumn FieldName="Quantity" Width="120" FixedWidth="True" Header="Кол-во" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:SpinEditSettings MinValue="0" MaskUseAsDisplayFormat="True" IsFloatValue="True" Increment="0.01"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn FieldName="MeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True"/>
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" AllowGrouping="False" ShowGroupPanel="False" EnableImmediatePosting="True">
+                            <dxg:TableView.ColumnHeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </dxg:TableView.ColumnHeaderTemplate>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dx:DXTabItem>
             <dx:DXTabItem Header="Паллеты">
                 <dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type models:Pallet}">
                     <dxg:GridControl.TotalSummary>
