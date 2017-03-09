@@ -115,6 +115,7 @@
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Помощь">
+                        <dxb:BarButtonItem Content="Справка" Command="{Binding OpenHelpCommand}"/>
                         <dxb:BarButtonItem Content="О программе" Command="{Binding ShowProgrammInfoCommand}"/>
                     </dxb:BarSubItem>
                 </dxb:Bar>

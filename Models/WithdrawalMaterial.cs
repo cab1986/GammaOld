@@ -31,14 +31,14 @@ namespace Gamma.Models
                     using (var gammaBase = DB.GammaDb)
                     {
                         var nomenclatureInfo =
-                            gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnits).First(n => n.C1CNomenclatureID == _nomenclatureID);
+                            gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == _nomenclatureID);
                         AvailableNomenclatures.Add(new NomenclatureAnalog()
                         {
                             NomenclatureID = _nomenclatureID,
                             Coefficient = 1,
                             NomenclatureName = nomenclatureInfo.Name,
-                            MeasureUnit = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault()?.Name,
-                            MeasureUnitID = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault()?.C1CMeasureUnitID,
+                            MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                            MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
                             IsMarked = nomenclatureInfo.IsArchive ?? false
                         }); 
                         var analogs =

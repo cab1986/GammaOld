@@ -25,10 +25,10 @@ namespace Gamma.Entities
         public Nullable<decimal> SelectionType { get; set; }
         public Nullable<System.Guid> C1CPropertyID { get; set; }
     
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual C1CSpecifications C1CSpecifications { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
         public virtual C1CProperties C1CProperties { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }

@@ -28,14 +28,14 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CMeasureUnitAnalogID { get; set; }
         public Nullable<decimal> AmountAnalog { get; set; }
     
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual C1CNomenclature C1CAnalogNomenclature { get; set; }
-        public virtual C1CNomenclature C1COutputNomenclature { get; set; }
         public virtual C1CSpecifications C1CSpecifications { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
         public virtual C1CMeasureUnits C1CAnalogMeasureUnits { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics1 { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics2 { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
+        public virtual C1CNomenclature C1CAnalogNomenclature { get; set; }
+        public virtual C1CNomenclature C1CNomenclature2 { get; set; }
     }
 }

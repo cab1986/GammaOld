@@ -34,10 +34,10 @@ namespace Gamma.ViewModels
         public DocProductPalletViewModel(Guid docId, GammaEntities gammaBase = null) : this()
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            var productId = gammaBase.DocProductionProducts.Where(d => d.DocID == docId).Select(d => d.ProductID).First();
+            ProductId = gammaBase.DocProductionProducts.Where(d => d.DocID == docId).Select(d => d.ProductID).First();
             PalletItems = new ObservableCollection<ProductPalletItem>(
                 from palItems in gammaBase.ProductPalletItems
-                where palItems.ProductID == productId
+                where palItems.ProductID == ProductId
                 select new ProductPalletItem()
                 {
                     NomenclatureId = palItems.C1CNomenclatureID,
@@ -49,6 +49,8 @@ namespace Gamma.ViewModels
                 );
             IsConfirmed = gammaBase.Docs.First(d => d.DocID == docId).IsConfirmed;
         }
+
+        public Guid? ProductId { get; private set; }
 
         public ObservableCollection<ProductPalletItem> PalletItems
         {

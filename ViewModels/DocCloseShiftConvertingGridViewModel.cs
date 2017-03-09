@@ -42,7 +42,7 @@ namespace Gamma.ViewModels
                 Number = d.Number
             }));
             var doc = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == docId);
-//            DocCloseShiftDocs = new ObservableCollection<Docs>(doc.DocCloseShiftDocs);
+            DocCloseShiftDocs = new ObservableCollection<Docs>(doc.DocCloseShiftDocs);
             PlaceID = (int)doc.PlaceID;
             ShiftID = doc.ShiftID??0;
             CloseDate = doc.Date;
@@ -58,8 +58,8 @@ namespace Gamma.ViewModels
                 DocWithdrawalMaterialID = d.DocWithdrawalMaterialID,
                 Quantity = d.Quantity,
                 BaseQuantity = d.Quantity,
-                MeasureUnit = d.C1CNomenclature.C1CMeasureUnits.FirstOrDefault(mu => mu.C1CMeasureUnitQualifierID == d.C1CNomenclature.C1CBaseMeasureUnitQualifier).Name,
-                MeasureUnitID = d.C1CNomenclature.C1CMeasureUnits.FirstOrDefault(mu => mu.C1CMeasureUnitQualifierID == d.C1CNomenclature.C1CBaseMeasureUnitQualifier).C1CMeasureUnitID,
+                MeasureUnit = d.C1CNomenclature.C1CMeasureUnitStorage.Name,
+                MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID,
                     /*                AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>()
                                     {
                                         new WithdrawalMaterial.NomenclatureAnalog()
@@ -72,14 +72,21 @@ namespace Gamma.ViewModels
                     QuantityIsReadOnly = !d.WithdrawByFact??true
             }));
             // Получение количества образцов
-            Samples = new ObservableCollection<Sample>(GammaBase.DocCloseShiftSamples.Where(ds => ds.DocID == docId)
+            var samples = new ObservableCollection<Sample>(GammaBase.DocCloseShiftSamples.Where(ds => ds.DocID == docId)
                 .Select(ds => new Sample
                 {
                     NomenclatureID = ds.C1CNomenclatureID,
                     CharacteristicID = ds.C1CCharacteristicID,
-                    Quantity = ds.Quantity/ds.C1CCharacteristics.C1CMeasureUnitsPackage.Coefficient??1,
-                    NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name
+                    Quantity = ds.Quantity,
+                    NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name,
+                    MeasureUnitId = ds.C1CMeasureUnitID
                 }));
+            foreach (var sample in samples)
+            {
+                sample.MeasureUnits = GetMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
+                if (sample.MeasureUnitId == null) sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
+            }
+            Samples = samples;
             // Получение переходных остатков
             NomenclatureRests = new ObservableCollection<Sample>(GammaBase.DocCloseShiftNomenclatureRests.Where(dr => dr.DocID == docId)
                 .Select(dr => new Sample
@@ -129,7 +136,7 @@ namespace Gamma.ViewModels
                 NomenclatureName = p.NomenclatureName,
                 Number = p.Number
             }));
-            Samples = new ObservableCollection<Sample>(Pallets
+            var samples = new ObservableCollection<Sample>(Pallets
                 .Select(p => new Sample
                 {
                     NomenclatureID = p.NomenclatureID,
@@ -137,6 +144,12 @@ namespace Gamma.ViewModels
                     Quantity = 0,
                     NomenclatureName = p.NomenclatureName,
                 }).Distinct());
+            foreach (var sample in samples)
+            {
+                sample.MeasureUnits = GetMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
+                sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
+            }
+            Samples = samples;
             NomenclatureRests = new ObservableCollection<Sample>(Pallets
                 .Select(p => new Sample
                 {
@@ -180,6 +193,30 @@ namespace Gamma.ViewModels
             IsChanged = true;
         }
 
+        private Dictionary<Guid, string> GetMeasureUnits(Guid nomenclatureId, Guid? characteristicId)
+        {
+            var dict = new Dictionary<Guid, string>();
+            using (var gammaBase = DB.GammaDb)
+            {
+                var unit =
+                    gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)?
+                        .C1CMeasureUnitsPackage;
+                if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
+                    dict.Add(unit.C1CMeasureUnitID, unit.Name);
+                unit =
+                    gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId)?
+                        .C1CMeasureUnitStorage;
+                if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
+                    dict.Add(unit.C1CMeasureUnitID, unit.Name);
+                unit =
+                    gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId)?
+                        .C1CMeasureUnitSets;
+                if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
+                    dict.Add(unit.C1CMeasureUnitID, unit.Name);
+            }
+            return dict;
+        }
+
         public DelegateCommand AddWithdrawalMaterialCommand { get; private set; }
         public DelegateCommand DeleteWithdrawalMaterialCommand { get; private set; }
 
@@ -201,15 +238,15 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Unregister<Nomenclature1CMessage>(this);
             var nomenclatureInfo =
-                GammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnits)
+                GammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
                     .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
             WithdrawalMaterials.Add(new WithdrawalMaterial
             {
                 NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
                 QuantityIsReadOnly = false,
                 Quantity = 0,
-                MeasureUnitID = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault(mu => mu.C1CMeasureUnitQualifierID == nomenclatureInfo.C1CBaseMeasureUnitQualifier)?.C1CMeasureUnitID,
-                MeasureUnit = nomenclatureInfo.C1CMeasureUnits.FirstOrDefault(mu => mu.C1CMeasureUnitQualifierID == nomenclatureInfo.C1CBaseMeasureUnitQualifier)?.Name,
+                MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
                 DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid()
             });
         }
@@ -224,6 +261,8 @@ namespace Gamma.ViewModels
             WithdrawalMaterials?.Clear();
             Samples?.Clear();
                 IsChanged = true;
+            Wastes?.Clear();
+            NomenclatureRests?.Clear();
             GammaBase.SaveChanges();
         }
 
@@ -339,8 +378,8 @@ namespace Gamma.ViewModels
                     C1CNomenclatureID = sample.NomenclatureID,
                     C1CCharacteristicID = (Guid)sample.CharacteristicID,
                     DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
-                    Quantity = sample.Quantity*GammaBase.C1CCharacteristics
-                        .FirstOrDefault(c => c.C1CCharacteristicID == sample.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient??1
+                    Quantity = sample.Quantity,
+                    C1CMeasureUnitID = sample.MeasureUnitId
                 });
             }
             GammaBase.DocCloseShiftNomenclatureRests.RemoveRange(docCloseShift.DocCloseShiftNomenclatureRests);
@@ -372,12 +411,12 @@ namespace Gamma.ViewModels
             if (IsChanged)
             {
                 docCloseShift.DocCloseShiftDocs.Clear();
-                var docCloseShiftDocs = GammaBase.Docs.
+ /*               var docCloseShiftDocs = GammaBase.Docs.
                     Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
                         d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                         d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
-                        (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal));
-                foreach (var doc in docCloseShiftDocs)
+                        (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal));*/
+                foreach (var doc in DocCloseShiftDocs)
                 {
                     docCloseShift.DocCloseShiftDocs.Add(doc);
                 }
@@ -409,6 +448,7 @@ namespace Gamma.ViewModels
             public Guid? MeasureUnitId { get; set; }
             public string MeasureUnit { get; set; }
             public decimal Quantity { get; set; }
+            public Dictionary<Guid, string> MeasureUnits { get; set; }
 
             protected bool Equals(Sample other)
             {

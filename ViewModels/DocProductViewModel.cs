@@ -201,7 +201,20 @@ namespace Gamma.ViewModels
         {
             SaveToModel();
             if (Doc == null) return;
-            var productId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
+            Guid? productId = null;
+            if (CurrentViewModel is DocProductSpoolViewModel)
+            {
+                productId = ((DocProductSpoolViewModel) CurrentViewModel).ProductId;
+            }
+            else if (CurrentViewModel is DocProductGroupPackViewModel)
+            {
+                productId = ((DocProductGroupPackViewModel)CurrentViewModel).ProductId;
+            }
+            else if (CurrentViewModel is DocProductPalletViewModel)
+            {
+                productId = ((DocProductPalletViewModel)CurrentViewModel).ProductId;
+            }
+//            var productId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
             if (productId == null) return;
             if (!GammaBase.Rests.Any(r => r.ProductID == productId && r.Quantity > 0))
             {

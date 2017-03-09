@@ -25,6 +25,9 @@ namespace Gamma.Entities
             this.C1CCharacteristics = new HashSet<C1CCharacteristics>();
             this.C1CCharacteristics1 = new HashSet<C1CCharacteristics>();
             this.DocCloseShiftWastes = new HashSet<DocCloseShiftWastes>();
+            this.C1CNomenclature = new HashSet<C1CNomenclature>();
+            this.C1CNomenclature1 = new HashSet<C1CNomenclature>();
+            this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
         }
     
         public System.Guid C1CMeasureUnitID { get; set; }
@@ -37,7 +40,6 @@ namespace Gamma.Entities
         public virtual C1CMeasureUnitQualifiers C1CMeasureUnitQualifiers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -52,5 +54,11 @@ namespace Gamma.Entities
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftWastes> DocCloseShiftWastes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclature> C1CNomenclature { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CNomenclature> C1CNomenclature1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
     }
 }

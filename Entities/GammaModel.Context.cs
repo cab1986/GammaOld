@@ -62,7 +62,6 @@ namespace Gamma.Entities
         public virtual DbSet<UserPrintNames> UserPrintNames { get; set; }
         public virtual DbSet<vProductionTaskBatches> vProductionTaskBatches { get; set; }
         public virtual DbSet<vProductionTaskProducts> vProductionTaskProducts { get; set; }
-        public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
         public virtual DbSet<C1CSpecifications> C1CSpecifications { get; set; }
         public virtual DbSet<C1CNomenclatureAnalogs> C1CNomenclatureAnalogs { get; set; }
         public virtual DbSet<DocWithdrawalMaterials> DocWithdrawalMaterials { get; set; }
@@ -76,7 +75,6 @@ namespace Gamma.Entities
         public virtual DbSet<PostTypes> PostTypes { get; set; }
         public virtual DbSet<ProductionTaskSGB> ProductionTaskSGB { get; set; }
         public virtual DbSet<ProductionTaskBatches> ProductionTaskBatches { get; set; }
-        public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DbSet<MaterialTypes> MaterialTypes { get; set; }
         public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
@@ -121,13 +119,15 @@ namespace Gamma.Entities
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<DocCloseShiftRemainders> DocCloseShiftRemainders { get; set; }
         public virtual DbSet<ProductGroupPacks> ProductGroupPacks { get; set; }
-        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
-        public virtual DbSet<ProductBales> ProductBales { get; set; }
         public virtual DbSet<vGroupPackSpools> vGroupPackSpools { get; set; }
         public virtual DbSet<DocInventarisationProducts> DocInventarisationProducts { get; set; }
         public virtual DbSet<DocCloseShiftNomenclatureRests> DocCloseShiftNomenclatureRests { get; set; }
         public virtual DbSet<C1CMainSpecifications> C1CMainSpecifications { get; set; }
         public virtual DbSet<DocCloseShiftWastes> DocCloseShiftWastes { get; set; }
+        public virtual DbSet<C1CNomenclature> C1CNomenclature { get; set; }
+        public virtual DbSet<ProductSpools> ProductSpools { get; set; }
+        public virtual DbSet<ProductBales> ProductBales { get; set; }
+        public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {

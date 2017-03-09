@@ -21,7 +21,7 @@ namespace Gamma.Entities
         public decimal Quantity { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }

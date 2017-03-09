@@ -26,7 +26,6 @@ namespace Gamma.Entities
     
         public virtual C1CDocShipmentOrder C1CDocShipmentOrder { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual C1CQuality C1CQuality { get; set; }
     }
 }

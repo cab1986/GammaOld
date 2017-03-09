@@ -51,10 +51,10 @@ namespace Gamma.Entities
         public virtual ProductGroupPacks ProductGroupPacks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeProducts> DocBrokeProducts { get; set; }
-        public virtual ProductSpools ProductSpools { get; set; }
-        public virtual ProductBales ProductBales { get; set; }
         public virtual Rests Rests { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocInventarisationProducts> DocInventarisationProducts { get; set; }
+        public virtual ProductSpools ProductSpools { get; set; }
+        public virtual ProductBales ProductBales { get; set; }
     }
 }

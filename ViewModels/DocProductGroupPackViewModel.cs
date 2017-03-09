@@ -135,13 +135,8 @@ namespace Gamma.ViewModels
 */
         }
 
-        private Guid? ProductId { get; set; }
-/*
-        private void GetGrossWeight()
-        {
-            GrossWeight = Convert.ToInt32(Scales.GetWeight());
-        }
-*/
+        public Guid? ProductId { get; set; }
+
         private Guid? DocId { get; set; }
 
         public bool IsConfirmed

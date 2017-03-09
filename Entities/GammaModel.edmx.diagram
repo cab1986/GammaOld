@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="89" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="106" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -58,33 +58,18 @@
         <AssociationConnector Association="GammaModel.FK_Templates_Reports" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_RolePermits_Roles1" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.C1CPropertyGammaProperties" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="GammaModel.C1CNomenclature" Width="1.5" PointX="3" PointY="47" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CSpecifications" Width="1.5" PointX="14.25" PointY="41.625" IsExpanded="true" />
-        <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CMeasureUnitQualifiers" />
-        <AssociationConnector Association="GammaModel.FK_1CMeasureUnits_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CNomenclatureProperties_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CSpecifications1" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CSpecifications1" />
-        <AssociationConnector Association="GammaModel.C1CNomenclatureGroupNomenclature" />
-        <AssociationConnector Association="GammaModel.PlaceGroup1CNomenclature" />
         <EntityTypeShape EntityType="GammaModel.C1CNomenclatureAnalogs" Width="2.5" PointX="16.5" PointY="46.625" IsExpanded="true" />
-        <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature1" />
-        <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature2" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CSpecifications" />
         <EntityTypeShape EntityType="GammaModel.DocWithdrawalMaterials" Width="1.5" PointX="23.5" PointY="43.75" IsExpanded="true" />
-        <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_DocWithdrawal" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CMeasureUnits1" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CMeasureUnits" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskRWCutting" Width="1.5" PointX="24.75" PointY="52.25" IsExpanded="true" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" />
         <EntityTypeShape EntityType="GammaModel.ProductionTasks" Width="1.5" PointX="16.5" PointY="56.5" IsExpanded="true" />
-        <AssociationConnector Association="GammaModel.FK_ProductionTasks_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_ProductionTasks" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskWR_ProductionTasks" />
         <EntityTypeShape EntityType="GammaModel.vCharacteristicSGBProperties" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
@@ -99,7 +84,6 @@
         <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrder_1CWarehouses" />
         <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" />
         <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CMeasureUnits" />
-        <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CDocShipmentOrderGoods_1CQuality" />
         <EntityTypeShape EntityType="GammaModel.ProductionTaskSGB" Width="1.5" PointX="18.75" PointY="65.875" IsExpanded="true" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskSGB_ProductionTasks" />
@@ -108,10 +92,7 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProcessModels" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" />
         <AssociationConnector Association="GammaModel.BatchProductionTasks" />
-        <EntityTypeShape EntityType="GammaModel.DocCloseShiftSamples" Width="1.5" PointX="16.5" PointY="52.875" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" />
         <EntityTypeShape EntityType="GammaModel.MaterialTypes" Width="1.5" PointX="5.25" PointY="47.75" />
-        <AssociationConnector Association="GammaModel.MaterialTypeNomenclature" />
         <EntityTypeShape EntityType="GammaModel.Branches" Width="1.5" PointX="5.25" PointY="63.75" />
         <AssociationConnector Association="GammaModel.FK_Branches_Enterprises" />
         <EntityTypeShape EntityType="GammaModel.DocBrokeProductRejectionReasons" Width="1.5" PointX="25.75" PointY="40" />
@@ -126,13 +107,10 @@
         <EntityTypeShape EntityType="GammaModel.Rests" Width="1.5" PointX="30.5" PointY="60.625" />
         <EntityTypeShape EntityType="GammaModel.BarcodeTypes" Width="1.5" PointX="17.25" PointY="40.5" />
         <EntityTypeShape EntityType="GammaModel.NomenclatureBarcodes" Width="1.5" PointX="19.5" PointY="57.125" />
-        <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes" />
         <EntityTypeShape EntityType="GammaModel.NomenclatureGammaInfo" Width="1.5" PointX="5.25" PointY="51.125" />
-        <AssociationConnector Association="GammaModel.FK_NomenclatureGammaInfo_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CProperties" />
         <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="21.5" PointY="64.875" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
         <EntityTypeShape EntityType="GammaModel.DocMovementOrderNomenclature" Width="1.5" PointX="18.75" PointY="81.25" />
         <EntityTypeShape EntityType="GammaModel.Persons" Width="1.5" PointX="7.5" PointY="66.75" />
         <AssociationConnector Association="GammaModel.FK_Persons_Branches" />
@@ -147,7 +125,6 @@
         <EntityTypeShape EntityType="GammaModel.Docs" Width="1.5" PointX="12" PointY="57.125" />
         <AssociationConnector Association="GammaModel.FK_DocBroke_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProductChangeState_Docs" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocMovement_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProducts_Docs" />
         <AssociationConnector Association="GammaModel.FK_Docs_DocTypes" />
@@ -213,13 +190,11 @@
         <AssociationConnector Association="GammaModel.FK_1CCharacteristicProperties_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_1CCharacteristics_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_1CCharacteristics_1CMeasureUnits1" />
-        <AssociationConnector Association="GammaModel.FK_1CCharacteristics_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CCharacteristics1" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CCharacteristics2" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" />
@@ -254,10 +229,52 @@
         <AssociationConnector Association="GammaModel.DocCloseShiftProducts" />
         <EntityTypeShape EntityType="GammaModel.ProductGroupPacks" Width="1.5" PointX="23.5" PointY="48.25" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_Products" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_Products" />
-        <EntityTypeShape EntityType="GammaModel.ProductSpools" Width="1.5" PointX="28.5" PointY="41.625" />
+        <EntityTypeShape EntityType="GammaModel.vGroupPackSpools" Width="1.5" PointX="12.375" PointY="5.75" />
+        <AssociationConnector Association="GammaModel.FK_Rests_Products" />
+        <EntityTypeShape EntityType="GammaModel.DocInventarisationProducts" Width="1.5" PointX="31.5" PointY="49" />
+        <AssociationConnector Association="GammaModel.FK_DocInventarisationProducts_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocInventarisationProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_Docs_Persons" />
+        <AssociationConnector Association="GammaModel.FK_Persons_PostTypes" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftNomenclatureRests" Width="1.5" PointX="25.75" PointY="43.875" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_Docs" />
+        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.75" PointX="19.5" PointY="52.75" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftWastes" Width="1.5" PointX="24.75" PointY="65.5" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_Docs" />
+        <EntityTypeShape EntityType="GammaModel.C1CNomenclature" Width="1.5" PointX="10.5" PointY="38.75" />
+        <AssociationConnector Association="GammaModel.FK_1CCharacteristics_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CMeasureUnitQualifiers" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CMeasureUnits1" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclature_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature1" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature2" />
+        <AssociationConnector Association="GammaModel.FK_1CNomenclatureProperties_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_1CSpecificationOutputNomenclature_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_NomenclatureGammaInfo_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTasks_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.C1CNomenclatureGroupNomenclature" />
+        <AssociationConnector Association="GammaModel.MaterialTypeNomenclature" />
+        <AssociationConnector Association="GammaModel.PlaceGroup1CNomenclature" />
+        <EntityTypeShape EntityType="GammaModel.ProductSpools" Width="1.5" PointX="28.5" PointY="41.75" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductSpools_Products" />
@@ -268,27 +285,11 @@
         <AssociationConnector Association="GammaModel.FK_ProductBales_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductBales_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductBales_Products" />
-        <EntityTypeShape EntityType="GammaModel.vGroupPackSpools" Width="1.5" PointX="12.375" PointY="5.75" />
-        <AssociationConnector Association="GammaModel.FK_Rests_Products" />
-        <EntityTypeShape EntityType="GammaModel.DocInventarisationProducts" Width="1.5" PointX="31.5" PointY="49" />
-        <AssociationConnector Association="GammaModel.FK_DocInventarisationProducts_Docs" />
-        <AssociationConnector Association="GammaModel.FK_DocInventarisationProducts_Products" />
-        <AssociationConnector Association="GammaModel.FK_Docs_Persons" />
-        <AssociationConnector Association="GammaModel.FK_Persons_PostTypes" />
-        <EntityTypeShape EntityType="GammaModel.DocCloseShiftNomenclatureRests" Width="1.5" PointX="25.75" PointY="43.875" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftNomenclatureRests_Docs" />
-        <EntityTypeShape EntityType="GammaModel.C1CMainSpecifications" Width="1.75" PointX="19.5" PointY="52.75" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CPlaces" />
-        <AssociationConnector Association="GammaModel.FK_1CMainSpecifications_1CSpecifications" />
-        <EntityTypeShape EntityType="GammaModel.DocCloseShiftWastes" Width="1.5" PointX="24.75" PointY="65.5" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CMeasureUnits" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_Docs" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftSamples" Width="1.5" PointX="15.75" PointY="52.625" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_Docs" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

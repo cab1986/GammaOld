@@ -32,7 +32,6 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> DateBegin { get; set; }
         public Nullable<System.DateTime> DateEnd { get; set; }
     
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
         public virtual ProductionTaskWR ProductionTaskWR { get; set; }
@@ -45,5 +44,6 @@ namespace Gamma.Entities
         public virtual ICollection<ActiveProductionTasks> ActiveProductionTasks { get; set; }
         public virtual Places Places { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }

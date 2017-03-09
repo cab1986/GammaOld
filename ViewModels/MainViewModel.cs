@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Windows;
 using Gamma.Dialogs;
 using System.Deployment.Application;
+using System.Diagnostics;
 using Gamma.Entities;
 
 namespace Gamma.ViewModels
@@ -106,6 +107,7 @@ namespace Gamma.ViewModels
                 ShowProgrammInfoCommand = new DelegateCommand(ShowProgrammInfo);
                 OpenQualityReportPMCommand = new DelegateCommand(MessageManager.OpenQualityReportPM);
                 ComplectPalletCommand = new DelegateCommand(ComplectPallet, () => DB.HaveWriteAccess("Pallets"));
+                OpenHelpCommand = new DelegateCommand(() => Process.Start("http://stgwiki.sgbi.local/index.php/Gamma"));
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -412,6 +414,7 @@ namespace Gamma.ViewModels
         public DelegateCommand ComplectPalletCommand { get; private set; }
         public DelegateCommand OpenInventarisationsCommand { get; set; }
         public List<ReportItem> Reports { get; set; }
+        public DelegateCommand OpenHelpCommand { get; set; }
 
         public class PlaceProduct
         {

@@ -23,7 +23,7 @@ namespace Gamma.Entities
         public Nullable<bool> ManualWeightInput { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual Products Products { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }
