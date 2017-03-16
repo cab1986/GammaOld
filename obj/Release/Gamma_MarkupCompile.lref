@@ -1,4 +1,4 @@
-﻿
+﻿D:\CProjects\Gamma\Gamma\obj\Release\GeneratedInternalTypeHelper.g.cs
 FD:\CProjects\Gamma\Gamma\App.xaml;;
 FD:\CProjects\Gamma\Gamma\Dialogs\AddNomenclatureToPalletDialog.xaml;;
 FD:\CProjects\Gamma\Gamma\Dialogs\SetBaleWeightDialog.xaml;;
@@ -6,7 +6,7 @@ FD:\CProjects\Gamma\Gamma\Views\DocBrokeListView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocBrokeView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftBalerGridView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftConvertingGridView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftPMRemainderView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftUnwinderRemainderView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftView.xaml;;
@@ -22,6 +22,8 @@ FD:\CProjects\Gamma\Gamma\Views\DocProductUnloadView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocProductView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocShipmentOrdersView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocShipmentOrderView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocWithdrawalsView.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\DocWithdrawalView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\EditRejectionReasonsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\FindProductionTaskBatchView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\FindProductView.xaml;;

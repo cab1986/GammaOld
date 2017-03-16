@@ -48,6 +48,9 @@
         <DataTemplate DataType="{x:Type vm:DocInventarisationsViewModel}">
             <views:DocInventarisationsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocWithdrawalsViewModel}">
+            <views:DocWithdrawalsView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
@@ -81,6 +84,7 @@
                         </dxb:BarSubItem>
                         <dxb:BarButtonItem Content="Акты о браке" Command="{Binding OpenDocBrokeListCommand}"/>
                         <dxb:BarButtonItem Content="Браковка партии БДМ" Command="{Binding OpenQualityReportPMCommand}"/>
+                        <dxb:BarButtonItem Content="Списания" Command="{Binding OpenDocWithdrawalsCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Производство" ItemLinksSource="{Binding PlaceProducts}">
                         <dxb:BarSubItem.ItemTemplate>

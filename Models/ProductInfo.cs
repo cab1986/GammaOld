@@ -35,5 +35,6 @@ namespace Gamma.Models
         public PlaceGroup PlaceGroup { get; set; }
         public bool IsWrittenOff { get; set; }
         public bool InGroupPack { get; set; }
+        public string MeasureUnit { get; set; }
     }
 }

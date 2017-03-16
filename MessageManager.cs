@@ -55,6 +55,16 @@ namespace Gamma
 
     public class OpenPlaceZonesMessage { }
 
+    public class OpenDocWithdrawalMessage
+    {
+        public OpenDocWithdrawalMessage(Guid docId)
+        {
+            DocId = docId;
+        }
+
+        public Guid DocId { get; private set; }
+    }
+
     public class OpenDocInventarisationMessage
     {
         public OpenDocInventarisationMessage(Guid docId)
@@ -303,6 +313,11 @@ namespace Gamma
         public static void NomenclatureEdit(Guid nomenclatureId)
         {
             Messenger.Default.Send(new NomenclatureEditMessage(nomenclatureId));
+        }
+
+        public static void OpenDocWithdrawal(Guid docId)
+        {
+            Messenger.Default.Send(new OpenDocWithdrawalMessage(docId));
         }
 
         public static void EditUser(GammaEntities gammaBase = null)

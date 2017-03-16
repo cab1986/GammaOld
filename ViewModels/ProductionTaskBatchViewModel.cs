@@ -84,7 +84,7 @@ namespace Gamma.ViewModels
 
             }
             CreateNewProductCommand = !WorkSession.IsRemotePrinting ? new DelegateCommand(CreateNewProduct, CanCreateNewProduct) 
-                : new DelegateCommand(CreateNewProduct, DB.HaveWriteAccess("ActiveProductionTasks"));
+                : new DelegateCommand(MakeProductionTaskActiveForPlace, DB.HaveWriteAccess("ActiveProductionTasks"));
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
@@ -440,7 +440,7 @@ namespace Gamma.ViewModels
                 var productionTaskID = gammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
                         Select(p => p.ProductionTasks.FirstOrDefault(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).ProductionTaskID).
                         FirstOrDefault();
-                Guid productId;
+                var productId = SqlGuidUtil.NewSequentialid();
                 var checkResult = SourceSpoolsCheckResult.Correct;
                 switch (BatchKind)
                 {
@@ -457,9 +457,8 @@ namespace Gamma.ViewModels
                                                                                  //    && d.Date >= SqlFunctions.DateAdd("hh",-12, DB.GetShiftBeginTime(curDate))
                                     && d.DocTypeID == (byte)DocTypes.DocProduction).OrderByDescending(d => d.Date)
                                     .FirstOrDefault();
-                                if (docProduction == null) break;
                                 //Если не указана смена, то переходный тамбур. Устанавливаем недостающие свойства и открываем для редактирования
-                                if (docProduction.ShiftID == null)
+                                if (docProduction != null && docProduction.ShiftID == null)
                                 {
                                     docProduction.Date = curDate;
                                         docProduction.ShiftID = WorkSession.ShiftID;
@@ -532,26 +531,115 @@ namespace Gamma.ViewModels
                     case BatchKinds.SGI:
                         checkResult = SourceSpoolsCorrect(WorkSession.PlaceID, productionTaskID);
                         if (checkResult == SourceSpoolsCheckResult.Block) return;
-                        /*
-                        var activeSourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
-                        if (activeSourceSpools.Count == 0)
-                        {
-                            MessageBox.Show("Нет активных раскатов", "Не установлен тамбур", MessageBoxButton.OK,
-                                MessageBoxImage.Information);
-                            return;
-                        }
-                        */
-                            var currentDateTime = DB.CurrentDateTime;
-                            var productionTask =
-                                gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
+                        var currentDateTime = DB.CurrentDateTime;
+                        var productionTask =
+                            gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
                                     (short)PlaceGroup.Convertings).FirstOrDefault();
                             if (productionTask == null) return;
                             var baseQuantity =
                             (int)(gammaBase.C1CCharacteristics.Where(
                                 c => c.C1CCharacteristicID == productionTask.C1CCharacteristicID)
                                 .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First() ?? 0);
-                            productId = SqlGuidUtil.NewSequentialid();
-                            var product = new Products()
+                        // получаем предыдущий документ в базе
+                        var doc = gammaBase.Docs.Include(d => d.DocProduction)
+                            .Where(d => d.PlaceID == WorkSession.PlaceID // && d.ShiftID == null
+                                                                         //    && d.Date >= SqlFunctions.DateAdd("hh",-12, DB.GetShiftBeginTime(curDate))
+                            && d.DocTypeID == (byte)DocTypes.DocProduction).OrderByDescending(d => d.Date)
+                            .FirstOrDefault();
+
+                        //Если не указана смена, то переходная паллета. Устанавливаем недостающие свойства и открываем для редактирования
+                        Products product;
+                        if (doc != null && doc.ShiftID == null)
+                        {
+                            productId =
+                                gammaBase.DocProductionProducts.First(dp => dp.DocID == doc.DocID)
+                                    .ProductID;
+                            product =
+                                gammaBase.Products.Include(p => p.ProductPallets)
+                                    .Include(p => p.ProductPallets.ProductPalletItems)
+                                    .FirstOrDefault(p => p.ProductID == productId);
+                            if (product == null)
+                            {
+                                product = new Products()
+                                {
+                                    ProductID = productId,
+                                    ProductKindID = (byte) ProductKind.ProductPallet,
+                                    ProductPallets = new ProductPallets()
+                                    {
+                                        ProductID = productId,
+                                        ProductPalletItems = new List<ProductPalletItems>
+                                        {
+                                            new ProductPalletItems()
+                                            {
+                                                ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                                ProductID = productId,
+                                                C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
+                                                C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
+                                                Quantity = baseQuantity
+                                            }
+                                        }
+                                    }
+                                };
+                                gammaBase.Products.Add(product);
+                            }
+                            else if (product.ProductPallets == null)
+                            {
+                                product.ProductPallets = new ProductPallets()
+                                {
+                                    ProductID = productId,
+                                    ProductPalletItems = new List<ProductPalletItems>
+                                    {
+                                        new ProductPalletItems()
+                                        {
+                                            ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                            ProductID = productId,
+                                            C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
+                                            C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
+                                            Quantity = baseQuantity
+                                        }
+                                    }
+                                };
+                            }
+                            else if (product.ProductPallets.ProductPalletItems == null)
+                            {
+                                product.ProductPallets.ProductPalletItems = new List<ProductPalletItems>
+                                {
+                                    new ProductPalletItems()
+                                    {
+                                        ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                        ProductID = productId,
+                                        C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
+                                        C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
+                                        Quantity = baseQuantity
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                var productPalletItem = product.ProductPallets.ProductPalletItems.First();
+                                productPalletItem.C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID;
+                                productPalletItem.C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID;
+                                productPalletItem.Quantity = baseQuantity;
+                            }
+                            doc.ShiftID = WorkSession.ShiftID;
+                            doc.PrintName = WorkSession.PrintName;
+                            doc.UserID = WorkSession.UserID;
+                            doc.DocProduction.ProductionTaskID = productionTask.ProductionTaskID;
+                            var docProductionProduct =
+                                gammaBase.DocProductionProducts.FirstOrDefault(dp => dp.DocID == doc.DocID);
+                            if (docProductionProduct != null)
+                            {
+                                docProductionProduct.C1CNomenclatureID = productionTask.C1CNomenclatureID;
+                                docProductionProduct.C1CCharacteristicID = productionTask.C1CCharacteristicID;
+                                docProductionProduct.Quantity =
+                                    product.ProductPallets.ProductPalletItems.First().Quantity;
+                            }
+                            gammaBase.SaveChanges();
+                            gammaBase.GenerateNewNumbersForDoc(doc.DocID);
+                        }
+                        else
+                        {
+                            product = new Products()
                             {
                                 ProductID = productId,
                                 ProductKindID = (byte)ProductKind.ProductPallet,
@@ -559,19 +647,21 @@ namespace Gamma.ViewModels
                                 {
                                     ProductID = productId,
                                     ProductPalletItems = new List<ProductPalletItems>
-                                    {
-                                        new ProductPalletItems()
                                         {
-                                            ProductPalletItemID = SqlGuidUtil.NewSequentialid(),ProductID = productId,
-                                            C1CNomenclatureID = (Guid)productionTask.C1CNomenclatureID,
-                                            C1CCharacteristicID = (Guid)productionTask.C1CCharacteristicID,
-                                            Quantity = baseQuantity}
-                                    }
+                                            new ProductPalletItems()
+                                            {
+                                                ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                                ProductID = productId,
+                                                C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
+                                                C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
+                                                Quantity = baseQuantity
+                                            }
+                                        }
                                 }
                             };
                             gammaBase.Products.Add(product);
                             var docID = SqlGuidUtil.NewSequentialid();
-                            var doc = new Docs
+                            doc = new Docs
                             {
                                 DocID = docID,
                                 Date = currentDateTime,
@@ -601,8 +691,9 @@ namespace Gamma.ViewModels
                                 }
                             };
                             gammaBase.Docs.Add(doc);
-                            var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
-                            foreach (var spoolId in sourceSpools.Where(s => s != null))
+                        }
+                        var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
+                        foreach (var spoolId in sourceSpools.Where(s => s != null))
                             {
                                 var docWithdrawalProduct =
                                     gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal).Include(d => d.DocWithdrawal.Docs)
@@ -641,30 +732,16 @@ namespace Gamma.ViewModels
                                 docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
                             gammaBase.SaveChanges();
-                            ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
+                        
+#if (!DEBUG)
+                        ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
+#endif
                             RefreshProduction();
                         break;
                 }
             }
         }
 
-//        private ObservableCollection<Place> _places = DB.GetPlaces(PlaceGroups.PM);
-//        private int _PlaceID;
-/*        [Required(ErrorMessage="Необходимо выбрать передел")]
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        public int PlaceID
-        {
-            get
-            {
-                return _PlaceID;
-            }
-            set
-            {
-                _PlaceID = value;
-                RaisePropertyChanged("PlaceID");
-            }
-        }
- * */
         public override bool CanSaveExecute()
         {
             return base.CanSaveExecute() && (CurrentView?.IsValid ?? true) && (CurrentView?.CanSaveExecute() ?? true) &&

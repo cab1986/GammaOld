@@ -8,8 +8,6 @@ using DevExpress.Mvvm;
 
 namespace Gamma.Models
 {
-    //TODO Добавить нормальный конструктор к WithdrawalMaterial
-
     /// <summary>
     /// Класс для грида материалов на списание
     /// </summary>

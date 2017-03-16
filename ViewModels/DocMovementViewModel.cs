@@ -18,6 +18,7 @@ namespace Gamma.ViewModels
     {
         public DocMovementViewModel(Guid docMovementId)
         {
+            Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             DocMovementId = docMovementId;
             using (var gammaBase = DB.GammaDb)
             {
@@ -82,6 +83,19 @@ namespace Gamma.ViewModels
             MovementProducts.CollectionChanged += MovementProductsOnCollectionChanged;
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
             Bars.Add(ReportManager.GetReportBar("DocMovement", VMID));
+        }
+
+        private void PrintReport(PrintReportMessage msg)
+        {
+            if (msg.VMID != VMID) return;
+            if (!IsValid)
+            {
+                MessageBox.Show("Не заполнены некоторые обязательные поля!", "Поля не заполнены", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                return;
+            }
+            if (!SaveToModel()) return;
+            ReportManager.PrintReport(msg.ReportID, DocMovementId);
         }
 
         public bool DenyEditOut { get; private set; }

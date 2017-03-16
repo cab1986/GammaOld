@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>50</ApplicationRevision>
+    <ApplicationRevision>54</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -660,6 +660,7 @@
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Models\DocInventarisation.cs" />
+    <Compile Include="Models\DocWithdrawal.cs" />
     <Compile Include="Models\InventarisationItem.cs" />
     <Compile Include="Models\MovementGood.cs" />
     <Compile Include="Models\MovementItem.cs" />
@@ -720,6 +721,7 @@
       <DependentUpon>GammaModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Entities\GammaModelManualConstructor.cs" />
+    <Compile Include="Models\WithdrawalProduct.cs" />
     <Compile Include="MVVMWindow.cs" />
     <Compile Include="Models\Place.cs" />
     <Compile Include="Models\ProductInfo.cs" />
@@ -755,6 +757,8 @@
     <Compile Include="ViewModels\DocShipmentOrdersViewModel.cs" />
     <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
     <Compile Include="Models\EditBrokeDecisionItem.cs" />
+    <Compile Include="ViewModels\DocWithdrawalsViewModel.cs" />
+    <Compile Include="ViewModels\DocWithdrawalViewModel.cs" />
     <Compile Include="ViewModels\EditRejectionReasonsViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
@@ -777,7 +781,7 @@
     <Compile Include="ViewModels\SaveImplementedViewModel.cs" />
     <Compile Include="ViewModels\DBEditItemWithNomenclatureViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftPMGridViewModel.cs" />
-    <Compile Include="ViewModels\DocCloseShiftPMRemainderViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftsViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftViewModel.cs" />
     <Compile Include="ViewModels\DocProductSpoolViewModel.cs" />
@@ -818,8 +822,8 @@
     <Compile Include="Views\DocCloseShiftPMGridView.xaml.cs">
       <DependentUpon>DocCloseShiftPMGridView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DocCloseShiftPMRemainderView.xaml.cs">
-      <DependentUpon>DocCloseShiftPMRemainderView.xaml</DependentUpon>
+    <Compile Include="Views\DocCloseShiftRemainderView.xaml.cs">
+      <DependentUpon>DocCloseShiftRemainderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftRwGridView.xaml.cs">
       <DependentUpon>DocCloseShiftRwGridView.xaml</DependentUpon>
@@ -871,6 +875,12 @@
     </Compile>
     <Compile Include="Views\DocShipmentOrderView.xaml.cs">
       <DependentUpon>DocShipmentOrderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocWithdrawalsView.xaml.cs">
+      <DependentUpon>DocWithdrawalsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocWithdrawalView.xaml.cs">
+      <DependentUpon>DocWithdrawalView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditRejectionReasonsView.xaml.cs">
       <DependentUpon>EditRejectionReasonsView.xaml</DependentUpon>
@@ -1020,7 +1030,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DocCloseShiftPMRemainderView.xaml">
+    <Page Include="Views\DocCloseShiftRemainderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1089,6 +1099,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocShipmentOrderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocWithdrawalsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocWithdrawalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1311,7 +1329,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

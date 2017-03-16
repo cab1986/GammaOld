@@ -188,7 +188,7 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftBalerGridView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftConvertingGridView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftPMGridView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftPMRemainderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRemainderView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRwGridView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftUnwinderRemainderView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftsView.g.cs
@@ -206,6 +206,8 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductUnloadView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrdersView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrderView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocWithdrawalsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocWithdrawalView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductionTaskBatchView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductView.g.cs
@@ -250,7 +252,7 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeListView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocBrokeView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftBalerGridView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftConvertingGridView.baml
-D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftPMRemainderView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftRemainderView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftUnwinderRemainderView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocCloseShiftView.baml
@@ -266,6 +268,8 @@ D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductUnloadView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocProductView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrdersView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocShipmentOrderView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocWithdrawalsView.baml
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\DocWithdrawalView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\EditRejectionReasonsView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductionTaskBatchView.baml
 D:\CProjects\Gamma\Gamma\obj\Debug\Views\FindProductView.baml

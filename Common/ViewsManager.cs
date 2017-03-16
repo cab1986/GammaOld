@@ -37,7 +37,13 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenPlaceZonesMessage>(this, OpenPlaceZones);
             Messenger.Default.Register<OpenQualityReportPMMessage>(this, OpenQualityReportPM);
             Messenger.Default.Register<OpenDocInventarisationMessage>(this, OpenDocInventarisation);
+            Messenger.Default.Register<OpenDocWithdrawalMessage>(this, OpenDocWithdrawal);
+        }
 
+        private void OpenDocWithdrawal(OpenDocWithdrawalMessage msg)
+        {
+            UIServices.SetBusyState();
+            new DocWithdrawalView(msg.DocId).Show();
         }
 
         private void OpenDocInventarisation(OpenDocInventarisationMessage msg)

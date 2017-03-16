@@ -1,0 +1,59 @@
+﻿<gamma:MvvmWindow x:Class="Gamma.Views.DocWithdrawalView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gamma.Views"
+        xmlns:gamma="clr-namespace:Gamma"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        mc:Ignorable="d"
+        Title="DocWithdrawalView" Height="500" Width="700"
+                  d:DataContext="{d:DesignInstance Type=viewModels:DocWithdrawalViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <dxlc:LayoutControl Orientation="Horizontal" >
+            <dxlc:LayoutGroup Orientation="Vertical" Width="200" View="GroupBox" Header="Списание">
+                <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding DocNumber}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
+                    <dxe:DateEdit EditValue="{Binding Date}" Mask="g" MaskUseAsDisplayFormat="True" IsReadOnly="True" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Передел" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Place}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Оператор" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding PrintName}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Списано" LabelPosition="Top">
+                <dx:DXTabControl>
+                    <dx:DXTabItem Header="Продукция">
+                        <dxg:GridControl ItemsSource="{Binding WithdrawalProducts}" MaxHeight="2000">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AutoWidth="True" />
+                            </dxg:GridControl.View>
+                            <dxg:GridColumn FieldName="Number" Header="Номер" AllowEditing="False"/>
+                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False"/>
+                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:SpinEdit EditValue="{Binding RowData.Row.Quantity}" IsReadOnly="{Binding RowData.Row.CompleteWithdrawal}" MaxValue="{Binding RowData.Row.MaxQuantity}"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="MeasureUnit" Header="Ед. изм." AllowEditing="False"/>
+                            <dxg:GridColumn FieldName="CompleteWithdrawal" Header="Полное списание" AllowEditing="False" Name="CompleteWithdrawal"/>
+                        </dxg:GridControl>
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="Материалы">
+                        
+                    </dx:DXTabItem>
+                </dx:DXTabControl>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutControl>
+    </Grid>
+</gamma:MvvmWindow>

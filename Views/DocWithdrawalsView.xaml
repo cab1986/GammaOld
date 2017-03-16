@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Gamma.Views.DocWithdrawalsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Views"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900"
+             d:DataContext="{d:DesignInstance Type=viewModels:DocWithdrawalsViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:TextEdit}">
+            <Style.Triggers>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="1">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="2">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Grid.Row="0">
+            <dxlc:LayoutItem Label="Диапозон:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding Intervalid}" x:Name="IntervalList" IsTextEditable="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Номер:">
+                <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Дата с:">
+                <dxe:DateEdit EditValue="{Binding DateBegin}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="по:">
+                <dxe:DateEdit EditValue="{Binding DateEnd}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Передел">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Places}" ValueMember="PlaceID" DisplayMember="PlaceName" EditValue="{Binding PlaceId}"/>
+            </dxlc:LayoutItem>
+            <Button Content="Поиск" Command="{Binding RefreshCommand}" Width="60"/>
+        </dxlc:LayoutControl>
+        <dxg:GridControl EnableSmartColumnsGeneration="False" Grid.Row="1" ItemsSource="{Binding DocWithdrawals}" SelectedItem="{Binding SelectedDocWithdrawal}" AllowLiveDataShaping="False" >
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="Передел" FieldName="Place"/>
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
+            </dxg:GridControl.View>
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}"/>
+            </dxmvvm:Interaction.Behaviors>
+        </dxg:GridControl>
+
+    </Grid>
+</UserControl>

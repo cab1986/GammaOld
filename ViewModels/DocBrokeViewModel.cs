@@ -250,7 +250,7 @@ namespace Gamma.ViewModels
 
         public override bool CanSaveExecute()
         {
-            return IsValid; //&& !IsReadOnly;
+            return IsValid && DB.HaveWriteAccess("DocBroke");
         }
         
         public DelegateCommand AddProductCommand { get; private set; }

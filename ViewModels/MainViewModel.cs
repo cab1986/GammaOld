@@ -108,6 +108,7 @@ namespace Gamma.ViewModels
                 OpenQualityReportPMCommand = new DelegateCommand(MessageManager.OpenQualityReportPM);
                 ComplectPalletCommand = new DelegateCommand(ComplectPallet, () => DB.HaveWriteAccess("Pallets"));
                 OpenHelpCommand = new DelegateCommand(() => Process.Start("http://stgwiki.sgbi.local/index.php/Gamma"));
+                OpenDocWithdrawalsCommand = new DelegateCommand(() => CurrentView = new DocWithdrawalsViewModel());
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -261,6 +262,21 @@ namespace Gamma.ViewModels
         private void CloseShift()
         {
             if (WorkSession.ShiftID == 0) return;
+            using (var gammaBase = DB.GammaDb)
+            {
+                var lastReport =
+                    gammaBase.Docs.Where(
+                        d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int) DocTypes.DocCloseShift && d.PlaceID == WorkSession.PlaceID)
+                        .OrderByDescending(d => d.Date)
+                        .FirstOrDefault();
+                if (lastReport != null && !lastReport.IsConfirmed)
+                {
+                    MessageBox.Show("≈сть неподтвержденный рапорт, он будет открыт дл€ редактировани€",
+                        "Ќеподтвержденный рапорт", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageManager.OpenDocCloseShift(lastReport.DocID);
+                    return;
+                }
+            }
             MessageManager.OpenDocCloseShift(WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID);
         }
 
@@ -413,8 +429,12 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenQualityReportPMCommand { get; private set; }
         public DelegateCommand ComplectPalletCommand { get; private set; }
         public DelegateCommand OpenInventarisationsCommand { get; set; }
-        public List<ReportItem> Reports { get; set; }
         public DelegateCommand OpenHelpCommand { get; set; }
+        public DelegateCommand OpenDocWithdrawalsCommand { get; set; }
+
+        public List<ReportItem> Reports { get; set; }
+
+
 
         public class PlaceProduct
         {

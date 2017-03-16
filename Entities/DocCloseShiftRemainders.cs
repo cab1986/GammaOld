@@ -21,7 +21,7 @@ namespace Gamma.Entities
         public Nullable<bool> IsSourceProduct { get; set; }
         public Nullable<System.Guid> DocWithdrawalID { get; set; }
     
-        public virtual Docs Docs { get; set; }
+        public virtual Docs DocWithdrawal { get; set; }
         public virtual Docs DocCloseShifts { get; set; }
         public virtual Products Products { get; set; }
     }

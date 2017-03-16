@@ -25,28 +25,19 @@ namespace Gamma.ViewModels
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
             var date = DB.CurrentDateTime;
             var sourceSpools = gammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == placeID);
-            var placeGroup = (PlaceGroup) gammaBase.Places.First(p => p.PlaceID == placeID).PlaceGroupID;
-            var isSourceProduct = placeGroup == PlaceGroup.Convertings || placeGroup == PlaceGroup.Rw;
             if (sourceSpools == null) return;
             if (sourceSpools.Unwinder1Spool != null)
             {
-                AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date, isSourceProduct);
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date, true);
             }
             if (sourceSpools.Unwinder2Spool != null)
             {
-                AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date, isSourceProduct);
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date, true);
             }
             if (sourceSpools.Unwinder3Spool != null)
             {
-                AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, isSourceProduct);
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, true);
             }
-            /*            SpoolRemainders[0].ProductID = sourceSpools.Unwinder1Spool;
-                        SpoolRemainders[1].ProductID = sourceSpools.Unwinder2Spool;
-                        SpoolRemainders[2].ProductID = sourceSpools.Unwinder3Spool;
-                        SpoolRemainders[0].Weight = SpoolRemainders[0].MaxWeight;
-                        SpoolRemainders[1].Weight = SpoolRemainders[1].MaxWeight;
-                        SpoolRemainders[2].Weight = SpoolRemainders[2].MaxWeight;
-            */
         }
 
         private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct)
@@ -56,6 +47,7 @@ namespace Gamma.ViewModels
             spoolRemainder.Index = SpoolRemainders.Count;
             SpoolRemainders.Add(spoolRemainder);
         }
+
         //<Summary>
         //Конструктор для существующего закрытия смены
         //</Summary>
@@ -65,7 +57,7 @@ namespace Gamma.ViewModels
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
             var doc = gammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docID);
             IsConfirmed = doc.IsConfirmed;
-            var remainders = doc.DocCloseShiftRemainders.ToList();
+            var remainders = doc.DocCloseShiftRemainders.Where(dr => dr.IsSourceProduct ?? false).ToList();
             foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, remainder.ProductID, remainder.IsSourceProduct ?? false)
             {
                 Weight = (int) remainder.Quantity,

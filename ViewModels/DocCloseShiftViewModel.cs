@@ -42,17 +42,18 @@ namespace Gamma.ViewModels
             {
                 case (short)PlaceGroup.PM:
                     CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
-                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftPMRemainderViewModel() : new DocCloseShiftPMRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
                     break;
                 case (short)PlaceGroup.Wr:
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
                     break;
                 case (short)PlaceGroup.Rw:
                     CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg);
-                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     break;
                 case (short)PlaceGroup.Convertings:
-                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
+                    CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel()
                         : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
@@ -101,6 +102,8 @@ namespace Gamma.ViewModels
                 Bars = (_currentViewModelGrid as IBarImplemented).Bars;
             }
         }
+
+        public SaveImplementedViewModel CurrentViewModelUnwinderRemainder { get; set; }
         public SaveImplementedViewModel CurrentViewModelRemainder { get; set; }
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
@@ -128,6 +131,7 @@ namespace Gamma.ViewModels
             IsNewDoc = false;
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
             CurrentViewModelGrid?.SaveToModel(Doc.DocID);
+            CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
             var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;
             if (currenGridViewModel != null && currenGridViewModel.IsChanged)
                 DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);

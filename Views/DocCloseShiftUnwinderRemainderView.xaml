@@ -11,7 +11,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" >
+        <dxlc:LayoutControl Header="Остатки на раскатах" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox" >
             <ItemsControl ItemsSource="{Binding SpoolRemainders}"
                           ItemTemplate="{StaticResource SpoolRemainderTemplate}"/>
         </dxlc:LayoutControl>

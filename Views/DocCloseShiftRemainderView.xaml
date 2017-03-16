@@ -7,14 +7,14 @@
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
-             x:Class="Gamma.Views.DocCloseShiftPMRemainderView" 
+             x:Class="Gamma.Views.DocCloseShiftRemainderView" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftPMRemainderViewModel, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftRemainderViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True">
-            <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Vertical">
-                <dxlc:LayoutItem Label="Номенклатура остатка" LabelPosition="Top">
+        <dxlc:LayoutControl Header="Передано следующей смене" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox">
+            <dxlc:LayoutGroup Header="Передано следующей смене" View="GroupBox" Orientation="Vertical">
+                <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
                     <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False" IsReadOnly="True">
                         <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}" />
                     </dxe:ButtonEdit>
@@ -23,7 +23,7 @@
                     <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID}"
                                       DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Переходящий остаток, кг" LabelPosition="Top">
+                <dxlc:LayoutItem Label="{Binding RemainderLabel}" LabelPosition="Top">
                     <dxe:PopupCalcEdit EditValue="{Binding Quantity}" AllowDefaultButton="False" />
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>

@@ -9144,7 +9144,7 @@
           <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
           <Property Name="IsSourceProduct" Type="Boolean" />
           <Property Name="DocWithdrawalID" Type="Guid" />
-          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
+          <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
           <NavigationProperty Name="DocCloseShifts" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="DocCloseShiftRemainders" ToRole="Docs" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocCloseShiftRemainders_Products" FromRole="DocCloseShiftRemainders" ToRole="Products" />
         </EntityType>
