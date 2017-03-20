@@ -60,10 +60,10 @@
                                 <dxe:SpinEditSettings MinValue="0" Mask="f0" MaskUseAsDisplayFormat="True" IsFloatValue="False"/>
                             </dxg:GridColumn.EditSettings>
                         </dxg:GridColumn>
-                        <dxg:GridColumn Width="60" FixedWidth="True" Header="Ед. изм." FieldName="MeasureUnitId">
+                        <dxg:GridColumn Width="60" FixedWidth="True" Header="Ед. изм." FieldName="MeasureUnitId" ReadOnly="{Binding IsReadOnly}">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
-                                    <dxe:ComboBoxEdit x:Name="PART_Editor" 
+                                    <dxe:ComboBoxEdit x:Name="PART_Editor" IsTextEditable="False"
                                                       ItemsSource="{Binding RowData.Row.MeasureUnits}" DisplayMember="Value" ValueMember="Key" />
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
@@ -110,7 +110,14 @@
                                 <dxe:SpinEditSettings MinValue="0" MaskUseAsDisplayFormat="True" IsFloatValue="True" Increment="0.01"/>
                             </dxg:GridColumn.EditSettings>
                         </dxg:GridColumn>
-                        <dxg:GridColumn FieldName="MeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True"/>
+                        <dxg:GridColumn Width="60" FixedWidth="True" Header="Ед. изм." FieldName="MeasureUnitId" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <dxe:ComboBoxEdit x:Name="PART_Editor" IsTextEditable="False"
+                                                      ItemsSource="{Binding RowData.Row.MeasureUnits}" DisplayMember="Value" ValueMember="Key" />
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
                         <dxg:TableView AutoWidth="True" AllowGrouping="False" ShowGroupPanel="False" EnableImmediatePosting="True">

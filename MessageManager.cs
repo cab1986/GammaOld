@@ -107,14 +107,16 @@ namespace Gamma
 
     public class OpenDocBrokeMessage
     {
-        public OpenDocBrokeMessage(Guid docId, Guid? productId = null)
+        public OpenDocBrokeMessage(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
             DocId = docId;
             ProductId = productId;
+            IsInFuturePeriod = isInFuturePeriod;
         }
 
         public Guid DocId { get; private set; }
         public Guid? ProductId { get; private set; }
+        public bool IsInFuturePeriod { get; private set; }
     }
 
     public class CloseMessage { }
@@ -437,9 +439,9 @@ namespace Gamma
                 );
         }
 
-        public static void OpenDocBroke(Guid docId, Guid? productId = null)
+        public static void OpenDocBroke(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
-            Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId));
+            Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
         }
 
         public static void OpenReportList()

@@ -10,6 +10,7 @@ using Gamma.Interfaces;
 using Gamma.Attributes;
 using System.Windows;
 using System.Data.Entity;
+using Gamma.Common;
 using Gamma.Entities;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -138,7 +139,7 @@ namespace Gamma.ViewModels
                     Title = "Тамбур";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
-                    AllowAddToBrokeAction = true;
+                    AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke");
                     CurrentViewModel = new DocProductSpoolViewModel(product.ProductID);
                     break;
                 case DocProductKinds.DocProductUnload:
@@ -152,14 +153,14 @@ namespace Gamma.ViewModels
                     Title = "Групповая упаковка";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
-                    AllowAddToBrokeAction = true;
+                    AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke");
                     CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);                   
                     break;
                 case DocProductKinds.DocProductPallet:
                     Title = "Паллета";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
-                    AllowAddToBrokeAction = true;
+                    AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke");
                     CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
                     break;
                 case DocProductKinds.DocProductBale:
@@ -199,6 +200,7 @@ namespace Gamma.ViewModels
 
         private void AddToDocBroke()
         {
+            UIServices.SetBusyState();
             SaveToModel();
             if (Doc == null) return;
             Guid? productId = null;
@@ -214,24 +216,39 @@ namespace Gamma.ViewModels
             {
                 productId = ((DocProductPalletViewModel)CurrentViewModel).ProductId;
             }
-//            var productId = GammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == Doc.DocID)?.ProductID;
             if (productId == null) return;
-            if (!GammaBase.Rests.Any(r => r.ProductID == productId && r.Quantity > 0))
+            using (var gammaBase = DB.GammaDb)
             {
-                MessageBox.Show("Нельзя актировать продукт, которого нет на остатках");
-                return;
-            }
-            var docBrokeId =
-                GammaBase.Docs.FirstOrDefault(
-                    d => d.DocTypeID == (int) DocTypes.DocBroke && !d.IsConfirmed && d.PlaceID == WorkSession.PlaceID)?.DocID;
-            if (docBrokeId != null)
-            {
-                MessageBox.Show("Есть незакрытый акт. Данный продукт будет добавлен в этот акт");
-                MessageManager.OpenDocBroke((Guid) docBrokeId, productId);
-            }
-            else
-            {
-                MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid(), productId);
+                if (!gammaBase.Rests.Any(r => r.ProductID == productId && r.Quantity > 0))
+                {
+                    MessageBox.Show("Нельзя актировать продукт, которого нет на остатках");
+                    return;
+                }
+                var docProduction =
+                    gammaBase.Docs.FirstOrDefault(
+                        d => d.DocProduction.DocProductionProducts.FirstOrDefault().ProductID == productId);
+                if (docProduction == null)
+                {
+                    MessageBox.Show("Непредвиденная ошибка при добавлении в акт!", "Ошибка актирования",
+                        MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                }
+                var docBrokeId =
+                    gammaBase.Docs.FirstOrDefault(
+                        d => d.DocTypeID == (int)DocTypes.DocBroke && !d.IsConfirmed 
+                            && d.PlaceID == WorkSession.PlaceID 
+                            && (((d.DocBroke.IsInFuturePeriod ?? false) && (docProduction.PlaceID != WorkSession.PlaceID))
+                            || ((!d.DocBroke.IsInFuturePeriod ?? true) && (docProduction.PlaceID == WorkSession.PlaceID))
+                            || !WorkSession.IsProductionPlace))?.DocID;
+                if (docBrokeId != null)
+                {
+                    MessageBox.Show("Есть незакрытый акт. Данный продукт будет добавлен в этот акт");
+                    MessageManager.OpenDocBroke((Guid)docBrokeId, productId);
+                }
+                else
+                {
+                    MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid(), productId, docProduction.PlaceID != WorkSession.PlaceID);
+                }
             }
         }
 
@@ -262,7 +279,6 @@ namespace Gamma.ViewModels
 
         private void GetDocRelations(Guid docId)
         {
-            
             ProductRelations = new ObservableCollection<ProductRelation>
                 (
                 from prel in GammaBase.GetDocRelations(docId)

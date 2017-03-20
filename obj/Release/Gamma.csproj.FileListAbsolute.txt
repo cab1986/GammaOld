@@ -306,3 +306,4 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache

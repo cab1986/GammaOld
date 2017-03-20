@@ -8,9 +8,9 @@ namespace Gamma.Views
     /// </summary>
     public partial class DocBrokeView
     {
-        public DocBrokeView(Guid docId, Guid? productId = null)
+        public DocBrokeView(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
-            DataContext = new DocBrokeViewModel(docId, productId);
+            DataContext = new DocBrokeViewModel(docId, productId, isInFuturePeriod);
             InitializeComponent();
         }
     }

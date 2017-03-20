@@ -19,11 +19,11 @@ namespace Gamma.ViewModels
 {
     public class DocBrokeViewModel: SaveImplementedViewModel, IBarImplemented, ICheckedAccess
     {
-        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false, GammaEntities gammaBase = null) : base(gammaBase)
         {
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             DocId = docBrokeId;
-            DiscoverPlaces = GammaBase.Places.Where(p => (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false))
+            DiscoverPlaces = GammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
                 .Select(p => new Place
                 {
                     PlaceGuid = p.PlaceGuid,
@@ -65,6 +65,11 @@ namespace Gamma.ViewModels
             else
             {
                 Date = DB.CurrentDateTime;
+                IsInFuturePeriod = isInFuturePeriod;
+                if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
+                {
+                    PlaceDiscoverId = DiscoverPlaces.First(dp => dp.PlaceID == WorkSession.PlaceID).PlaceGuid;
+                }
                 var number =
                     GammaBase.Docs.Where(d => d.DocTypeID == (int) DocTypes.DocBroke && d.Number != null)
                         .OrderByDescending(d => d.Date)

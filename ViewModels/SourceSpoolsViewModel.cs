@@ -295,12 +295,12 @@ namespace Gamma.ViewModels
             var docID = SqlGuidUtil.NewSequentialid();
             GammaBase.CreateDocBrokeWithBrokeDecision(docID, productId, weight/1000, rejectionReasonId,
                 WorkSession.PrintName, WorkSession.PlaceID);
-            CompleteWithdraw(productId);
+//            CompleteWithdraw(productId);
 //            MessageManager.OpenDocBroke(docID);
 //            var docProductionId = GammaBase.DocProductionProducts
 //                .Where(d => d.ProductID == productid && d.DocProduction.Docs.DocTypeID == (byte)DocTypes.DocProduction)
 //                .Select(d => d.DocID).FirstOrDefault();
-            ReportManager.PrintReport("Амбалаж утилизация", "Spool", productId);
+            ReportManager.PrintReport("Амбалаж", "Spool", productId);
         }
         private void ChangeUnwinderActive(byte unum)
         {

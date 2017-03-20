@@ -83,7 +83,7 @@ namespace Gamma.ViewModels
                 }));
             foreach (var sample in samples)
             {
-                sample.MeasureUnits = GetMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
+                sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
                 if (sample.MeasureUnitId == null) sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
             }
             Samples = samples;
@@ -107,6 +107,10 @@ namespace Gamma.ViewModels
                     MeasureUnitId = dw.C1CMeasureUnitID,
                     MeasureUnit = dw.C1CMeasureUnits.Name
                 }));
+            foreach (var waste in Wastes)
+            {
+                waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
+            }
         }
 
         public bool IsChanged { get; private set; }
@@ -146,7 +150,7 @@ namespace Gamma.ViewModels
                 }).Distinct());
             foreach (var sample in samples)
             {
-                sample.MeasureUnits = GetMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
+                sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
                 sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
             }
             Samples = samples;
@@ -179,7 +183,7 @@ namespace Gamma.ViewModels
                             MeasureUnit = m.MeasureUnit,
                             MeasureUnitID = m.MeasureUnitID
                         }));
-            Wastes = new ItemsChangeObservableCollection<Sample>(
+            var wastes = new ItemsChangeObservableCollection<Sample>(
                 GammaBase.FillDocCloseShiftConvertingWastes(PlaceID, ShiftID, CloseDate)
                 .Select(w => new Sample
                 {
@@ -190,10 +194,26 @@ namespace Gamma.ViewModels
                     MeasureUnitId = w.MeasureUnitID,
                     MeasureUnit = w.MeasureUnit
                 }));
+            foreach (var waste in wastes)
+            {
+                waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
+                waste.MeasureUnitId = waste.MeasureUnits.FirstOrDefault().Key;
+            }
+            Wastes = wastes;
             IsChanged = true;
         }
 
-        private Dictionary<Guid, string> GetMeasureUnits(Guid nomenclatureId, Guid? characteristicId)
+        private Dictionary<Guid, string> GetWasteMeasureUnits(Guid nomenclatureId)
+        {
+            Dictionary<Guid, string> dict;
+            using (var gammaBase = DB.GammaDb)
+            {
+                dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CNomenclatureID == nomenclatureId).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);                
+            }
+            return dict.OrderBy(x => x.Value).ToDictionary(x => x.Key, x=> x.Value);
+        }
+
+        private Dictionary<Guid, string> GetSampleMeasureUnits(Guid nomenclatureId, Guid? characteristicId)
         {
             var dict = new Dictionary<Guid, string>();
             using (var gammaBase = DB.GammaDb)

@@ -30,7 +30,11 @@
                     <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Выпущено, (рул, пач)" Width="180" FixedWidth="True"/>
+            <dxg:GridColumn Binding="{Binding MadeQuantity}" Header="Выпущено, (рул, пач)" Width="180" FixedWidth="True">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
         </dxg:GridControl>
     </Grid>
 </UserControl>
