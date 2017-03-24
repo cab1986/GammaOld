@@ -23,14 +23,15 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the NewUserViewModel class.
         /// </summary>
-        public UserEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public UserEditViewModel()
         {
             _isNewUser = true;
             User = new Users { UserID = SqlGuidUtil.NewSequentialid() };
             ChangePassEnabled = false;
             InitializeFields();
         }
-        public UserEditViewModel(Guid userid, GammaEntities gammaBase = null): base(gammaBase)
+
+        public UserEditViewModel(Guid userid)
         {
             ChangePassEnabled = true;
             UserID = userid;
@@ -102,7 +103,7 @@ namespace Gamma.ViewModels
         private string _name;
         private Users User { get; set; }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             
             User.Login = Login;

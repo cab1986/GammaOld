@@ -15,7 +15,7 @@ namespace Gamma.ViewModels
 {
     public class DocCloseShiftBalerViewModel : SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
-        public DocCloseShiftBalerViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocCloseShiftBalerViewModel(OpenDocCloseShiftMessage msg)
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftBaler", VMID));
             if (msg.DocID == null)
@@ -84,7 +84,7 @@ namespace Gamma.ViewModels
             Bales.Clear();
             IsChanged = true;
         }
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("DocCloseShiftDocs")) return true;
             var doc = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == itemID);

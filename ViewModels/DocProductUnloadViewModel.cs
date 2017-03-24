@@ -28,7 +28,7 @@ namespace Gamma.ViewModels
         /// Инициализирует новую viewmodel.
         /// Если новый, то id = ProductionTaskID иначе id = DocID
         /// </summary>
-        public DocProductUnloadViewModel(Guid docID, bool newProduct, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocProductUnloadViewModel(Guid docID, bool newProduct)
         {
             DocID = docID;
             var productionTaskID =
@@ -157,7 +157,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("UnloadSpools");
             }
         }
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (IsReadOnly) return true;          
             if (UnloadSpoolsSaved) return true;

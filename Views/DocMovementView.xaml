@@ -18,7 +18,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocMovementViewModel}}"
         common:WindowSettings.Save="True"
-        Title="Заказ на перемещение" Height="600" Width="1000">
+        Title="перемещение" Height="600" Width="1000">
     
     <Grid>
         <Grid.RowDefinitions>

@@ -74,84 +74,85 @@ namespace Gamma.ViewModels
         /// Сохранение остатков в БД
         /// </summary>
         /// <param name="itemID">ID документа закрытия смены</param>
-        /// <param name="gammaBase">Контекст базы данных</param>
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("DocCloseShiftRemainders")) return true;
             UIServices.SetBusyState();
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
-            foreach (var remainder in remainders)
+            using (var gammaBase = DB.GammaDb)
             {
-                // Занесение остатков в таблицу остатков закрытия смены
-                var docRemainder =
-                    gammaBase.DocCloseShiftRemainders.FirstOrDefault(d => d.ProductID == remainder.ProductID && d.DocID == itemID);
-                if (docRemainder == null)
+                var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
+                foreach (var remainder in remainders)
                 {
-                    docRemainder = new DocCloseShiftRemainders()
+                    // Занесение остатков в таблицу остатков закрытия смены
+                    var docRemainder =
+                        gammaBase.DocCloseShiftRemainders.FirstOrDefault(d => d.ProductID == remainder.ProductID && d.DocID == itemID);
+                    if (docRemainder == null)
                     {
-                        DocID = itemID,
-                        DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
-                        ProductID = remainder.ProductID,
-                        IsSourceProduct = remainder.IsSourceProduct
-                    };
-                    gammaBase.DocCloseShiftRemainders.Add(docRemainder);
-                }
-                docRemainder.Quantity = remainder.Weight;
-                // Списание части тамбура                
-                if (remainder.IsSourceProduct)
-                {
-                    DocWithdrawalProducts docWithdrawalProduct;
-                    if (remainder.DocWithdrawalId != null)
-                    {
-                        docWithdrawalProduct =
-                            gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal.Docs)
-                                .First(d => d.DocID == remainder.DocWithdrawalId);
-                    }
-                    else
-                    {
-                        docWithdrawalProduct =
-                            gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                            .FirstOrDefault(d => d.ProductID == remainder.ProductID);
-                        if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
+                        docRemainder = new DocCloseShiftRemainders()
                         {
-                            var docId = SqlGuidUtil.NewSequentialid();
-                            docWithdrawalProduct = new DocWithdrawalProducts
+                            DocID = itemID,
+                            DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = remainder.ProductID,
+                            IsSourceProduct = remainder.IsSourceProduct
+                        };
+                        gammaBase.DocCloseShiftRemainders.Add(docRemainder);
+                    }
+                    docRemainder.Quantity = remainder.Weight;
+                    // Списание части тамбура                
+                    if (remainder.IsSourceProduct)
+                    {
+                        DocWithdrawalProducts docWithdrawalProduct;
+                        if (remainder.DocWithdrawalId != null)
+                        {
+                            docWithdrawalProduct =
+                                gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal.Docs)
+                                    .First(d => d.DocID == remainder.DocWithdrawalId);
+                        }
+                        else
+                        {
+                            docWithdrawalProduct =
+                                gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
+                                .FirstOrDefault(d => d.ProductID == remainder.ProductID);
+                            if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                             {
-                                DocID = docId,
-                                // ReSharper disable once PossibleInvalidOperationException
-                                // Проверка на null есть при выборке из SpoolRemainders
-                                ProductID = (Guid)remainder.ProductID,
-                                DocWithdrawal = new DocWithdrawal
+                                var docId = SqlGuidUtil.NewSequentialid();
+                                docWithdrawalProduct = new DocWithdrawalProducts
                                 {
                                     DocID = docId,
-                                    OutPlaceID = WorkSession.PlaceID,
-                                    Docs = new Docs
+                                    // ReSharper disable once PossibleInvalidOperationException
+                                    // Проверка на null есть при выборке из SpoolRemainders
+                                    ProductID = (Guid)remainder.ProductID,
+                                    DocWithdrawal = new DocWithdrawal
                                     {
                                         DocID = docId,
-                                        IsConfirmed = true,
-                                        Date = DB.CurrentDateTime,
-                                        DocTypeID = (int)DocTypes.DocWithdrawal,
-                                        PlaceID = WorkSession.PlaceID,
-                                        PrintName = WorkSession.PrintName,
-                                        ShiftID = WorkSession.ShiftID,
-                                        UserID = WorkSession.UserID
+                                        OutPlaceID = WorkSession.PlaceID,
+                                        Docs = new Docs
+                                        {
+                                            DocID = docId,
+                                            IsConfirmed = true,
+                                            Date = DB.CurrentDateTime,
+                                            DocTypeID = (int)DocTypes.DocWithdrawal,
+                                            PlaceID = WorkSession.PlaceID,
+                                            PrintName = WorkSession.PrintName,
+                                            ShiftID = WorkSession.ShiftID,
+                                            UserID = WorkSession.UserID
+                                        }
                                     }
-                                }
-                            };
-                            gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+                                };
+                                gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+                            }
+                        };
+                        if (DB.AllowEditDoc(docWithdrawalProduct.DocID))
+                        {
+                            docWithdrawalProduct.Quantity = (remainder.MaxWeight - remainder.Weight) / 1000;
+                            docWithdrawalProduct.CompleteWithdrawal = false;
+                            docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
                         }
-                    };
-                    if (DB.AllowEditDoc(docWithdrawalProduct.DocID))
-                    {
-                        docWithdrawalProduct.Quantity = (remainder.MaxWeight  - remainder.Weight) / 1000;
-                        docWithdrawalProduct.CompleteWithdrawal = false;
-                        docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
+                        docRemainder.DocWithdrawalID = docWithdrawalProduct.DocID;
+                        remainder.DocWithdrawalId = docWithdrawalProduct.DocID;
                     }
-                    docRemainder.DocWithdrawalID = docWithdrawalProduct.DocID;
-                    remainder.DocWithdrawalId = docWithdrawalProduct.DocID;
+                    gammaBase.SaveChanges();
                 }
-                gammaBase.SaveChanges();   
             }
             return true;
         }

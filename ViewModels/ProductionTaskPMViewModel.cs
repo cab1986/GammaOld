@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTaskPMViewModel class.
         /// </summary>        
-        public ProductionTaskPMViewModel() : base(DB.GammaDb)
+        public ProductionTaskPMViewModel()
         {
             Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.PM).
                 Select(p => new Place()
@@ -425,11 +425,12 @@ namespace Gamma.ViewModels
             }
         }
  * */
-        public override bool SaveToModel(Guid itemId, GammaEntities gammaBase = null) // itemID = ProductionTaskBatchID
+        public override bool SaveToModel(Guid itemId) // itemID = ProductionTaskBatchID
         {
             if (!DB.HaveWriteAccess("ProductionTaskSGB")) return true;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var productionTaskBatch =
+            using (var gammaBase = DB.GammaDb)
+            {
+                var productionTaskBatch =
                     gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == itemId);
                 ProductionTasks productionTask;
                 if (productionTaskBatch == null)
@@ -439,14 +440,14 @@ namespace Gamma.ViewModels
                     return true;
                 }
                 var productionTaskTemp =
-                    gammaBase.GetProductionTaskByBatchID(itemId, (short) PlaceGroup.PM).FirstOrDefault();
+                    gammaBase.GetProductionTaskByBatchID(itemId, (short)PlaceGroup.PM).FirstOrDefault();
                 if (productionTaskTemp == null)
                 {
                     ProductionTaskID = SqlGuidUtil.NewSequentialid();
                     productionTask = new ProductionTasks()
                     {
                         ProductionTaskID = ProductionTaskID,
-                        PlaceGroupID = (short) PlaceGroup.PM
+                        PlaceGroupID = (short)PlaceGroup.PM
                     };
                     productionTaskBatch.ProductionTasks.Add(productionTask);
                 }
@@ -456,13 +457,14 @@ namespace Gamma.ViewModels
                     productionTask = gammaBase.ProductionTasks.Find(ProductionTaskID);
                 }
                 productionTask.PlaceID = PlaceID;
-                productionTask.C1CNomenclatureID = (Guid) NomenclatureID;
+                productionTask.C1CNomenclatureID = (Guid)NomenclatureID;
                 productionTask.C1CCharacteristicID = CharacteristicID;
                 productionTask.Quantity = TaskQuantity;
                 productionTask.DateBegin = DateBegin;
                 productionTask.DateEnd = DateEnd;
                 gammaBase.SaveChanges();
                 ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
+            }
             return true;
         }
         [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]

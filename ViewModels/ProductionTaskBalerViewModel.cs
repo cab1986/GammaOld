@@ -159,7 +159,7 @@ namespace Gamma.ViewModels
         }
 */
 
-        public override bool SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid productionTaskBatchID)
         {
             SaveToModel();
             var productionTaskBatch =

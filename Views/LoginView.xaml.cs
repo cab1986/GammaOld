@@ -20,7 +20,7 @@ namespace Gamma.Views
 
         private void OpenMain(OpenMainMessage obj)
         {
-            var view = new MainView(DB.GammaDb);
+            var view = new MainView();
             view.Show();
         }
     }

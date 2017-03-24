@@ -9,7 +9,7 @@ namespace Gamma.Views
     {
         public SourceSpoolsView()
         {
-            DataContext = new SourceSpoolsViewModel(DB.GammaDb);
+            DataContext = new SourceSpoolsViewModel();
             InitializeComponent();
         }
     }

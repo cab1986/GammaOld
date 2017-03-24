@@ -13,17 +13,21 @@ namespace Gamma.ViewModels
 {
     public class DocBrokeListViewModel: RootViewModel, IItemManager
     {
-        public DocBrokeListViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public DocBrokeListViewModel()
         {
+            
             FindCommand = new DelegateCommand(Find);
             CreateNewDocBrokeCommand = new DelegateCommand(() => OpenDocBroke());
             OpenDocBrokeCommand = new DelegateCommand(() => OpenDocBroke(SelectedDocBroke.DocId), () => SelectedDocBroke != null);
-            PlacesList = new List<Place>(GammaBase.Places.Where(p => p.PlaceGuid != null).Select(p => new Place
+            using (var gammaBase = DB.GammaDb)
             {
-                PlaceID = p.PlaceID,
-                PlaceGuid = p.PlaceGuid,
-                PlaceName = p.Name
-            }));
+                PlacesList = new List<Place>(gammaBase.Places.Where(p => p.PlaceGuid != null).Select(p => new Place
+                {
+                    PlaceID = p.PlaceID,
+                    PlaceGuid = p.PlaceGuid,
+                    PlaceName = p.Name
+                }));
+            }
             Find();
             RefreshCommand = FindCommand;
             EditItemCommand = OpenDocBrokeCommand;

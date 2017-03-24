@@ -19,79 +19,82 @@ namespace Gamma.ViewModels
 {
     public class DocBrokeViewModel: SaveImplementedViewModel, IBarImplemented, ICheckedAccess
     {
-        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false) : base()
         {
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             DocId = docBrokeId;
-            DiscoverPlaces = GammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
+            using (var gammaBase = DB.GammaDb)
+            {
+                DiscoverPlaces = gammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
                 .Select(p => new Place
                 {
                     PlaceGuid = p.PlaceGuid,
                     PlaceID = p.PlaceID,
                     PlaceName = p.Name
                 }).ToList();
-            BrokePlaces = DiscoverPlaces;
-            StorePlaces = GammaBase.Places.Where(p => p.IsWarehouse??false)
-                .Select(p => new Place
-                {
-                    PlaceGuid = p.PlaceGuid,
-                    PlaceID = p.PlaceID,
-                    PlaceName = p.Name
-                }).ToList();
-            var doc = GammaBase.Docs.Include(d => d.DocBroke)
-                .Include(d => d.DocBroke.DocBrokeProducts)
-                .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons))
-                .FirstOrDefault(d => d.DocID == DocId);
-            BrokeProducts = new ItemsChangeObservableCollection<BrokeProduct>();
-            InternalUsageProduct = new EditBrokeDecisionItem("Хоз. нужды", ProductState.InternalUsage, BrokeDecisionProducts);
-            GoodProduct = new EditBrokeDecisionItem("Годная", ProductState.Good, BrokeDecisionProducts);
-            LimitedProduct = new EditBrokeDecisionItem("Ограниченная партия", ProductState.Limited, BrokeDecisionProducts);
-            BrokeProduct = new EditBrokeDecisionItem("На утилизацию", ProductState.Broke, BrokeDecisionProducts);
-            RepackProduct = new EditBrokeDecisionItem("На переделку", ProductState.Repack, BrokeDecisionProducts, true);
+                BrokePlaces = DiscoverPlaces;
+                StorePlaces = gammaBase.Places.Where(p => p.IsWarehouse ?? false)
+                    .Select(p => new Place
+                    {
+                        PlaceGuid = p.PlaceGuid,
+                        PlaceID = p.PlaceID,
+                        PlaceName = p.Name
+                    }).ToList();
+                var doc = gammaBase.Docs.Include(d => d.DocBroke)
+                    .Include(d => d.DocBroke.DocBrokeProducts)
+                    .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons))
+                    .FirstOrDefault(d => d.DocID == DocId);
+                BrokeProducts = new ItemsChangeObservableCollection<BrokeProduct>();
+                InternalUsageProduct = new EditBrokeDecisionItem("Хоз. нужды", ProductState.InternalUsage, BrokeDecisionProducts);
+                GoodProduct = new EditBrokeDecisionItem("Годная", ProductState.Good, BrokeDecisionProducts);
+                LimitedProduct = new EditBrokeDecisionItem("Ограниченная партия", ProductState.Limited, BrokeDecisionProducts);
+                BrokeProduct = new EditBrokeDecisionItem("На утилизацию", ProductState.Broke, BrokeDecisionProducts);
+                RepackProduct = new EditBrokeDecisionItem("На переделку", ProductState.Repack, BrokeDecisionProducts, true);
 
-            if (doc != null)
-            {
-                DocNumber = doc.Number;
-                Date = doc.Date;
-                PlaceDiscoverId = doc.DocBroke.PlaceDiscoverID;
-                PlaceStoreId = doc.DocBroke.PlaceStoreID;
-                IsInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false;
-                IsConfirmed = doc.IsConfirmed;
-                foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
+                if (doc != null)
                 {
-                    AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
+                    DocNumber = doc.Number;
+                    Date = doc.Date;
+                    PlaceDiscoverId = doc.DocBroke.PlaceDiscoverID;
+                    PlaceStoreId = doc.DocBroke.PlaceStoreID;
+                    IsInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false;
+                    IsConfirmed = doc.IsConfirmed;
+                    foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
+                    {
+                        AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
+                    }
                 }
+                else
+                {
+                    Date = DB.CurrentDateTime;
+                    IsInFuturePeriod = isInFuturePeriod;
+                    if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
+                    {
+                        PlaceDiscoverId = DiscoverPlaces.First(dp => dp.PlaceID == WorkSession.PlaceID).PlaceGuid;
+                    }
+                    var number =
+                        gammaBase.Docs.Where(d => d.DocTypeID == (int)DocTypes.DocBroke && d.Number != null)
+                            .OrderByDescending(d => d.Date)
+                            .FirstOrDefault();
+                    try
+                    {
+                        DocNumber = (Convert.ToInt32(number) + 1).ToString();
+                    }
+                    catch
+                    {
+                        DocNumber = "1";
+                    }
+                }
+                if (productId != null)
+                {
+                    AddProduct((Guid)productId, DocId, BrokeProducts, BrokeDecisionProducts);
+                }
+                AddProductCommand = new DelegateCommand(ChooseProductToAdd, () => !IsReadOnly);
+                DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
+                EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
+                OpenProductCommand = new DelegateCommand(OpenProduct);
+                IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
             }
-            else
-            {
-                Date = DB.CurrentDateTime;
-                IsInFuturePeriod = isInFuturePeriod;
-                if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
-                {
-                    PlaceDiscoverId = DiscoverPlaces.First(dp => dp.PlaceID == WorkSession.PlaceID).PlaceGuid;
-                }
-                var number =
-                    GammaBase.Docs.Where(d => d.DocTypeID == (int) DocTypes.DocBroke && d.Number != null)
-                        .OrderByDescending(d => d.Date)
-                        .FirstOrDefault();
-                try
-                {
-                    DocNumber = (Convert.ToInt32(number) + 1).ToString();
-                }
-                catch
-                {
-                    DocNumber = "1";
-                }
-            }
-            if (productId != null)
-            {
-                AddProduct((Guid)productId, DocId, BrokeProducts, BrokeDecisionProducts);
-            }
-            AddProductCommand = new DelegateCommand(ChooseProductToAdd, () => !IsReadOnly);
-            DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
-            EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
-            OpenProductCommand = new DelegateCommand(OpenProduct);
-            IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
         }
@@ -126,85 +129,93 @@ namespace Gamma.ViewModels
         /// <param name="brokeProducts">Список продукции</param>
         /// <param name="brokeDecisionProducts">Список решений по продукции</param>
         /// <param name="gammaBase">Контекст БД</param>
-        private void AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ICollection<BrokeDecisionProduct> brokeDecisionProducts,
-            GammaEntities gammaBase = null)
+        private void AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ICollection<BrokeDecisionProduct> brokeDecisionProducts)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            if (BrokeProducts.Select(bp => bp.ProductId).Contains(productId)) return;
-            var product = gammaBase.vProductsInfo
-                .FirstOrDefault(p => p.ProductID == productId);
-            if (product == null) return;
-#region AddBrokeProduct
-            var docBrokeProductInfo =
-                    gammaBase.DocBrokeProducts.Include(d => d.DocBrokeProductRejectionReasons)
-                    .FirstOrDefault(d => d.DocID == docId && d.ProductID == productId);
-            var brokeProduct = new BrokeProduct(docBrokeProductInfo == null ? new ItemsChangeObservableCollection<RejectionReason>() :
-                new ItemsChangeObservableCollection<RejectionReason>(docBrokeProductInfo.DocBrokeProductRejectionReasons
-                .Select(d => new RejectionReason()
+            using (var gammaBase = DB.GammaDb)
+            {
+                if (BrokeProducts.Select(bp => bp.ProductId).Contains(productId)) return;
+                var product = gammaBase.vProductsInfo
+                    .FirstOrDefault(p => p.ProductID == productId);
+                if (product == null) return;
+                if (!IsInFuturePeriod && BrokeProducts.Count > 0 &&
+                    BrokeProducts.Select(bp => bp.ProductionPlaceId).First() != product.PlaceID)
                 {
-                    RejectionReasonID = d.C1CRejectionReasonID,
-                    Comment = d.Comment
-                })), docBrokeProductInfo?.BrokePlaceID, docBrokeProductInfo?.BrokeShiftID, docBrokeProductInfo?.BrokePrintName)
-            {
-                Date = product.Date,
-                NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
-                Number = product.Number,
-                Place = product.Place,
-                ProductionPlaceId = (int)product.PlaceID,
-                ProductionPrintName = product.PrintName,
-                ShiftId = product.ShiftID,
-                BaseMeasureUnit = product.BaseMeasureUnit,
-                ProductId = product.ProductID, 
-                ProductKind = (ProductKind)product.ProductKindID,
-                Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity??0 : docBrokeProductInfo.Quantity??0
-            };
-            if (brokeProduct.BrokePlaceId == brokeProduct.ProductionPlaceId && brokeProduct.PrintName == null)
-                brokeProduct.PrintName = brokeProduct.ProductionPrintName;
-            brokeProducts.Add(brokeProduct);
-#endregion AddBrokeProduct
-#region AddBrokeDecisionProduct
-            var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
-            if (docBrokeDecisionProducts.Count == 0)
-            {
-                brokeDecisionProducts.Add(new BrokeDecisionProduct(
-                    product.ProductID,
-                    (ProductKind)product.ProductKindID,
-                    product.Number,
-                    ProductState.NeedsDecision,
-                    product.BaseMeasureUnitQuantity ?? 1000000,
-                    DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
-                    product.BaseMeasureUnit,
-                    product.C1CNomenclatureID,
-                    (Guid) product.C1CCharacteristicID,
-                    product.BaseMeasureUnitQuantity ?? 0
-                    )
-                );
-            }
-            else
-            {
-                foreach (var decisionProduct in docBrokeDecisionProducts)
+                    MessageBox.Show("Нельзя добавлять продукт другого передела в акт 25к", "Ошибка добавления",
+                        MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    return;
+                }
+                #region AddBrokeProduct
+                var docBrokeProductInfo =
+                        gammaBase.DocBrokeProducts.Include(d => d.DocBrokeProductRejectionReasons)
+                        .FirstOrDefault(d => d.DocID == docId && d.ProductID == productId);
+                var brokeProduct = new BrokeProduct(docBrokeProductInfo == null ? new ItemsChangeObservableCollection<RejectionReason>() :
+                    new ItemsChangeObservableCollection<RejectionReason>(docBrokeProductInfo.DocBrokeProductRejectionReasons
+                    .Select(d => new RejectionReason()
+                    {
+                        RejectionReasonID = d.C1CRejectionReasonID,
+                        Comment = d.Comment
+                    })), docBrokeProductInfo?.BrokePlaceID, docBrokeProductInfo?.BrokeShiftID, docBrokeProductInfo?.BrokePrintName)
+                {
+                    Date = product.Date,
+                    NomenclatureName = DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
+                    Number = product.Number,
+                    Place = product.Place,
+                    ProductionPlaceId = (int)product.PlaceID,
+                    ProductionPrintName = product.PrintName,
+                    ShiftId = product.ShiftID,
+                    BaseMeasureUnit = product.BaseMeasureUnit,
+                    ProductId = product.ProductID,
+                    ProductKind = (ProductKind)product.ProductKindID,
+                    Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity ?? 0 : docBrokeProductInfo.Quantity ?? 0
+                };
+                if (brokeProduct.BrokePlaceId == brokeProduct.ProductionPlaceId && brokeProduct.PrintName == null)
+                    brokeProduct.PrintName = brokeProduct.ProductionPrintName;
+                brokeProducts.Add(brokeProduct);
+                #endregion AddBrokeProduct
+                #region AddBrokeDecisionProduct
+                var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
+                if (docBrokeDecisionProducts.Count == 0)
                 {
                     brokeDecisionProducts.Add(new BrokeDecisionProduct(
-                            decisionProduct.ProductID,
-                            (ProductKind)product.ProductKindID,
-                            product.Number,
-                            (ProductState)decisionProduct.StateID,
-                            docBrokeProductInfo?.Quantity ?? 1000000,
-                            DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
-                            product.BaseMeasureUnit,
-                            product.C1CNomenclatureID,
-                            (Guid)product.C1CCharacteristicID,
-                            decisionProduct.Quantity ?? 0
+                        product.ProductID,
+                        (ProductKind)product.ProductKindID,
+                        product.Number,
+                        ProductState.NeedsDecision,
+                        product.BaseMeasureUnitQuantity ?? 1000000,
+                        DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
+                        product.BaseMeasureUnit,
+                        product.C1CNomenclatureID,
+                        (Guid)product.C1CCharacteristicID,
+                        product.BaseMeasureUnitQuantity ?? 0
                         )
-                    {
-                        Comment = decisionProduct.Comment,
-                        NomenclatureId = decisionProduct.C1CNomenclatureID,
-                        CharacteristicId = decisionProduct.C1CCharacteristicID,
-                        ProductKind = (ProductKind)product.ProductKindID
-                    });
+                    );
                 }
+                else
+                {
+                    foreach (var decisionProduct in docBrokeDecisionProducts)
+                    {
+                        brokeDecisionProducts.Add(new BrokeDecisionProduct(
+                                decisionProduct.ProductID,
+                                (ProductKind)product.ProductKindID,
+                                product.Number,
+                                (ProductState)decisionProduct.StateID,
+                                docBrokeProductInfo?.Quantity ?? 1000000,
+                                DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
+                                product.BaseMeasureUnit,
+                                product.C1CNomenclatureID,
+                                (Guid)product.C1CCharacteristicID,
+                                decisionProduct.Quantity ?? 0
+                            )
+                        {
+                            Comment = decisionProduct.Comment,
+                            NomenclatureId = decisionProduct.C1CNomenclatureID,
+                            CharacteristicId = decisionProduct.C1CCharacteristicID,
+                            ProductKind = (ProductKind)product.ProductKindID
+                        });
+                    }
+                }
+                #endregion AddBrokeDecisionProduct
             }
-#endregion AddBrokeDecisionProduct
         }
 
         private void ChooseProductToAdd()
@@ -420,7 +431,7 @@ namespace Gamma.ViewModels
         public EditBrokeDecisionItem BrokeProduct { get; set; } 
         public EditBrokeDecisionItem RepackProduct { get; set; } 
 
-        public override bool SaveToModel(GammaEntities gamma = null)
+        public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("DocBroke")) return true;
             if (

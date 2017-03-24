@@ -15,7 +15,7 @@ namespace Gamma.ViewModels
     /// </summary>
     public class WarehousePersonsViewModel : RootViewModel
     {
-        public WarehousePersonsViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public WarehousePersonsViewModel()
         {
             AddPersonCommand = new DelegateCommand(AddPerson, () => !string.IsNullOrWhiteSpace(NewPersonName));
             DeletePersonCommand = new DelegateCommand(DeletePerson, () => SelectedPerson != null);

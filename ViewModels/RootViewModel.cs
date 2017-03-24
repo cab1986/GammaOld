@@ -17,14 +17,17 @@ namespace Gamma.ViewModels
         /// </summary>
         protected RootViewModel()
         {
+            if (GammaSettings.IsConnectionStringSetted)
+                GammaBase = DB.GammaDb;
             CloseCommand = new DelegateCommand(CloseWindow);
         }
 
-        protected RootViewModel(GammaEntities gammaBase = null): this()
+        /*
+       protected RootViewModel(GammaEntities gammaBase = null): this()
         {
             GammaBase = gammaBase ?? DB.GammaDb;
         }
-
+        */
         protected GammaEntities GammaBase { get; set; }
 
         protected void CloseWindow()

@@ -26,7 +26,7 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="productionTaskBatchID">id пакета заданий</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public ProductionTaskRwViewModel(Guid productionTaskBatchID, GammaEntities gammaBase = null) : base(gammaBase)
+        public ProductionTaskRwViewModel(Guid productionTaskBatchID)
         {
             ProductionTaskBatchID = productionTaskBatchID;
             var productionTask = GammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Rw).FirstOrDefault();
@@ -138,8 +138,7 @@ namespace Gamma.ViewModels
         /// 
         /// </summary>
         /// <param name="productionTaskBatchID">ID пакета заданий</param>
-        /// <param name="gammaBase">Контекст БД</param>
-        public override bool SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid productionTaskBatchID)
         {
             if (IsReadOnly) return true;
             var productionTaskRw = GammaBase.ProductionTasks

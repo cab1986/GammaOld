@@ -19,7 +19,7 @@ namespace Gamma.ViewModels
 {
     class DocProductGroupPackViewModel : SaveImplementedViewModel, ICheckedAccess, IBarImplemented
     {
-        public DocProductGroupPackViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public DocProductGroupPackViewModel()
         {
             IsNewGroupPack = true;
 //            GetGrossWeightCommand = new DelegateCommand(GetGrossWeight, () => Scales.IsReady && !IsConfirmed);
@@ -414,7 +414,7 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="itemID">ID документа</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid || IsUnpacked || IsReadOnly) return true;
             DocId = itemID;

@@ -21,7 +21,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ReportListViewModel class.
         /// </summary>
-        public ReportListViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public ReportListViewModel()
         {
             GammaBase.Reports.Load();
             Reports = GammaBase.Reports.Local;

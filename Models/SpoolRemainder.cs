@@ -2,17 +2,19 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 using System;
 using System.Linq;
+using DevExpress.Mvvm;
 using Gamma.Attributes;
 using Gamma.Entities;
 using Gamma.Interfaces;
+using System.Data.Entity;
 
 namespace Gamma.Models
 {
-    public class SpoolRemainder: ICheckedAccess
+    public class SpoolRemainder: ViewModelBase, ICheckedAccess
     {
-        public SpoolRemainder(DateTime docDate, Guid? productId, bool isSourceProduct, GammaEntities gammaBase = null)
+        public SpoolRemainder(DateTime docDate, Guid? productId, bool isSourceProduct)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
+            GammaBase = DB.GammaDb;
             DocDate = docDate;
             IsSourceProduct = isSourceProduct;
             ProductID = productId;            
@@ -22,6 +24,8 @@ namespace Gamma.Models
         private GammaEntities GammaBase { get; }
         public int Index { get; set; }
         private Guid? _productid;
+        private decimal _weight;
+        private decimal _length;
 
         public Guid? ProductID
         {
@@ -29,18 +33,53 @@ namespace Gamma.Models
             set
             {
                 _productid = value;
-                MaxWeight = ProductID != null ? GetRemainderMaxWeight((Guid)ProductID, DocDate) : 0;
-                Nomenclature = ProductID != null ? GetProductSpoolNomenclature((Guid)ProductID) + MaxWeight + "кг": string.Empty;
-                
+                if (value == null) return;
+                MaxWeight = GetRemainderMaxWeight((Guid)value, DocDate);
+                Nomenclature = GetProductSpoolNomenclature((Guid)value) + MaxWeight + "кг";
+                using (var gammaBase = DB.GammaDb)
+                {
+                    var productSpool =
+                        gammaBase.ProductSpools.Include(ps => ps.Products.DocProductionProducts)
+                            .FirstOrDefault(ps => ps.ProductID == value);
+                    var quantity = productSpool?.Products.DocProductionProducts.First().Quantity*1000 ?? 0;
+                    if (quantity == 0) return;
+                    MaxLength = (productSpool?.Length ?? 0)*MaxWeight/quantity;
+                }
             }
         }
 
         public string Nomenclature { get; set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public decimal Weight { get; set; }
+        public decimal Weight
+        {
+            get { return _weight; }
+            set
+            {
+                if (_weight == value) return;
+                _weight = value;
+                if (MaxWeight == 0) return;
+                Length = Math.Round(Weight*MaxLength/MaxWeight,2);
+                RaisePropertyChanged("Weight");
+            }
+        }
+
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public decimal Length
+        {
+            get { return _length; }
+            set
+            {
+                if (_length == value) return;
+                _length = value;
+                if (MaxLength == 0) return;
+                Weight = Math.Round(Length*MaxWeight/MaxLength);
+                RaisePropertyChanged("Length");
+            }
+        }
 
         public decimal MaxWeight { get; set; }
+        public decimal MaxLength { get; private set; }
 
         private string GetProductSpoolNomenclature(Guid productid)
         {

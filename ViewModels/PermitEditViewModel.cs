@@ -20,14 +20,14 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the NewPermitViewModel class.
         /// </summary>
 
-        public PermitEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public PermitEditViewModel()
         {
             Permit = new Permits {PermitID = SqlGuidUtil.NewSequentialid()};
             PermitTables = new ObservableCollection<PermitTables>();
             _isNewPermit = true;
             InitializeFields();
         }
-        public PermitEditViewModel(Guid permitId, GammaEntities gammaBase = null): base(gammaBase)
+        public PermitEditViewModel(Guid permitId)
         {
             PermitID = permitId;
             Permit = GammaBase.Permits.Include("PermitTables").FirstOrDefault(p => p.PermitID == permitId);
@@ -107,25 +107,27 @@ namespace Gamma.ViewModels
         }
         public PermitTables SelectedPermitTable { get; set; }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            if (_isNewPermit)
+            using (var gammaBase = DB.GammaDb)
             {
-                gammaBase.Permits.Add(Permit);
-            }
-            else
-            {
-                if (!Permit.PermitTables.SequenceEqual(PermitTables))
+                if (_isNewPermit)
                 {
-                    var toadd = PermitTables.Where(p => !Permit.PermitTables.Contains(p));
-                    gammaBase.PermitTables.AddRange(toadd);
-                    var todel = Permit.PermitTables.Where(p => !PermitTables.Contains(p));
-                    gammaBase.PermitTables.RemoveRange(todel);
+                    gammaBase.Permits.Add(Permit);
                 }
+                else
+                {
+                    if (!Permit.PermitTables.SequenceEqual(PermitTables))
+                    {
+                        var toadd = PermitTables.Where(p => !Permit.PermitTables.Contains(p));
+                        gammaBase.PermitTables.AddRange(toadd);
+                        var todel = Permit.PermitTables.Where(p => !PermitTables.Contains(p));
+                        gammaBase.PermitTables.RemoveRange(todel);
+                    }
+                }
+                Permit.PermitTables = PermitTables;
+                gammaBase.SaveChanges();
             }
-            Permit.PermitTables = PermitTables;
-            gammaBase.SaveChanges();
             return true;
         }
     }

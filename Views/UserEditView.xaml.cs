@@ -10,7 +10,7 @@ namespace Gamma.Views
     {
         public UserEditView(UserEditMessage msg)
         {
-            var viewModel = msg.UserID == null ? new UserEditViewModel(msg.GammaBase) : new UserEditViewModel((Guid)msg.UserID, msg.GammaBase);
+            var viewModel = msg.UserID == null ? new UserEditViewModel() : new UserEditViewModel((Guid)msg.UserID);
             DataContext = viewModel;
             InitializeComponent();
         }

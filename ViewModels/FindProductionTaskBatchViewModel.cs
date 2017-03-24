@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the FindProductionTaskViewModel class.
         /// </summary>
-        public FindProductionTaskBatchViewModel(BatchKinds batchKind, GammaEntities gammaBase = null) : base(gammaBase)
+        public FindProductionTaskBatchViewModel(BatchKinds batchKind)
         {
             ProductionTaskStates = new ProductionTaskStates().ToDictionary();
             BatchKind = batchKind;

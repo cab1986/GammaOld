@@ -24,7 +24,7 @@
                                       DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="{Binding RemainderLabel}" LabelPosition="Top">
-                    <dxe:PopupCalcEdit EditValue="{Binding Quantity}" AllowDefaultButton="False" />
+                    <dxe:PopupCalcEdit EditValue="{Binding Quantity}" AllowDefaultButton="False" Precision="0" />
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

@@ -110,27 +110,28 @@ namespace Gamma.ViewModels
         /// 
         /// </summary>
         /// <param name="itemID">ProductionTaskID</param>
-        /// <param name="gammaBase">Контекст БД</param>
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
-            if (productionTask == null)
+            using (var gammaBase = DB.GammaDb)
             {
-                MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
+                var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
+                if (productionTask == null)
+                {
+                    MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+                if (productionTask.ProductionTaskSGB == null)
+                {
+                    productionTask.ProductionTaskSGB = new ProductionTaskSGB();
+                }
+                productionTask.ProductionTaskSGB.Diameter = Diameter;
+                productionTask.ProductionTaskSGB.DiameterMinus = DiameterMinus;
+                productionTask.ProductionTaskSGB.DiameterPlus = DiameterPlus;
+                productionTask.ProductionTaskSGB.Crepe = Crepe;
+                productionTask.ProductionTaskSGB.TechSpecification = TechSpecification;
+                productionTask.ProductionTaskSGB.QualitySpecification = QualitySpecification;
+                gammaBase.SaveChanges();
             }
-            if (productionTask.ProductionTaskSGB == null)
-            {
-                productionTask.ProductionTaskSGB = new ProductionTaskSGB();
-            }
-            productionTask.ProductionTaskSGB.Diameter = Diameter;
-            productionTask.ProductionTaskSGB.DiameterMinus = DiameterMinus;
-            productionTask.ProductionTaskSGB.DiameterPlus = DiameterPlus;
-            productionTask.ProductionTaskSGB.Crepe = Crepe;
-            productionTask.ProductionTaskSGB.TechSpecification = TechSpecification;
-            productionTask.ProductionTaskSGB.QualitySpecification = QualitySpecification;
-            gammaBase.SaveChanges();
             return true;
         }
 

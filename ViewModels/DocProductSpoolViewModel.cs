@@ -28,8 +28,7 @@ namespace Gamma.ViewModels
         /// Инициализация информации о тамбуре
         /// </summary>
         /// <param name="productId">ID продукта</param>
-        /// <param name="gammaBase">Контекст БД</param>
-        public DocProductSpoolViewModel(Guid productId, GammaEntities gammaBase = null): base(gammaBase)
+        public DocProductSpoolViewModel(Guid productId)
         {
             ProductId = productId;
             ShowCreateGroupPack = WorkSession.PlaceID == 21;
@@ -312,8 +311,7 @@ namespace Gamma.ViewModels
         /// Сохранение в базу
         /// </summary>
         /// <param name="itemID">ID документа</param>
-        /// <param name="gammaBase">Контекст БД</param>
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (!DB.HaveWriteAccess("ProductSpools")) return true;
             var product =

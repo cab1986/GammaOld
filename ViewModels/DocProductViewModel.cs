@@ -25,9 +25,8 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the DocProductViewModel class.
         /// </summary>
-        /// <param name="gammaBase">Контекст бд для модели(по умолчанию Null, необходим для тестирования)</param>
         /// <param name="msg">Сообщение, содержащее параметры</param>
-        public DocProductViewModel(OpenDocProductMessage msg, GammaEntities gammaBase = null): base(gammaBase)
+        public DocProductViewModel(OpenDocProductMessage msg)
         {
             Products product = null;
             if (msg.IsNewProduct)
@@ -451,7 +450,7 @@ namespace Gamma.ViewModels
             ReportManager.PrintReport(msg.ReportID, spoolViewModel?.ProductId ?? Doc.DocID);
         }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             if (IsReadOnly && IsConfirmed) return true;
             Doc.Date = DocDate;
@@ -486,6 +485,9 @@ namespace Gamma.ViewModels
                     break;
                 case DocTypes.DocShipment:
                     MessageManager.OpenDocShipmentOrder(SelectedRelation.DocID);
+                    break;
+                case DocTypes.DocMovement:
+                    MessageManager.OpenDocMovement(SelectedRelation.DocID);
                     break;
                 default:
                     switch (SelectedRelation.ProductKindID)

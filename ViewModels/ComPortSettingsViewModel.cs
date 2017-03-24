@@ -91,7 +91,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             var settings = GammaSettings.Get();
             settings.ScannerComPort.ComPortNumber = ScannerComPortNumber;

@@ -1,5 +1,7 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+using System;
 using System.Linq;
 using System.Windows;
 using Gamma.Entities;
@@ -18,11 +20,19 @@ namespace Gamma.Dialogs
             var printNames = (from d in gammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).Distinct().ToList();
             EdtPrintName.ItemsSource = printNames;
         }
+
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
-            PrintName = EdtPrintName.Text;
+            PrintName = EdtPrintName.Text.Trim();
             DialogResult = true;
         }
+
         public string PrintName { get; private set; }
+
+        private void EdtPrintName_EditValueChanged(object sender, DevExpress.Xpf.Editors.EditValueChangedEventArgs e)
+        {
+            btnOK.IsEnabled = !string.IsNullOrEmpty(EdtPrintName.Text);
+        }
+
     }
 }

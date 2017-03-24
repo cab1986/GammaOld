@@ -42,7 +42,7 @@
                             <dxg:GridColumn Header="Количество" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" />
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>

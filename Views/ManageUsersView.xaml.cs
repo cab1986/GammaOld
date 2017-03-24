@@ -12,7 +12,7 @@ namespace Gamma.Views
         /// </summary>
         public ManageUsersView()
         {
-            DataContext = new ManageUsersViewModel(DB.GammaDb);
+            DataContext = new ManageUsersViewModel();
             InitializeComponent();
         }        
     }

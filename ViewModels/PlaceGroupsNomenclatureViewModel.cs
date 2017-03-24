@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
 {
     class PlaceGroupsNomenclatureViewModel : SaveImplementedViewModel
     {
-        public PlaceGroupsNomenclatureViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public PlaceGroupsNomenclatureViewModel()
         {
             PlaceGroups = (from pg in GammaBase.PlaceGroups select pg).ToList();
             _placeGroupID = PlaceGroups[0].PlaceGroupID;
@@ -180,20 +180,22 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var placeGroup = gammaBase.PlaceGroups.Include(p => p.C1CNomenclature).First(p => p.PlaceGroupID == PlaceGroupID);
-            if (placeGroup.C1CNomenclature == null) placeGroup.C1CNomenclature = new List<C1CNomenclature>();
-            else
-                placeGroup.C1CNomenclature.Clear();
-            var nomenclatureIds = PlaceGroupNomenclature.Select(p => p.FolderID).ToList();
-            var nomenclatureTree = gammaBase.C1CNomenclature.Where(n1C => nomenclatureIds.Contains(n1C.C1CNomenclatureID)).Select(n => n);
-            foreach (var nomenclature in nomenclatureTree)
+            using (var gammaBase = DB.GammaDb)
             {
-                placeGroup.C1CNomenclature.Add(nomenclature);
+                var placeGroup = gammaBase.PlaceGroups.Include(p => p.C1CNomenclature).First(p => p.PlaceGroupID == PlaceGroupID);
+                if (placeGroup.C1CNomenclature == null) placeGroup.C1CNomenclature = new List<C1CNomenclature>();
+                else
+                    placeGroup.C1CNomenclature.Clear();
+                var nomenclatureIds = PlaceGroupNomenclature.Select(p => p.FolderID).ToList();
+                var nomenclatureTree = gammaBase.C1CNomenclature.Where(n1C => nomenclatureIds.Contains(n1C.C1CNomenclatureID)).Select(n => n);
+                foreach (var nomenclature in nomenclatureTree)
+                {
+                    placeGroup.C1CNomenclature.Add(nomenclature);
+                }
+                gammaBase.SaveChanges();
             }
-            gammaBase.SaveChanges();
             return true;
         }
 

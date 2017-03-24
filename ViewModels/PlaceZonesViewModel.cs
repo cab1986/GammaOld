@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
 {
     public class PlaceZonesViewModel : RootViewModel
     {
-        public PlaceZonesViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public PlaceZonesViewModel()
         {
             Places = GammaBase.Places.Where(p => WorkSession.BranchIds.Contains(p.BranchID) && (p.IsWarehouse ?? false))
                 .Select(p => new Place()

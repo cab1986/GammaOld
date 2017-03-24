@@ -96,7 +96,7 @@ namespace Gamma.ViewModels
             Spools.Clear();
             IsChanged = true;
         }
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (DocCloseShift == null)
             {

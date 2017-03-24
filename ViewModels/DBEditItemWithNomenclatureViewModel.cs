@@ -27,7 +27,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the DBEditItemWithNomenclatureViewModel class.
         /// </summary>
-        protected DbEditItemWithNomenclatureViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        protected DbEditItemWithNomenclatureViewModel()
         {
             ChooseNomenclatureCommand = new DelegateCommand(ChooseNomenclature,CanChooseNomenclature);
         }
@@ -99,9 +99,12 @@ namespace Gamma.ViewModels
                 NomenclatureName = null;
                 return;
             }
-            NomenclatureName = (from nom in GammaBase.C1CNomenclature
-                                where nom.C1CNomenclatureID == nomenclatureid
-                                select nom.Name).FirstOrDefault();
+            using (var gammaBase = DB.GammaDb)
+            {
+                NomenclatureName = (from nom in gammaBase.C1CNomenclature
+                                    where nom.C1CNomenclatureID == nomenclatureid
+                                    select nom.Name).FirstOrDefault();
+            }
         }
 
         private ObservableCollection<Characteristic> _characteristics;

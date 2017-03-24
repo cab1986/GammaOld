@@ -89,7 +89,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override bool SaveToModel(GammaEntities gammaDb = null)
+        public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("DocWithdrawalProducts")) return true;
             using (var gammaBase = DB.GammaDb)

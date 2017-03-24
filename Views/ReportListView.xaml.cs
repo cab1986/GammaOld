@@ -12,7 +12,7 @@ namespace Gamma.Views
         /// </summary>
         public ReportListView()
         {
-            DataContext = new ReportListViewModel(DB.GammaDb);
+            DataContext = new ReportListViewModel();
             InitializeComponent();
         }
     }

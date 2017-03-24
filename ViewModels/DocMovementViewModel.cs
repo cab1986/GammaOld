@@ -214,7 +214,7 @@ namespace Gamma.ViewModels
         public ItemsChangeObservableCollection<MovementProduct> MovementProducts { get; set; }
 //        public List<Place> Warehouses { get; private set; }
 
-        public override bool SaveToModel(GammaEntities gammaDb = null)
+        public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("DocMovement")) return true;
             using (var gammaBase = DB.GammaDb)

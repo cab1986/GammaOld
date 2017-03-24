@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 using DevExpress.Mvvm;
-using Gamma.Entities;
-using Gamma.Models;
 using Gamma.ViewModels;
 
 namespace Gamma
@@ -14,9 +12,9 @@ namespace Gamma
         /// <summary>
         /// Initializes a new instance of the MainView class.
         /// </summary>
-        public MainView(GammaEntities gammaBase = null)
+        public MainView()
         {
-            DataContext = new MainViewModel(gammaBase);
+            DataContext = new MainViewModel();
             InitializeComponent();
             Closed += MainView_Closed;
         }
@@ -25,7 +23,7 @@ namespace Gamma
             Messenger.Default.Unregister(this);
         }          
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
+        {     
             if (MessageBox.Show("Хотите закончить работу с программой?", "Завершение работы", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 e.Cancel = true;
  //           DXSerializer.Serialize(this, "testLayout.xml", "Gamma", null);

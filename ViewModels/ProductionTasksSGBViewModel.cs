@@ -8,8 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using Gamma.Common;
-using Gamma.Entities;
-using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -21,9 +19,8 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTasksRWViewModel class.
         /// </summary>
-        public ProductionTasksSGBViewModel(GammaEntities gammaBase = null)
+        public ProductionTasksSGBViewModel()
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
             NewItemCommand = new DelegateCommand(NewItem);
             EditItemCommand = new DelegateCommand(EditItem,() => SelectedProductionTaskBatch != null);
             DeleteItemCommand = new DelegateCommand(DeleteItem);

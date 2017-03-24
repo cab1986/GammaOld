@@ -70,30 +70,30 @@ namespace Gamma.ViewModels
         /// Сохранение в БД
         /// </summary>
         /// <param name="itemID">Id документа выработки</param>
-        /// <param name="gammaBase">Контекст базы данныъ</param>
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (!CanSaveExecute()) return true;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var product =
+            using (var gammaBase = DB.GammaDb)
+            {
+                var product =
                 gammaBase.Products.Include(p => p.ProductPallets)
                     .Include(
                         p =>
                             p.ProductPallets.ProductPalletItems).First(p => gammaBase.DocProductionProducts.Where(d => d.DocID == itemID)
                                 .Select(d => d.ProductID)
                                 .Contains(p.ProductID));
-            if (product == null)
-            {
-                var productId = SqlGuidUtil.NewSequentialid();
-                product = new Products()
+                if (product == null)
                 {
-                    ProductID = productId,
-                    ProductPallets = new ProductPallets()
+                    var productId = SqlGuidUtil.NewSequentialid();
+                    product = new Products()
                     {
                         ProductID = productId,
-                        ProductPalletItems = new List<ProductPalletItems>()
-                    },
-                    DocProductionProducts = new List<DocProductionProducts>
+                        ProductPallets = new ProductPallets()
+                        {
+                            ProductID = productId,
+                            ProductPalletItems = new List<ProductPalletItems>()
+                        },
+                        DocProductionProducts = new List<DocProductionProducts>
                     {
                         new DocProductionProducts
                         {
@@ -101,50 +101,51 @@ namespace Gamma.ViewModels
                             ProductID = productId,
                         }
                     }
-                };
-                gammaBase.Products.Add(product);
-            }
-            else if (product.ProductPallets == null)
-            {
-                product.ProductPallets = new ProductPallets()
+                    };
+                    gammaBase.Products.Add(product);
+                }
+                else if (product.ProductPallets == null)
                 {
-                    ProductID = product.ProductID,
-                    ProductPalletItems = new List<ProductPalletItems>()
-                };
-            }
-            var palItemsToRemove =
-                product.ProductPallets.ProductPalletItems.Where(
-                    palItem => !PalletItems.Select(p => p.ProductPalletItemId).Contains(palItem.ProductPalletItemID))
-                    .ToArray();
+                    product.ProductPallets = new ProductPallets()
+                    {
+                        ProductID = product.ProductID,
+                        ProductPalletItems = new List<ProductPalletItems>()
+                    };
+                }
+                var palItemsToRemove =
+                    product.ProductPallets.ProductPalletItems.Where(
+                        palItem => !PalletItems.Select(p => p.ProductPalletItemId).Contains(palItem.ProductPalletItemID))
+                        .ToArray();
                 foreach (var palItem in palItemsToRemove)
                 {
                     product.ProductPallets.ProductPalletItems.Remove(palItem);
                 }
-            var palItemsToAdd =
-                PalletItems.Where(
-                    p => !gammaBase.ProductPalletItems.Where(prodItem => prodItem.ProductID == product.ProductID)
-                        .Select(prodItem => prodItem.ProductPalletItemID).Contains(p.ProductPalletItemId));
-            var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
-            var productPalletItems = palItemsToAdd as IList<ProductPalletItem> ?? palItemsToAdd.ToList();
-            if (docProductionProduct != null && productPalletItems.Any())
-            {
-                docProductionProduct.C1CNomenclatureID = productPalletItems.First().NomenclatureId;
-                docProductionProduct.C1CCharacteristicID = productPalletItems.First().CharacteristicId;
-                docProductionProduct.Quantity = productPalletItems.First().Quantity;
-            }
-            foreach (var palItem in productPalletItems)
-            {
-                product.ProductPallets.ProductPalletItems.Add(new ProductPalletItems()
+                var palItemsToAdd =
+                    PalletItems.Where(
+                        p => !gammaBase.ProductPalletItems.Where(prodItem => prodItem.ProductID == product.ProductID)
+                            .Select(prodItem => prodItem.ProductPalletItemID).Contains(p.ProductPalletItemId));
+                var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
+                var productPalletItems = palItemsToAdd as IList<ProductPalletItem> ?? palItemsToAdd.ToList();
+                if (docProductionProduct != null && productPalletItems.Any())
                 {
-                    ProductID = product.ProductID,
-                    C1CNomenclatureID = palItem.NomenclatureId,
-                    C1CCharacteristicID = palItem.CharacteristicId,
-                    ProductPalletItemID = palItem.ProductPalletItemId,
-                    Quantity = palItem.Quantity
-                });
+                    docProductionProduct.C1CNomenclatureID = productPalletItems.First().NomenclatureId;
+                    docProductionProduct.C1CCharacteristicID = productPalletItems.First().CharacteristicId;
+                    docProductionProduct.Quantity = productPalletItems.First().Quantity;
+                }
+                foreach (var palItem in productPalletItems)
+                {
+                    product.ProductPallets.ProductPalletItems.Add(new ProductPalletItems()
+                    {
+                        ProductID = product.ProductID,
+                        C1CNomenclatureID = palItem.NomenclatureId,
+                        C1CCharacteristicID = palItem.CharacteristicId,
+                        ProductPalletItemID = palItem.ProductPalletItemId,
+                        Quantity = palItem.Quantity
+                    });
+                }
+                gammaBase.SaveChanges();
+                MessageManager.ProductChanged(product.ProductID);
             }
-            gammaBase.SaveChanges();
-            MessageManager.ProductChanged(product.ProductID);
             return true;
         }
 

@@ -12,7 +12,7 @@ namespace Gamma.ViewModels
 {
     public class ImportOldProductsViewModel : DbEditItemWithNomenclatureViewModel
     {
-        public ImportOldProductsViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public ImportOldProductsViewModel()
         {
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKind));
             SaveCommand = new DelegateCommand(Save, () => ProductId == null && !string.IsNullOrWhiteSpace(OldNomenclature));
@@ -113,7 +113,7 @@ namespace Gamma.ViewModels
             IsAssociated = ProductId != null;
         }
         
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             GammaBase.SaveOldProductToNewBase(OldProductId, SelectedProductKindIndex, NomenclatureID, CharacteristicID);
             Number = SavedNumber;

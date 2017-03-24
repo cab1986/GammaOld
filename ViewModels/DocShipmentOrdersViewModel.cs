@@ -15,7 +15,7 @@ namespace Gamma.ViewModels
 {
     class DocShipmentOrdersViewModel : RootViewModel, IItemManager
     {
-        public DocShipmentOrdersViewModel(bool isOutOrders = true, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocShipmentOrdersViewModel(bool isOutOrders = true)
         {
             IsOutOrders = isOutOrders;
             OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveWriteAccess("DocShipmentOrderInfo"));

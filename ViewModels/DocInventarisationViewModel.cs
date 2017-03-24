@@ -60,7 +60,7 @@ namespace Gamma.ViewModels
         public bool IsConfirmed { get; set; }
         public ObservableCollection<InventarisationItem> Items { get; set; } = new ObservableCollection<InventarisationItem>();
 
-        public override bool SaveToModel(GammaEntities db = null)
+        public override bool SaveToModel()
         {
             using (var gammaBase = DB.GammaDb)
             {

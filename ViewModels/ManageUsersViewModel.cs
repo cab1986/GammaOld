@@ -20,7 +20,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ManageUsersViewModel class.
         /// </summary>
-        public ManageUsersViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public ManageUsersViewModel()
         {
             LoadTables();
             EditItemCommand = new DelegateCommand(EditItem,SelectedNotNull);

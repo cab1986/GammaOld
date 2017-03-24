@@ -29,7 +29,13 @@
             <dxlc:LayoutGroup Orientation="Horizontal">
                 <dxlc:LayoutItem Label="Вес остатка, кг" LabelPosition="Top" Width="80" >
                     <dxe:SpinEdit EditValue="{Binding Weight, UpdateSourceTrigger=PropertyChanged}" MaxValue="{Binding MaxWeight}"
-                                     EditValueType="{x:Type system:Decimal}" IsFloatValue="False" MinValue="0"/>
+                                     EditValueType="{x:Type system:Decimal}" IsFloatValue="False" MinValue="0" Mask="d" MaskUseAsDisplayFormat="True"
+                                  />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Длина остатка, км" LabelPosition="Top" Width="100" >
+                    <dxe:SpinEdit EditValue="{Binding Length, UpdateSourceTrigger=PropertyChanged}" MaxValue="{Binding MaxLength}"
+                                     EditValueType="{x:Type system:Decimal}" IsFloatValue="True" MinValue="0" Increment="0.01" Mask="f2" MaskUseAsDisplayFormat="True"
+                                  />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label = "Тамбур" LabelPosition="Top">
                     <dxe:ButtonEdit AllowDefaultButton="False" EditValue = "{Binding Nomenclature}" IsReadOnly="True">

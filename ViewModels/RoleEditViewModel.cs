@@ -17,14 +17,14 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the RoleEditViewModel class.
         /// </summary>
-        public RoleEditViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public RoleEditViewModel()
         {
             _isNewRole = true;
             Role = new Roles() { RoleID = SqlGuidUtil.NewSequentialid() };
             RolePermits = new ObservableCollection<RolePermits>();
             Permits = new ObservableCollection<Permits>(GammaBase.Permits.Select(p => p));
         }
-        public RoleEditViewModel(Guid roleID, GammaEntities gammaBase = null): base(gammaBase)
+        public RoleEditViewModel(Guid roleID)
         {
             Marks = new PermissionMark().ToDictionary();
             Role = GammaBase.Roles.Include("RolePermits").FirstOrDefault(r => r.RoleID == roleID);
@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             if (_isNewRole)
             {

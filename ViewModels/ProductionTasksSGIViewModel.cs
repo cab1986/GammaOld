@@ -21,7 +21,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTasksConvertingGridViewModel class.
         /// </summary>
-        public ProductionTasksSGIViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public ProductionTasksSGIViewModel()
         {
             GetProductionTasks();
             EditItemCommand = new DelegateCommand(EditItem);
@@ -49,21 +49,10 @@ namespace Gamma.ViewModels
                     Nomenclature = pt.Nomenclature + "\r\n" + pt.Characteristic,
                     Place = pt.Place,
                     Number = pt.Number,
-                    MadeQuantity = pt.MadeQuantity
+                    MadeQuantity = pt.MadeQuantity,
+                    EnumColor = (byte?)pt.EnumColor ?? 0 // Если 3, то как на СГБ розовым цветить будем(активные задания)
                 }
                 );
-
-            /*          ProductionTasks = new ObservableCollection<ProductionTask>
-                              (from pt in DB.GammaBase.ProductionTasks
-                               where pt.ProductionTaskKindID == (short)ProductionTaskKinds.ProductionTaskConverting
-                               select new ProductionTask
-                               {
-                                   ProductionTaskID = pt.ProductionTaskID,
-                                   DateBegin = pt.DateBegin,
-                                   Nomenclature = pt.C1CNomenclature.Name + " " + pt.C1CCharacteristics.Name,
-                                   Quantity = pt.Quantity
-                               });
-   * */
         }
 
         private void EditItem()
@@ -134,6 +123,7 @@ namespace Gamma.ViewModels
             public string Place { get; set; }
             public string Number { get; set; }
             public string MadeQuantity { get; set; }
+            public byte EnumColor { get; set; }
         }        
     }
 }

@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
         private bool _isConfirmed;
         private DateTime? _dateIn;
 
-        public DocShipmentOrderViewModel(Guid docShipmentOrderId, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocShipmentOrderViewModel(Guid docShipmentOrderId)
         {
             Bars.Add(ReportManager.GetReportBar("DocShipmentOrder",VMId));
             DocShipmentOrderID = docShipmentOrderId;
@@ -286,7 +286,7 @@ namespace Gamma.ViewModels
 
         private Guid DocShipmentOrderID { get; set; }
 
-        public override bool SaveToModel(GammaEntities gammaDb = null)
+        public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("DocShipmentOrderInfo")) return true;
             using (var gammaBase = DB.GammaDb)

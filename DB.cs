@@ -65,6 +65,7 @@ namespace Gamma
                 return false;
             }
         }
+
         public static void RollBack()
         {
             if (!HaveChanges()) return;

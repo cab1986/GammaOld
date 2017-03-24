@@ -15,9 +15,8 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftRwGridViewModel: SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
-        public DocCloseShiftRwGridViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null)
+        public DocCloseShiftRwGridViewModel(OpenDocCloseShiftMessage msg)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
             if (msg.DocID == null)
             {
                 PlaceID = (int)msg.PlaceID;
@@ -115,7 +114,7 @@ namespace Gamma.ViewModels
             SaveToModel();
             IsChanged = true;
         }
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
             if (DocCloseShift == null)
             {

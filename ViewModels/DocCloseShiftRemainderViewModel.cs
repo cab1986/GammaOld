@@ -92,6 +92,7 @@ namespace Gamma.ViewModels
             return coefficient;
         }
 
+        [UIAuth(UIAuthLevel.ReadOnly)]
         public override Guid? CharacteristicID
         {
             get { return base.CharacteristicID; }
@@ -124,6 +125,7 @@ namespace Gamma.ViewModels
 
         private bool IsConfirmed { get; }
         private DocCloseShiftRemainders DocCloseShiftRemainder { get; set; }
+
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Quantity { get; set; }
         protected override bool CanChooseNomenclature()
@@ -131,40 +133,41 @@ namespace Gamma.ViewModels
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
         }
 
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid itemID)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var doc = gammaBase.Docs.First(d => d.DocID == itemID);
-            if (DocCloseShiftRemainder == null && Quantity > 0)
+            using (var gammaBase = DB.GammaDb)
             {
-                var productId = SqlGuidUtil.NewSequentialid();
-                switch (PlaceGroup)
+                var doc = gammaBase.Docs.First(d => d.DocID == itemID);
+                if (DocCloseShiftRemainder == null && Quantity > 0)
                 {
-                    case PlaceGroup.PM:
-                        var productSpool = new Products()
-                        {
-                            ProductID = productId,
-                            ProductKindID = (byte)ProductKind.ProductSpool,
-                            ProductSpools = new ProductSpools()
-                            {
-                                C1CCharacteristicID = (Guid)CharacteristicID,
-                                C1CNomenclatureID = (Guid)NomenclatureID,
-                                Diameter = 0,
-                                DecimalWeight = 0,
-                                ProductID = productId
-                            }
-                        };
-                        gammaBase.Products.Add(productSpool);
-                        break;
-                    case PlaceGroup.Convertings:
-                        var productPallet = new Products()
-                        {
-                            ProductID = productId,
-                            ProductKindID = (byte)ProductKind.ProductPallet,
-                            ProductPallets = new ProductPallets
+                    var productId = SqlGuidUtil.NewSequentialid();
+                    switch (PlaceGroup)
+                    {
+                        case PlaceGroup.PM:
+                            var productSpool = new Products()
                             {
                                 ProductID = productId,
-                                ProductPalletItems = new List<ProductPalletItems>()
+                                ProductKindID = (byte)ProductKind.ProductSpool,
+                                ProductSpools = new ProductSpools()
+                                {
+                                    C1CCharacteristicID = (Guid)CharacteristicID,
+                                    C1CNomenclatureID = (Guid)NomenclatureID,
+                                    Diameter = 0,
+                                    DecimalWeight = 0,
+                                    ProductID = productId
+                                }
+                            };
+                            gammaBase.Products.Add(productSpool);
+                            break;
+                        case PlaceGroup.Convertings:
+                            var productPallet = new Products()
+                            {
+                                ProductID = productId,
+                                ProductKindID = (byte)ProductKind.ProductPallet,
+                                ProductPallets = new ProductPallets
+                                {
+                                    ProductID = productId,
+                                    ProductPalletItems = new List<ProductPalletItems>()
                                 {
                                     new ProductPalletItems
                                     {
@@ -174,14 +177,14 @@ namespace Gamma.ViewModels
                                         ProductPalletItemID = SqlGuidUtil.NewSequentialid()
                                     }
                                 }
-                            }
-                        };
-                        gammaBase.Products.Add(productPallet);
-                        break;
+                                }
+                            };
+                            gammaBase.Products.Add(productPallet);
+                            break;
 
-                }
-                var docID = SqlGuidUtil.NewSequentialid();
-                var docProductionProducts = new ObservableCollection<DocProductionProducts>
+                    }
+                    var docID = SqlGuidUtil.NewSequentialid();
+                    var docProductionProducts = new ObservableCollection<DocProductionProducts>
                 {
                     new DocProductionProducts()
                     {
@@ -191,65 +194,66 @@ namespace Gamma.ViewModels
                         C1CCharacteristicID = CharacteristicID
                     }
                 };
-                var docProduction = new Docs()
-                {
-                    DocID = docID,
-                    Date = DB.CurrentDateTime,
-                    PlaceID = doc.PlaceID,
-                    DocTypeID = (byte)DocTypes.DocProduction,
-                    DocProduction = new DocProduction()
+                    var docProduction = new Docs()
                     {
                         DocID = docID,
-                        InPlaceID = doc.PlaceID,
-                        DocProductionProducts = docProductionProducts
-                    }
-                };
-                gammaBase.Docs.Add(docProduction);
-                DocCloseShiftRemainder = new DocCloseShiftRemainders()
-                {
-                    DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
-                    DocID = itemID,
-                    ProductID = productId,
-                    Quantity = Quantity * Coefficient,
-                    IsSourceProduct = false
-                };
-                gammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
-            }
-            else if (DocCloseShiftRemainder != null)
-            {
-                DocCloseShiftRemainder.Quantity = Quantity * Coefficient;
-                if (
-                    gammaBase.DocProductionProducts.Any(
-                        d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))
-                {
-                    var docProductionProduct =
-                        gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools).Include(d => d.Products.ProductPallets.ProductPalletItems)
-                            .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
-                    if (docProductionProduct != null && NomenclatureID != null)
-                    {
-                        docProductionProduct.C1CNomenclatureID = NomenclatureID;
-                        docProductionProduct.C1CCharacteristicID = CharacteristicID;
-                        switch (PlaceGroup)
+                        Date = DB.CurrentDateTime,
+                        PlaceID = doc.PlaceID,
+                        DocTypeID = (byte)DocTypes.DocProduction,
+                        DocProduction = new DocProduction()
                         {
-                            case PlaceGroup.PM:
-                                docProductionProduct.Products.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
-                                docProductionProduct.Products.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
-                                break;
-                            case PlaceGroup.Convertings:
-                                var productPalletItem =
-                                    docProductionProduct.Products.ProductPallets.ProductPalletItems.FirstOrDefault();
-                                if (productPalletItem != null)
-                                {
-                                    productPalletItem.C1CNomenclatureID = (Guid) NomenclatureID;
-                                    productPalletItem.C1CCharacteristicID = (Guid) CharacteristicID;
-                                }
-                                break;
+                            DocID = docID,
+                            InPlaceID = doc.PlaceID,
+                            DocProductionProducts = docProductionProducts
                         }
-                        
+                    };
+                    gammaBase.Docs.Add(docProduction);
+                    DocCloseShiftRemainder = new DocCloseShiftRemainders()
+                    {
+                        DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
+                        DocID = itemID,
+                        ProductID = productId,
+                        Quantity = Quantity * Coefficient,
+                        IsSourceProduct = false
+                    };
+                    gammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
+                }
+                else if (DocCloseShiftRemainder != null)
+                {
+                    DocCloseShiftRemainder.Quantity = Quantity * Coefficient;
+                    if (
+                        gammaBase.DocProductionProducts.Any(
+                            d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))
+                    {
+                        var docProductionProduct =
+                            gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools).Include(d => d.Products.ProductPallets.ProductPalletItems)
+                                .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
+                        if (docProductionProduct != null && NomenclatureID != null)
+                        {
+                            docProductionProduct.C1CNomenclatureID = NomenclatureID;
+                            docProductionProduct.C1CCharacteristicID = CharacteristicID;
+                            switch (PlaceGroup)
+                            {
+                                case PlaceGroup.PM:
+                                    docProductionProduct.Products.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
+                                    docProductionProduct.Products.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
+                                    break;
+                                case PlaceGroup.Convertings:
+                                    var productPalletItem =
+                                        docProductionProduct.Products.ProductPallets.ProductPalletItems.FirstOrDefault();
+                                    if (productPalletItem != null)
+                                    {
+                                        productPalletItem.C1CNomenclatureID = (Guid)NomenclatureID;
+                                        productPalletItem.C1CCharacteristicID = (Guid)CharacteristicID;
+                                    }
+                                    break;
+                            }
+
+                        }
                     }
                 }
-            } 
-            gammaBase.SaveChanges();
+                gammaBase.SaveChanges();
+            }
             return true;
         }
 

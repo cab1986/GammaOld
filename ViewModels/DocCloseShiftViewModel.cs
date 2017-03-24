@@ -15,7 +15,7 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftViewModel : SaveImplementedViewModel
     {
-        public DocCloseShiftViewModel(OpenDocCloseShiftMessage msg, GammaEntities gammaBase = null) : base(gammaBase)
+        public DocCloseShiftViewModel(OpenDocCloseShiftMessage msg)
         {
             //gammaBase = gammaBase ?? DB.GammaDb;
             if (msg.DocID == null)
@@ -108,7 +108,7 @@ namespace Gamma.ViewModels
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             if (!CanSaveExecute()) return false;
             if (IsNewDoc)

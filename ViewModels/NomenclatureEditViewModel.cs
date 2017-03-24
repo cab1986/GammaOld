@@ -12,7 +12,7 @@ namespace Gamma.ViewModels
 {
     class NomenclatureEditViewModel : SaveImplementedViewModel
     {
-        public NomenclatureEditViewModel(Guid nomenclatureId, GammaEntities gammaBase = null) : base(gammaBase)
+        public NomenclatureEditViewModel(Guid nomenclatureId)
         {
             BarcodeTypes = GammaBase.BarcodeTypes.ToList();
             NomenclatureId = nomenclatureId;
@@ -52,40 +52,42 @@ namespace Gamma.ViewModels
 
         public List<BarcodeTypes> BarcodeTypes { get; }
         
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("NomenclatureBarcodes")) return true;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var gammaInfo = gammaBase.NomenclatureGammaInfo.FirstOrDefault(n => n.C1CNomenclatureID == NomenclatureId);
-            if (gammaInfo == null)
+            using (var gammaBase = DB.GammaDb)
             {
-                gammaInfo = new NomenclatureGammaInfo()
+                var gammaInfo = gammaBase.NomenclatureGammaInfo.FirstOrDefault(n => n.C1CNomenclatureID == NomenclatureId);
+                if (gammaInfo == null)
                 {
-                    C1CNomenclatureID = NomenclatureId
-                };
-                gammaBase.NomenclatureGammaInfo.Add(gammaInfo);
-            }
-            gammaInfo.TextPTM = PTMText;
-            foreach (var nomenclatureBarcode in NomenclatureBarcodes)
-            {
-                var bcode =
-                    gammaBase.NomenclatureBarcodes.FirstOrDefault(
-                        b =>
-                            b.C1CNomenclatureID == nomenclatureBarcode.NomenclatureId &&
-                            b.C1CCharacteristicID == nomenclatureBarcode.CharacteristicId);
-                if (bcode == null)
-                {
-                    bcode = new NomenclatureBarcodes
+                    gammaInfo = new NomenclatureGammaInfo()
                     {
-                        C1CNomenclatureID = nomenclatureBarcode.NomenclatureId,
-                        C1CCharacteristicID = nomenclatureBarcode.CharacteristicId
+                        C1CNomenclatureID = NomenclatureId
                     };
-                    gammaBase.NomenclatureBarcodes.Add(bcode);
+                    gammaBase.NomenclatureGammaInfo.Add(gammaInfo);
                 }
-                bcode.BarcodeTypeID = nomenclatureBarcode.BarcodeTypeId;
-                bcode.Barcode = nomenclatureBarcode.Barcode;
+                gammaInfo.TextPTM = PTMText;
+                foreach (var nomenclatureBarcode in NomenclatureBarcodes)
+                {
+                    var bcode =
+                        gammaBase.NomenclatureBarcodes.FirstOrDefault(
+                            b =>
+                                b.C1CNomenclatureID == nomenclatureBarcode.NomenclatureId &&
+                                b.C1CCharacteristicID == nomenclatureBarcode.CharacteristicId);
+                    if (bcode == null)
+                    {
+                        bcode = new NomenclatureBarcodes
+                        {
+                            C1CNomenclatureID = nomenclatureBarcode.NomenclatureId,
+                            C1CCharacteristicID = nomenclatureBarcode.CharacteristicId
+                        };
+                        gammaBase.NomenclatureBarcodes.Add(bcode);
+                    }
+                    bcode.BarcodeTypeID = nomenclatureBarcode.BarcodeTypeId;
+                    bcode.Barcode = nomenclatureBarcode.Barcode;
+                }
+                gammaBase.SaveChanges();
             }
-            gammaBase.SaveChanges();
             return true;
         }
     }

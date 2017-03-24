@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using DevExpress.Mvvm;
 using Gamma.Attributes;
+using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Models;
 
@@ -71,13 +72,13 @@ namespace Gamma.ViewModels
             }
         }
 
-        public event Func<GammaEntities,bool> PrintExampleEvent;
+        public event Func<bool> PrintExampleEvent;
 
         public DelegateCommand PrintExampleCommand { get; private set; }
 
         private void PrintExample()
         {
-            PrintExampleEvent?.Invoke(GammaBase); // Вызывает сохранение батча, при этом productionTaskID получает значение
+            PrintExampleEvent?.Invoke(); // Вызывает сохранение батча, при этом productionTaskID получает значение
             ReportManager.PrintReport("PalletExample","Examples",ProductionTaskId);
         }
 
@@ -163,9 +164,9 @@ namespace Gamma.ViewModels
                     "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
                     "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
-        public override bool SaveToModel(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid productionTaskBatchID)
         {
-            SaveToModel();
+            UIServices.SetBusyState();
                 var productionTaskBatch =
                     GammaBase.ProductionTaskBatches.Include(pt => pt.ProductionTasks)
                         .First(pt => pt.ProductionTaskBatchID == productionTaskBatchID);

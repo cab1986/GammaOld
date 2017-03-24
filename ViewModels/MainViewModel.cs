@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public MainViewModel()
         {
             Messenger.Default.Register<CloseMessage>(this, msg => CloseSignal = true);
             Messenger.Default.Register<OpenProductionTaskBatchMessage>(this, OpenProductionTaskBatch);
@@ -37,6 +37,12 @@ namespace Gamma.ViewModels
                 if (dialog.DialogResult == true)
                 {
                     WorkSession.PrintName = dialog.PrintName;
+                }
+                else
+                {
+                    MessageBox.Show("Не было введено имя для печати, дальнейшая работа невозможна");
+                    Application.Current.Shutdown();
+                    return;
                 }
                 if (WorkSession.PlaceGroup == PlaceGroup.Convertings)
                 {
@@ -62,8 +68,8 @@ namespace Gamma.ViewModels
             {
                 ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList);
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM);
-                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb));
-                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb));
+                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel());
+                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel());
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers);
             }
@@ -72,11 +78,11 @@ namespace Gamma.ViewModels
                 ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList,
                 () => WorkSession.DBAdmin || DB.HaveWriteAccess("Reports"));
 //                ShowProductionTasksPMCommand = new DelegateCommand(() => CurrentView = ViewModelLocator.ProductionTasksPM, () => DB.HaveReadAccess("ProductionTasks"));
-                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb),
+                ShowProductionTasksSGBCommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGBViewModel(),
                     () => DB.HaveReadAccess("ProductionTasks"));
                 ShowProductionTasksBalerCommand = new DelegateCommand(() => CurrentView = new ProductionTasksBalerViewModel(), 
                     () => DB.HaveReadAccess("ProductionTasks"));
-                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb),
+                ShowProductionTasksSGICommand = new DelegateCommand(() => CurrentView = new ProductionTasksSGIViewModel(),
                     DB.HaveReadAccess("ProductionTasks"));
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
@@ -115,13 +121,13 @@ namespace Gamma.ViewModels
             {
                 case PlaceGroup.PM:
                 case PlaceGroup.Rw:
-                    CurrentView = new ProductionTasksSGBViewModel(DB.GammaDb);
+                    CurrentView = new ProductionTasksSGBViewModel();
                     break;
                 case PlaceGroup.Wr:
                     OpenPlaceProducts(WorkSession.PlaceID);
                     break;
                 case PlaceGroup.Convertings:
-                    CurrentView = new ProductionTasksSGIViewModel(DB.GammaDb);
+                    CurrentView = new ProductionTasksSGIViewModel();
                     break;
                 case PlaceGroup.Baler:
                     CurrentView = new ProductionTasksBalerViewModel();
@@ -162,7 +168,7 @@ namespace Gamma.ViewModels
         private void OpenProductionTaskBatch(OpenProductionTaskBatchMessage msg)
         {
             if (msg.Window) return;
-            CurrentView = new ProductionTaskBatchViewModel(msg, DB.GammaDb);
+            CurrentView = new ProductionTaskBatchViewModel(msg);
             ActivatedCommand = ((ProductionTaskBatchViewModel) CurrentView).ActivatedCommand;
             DeactivatedCommand = ((ProductionTaskBatchViewModel) CurrentView).DeactivatedCommand;
         }

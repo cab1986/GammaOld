@@ -6,6 +6,7 @@
         xmlns:ignore="http://www.galasoft.ch/ignore"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              x:Class="Gamma.Views.ProductionTasksSGIView"
         mc:Ignorable="d ignore"
         d:DataContext="{d:DesignInstance Type=viewModels:ProductionTasksSGIViewModel, IsDesignTimeCreatable=False}">
@@ -14,8 +15,19 @@
         <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskSGI}" AutoExpandAllGroups="True"
 			FontSize="24" FontWeight="Medium" >
             <dxg:GridControl.View>
-                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"
-                               />
+                <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True">
+                    <dxg:TableView.FormatConditions>
+                        <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '1'" FieldName="EnumColor" ApplyToRow="True">
+                            <dx:Format Background="#FF35D31B"/>
+                        </dxg:FormatCondition>
+                        <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '2'" ApplyToRow="True" FieldName="EnumColor">
+                            <dx:Format Background="#FFECE20C"/>
+                        </dxg:FormatCondition>
+                        <dxg:FormatCondition Expression="[RowData.Row.EnumColor] = '3'" ApplyToRow="True" FieldName="EnumColor">
+                            <dx:Format Background="#FFC88E" />
+                        </dxg:FormatCondition>
+                    </dxg:TableView.FormatConditions>
+                </dxg:TableView>
             </dxg:GridControl.View>
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}"/>
@@ -35,6 +47,7 @@
                     <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+            <dxg:GridColumn Binding="{Binding EnumColor}" Visible="False" />
         </dxg:GridControl>
     </Grid>
 </UserControl>

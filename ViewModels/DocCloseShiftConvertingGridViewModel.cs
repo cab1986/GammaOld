@@ -19,7 +19,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Создает новый экземпляр модели для грида закрытия смены конвертингов
         /// </summary>
-        public DocCloseShiftConvertingGridViewModel(GammaEntities gammaBase = null): base(gammaBase)
+        public DocCloseShiftConvertingGridViewModel()
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftConverting", VMID));
             PlaceID = WorkSession.PlaceID;
@@ -29,7 +29,7 @@ namespace Gamma.ViewModels
             DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
         }
 
-        public DocCloseShiftConvertingGridViewModel(Guid docId, GammaEntities gammaBase = null) : this(gammaBase)
+        public DocCloseShiftConvertingGridViewModel(Guid docId) : this()
         {
             Pallets = new ObservableCollection<Pallet>(GammaBase.GetDocCloseShiftConvertingPallets(docId).Select(d => new Pallet()
             {
@@ -350,7 +350,7 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="docId">ID документа закрытия смены</param>
         /// <param name="gammaBase">Контекст БД(в процедуре использован private GammaBase)</param>
-        public override bool SaveToModel(Guid docId, GammaEntities gammaBase = null)
+        public override bool SaveToModel(Guid docId)
         {
             if (IsReadOnly) return true;
             var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftWithdrawals)

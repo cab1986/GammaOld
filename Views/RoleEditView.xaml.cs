@@ -9,7 +9,7 @@ namespace Gamma.Views
     {
         public RoleEditView(RoleEditMessage msg)
         {
-            var viewModel = msg.RoleID == null ? new RoleEditViewModel(msg.GammaBase) : new RoleEditViewModel((Guid)msg.RoleID, msg.GammaBase);
+            var viewModel = msg.RoleID == null ? new RoleEditViewModel() : new RoleEditViewModel((Guid)msg.RoleID);
             DataContext = viewModel;
             InitializeComponent();
         }

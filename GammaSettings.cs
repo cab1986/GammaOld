@@ -99,7 +99,10 @@ namespace Gamma
             entityConnectionStringBuilder.Metadata = "res://*/Entities.GammaModel.csdl|res://*/Entities.GammaModel.ssdl|res://*/Entities.GammaModel.msl";
 
             ConnectionString = entityConnectionStringBuilder.ToString();
+            IsConnectionStringSetted = true;
         }
+
+        public static bool IsConnectionStringSetted { get; private set; }
 
         public static void Serialize()
         {

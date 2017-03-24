@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>54</ApplicationRevision>
+    <ApplicationRevision>55</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -88,7 +88,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Data.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DevExpress.Images.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -1329,7 +1329,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

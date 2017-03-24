@@ -13,7 +13,7 @@ namespace Gamma.ViewModels
 {
     public class MaterialTypesNomenclatureViewModel: SaveImplementedViewModel
     {
-        public MaterialTypesNomenclatureViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        public MaterialTypesNomenclatureViewModel()
         {        
             MaterialTypes = GammaBase.MaterialTypes.ToList();
             _materialTypeId = MaterialTypes[0].MaterialTypeID;
@@ -181,7 +181,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             var materialType = GammaBase.MaterialTypes.Include(mt => mt.C1CNomenclature).First(p => p.MaterialTypeID == MaterialTypeId);
             if (materialType.C1CNomenclature == null) materialType.C1CNomenclature = new List<C1CNomenclature>();

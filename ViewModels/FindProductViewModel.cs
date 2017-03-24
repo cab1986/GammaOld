@@ -24,7 +24,7 @@ namespace Gamma.ViewModels
         /// Initializes a new instance of the FindProductViewModel class.
         /// </summary>
         
-        private FindProductViewModel(GammaEntities gammaBase = null) : base(gammaBase)
+        private FindProductViewModel()
         {
             Messenger.Default.Register<BarcodeMessage>(this,BarcodeReceived);
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKind));

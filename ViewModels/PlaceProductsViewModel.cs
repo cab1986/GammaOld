@@ -9,7 +9,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using System.Data.Entity.SqlServer;
-using Gamma.Entities;
 using Gamma.Models;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -24,9 +23,13 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the PlaceProductsViewModel class.
         /// </summary>
-        public PlaceProductsViewModel(int placeID, GammaEntities gammaBase = null): base(gammaBase)
+        public PlaceProductsViewModel(int placeID)
         {
             Intervals = new List<string> {"Последние 500", "За мою смену", "За последний день", "Поиск"};
+            if (WorkSession.IsProductionPlace)
+            {
+                Intervalid = 1;
+            }
             FindCommand = new DelegateCommand(Find);
             OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
             CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroup.Wr && WorkSession.PlaceGroup == PlaceGroup);
@@ -241,115 +244,116 @@ namespace Gamma.ViewModels
         private void Find()
         {
             UIServices.SetBusyState();
-            switch (Intervalid)
+            using (var gammaBase = DB.GammaDb)
             {
-                case 0:
-                    Products = new ObservableCollection<ProductInfo>
-                    ((
-                        from vpi in GammaBase.vProductsInfo
-                        where vpi.PlaceID == PlaceID
-                        orderby vpi.Date descending
-                        select new ProductInfo
-                        {
-                            CharacteristicID = vpi.C1CCharacteristicID,
-                            Date = vpi.Date,
-                            DocID = vpi.DocID,
-                            NomenclatureID = vpi.C1CNomenclatureID,
-                            NomenclatureName = vpi.NomenclatureName,
-                            Number = vpi.Number,
-                            Place = vpi.Place,
-                            ProductID = vpi.ProductID,
-                            ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet?vpi.ProductionQuantity*1000 : vpi.ProductionQuantity,
-                            ShiftID = vpi.ShiftID,
-                            State = vpi.State,
-                            PlaceID = vpi.PlaceID,
-                            PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
-                        }
-                    ).Take(500));
-                    break;
-                case 1:
-                    Products = new ObservableCollection<ProductInfo>
-                    (
-                        from vpi in GammaBase.vProductsInfo
-                        where vpi.PlaceID == PlaceID && vpi.ShiftID == WorkSession.ShiftID &&
-                        vpi.Date >= SqlFunctions.DateAdd("hh",-1,DB.GetShiftBeginTime(DB.CurrentDateTime)) && vpi.Date <= SqlFunctions.DateAdd("hh",1,DB.GetShiftEndTime(DB.CurrentDateTime))
-                        orderby vpi.Date descending
-                        select new ProductInfo
-                        {
-                            CharacteristicID = vpi.C1CCharacteristicID,
-                            Date = vpi.Date,
-                            DocID = vpi.DocID,
-                            NomenclatureID = vpi.C1CNomenclatureID,
-                            NomenclatureName = vpi.NomenclatureName,
-                            Number = vpi.Number,
-                            Place = vpi.Place,
-                            ProductID = vpi.ProductID,
-                            ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
-                            ShiftID = vpi.ShiftID,
-                            State = vpi.State,
-                            PlaceID = vpi.PlaceID,
-                            PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
-                        }
-                    );
-                    break;
-                case 2:
-                    var endTime = DB.CurrentDateTime;
-                    var beginTime = endTime.AddDays(-1);
-                    Products = new ObservableCollection<ProductInfo>
-                    (
-                        from vpi in GammaBase.vProductsInfo
-                        where vpi.PlaceID == PlaceID && 
-                        vpi.Date >= beginTime && vpi.Date <= endTime
-                        orderby vpi.Date descending
-                        select new ProductInfo
-                        {
-                            CharacteristicID = vpi.C1CCharacteristicID,
-                            Date = vpi.Date,
-                            DocID = vpi.DocID,
-                            NomenclatureID = vpi.C1CNomenclatureID,
-                            NomenclatureName = vpi.NomenclatureName,
-                            Number = vpi.Number,
-                            Place = vpi.Place,
-                            ProductID = vpi.ProductID,
-                            ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
-                            ShiftID = vpi.ShiftID,
-                            State = vpi.State,
-                            PlaceID = vpi.PlaceID,
-                            PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
-                        }
-                    );
-                    break;
-                default:
-                    Products = new ObservableCollection<ProductInfo>
-                    (
-                        from vpi in GammaBase.vProductsInfo
-                        where vpi.PlaceID == PlaceID && 
-                        (Number == null || Number == "" || vpi.Number == Number) &&
-                        (DateBegin == null || vpi.Date >= DateBegin) &&
-                        (DateEnd == null || vpi.Date <= DateEnd)
-                        orderby vpi.Date descending
-                        select new ProductInfo
-                        {
-                            CharacteristicID = vpi.C1CCharacteristicID,
-                            Date = vpi.Date,
-                            DocID = vpi.DocID,
-                            NomenclatureID = vpi.C1CNomenclatureID,
-                            NomenclatureName = vpi.NomenclatureName,
-                            Number = vpi.Number,
-                            Place = vpi.Place,
-                            ProductID = vpi.ProductID,
-                            ProductKind = (ProductKind)vpi.ProductKindID,
-                            Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
-                            ShiftID = vpi.ShiftID,
-                            State = vpi.State,
-                            PlaceID = vpi.PlaceID,
-                            PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
-                        }
-                    );
-                    break;
+                switch (Intervalid)
+                {
+                    case 0:
+                        Products = new ObservableCollection<ProductInfo>
+                        (
+                            gammaBase.vProductsInfo.Where(vpi => vpi.PlaceID == PlaceID).OrderByDescending(vpi => vpi.Date).Take(500)
+                            .Select(vpi => new ProductInfo
+                            {
+                                CharacteristicID = vpi.C1CCharacteristicID,
+                                Date = vpi.Date,
+                                DocID = vpi.DocID,
+                                NomenclatureID = vpi.C1CNomenclatureID,
+                                NomenclatureName = vpi.NomenclatureName,
+                                Number = vpi.Number,
+                                Place = vpi.Place,
+                                ProductID = vpi.ProductID,
+                                ProductKind = (ProductKind)vpi.ProductKindID,
+                                Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
+                                ShiftID = vpi.ShiftID,
+                                State = vpi.State,
+                                PlaceID = vpi.PlaceID,
+                                PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
+                            })   
+                        );
+                        break;
+                    case 1:
+                        Products = new ObservableCollection<ProductInfo>
+                        (
+                            from vpi in GammaBase.vProductsInfo
+                            where vpi.PlaceID == PlaceID && vpi.ShiftID == WorkSession.ShiftID &&
+                            vpi.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime)) && vpi.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(DB.CurrentDateTime))
+                            orderby vpi.Date descending
+                            select new ProductInfo
+                            {
+                                CharacteristicID = vpi.C1CCharacteristicID,
+                                Date = vpi.Date,
+                                DocID = vpi.DocID,
+                                NomenclatureID = vpi.C1CNomenclatureID,
+                                NomenclatureName = vpi.NomenclatureName,
+                                Number = vpi.Number,
+                                Place = vpi.Place,
+                                ProductID = vpi.ProductID,
+                                ProductKind = (ProductKind)vpi.ProductKindID,
+                                Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
+                                ShiftID = vpi.ShiftID,
+                                State = vpi.State,
+                                PlaceID = vpi.PlaceID,
+                                PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
+                            }
+                        );
+                        break;
+                    case 2:
+                        var endTime = DB.CurrentDateTime;
+                        var beginTime = endTime.AddDays(-1);
+                        Products = new ObservableCollection<ProductInfo>
+                        (
+                            from vpi in GammaBase.vProductsInfo
+                            where vpi.PlaceID == PlaceID &&
+                            vpi.Date >= beginTime && vpi.Date <= endTime
+                            orderby vpi.Date descending
+                            select new ProductInfo
+                            {
+                                CharacteristicID = vpi.C1CCharacteristicID,
+                                Date = vpi.Date,
+                                DocID = vpi.DocID,
+                                NomenclatureID = vpi.C1CNomenclatureID,
+                                NomenclatureName = vpi.NomenclatureName,
+                                Number = vpi.Number,
+                                Place = vpi.Place,
+                                ProductID = vpi.ProductID,
+                                ProductKind = (ProductKind)vpi.ProductKindID,
+                                Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
+                                ShiftID = vpi.ShiftID,
+                                State = vpi.State,
+                                PlaceID = vpi.PlaceID,
+                                PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
+                            }
+                        );
+                        break;
+                    default:
+                        Products = new ObservableCollection<ProductInfo>
+                        (
+                            from vpi in GammaBase.vProductsInfo
+                            where vpi.PlaceID == PlaceID &&
+                            (Number == null || Number == "" || vpi.Number == Number) &&
+                            (DateBegin == null || vpi.Date >= DateBegin) &&
+                            (DateEnd == null || vpi.Date <= DateEnd)
+                            orderby vpi.Date descending
+                            select new ProductInfo
+                            {
+                                CharacteristicID = vpi.C1CCharacteristicID,
+                                Date = vpi.Date,
+                                DocID = vpi.DocID,
+                                NomenclatureID = vpi.C1CNomenclatureID,
+                                NomenclatureName = vpi.NomenclatureName,
+                                Number = vpi.Number,
+                                Place = vpi.Place,
+                                ProductID = vpi.ProductID,
+                                ProductKind = (ProductKind)vpi.ProductKindID,
+                                Quantity = (ProductKind)vpi.ProductKindID != ProductKind.ProductPallet ? vpi.ProductionQuantity * 1000 : vpi.ProductionQuantity,
+                                ShiftID = vpi.ShiftID,
+                                State = vpi.State,
+                                PlaceID = vpi.PlaceID,
+                                PlaceGroup = (PlaceGroup)vpi.PlaceGroupID
+                            }
+                        );
+                        break;
+                }
             }
         }
 

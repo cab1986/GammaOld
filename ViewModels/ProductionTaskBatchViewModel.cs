@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the ProductionTaskViewModel class.
         /// </summary>
-        public ProductionTaskBatchViewModel(OpenProductionTaskBatchMessage msg, GammaEntities gammaBase = null): base(gammaBase)
+        public ProductionTaskBatchViewModel(OpenProductionTaskBatchMessage msg)
         {
             Contractors = GammaBase.C1CContractors.Where(c => c.IsBuyer ?? false).ToList();
             ProductionTaskBatchID = msg.ProductionTaskBatchID ?? SqlGuidUtil.NewSequentialid();
@@ -386,28 +386,30 @@ namespace Gamma.ViewModels
 
         
 
-        public override bool SaveToModel(GammaEntities gammaBase = null)
+        public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("ProductionTaskBatches")) return true;
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var productionTaskBatch = gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == ProductionTaskBatchID);
-            if (productionTaskBatch == null)
+            using (var gammaBase = DB.GammaDb)
             {
-                productionTaskBatch = new ProductionTaskBatches()
+                var productionTaskBatch = gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == ProductionTaskBatchID);
+                if (productionTaskBatch == null)
                 {
-                    ProductionTaskBatchID = ProductionTaskBatchID,
-                    UserID = WorkSession.UserID
-                };
-                gammaBase.ProductionTaskBatches.Add(productionTaskBatch);
+                    productionTaskBatch = new ProductionTaskBatches()
+                    {
+                        ProductionTaskBatchID = ProductionTaskBatchID,
+                        UserID = WorkSession.UserID
+                    };
+                    gammaBase.ProductionTaskBatches.Add(productionTaskBatch);
+                }
+                productionTaskBatch.ProcessModelID = ProcessModelID;
+                productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID ?? 0;
+                productionTaskBatch.Date = Date;
+                productionTaskBatch.Comment = Comment;
+                productionTaskBatch.PartyControl = PartyControl;
+                productionTaskBatch.BatchKindID = (short)BatchKind;
+                productionTaskBatch.C1CContractorID = ContractorId;
+                gammaBase.SaveChanges();
             }
-            productionTaskBatch.ProcessModelID = ProcessModelID;
-            productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID ?? 0;
-            productionTaskBatch.Date = Date;
-            productionTaskBatch.Comment = Comment;
-            productionTaskBatch.PartyControl = PartyControl;
-            productionTaskBatch.BatchKindID = (short)BatchKind;
-            productionTaskBatch.C1CContractorID = ContractorId;
-            gammaBase.SaveChanges();
             CurrentView?.SaveToModel(ProductionTaskBatchID);
             return true;
         }

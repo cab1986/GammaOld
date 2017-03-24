@@ -15,10 +15,7 @@ namespace Gamma.ViewModels
     /// </summary>
     public class ProductionTaskWrViewModel : SaveImplementedViewModel, ICheckedAccess
     {
-        public ProductionTaskWrViewModel()
-        {
-        }
-        public ProductionTaskWrViewModel(Guid productionTaskBatchID, GammaEntities gammaBase = null) : base(gammaBase)
+        public ProductionTaskWrViewModel(Guid productionTaskBatchID)
         {
             var productionTaskWr = GammaBase.GetProductionTaskBatchWRProperties(productionTaskBatchID).FirstOrDefault();
             if (productionTaskWr != null)
@@ -88,25 +85,27 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("GroupPackConfig");
             }
         }
-        public override bool SaveToModel(Guid itemID, GammaEntities gammaBase = null) // Сохранение по ProductionTaskID
+        public override bool SaveToModel(Guid itemID) // Сохранение по ProductionTaskID
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
-            if (productionTask == null)
+            using (var gammaBase = DB.GammaDb)
             {
-                MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
+                var productionTask = gammaBase.ProductionTasks.Include("ProductionTaskSGB").FirstOrDefault(p => p.ProductionTaskID == itemID);
+                if (productionTask == null)
+                {
+                    MessageBox.Show("Что-то пошло не так при сохранении.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+                if (productionTask.ProductionTaskWR == null)
+                {
+                    productionTask.ProductionTaskWR = new ProductionTaskWR();
+                }
+                productionTask.ProductionTaskWR.IsEndProtected = IsEndProtected;
+                productionTask.ProductionTaskWR.IsWithCarton = IsWithCarton;
+                productionTask.ProductionTaskWR.NumFilmLayers = NumFilmLayers;
+                productionTask.ProductionTaskWR.GroupPackConfig = GroupPackConfig;
+                gammaBase.SaveChanges();
+                return true;
             }
-            if (productionTask.ProductionTaskWR == null)
-            {
-                productionTask.ProductionTaskWR = new ProductionTaskWR();
-            }
-            productionTask.ProductionTaskWR.IsEndProtected = IsEndProtected;
-            productionTask.ProductionTaskWR.IsWithCarton = IsWithCarton;
-            productionTask.ProductionTaskWR.NumFilmLayers = NumFilmLayers;
-            productionTask.ProductionTaskWR.GroupPackConfig = GroupPackConfig;
-            gammaBase.SaveChanges();
-            return true;
         }
 
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductionTaskWR");
