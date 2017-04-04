@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Gamma
 {
-    public class SqlGuidUtil
+    public static class SqlGuidUtil
     {
         [DllImport("rpcrt4.dll", SetLastError = true)]
         static extern int UuidCreateSequential(out Guid guid);

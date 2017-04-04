@@ -223,12 +223,23 @@ namespace Gamma.ViewModels
                     MessageBox.Show("Нельзя актировать продукт, которого нет на остатках");
                     return;
                 }
+                if (
+                    gammaBase.SourceSpools.Any(
+                        s =>
+                            s.Unwinder1Spool == productId || s.Unwinder2Spool == productId ||
+                            s.Unwinder3Spool == productId))
+                {
+                    MessageBox.Show(
+                        "Нельзя актировать тамбур, который находится на раскате. Актируйте тамбур при снятии или снимите тамбур с раската и затем актируйте",
+                        "Ошибка актирования", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                }
                 var docProduction =
                     gammaBase.Docs.FirstOrDefault(
-                        d => d.DocProduction.DocProductionProducts.FirstOrDefault().ProductID == productId);
+                        d => d.DocProduction.DocProductionProducts.Any(dp => dp.ProductID == productId));
                 if (docProduction == null)
                 {
-                    MessageBox.Show("Непредвиденная ошибка при добавлении в акт!", "Ошибка актирования",
+                    MessageBox.Show("Непредвиденная ошибка при добавлении в акт! Не удалось получить информацию о продукте.", "Ошибка актирования",
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }

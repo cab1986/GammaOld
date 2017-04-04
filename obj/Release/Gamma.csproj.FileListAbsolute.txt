@@ -5,7 +5,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.pdb
-D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Images.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Mvvm.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Printing.v16.1.Core.dll
@@ -42,7 +41,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraBars.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraTreeList.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Office.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Drawing.dll
-D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Mvvm.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Printing.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Sparkline.v16.1.Core.xml
@@ -71,10 +69,6 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraBars.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraTreeList.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Office.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Drawing.xml
-D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Data.v16.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Printing.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Printing.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Printing.v16.1.Core.resources.dll
@@ -307,3 +301,9 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.dll
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.xml
+D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Data.v16.1.resources.dll
