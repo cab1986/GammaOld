@@ -290,6 +290,7 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocProduction_DocShipmentOrders" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

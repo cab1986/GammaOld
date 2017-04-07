@@ -122,15 +122,35 @@ namespace Gamma.ViewModels
             foreach (var t in tempCollection)
             {
                 var productionTaskBatchID = t.ProductionTaskBatchID;
-                var cuttingList = GammaBase.GetProductionTaskBatchSGBCuttings(productionTaskBatchID).ToList();
+                var cuttingList = GammaBase.GetProductionTaskBatchCuttingsSGB(productionTaskBatchID).ToList();
                 if (cuttingList.Count == 0)
                 {
                     MessageBox.Show($"Ошибка при получении информации о задании(id: {productionTaskBatchID})");
                     continue;
                 }
-                var cutting = cuttingList[0];
+                Guid characteristicId;
+                if (WorkSession.PlaceGroup == PlaceGroup.PM)
+                {
+                    var productionTaskPM =
+                        GammaBase.ProductionTasks.FirstOrDefault(
+                            pt =>
+                                pt.PlaceGroupID == (int) PlaceGroup.PM &&
+                                pt.ProductionTaskBatches.FirstOrDefault().ProductionTaskBatchID == productionTaskBatchID);
+                    if (productionTaskPM != null)
+                    {
+                        characteristicId = (Guid) productionTaskPM.C1CCharacteristicID;
+                    }
+                    else
+                    {
+                        characteristicId = (Guid)cuttingList[0].C1CCharacteristicID;
+                    }
+                }
+                else
+                {
+                    characteristicId = (Guid)cuttingList[0].C1CCharacteristicID;
+                }
                 t.Nomenclature =
-                    $"{t.Nomenclature} \r\n{cutting.CoreDiameter} {cutting.LayerNumber} {cutting.Color} {cutting.Destination}";
+                    $"{t.Nomenclature} \r\n{DB.GetCharacteristicNameForProductionTaskSGB(characteristicId)}";
                 t.TotalFormat = 0;
                 for (int k = 0; k < cuttingList.Count(); k++)
                 {

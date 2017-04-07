@@ -18,6 +18,7 @@ namespace Gamma.Entities
         public DocShipmentOrders()
         {
             this.DocMovement = new HashSet<DocMovement>();
+            this.DocProduction = new HashSet<DocProduction>();
         }
     
         public System.Guid DocOrderID { get; set; }
@@ -39,5 +40,7 @@ namespace Gamma.Entities
         public virtual ICollection<DocMovement> DocMovement { get; set; }
         public virtual Persons Persons { get; set; }
         public virtual Persons Persons1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocProduction> DocProduction { get; set; }
     }
 }

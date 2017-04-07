@@ -472,10 +472,13 @@
     <Compile Include="Entities\GetOldProductInfo_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\GetProductionTaskBatchProducts_Result.cs">
+    <Compile Include="Entities\GetProductionTaskBatchCuttingsSGB_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\GetProductionTaskBatchSGBCuttings_Result.cs">
+    <Compile Include="Entities\GetProductionTaskBatchCuttingsSGB_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetProductionTaskBatchProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetProductionTaskBatchSGBProperties_Result.cs">

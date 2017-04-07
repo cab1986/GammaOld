@@ -150,6 +150,16 @@ namespace Gamma
         {
             return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetCoreWeight('{characteristicID}')").AsEnumerable().First();
         }
+
+        public static string GetCharacteristicNameForProductionTaskSGB(Guid characteristicId)
+        {
+            return
+                GammaDb.Database.SqlQuery<string>(
+                    $"SELECT dbo.GetCharacteristicNameForProductionTaskSGB('{characteristicId}')")
+                    .AsEnumerable()
+                    .First();
+        }
+
         public static decimal GetSpoolCoreWeight(Guid productid, GammaEntities gammaBase = null)
         {
             return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetSpoolCoreWeight('{productid}')").AsEnumerable().First();

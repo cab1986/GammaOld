@@ -584,6 +584,7 @@
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
           <Property Name="InPlaceID" Type="int" />
           <Property Name="HasWarnings" Type="bit" />
+          <Property Name="DocOrderId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocProductionProducts">
           <Key>
@@ -2638,6 +2639,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocProduction_DocShipmentOrders">
+          <End Role="DocShipmentOrders" Type="Self.DocShipmentOrders" Multiplicity="0..1" />
+          <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocShipmentOrders">
+              <PropertyRef Name="DocOrderID" />
+            </Principal>
+            <Dependent Role="DocProduction">
+              <PropertyRef Name="DocOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocProduction_Places">
           <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
           <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="*" />
@@ -3736,6 +3749,9 @@
         <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="GetCharacteristicNameForProductionTaskSGB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="GetCharacteristicsForPM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="Color" Type="nvarchar" Mode="In" />
@@ -3798,13 +3814,13 @@
           <Parameter Name="Number" Type="varchar" Mode="In" />
           <Parameter Name="ProductKindId" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetProductionTaskBatchCuttingsSGB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="GetProductionTaskBatchGroupPacksWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetProductionTaskBatchMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
-          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
-        </Function>
-        <Function Name="GetProductionTaskBatchSGBCuttings" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetProductionTaskBatchSGBProperties" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -4615,6 +4631,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_DocProduction_Docs" Association="Self.FK_DocProduction_Docs">
             <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocProduction" EntitySet="DocProduction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocProduction_DocShipmentOrders" Association="Self.FK_DocProduction_DocShipmentOrders">
+            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
             <End Role="DocProduction" EntitySet="DocProduction" />
           </AssociationSet>
           <AssociationSet Name="FK_DocProduction_Places" Association="Self.FK_DocProduction_Places">
@@ -5750,9 +5770,6 @@
           <FunctionImport Name="GetNomenclatureFolders" ReturnType="Collection(GammaModel.GetNomenclatureFolders_Result)">
           <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetProductionTaskBatchSGBCuttings" ReturnType="Collection(GammaModel.GetProductionTaskBatchSGBCuttings_Result)">
-          <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
-          </FunctionImport>
           <FunctionImport Name="GetProductionTaskBatchSGBProperties" ReturnType="Collection(GammaModel.GetProductionTaskBatchSGBProperties_Result)">
           <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
           </FunctionImport>
@@ -6636,6 +6653,13 @@
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftSamples" EntitySet="DocCloseShiftSamples" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocProduction_DocShipmentOrders" Association="GammaModel.FK_DocProduction_DocShipmentOrders">
+            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
+            <End Role="DocProduction" EntitySet="DocProduction" />
+          </AssociationSet>
+          <FunctionImport Name="GetProductionTaskBatchCuttingsSGB" ReturnType="Collection(GammaModel.GetProductionTaskBatchCuttingsSGB_Result1)">
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -6732,19 +6756,6 @@
           <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
           <Property Type="Int32" Name="Quantity" Nullable="true" />
           <Property Type="Boolean" Name="IsConfirmed" Nullable="false" />
-        </ComplexType>
-        <ComplexType Name="GetProductionTaskBatchSGBCuttings_Result">
-          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
-          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
-          <Property Type="Int32" Name="CutIndex" Nullable="true" />
-          <Property Type="String" Name="CoreDiameter" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="LayerNumber" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Diameter" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Destination" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Format" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Color" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
-          <Property Type="String" Name="NomenclatureKind" Nullable="false" MaxLength="3" />
         </ComplexType>
         <ComplexType Name="GetProductionTaskBatchSGBProperties_Result">
           <Property Type="Int32" Name="Diameter" Nullable="true" />
@@ -7946,6 +7957,8 @@
           <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.DocProductionWithdrawals" FromRole="DocProduction" ToRole="DocWithdrawal" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocProduction_Places" FromRole="DocProduction" ToRole="Places" />
           <NavigationProperty Name="DocProductionProducts" Relationship="GammaModel.FK_DocProductionProducts_DocProduction" FromRole="DocProduction" ToRole="DocProductionProducts" />
+          <Property Name="DocOrderId" Type="Guid" />
+          <NavigationProperty Name="DocShipmentOrders" Relationship="GammaModel.FK_DocProduction_DocShipmentOrders" FromRole="DocProduction" ToRole="DocShipmentOrders" />
         </EntityType>
         <Association Name="FK_DocProduction_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1">
@@ -8278,6 +8291,7 @@
           <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_DocShipmentOrders" FromRole="DocShipmentOrders" ToRole="DocMovement" />
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipmentOrders_Persons" FromRole="DocShipmentOrders" ToRole="Persons" />
           <NavigationProperty Name="Persons1" Relationship="GammaModel.FK_DocShipmentOrders_Persons1" FromRole="DocShipmentOrders" ToRole="Persons" />
+          <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_DocShipmentOrders" FromRole="DocShipmentOrders" ToRole="DocProduction" />
         </EntityType>
         <EntityType Name="DocBrokeProducts">
           <Key>
@@ -10064,6 +10078,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocProduction_DocShipmentOrders">
+          <End Type="GammaModel.DocShipmentOrders" Role="DocShipmentOrders" Multiplicity="0..1" />
+          <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocShipmentOrders">
+              <PropertyRef Name="DocOrderID" />
+            </Principal>
+            <Dependent Role="DocProduction">
+              <PropertyRef Name="DocOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetProductionTaskBatchCuttingsSGB_Result">
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="Int32" Name="CutIndex" Nullable="true" />
+          <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
+          <Property Type="String" Name="NomenclatureKind" Nullable="false" MaxLength="3" />
+        </ComplexType>
+        <ComplexType Name="GetProductionTaskBatchCuttingsSGB_Result1">
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="Int32" Name="CutIndex" Nullable="true" />
+          <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
+          <Property Type="String" Name="NomenclatureKind" Nullable="false" MaxLength="3" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -10524,23 +10565,6 @@
                 <ScalarProperty Name="FolderID" ColumnName="FolderID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetProductionTaskBatchSGBCuttings" FunctionName="GammaDBModel.GetProductionTaskBatchSGBCuttings">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskBatchSGBCuttings_Result">
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
-                <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
-                <ScalarProperty Name="CoreDiameter" ColumnName="CoreDiameter" />
-                <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
-                <ScalarProperty Name="Diameter" ColumnName="Diameter" />
-                <ScalarProperty Name="Destination" ColumnName="Destination" />
-                <ScalarProperty Name="Format" ColumnName="Format" />
-                <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
-                <ScalarProperty Name="NomenclatureKind" ColumnName="NomenclatureKind" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -11232,6 +11256,7 @@
           <EntitySetMapping Name="DocProduction">
             <EntityTypeMapping TypeName="GammaModel.DocProduction">
               <MappingFragment StoreEntitySet="DocProduction">
+                <ScalarProperty Name="DocOrderId" ColumnName="DocOrderId" />
                 <ScalarProperty Name="HasWarnings" ColumnName="HasWarnings" />
                 <ScalarProperty Name="InPlaceID" ColumnName="InPlaceID" />
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
@@ -11824,6 +11849,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetProductionTaskBatchCuttingsSGB" FunctionName="GammaDBModel.GetProductionTaskBatchCuttingsSGB">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskBatchCuttingsSGB_Result1">
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="CutIndex" ColumnName="CutIndex" />
+                <ScalarProperty Name="FormatNumeric" ColumnName="FormatNumeric" />
+                <ScalarProperty Name="NomenclatureKind" ColumnName="NomenclatureKind" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

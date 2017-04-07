@@ -25,6 +25,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> ProductionTaskID { get; set; }
         public Nullable<int> InPlaceID { get; set; }
         public Nullable<bool> HasWarnings { get; set; }
+        public Nullable<System.Guid> DocOrderId { get; set; }
     
         public virtual Docs Docs { get; set; }
         public virtual ProductionTasks ProductionTasks { get; set; }
@@ -33,5 +34,6 @@ namespace Gamma.Entities
         public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
+        public virtual DocShipmentOrders DocShipmentOrders { get; set; }
     }
 }

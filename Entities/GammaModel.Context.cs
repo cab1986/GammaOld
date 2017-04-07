@@ -266,15 +266,6 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNomenclatureFolders_Result>("GetNomenclatureFolders", placeGroupIDParameter);
         }
     
-        public virtual ObjectResult<GetProductionTaskBatchSGBCuttings_Result> GetProductionTaskBatchSGBCuttings(Nullable<System.Guid> productionTaskBatchID)
-        {
-            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
-                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
-                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchSGBCuttings_Result>("GetProductionTaskBatchSGBCuttings", productionTaskBatchIDParameter);
-        }
-    
         public virtual ObjectResult<GetProductionTaskBatchSGBProperties_Result> GetProductionTaskBatchSGBProperties(Nullable<System.Guid> productionTaskBatchID)
         {
             var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
@@ -780,6 +771,15 @@ namespace Gamma.Entities
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingWastes_Result>("FillDocCloseShiftConvertingWastes", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<GetProductionTaskBatchCuttingsSGB_Result1> GetProductionTaskBatchCuttingsSGB(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchCuttingsSGB_Result1>("GetProductionTaskBatchCuttingsSGB", productionTaskBatchIDParameter);
         }
     }
 }

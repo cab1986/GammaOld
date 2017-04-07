@@ -11,17 +11,12 @@ namespace Gamma.Entities
 {
     using System;
     
-    public partial class GetProductionTaskBatchSGBCuttings_Result
+    public partial class GetProductionTaskBatchCuttingsSGB_Result
     {
-        public System.Guid C1CNomenclatureID { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<int> CutIndex { get; set; }
-        public string CoreDiameter { get; set; }
-        public string LayerNumber { get; set; }
-        public string Diameter { get; set; }
-        public string Destination { get; set; }
-        public string Format { get; set; }
-        public string Color { get; set; }
+        public string CharacteristicName { get; set; }
         public Nullable<int> FormatNumeric { get; set; }
         public string NomenclatureKind { get; set; }
     }
