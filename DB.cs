@@ -33,14 +33,11 @@ namespace Gamma
             get
             {
                 GammaEntities context = null;
-                if (Connection != null)
+                if (Connection == null)
                 {
-                    context = new GammaEntities(Connection);
-                    context.Database.CommandTimeout = 300;
-                    return context;
+                    Connection = new EntityConnection(GammaSettings.ConnectionString);
+                    Connection.Open();
                 }
-                Connection = new EntityConnection(GammaSettings.ConnectionString);
-                Connection.Open();
                 context = new GammaEntities(Connection);
                 context.Database.CommandTimeout = 300;
                 return context;

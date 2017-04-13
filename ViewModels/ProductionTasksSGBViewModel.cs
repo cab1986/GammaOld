@@ -125,7 +125,9 @@ namespace Gamma.ViewModels
                 var cuttingList = GammaBase.GetProductionTaskBatchCuttingsSGB(productionTaskBatchID).ToList();
                 if (cuttingList.Count == 0)
                 {
+#if DEBUG
                     MessageBox.Show($"Ошибка при получении информации о задании(id: {productionTaskBatchID})");
+#endif
                     continue;
                 }
                 Guid characteristicId;

@@ -307,3 +307,5 @@ D:\CProjects\Gamma\Gamma\bin\Debug\de\DevExpress.Data.v16.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\es\DevExpress.Data.v16.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ja\DevExpress.Data.v16.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Debug\ru\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ComplectedPalletsView.g.cs
+D:\CProjects\Gamma\Gamma\obj\Debug\Views\ComplectedPalletsView.baml

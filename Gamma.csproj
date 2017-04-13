@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>58</ApplicationRevision>
+    <ApplicationRevision>59</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -659,6 +659,7 @@
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\RECT.cs" />
+    <Compile Include="Models\ComplectedPallet.cs" />
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
@@ -679,6 +680,7 @@
     <Compile Include="Models\ProductRelation.cs" />
     <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Models\QualityReportItem.cs" />
+    <Compile Include="Models\Sample.cs" />
     <Compile Include="Models\SpoolPathPM.cs" />
     <Compile Include="Models\SpoolRemainder.cs" />
     <Compile Include="Common\UIServices.cs" />
@@ -740,6 +742,7 @@
     <Compile Include="Scanner.cs" />
     <Compile Include="Models\BrokeDecisionProduct.cs" />
     <Compile Include="Models\BrokeProduct.cs" />
+    <Compile Include="ViewModels\ComplectedPalletsViewModel.cs" />
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
@@ -807,6 +810,9 @@
     <Compile Include="ViewModels\SourceSpoolsViewModel.cs" />
     <Compile Include="ViewModels\ValidationViewModelBase.cs" />
     <Compile Include="ViewModels\WarehousePersonsViewModel.cs" />
+    <Compile Include="Views\ComplectedPalletsView.xaml.cs">
+      <DependentUpon>ComplectedPalletsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ComPortSettingsView.xaml.cs">
       <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
     </Compile>
@@ -1006,6 +1012,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\SetBaleWeightDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ComplectedPalletsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

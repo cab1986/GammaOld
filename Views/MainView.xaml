@@ -24,6 +24,9 @@
         <DataTemplate DataType="{x:Type vm:DocBrokeListViewModel}">
             <views:DocBrokeListView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ComplectedPalletsViewModel}">
+            <views:ComplectedPalletsView />
+        </DataTemplate>
        <DataTemplate DataType="{x:Type vm:ProductionTasksSGBViewModel}">
             <views:ProductionTasksSGBView />
         </DataTemplate>
@@ -103,8 +106,8 @@
                         <dxb:BarButtonItem Content="Список работников" Command="{Binding OpenWarehousePersonsCommand}" />
                         <dxb:BarButtonItem Content="Импорт старой продукции" Command="{Binding OpenImportOldProductsCommand}" />
                         <dxb:BarButtonItem Content="Зонирование складов" Command="{Binding OpenPlaceZonesCommand}" />
-                        <dxb:BarButtonItem Content="Комплектация паллеты" Command="{Binding ComplectPalletCommand}" />
-                        <dxb:BarButtonItem Content="Инвентаризации" Command="{Binding OpenInventarisationsCommand}"/>
+                        <dxb:BarButtonItem Content="Скомплектованные паллеты" Command="{Binding OpenComplectedPalletsCommand}" />
+                        <dxb:BarButtonItem Content="Инвентаризации" Command="{Binding OpenInventarisationsCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Номенклатура">
                         <dxb:BarButtonItem Content="Номенклатура СГИ" Command="{Binding EditPlaceGroupNomenclatureCommand}" CommandParameter="2"/>

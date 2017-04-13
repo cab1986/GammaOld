@@ -1,11 +1,13 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Gamma.Interfaces;
 using Gamma.Models;
 using System.Data.Entity;
 using System.Windows;
-using Gamma.Entities;
+using DevExpress.Mvvm;
 
 namespace Gamma.ViewModels
 {
@@ -47,6 +49,12 @@ namespace Gamma.ViewModels
                     });
                 }
             }
+            Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
+        }
+
+        private void PrintReport(PrintReportMessage obj)
+        {
+            throw new NotImplementedException();
         }
 
         private Guid DocId { get; set; }

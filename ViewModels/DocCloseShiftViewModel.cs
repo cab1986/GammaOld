@@ -132,9 +132,11 @@ namespace Gamma.ViewModels
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
             CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
+#if !DEBUG
             var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;
             if (currenGridViewModel != null && currenGridViewModel.IsChanged)
                 DB.UploadDocCloseShiftTo1C(Doc.DocID, GammaBase);
+#endif
             return true;
         }
 

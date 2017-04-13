@@ -20,20 +20,25 @@ namespace Gamma.ViewModels
     /// </summary>
     public class PlaceProductsViewModel : RootViewModel
     {
+        private PlaceProductsViewModel()
+        {
+            FindCommand = new DelegateCommand(Find);
+            OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
+            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroup.Wr && WorkSession.PlaceGroup == PlaceGroup);
+            DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the PlaceProductsViewModel class.
         /// </summary>
-        public PlaceProductsViewModel(int placeID)
+        public PlaceProductsViewModel(int placeID) : this()
         {
             Intervals = new List<string> {"Последние 500", "За мою смену", "За последний день", "Поиск"};
             if (WorkSession.IsProductionPlace)
             {
                 Intervalid = 1;
             }
-            FindCommand = new DelegateCommand(Find);
-            OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
-            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroup.Wr && WorkSession.PlaceGroup == PlaceGroup);
-            DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
             PlaceID = placeID;
             PlaceGroup = (PlaceGroup)(GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault());
             switch (PlaceGroup)
@@ -241,6 +246,8 @@ namespace Gamma.ViewModels
         }
         private int PlaceID { get; set; }
         private PlaceGroup PlaceGroup { get; set; }
+        private bool WarehouseProducts { get; set; }
+
         private void Find()
         {
             UIServices.SetBusyState();
