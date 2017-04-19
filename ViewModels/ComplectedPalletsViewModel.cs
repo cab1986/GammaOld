@@ -13,6 +13,7 @@ namespace Gamma.ViewModels
         {
             Intervals = new List<string> { "Последние 500", "За последний день", "Поиск" };
             RefreshCommand = new DelegateCommand(Find);
+            NewItemCommand = new DelegateCommand(ComplectPallet);
             Find();
         }
 
@@ -30,6 +31,11 @@ namespace Gamma.ViewModels
                 _pallets = value;
                 RaisePropertiesChanged("Pallets");
             }
+        }
+
+        private void ComplectPallet()
+        {
+            MessageManager.CreateNewProduct(DocProductKinds.DocProductPallet);
         }
 
         public string Number { get; set; }

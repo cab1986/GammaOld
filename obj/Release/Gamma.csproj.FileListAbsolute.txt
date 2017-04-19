@@ -5,6 +5,7 @@ D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\bin\Release\Gamma.pdb
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Images.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Mvvm.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Printing.v16.1.Core.dll
@@ -31,6 +32,12 @@ D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.dll
 D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Bars.dll
 D:\CProjects\Gamma\Gamma\bin\Release\FastReport.dll
 D:\CProjects\Gamma\Gamma\bin\Release\FastReport.Editor.dll
+D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Threading.Tasks.dll
+D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Threading.Tasks.Extensions.dll
+D:\CProjects\Gamma\Gamma\bin\Release\System.IO.dll
+D:\CProjects\Gamma\Gamma\bin\Release\System.Runtime.dll
+D:\CProjects\Gamma\Gamma\bin\Release\System.Threading.Tasks.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Charts.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.CodeParser.v16.1.dll
@@ -41,6 +48,7 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraBars.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraTreeList.v16.1.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Office.v16.1.Core.dll
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Drawing.dll
+D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Mvvm.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Printing.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Sparkline.v16.1.Core.xml
@@ -61,6 +69,12 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraLayout.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraPrinting.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.xml
 D:\CProjects\Gamma\Gamma\bin\Release\EntityFramework.SqlServer.xml
+D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Threading.Tasks.xml
+D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Threading.Tasks.Extensions.xml
+D:\CProjects\Gamma\Gamma\bin\Release\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+D:\CProjects\Gamma\Gamma\bin\Release\System.IO.xml
+D:\CProjects\Gamma\Gamma\bin\Release\System.Runtime.xml
+D:\CProjects\Gamma\Gamma\bin\Release\System.Threading.Tasks.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.Ribbon.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Xpf.DocumentViewer.v16.1.Core.xml
@@ -69,6 +83,10 @@ D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraBars.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.XtraTreeList.v16.1.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Office.v16.1.Core.xml
 D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Pdf.v16.1.Drawing.xml
+D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Data.v16.1.resources.dll
+D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Data.v16.1.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Printing.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Printing.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Printing.v16.1.Core.resources.dll
@@ -159,6 +177,8 @@ D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Office.v16.1.Core.resources.d
 D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Office.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Office.v16.1.Core.resources.dll
 D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Office.v16.1.Core.resources.dll
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csproj.App.config
+D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChangeSpoolDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChoosePrintNameDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\FilterDateReportDialog.baml
@@ -176,6 +196,7 @@ D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChangeSpoolDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\ChoosePrintNameDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\FilterDateReportDialog.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\SetBaleWeightDialog.g.cs
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ComplectedPalletsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\ComPortSettingsView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocBrokeListView.g.cs
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocBrokeView.g.cs
@@ -242,6 +263,7 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma_MarkupCompile.lref
 D:\CProjects\Gamma\Gamma\obj\Release\App.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\AddNomenclatureToPalletDialog.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Dialogs\SetBaleWeightDialog.baml
+D:\CProjects\Gamma\Gamma\obj\Release\Views\ComplectedPalletsView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocBrokeListView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocBrokeView.baml
 D:\CProjects\Gamma\Gamma\obj\Release\Views\DocCloseShiftBalerGridView.baml
@@ -300,12 +322,3 @@ D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe.manifest
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.application
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.exe
 D:\CProjects\Gamma\Gamma\obj\Release\Gamma.pdb
-D:\CProjects\Gamma\Gamma\obj\Release\Gamma.csprojResolveAssemblyReference.cache
-D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.dll
-D:\CProjects\Gamma\Gamma\bin\Release\DevExpress.Data.v16.1.xml
-D:\CProjects\Gamma\Gamma\bin\Release\de\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\bin\Release\es\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\bin\Release\ja\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\bin\Release\ru\DevExpress.Data.v16.1.resources.dll
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ComplectedPalletsView.g.cs
-D:\CProjects\Gamma\Gamma\obj\Release\Views\ComplectedPalletsView.baml

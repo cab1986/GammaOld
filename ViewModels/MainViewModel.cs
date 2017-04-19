@@ -112,7 +112,6 @@ namespace Gamma.ViewModels
                 OpenPlaceZonesCommand = new DelegateCommand(OpenPlaceZones);
                 ShowProgrammInfoCommand = new DelegateCommand(ShowProgrammInfo);
                 OpenQualityReportPMCommand = new DelegateCommand(MessageManager.OpenQualityReportPM);
-                ComplectPalletCommand = new DelegateCommand(ComplectPallet, () => DB.HaveWriteAccess("Pallets"));
                 OpenHelpCommand = new DelegateCommand(() => Process.Start("http://stgwiki.sgbi.local/index.php/Gamma"));
                 OpenDocWithdrawalsCommand = new DelegateCommand(() => CurrentView = new DocWithdrawalsViewModel());
                 OpenComplectedPalletsCommand = new DelegateCommand(() => CurrentView = new ComplectedPalletsViewModel());
@@ -159,6 +158,8 @@ namespace Gamma.ViewModels
                                                Command = PrintReportCommand
                                            }));
         }
+
+        public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 
         private void OpenInventarisations()
         {
@@ -438,7 +439,6 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenInventarisationsCommand { get; set; }
         public DelegateCommand OpenHelpCommand { get; set; }
         public DelegateCommand OpenDocWithdrawalsCommand { get; set; }
-        public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 
         public List<ReportItem> Reports { get; set; }
 
@@ -456,11 +456,6 @@ namespace Gamma.ViewModels
             public DelegateCommand<Guid> Command { get; set; }
             public Guid ReportId { get; set; }
             public string ReportName { get; set; }
-        }
-
-        private void ComplectPallet()
-        {
-            MessageManager.CreateNewProduct(DocProductKinds.DocProductPallet);
         }
 
     }

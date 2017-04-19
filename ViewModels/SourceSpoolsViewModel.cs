@@ -529,12 +529,14 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Unwinder3Nomenclature");
             }
         }
+
         private string ProductNomenclature(Guid? productid)
         {
             return (from pspool in GammaBase.ProductSpools
                     where pspool.ProductID == productid
                     select "№" + pspool.Products.Number + " " + pspool.C1CNomenclature.Name + " " + pspool.C1CCharacteristics.Name).FirstOrDefault();
         }
+
         private SourceSpools SourceSpools { get; set; }
 
         private bool CheckSpoolIsUsed(Guid? productId)

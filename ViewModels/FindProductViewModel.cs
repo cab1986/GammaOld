@@ -5,9 +5,10 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using Gamma.Common;
-using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
@@ -138,9 +139,31 @@ namespace Gamma.ViewModels
         public DelegateCommand FindCommand { get; private set; }
         public DelegateCommand ResetSearchCommand { get; private set; }
 
-        private void Find(bool isFromScanner)
+        private async void Find(bool isFromScanner)
         {
-            UIServices.SetBusyState();
+            if (IsSearching) return;
+            IsSearching = !IsSearching;
+            Mouse.OverrideCursor = Cursors.Wait;
+            await Task.Factory.StartNew(() => AsyncFind(isFromScanner)).ContinueWith((t) => Application.Current.Dispatcher.BeginInvoke(new Action(
+                () =>
+                {
+                    Mouse.OverrideCursor = null;
+                    IsSearching = false;
+                })));
+            if (FoundProducts.Count == 0 && ButtonPanelVisible)
+            {
+                MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
+            }
+            if (FoundProducts.Count != 1 || !ButtonPanelVisible) return;
+            SelectedProduct = FoundProducts.First();
+            ChooseProduct();
+        }
+
+        private bool IsSearching { get; set; }
+
+
+        private void AsyncFind(bool isFromScanner)
+        {
             using (var gammaBase = DB.GammaDb)
             {
                 if (isFromScanner)
@@ -234,20 +257,6 @@ namespace Gamma.ViewModels
                         );
                 }
             }
-            if (FoundProducts.Count == 0 && ButtonPanelVisible)
-            {
-                MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
-            }
-            if (FoundProducts.Count != 1 || !ButtonPanelVisible) return;
-            SelectedProduct = FoundProducts.First();
-            ChooseProduct();
-//            var product = FoundProducts.First();
-            //if (product.InGroupPack)
-            //{
-            //    if (!UnpackGroupPack(product.ProductID)) return;
-            //}
-            //Messenger.Default.Send(new ChoosenProductMessage { ProductID = FoundProducts.First().ProductID });
-            //CloseWindow();
         }   
         
 

@@ -2,6 +2,7 @@
 FD:\CProjects\Gamma\Gamma\App.xaml;;
 FD:\CProjects\Gamma\Gamma\Dialogs\AddNomenclatureToPalletDialog.xaml;;
 FD:\CProjects\Gamma\Gamma\Dialogs\SetBaleWeightDialog.xaml;;
+FD:\CProjects\Gamma\Gamma\Views\ComplectedPalletsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocBrokeListView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocBrokeView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\DocCloseShiftBalerGridView.xaml;;
@@ -51,5 +52,4 @@ FD:\CProjects\Gamma\Gamma\Views\ProductionTasksSGBView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\ProductionTaskBatchView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\SourceSpoolsView.xaml;;
 FD:\CProjects\Gamma\Gamma\Views\WarehousePersonsView.xaml;;
-FD:\CProjects\Gamma\Gamma\Views\ComplectedPalletsView.xaml;;
 
