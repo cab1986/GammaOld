@@ -42,7 +42,8 @@ namespace Gamma.ViewModels
                 ProductionTaskID = (Guid)productionTaskID;
                 GetProductionTaskRwInfo(ProductionTaskID);
             }
-            CreateSpoolsCommand = new DelegateCommand(CreateSpools, CanCreateSpools);EditSpoolCommand = new DelegateCommand(EditSpool);
+            CreateSpoolsCommand = new DelegateCommand(CreateSpools, CanCreateSpools);
+            EditSpoolCommand = new DelegateCommand(EditSpool);
             Bars.Add(ReportManager.GetReportBar("Unload", VMID));
             if (newProduct)  // Если новый съем то получаем раскрой из задания DocProduction и инициализруем коллекцию тамбуров съема
             {
@@ -131,16 +132,28 @@ namespace Gamma.ViewModels
         private void CreateSpools()
         {
             UIServices.SetBusyState();
-            UnloadSpools.Clear();
-            UnloadSpools =
-                new ObservableCollection<PaperBase>(from us in GammaBase.CreateUnloadSpools(DocID, ProductionTaskID, Diameter, BreakNumber, Length)
-                select  new PaperBase()
+            using (var gammaBase = DB.GammaDb)
+            {
+                if (UnloadSpools.Count > 0 &&
+                    gammaBase.Docs.Any(d => d.DocTypeID == (int) DocTypes.DocProduction &&
+                                            d.Date > gammaBase.Docs.FirstOrDefault(dc => dc.DocID == DocID).Date))
                 {
-                    DocID = (Guid)us.DocID,
-                    ProductID = (Guid)us.ProductID,
-                    Number = us.Number,
-                    Nomenclature = us.NomenclatureName
-                });
+                    MessageBox.Show(
+                        "Есть съем произведенный позднее, редактирование запрещено. Редактируйте каждый рулон отдельно или удалите некорректный съем и создайте новый",
+                        "Ошибка создания рулонов", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    return;
+                }
+                UnloadSpools.Clear();
+                UnloadSpools =
+                    new ObservableCollection<PaperBase>(from us in gammaBase.CreateUnloadSpools(DocID, ProductionTaskID, Diameter, BreakNumber, Length)
+                        select new PaperBase()
+                        {
+                            DocID = (Guid)us.DocID,
+                            ProductID = (Guid)us.ProductID,
+                            Number = us.Number,
+                            Nomenclature = us.NomenclatureName
+                        });
+            }
         }
 
         private bool UnloadSpoolsSaved { get; set; }

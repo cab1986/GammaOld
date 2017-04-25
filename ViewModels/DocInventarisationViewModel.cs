@@ -16,6 +16,7 @@ namespace Gamma.ViewModels
         public DocInventarisationViewModel(Guid docId)
         {
             DocId = docId;
+            Bars.Add(ReportManager.GetReportBar("DocInventarisation", VMID));
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocInventarisationProducts).Include(d => d.Persons).Include(d => d.Places)
@@ -52,9 +53,10 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 
-        private void PrintReport(PrintReportMessage obj)
+        private void PrintReport(PrintReportMessage msg)
         {
-            throw new NotImplementedException();
+            if (msg.VMID != VMID) return;
+            ReportManager.PrintReport(msg.ReportID, DocId);
         }
 
         private Guid DocId { get; set; }
