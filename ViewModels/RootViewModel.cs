@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
 
         protected void CloseWindow()
         {
-            DB.RollBack();
+//            DB.RollBack();
             CloseSignal = true;
             Cleanup();
         }
@@ -51,7 +51,7 @@ namespace Gamma.ViewModels
 
         public DelegateCommand CloseCommand { get; private set; }
 
-        protected void Cleanup()
+        private void Cleanup()
         {
             Messenger.Default.Unregister(this);
 //            GammaBase?.Dispose();

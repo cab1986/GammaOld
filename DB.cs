@@ -5,12 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core.EntityClient;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
-using DevExpress.Mvvm;
 using Gamma.Entities;
 using Gamma.Models;
 
@@ -21,9 +19,9 @@ namespace Gamma
         /// <summary>
         /// Многократноиспользуемый контекст БД
         /// </summary>
-        private static GammaEntities GammaBase { get; set; }
+        //        private static GammaEntities GammaBase { get; set; }
 
-        private static EntityConnection Connection { get; set; }
+        //        private static EntityConnection Connection { get; set; }
 
         /// <summary>
         /// Новый экземпляр контекста БД
@@ -32,27 +30,20 @@ namespace Gamma
         {
             get
             {
-                GammaEntities context = null;
-                if (Connection == null)
-                {
-                    Connection = new EntityConnection(GammaSettings.ConnectionString);
-                    Connection.Open();
-                }
-                context = new GammaEntities(Connection);
+                var context = new GammaEntities(GammaSettings.ConnectionString);
                 context.Database.CommandTimeout = 300;
                 return context;
             }
         }
 
 
-
         public static bool Initialize()
         {
-            GammaBase = new GammaEntities(GammaSettings.ConnectionString);
-            GammaBase.Database.CommandTimeout = 300;      
+//            GammaBase = new GammaEntities(GammaSettings.ConnectionString);
+//            GammaBase.Database.CommandTimeout = 300;      
             try
             {
-                GammaBase.Database.Connection.Open();
+//                GammaBase.Database.Connection.Open();
                 WorkSession.UserID = CurrentUserID;
                 return true;
             }
@@ -62,7 +53,7 @@ namespace Gamma
                 return false;
             }
         }
-
+/*
         public static void RollBack()
         {
             if (!HaveChanges()) return;
@@ -72,6 +63,8 @@ namespace Gamma
             GammaBase.Database.Connection.Open();
             Messenger.Default.Send(new BaseReconnectedMessage());
         }
+*/
+/*
         public static bool HaveChanges()
         {
             if (GammaBase == null) return false;
@@ -80,6 +73,8 @@ namespace Gamma
                                               || e.State == EntityState.Modified
                                               || e.State == EntityState.Deleted);
         }
+*/
+
         public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? GammaDb;
@@ -105,7 +100,7 @@ namespace Gamma
                 }
         */
 
-
+/*
         public static string GetNextDocNumber(DocTypes docType, int placeId, int shiftId, GammaEntities gammaBase = null)
         {
             return
@@ -114,6 +109,7 @@ namespace Gamma
                     .AsEnumerable()
                     .FirstOrDefault();
         }
+*/
 
         public static string GetProductNomenclatureNameBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
         {
@@ -143,6 +139,8 @@ namespace Gamma
         {
             return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetUnwindersCount({placeID})").AsEnumerable().First();
         }
+
+
         public static decimal GetCoreWeight(Guid characteristicID, GammaEntities gammaBase = null)
         {
             return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetCoreWeight('{characteristicID}')").AsEnumerable().First();
@@ -183,13 +181,7 @@ namespace Gamma
                     .First();
         }
 
-        public static ObservableCollection<string> BaseTables
-        { 
-            get
-            {
-                return new ObservableCollection<string>(GammaDb.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
-            }
-        }
+        public static ObservableCollection<string> BaseTables => new ObservableCollection<string>(GammaDb.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
 
         public static void UploadDocCloseShiftTo1C(Guid docId, GammaEntities gammaBase = null)
         {
@@ -200,7 +192,7 @@ namespace Gamma
                 {
                     Value = docId
                 };
-                string sql = $"exec [dbo].[UploadDocCloseShiftReportTo1C] @DocID";
+                const string sql = "exec [dbo].[UploadDocCloseShiftReportTo1C] @DocID";
                 gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
             }
             catch (Exception)

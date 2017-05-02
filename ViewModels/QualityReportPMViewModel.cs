@@ -131,7 +131,8 @@ namespace Gamma.ViewModels
                     doc.DocBroke.DocBrokeProducts.Add(new DocBrokeProducts
                     {
                         ProductID = productId,
-                        DocID = doc.DocID
+                        DocID = doc.DocID,
+                        Quantity = QualityReportItems.First(item => item.ProductId == productId).Weight
                     });
                 }
                 gammaBase.Docs.Add(doc);

@@ -19,7 +19,7 @@ namespace Gamma.ViewModels
 {
     public class DocBrokeViewModel: SaveImplementedViewModel, IBarImplemented, ICheckedAccess
     {
-        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false) : base()
+        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false)
         {
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             DocId = docBrokeId;
@@ -128,7 +128,6 @@ namespace Gamma.ViewModels
         /// <param name="docId">ID документа акта о браке</param>
         /// <param name="brokeProducts">Список продукции</param>
         /// <param name="brokeDecisionProducts">Список решений по продукции</param>
-        /// <param name="gammaBase">Контекст БД</param>
         private void AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ICollection<BrokeDecisionProduct> brokeDecisionProducts)
         {
             using (var gammaBase = DB.GammaDb)
