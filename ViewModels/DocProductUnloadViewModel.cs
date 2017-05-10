@@ -134,9 +134,9 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {
-                if (UnloadSpools.Count > 0 &&
-                    gammaBase.Docs.Any(d => d.DocTypeID == (int) DocTypes.DocProduction &&
-                                            d.Date > gammaBase.Docs.FirstOrDefault(dc => dc.DocID == DocID).Date))
+                if (gammaBase.Docs.Any(d => d.DocTypeID == (int) DocTypes.DocProduction &&
+                                            d.Date > gammaBase.Docs.FirstOrDefault(dc => dc.DocID == DocID).Date &&
+                                            d.PlaceID == gammaBase.Docs.FirstOrDefault(dc => dc.DocID == DocID).PlaceID))
                 {
                     MessageBox.Show(
                         "Есть съем произведенный позднее, редактирование запрещено. Редактируйте каждый рулон отдельно или удалите некорректный съем и создайте новый",
