@@ -10,8 +10,10 @@
         xmlns:viewModels="clr-namespace:Gamma.ViewModels"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:common="clr-namespace:Gamma.Common"
         mc:Ignorable="d"
-        Title="DocWithdrawalView" Height="500" Width="700"
+        common:WindowSettings.Save="True"
+        Title="Списание" Height="500" Width="700"
                   d:DataContext="{d:DesignInstance Type=viewModels:DocWithdrawalViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <dxlc:LayoutControl Orientation="Horizontal" >
@@ -41,7 +43,7 @@
                             <dxg:GridColumn FieldName="Quantity" Header="Кол-во">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit EditValue="{Binding RowData.Row.Quantity}" IsReadOnly="{Binding RowData.Row.CompleteWithdrawal}" MaxValue="{Binding RowData.Row.MaxQuantity}"/>
+                                        <dxe:SpinEdit EditValue="{Binding RowData.Row.Quantity}" IsReadOnly="True" MaxValue="{Binding RowData.Row.MaxQuantity}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
