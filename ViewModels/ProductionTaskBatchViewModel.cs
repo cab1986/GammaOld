@@ -430,6 +430,22 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
+	            var productionTask =
+		            gammaBase.ProductionTasks.FirstOrDefault(
+			            p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
+			                 p.PlaceID == WorkSession.PlaceID);
+	            if (productionTask == null)
+	            {
+		            return;
+	            }
+	            using (var client = new GammaService.PrinterServiceClient())
+				{
+					if (!client.ActivateProductionTask(productionTask.ProductionTaskID))
+					{
+						MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор", MessageBoxButton.OK,
+							MessageBoxImage.Warning);
+					}
+	            }
             }
         }
 

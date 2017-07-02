@@ -761,6 +761,11 @@
     <Compile Include="ReportManager.cs" />
     <Compile Include="Scales.cs" />
     <Compile Include="Models\PaperBase.cs" />
+    <Compile Include="Service References\GammaService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="SQLGuidUtil.cs" />
     <Compile Include="UIAuthBehavior.cs" />
     <Compile Include="ValidationExceptionBehavior.cs" />
@@ -1292,13 +1297,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Service References\GammaService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\GammaService\configuration.svcinfo" />
+    <None Include="Service References\GammaService\configuration91.svcinfo" />
+    <None Include="Service References\GammaService\item.disco" />
     <EmbeddedResource Include="Properties\Licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="Entities\GammaModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>GammaModel.Designer.cs</LastGenOutput>
@@ -1320,6 +1334,13 @@
     <Content Include="Russian.frl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Service References\GammaService\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GammaService\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\GammaService\PrinterService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -1364,7 +1385,12 @@
       <LastGenOutput>GammaModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\GammaService\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
