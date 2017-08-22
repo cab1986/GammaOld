@@ -35,6 +35,8 @@ namespace Gamma.Entities
             this.ProductSpools = new HashSet<ProductSpools>();
             this.ProductBales = new HashSet<ProductBales>();
             this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
+            this.C1CDocComplectationNomenclature = new HashSet<C1CDocComplectationNomenclature>();
+            this.C1CDocComplectationNomenclature1 = new HashSet<C1CDocComplectationNomenclature>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -45,6 +47,7 @@ namespace Gamma.Entities
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public string PrintName { get; set; }
+        public string PackageLabelPath { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }
@@ -85,5 +88,9 @@ namespace Gamma.Entities
         public virtual ICollection<ProductBales> ProductBales { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature1 { get; set; }
     }
 }

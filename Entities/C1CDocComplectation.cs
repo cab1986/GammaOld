@@ -12,30 +12,21 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocProduction
+    public partial class C1CDocComplectation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocProduction()
+        public C1CDocComplectation()
         {
-            this.DocWithdrawal = new HashSet<DocWithdrawal>();
-            this.DocProductionProducts = new HashSet<DocProductionProducts>();
+            this.C1CDocComplectationNomenclature = new HashSet<C1CDocComplectationNomenclature>();
             this.DocComplectation = new HashSet<DocComplectation>();
         }
     
-        public System.Guid DocID { get; set; }
-        public Nullable<System.Guid> ProductionTaskID { get; set; }
-        public Nullable<int> InPlaceID { get; set; }
-        public Nullable<bool> HasWarnings { get; set; }
-        public Nullable<System.Guid> DocOrderId { get; set; }
+        public System.Guid C1CDocComplectationID { get; set; }
+        public string C1CCode { get; set; }
+        public Nullable<System.DateTime> Date { get; set; }
     
-        public virtual Docs Docs { get; set; }
-        public virtual ProductionTasks ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
-        public virtual Places Places { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
-        public virtual DocShipmentOrders DocShipmentOrders { get; set; }
+        public virtual ICollection<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocComplectation> DocComplectation { get; set; }
     }

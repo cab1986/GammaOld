@@ -128,6 +128,9 @@ namespace Gamma.Entities
         public virtual DbSet<ProductSpools> ProductSpools { get; set; }
         public virtual DbSet<ProductBales> ProductBales { get; set; }
         public virtual DbSet<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
+        public virtual DbSet<C1CDocComplectation> C1CDocComplectation { get; set; }
+        public virtual DbSet<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
+        public virtual DbSet<DocComplectation> DocComplectation { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
