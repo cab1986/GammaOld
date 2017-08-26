@@ -131,6 +131,7 @@ namespace Gamma.Entities
         public virtual DbSet<C1CDocComplectation> C1CDocComplectation { get; set; }
         public virtual DbSet<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
         public virtual DbSet<DocComplectation> DocComplectation { get; set; }
+        public virtual DbSet<v1CDocComplectationPositions> v1CDocComplectationPositions { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {

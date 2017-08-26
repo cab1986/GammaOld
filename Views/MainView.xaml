@@ -45,6 +45,9 @@
         <DataTemplate DataType="{x:Type vm:DocShipmentOrdersViewModel}">
             <views:DocShipmentOrdersView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocComplectationsListViewModel}">
+            <views:DocComplectationsListView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocMovementsViewModel}">
             <views:DocMovementsView />
         </DataTemplate>
@@ -108,6 +111,7 @@
                         <dxb:BarButtonItem Content="Зонирование складов" Command="{Binding OpenPlaceZonesCommand}" />
                         <dxb:BarButtonItem Content="Скомплектованные паллеты" Command="{Binding OpenComplectedPalletsCommand}" />
                         <dxb:BarButtonItem Content="Инвентаризации" Command="{Binding OpenInventarisationsCommand}" />
+                        <dxb:BarButtonItem Content="Документы комплектации" Command="{Binding OpenDocComplectationsCommand}" />
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Номенклатура">
                         <dxb:BarButtonItem Content="Номенклатура СГИ" Command="{Binding EditPlaceGroupNomenclatureCommand}" CommandParameter="2"/>

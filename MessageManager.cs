@@ -85,6 +85,16 @@ namespace Gamma
         public Guid DocId { get; private set; }
     }
 
+	public class EditDocComplectationMessage
+	{
+		public EditDocComplectationMessage(Guid docId)
+		{
+			DocId = docId;
+		}
+
+		public Guid DocId { get; private set; }
+	}
+
     public class NomenclatureEditMessage
     {
         public NomenclatureEditMessage(Guid nomenclatureId)
@@ -471,6 +481,11 @@ namespace Gamma
         {
             Messenger.Default.Send(new EditDocMovementMessage(docId));
         }
+
+	    public static void OpenDocComplectation(Guid docId)
+	    {
+		    Messenger.Default.Send(new EditDocComplectationMessage(docId));
+	    }
         
         public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, bool allowChangeProductKind = false)
         {

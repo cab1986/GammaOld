@@ -124,7 +124,8 @@ namespace Gamma
         DocBroke,
         DocMovementOrder,
         DocWarehouseAccept,
-        DocInventarisation
+        DocInventarisation,
+		DocComplectation
     }
     public enum PermissionMark
     {

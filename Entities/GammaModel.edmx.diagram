@@ -302,6 +302,7 @@
         <AssociationConnector Association="GammaModel.FK_DocComplectation_DocProduction" />
         <AssociationConnector Association="GammaModel.FK_DocComplectation_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocComplectation_DocWithdrawal" />
+        <EntityTypeShape EntityType="GammaModel.v1CDocComplectationPositions" Width="1.5" PointX="13.375" PointY="8.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

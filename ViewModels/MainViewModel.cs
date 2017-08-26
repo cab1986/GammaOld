@@ -115,6 +115,7 @@ namespace Gamma.ViewModels
                 OpenHelpCommand = new DelegateCommand(() => Process.Start("http://stgwiki.sgbi.local/index.php/Gamma"));
                 OpenDocWithdrawalsCommand = new DelegateCommand(() => CurrentView = new DocWithdrawalsViewModel());
                 OpenComplectedPalletsCommand = new DelegateCommand(() => CurrentView = new ComplectedPalletsViewModel());
+				OpenDocComplectationsCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel());
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -160,6 +161,8 @@ namespace Gamma.ViewModels
         }
 
         public DelegateCommand OpenComplectedPalletsCommand { get; set; }
+
+		public DelegateCommand OpenDocComplectationsCommand { get; private set; }
 
         private void OpenInventarisations()
         {

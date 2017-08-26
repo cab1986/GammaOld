@@ -68,10 +68,10 @@
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>3C57A0A18CA3E675A723B0EB245F201A91BB8EEE</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>097A306F9078DEF80F4F97766F35B4C16CE9E9C3</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Gamma_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Gamma_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -85,6 +85,12 @@
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>GammaKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Data.v16.1, Version=16.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
@@ -255,6 +261,12 @@
     <Compile Include="Entities\C1CContractors.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\C1CDocComplectation.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\C1CDocComplectationNomenclature.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\C1CDocInternalOrders.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -361,6 +373,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocCloseShiftWastes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocComplectation.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocInProducts.cs">
@@ -645,6 +660,9 @@
     <Compile Include="Entities\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\v1CDocComplectationPositions.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\v1COrderGoods.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -689,6 +707,7 @@
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Models\DocComplectationListItem.cs" />
     <Compile Include="Models\DocInventarisation.cs" />
     <Compile Include="Models\DocWithdrawal.cs" />
     <Compile Include="Models\InventarisationItem.cs" />
@@ -783,6 +802,7 @@
     <Compile Include="ViewModels\DocCloseShiftRwGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
+    <Compile Include="ViewModels\DocComplectationsListViewModel.cs" />
     <Compile Include="ViewModels\DocInventarisationsViewModel.cs" />
     <Compile Include="ViewModels\DocInventarisationViewModel.cs" />
     <Compile Include="ViewModels\DocMovementsViewModel.cs" />
@@ -879,6 +899,9 @@
     </Compile>
     <Compile Include="Views\DocCloseShiftWRGridView.xaml.cs">
       <DependentUpon>DocCloseShiftWRGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocComplectationsListView.xaml.cs">
+      <DependentUpon>DocComplectationsListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocInventarisationsView.xaml.cs">
       <DependentUpon>DocInventarisationsView.xaml</DependentUpon>
@@ -1098,6 +1121,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DocComplectationsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DocInventarisationsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1297,6 +1324,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="GammaKey.snk" />
+    <None Include="Gamma_1_TemporaryKey.pfx" />
     <None Include="Service References\GammaService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

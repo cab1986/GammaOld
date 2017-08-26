@@ -1130,6 +1130,20 @@
           <Property Name="MobileComputer" Type="bit" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1CDocComplectationPositions" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="v1CDocComplectationPositions">
+          <Key>
+            <PropertyRef Name="1CDocComplectationID" />
+          </Key>
+          <Property Name="1CDocComplectationID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Nomenclature" Type="varchar" MaxLength="8000" />
+          <Property Name="OldCharacteristic" Type="varchar" MaxLength="255" />
+          <Property Name="NewCharacteristic" Type="varchar" MaxLength="255" />
+          <Property Name="DocQuantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="Withdraw" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrderGoods" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="v1COrderGoods">
           <Key>
@@ -4121,6 +4135,17 @@
           <EntitySet Name="UserPlaces" EntityType="Self.UserPlaces" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v1CDocComplectationPositions].[1CDocComplectationID] AS [1CDocComplectationID], 
+    [v1CDocComplectationPositions].[Nomenclature] AS [Nomenclature], 
+    [v1CDocComplectationPositions].[OldCharacteristic] AS [OldCharacteristic], 
+    [v1CDocComplectationPositions].[NewCharacteristic] AS [NewCharacteristic], 
+    [v1CDocComplectationPositions].[DocQuantity] AS [DocQuantity], 
+    [v1CDocComplectationPositions].[Withdraw] AS [Withdraw], 
+    [v1CDocComplectationPositions].[Complected] AS [Complected]
+    FROM [dbo].[v1CDocComplectationPositions] AS [v1CDocComplectationPositions]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="v1COrderGoods" EntityType="Self.v1COrderGoods" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [v1COrderGoods].[DocOrderID] AS [DocOrderID], 
@@ -6830,6 +6855,7 @@
             <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
             <End Role="DocComplectation" EntitySet="DocComplectation" />
           </AssociationSet>
+          <EntitySet Name="v1CDocComplectationPositions" EntityType="GammaModel.v1CDocComplectationPositions" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10419,6 +10445,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="v1CDocComplectationPositions">
+          <Key>
+            <PropertyRef Name="C1CDocComplectationID" />
+          </Key>
+          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
+          <Property Name="Nomenclature" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="OldCharacteristic" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NewCharacteristic" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="DocQuantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="Withdraw" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="Complected" Type="Decimal" Precision="38" Scale="5" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12205,6 +12243,19 @@
                 <ScalarProperty Name="DocWithdrawalID" ColumnName="DocWithdrawalID" />
                 <ScalarProperty Name="DocProductionID" ColumnName="DocProductionID" />
                 <ScalarProperty Name="DocComplectationID" ColumnName="DocComplectationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v1CDocComplectationPositions">
+            <EntityTypeMapping TypeName="GammaModel.v1CDocComplectationPositions">
+              <MappingFragment StoreEntitySet="v1CDocComplectationPositions">
+                <ScalarProperty Name="Complected" ColumnName="Complected" />
+                <ScalarProperty Name="Withdraw" ColumnName="Withdraw" />
+                <ScalarProperty Name="DocQuantity" ColumnName="DocQuantity" />
+                <ScalarProperty Name="NewCharacteristic" ColumnName="NewCharacteristic" />
+                <ScalarProperty Name="OldCharacteristic" ColumnName="OldCharacteristic" />
+                <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
