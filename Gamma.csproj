@@ -235,6 +235,7 @@
     <Compile Include="Attributes\CompareAttribute.cs" />
     <Compile Include="Attributes\UIAuthAttribute.cs" />
     <Compile Include="BarCommand.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Dialogs\AddNomenclatureToPalletDialog.xaml.cs">
       <DependentUpon>AddNomenclatureToPalletDialog.xaml</DependentUpon>
     </Compile>
@@ -703,6 +704,7 @@
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\RECT.cs" />
+    <Compile Include="Models\ComplectationItem.cs" />
     <Compile Include="Models\ComplectedPallet.cs" />
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
@@ -720,6 +722,7 @@
     <Compile Include="Models\NomenclatureBarcode.cs" />
     <Compile Include="Models\Pallet.cs" />
     <Compile Include="Models\PlaceZone.cs" />
+    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductionTaskBalerGridItem.cs" />
     <Compile Include="Models\ProductPalletItem.cs" />
     <Compile Include="Models\ProductRelation.cs" />
@@ -803,6 +806,7 @@
     <Compile Include="ViewModels\DocCloseShiftUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWRGridViewModel.cs" />
     <Compile Include="ViewModels\DocComplectationsListViewModel.cs" />
+    <Compile Include="ViewModels\DocComplectationViewModel.cs" />
     <Compile Include="ViewModels\DocInventarisationsViewModel.cs" />
     <Compile Include="ViewModels\DocInventarisationViewModel.cs" />
     <Compile Include="ViewModels\DocMovementsViewModel.cs" />
@@ -902,6 +906,9 @@
     </Compile>
     <Compile Include="Views\DocComplectationsListView.xaml.cs">
       <DependentUpon>DocComplectationsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocComplectationView.xaml.cs">
+      <DependentUpon>DocComplectationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocInventarisationsView.xaml.cs">
       <DependentUpon>DocInventarisationsView.xaml</DependentUpon>
@@ -1122,6 +1129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocComplectationsListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocComplectationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1423,7 +1434,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

@@ -28,6 +28,7 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Register<CloseMessage>(this, msg => CloseSignal = true);
             Messenger.Default.Register<OpenProductionTaskBatchMessage>(this, OpenProductionTaskBatch);
+            Messenger.Default.Register<EditDocComplectationMessage>(this, OpenDocComplectation);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
             if (WorkSession.IsProductionPlace) // Если производственный передел
@@ -235,6 +236,11 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             CurrentView = new DocBrokeListViewModel();
+        }
+
+        private void OpenDocComplectation(EditDocComplectationMessage msg)
+        {
+            CurrentView = new DocComplectationViewModel(msg.DocId);
         }
 
         private void OpenPlaceProducts(int placeID)

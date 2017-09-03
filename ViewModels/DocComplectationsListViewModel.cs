@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using Gamma.Controllers;
+using Gamma.Entities;
 using Gamma.Models;
 
 namespace Gamma.ViewModels
@@ -10,6 +12,8 @@ namespace Gamma.ViewModels
 	public class DocComplectationsListViewModel : RootViewModel
 	{
 		#region Fields
+
+		private DocumentController documentController = new DocumentController();
 
 		private int _intervalId;
 
@@ -76,7 +80,18 @@ namespace Gamma.ViewModels
 			}
 			if (selectedDocComplectation.DocId == null)
 			{
-				selectedDocComplectation.DocId = SqlGuidUtil.NewSequentialid();
+				SelectedDocComplectation.DocId = SqlGuidUtil.NewSequentialid();
+				var doc = documentController.ConstructDoc((Guid)SelectedDocComplectation.DocId, DocTypes.DocComplectation);
+				doc.DocComplectation = new DocComplectation
+				{
+					C1CDocComplectationID = SelectedDocComplectation.Doc1CId,
+					DocComplectationID = (Guid) SelectedDocComplectation.DocId
+				};
+				using (var db = DB.GammaDb)
+				{
+					db.Docs.Add(doc);
+					db.SaveChanges();
+				}
 			}
 			MessageManager.OpenDocComplectation((Guid)selectedDocComplectation.DocId);
 		}

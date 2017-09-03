@@ -57,6 +57,9 @@
         <DataTemplate DataType="{x:Type vm:DocWithdrawalsViewModel}">
             <views:DocWithdrawalsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocComplectationViewModel}">
+            <views:DocComplectationView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
