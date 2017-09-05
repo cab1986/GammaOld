@@ -65,7 +65,6 @@ namespace Gamma.ViewModels
 					}
 					if (DocWithdrawalId != null)
 					{
-
 						foreach (var product in context.DocWithdrawalProducts.Include(dp => dp.Products)
 							.Where(dp => dp.DocID == DocWithdrawalId
 							             && dp.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
@@ -131,11 +130,24 @@ namespace Gamma.ViewModels
 					MessageBox.Show("Номенклатура найденной паллеты не совпадает с документом");
 					return;
 				}
+				bool withdrawResult = false;
 				if (DocWithdrawalId == null)
 				{
 					DocWithdrawalId = SqlGuidUtil.NewSequentialid();
+					if (documentController.WithdrawProduct(pallet.ProductID, (Guid) DocWithdrawalId))
+					{
+						var complectation = context.DocComplectation.First(d => d.DocComplectationID == DocId);
+						complectation.DocWithdrawalID = DocWithdrawalId;
+						context.SaveChanges();
+					}
+					else
+					{
+						DocWithdrawalId = null;
+						MessageBox.Show("Не удалось списать паллету. Ошибка в базе.");
+						return;
+					}
 				}
-				if (!documentController.WithdrawProduct(pallet.ProductID, (Guid)DocWithdrawalId))
+				else if (!documentController.WithdrawProduct(pallet.ProductID, (Guid)DocWithdrawalId))
 				{
 					MessageBox.Show("Не удалось списать паллету. Ошибка в базе.");
 					return;

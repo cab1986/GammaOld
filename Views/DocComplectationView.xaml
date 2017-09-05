@@ -44,8 +44,8 @@
                             <dxg:TableView AllowEditing="False" />
                         </dxg:GridControl.View>
                         <dxg:GridColumn Header="Номенклатура" FieldName="OldNomenclature" />
-                        <dxg:GridColumn Header="ГУ на паллете" FieldName="OldNomenclatureGroupPacks" />
-                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="PalletsToUnpack" />
+                        <dxg:GridColumn Header="ГУ на паллете" FieldName="OldGroupPacksInPallet" />
+                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="OldPalletQuantity" />
                         <dxg:GridColumn Header="Кол-во паллет распаковано">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
@@ -54,7 +54,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding Path=RowData.Row.OldPalletQuantity, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding Path=RowData.Row.NumUnpackedPallets, Mode=OneWay}" IsReadOnly="True"/>
                                         <ProgressBar Width="20"  Grid.Column="1" Minimum="0" Maximum="{Binding Path=RowData.Row.Quantity}" 
                                                      Value="{Binding Path=RowData.Row.UnpackedQuantity, Mode=OneWay}"
                                                      Orientation="Vertical">
