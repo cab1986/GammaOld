@@ -67,7 +67,7 @@ namespace Gamma.Models
 		private void PackedChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			RaisePropertyChanged(() => PackedQuantity);
-			RaisePropertyChanged(() => NumComplectedPallets);
+			RaisePropertyChanged(() => NumPackedPallets);
 		}
 
 		private void UnpackedChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -122,9 +122,9 @@ namespace Gamma.Models
 			get { return OldPalletQuantity > 0 ? UnpackedQuantity / oldPalletCoefficient : 0; }
 		}
 
-		public decimal NumComplectedPallets
+		public decimal NumPackedPallets
 		{
-			get { return NewPalletQuantity > 0 ? UnpackedQuantity / newPalletCoefficient : 0; }
+			get { return NewPalletQuantity > 0 ? PackedQuantity / newPalletCoefficient : 0; }
 		}
 	}
 }

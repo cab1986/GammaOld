@@ -7,6 +7,7 @@
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocComplectationViewModel}}">
@@ -28,24 +29,50 @@
                 <DockPanel Grid.Column="0" LastChildFill="True">
                     <TextBlock DockPanel.Dock="Top" Text="РАСФОРМИРОВАТЬ ПАЛЛЕТУ" FontSize="20"
                                HorizontalAlignment="Center" />
-                    <Grid DockPanel.Dock="Top">
+                    <Grid DockPanel.Dock="Top" Height="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Command="{Binding UnpackCommand}" Width="60">
-                            <TextBlock Text="Расформировать паллету" TextWrapping="WrapWithOverflow" />
+                        <Button Command="{Binding UnpackCommand}" Width="140">
+                            <TextBlock Text="Расформировать паллету" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" />
                         </Button>
                         <TextBox Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                                  Text="{Binding Barcode, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                     <dxg:GridControl ItemsSource="{Binding ComplectationItems}">
+                        <dxg:GridControl.Resources>
+                            <DataTemplate x:Key="NumberColumn">
+                                <dxe:TextEdit Name="PART_Editor" VerticalAlignment="Stretch" FontSize="20" FontWeight="Bold" DisplayFormatString="0.#"/>
+                            </DataTemplate>
+                        </dxg:GridControl.Resources>
                         <dxg:GridControl.View>
-                            <dxg:TableView AllowEditing="False" />
+                            <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True" RowMinHeight="60" AllowGrouping="False" AllowDateTimeGroupIntervalMenu="False" IsGroupPanelMenuEnabled="False" IsGroupFooterMenuEnabled="False" IsGroupRowMenuEnabled="False" ShowGroupPanel="False" />
                         </dxg:GridControl.View>
-                        <dxg:GridColumn Header="Номенклатура" FieldName="OldNomenclature" />
-                        <dxg:GridColumn Header="ГУ на паллете" FieldName="OldGroupPacksInPallet" />
-                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="OldPalletQuantity" />
+                        <dxg:GridControl.DetailDescriptor>
+                            <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding UnpackedPallets}">
+                                <dxg:GridControl>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False"/>
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn Header="Номер" FieldName="Number"/>
+                                    <dxg:GridColumn Header="Количество" FieldName="Quantity">
+                                        <dxg:GridColumn.EditSettings>
+                                            <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                        </dxg:GridColumn.EditSettings>
+                                    </dxg:GridColumn>
+                                </dxg:GridControl>
+                            </dxg:DataControlDetailDescriptor>
+                        </dxg:GridControl.DetailDescriptor>
+                        <dxg:GridColumn Header="Номенклатура" FieldName="OldNomenclature">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <dxe:TextEdit Name="PART_Editor" TextWrapping="WrapWithOverflow" />
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
+                            <dxg:GridColumn Header="ГУ на паллете" FieldName="OldGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" />
+                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="OldPalletQuantity" CellTemplate="{StaticResource NumberColumn}" />
                         <dxg:GridColumn Header="Кол-во паллет распаковано">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
@@ -54,10 +81,11 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding Path=RowData.Row.NumUnpackedPallets, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding Path=RowData.Row.NumUnpackedPallets, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Stretch"
+                                                 FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"/>
                                         <ProgressBar Width="20"  Grid.Column="1" Minimum="0" Maximum="{Binding Path=RowData.Row.Quantity}" 
                                                      Value="{Binding Path=RowData.Row.UnpackedQuantity, Mode=OneWay}"
-                                                     Orientation="Vertical">
+                                                     Orientation="Vertical" Foreground="ForestGreen">
                                         </ProgressBar>
                                     </Grid>
                                 </DataTemplate>
@@ -65,7 +93,81 @@
                         </dxg:GridColumn>
                     </dxg:GridControl>
                 </DockPanel>
-                <DockPanel Grid.Column="1" />
+                <DockPanel Grid.Column="1" LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Top" Text="СКОМПЛЕКТОВАТЬ ПАЛЛЕТУ" FontSize="20"
+                               HorizontalAlignment="Center" />
+                    <Grid DockPanel.Dock="Top" Height="40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Номер последней паллеты:" Margin="2"/>
+                        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                                     Text="{Binding LastCreatedPalletNumber, Mode=OneWay}" IsReadOnly="True"/>
+                    </Grid>
+                    <dxg:GridControl ItemsSource="{Binding ComplectationItems}">
+                        <dxg:GridControl.Resources>
+                            <DataTemplate x:Key="NumberColumn">
+                                <dxe:TextEdit Name="PART_Editor" VerticalAlignment="Stretch" FontSize="20" FontWeight="Bold" DisplayFormatString="0.#"/>
+                            </DataTemplate>
+                        </dxg:GridControl.Resources>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True" RowMinHeight="60"  ShowGroupPanel="False"/>
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.DetailDescriptor>
+                            <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding PackedPallets}">
+                                <dxg:GridControl>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False"/>
+                                    </dxg:GridControl.View>
+                                    <dxg:GridColumn Header="Номер" FieldName="Number"/>
+                                    <dxg:GridColumn Header="Количество" FieldName="Quantity">
+                                        <dxg:GridColumn.EditSettings>
+                                            <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                        </dxg:GridColumn.EditSettings>
+                                    </dxg:GridColumn>
+                                </dxg:GridControl>
+                            </dxg:DataControlDetailDescriptor>
+                        </dxg:GridControl.DetailDescriptor>
+                        <dxg:GridColumn Header="Номенклатура" FieldName="NewNomenclature">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <dxe:TextEdit Name="PART_Editor" TextWrapping="WrapWithOverflow" />
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn Header="ГУ на паллете" FieldName="NewGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" />
+                        <dxg:GridColumn Header="Кол-во паллет скомплектовать" FieldName="NewPalletQuantity" CellTemplate="{StaticResource NumberColumn}" />
+                        <dxg:GridColumn Header="Кол-во паллет скомплектовано">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Text="{Binding Path=RowData.Row.NumPackedPallets, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Stretch"
+                                                 FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                        <ProgressBar Width="20"  Grid.Column="1" Minimum="0" Maximum="{Binding Path=RowData.Row.Quantity}" 
+                                                     Value="{Binding Path=RowData.Row.PackedQuantity, Mode=OneWay}" 
+                                                     Orientation="Vertical" Foreground="ForestGreen">
+                                        </ProgressBar>
+                                    </Grid>
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn>
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding Path=DataContext.CreatePalletCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowData.Row}" Width="100">
+                                        <TextBlock Text="Создать паллету" TextWrapping="WrapWithOverflow" HorizontalAlignment="Stretch" 
+                                                   FontSize="16" FontWeight="Bold" TextAlignment="Center"/>
+                                    </Button>
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
+                    </dxg:GridControl>
+                </DockPanel>
             </Grid>
         </Grid>
     </dxb:BarManager>
