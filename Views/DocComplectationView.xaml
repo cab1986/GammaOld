@@ -8,19 +8,35 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="1000" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocComplectationViewModel}}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ColumnHeaderTemplate">
+            <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Stretch"/>
+        </DataTemplate>
+        <DataTemplate x:Key="NumberColumn">
+            <dxe:TextEdit Name="PART_Editor" VerticalAlignment="Stretch" FontSize="20" FontWeight="Bold" DisplayFormatString="0.#"/>
+        </DataTemplate>
+    </UserControl.Resources>
     <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <DockPanel>
-                <TextBlock Text="{Binding Number}" DockPanel.Dock="Top" />
-                <TextBlock Text="{Binding DocDate}" DockPanel.Dock="Top" />
-            </DockPanel>
+            <dxlc:LayoutControl Orientation="Vertical" StretchContentHorizontally="True">
+                <dxlc:LayoutGroup Header="Комплектация" Orientation="Vertical" View="GroupBox">
+                    <dxlc:LayoutItem Label="Номер">
+                        <TextBlock Text="{Binding Number}" />
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Дата">
+                        <TextBlock Text="{Binding DocDate}" />
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutControl>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.5*" />
@@ -41,11 +57,6 @@
                                  Text="{Binding Barcode, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                     <dxg:GridControl ItemsSource="{Binding ComplectationItems}">
-                        <dxg:GridControl.Resources>
-                            <DataTemplate x:Key="NumberColumn">
-                                <dxe:TextEdit Name="PART_Editor" VerticalAlignment="Stretch" FontSize="20" FontWeight="Bold" DisplayFormatString="0.#"/>
-                            </DataTemplate>
-                        </dxg:GridControl.Resources>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True" RowMinHeight="60" AllowGrouping="False" AllowDateTimeGroupIntervalMenu="False" IsGroupPanelMenuEnabled="False" IsGroupFooterMenuEnabled="False" IsGroupRowMenuEnabled="False" ShowGroupPanel="False" />
                         </dxg:GridControl.View>
@@ -71,9 +82,12 @@
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
                         </dxg:GridColumn>
-                            <dxg:GridColumn Header="ГУ на паллете" FieldName="OldGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" />
-                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="OldPalletQuantity" CellTemplate="{StaticResource NumberColumn}" />
-                        <dxg:GridColumn Header="Кол-во паллет распаковано">
+                        <dxg:GridColumn Header="ГУ на паллете" FieldName="OldGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" 
+                                        HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="60" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="OldPalletQuantity" CellTemplate="{StaticResource NumberColumn}"
+                                        HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="80" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Кол-во паллет распаковано" FixedWidth="True"
+                                        HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="90">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -112,7 +126,7 @@
                             </DataTemplate>
                         </dxg:GridControl.Resources>
                         <dxg:GridControl.View>
-                            <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True" RowMinHeight="60"  ShowGroupPanel="False"/>
+                            <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True"  ShowGroupPanel="False" AllowColumnMoving="False" />
                         </dxg:GridControl.View>
                         <dxg:GridControl.DetailDescriptor>
                             <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding PackedPallets}">
@@ -136,9 +150,12 @@
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
                         </dxg:GridColumn>
-                        <dxg:GridColumn Header="ГУ на паллете" FieldName="NewGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" />
-                        <dxg:GridColumn Header="Кол-во паллет скомплектовать" FieldName="NewPalletQuantity" CellTemplate="{StaticResource NumberColumn}" />
-                        <dxg:GridColumn Header="Кол-во паллет скомплектовано">
+                        <dxg:GridColumn Header="ГУ на паллете" FieldName="NewGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" 
+                                        HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="60" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Кол-во паллет скомплектовать" FieldName="NewPalletQuantity" CellTemplate="{StaticResource NumberColumn}" 
+                                        HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="90" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Кол-во паллет скомплектовано" Width="90" FixedWidth="True"
+                                        HeaderTemplate="{StaticResource ColumnHeaderTemplate}" >
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -156,7 +173,7 @@
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
                         </dxg:GridColumn>
-                        <dxg:GridColumn>
+                        <dxg:GridColumn Width="100" FixedWidth="True">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Command="{Binding Path=DataContext.CreatePalletCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowData.Row}" Width="100">
