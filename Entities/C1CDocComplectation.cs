@@ -24,7 +24,9 @@ namespace Gamma.Entities
         public System.Guid C1CDocComplectationID { get; set; }
         public string C1CCode { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
+        public Nullable<System.Guid> C1CWarehouseID { get; set; }
     
+        public virtual C1CWarehouses C1CWarehouses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

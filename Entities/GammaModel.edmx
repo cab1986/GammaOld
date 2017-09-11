@@ -52,21 +52,23 @@
             <PropertyRef Name="1CDocComplectationID" />
           </Key>
           <Property Name="1CDocComplectationID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="1CCode" Type="varchar" MaxLength="20" />
+          <Property Name="1CCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Date" Type="datetime" />
+          <Property Name="1CWarehouseID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CDocComplectationNomenclature">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
-            <PropertyRef Name="1CNomenclatureID" />
-            <PropertyRef Name="1COldCharacteristicID" />
-            <PropertyRef Name="1CNewCharacteristicID" />
+            <PropertyRef Name="LineNumber" />
           </Key>
           <Property Name="1CDocComplectationID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="LineNumber" Type="decimal" Precision="5" Scale="0" Nullable="false" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1COldCharacteristicID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CNewCharacteristicID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="1CQualityID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CDocInternalOrders">
           <Key>
@@ -1477,6 +1479,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_1CDocComplectation_1CWarehouses">
+          <End Role="1CWarehouses" Type="Self.1CWarehouses" Multiplicity="0..1" />
+          <End Role="1CDocComplectation" Type="Self.1CDocComplectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CWarehouses">
+              <PropertyRef Name="1CWarehouseID" />
+            </Principal>
+            <Dependent Role="1CDocComplectation">
+              <PropertyRef Name="1CWarehouseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_1CDocComplectationNomenclature_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
           <End Role="1CDocComplectationNomenclature" Type="Self.1CDocComplectationNomenclature" Multiplicity="*" />
@@ -1513,6 +1527,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="1CDocComplectationNomenclature" Type="Self.1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="1CDocComplectationNomenclature">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_1CDocComplectationNomenclature_1CNomenclature">
           <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="1CDocComplectationNomenclature" Type="Self.1CDocComplectationNomenclature" Multiplicity="*" />
@@ -1522,6 +1548,18 @@
             </Principal>
             <Dependent Role="1CDocComplectationNomenclature">
               <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CQuality">
+          <End Role="1CQuality" Type="Self.1CQuality" Multiplicity="0..1" />
+          <End Role="1CDocComplectationNomenclature" Type="Self.1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CQuality">
+              <PropertyRef Name="1CQualityID" />
+            </Principal>
+            <Dependent Role="1CDocComplectationNomenclature">
+              <PropertyRef Name="1CQualityID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4367,6 +4405,10 @@
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
           </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectation_1CWarehouses" Association="Self.FK_1CDocComplectation_1CWarehouses">
+            <End Role="1CWarehouses" EntitySet="1CWarehouses" />
+            <End Role="1CDocComplectation" EntitySet="1CDocComplectation" />
+          </AssociationSet>
           <AssociationSet Name="FK_1CDocComplectationNomenclature_1CCharacteristics" Association="Self.FK_1CDocComplectationNomenclature_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
             <End Role="1CDocComplectationNomenclature" EntitySet="1CDocComplectationNomenclature" />
@@ -4379,8 +4421,16 @@
             <End Role="1CDocComplectation" EntitySet="1CDocComplectation" />
             <End Role="1CDocComplectationNomenclature" EntitySet="1CDocComplectationNomenclature" />
           </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CMeasureUnits" Association="Self.FK_1CDocComplectationNomenclature_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+            <End Role="1CDocComplectationNomenclature" EntitySet="1CDocComplectationNomenclature" />
+          </AssociationSet>
           <AssociationSet Name="FK_1CDocComplectationNomenclature_1CNomenclature" Association="Self.FK_1CDocComplectationNomenclature_1CNomenclature">
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="1CDocComplectationNomenclature" EntitySet="1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CQuality" Association="Self.FK_1CDocComplectationNomenclature_1CQuality">
+            <End Role="1CQuality" EntitySet="1CQuality" />
             <End Role="1CDocComplectationNomenclature" EntitySet="1CDocComplectationNomenclature" />
           </AssociationSet>
           <AssociationSet Name="FK_1CDocInternalOrders_1CWarehouses" Association="Self.FK_1CDocInternalOrders_1CWarehouses">
@@ -5184,6 +5234,7 @@
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CNomenclature_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CNomenclature" />
           <NavigationProperty Name="C1CNomenclature1" Relationship="GammaModel.FK_1CNomenclature_1CMeasureUnits1" FromRole="C1CMeasureUnits" ToRole="C1CNomenclature" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftSamples" />
+          <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CDocComplectationNomenclature" />
         </EntityType>
         <EntityType Name="C1CNomenclatureGroups">
           <Key>
@@ -5270,6 +5321,7 @@
           <Property Name="Description" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="ProductStates" Relationship="Self.FK_ProductStates_1CQuality" FromRole="C1CQuality" ToRole="ProductStates" />
           <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CQuality" FromRole="C1CQuality" ToRole="C1CDocShipmentOrderGoods" />
+          <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CQuality" FromRole="C1CQuality" ToRole="C1CDocComplectationNomenclature" />
         </EntityType>
         <EntityType Name="C1CRejectionReasons">
           <Key>
@@ -6820,29 +6872,7 @@
           <FunctionImport Name="GetProductionTaskBatchCuttingsSGB" ReturnType="Collection(GammaModel.GetProductionTaskBatchCuttingsSGB_Result1)">
           <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
           </FunctionImport>
-          <EntitySet Name="C1CDocComplectation" EntityType="GammaModel.C1CDocComplectation" />
-          <EntitySet Name="C1CDocComplectationNomenclature" EntityType="GammaModel.C1CDocComplectationNomenclature" />
           <EntitySet Name="DocComplectation" EntityType="GammaModel.DocComplectation" />
-          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CCharacteristics" Association="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics">
-            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
-          </AssociationSet>
-          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CCharacteristics1" Association="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1">
-            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
-          </AssociationSet>
-          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CDocComplectation" Association="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation">
-            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
-            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocComplectation_1CDocComplectation" Association="GammaModel.FK_DocComplectation_1CDocComplectation">
-            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
-            <End Role="DocComplectation" EntitySet="DocComplectation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CNomenclature" Association="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature">
-            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
-          </AssociationSet>
           <AssociationSet Name="FK_DocComplectation_DocProduction" Association="GammaModel.FK_DocComplectation_DocProduction">
             <End Role="DocProduction" EntitySet="DocProduction" />
             <End Role="DocComplectation" EntitySet="DocComplectation" />
@@ -6856,6 +6886,40 @@
             <End Role="DocComplectation" EntitySet="DocComplectation" />
           </AssociationSet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="GammaModel.v1CDocComplectationPositions" />
+          <EntitySet Name="C1CDocComplectation" EntityType="GammaModel.C1CDocComplectation" />
+          <EntitySet Name="C1CDocComplectationNomenclature" EntityType="GammaModel.C1CDocComplectationNomenclature" />
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CCharacteristics" Association="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CCharacteristics1" Association="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectation_1CWarehouses" Association="GammaModel.FK_1CDocComplectation_1CWarehouses">
+            <End Role="C1CWarehouses" EntitySet="C1CWarehouses" />
+            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CDocComplectation" Association="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation">
+            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
+            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocComplectation_1CDocComplectation" Association="GammaModel.FK_DocComplectation_1CDocComplectation">
+            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
+            <End Role="DocComplectation" EntitySet="DocComplectation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CMeasureUnits" Association="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits">
+            <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CNomenclature" Association="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDocComplectationNomenclature_1CQuality" Association="GammaModel.FK_1CDocComplectationNomenclature_1CQuality">
+            <End Role="C1CQuality" EntitySet="C1CQuality" />
+            <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -7375,6 +7439,7 @@
           <NavigationProperty Name="C1CDocShipmentOrder" Relationship="GammaModel.FK_1CDocShipmentOrder_1CWarehouses" FromRole="C1CWarehouses" ToRole="C1CDocShipmentOrder" />
           <NavigationProperty Name="C1CDocInternalOrders" Relationship="GammaModel.FK_1CDocInternalOrders_1CWarehouses" FromRole="C1CWarehouses" ToRole="C1CDocInternalOrders" />
           <NavigationProperty Name="C1CDocInternalOrders1" Relationship="GammaModel.FK_1CDocInternalOrders_1CWarehouses1" FromRole="C1CWarehouses" ToRole="C1CDocInternalOrders" />
+          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_1CDocComplectation_1CWarehouses" FromRole="C1CWarehouses" ToRole="C1CDocComplectation" />
         </EntityType>
         <EntityType Name="PostTypes">
           <Key>
@@ -8970,7 +9035,7 @@
           <Property Name="PackageLabelPath" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CDocComplectationNomenclature" />
           <NavigationProperty Name="C1CDocComplectationNomenclature1" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1" FromRole="C1CCharacteristics" ToRole="C1CDocComplectationNomenclature" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
           <End Type="GammaModel.C1CCharacteristicProperties" Role="C1CCharacteristicProperties" Multiplicity="*" />
@@ -10309,33 +10374,6 @@
           <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
           <Property Type="String" Name="NomenclatureKind" Nullable="false" MaxLength="3" />
         </ComplexType>
-        <EntityType Name="C1CDocComplectation">
-          <Key>
-            <PropertyRef Name="C1CDocComplectationID" />
-          </Key>
-          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
-          <Property Name="C1CCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation" FromRole="C1CDocComplectation" ToRole="C1CDocComplectationNomenclature" />
-          <NavigationProperty Name="DocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="C1CDocComplectation" ToRole="DocComplectation" />
-        </EntityType>
-        <EntityType Name="C1CDocComplectationNomenclature">
-          <Key>
-            <PropertyRef Name="C1CDocComplectationID" />
-            <PropertyRef Name="C1CNomenclatureID" />
-            <PropertyRef Name="C1COldCharacteristicID" />
-            <PropertyRef Name="C1CNewCharacteristicID" />
-          </Key>
-          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
-          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
-          <Property Name="C1COldCharacteristicID" Type="Guid" Nullable="false" />
-          <Property Name="C1CNewCharacteristicID" Type="Guid" Nullable="false" />
-          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
-          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics" FromRole="C1CDocComplectationNomenclature" ToRole="C1CCharacteristics" />
-          <NavigationProperty Name="C1CCharacteristics1" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1" FromRole="C1CDocComplectationNomenclature" ToRole="C1CCharacteristics" />
-          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation" FromRole="C1CDocComplectationNomenclature" ToRole="C1CDocComplectation" />
-          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature" FromRole="C1CDocComplectationNomenclature" ToRole="C1CNomenclature" />
-        </EntityType>
         <EntityType Name="DocComplectation">
           <Key>
             <PropertyRef Name="DocComplectationID" />
@@ -10344,71 +10382,11 @@
           <Property Name="DocProductionID" Type="Guid" />
           <Property Name="DocWithdrawalID" Type="Guid" />
           <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="DocComplectation" ToRole="C1CDocComplectation" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocComplectation_DocProduction" FromRole="DocComplectation" ToRole="DocProduction" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocComplectation_Docs" FromRole="DocComplectation" ToRole="Docs" />
           <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocComplectation_DocWithdrawal" FromRole="DocComplectation" ToRole="DocWithdrawal" />
+          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="DocComplectation" ToRole="C1CDocComplectation" />
         </EntityType>
-        <Association Name="FK_1CDocComplectationNomenclature_1CCharacteristics">
-          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
-          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CCharacteristics">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="C1CDocComplectationNomenclature">
-              <PropertyRef Name="C1COldCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_1CDocComplectationNomenclature_1CCharacteristics1">
-          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
-          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CCharacteristics">
-              <PropertyRef Name="C1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="C1CDocComplectationNomenclature">
-              <PropertyRef Name="C1CNewCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_1CDocComplectationNomenclature_1CDocComplectation">
-          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="1" />
-          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CDocComplectation">
-              <PropertyRef Name="C1CDocComplectationID" />
-            </Principal>
-            <Dependent Role="C1CDocComplectationNomenclature">
-              <PropertyRef Name="C1CDocComplectationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocComplectation_1CDocComplectation">
-          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="1" />
-          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CDocComplectation">
-              <PropertyRef Name="C1CDocComplectationID" />
-            </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="C1CDocComplectationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_1CDocComplectationNomenclature_1CNomenclature">
-          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
-          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CNomenclature">
-              <PropertyRef Name="C1CNomenclatureID" />
-            </Principal>
-            <Dependent Role="C1CDocComplectationNomenclature">
-              <PropertyRef Name="C1CNomenclatureID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DocComplectation_DocProduction">
           <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="0..1" />
           <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
@@ -10457,6 +10435,134 @@
           <Property Name="Withdraw" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="Complected" Type="Decimal" Precision="38" Scale="5" />
         </EntityType>
+        <EntityType Name="C1CDocComplectation">
+          <Key>
+            <PropertyRef Name="C1CDocComplectationID" />
+          </Key>
+          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="C1CWarehouseID" Type="Guid" />
+          <NavigationProperty Name="C1CWarehouses" Relationship="GammaModel.FK_1CDocComplectation_1CWarehouses" FromRole="C1CDocComplectation" ToRole="C1CWarehouses" />
+          <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation" FromRole="C1CDocComplectation" ToRole="C1CDocComplectationNomenclature" />
+          <NavigationProperty Name="DocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="C1CDocComplectation" ToRole="DocComplectation" />
+        </EntityType>
+        <EntityType Name="C1CDocComplectationNomenclature">
+          <Key>
+            <PropertyRef Name="C1CDocComplectationID" />
+            <PropertyRef Name="LineNumber" />
+          </Key>
+          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
+          <Property Name="LineNumber" Type="Decimal" Nullable="false" Precision="5" Scale="0" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1COldCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNewCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="C1CQualityID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics" FromRole="C1CDocComplectationNomenclature" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CCharacteristics1" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1" FromRole="C1CDocComplectationNomenclature" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation" FromRole="C1CDocComplectationNomenclature" ToRole="C1CDocComplectation" />
+          <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits" FromRole="C1CDocComplectationNomenclature" ToRole="C1CMeasureUnits" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature" FromRole="C1CDocComplectationNomenclature" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="C1CQuality" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CQuality" FromRole="C1CDocComplectationNomenclature" ToRole="C1CQuality" />
+        </EntityType>
+        <Association Name="FK_1CDocComplectationNomenclature_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectationNomenclature">
+              <PropertyRef Name="C1COldCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CCharacteristics1">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectationNomenclature">
+              <PropertyRef Name="C1CNewCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectation_1CWarehouses">
+          <End Type="GammaModel.C1CWarehouses" Role="C1CWarehouses" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CWarehouses">
+              <PropertyRef Name="C1CWarehouseID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectation">
+              <PropertyRef Name="C1CWarehouseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CDocComplectation">
+          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="1" />
+          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDocComplectation">
+              <PropertyRef Name="C1CDocComplectationID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectationNomenclature">
+              <PropertyRef Name="C1CDocComplectationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocComplectation_1CDocComplectation">
+          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="1" />
+          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDocComplectation">
+              <PropertyRef Name="C1CDocComplectationID" />
+            </Principal>
+            <Dependent Role="DocComplectation">
+              <PropertyRef Name="C1CDocComplectationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CMeasureUnits">
+          <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CMeasureUnits">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectationNomenclature">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectationNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDocComplectationNomenclature_1CQuality">
+          <End Type="GammaModel.C1CQuality" Role="C1CQuality" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CQuality">
+              <PropertyRef Name="C1CQualityID" />
+            </Principal>
+            <Dependent Role="C1CDocComplectationNomenclature">
+              <PropertyRef Name="C1CQualityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12216,26 +12322,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="C1CDocComplectation">
-            <EntityTypeMapping TypeName="GammaModel.C1CDocComplectation">
-              <MappingFragment StoreEntitySet="1CDocComplectation">
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
-                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="C1CDocComplectationNomenclature">
-            <EntityTypeMapping TypeName="GammaModel.C1CDocComplectationNomenclature">
-              <MappingFragment StoreEntitySet="1CDocComplectationNomenclature">
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="C1CNewCharacteristicID" ColumnName="1CNewCharacteristicID" />
-                <ScalarProperty Name="C1COldCharacteristicID" ColumnName="1COldCharacteristicID" />
-                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
-                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="DocComplectation">
             <EntityTypeMapping TypeName="GammaModel.DocComplectation">
               <MappingFragment StoreEntitySet="DocComplectation">
@@ -12255,6 +12341,30 @@
                 <ScalarProperty Name="NewCharacteristic" ColumnName="NewCharacteristic" />
                 <ScalarProperty Name="OldCharacteristic" ColumnName="OldCharacteristic" />
                 <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C1CDocComplectation">
+            <EntityTypeMapping TypeName="GammaModel.C1CDocComplectation">
+              <MappingFragment StoreEntitySet="1CDocComplectation">
+                <ScalarProperty Name="C1CWarehouseID" ColumnName="1CWarehouseID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C1CDocComplectationNomenclature">
+            <EntityTypeMapping TypeName="GammaModel.C1CDocComplectationNomenclature">
+              <MappingFragment StoreEntitySet="1CDocComplectationNomenclature">
+                <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CNewCharacteristicID" ColumnName="1CNewCharacteristicID" />
+                <ScalarProperty Name="C1COldCharacteristicID" ColumnName="1COldCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
                 <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
               </MappingFragment>
             </EntityTypeMapping>

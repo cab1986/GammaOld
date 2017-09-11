@@ -19,6 +19,7 @@ namespace Gamma.Entities
         {
             this.ProductStates = new HashSet<ProductStates>();
             this.C1CDocShipmentOrderGoods = new HashSet<C1CDocShipmentOrderGoods>();
+            this.C1CDocComplectationNomenclature = new HashSet<C1CDocComplectationNomenclature>();
         }
     
         public System.Guid C1CQualityID { get; set; }
@@ -32,5 +33,7 @@ namespace Gamma.Entities
         public virtual ICollection<ProductStates> ProductStates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDocShipmentOrderGoods> C1CDocShipmentOrderGoods { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
     }
 }
