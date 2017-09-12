@@ -33,7 +33,7 @@
                         <TextBlock Text="{Binding Number}" />
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Дата">
-                        <TextBlock Text="{Binding DocDate}" />
+                        <TextBlock Text="{Binding DocDate, StringFormat=dd-MM-yyyy hh:mm}" />
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
             </dxlc:LayoutControl>
@@ -120,13 +120,9 @@
                                      Text="{Binding LastCreatedPalletNumber, Mode=OneWay}" IsReadOnly="True"/>
                     </Grid>
                     <dxg:GridControl ItemsSource="{Binding ComplectationItems}">
-                        <dxg:GridControl.Resources>
-                            <DataTemplate x:Key="NumberColumn">
-                                <dxe:TextEdit Name="PART_Editor" VerticalAlignment="Stretch" FontSize="20" FontWeight="Bold" DisplayFormatString="0.#"/>
-                            </DataTemplate>
-                        </dxg:GridControl.Resources>
                         <dxg:GridControl.View>
-                            <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True"  ShowGroupPanel="False" AllowColumnMoving="False" />
+                            <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True" ShowGroupPanel="False" AllowColumnMoving="False" 
+                                           RowMinHeight="60"/>
                         </dxg:GridControl.View>
                         <dxg:GridControl.DetailDescriptor>
                             <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding PackedPallets}">

@@ -108,7 +108,8 @@ namespace Gamma.ViewModels
 				switch (IntervalId)
 				{
 					case 0:
-						DocComplectations = gammaBase.C1CDocComplectation.Where(dc => !dc.DocComplectation.Any() || !dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed)
+						DocComplectations = gammaBase.C1CDocComplectation.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID 
+						&& !dc.DocComplectation.Any() || !dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed)
 							.OrderByDescending(dc => dc.Date).Take(500)
 							.Select(dc => new DocComplectationListItem
 							{
@@ -120,6 +121,7 @@ namespace Gamma.ViewModels
 						break;
 					case 1:
 						DocComplectations = gammaBase.C1CDocComplectation
+							.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID)
 							.OrderByDescending(dc => dc.Date).Take(500)
 							.Select(dc => new DocComplectationListItem
 							{
@@ -131,7 +133,7 @@ namespace Gamma.ViewModels
 						break;
 					case 2:
 						DocComplectations = gammaBase.C1CDocComplectation
-							.Where(dc => 
+							.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID &&
 								(string.IsNullOrEmpty(Number) || dc.C1CCode.Contains(Number)) &&
 								(DateBegin == null || dc.Date >= DateBegin) &&
 								(DateEnd == null || dc.Date <= DateEnd)

@@ -74,7 +74,7 @@ namespace Gamma.ViewModels
 				{
 					var item = new ComplectationItem(nomenclaturePosition.C1CNomenclatureID,
 						nomenclaturePosition.C1COldCharacteristicID, nomenclaturePosition.C1CNewCharacteristicID,
-						nomenclaturePosition.Quantity ?? 0);
+						nomenclaturePosition.C1CQualityID, nomenclaturePosition.Quantity ?? 0);
 					foreach (var product in context.DocProductionProducts.Include(dp => dp.Products)
 							.Where(dp => dp.DocID == DocProductionId 
 							&& dp.C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
@@ -182,10 +182,16 @@ namespace Gamma.ViewModels
 					MessageBox.Show("Паллета уже списана");
 					return;
 				}
-				if (!OldNomenclature.Any(
-					n => n.Item1.Equals(pallet.C1CNomenclatureID) && n.Item2.Equals(pallet.C1CCharacteristicID)))
+				var item = ComplectationItems.FirstOrDefault(i => i.NomenclatureID.Equals(pallet.C1CNomenclatureID) &&
+																i.OldCharacteristicId.Equals(pallet.C1CCharacteristicID));
+				if (item == null)
 				{
 					MessageBox.Show("Номенклатура найденной паллеты не совпадает с документом");
+					return;
+				}
+				if (item.QualityId != null && pallet.C1CQualityID != null && item.QualityId != pallet.C1CQualityID)
+				{
+					MessageBox.Show("Качество найденной паллеты не совпадает с документом");
 					return;
 				}
 				if (!documentController.WithdrawProduct(pallet.ProductID, (Guid)DocWithdrawalId))
@@ -193,8 +199,6 @@ namespace Gamma.ViewModels
 					MessageBox.Show("Не удалось списать паллету. Ошибка в базе.");
 					return;
 				}
-				var item = ComplectationItems.First(i => i.NomenclatureID == pallet.C1CNomenclatureID &&
-				                                         i.OldCharacteristicId == pallet.C1CCharacteristicID);
 				item.UnpackedPallets.Add(new Product
 				{
 					ProductId = pallet.ProductID,
