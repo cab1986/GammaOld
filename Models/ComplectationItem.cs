@@ -10,19 +10,19 @@ namespace Gamma.Models
 	{
 		#region Fields
 
-		private decimal oldGroupPackCoefficient = 1;
+		private readonly decimal oldGroupPackCoefficient = 1;
 
-		private decimal oldPalletCoefficient = 1;
+		private readonly decimal oldPalletCoefficient = 1;
 
-		private decimal newGroupPackCoefficient = 1;
+		private readonly decimal newGroupPackCoefficient = 1;
 
-		private decimal newPalletCoefficient = 1;
+		private readonly decimal newPalletCoefficient = 1;
 
 		#endregion
 
 		#region Constructor
 
-		public ComplectationItem(Guid nomenclatureId, Guid oldCharacteristicId, Guid newCharacteristicId, decimal quantity)
+		public ComplectationItem(Guid nomenclatureId, Guid oldCharacteristicId, Guid newCharacteristicId, Guid? qualityId, decimal quantity)
 		{
 			UnpackedPallets.CollectionChanged += UnpackedChanged;
 			PackedPallets.CollectionChanged += PackedChanged;
@@ -30,6 +30,7 @@ namespace Gamma.Models
 			NomenclatureID = nomenclatureId;
 			OldCharacteristicId = oldCharacteristicId;
 			NewCharacteristicId = newCharacteristicId;
+			QualityId = qualityId;
 			using (var context = DB.GammaDb)
 			{
 				var nomInfo = context.C1CCharacteristics.Where(c =>
@@ -83,6 +84,8 @@ namespace Gamma.Models
 		public Guid OldCharacteristicId { get; private set; }
 
 		public Guid NewCharacteristicId { get; private set; }
+
+		public Guid? QualityId { get; private set; }
 
 		/// <summary>
 		/// String representation of old nomenclature + characteristic
