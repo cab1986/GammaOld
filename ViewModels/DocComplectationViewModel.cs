@@ -42,10 +42,12 @@ namespace Gamma.ViewModels
 				}
 				DocProductionId = docComplectation.DocProductionID;
 				DocWithdrawalId = docComplectation.DocWithdrawalID;
+				var placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID 
+					?? WorkSession.PlaceID;
 				if (DocWithdrawalId == null)
 				{
 					DocWithdrawalId = SqlGuidUtil.NewSequentialid();
-					var docWithdrawal = documentController.ConstructDoc((Guid)DocWithdrawalId, DocTypes.DocWithdrawal);
+					var docWithdrawal = documentController.ConstructDoc((Guid)DocWithdrawalId, DocTypes.DocWithdrawal, placeId);
 					context.Docs.Add(docWithdrawal);
 					docComplectation.DocWithdrawalID = DocWithdrawalId;
 					context.SaveChanges();
@@ -53,7 +55,7 @@ namespace Gamma.ViewModels
 				if (DocProductionId == null)
 				{
 					DocProductionId = SqlGuidUtil.NewSequentialid();
-					var docProduction = documentController.ConstructDoc((Guid)DocProductionId, DocTypes.DocProduction);
+					var docProduction = documentController.ConstructDoc((Guid)DocProductionId, DocTypes.DocProduction, placeId);
 					docProduction.DocProduction = new DocProduction
 					{
 						DocID = (Guid)DocProductionId,

@@ -23,7 +23,7 @@ namespace Gamma.Controllers
 					.FirstOrDefault(d => d.DocID == docId);
 				if (docWithdrawal == null)
 				{
-					docWithdrawal = ConstructDoc(docId, DocTypes.DocWithdrawal);
+					docWithdrawal = ConstructDoc(docId, DocTypes.DocWithdrawal, WorkSession.PlaceID);
 					context.Docs.Add(docWithdrawal);
 				}
 				if (docWithdrawal.DocWithdrawal == null)
@@ -59,7 +59,7 @@ namespace Gamma.Controllers
 
 		#region Private methods
 
-		public Docs ConstructDoc(Guid id, DocTypes type)
+		public Docs ConstructDoc(Guid id, DocTypes type, int placeId)
 		{
 			var doc = new Docs
 			{
@@ -68,7 +68,7 @@ namespace Gamma.Controllers
 				DocTypeID = (int) type,
 				PrintName = WorkSession.PrintName,
 				UserID = WorkSession.UserID,
-				PlaceID = WorkSession.PlaceID,
+				PlaceID = placeId,
 				ShiftID = WorkSession.ShiftID,
 			};
 			return doc;
