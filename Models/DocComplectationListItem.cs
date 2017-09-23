@@ -17,6 +17,8 @@ namespace Gamma.Models
 
 		public List<ComplectationNomenclatureItem> NomenclaturePositions { get; set; } = new List<ComplectationNomenclatureItem>();
 
+		public int? PlaceId { get; set; }
+
 		#endregion
 	}
 

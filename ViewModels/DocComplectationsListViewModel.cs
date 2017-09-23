@@ -81,7 +81,7 @@ namespace Gamma.ViewModels
 			if (selectedDocComplectation.DocId == null)
 			{
 				SelectedDocComplectation.DocId = SqlGuidUtil.NewSequentialid();
-				var doc = documentController.ConstructDoc((Guid)SelectedDocComplectation.DocId, DocTypes.DocComplectation);
+				var doc = documentController.ConstructDoc((Guid)SelectedDocComplectation.DocId, DocTypes.DocComplectation, selectedDocComplectation.PlaceId ?? WorkSession.PlaceID);
 				doc.DocComplectation = new DocComplectation
 				{
 					C1CDocComplectationID = SelectedDocComplectation.Doc1CId,
@@ -116,7 +116,8 @@ namespace Gamma.ViewModels
 								DocId = dc.DocComplectation.Any() ? (Guid?)dc.DocComplectation.FirstOrDefault().DocComplectationID : null,
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
-								Date = (DateTime)dc.Date
+								Date = (DateTime)dc.Date,
+								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID
 							}).ToList();
 						break;
 					case 1:
@@ -128,7 +129,8 @@ namespace Gamma.ViewModels
 								DocId = dc.DocComplectation.Any() ? (Guid?)dc.DocComplectation.FirstOrDefault().DocComplectationID : null,
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
-								Date = (DateTime)dc.Date
+								Date = (DateTime)dc.Date,
+								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID
 							}).ToList();
 						break;
 					case 2:
@@ -144,7 +146,8 @@ namespace Gamma.ViewModels
 								DocId = dc.DocComplectation.Any() ? (Guid?)dc.DocComplectation.FirstOrDefault().DocComplectationID : null,
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
-								Date = (DateTime)dc.Date
+								Date = (DateTime)dc.Date,
+								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID
 							}).ToList();
 						break;
 				}
