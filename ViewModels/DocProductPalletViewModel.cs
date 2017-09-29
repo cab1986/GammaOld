@@ -31,13 +31,16 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="docId">ID документа выработки</param>
         /// <param name="gammaBase">Контекст БД</param>
-        public DocProductPalletViewModel(Guid docId, GammaEntities gammaBase = null) : this()
+        //public DocProductPalletViewModel(Guid docId, GammaEntities gammaBase = null) : this()
+        public DocProductPalletViewModel(Guid productId, GammaEntities gammaBase = null) : this()
         {
             gammaBase = gammaBase ?? DB.GammaDb;
-            ProductId = gammaBase.DocProductionProducts.Where(d => d.DocID == docId).Select(d => d.ProductID).First();
+            ProductId = productId;
+            DocId = gammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
+                SqlGuidUtil.NewSequentialid();
             PalletItems = new ObservableCollection<ProductPalletItem>(
                 from palItems in gammaBase.ProductPalletItems
-                where palItems.ProductID == ProductId
+                where palItems.ProductID == productId
                 select new ProductPalletItem()
                 {
                     NomenclatureId = palItems.C1CNomenclatureID,
@@ -47,10 +50,11 @@ namespace Gamma.ViewModels
                     ProductPalletItemId = palItems.ProductPalletItemID
                 } 
                 );
-            IsConfirmed = gammaBase.Docs.First(d => d.DocID == docId).IsConfirmed;
+            IsConfirmed = gammaBase.Docs.First(d => d.DocID == DocId).IsConfirmed;
         }
 
         public Guid? ProductId { get; private set; }
+        public Guid? DocId { get; private set; }
 
         public ObservableCollection<ProductPalletItem> PalletItems
         {
@@ -76,12 +80,8 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var product =
-                gammaBase.Products.Include(p => p.ProductPallets)
-                    .Include(
-                        p =>
-                            p.ProductPallets.ProductPalletItems).First(p => gammaBase.DocProductionProducts.Where(d => d.DocID == itemID)
-                                .Select(d => d.ProductID)
-                                .Contains(p.ProductID));
+                gammaBase.Products.Include(p => p.ProductPallets).Include(p => p.DocProductionProducts)
+                    .FirstOrDefault(p => p.ProductID == ProductId);
                 if (product == null)
                 {
                     var productId = SqlGuidUtil.NewSequentialid();
@@ -120,6 +120,7 @@ namespace Gamma.ViewModels
                 {
                     product.ProductPallets.ProductPalletItems.Remove(palItem);
                 }
+                gammaBase.SaveChanges();
                 var palItemsToAdd =
                     PalletItems.Where(
                         p => !gammaBase.ProductPalletItems.Where(prodItem => prodItem.ProductID == product.ProductID)

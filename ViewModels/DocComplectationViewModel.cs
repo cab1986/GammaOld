@@ -49,7 +49,12 @@ namespace Gamma.ViewModels
 					DocWithdrawalId = SqlGuidUtil.NewSequentialid();
 					var docWithdrawal = documentController.ConstructDoc((Guid)DocWithdrawalId, DocTypes.DocWithdrawal, placeId);
 					context.Docs.Add(docWithdrawal);
-					docComplectation.DocWithdrawalID = DocWithdrawalId;
+                    docWithdrawal.DocWithdrawal = new DocWithdrawal
+                    {
+                        DocID = (Guid)DocWithdrawalId,
+                        OutPlaceID = WorkSession.PlaceID,
+                    };
+                    docComplectation.DocWithdrawalID = DocWithdrawalId;
 					context.SaveChanges();
 				}
 				if (DocProductionId == null)
@@ -110,13 +115,14 @@ namespace Gamma.ViewModels
 			Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
 			UnpackCommand = new DelegateCommand(Unpack, () => !string.IsNullOrEmpty(Barcode));
 			CreatePalletCommand = new DelegateCommand<ComplectationItem>(CreateNewPallet);
-		}
+            OpenPackedPalletItemCommand = new DelegateCommand(OpenProduct, () => SelectedPackedPalletItem != null);
+        }
 
-		#endregion
+        #endregion
 
-		#region Private Methods
+        #region Private Methods
 
-		private void BarcodeReceived(BarcodeMessage msg)
+        private void BarcodeReceived(BarcodeMessage msg)
 		{
 			var bcode = msg.Barcode;
 			var pallet = ComplectationItems
@@ -317,11 +323,18 @@ namespace Gamma.ViewModels
 			}
 		}
 
-		#endregion
+        public Product SelectedPackedPalletItem { get; set; }
+        public DelegateCommand OpenPackedPalletItemCommand { get; private set; }
+        private void OpenProduct()
+        {
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedPackedPalletItem.ProductId);
+        }
 
-		#region IBarImplemented
+        #endregion
 
-		public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
+        #region IBarImplemented
+
+        public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
 
 		public Guid? VMID { get; } = Guid.NewGuid();
 
