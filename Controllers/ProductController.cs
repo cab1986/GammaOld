@@ -27,7 +27,9 @@ namespace Gamma.Controllers
 				{
 					ProductID = productId,
 					StateID = (byte)ProductState.Good,
-					ProductPallets = new ProductPallets
+
+                    ProductKindID = (byte)ProductKind.ProductPallet,
+                    ProductPallets = new ProductPallets
 					{
 						ProductID = productId,
 						ProductPalletItems = new List<ProductPalletItems>

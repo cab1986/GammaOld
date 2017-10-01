@@ -10,6 +10,7 @@
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              mc:Ignorable="d"
              d:DesignHeight="1000" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocComplectationViewModel}}">
@@ -126,7 +127,7 @@
                         </dxg:GridControl.View>
                         <dxg:GridControl.DetailDescriptor>
                             <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding PackedPallets}">
-                                <dxg:GridControl>
+                                <dxg:GridControl  SelectedItem="{Binding SelectedPackedPalletItem}">
                                     <dxg:GridControl.View>
                                         <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False"/>
                                     </dxg:GridControl.View>
@@ -179,6 +180,9 @@
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
                         </dxg:GridColumn>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenPackedPalletItemCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
                     </dxg:GridControl>
                 </DockPanel>
             </Grid>
