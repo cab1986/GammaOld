@@ -23,6 +23,8 @@ namespace Gamma.ViewModels
 		private string barcode;
 		private string _lastCreatedPalletNumber;
 
+		private int placeId;
+
 		#endregion
 
 		#region Constructor
@@ -32,7 +34,10 @@ namespace Gamma.ViewModels
 			DocId = docId;
 			using (var context = DB.GammaDb)
 			{
-				var docComplectation = context.DocComplectation.Include(d => d.C1CDocComplectation).FirstOrDefault(d => d.DocComplectationID == docId);
+				var docComplectation = context.DocComplectation.Include(d => d.C1CDocComplectation)
+					.Include(d => d.DocProduction.Select(dp => dp.DocProductionProducts))
+					.Include(d => d.DocWithdrawal.Select(dw => dw.DocWithdrawalProducts))
+					.FirstOrDefault(d => d.DocComplectationID == docId);
 				if (docComplectation == null)
 				{
 					MessageBox.Show("Произошла ошибка, документа нет в базе", "Ошибка документа", MessageBoxButton.OK,
@@ -40,41 +45,9 @@ namespace Gamma.ViewModels
 					CloseWindow();
 					return;
 				}
-				DocProductionId = docComplectation.DocProductionID;
-				DocWithdrawalId = docComplectation.DocWithdrawalID;
-				var placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID 
+				placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID 
 					?? WorkSession.PlaceID;
-				if (DocWithdrawalId == null)
-				{
-					DocWithdrawalId = SqlGuidUtil.NewSequentialid();
-					var docWithdrawal = documentController.ConstructDoc((Guid)DocWithdrawalId, DocTypes.DocWithdrawal, placeId);
-					context.Docs.Add(docWithdrawal);
-                    docWithdrawal.DocWithdrawal = new DocWithdrawal
-                    {
-                        DocID = (Guid)DocWithdrawalId,
-                        OutPlaceID = WorkSession.PlaceID,
-                    };
-                    docComplectation.DocWithdrawalID = DocWithdrawalId;
-					context.SaveChanges();
-				}
-				if (DocProductionId == null)
-				{
-					DocProductionId = SqlGuidUtil.NewSequentialid();
-					var docProduction = documentController.ConstructDoc((Guid)DocProductionId, DocTypes.DocProduction, placeId);
-					docProduction.DocProduction = new DocProduction
-					{
-						DocID = (Guid)DocProductionId,
-						InPlaceID = WorkSession.PlaceID,
-					};
-					context.Docs.Add(docProduction);
-					docComplectation.DocProductionID = DocProductionId;
-					context.SaveChanges();
-				}
 				DocDate = (DateTime)docComplectation.C1CDocComplectation.Date;
-				if (DocProductionId == null)
-				{
-					
-				}
 				Number = docComplectation.C1CDocComplectation.C1CCode;
 				foreach (var nomenclaturePosition in context.C1CDocComplectationNomenclature
 					.Where(d => d.C1CDocComplectationID == docComplectation.C1CDocComplectationID))
@@ -82,26 +55,30 @@ namespace Gamma.ViewModels
 					var item = new ComplectationItem(nomenclaturePosition.C1CNomenclatureID,
 						nomenclaturePosition.C1COldCharacteristicID, nomenclaturePosition.C1CNewCharacteristicID,
 						nomenclaturePosition.C1CQualityID, nomenclaturePosition.Quantity ?? 0);
-					foreach (var product in context.DocProductionProducts.Include(dp => dp.Products)
-							.Where(dp => dp.DocID == DocProductionId 
-							&& dp.C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-							&& dp.C1CCharacteristicID == nomenclaturePosition.C1CNewCharacteristicID))
+					foreach (var product in docComplectation
+						.DocProduction
+						.SelectMany(dp => dp.DocProductionProducts)
+						.Where(dp => dp.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
+							&& dp.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1CNewCharacteristicID))
 						{
-							item.PackedPallets.Add(new Product
+							item.PackedPallets.Add(new ComplectationProduct
 							{
+								DocId = product.DocID,
 								ProductId = product.ProductID,
 								Quantity = product.Quantity ?? 0,
 								Number = product.Products.Number,
 								Barcode = product.Products.BarCode
 							});
 						}
-					foreach (var product in context.DocWithdrawalProducts.Include(dp => dp.Products)
-							.Where(dp => dp.DocID == DocWithdrawalId
-							             && dp.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-							             && dp.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID))
+					foreach (var product in docComplectation
+						.DocWithdrawal
+						.SelectMany(dw => dw.DocWithdrawalProducts)
+						.Where(dw => dw.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
+									&& dw.Products.ProductPallets.ProductPalletItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID))
 						{
-							item.UnpackedPallets.Add(new Product
+						item.UnpackedPallets.Add(new ComplectationProduct
 							{
+								DocId = product.DocID,
 								ProductId = product.ProductID,
 								Quantity = product.Quantity ?? 0,
 								Number = product.Products.Number,
@@ -202,13 +179,17 @@ namespace Gamma.ViewModels
 					MessageBox.Show("Качество найденной паллеты не совпадает с документом");
 					return;
 				}
-				if (!documentController.WithdrawProduct(pallet.ProductID, (Guid)DocWithdrawalId))
+				var docWithdrawalId = SqlGuidUtil.NewSequentialid();
+				if (!documentController.WithdrawProduct(pallet.ProductID, docWithdrawalId))
 				{
 					MessageBox.Show("Не удалось списать паллету. Ошибка в базе.");
 					return;
 				}
-				item.UnpackedPallets.Add(new Product
+				context.DocComplectation.First(d => d.DocComplectationID == DocId).DocWithdrawal.Add(context.DocWithdrawal.First(d => d.DocID == docWithdrawalId));
+				context.SaveChanges();
+				item.UnpackedPallets.Add(new ComplectationProduct
 				{
+					DocId = docWithdrawalId,
 					ProductId = pallet.ProductID,
 					Number = pallet.Number,
 					Barcode = pallet.BarCode,
@@ -221,7 +202,7 @@ namespace Gamma.ViewModels
 		/// Cancel unpack operation of product
 		/// </summary>
 		/// <param name="product"></param>
-		private void DeleteFromUnpack(Product product)
+		private void DeleteFromUnpack(ComplectationProduct product)
 		{
 			if (product == null)
 			{
@@ -235,8 +216,11 @@ namespace Gamma.ViewModels
 				using (var context = DB.GammaDb)
 				{
 					context.DocWithdrawalProducts.Remove(
-						context.DocWithdrawalProducts.First(wp => wp.DocID == DocWithdrawalId &&
-																			wp.ProductID == product.ProductId));
+						context.DocWithdrawalProducts.First(wp => wp.DocID == product.DocId));
+					context.DocWithdrawal.Remove(context.DocWithdrawal.First(dw => dw.DocID == product.DocId));
+					context.Docs.Remove(context.Docs.First(d => d.DocID == product.DocId));
+					context.DocComplectation.First(d => d.DocComplectationID == DocId)
+						.DocWithdrawal.Remove(context.DocWithdrawal.First(dw => dw.DocID == product.DocId));
 					context.SaveChanges();
 					var item = ComplectationItems.First(i => i.UnpackedPallets.Contains(product));
 					item.UnpackedPallets.Remove(product);
@@ -247,9 +231,30 @@ namespace Gamma.ViewModels
 		private void CreateNewPallet(ComplectationItem item)
 		{
 			UIServices.SetBusyState();
-			var product = productController.AddNewPalletToDocProduction((Guid) DocProductionId, item.NomenclatureID,
+			var docProductionId = SqlGuidUtil.NewSequentialid();
+			var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
+			docProduction.DocProduction = new DocProduction
+			{
+				DocID = docProductionId,
+				InPlaceID = placeId
+			};
+			using (var context = DB.GammaDb)
+			{
+				context.Docs.Add(docProduction);
+				context.DocComplectation.First(d => d.DocComplectationID == DocId).DocProduction.Add(docProduction.DocProduction);
+				context.SaveChanges();
+			}
+			var product = productController.AddNewPalletToDocProduction(docProductionId, item.NomenclatureID,
 				item.NewCharacteristicId);
-			item.PackedPallets.Add(product);
+			var complectedPallet = new ComplectationProduct
+			{
+				DocId = docProductionId,
+				ProductId = product.ProductId,
+				Quantity = product.Quantity,
+				Barcode = product.Barcode,
+				Number = product.Number
+			};
+			item.PackedPallets.Add(complectedPallet);
 			LastCreatedPalletNumber = product.Number;
 			ReportManager.PrintReport("Амбалаж", "Pallet", product.ProductId, false, 2);
 		}
@@ -310,10 +315,6 @@ namespace Gamma.ViewModels
 		#region Private properties
 
 		private Guid DocId { get; set; }
-
-		private Guid? DocWithdrawalId { get; set; }
-
-		private Guid? DocProductionId { get; set; }
 
 		private List<Tuple<Guid, Guid>> OldNomenclature
 		{

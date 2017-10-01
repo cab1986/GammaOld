@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="106" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="117" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -291,10 +291,6 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftSamples_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_DocShipmentOrders" />
-        <EntityTypeShape EntityType="GammaModel.DocComplectation" Width="1.5" PointX="27.25" PointY="67.5" />
-        <AssociationConnector Association="GammaModel.FK_DocComplectation_DocProduction" />
-        <AssociationConnector Association="GammaModel.FK_DocComplectation_Docs" />
-        <AssociationConnector Association="GammaModel.FK_DocComplectation_DocWithdrawal" />
         <EntityTypeShape EntityType="GammaModel.v1CDocComplectationPositions" Width="1.5" PointX="13.375" PointY="8.75" />
         <EntityTypeShape EntityType="GammaModel.C1CDocComplectation" Width="1.5" PointX="18.25" PointY="23" />
         <EntityTypeShape EntityType="GammaModel.C1CDocComplectationNomenclature" Width="1.5" PointX="31.5" PointY="44.125" />
@@ -302,10 +298,14 @@
         <AssociationConnector Association="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1" />
         <AssociationConnector Association="GammaModel.FK_1CDocComplectation_1CWarehouses" />
         <AssociationConnector Association="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation" />
-        <AssociationConnector Association="GammaModel.FK_DocComplectation_1CDocComplectation" />
         <AssociationConnector Association="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_1CDocComplectationNomenclature_1CQuality" />
+        <EntityTypeShape EntityType="GammaModel.DocComplectation" Width="1.5" PointX="20.5" PointY="37.25" />
+        <AssociationConnector Association="GammaModel.FK_DocComplectation_1CDocComplectation" />
+        <AssociationConnector Association="GammaModel.FK_DocComplectation_Docs" />
+        <AssociationConnector Association="GammaModel.DocComplectationProductions" />
+        <AssociationConnector Association="GammaModel.DocComplectationWithdrawals" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

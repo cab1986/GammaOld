@@ -99,8 +99,8 @@ namespace Gamma.Models
 
 		public decimal Quantity { get; set; }
 
-		public ObservableCollection<Product> UnpackedPallets { get; set; } = new ObservableCollection<Product>();
-		public ObservableCollection<Product> PackedPallets { get; set; } = new ObservableCollection<Product>();
+		public ObservableCollection<ComplectationProduct> UnpackedPallets { get; set; } = new ObservableCollection<ComplectationProduct>();
+		public ObservableCollection<ComplectationProduct> PackedPallets { get; set; } = new ObservableCollection<ComplectationProduct>();
 
 		public decimal UnpackedQuantity
 		{

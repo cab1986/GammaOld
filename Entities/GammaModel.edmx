@@ -532,9 +532,23 @@
             <PropertyRef Name="DocComplectationID" />
           </Key>
           <Property Name="DocComplectationID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="DocProductionID" Type="uniqueidentifier" />
-          <Property Name="DocWithdrawalID" Type="uniqueidentifier" />
           <Property Name="1CDocComplectationID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocComplectationProductions">
+          <Key>
+            <PropertyRef Name="DocComplectationID" />
+            <PropertyRef Name="DocProductionID" />
+          </Key>
+          <Property Name="DocComplectationID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocComplectationWithdrawals">
+          <Key>
+            <PropertyRef Name="DocComplectationId" />
+            <PropertyRef Name="DocWithdrawalId" />
+          </Key>
+          <Property Name="DocComplectationId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocWithdrawalId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="DocInProducts">
           <Key>
@@ -2541,18 +2555,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocComplectation_DocProduction">
-          <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="0..1" />
-          <End Role="DocComplectation" Type="Self.DocComplectation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocProduction">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="DocProductionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DocComplectation_Docs">
           <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
           <End Role="DocComplectation" Type="Self.DocComplectation" Multiplicity="0..1" />
@@ -2565,15 +2567,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocComplectation_DocWithdrawal">
-          <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="0..1" />
-          <End Role="DocComplectation" Type="Self.DocComplectation" Multiplicity="*" />
+        <Association Name="FK_DocComplectationProductions_DocComplectation">
+          <End Role="DocComplectation" Type="Self.DocComplectation" Multiplicity="1" />
+          <End Role="DocComplectationProductions" Type="Self.DocComplectationProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocComplectation">
+              <PropertyRef Name="DocComplectationID" />
+            </Principal>
+            <Dependent Role="DocComplectationProductions">
+              <PropertyRef Name="DocComplectationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocComplectationProductions_DocProduction">
+          <End Role="DocProduction" Type="Self.DocProduction" Multiplicity="1" />
+          <End Role="DocComplectationProductions" Type="Self.DocComplectationProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocProduction">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocComplectationProductions">
+              <PropertyRef Name="DocProductionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocComplectationWithdrawals_DocComplectation">
+          <End Role="DocComplectation" Type="Self.DocComplectation" Multiplicity="1" />
+          <End Role="DocComplectationWithdrawals" Type="Self.DocComplectationWithdrawals" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocComplectation">
+              <PropertyRef Name="DocComplectationID" />
+            </Principal>
+            <Dependent Role="DocComplectationWithdrawals">
+              <PropertyRef Name="DocComplectationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocComplectationWithdrawals_DocWithdrawal">
+          <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
+          <End Role="DocComplectationWithdrawals" Type="Self.DocComplectationWithdrawals" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DocWithdrawal">
               <PropertyRef Name="DocID" />
             </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="DocWithdrawalID" />
+            <Dependent Role="DocComplectationWithdrawals">
+              <PropertyRef Name="DocWithdrawalId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4115,6 +4153,8 @@
           <EntitySet Name="DocCloseShiftWastes" EntityType="Self.DocCloseShiftWastes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftWithdrawals" EntityType="Self.DocCloseShiftWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocComplectation" EntityType="Self.DocComplectation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocComplectationProductions" EntityType="Self.DocComplectationProductions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocComplectationWithdrawals" EntityType="Self.DocComplectationWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInProducts" EntityType="Self.DocInProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInventarisationProducts" EntityType="Self.DocInventarisationProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
@@ -4757,17 +4797,25 @@
             <End Role="1CDocComplectation" EntitySet="1CDocComplectation" />
             <End Role="DocComplectation" EntitySet="DocComplectation" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocComplectation_DocProduction" Association="Self.FK_DocComplectation_DocProduction">
-            <End Role="DocProduction" EntitySet="DocProduction" />
-            <End Role="DocComplectation" EntitySet="DocComplectation" />
-          </AssociationSet>
           <AssociationSet Name="FK_DocComplectation_Docs" Association="Self.FK_DocComplectation_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocComplectation" EntitySet="DocComplectation" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocComplectation_DocWithdrawal" Association="Self.FK_DocComplectation_DocWithdrawal">
-            <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+          <AssociationSet Name="FK_DocComplectationProductions_DocComplectation" Association="Self.FK_DocComplectationProductions_DocComplectation">
             <End Role="DocComplectation" EntitySet="DocComplectation" />
+            <End Role="DocComplectationProductions" EntitySet="DocComplectationProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocComplectationProductions_DocProduction" Association="Self.FK_DocComplectationProductions_DocProduction">
+            <End Role="DocProduction" EntitySet="DocProduction" />
+            <End Role="DocComplectationProductions" EntitySet="DocComplectationProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocComplectationWithdrawals_DocComplectation" Association="Self.FK_DocComplectationWithdrawals_DocComplectation">
+            <End Role="DocComplectation" EntitySet="DocComplectation" />
+            <End Role="DocComplectationWithdrawals" EntitySet="DocComplectationWithdrawals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocComplectationWithdrawals_DocWithdrawal" Association="Self.FK_DocComplectationWithdrawals_DocWithdrawal">
+            <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+            <End Role="DocComplectationWithdrawals" EntitySet="DocComplectationWithdrawals" />
           </AssociationSet>
           <AssociationSet Name="FK_DocInProducts_DocMovement" Association="Self.FK_DocInProducts_DocMovement">
             <End Role="DocMovement" EntitySet="DocMovement" />
@@ -5417,7 +5465,7 @@
           <NavigationProperty Name="DocUnpack" Relationship="GammaModel.DocUnpackWithdrawals" FromRole="DocWithdrawal" ToRole="Docs" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.DocProductionWithdrawals" FromRole="DocWithdrawal" ToRole="DocProduction" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocWithdrawal_Places" FromRole="DocWithdrawal" ToRole="Places" />
-          <NavigationProperty Name="DocComplectation" Relationship="GammaModel.FK_DocComplectation_DocWithdrawal" FromRole="DocWithdrawal" ToRole="DocComplectation" />
+          <NavigationProperty Name="DocComplectation" Relationship="GammaModel.DocComplectationWithdrawals" FromRole="DocWithdrawal" ToRole="DocComplectation" />
           </EntityType>
         <EntityType Name="Enterprises">
           <Key>
@@ -6872,19 +6920,6 @@
           <FunctionImport Name="GetProductionTaskBatchCuttingsSGB" ReturnType="Collection(GammaModel.GetProductionTaskBatchCuttingsSGB_Result1)">
           <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
           </FunctionImport>
-          <EntitySet Name="DocComplectation" EntityType="GammaModel.DocComplectation" />
-          <AssociationSet Name="FK_DocComplectation_DocProduction" Association="GammaModel.FK_DocComplectation_DocProduction">
-            <End Role="DocProduction" EntitySet="DocProduction" />
-            <End Role="DocComplectation" EntitySet="DocComplectation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocComplectation_Docs" Association="GammaModel.FK_DocComplectation_Docs">
-            <End Role="Docs" EntitySet="Docs" />
-            <End Role="DocComplectation" EntitySet="DocComplectation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocComplectation_DocWithdrawal" Association="GammaModel.FK_DocComplectation_DocWithdrawal">
-            <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
-            <End Role="DocComplectation" EntitySet="DocComplectation" />
-          </AssociationSet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="GammaModel.v1CDocComplectationPositions" />
           <EntitySet Name="C1CDocComplectation" EntityType="GammaModel.C1CDocComplectation" />
           <EntitySet Name="C1CDocComplectationNomenclature" EntityType="GammaModel.C1CDocComplectationNomenclature" />
@@ -6904,10 +6939,6 @@
             <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
             <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocComplectation_1CDocComplectation" Association="GammaModel.FK_DocComplectation_1CDocComplectation">
-            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
-            <End Role="DocComplectation" EntitySet="DocComplectation" />
-          </AssociationSet>
           <AssociationSet Name="FK_1CDocComplectationNomenclature_1CMeasureUnits" Association="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits">
             <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
             <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
@@ -6919,6 +6950,23 @@
           <AssociationSet Name="FK_1CDocComplectationNomenclature_1CQuality" Association="GammaModel.FK_1CDocComplectationNomenclature_1CQuality">
             <End Role="C1CQuality" EntitySet="C1CQuality" />
             <End Role="C1CDocComplectationNomenclature" EntitySet="C1CDocComplectationNomenclature" />
+          </AssociationSet>
+          <EntitySet Name="DocComplectation" EntityType="GammaModel.DocComplectation" />
+          <AssociationSet Name="FK_DocComplectation_1CDocComplectation" Association="GammaModel.FK_DocComplectation_1CDocComplectation">
+            <End Role="C1CDocComplectation" EntitySet="C1CDocComplectation" />
+            <End Role="DocComplectation" EntitySet="DocComplectation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocComplectation_Docs" Association="GammaModel.FK_DocComplectation_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocComplectation" EntitySet="DocComplectation" />
+          </AssociationSet>
+          <AssociationSet Name="DocComplectationProductions" Association="GammaModel.DocComplectationProductions">
+            <End Role="DocComplectation" EntitySet="DocComplectation" />
+            <End Role="DocProduction" EntitySet="DocProduction" />
+          </AssociationSet>
+          <AssociationSet Name="DocComplectationWithdrawals" Association="GammaModel.DocComplectationWithdrawals">
+            <End Role="DocComplectation" EntitySet="DocComplectation" />
+            <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -8221,7 +8269,7 @@
           <NavigationProperty Name="DocProductionProducts" Relationship="GammaModel.FK_DocProductionProducts_DocProduction" FromRole="DocProduction" ToRole="DocProductionProducts" />
           <Property Name="DocOrderId" Type="Guid" />
           <NavigationProperty Name="DocShipmentOrders" Relationship="GammaModel.FK_DocProduction_DocShipmentOrders" FromRole="DocProduction" ToRole="DocShipmentOrders" />
-          <NavigationProperty Name="DocComplectation" Relationship="GammaModel.FK_DocComplectation_DocProduction" FromRole="DocProduction" ToRole="DocComplectation" />
+          <NavigationProperty Name="DocComplectation" Relationship="GammaModel.DocComplectationProductions" FromRole="DocProduction" ToRole="DocComplectation" />
         </EntityType>
         <Association Name="FK_DocProduction_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1">
@@ -10374,55 +10422,6 @@
           <Property Type="Int32" Name="FormatNumeric" Nullable="true" />
           <Property Type="String" Name="NomenclatureKind" Nullable="false" MaxLength="3" />
         </ComplexType>
-        <EntityType Name="DocComplectation">
-          <Key>
-            <PropertyRef Name="DocComplectationID" />
-          </Key>
-          <Property Name="DocComplectationID" Type="Guid" Nullable="false" />
-          <Property Name="DocProductionID" Type="Guid" />
-          <Property Name="DocWithdrawalID" Type="Guid" />
-          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocComplectation_DocProduction" FromRole="DocComplectation" ToRole="DocProduction" />
-          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocComplectation_Docs" FromRole="DocComplectation" ToRole="Docs" />
-          <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.FK_DocComplectation_DocWithdrawal" FromRole="DocComplectation" ToRole="DocWithdrawal" />
-          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="DocComplectation" ToRole="C1CDocComplectation" />
-        </EntityType>
-        <Association Name="FK_DocComplectation_DocProduction">
-          <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="0..1" />
-          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocProduction">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="DocProductionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocComplectation_Docs">
-          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
-          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Docs">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="DocComplectationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocComplectation_DocWithdrawal">
-          <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="0..1" />
-          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocWithdrawal">
-              <PropertyRef Name="DocID" />
-            </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="DocWithdrawalID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="C1CDocComplectationID" />
@@ -10515,18 +10514,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocComplectation_1CDocComplectation">
-          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="1" />
-          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C1CDocComplectation">
-              <PropertyRef Name="C1CDocComplectationID" />
-            </Principal>
-            <Dependent Role="DocComplectation">
-              <PropertyRef Name="C1CDocComplectationID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_1CDocComplectationNomenclature_1CMeasureUnits">
           <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
           <End Type="GammaModel.C1CDocComplectationNomenclature" Role="C1CDocComplectationNomenclature" Multiplicity="*" />
@@ -10562,6 +10549,49 @@
               <PropertyRef Name="C1CQualityID" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocComplectation">
+          <Key>
+            <PropertyRef Name="DocComplectationID" />
+          </Key>
+          <Property Name="DocComplectationID" Type="Guid" Nullable="false" />
+          <Property Name="C1CDocComplectationID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="C1CDocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="DocComplectation" ToRole="C1CDocComplectation" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocComplectation_Docs" FromRole="DocComplectation" ToRole="Docs" />
+          <NavigationProperty Name="DocProduction" Relationship="GammaModel.DocComplectationProductions" FromRole="DocComplectation" ToRole="DocProduction" />
+          <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.DocComplectationWithdrawals" FromRole="DocComplectation" ToRole="DocWithdrawal" />
+        </EntityType>
+        <Association Name="FK_DocComplectation_1CDocComplectation">
+          <End Type="GammaModel.C1CDocComplectation" Role="C1CDocComplectation" Multiplicity="1" />
+          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDocComplectation">
+              <PropertyRef Name="C1CDocComplectationID" />
+            </Principal>
+            <Dependent Role="DocComplectation">
+              <PropertyRef Name="C1CDocComplectationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocComplectation_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocComplectation">
+              <PropertyRef Name="DocComplectationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DocComplectationProductions">
+          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
+          <End Type="GammaModel.DocProduction" Role="DocProduction" Multiplicity="*" />
+        </Association>
+        <Association Name="DocComplectationWithdrawals">
+          <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
+          <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -12322,16 +12352,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="DocComplectation">
-            <EntityTypeMapping TypeName="GammaModel.DocComplectation">
-              <MappingFragment StoreEntitySet="DocComplectation">
-                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
-                <ScalarProperty Name="DocWithdrawalID" ColumnName="DocWithdrawalID" />
-                <ScalarProperty Name="DocProductionID" ColumnName="DocProductionID" />
-                <ScalarProperty Name="DocComplectationID" ColumnName="DocComplectationID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="v1CDocComplectationPositions">
             <EntityTypeMapping TypeName="GammaModel.v1CDocComplectationPositions">
               <MappingFragment StoreEntitySet="v1CDocComplectationPositions">
@@ -12369,6 +12389,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DocComplectation">
+            <EntityTypeMapping TypeName="GammaModel.DocComplectation">
+              <MappingFragment StoreEntitySet="DocComplectation">
+                <ScalarProperty Name="C1CDocComplectationID" ColumnName="1CDocComplectationID" />
+                <ScalarProperty Name="DocComplectationID" ColumnName="DocComplectationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="DocComplectationProductions" TypeName="GammaModel.DocComplectationProductions" StoreEntitySet="DocComplectationProductions">
+            <EndProperty Name="DocProduction">
+              <ScalarProperty Name="DocID" ColumnName="DocProductionID" />
+            </EndProperty>
+            <EndProperty Name="DocComplectation">
+              <ScalarProperty Name="DocComplectationID" ColumnName="DocComplectationID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="DocComplectationWithdrawals" TypeName="GammaModel.DocComplectationWithdrawals" StoreEntitySet="DocComplectationWithdrawals">
+            <EndProperty Name="DocWithdrawal">
+              <ScalarProperty Name="DocID" ColumnName="DocWithdrawalId" />
+            </EndProperty>
+            <EndProperty Name="DocComplectation">
+              <ScalarProperty Name="DocComplectationID" ColumnName="DocComplectationId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -14,14 +14,21 @@ namespace Gamma.Entities
     
     public partial class DocComplectation
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocComplectation()
+        {
+            this.DocProduction = new HashSet<DocProduction>();
+            this.DocWithdrawal = new HashSet<DocWithdrawal>();
+        }
+    
         public System.Guid DocComplectationID { get; set; }
-        public Nullable<System.Guid> DocProductionID { get; set; }
-        public Nullable<System.Guid> DocWithdrawalID { get; set; }
         public System.Guid C1CDocComplectationID { get; set; }
     
-        public virtual DocProduction DocProduction { get; set; }
-        public virtual Docs Docs { get; set; }
-        public virtual DocWithdrawal DocWithdrawal { get; set; }
         public virtual C1CDocComplectation C1CDocComplectation { get; set; }
+        public virtual Docs Docs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocProduction> DocProduction { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
     }
 }
