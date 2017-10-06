@@ -324,7 +324,7 @@ namespace Gamma.ViewModels
 			}
 		}
 
-        public Product SelectedPackedPalletItem { get; set; }
+        public ComplectationProduct SelectedPackedPalletItem { get; set; }
         public DelegateCommand OpenPackedPalletItemCommand { get; private set; }
         private void OpenProduct()
         {
