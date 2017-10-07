@@ -438,14 +438,24 @@ namespace Gamma.ViewModels
 	            {
 		            return;
 	            }
-	            using (var client = new GammaService.PrinterServiceClient())
-				{
-					if (!client.ActivateProductionTask(productionTask.ProductionTaskID))
-					{
-						MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор", MessageBoxButton.OK,
-							MessageBoxImage.Warning);
-					}
-	            }
+                try
+                {
+                    using (var client = new GammaService.PrinterServiceClient())
+                    {
+                        if (!client.ActivateProductionTask(productionTask.ProductionTaskID))
+                        {
+                            MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                        }
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                }
             }
         }
 

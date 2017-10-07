@@ -35,6 +35,7 @@ namespace Gamma.ViewModels
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
             PrintExampleCommand = new DelegateCommand(PrintExample);
+            UsedSpools = new SpoolWithdrawByShiftViewModel();
         }
         /// <summary>
         /// Открытие задания для редактирования
@@ -75,6 +76,8 @@ namespace Gamma.ViewModels
         public event Func<bool> PrintExampleEvent;
 
         public DelegateCommand PrintExampleCommand { get; private set; }
+
+        public SpoolWithdrawByShiftViewModel UsedSpools { get; private set; }
 
         private void PrintExample()
         {

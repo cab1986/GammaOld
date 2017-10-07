@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using DevExpress.Mvvm;
+using DevExpress.Xpf.CodeView;
 
 namespace Gamma.ViewModels
 {
@@ -16,7 +18,9 @@ namespace Gamma.ViewModels
 
 		public SpoolWithdrawByShiftViewModel()
 		{
-			
+			OpenSpoolCommand = new DelegateCommand(OpenSpool);
+			UpdateSpools();
+			Messenger.Default.Register<SpoolWithdrawed>(this, s => UpdateSpools());
 		}
 
 		#endregion
@@ -47,7 +51,19 @@ namespace Gamma.ViewModels
 			UsedSpools.Clear();
 			using (var context = DB.GammaDb)
 			{
-				
+				UsedSpools.AddRange(context.DocWithdrawalProducts.Where(dw => dw.DocWithdrawal.Docs.ShiftID == WorkSession.ShiftID
+				&& dw.DocWithdrawal.Docs.Date >= DB.GetShiftBeginTime(DateTime.Now) && dw.DocWithdrawal.Docs.Date <= DB.GetShiftEndTime(DateTime.Now)
+				&& dw.Products.ProductKindID == (int)ProductKind.ProductSpool)
+				.GroupBy(dw => dw.ProductID)
+				.Select(gp => new UsedSpool
+					{
+						ProductId = gp.Key,
+						UsedQuantity = (int)gp.Sum(dw => dw.Quantity ?? 0) * 1000,
+						Number = gp.FirstOrDefault().Products.Number,
+						RemainderQuantity = (int)(gp.FirstOrDefault().Products.ProductSpools.DecimalWeight*1000),
+						Nomenclature = gp.FirstOrDefault().Products.ProductSpools.C1CNomenclature.Name + gp.FirstOrDefault().Products.ProductSpools.C1CCharacteristics.Name,
+						InstallDate = context.SpoolInstallLog.OrderByDescending(s => s.Date).FirstOrDefault(s => s.ProductID == gp.Key).Date
+				}).OrderBy(s => s.InstallDate));
 			}
 		}
 
@@ -60,7 +76,8 @@ namespace Gamma.ViewModels
 		public Guid ProductId { get; set; }
 		public string Number { get; set; }
 		public string Nomenclature { get; set; }
-		public decimal UsedQuantity { get; set; }
-		public decimal RemainderQuantity { get; set; }
+		public int UsedQuantity { get; set; }
+		public int RemainderQuantity { get; set; }
+		public DateTime? InstallDate { get; set; }
 	}
 }

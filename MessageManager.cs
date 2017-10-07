@@ -22,6 +22,8 @@ namespace Gamma
     public class BaseReconnectedMessage { }
     public class OpenFilterDateMessage { }
 
+    public class SpoolWithdrawed { }
+
     public class PrintReportMessage
     {
         public Guid ReportID { get; set; } // id отчета
@@ -330,6 +332,11 @@ namespace Gamma
         public static void OpenDocWithdrawal(Guid docId)
         {
             Messenger.Default.Send(new OpenDocWithdrawalMessage(docId));
+        }
+
+        public static void SpoolWithdrawed()
+        {
+            Messenger.Default.Send(new SpoolWithdrawed());
         }
 
         public static void EditUser(GammaEntities gammaBase = null)

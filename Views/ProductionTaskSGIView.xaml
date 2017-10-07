@@ -59,6 +59,9 @@
                     </Button.Style>
                 </Button>
             </dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Использованные тамбура" LabelPosition="Top">
+                <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>
+            </dxlc:LayoutItem>
         </dxlc:LayoutControl>
         <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior />

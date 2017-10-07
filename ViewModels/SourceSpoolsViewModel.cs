@@ -282,6 +282,7 @@ namespace Gamma.ViewModels
                     break;
             }
             GammaBase.SaveChanges();
+            MessageManager.SpoolWithdrawed();
             return true;
         }
 

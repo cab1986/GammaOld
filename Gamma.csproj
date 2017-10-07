@@ -1029,6 +1029,9 @@
     <Compile Include="Views\RoleEditView.xaml.cs">
       <DependentUpon>RoleEditView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SpoolWithdrawByShiftView.xaml.cs">
+      <DependentUpon>SpoolWithdrawByShiftView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserEditView.xaml.cs">
       <DependentUpon>UserEditView.xaml</DependentUpon>
     </Compile>
@@ -1287,6 +1290,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SpoolWithdrawByShiftView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UserEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1437,7 +1444,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
