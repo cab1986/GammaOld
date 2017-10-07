@@ -22,6 +22,7 @@ namespace Gamma.Entities
             this.DocCloseShift = new HashSet<Docs>();
             this.DocUnpack = new HashSet<Docs>();
             this.DocProduction = new HashSet<DocProduction>();
+            this.DocComplectation = new HashSet<DocComplectation>();
         }
     
         public System.Guid DocID { get; set; }
@@ -39,5 +40,7 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
         public virtual Places Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocComplectation> DocComplectation { get; set; }
     }
 }

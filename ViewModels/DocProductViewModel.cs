@@ -160,7 +160,8 @@ namespace Gamma.ViewModels
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke");
-                    CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
+                    //CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
+                    CurrentViewModel = new DocProductPalletViewModel(product.ProductID);
                     break;
                 case DocProductKinds.DocProductBale:
                     Title = "Кипа";

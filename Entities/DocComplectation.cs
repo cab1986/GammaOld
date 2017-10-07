@@ -12,31 +12,23 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocProduction
+    public partial class DocComplectation
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocProduction()
+        public DocComplectation()
         {
+            this.DocProduction = new HashSet<DocProduction>();
             this.DocWithdrawal = new HashSet<DocWithdrawal>();
-            this.DocProductionProducts = new HashSet<DocProductionProducts>();
-            this.DocComplectation = new HashSet<DocComplectation>();
         }
     
-        public System.Guid DocID { get; set; }
-        public Nullable<System.Guid> ProductionTaskID { get; set; }
-        public Nullable<int> InPlaceID { get; set; }
-        public Nullable<bool> HasWarnings { get; set; }
-        public Nullable<System.Guid> DocOrderId { get; set; }
+        public System.Guid DocComplectationID { get; set; }
+        public System.Guid C1CDocComplectationID { get; set; }
     
+        public virtual C1CDocComplectation C1CDocComplectation { get; set; }
         public virtual Docs Docs { get; set; }
-        public virtual ProductionTasks ProductionTasks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocProduction> DocProduction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
-        public virtual Places Places { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocProductionProducts> DocProductionProducts { get; set; }
-        public virtual DocShipmentOrders DocShipmentOrders { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocComplectation> DocComplectation { get; set; }
     }
 }

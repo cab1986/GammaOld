@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="Gamma.Views.DocComplectationsListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Views"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocComplectationsListViewModel}}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:TextEdit}">
+            <Style.Triggers>
+                <DataTrigger 
+                    Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+                    Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger 
+                    Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+                    Value="1">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl>
+            <dxlc:LayoutItem Label="Диапозон:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" x:Name="IntervalList" IsTextEditable="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Номер:">
+                <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Дата с:">
+                <dxe:DateEdit EditValue="{Binding DateBegin}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="по:">
+                <dxe:DateEdit EditValue="{Binding DateEnd}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <Button Content="Поиск" Command="{Binding RefreshCommand}" Width="60"/>
+        </dxlc:LayoutControl>
+        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding DocComplectations}" SelectedItem="{Binding SelectedDocComplectation}" x:Name="GridControl" >
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}" />
+            </dxmvvm:Interaction.Behaviors>
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
+            </dxg:GridControl.View>
+            <dxg:GridControl.DetailDescriptor>
+                <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding NomenclaturePositions}">
+                    <dxg:GridControl>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AutoWidth="True" AllowEditing="False"/>
+                        </dxg:GridControl.View>
+                        <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature"/>
+                        <dxg:GridColumn Header="Старая характеристика" FieldName="CharacteristicFrom" />
+                        <dxg:GridColumn Header="Новая характеристика" FieldName="CharacteristicTo" />
+                        <dxg:GridColumn Header="Нужное кол-во" FieldName="Quantity" />
+                        <dxg:GridColumn Header="Распаковано" FieldName="UnpackedQuantity" />
+                        <dxg:GridColumn Header="Скомплектовано" FieldName="ComplectedQuantity" />
+                    </dxg:GridControl>
+                </dxg:DataControlDetailDescriptor>
+            </dxg:GridControl.DetailDescriptor>
+            <dxg:GridColumn Header="Номер документа" FieldName="Number" VisibleIndex="0" />
+            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"/>
+        </dxg:GridControl>
+    </Grid>
+</UserControl>
