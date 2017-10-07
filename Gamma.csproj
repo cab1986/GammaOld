@@ -830,6 +830,7 @@
     <Compile Include="ViewModels\PermitEditViewModel.cs" />
     <Compile Include="ViewModels\ProductionTasksSGIViewModel.cs" />
     <Compile Include="ViewModels\RoleEditViewModel.cs" />
+    <Compile Include="ViewModels\SpoolWithdrawByShiftViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\NomenclatureFindViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskPMViewModel.cs" />
@@ -1394,7 +1395,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
