@@ -47,6 +47,8 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CPlaceID { get; set; }
         public Nullable<int> UnwindersCount { get; set; }
         public Nullable<bool> IsRemotePrinting { get; set; }
+        public Nullable<bool> UseApplicator { get; set; }
+        public string ApplicatorLabelPath { get; set; }
     
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }
