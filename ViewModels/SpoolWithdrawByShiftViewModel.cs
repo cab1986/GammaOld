@@ -53,8 +53,9 @@ namespace Gamma.ViewModels
 			{
 				UsedSpools.AddRange(context.DocWithdrawalProducts.Where(dw => dw.DocWithdrawal.Docs.ShiftID == WorkSession.ShiftID
 				&& dw.DocWithdrawal.Docs.Date >= DB.GetShiftBeginTime(DateTime.Now) && dw.DocWithdrawal.Docs.Date <= DB.GetShiftEndTime(DateTime.Now)
-				&& dw.Products.ProductKindID == (int)ProductKind.ProductSpool)
-				.GroupBy(dw => dw.ProductID)
+				&& dw.Products.ProductKindID == (int)ProductKind.ProductSpool
+                && dw.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID)
+                .GroupBy(dw => dw.ProductID)
 				.Select(gp => new UsedSpool
 					{
 						ProductId = gp.Key,
