@@ -419,7 +419,7 @@ namespace Gamma.ViewModels
             if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid || IsUnpacked || IsReadOnly) return true;
             DocId = itemID;
            var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight,
-                Spools.Count).FirstOrDefault();
+                Spools.Count, Spools.FirstOrDefault().ProductID).FirstOrDefault();
             if (!string.IsNullOrEmpty(result))
             {
                 MessageBox.Show(result, "Проверка упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);

@@ -532,7 +532,7 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GroupPackSpools_Result>("GroupPackSpools", docIDParameter);
         }
     
-        public virtual ObjectResult<string> ValidateGroupPackBeforeSave(Nullable<System.Guid> nomenclatureID, Nullable<System.Guid> characteristicID, Nullable<decimal> diameter, Nullable<decimal> weight, Nullable<int> countRolls)
+        public virtual ObjectResult<string> ValidateGroupPackBeforeSave(Nullable<System.Guid> nomenclatureID, Nullable<System.Guid> characteristicID, Nullable<decimal> diameter, Nullable<decimal> weight, Nullable<int> countRolls, Nullable<System.Guid> productId)
         {
             var nomenclatureIDParameter = nomenclatureID.HasValue ?
                 new ObjectParameter("NomenclatureID", nomenclatureID) :
@@ -553,8 +553,12 @@ namespace Gamma.Entities
             var countRollsParameter = countRolls.HasValue ?
                 new ObjectParameter("CountRolls", countRolls) :
                 new ObjectParameter("CountRolls", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateGroupPackBeforeSave", nomenclatureIDParameter, characteristicIDParameter, diameterParameter, weightParameter, countRollsParameter);
+
+            var productIdParameter = productId.HasValue ?
+                new ObjectParameter("ProductID", productId) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateGroupPackBeforeSave", nomenclatureIDParameter, characteristicIDParameter, diameterParameter, weightParameter, countRollsParameter, productIdParameter);
         }
     
         public virtual ObjectResult<string> CheckAddedGroupPackSpool(Nullable<System.Guid> addedProductId, Nullable<System.Guid> baseProductId)
