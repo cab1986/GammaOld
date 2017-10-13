@@ -55,6 +55,8 @@
           <Property Name="1CCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Date" Type="datetime" />
           <Property Name="1CWarehouseID" Type="uniqueidentifier" />
+          <Property Name="Marked" Type="bit" />
+          <Property Name="Posted" Type="bit" />
         </EntityType>
         <EntityType Name="1CDocComplectationNomenclature">
           <Key>
@@ -1145,8 +1147,8 @@
           <Property Name="ShiftID" Type="tinyint" Nullable="false" />
           <Property Name="MobileComputer" Type="bit" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1CDocComplectationPositions" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1159,8 +1161,8 @@
           <Property Name="Withdraw" Type="decimal" Precision="38" Scale="5" />
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrderGoods" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1178,9 +1180,15 @@
           <Property Name="AcceptedQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
+          <Property Name="BreakNumber" Type="int" />
+          <Property Name="CountProduct" Type="int" />
+          <Property Name="CountProductSpools" Type="int" />
+          <Property Name="CountProductSpoolsWithBreak" Type="int" />
+          <Property Name="CoefficientPackage" Type="decimal" Precision="10" Scale="3" />
+          <Property Name="CoefficientPallet" Type="decimal" Precision="10" Scale="3" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1COrders" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1217,8 +1225,8 @@
           <Property Name="OrderKindID" Type="int" Nullable="false" />
           <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.v1CWorkingSpecifications" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="Period" />
@@ -1231,8 +1239,8 @@
           <Property Name="1CPlaceID" Type="uniqueidentifier" />
           <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vCharacteristicSGBProperties" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1250,33 +1258,36 @@
           <Property Name="Buyer" Type="varchar" MaxLength="50" />
           <Property Name="TypeKind" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vDocMovementGoods" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
             
-            
           </Key>
           <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocOrderID" Type="uniqueidentifier" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="1CQualityID" Type="uniqueidentifier" />
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="OutQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="InQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="AcceptedQuantity" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="BreakNumber" Type="int" />
+          <Property Name="CountProduct" Type="int" />
+          <Property Name="CountProductSpools" Type="bigint" />
+          <Property Name="CountProductSpoolsWithBreak" Type="int" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vDocMovementProducts" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
             <PropertyRef Name="ProductID" />
+            <PropertyRef Name="ProductKindID" />
             <PropertyRef Name="DocDate" />
             
-            
-            <PropertyRef Name="ProductKindID" />
           </Key>
           <Property Name="DocMovementID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
@@ -1295,17 +1306,21 @@
           <Property Name="DocDate" Type="datetime" Nullable="false" />
           <Property Name="OutPerson" Type="nvarchar" MaxLength="255" />
           <Property Name="InPerson" Type="nvarchar" MaxLength="255" />
-          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="1CQualityID" Type="uniqueidentifier" />
-          <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
-          <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
+          <Property Name="NomenclatureName" Type="nvarchar" MaxLength="554" />
+          <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="552" />
           <Property Name="Number" Type="varchar" MaxLength="20" />
           <Property Name="BarCode" Type="varchar" MaxLength="20" />
+          <Property Name="InPlaceZoneID" Type="uniqueidentifier" />
+          <Property Name="InPlaceZone" Type="varchar" MaxLength="1000" />
+          <Property Name="OutPlaceZoneID" Type="uniqueidentifier" />
+          <Property Name="OutPlaceZone" Type="varchar" MaxLength="1000" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vGroupPackSpools" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -1315,8 +1330,8 @@
           <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vPlacePropertiesValues" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -1326,8 +1341,8 @@
           <Property Name="Format" Type="decimal" Precision="20" Scale="5" />
           <Property Name="CoreDiameter" Type="decimal" Precision="20" Scale="5" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vPMSpoolsToGroupPack" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1347,8 +1362,8 @@
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskBatches" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -1357,8 +1372,8 @@
           <Property Name="ProductionTaskBatchID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductionTaskProducts" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1377,8 +1392,8 @@
           <Property Name="CharacteristicID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "GammaNew.dbo.vProductsInfo" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -3129,6 +3144,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocWithdrawalProducts_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="DocWithdrawalProducts" Type="Self.DocWithdrawalProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocWithdrawalProducts">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MaterialTypeNomenclature_1CNomenclature">
           <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="MaterialTypeNomenclature" Type="Self.MaterialTypeNomenclature" Multiplicity="*" />
@@ -4098,6 +4125,7 @@
           <Parameter Name="Diameter" Type="decimal" Mode="In" />
           <Parameter Name="Weight" Type="decimal" Mode="In" />
           <Parameter Name="CountRolls" Type="int" Mode="In" />
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -4237,7 +4265,13 @@
     [v1COrderGoods].[InQuantity] AS [InQuantity], 
     [v1COrderGoods].[AcceptedQuantity] AS [AcceptedQuantity], 
     [v1COrderGoods].[NomenclatureName] AS [NomenclatureName], 
-    [v1COrderGoods].[ShortNomenclatureName] AS [ShortNomenclatureName]
+    [v1COrderGoods].[ShortNomenclatureName] AS [ShortNomenclatureName], 
+    [v1COrderGoods].[BreakNumber] AS [BreakNumber], 
+    [v1COrderGoods].[CountProduct] AS [CountProduct], 
+    [v1COrderGoods].[CountProductSpools] AS [CountProductSpools], 
+    [v1COrderGoods].[CountProductSpoolsWithBreak] AS [CountProductSpoolsWithBreak], 
+    [v1COrderGoods].[CoefficientPackage] AS [CoefficientPackage], 
+    [v1COrderGoods].[CoefficientPallet] AS [CoefficientPallet]
     FROM [dbo].[v1COrderGoods] AS [v1COrderGoods]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1COrders" EntityType="Self.v1COrders" store:Type="Views" store:Schema="dbo">
@@ -4299,13 +4333,18 @@
           <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vDocMovementGoods].[DocMovementID] AS [DocMovementID], 
+    [vDocMovementGoods].[DocOrderID] AS [DocOrderID], 
     [vDocMovementGoods].[1CNomenclatureID] AS [1CNomenclatureID], 
     [vDocMovementGoods].[1CCharacteristicID] AS [1CCharacteristicID], 
     [vDocMovementGoods].[1CQualityID] AS [1CQualityID], 
     [vDocMovementGoods].[NomenclatureName] AS [NomenclatureName], 
     [vDocMovementGoods].[OutQuantity] AS [OutQuantity], 
     [vDocMovementGoods].[InQuantity] AS [InQuantity], 
-    [vDocMovementGoods].[AcceptedQuantity] AS [AcceptedQuantity]
+    [vDocMovementGoods].[AcceptedQuantity] AS [AcceptedQuantity], 
+    [vDocMovementGoods].[BreakNumber] AS [BreakNumber], 
+    [vDocMovementGoods].[CountProduct] AS [CountProduct], 
+    [vDocMovementGoods].[CountProductSpools] AS [CountProductSpools], 
+    [vDocMovementGoods].[CountProductSpoolsWithBreak] AS [CountProductSpoolsWithBreak]
     FROM [dbo].[vDocMovementGoods] AS [vDocMovementGoods]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMovementProducts" EntityType="Self.vDocMovementProducts" store:Type="Views" store:Schema="dbo">
@@ -4334,7 +4373,11 @@
     [vDocMovementProducts].[NomenclatureName] AS [NomenclatureName], 
     [vDocMovementProducts].[ShortNomenclatureName] AS [ShortNomenclatureName], 
     [vDocMovementProducts].[Number] AS [Number], 
-    [vDocMovementProducts].[BarCode] AS [BarCode]
+    [vDocMovementProducts].[BarCode] AS [BarCode], 
+    [vDocMovementProducts].[InPlaceZoneID] AS [InPlaceZoneID], 
+    [vDocMovementProducts].[InPlaceZone] AS [InPlaceZone], 
+    [vDocMovementProducts].[OutPlaceZoneID] AS [OutPlaceZoneID], 
+    [vDocMovementProducts].[OutPlaceZone] AS [OutPlaceZone]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
@@ -4983,6 +5026,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_DocWithdrawalProducts_DocWithdrawal" Association="Self.FK_DocWithdrawalProducts_DocWithdrawal">
             <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+            <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocWithdrawalProducts_Products" Association="Self.FK_DocWithdrawalProducts_Products">
+            <End Role="Products" EntitySet="Products" />
             <End Role="DocWithdrawalProducts" EntitySet="DocWithdrawalProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_MaterialTypeNomenclature_1CNomenclature" Association="Self.FK_MaterialTypeNomenclature_1CNomenclature">
@@ -6241,6 +6288,7 @@
             <Parameter Name="Diameter" Mode="In" Type="Decimal" />
             <Parameter Name="Weight" Mode="In" Type="Decimal" />
             <Parameter Name="CountRolls" Mode="In" Type="Int32" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="Rests" EntityType="GammaModel.Rests" />
           <FunctionImport Name="CheckAddedGroupPackSpool" ReturnType="Collection(String)">
@@ -8046,12 +8094,17 @@
           </Key>
           <Property Name="DocMovementID" Type="Guid" Nullable="false" />
           <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
-          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
           <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
           <Property Name="OutQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="InQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="C1CQualityID" Type="Guid" />
           <Property Name="AcceptedQuantity" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="DocOrderID" Type="Guid" />
+          <Property Name="BreakNumber" Type="Int32" />
+          <Property Name="CountProduct" Type="Int32" />
+          <Property Name="CountProductSpools" Type="Int64" />
+          <Property Name="CountProductSpoolsWithBreak" Type="Int32" />
         </EntityType>
         <EntityType Name="ProductKinds">
           <Key>
@@ -8670,14 +8723,18 @@
           <Property Name="DocDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OutPerson" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="InPerson" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
           <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
-          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
           <Property Name="C1CQualityID" Type="Guid" />
-          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
-          <Property Name="ShortNomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="true" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="554" FixedLength="false" Unicode="true" />
+          <Property Name="ShortNomenclatureName" Type="String" MaxLength="552" FixedLength="false" Unicode="true" />
           <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="BarCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="InPlaceZoneID" Type="Guid" />
+          <Property Name="InPlaceZone" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="OutPlaceZoneID" Type="Guid" />
+          <Property Name="OutPlaceZone" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="v1COrderGoods">
           <Key>
@@ -8696,6 +8753,12 @@
           <Property Name="AcceptedQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
           <Property Name="ShortNomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="true" />
+          <Property Name="BreakNumber" Type="Int32" />
+          <Property Name="CountProduct" Type="Int32" />
+          <Property Name="CountProductSpools" Type="Int32" />
+          <Property Name="CountProductSpoolsWithBreak" Type="Int32" />
+          <Property Name="CoefficientPackage" Type="Decimal" Precision="10" Scale="3" />
+          <Property Name="CoefficientPallet" Type="Decimal" Precision="10" Scale="3" />
         </EntityType>
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
@@ -10445,6 +10508,8 @@
           <NavigationProperty Name="C1CWarehouses" Relationship="GammaModel.FK_1CDocComplectation_1CWarehouses" FromRole="C1CDocComplectation" ToRole="C1CWarehouses" />
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CDocComplectation" FromRole="C1CDocComplectation" ToRole="C1CDocComplectationNomenclature" />
           <NavigationProperty Name="DocComplectation" Relationship="GammaModel.FK_DocComplectation_1CDocComplectation" FromRole="C1CDocComplectation" ToRole="DocComplectation" />
+          <Property Name="Marked" Type="Boolean" />
+          <Property Name="Posted" Type="Boolean" />
         </EntityType>
         <EntityType Name="C1CDocComplectationNomenclature">
           <Key>
@@ -11651,6 +11716,11 @@
           <EntitySetMapping Name="vDocMovementGoods">
             <EntityTypeMapping TypeName="GammaModel.vDocMovementGoods">
               <MappingFragment StoreEntitySet="vDocMovementGoods">
+                <ScalarProperty Name="CountProductSpoolsWithBreak" ColumnName="CountProductSpoolsWithBreak" />
+                <ScalarProperty Name="CountProductSpools" ColumnName="CountProductSpools" />
+                <ScalarProperty Name="CountProduct" ColumnName="CountProduct" />
+                <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
+                <ScalarProperty Name="DocOrderID" ColumnName="DocOrderID" />
                 <ScalarProperty Name="AcceptedQuantity" ColumnName="AcceptedQuantity" />
                 <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
                 <ScalarProperty Name="InQuantity" ColumnName="InQuantity" />
@@ -11958,6 +12028,10 @@
           <EntitySetMapping Name="vDocMovementProducts">
             <EntityTypeMapping TypeName="GammaModel.vDocMovementProducts">
               <MappingFragment StoreEntitySet="vDocMovementProducts">
+                <ScalarProperty Name="OutPlaceZone" ColumnName="OutPlaceZone" />
+                <ScalarProperty Name="OutPlaceZoneID" ColumnName="OutPlaceZoneID" />
+                <ScalarProperty Name="InPlaceZone" ColumnName="InPlaceZone" />
+                <ScalarProperty Name="InPlaceZoneID" ColumnName="InPlaceZoneID" />
                 <ScalarProperty Name="BarCode" ColumnName="BarCode" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="ShortNomenclatureName" ColumnName="ShortNomenclatureName" />
@@ -11989,6 +12063,12 @@
           <EntitySetMapping Name="v1COrderGoods">
             <EntityTypeMapping TypeName="GammaModel.v1COrderGoods">
               <MappingFragment StoreEntitySet="v1COrderGoods">
+                <ScalarProperty Name="CoefficientPallet" ColumnName="CoefficientPallet" />
+                <ScalarProperty Name="CoefficientPackage" ColumnName="CoefficientPackage" />
+                <ScalarProperty Name="CountProductSpoolsWithBreak" ColumnName="CountProductSpoolsWithBreak" />
+                <ScalarProperty Name="CountProductSpools" ColumnName="CountProductSpools" />
+                <ScalarProperty Name="CountProduct" ColumnName="CountProduct" />
+                <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
                 <ScalarProperty Name="ShortNomenclatureName" ColumnName="ShortNomenclatureName" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="AcceptedQuantity" ColumnName="AcceptedQuantity" />
@@ -12368,6 +12448,8 @@
           <EntitySetMapping Name="C1CDocComplectation">
             <EntityTypeMapping TypeName="GammaModel.C1CDocComplectation">
               <MappingFragment StoreEntitySet="1CDocComplectation">
+                <ScalarProperty Name="Posted" ColumnName="Posted" />
+                <ScalarProperty Name="Marked" ColumnName="Marked" />
                 <ScalarProperty Name="C1CWarehouseID" ColumnName="1CWarehouseID" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
