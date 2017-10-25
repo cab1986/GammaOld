@@ -107,8 +107,8 @@ namespace Gamma.ViewModels
             
                 var docWithdrawalProduct =
                 GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                    .FirstOrDefault(d => d.ProductID == productId);
-                if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null)// || docWithdrawalProduct.CompleteWithdrawal == true)
+                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
+                if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                 {
                     var docId = SqlGuidUtil.NewSequentialid();
                     docWithdrawalProduct = new DocWithdrawalProducts
@@ -293,9 +293,9 @@ namespace Gamma.ViewModels
             {
                 var docWithdrawalProduct =
                 gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                    .FirstOrDefault(d => d.ProductID == productId);
+                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
                 //if (docWithdrawalProduct?.CompleteWithdrawal == true) return;
-                if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null)
+                if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                 {
                     var docId = SqlGuidUtil.NewSequentialid();
                     docWithdrawalProduct = new DocWithdrawalProducts
