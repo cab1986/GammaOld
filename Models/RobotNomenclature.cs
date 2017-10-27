@@ -11,6 +11,6 @@ namespace Gamma.Models
         public string EANFullPallet { get; set; }
         public int ProductionLine { get; set; }
         public int PlaceID { get; set; }
-        public string ProdName { get; set; }
+        public string ProdName { get; set; } 
     }
 }
