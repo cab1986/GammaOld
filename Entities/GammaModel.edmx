@@ -1451,6 +1451,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Key>
             <PropertyRef Name="ProdNumber" />
             <PropertyRef Name="ProductionLine" />
+            
             <PropertyRef Name="PlaceID" />
           </Key>
           <Property Name="ProdNumber" Type="int" Nullable="false" />
@@ -1458,7 +1459,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="EANFullPallet" Type="nvarchar" MaxLength="50" />
           <Property Name="ProductionLine" Type="int" Nullable="false" />
           <Property Name="PlaceID" Type="int" Nullable="false" />
-          <Property Name="ProdName" Type="nvarchar" MaxLength="371" />
+          <Property Name="ProdName" Type="nvarchar" MaxLength="472" Nullable="false" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
@@ -10739,7 +10740,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="EANFullPallet" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ProductionLine" Type="Int32" Nullable="false" />
           <Property Name="PlaceID" Type="Int32" Nullable="false" />
-          <Property Name="ProdName" Type="String" MaxLength="371" FixedLength="false" Unicode="true" />
+          <Property Name="ProdName" Type="String" MaxLength="472" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <Association Name="FK_ProductionTaskConverting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
