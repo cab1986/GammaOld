@@ -34,6 +34,16 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
+            RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
+                Select(p => new RobotNomenclature()
+                {
+                    ProdNumber = p.ProdNumber,
+                    ProdDescription = p.ProdDescription,
+                    EANFullPallet = p.EANFullPallet,
+                    ProductionLine = p.ProductionLine,
+                    PlaceID = p.PlaceID,
+                    ProdName = p.ProdName
+                }));
             PrintExampleCommand = new DelegateCommand(PrintExample);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
         }
@@ -64,12 +74,27 @@ namespace Gamma.ViewModels
                                 MessageBoxImage.Asterisk);
                         }
                     }
+                    RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
+                        Select(p => new RobotNomenclature()
+                        {
+                            ProdNumber = p.ProdNumber,
+                            ProdDescription = p.ProdDescription,
+                            EANFullPallet = p.EANFullPallet,
+                            ProductionLine = p.ProductionLine,
+                            PlaceID = p.PlaceID,
+                            ProdName = p.ProdName
+                        }));
+                    RobotProductNumber =
+                        gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)
+                            .Select(p => p.RobotProductNumber)
+                            .FirstOrDefault();
                 }
                 ProductionTaskStateID =
                     gammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
                         .Select(p => p.ProductionTaskStateID)
                         .FirstOrDefault();
                 IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
+
             }
         }
 
@@ -123,6 +148,7 @@ namespace Gamma.ViewModels
         /// id выбранного передела
         /// </summary>
         [UIAuth(UIAuthLevel.ReadOnly)]
+        //[Required]
         [Required(ErrorMessage = @"Передел не может быть пустым")]
         public int? PlaceID
         {
@@ -133,6 +159,59 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("PlaceID");
             }
         }
+
+        
+        private Place _selectedPlace;
+        /// <summary>
+        /// Выбранный передел. При смене обновляем список номеров робота. 
+        /// </summary>
+        public Place SelectedPlace
+        {
+            get { return _selectedPlace; }
+            set
+            {
+                if (_selectedPlace != value)
+                {
+                    _selectedPlace = value;
+                    if (value != null) PlaceChanged(value.PlaceID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обновить список номеров робота при смене передела
+        /// </summary>
+        private void PlaceChanged(int PlaceID)
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var IsRobot =
+                gammaBase.Places.Where(p => p.PlaceID == PlaceID)
+                    .Select(p => p.IsRobot)
+                    .FirstOrDefault();
+                if (IsRobot == true)
+                {
+                    RobotNomenclatureVisible = Visibility.Visible;
+                    RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
+                        Select(p => new RobotNomenclature()
+                        {
+                            ProdNumber = p.ProdNumber,
+                            ProdDescription = p.ProdDescription,
+                            EANFullPallet = p.EANFullPallet,
+                            ProductionLine = p.ProductionLine,
+                            PlaceID = p.PlaceID,
+                            ProdName = p.ProdName
+                        }));
+                }
+                else
+                {
+                    RobotNomenclatureVisible = Visibility.Collapsed;
+                    RobotNomenclatures = null;
+                }
+            }
+            //RobotProductNumber = null;
+        }
+
         /// <summary>
         /// Количество рулончиков в шт.
         /// </summary>
@@ -167,6 +246,10 @@ namespace Gamma.ViewModels
                     "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
                     "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
+        //public override bool CanSaveExecute()
+        //{
+        //    return false;
+        //}
         public override bool SaveToModel(Guid productionTaskBatchID)
         {
             UIServices.SetBusyState();
@@ -204,7 +287,48 @@ namespace Gamma.ViewModels
                 productionTask.DateEnd = DateEnd;
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
-                GammaBase.SaveChanges();
+
+            var placeIsRobot =
+                GammaBase.Places.Where(p => p.PlaceID == PlaceID)
+                        .Select(p => p.IsRobot)
+                        .FirstOrDefault();
+            if (placeIsRobot == true)
+            {
+                var RobotProductDescription = GammaBase.vRobotNomenclatures.Where(p => p.ProdNumber == RobotProductNumber)
+                .Select(p => p.ProdDescription)
+                .FirstOrDefault();
+                ProductionTaskConverting productionTaskConverting;
+                if (productionTaskBatch.ProductionTasks.FirstOrDefault().ProductionTaskConverting == null)
+                {
+                    productionTaskConverting = new ProductionTaskConverting()
+                    {
+                        ProductionTaskID = productionTask.ProductionTaskID,
+                        RobotProductNumber = RobotProductNumber,
+                        RobotProductDescription = RobotProductDescription
+                    };
+                    productionTaskBatch.ProductionTasks.FirstOrDefault().ProductionTaskConverting = productionTaskConverting;
+                }
+                else
+                {
+                    productionTaskBatch.ProductionTasks.First().ProductionTaskConverting.RobotProductNumber = RobotProductNumber;
+                    productionTaskBatch.ProductionTasks.First().ProductionTaskConverting.RobotProductDescription = RobotProductDescription;
+                }
+                var productionTaskStateID =
+                    GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
+                            .Select(p => p.ProductionTaskStateID)
+                            .FirstOrDefault();
+                if (productionTaskStateID > 0 && placeIsRobot == true && RobotProductNumber == null)
+                {
+                    MessageBox.Show("Вы попытались сохранить задание в производстве без указания номера задания робота. Оно не будет сохранено");
+                    return false;
+                }
+            }
+            else
+            {
+                GammaBase.ProductionTaskConverting.RemoveRange(GammaBase.ProductionTaskConverting.Where(c => c.ProductionTaskID == productionTask.ProductionTaskID));
+            }
+
+            GammaBase.SaveChanges();
             ProductionTaskId = productionTask.ProductionTaskID;
             return true;
         }
@@ -265,5 +389,52 @@ namespace Gamma.ViewModels
         /// Только для чтения, если по каким-то причинам не задание невалидно, то есть возможность редактирования
         /// </summary>
         public bool IsReadOnly => (IsConfirmed || !DB.HaveWriteAccess("ProductionTasks")) && IsValid;
+
+        public Visibility _robotNomenclatureVisible { get; set; } = Visibility.Visible;
+        /// <summary>
+        /// Видимость задания номера для робота
+        /// </summary>
+        public Visibility RobotNomenclatureVisible
+        {
+            get { return _robotNomenclatureVisible; }
+            set
+            {
+                _robotNomenclatureVisible = value;
+                RaisePropertiesChanged("RobotNomenclatureVisible");
+            }
+        }
+
+        public int? _robotProductNumber { get; set; }
+        /// <summary>
+        /// номер выбранного задания
+        /// </summary>
+        [UIAuth(UIAuthLevel.ReadOnly)]
+        public int? RobotProductNumber
+        {
+            get { return _robotProductNumber; }
+            set
+            {
+                _robotProductNumber = value;
+                RaisePropertiesChanged("RobotProductNumber");
+            }
+        }
+
+        private ObservableCollection<RobotNomenclature> _robotNomenclatures;
+
+        /// <summary>
+        /// Список номеров заданий робота
+        /// </summary>
+        public ObservableCollection<RobotNomenclature> RobotNomenclatures
+        {
+            get { return _robotNomenclatures; }
+            set
+            {
+                _robotNomenclatures = value;
+                //if (_robotProductNumbers.Select(p => p.RobotProductNumberID).Contains(PobotProductNumberID ?? -1)) return;
+                //if (_robotProductNumbers.Count > 0) RobotProductNumberID = _robotProductNumbers[0].RobotProductNumberID;
+                //else RobotProductNumberID = null;
+                RaisePropertyChanged("RobotNomenclatures");
+            }
+        }
     }
 }

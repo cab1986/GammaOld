@@ -45,7 +45,7 @@
             <dxlc:LayoutGroup>
                 <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="100" HorizontalAlignment="Left">
                     <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}"
-					DisplayMember="PlaceName" ValueMember="PlaceID" />
+					DisplayMember="PlaceName" ValueMember="PlaceID" SelectedItem="{Binding SelectedPlace, Mode=OneWayToSource}"/>
                 </dxlc:LayoutItem>
                 <Button Content="Печать образца" Height="22" VerticalAlignment="Bottom" Width="120" Command="{Binding PrintExampleCommand}">
                     <Button.Style>
@@ -58,6 +58,12 @@
                         </Style>
                     </Button.Style>
                 </Button>
+                <dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
+                    <dxe:ComboBoxEdit IsTextEditable="False" 
+                                                      ItemsSource="{Binding RobotNomenclatures}" EditValue="{Binding RobotProductNumber, UpdateSourceTrigger=PropertyChanged}"
+                                                      DisplayMember="ProdName" ValueMember="ProdNumber"  AllowNullInput="True">
+                    </dxe:ComboBoxEdit>
+                </dxlc:LayoutItem>                
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Использованные тамбура" LabelPosition="Top">
                 <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>

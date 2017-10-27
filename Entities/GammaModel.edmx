@@ -862,6 +862,7 @@
           <Property Name="IsRemotePrinting" Type="bit" />
           <Property Name="UseApplicator" Type="bit" />
           <Property Name="ApplicatorLabelPath" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsRobot" Type="bit" />
         </EntityType>
         <EntityType Name="PlaceZones">
           <Key>
@@ -921,6 +922,14 @@
           <Property Name="ProcessModelID" Type="smallint" />
           <Property Name="PartyControl" Type="bit" />
           <Property Name="1CContractorID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="ProductionTaskConverting">
+          <Key>
+            <PropertyRef Name="ProductionTaskID" />
+          </Key>
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RobotProductNumber" Type="int" />
+          <Property Name="RobotProductDescription" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="ProductionTaskRWCutting">
           <Key>
@@ -1148,7 +1157,7 @@
           <Property Name="MobileComputer" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1162,7 +1171,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.v1CDocComplectationPositions' doe
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1178,17 +1187,17 @@ warning 6002: The table/view 'GammaNewSykt.dbo.v1COrderGoods' does not have a pr
           <Property Name="OutQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="InQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="AcceptedQuantity" Type="decimal" Precision="38" Scale="5" />
-          <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+          <Property Name="NomenclatureName" Type="nvarchar" MaxLength="563" />
           <Property Name="ShortNomenclatureName" Type="nvarchar" MaxLength="511" />
           <Property Name="BreakNumber" Type="int" />
           <Property Name="CountProduct" Type="int" />
-          <Property Name="CountProductSpools" Type="int" />
+          <Property Name="CountProductSpools" Type="bigint" />
           <Property Name="CountProductSpoolsWithBreak" Type="int" />
           <Property Name="CoefficientPackage" Type="decimal" Precision="10" Scale="3" />
           <Property Name="CoefficientPallet" Type="decimal" Precision="10" Scale="3" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1226,7 +1235,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.v1COrders' does not have a primar
           <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="Period" />
@@ -1240,7 +1249,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.v1CWorkingSpecifications' does no
           <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1259,7 +1268,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vCharacteristicSGBProperties' doe
           <Property Name="TypeKind" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1280,7 +1289,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vDocMovementGoods' does not have 
           <Property Name="CountProductSpoolsWithBreak" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1320,7 +1329,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vDocMovementProducts' does not ha
           <Property Name="OutPlaceZone" Type="varchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -1331,7 +1340,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vGroupPackSpools' does not have a
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -1342,7 +1351,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vPlacePropertiesValues' does not 
           <Property Name="CoreDiameter" Type="decimal" Precision="20" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1363,7 +1372,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vPMSpoolsToGroupPack' does not ha
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -1373,7 +1382,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductionTaskBatches' does not 
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1393,7 +1402,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductionTaskProducts' does not
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1435,6 +1444,21 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
           <Property Name="IsWrittenOff" Type="bit" />
           <Property Name="State" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vRobotNomenclatures">
+          <Key>
+            <PropertyRef Name="ProdNumber" />
+            <PropertyRef Name="ProductionLine" />
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="ProdNumber" Type="int" Nullable="false" />
+          <Property Name="ProdDescription" Type="nvarchar" MaxLength="255" />
+          <Property Name="EANFullPallet" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProductionLine" Type="int" Nullable="false" />
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="ProdName" Type="nvarchar" MaxLength="371" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
@@ -3434,6 +3458,20 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductionTaskConverting_ProductionTasks">
+          <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ProductionTaskConverting" Type="Self.ProductionTaskConverting" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConverting">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
           <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
@@ -4219,6 +4257,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <EntitySet Name="ProductBales" EntityType="Self.ProductBales" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionTaskConverting" EntityType="Self.ProductionTaskConverting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" Schema="dbo" store:Type="Tables" />
@@ -4463,6 +4502,16 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
     [vProductsInfo].[IsWrittenOff] AS [IsWrittenOff], 
     [vProductsInfo].[State] AS [State]
     FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vRobotNomenclatures" EntityType="Self.vRobotNomenclatures" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vRobotNomenclatures].[ProdNumber] AS [ProdNumber], 
+    [vRobotNomenclatures].[ProdDescription] AS [ProdDescription], 
+    [vRobotNomenclatures].[EANFullPallet] AS [EANFullPallet], 
+    [vRobotNomenclatures].[ProductionLine] AS [ProductionLine], 
+    [vRobotNomenclatures].[PlaceID] AS [PlaceID], 
+    [vRobotNomenclatures].[ProdName] AS [ProdName]
+    FROM [dbo].[vRobotNomenclatures] AS [vRobotNomenclatures]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_1CCharacteristicProperties_1CCharacteristics" Association="Self.FK_1CCharacteristicProperties_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -5123,6 +5172,10 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <AssociationSet Name="FK_ProductionTaskBatches_ProductionTaskStates" Association="Self.FK_ProductionTaskBatches_ProductionTaskStates">
             <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
             <End Role="ProductionTaskBatches" EntitySet="ProductionTaskBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConverting_ProductionTasks" Association="Self.FK_ProductionTaskConverting_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskConverting" EntitySet="ProductionTaskConverting" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="Self.FK_ProductionTaskRWCutting_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -7016,6 +7069,12 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
             <End Role="DocComplectation" EntitySet="DocComplectation" />
             <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
           </AssociationSet>
+          <EntitySet Name="ProductionTaskConverting" EntityType="GammaModel.ProductionTaskConverting" />
+          <EntitySet Name="vRobotNomenclatures" EntityType="GammaModel.vRobotNomenclatures" />
+          <AssociationSet Name="FK_ProductionTaskConverting_ProductionTasks" Association="GammaModel.FK_ProductionTaskConverting_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskConverting" EntitySet="ProductionTaskConverting" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -7393,6 +7452,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_ProductionTasks_Places" FromRole="ProductionTasks" ToRole="Places" />
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="ProductionTasks" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="ProductionTasks" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="ProductionTaskConverting" Relationship="GammaModel.FK_ProductionTaskConverting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskConverting" />
         </EntityType>
         <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
@@ -8751,7 +8811,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <Property Name="OutQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="InQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="AcceptedQuantity" Type="Decimal" Precision="38" Scale="5" />
-          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="563" FixedLength="false" Unicode="true" />
           <Property Name="ShortNomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="true" />
           <Property Name="BreakNumber" Type="Int32" />
           <Property Name="CountProduct" Type="Int32" />
@@ -8856,6 +8916,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <NavigationProperty Name="Users" Relationship="GammaModel.UserPlaces" FromRole="Places" ToRole="Users" />
           <Property Name="UseApplicator" Type="Boolean" />
           <Property Name="ApplicatorLabelPath" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsRobot" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -10658,6 +10719,42 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <End Type="GammaModel.DocComplectation" Role="DocComplectation" Multiplicity="*" />
           <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
         </Association>
+        <EntityType Name="ProductionTaskConverting">
+          <Key>
+            <PropertyRef Name="ProductionTaskID" />
+          </Key>
+          <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
+          <Property Name="RobotProductNumber" Type="Int32" />
+          <Property Name="RobotProductDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskConverting_ProductionTasks" FromRole="ProductionTaskConverting" ToRole="ProductionTasks" />
+        </EntityType>
+        <EntityType Name="vRobotNomenclatures">
+          <Key>
+            <PropertyRef Name="ProdNumber" />
+            <PropertyRef Name="ProductionLine" />
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="ProdNumber" Type="Int32" Nullable="false" />
+          <Property Name="ProdDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="EANFullPallet" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductionLine" Type="Int32" Nullable="false" />
+          <Property Name="PlaceID" Type="Int32" Nullable="false" />
+          <Property Name="ProdName" Type="String" MaxLength="371" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_ProductionTaskConverting_ProductionTasks">
+          <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GammaModel.ProductionTaskConverting" Role="ProductionTaskConverting" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConverting">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12104,6 +12201,7 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsRobot" ColumnName="IsRobot" />
                 <ScalarProperty Name="ApplicatorLabelPath" ColumnName="ApplicatorLabelPath" />
                 <ScalarProperty Name="UseApplicator" ColumnName="UseApplicator" />
                 <ScalarProperty Name="IsRemotePrinting" ColumnName="IsRemotePrinting" />
@@ -12495,6 +12593,27 @@ warning 6002: The table/view 'GammaNewSykt.dbo.vProductsInfo' does not have a pr
               <ScalarProperty Name="DocComplectationID" ColumnName="DocComplectationId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ProductionTaskConverting">
+            <EntityTypeMapping TypeName="GammaModel.ProductionTaskConverting">
+              <MappingFragment StoreEntitySet="ProductionTaskConverting">
+                <ScalarProperty Name="RobotProductDescription" ColumnName="RobotProductDescription" />
+                <ScalarProperty Name="RobotProductNumber" ColumnName="RobotProductNumber" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vRobotNomenclatures">
+            <EntityTypeMapping TypeName="GammaModel.vRobotNomenclatures">
+              <MappingFragment StoreEntitySet="vRobotNomenclatures">
+                <ScalarProperty Name="ProdName" ColumnName="ProdName" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="ProductionLine" ColumnName="ProductionLine" />
+                <ScalarProperty Name="EANFullPallet" ColumnName="EANFullPallet" />
+                <ScalarProperty Name="ProdDescription" ColumnName="ProdDescription" />
+                <ScalarProperty Name="ProdNumber" ColumnName="ProdNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

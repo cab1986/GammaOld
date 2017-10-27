@@ -306,6 +306,9 @@
         <AssociationConnector Association="GammaModel.FK_DocComplectation_Docs" />
         <AssociationConnector Association="GammaModel.DocComplectationProductions" />
         <AssociationConnector Association="GammaModel.DocComplectationWithdrawals" />
+        <EntityTypeShape EntityType="GammaModel.ProductionTaskConverting" Width="1.5" PointX="18.75" PointY="84.875" />
+        <EntityTypeShape EntityType="GammaModel.vRobotNomenclatures" Width="1.5" PointX="13.375" PointY="12.75" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskConverting_ProductionTasks" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
