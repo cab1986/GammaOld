@@ -68,10 +68,10 @@
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>097A306F9078DEF80F4F97766F35B4C16CE9E9C3</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>D21B782ACE1265F031DA59AE97C4FAD8E4FA3AE3</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Gamma_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Gamma_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -599,6 +599,9 @@
     <Compile Include="Entities\ProductionTaskBatches.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ProductionTaskConverting.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -701,6 +704,9 @@
     <Compile Include="Entities\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\vRobotNomenclatures.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Bale.cs" />
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
@@ -730,6 +736,7 @@
     <Compile Include="Models\ProductRelation.cs" />
     <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Models\QualityReportItem.cs" />
+    <Compile Include="Models\RobotNomenclature.cs" />
     <Compile Include="Models\Sample.cs" />
     <Compile Include="Models\SpoolPathPM.cs" />
     <Compile Include="Models\SpoolRemainder.cs" />
@@ -1347,6 +1354,7 @@
     </Compile>
     <None Include="GammaKey.snk" />
     <None Include="Gamma_1_TemporaryKey.pfx" />
+    <None Include="Gamma_2_TemporaryKey.pfx" />
     <None Include="Service References\GammaService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

@@ -13,7 +13,7 @@
 
     <Grid>
         <dxg:GridControl ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskSGI}" AutoExpandAllGroups="True"
-			FontSize="24" FontWeight="Medium" >
+			FontSize="24" FontWeight="Medium">
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True">
                     <dxg:TableView.FormatConditions>
@@ -36,7 +36,13 @@
             <dxg:GridColumn Binding="{Binding Place}" Header="Передел" GroupIndex="0" ShowGroupedColumn="False"/>
             <dxg:GridColumn Binding="{Binding ProductionTaskBatchID}" Visible="False" />
             <dxg:GridColumn Binding="{Binding DateBegin}" Header="Дата начала" VisibleIndex="1" Width="150" FixedWidth="True"/>
-            <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="2" AllowBestFit="True"/>
+            <dxg:GridColumn Binding="{Binding Nomenclature}" Header="Номенклатура" VisibleIndex="2" AllowBestFit="True">
+            <dxg:GridColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding RowData.Row.Nomenclature}" HorizontalAlignment="Stretch" LineHeight="Auto" TextAlignment="Left"  TextWrapping="Wrap"></TextBlock>
+                </DataTemplate>
+            </dxg:GridColumn.CellTemplate>
+            </dxg:GridColumn>
             <dxg:GridColumn Binding="{Binding Quantity}" Header="Задание, (рул, пач)" VisibleIndex="3" Width="180" FixedWidth="True">
                 <dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
