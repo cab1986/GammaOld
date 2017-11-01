@@ -167,14 +167,14 @@ namespace Gamma.ViewModels
                                 ProductPallets = new ProductPallets
                                 {
                                     ProductID = productId,
-                                    ProductPalletItems = new List<ProductPalletItems>()
+                                    ProductItems = new List<ProductItems>()
                                 {
-                                    new ProductPalletItems
+                                    new ProductItems
                                     {
                                         C1CCharacteristicID = (Guid)CharacteristicID,
                                         C1CNomenclatureID = (Guid)NomenclatureID,
                                         ProductID = productId,
-                                        ProductPalletItemID = SqlGuidUtil.NewSequentialid()
+                                        ProductItemID = SqlGuidUtil.NewSequentialid()
                                     }
                                 }
                                 }
@@ -226,7 +226,7 @@ namespace Gamma.ViewModels
                             d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))
                     {
                         var docProductionProduct =
-                            gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools).Include(d => d.Products.ProductPallets.ProductPalletItems)
+                            gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools).Include(d => d.Products.ProductPallets.ProductItems)
                                 .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
                         if (docProductionProduct != null && NomenclatureID != null)
                         {
@@ -239,12 +239,12 @@ namespace Gamma.ViewModels
                                     docProductionProduct.Products.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
                                     break;
                                 case PlaceGroup.Convertings:
-                                    var productPalletItem =
-                                        docProductionProduct.Products.ProductPallets.ProductPalletItems.FirstOrDefault();
-                                    if (productPalletItem != null)
+                                    var productItem =
+                                        docProductionProduct.Products.ProductPallets.ProductItems.FirstOrDefault();
+                                    if (productItem != null)
                                     {
-                                        productPalletItem.C1CNomenclatureID = (Guid)NomenclatureID;
-                                        productPalletItem.C1CCharacteristicID = (Guid)CharacteristicID;
+                                        productItem.C1CNomenclatureID = (Guid)NomenclatureID;
+                                        productItem.C1CCharacteristicID = (Guid)CharacteristicID;
                                     }
                                     break;
                             }

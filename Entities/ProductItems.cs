@@ -12,9 +12,9 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductPalletItems
+    public partial class ProductItems
     {
-        public System.Guid ProductPalletItemID { get; set; }
+        public System.Guid ProductItemID { get; set; }
         public System.Guid ProductID { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }
         public System.Guid C1CCharacteristicID { get; set; }
@@ -23,5 +23,6 @@ namespace Gamma.Entities
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual ProductPallets ProductPallets { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

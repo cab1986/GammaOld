@@ -110,7 +110,7 @@
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_BarcodeTypes" />
         <EntityTypeShape EntityType="GammaModel.NomenclatureGammaInfo" Width="1.5" PointX="5.25" PointY="51.125" />
         <AssociationConnector Association="GammaModel.FK_1CSpecificationInputNomenclature_1CProperties" />
-        <EntityTypeShape EntityType="GammaModel.ProductPalletItems" Width="1.5" PointX="21.5" PointY="64.875" />
+        <EntityTypeShape EntityType="GammaModel.ProductItems" Width="1.5" PointX="21.5" PointY="64.875" />
         <EntityTypeShape EntityType="GammaModel.DocMovementOrderNomenclature" Width="1.5" PointX="18.75" PointY="81.25" />
         <EntityTypeShape EntityType="GammaModel.Persons" Width="1.5" PointX="7.5" PointY="66.75" />
         <AssociationConnector Association="GammaModel.FK_Persons_Branches" />
@@ -199,9 +199,9 @@
         <AssociationConnector Association="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_1CCharacteristics" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_ProductItems_1CCharacteristics" />
         <EntityTypeShape EntityType="GammaModel.ProductPallets" Width="1.5" PointX="22.5" PointY="40.5" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_ProductPallets" />
+        <AssociationConnector Association="GammaModel.FK_ProductItems_ProductPallets" />
         <AssociationConnector Association="GammaModel.FK_ProductPallets_Products1" />
         <EntityTypeShape EntityType="GammaModel.DocProductionProducts" Width="1.5" PointX="28" PointY="55.125" />
         <AssociationConnector Association="GammaModel.FK_DocProductionProducts_DocProduction" />
@@ -270,7 +270,7 @@
         <AssociationConnector Association="GammaModel.FK_ProductGroupPacks_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductionTasks_1CNomenclature" />
-        <AssociationConnector Association="GammaModel.FK_ProductPalletItems_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductItems_1CNomenclature" />
         <AssociationConnector Association="GammaModel.C1CNomenclatureGroupNomenclature" />
         <AssociationConnector Association="GammaModel.MaterialTypeNomenclature" />
         <AssociationConnector Association="GammaModel.PlaceGroup1CNomenclature" />
@@ -309,6 +309,7 @@
         <EntityTypeShape EntityType="GammaModel.ProductionTaskConverting" Width="1.5" PointX="18.75" PointY="84.875" />
         <EntityTypeShape EntityType="GammaModel.vRobotNomenclatures" Width="1.5" PointX="13.375" PointY="12.75" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskConverting_ProductionTasks" />
+        <AssociationConnector Association="GammaModel.FK_ProductItems_Products" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

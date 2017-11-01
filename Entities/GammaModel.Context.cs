@@ -86,7 +86,7 @@ namespace Gamma.Entities
         public virtual DbSet<BarcodeTypes> BarcodeTypes { get; set; }
         public virtual DbSet<NomenclatureBarcodes> NomenclatureBarcodes { get; set; }
         public virtual DbSet<NomenclatureGammaInfo> NomenclatureGammaInfo { get; set; }
-        public virtual DbSet<ProductPalletItems> ProductPalletItems { get; set; }
+        public virtual DbSet<ProductItems> ProductItems { get; set; }
         public virtual DbSet<DocMovementOrderNomenclature> DocMovementOrderNomenclature { get; set; }
         public virtual DbSet<Persons> Persons { get; set; }
         public virtual DbSet<C1CPlaces> C1CPlaces { get; set; }

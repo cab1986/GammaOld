@@ -75,7 +75,7 @@ namespace Gamma.ViewModels
                                 ProductId = d.DocProduction.DocProductionProducts.FirstOrDefault().ProductID,
                                 DocOrderId = (Guid)d.DocProduction.DocOrderId,
                                 OrderNumber = gammaBase.v1COrders.FirstOrDefault(order => order.C1COrderID == d.DocProduction.DocOrderId).Number,
-                                PalletItems = d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductPallets.ProductPalletItems
+                                PalletItems = d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductPallets.ProductItems
                                     .Select(p => new PalletItem
                                     {
                                         NomenclatureId = p.C1CNomenclatureID,

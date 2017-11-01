@@ -39,7 +39,7 @@
                                        Command="{Binding DeleteNomenclatureFromPalletCommand}"/>
                 </dxb:Bar>
             </dxb:BarManager.Bars>
-            <dxg:GridControl EnableSmartColumnsGeneration="False" ItemsSource="{Binding PalletItems}" SelectedItem="{Binding SelectedProductPalletItem}">
+            <dxg:GridControl EnableSmartColumnsGeneration="False" ItemsSource="{Binding PalletItems}" SelectedItem="{Binding SelectedProductItem}">
                 <dxg:GridControl.View>
                     <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="False" AutoWidth="True" ShowGroupPanel="False" AllowEditing="False" />
                 </dxg:GridControl.View>

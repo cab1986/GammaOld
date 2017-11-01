@@ -2,20 +2,20 @@
 
 namespace Gamma.Models
 {
-    public class ProductPalletItem
+    public class ProductItem
     {
-        public ProductPalletItem() { }
+        public ProductItem() { }
 
-        public ProductPalletItem(Guid nomenclatureId, Guid characteristicId, int quantity, string nomenclatureName, Guid? productPalletItemId = null)
+        public ProductItem(Guid nomenclatureId, Guid characteristicId, int quantity, string nomenclatureName, Guid? productItemId = null)
         {
             NomenclatureId = nomenclatureId;
             CharacteristicId = characteristicId;
             Quantity = quantity;
             NomenclatureName = nomenclatureName;
-            ProductPalletItemId = productPalletItemId ?? SqlGuidUtil.NewSequentialid();
+            ProductItemId = productItemId ?? SqlGuidUtil.NewSequentialid();
         }
 
-        public Guid ProductPalletItemId { get; set; }
+        public Guid ProductItemId { get; set; }
         public string NomenclatureName { get; set; }
         public int Quantity { get; set; }
         public Guid CharacteristicId { get; set; }

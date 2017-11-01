@@ -31,11 +31,11 @@ namespace Gamma.Controllers
 					ProductPallets = new ProductPallets
 					{
 						ProductID = productId,
-						ProductPalletItems = new List<ProductPalletItems>
+						ProductItems = new List<ProductItems>
 						{
-							new ProductPalletItems
+							new ProductItems
 							{
-								ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+								ProductItemID = SqlGuidUtil.NewSequentialid(),
 								ProductID = productId,
 								C1CNomenclatureID = nomenclatureId,
 								C1CCharacteristicID = characteristicId,

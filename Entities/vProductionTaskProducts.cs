@@ -17,7 +17,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> ProductionTaskID { get; set; }
         public Nullable<int> PlaceID { get; set; }
         public System.Guid DocID { get; set; }
-        public Nullable<byte> ProductKindID { get; set; }
+        public byte ProductKindID { get; set; }
         public System.Guid ProductID { get; set; }
         public string Number { get; set; }
         public System.DateTime Date { get; set; }

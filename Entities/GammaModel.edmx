@@ -984,6 +984,16 @@
           <Property Name="IsEndProtected" Type="bit" />
           <Property Name="GroupPackConfig" Type="varchar" MaxLength="8000" />
         </EntityType>
+        <EntityType Name="ProductItems">
+          <Key>
+            <PropertyRef Name="ProductItemID" />
+          </Key>
+          <Property Name="ProductItemID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
+        </EntityType>
         <EntityType Name="ProductKindRejectionReasons">
           <Key>
             <PropertyRef Name="ProductKindID" />
@@ -998,16 +1008,6 @@
           </Key>
           <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="ProductPalletItems">
-          <Key>
-            <PropertyRef Name="ProductPalletItemID" />
-          </Key>
-          <Property Name="ProductPalletItemID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Quantity" Type="int" />
         </EntityType>
         <EntityType Name="ProductPallets">
           <Key>
@@ -1386,13 +1386,14 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
+            
             <PropertyRef Name="ProductID" />
             <PropertyRef Name="Date" />
           </Key>
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
           <Property Name="PlaceID" Type="int" />
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="ProductKindID" Type="tinyint" />
+          <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
           <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Number" Type="varchar" MaxLength="20" />
           <Property Name="Date" Type="datetime" Nullable="false" />
@@ -3575,6 +3576,42 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductItems_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+          <End Role="ProductItems" Type="Self.ProductItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="ProductItems">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductItems_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="ProductItems" Type="Self.ProductItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="ProductItems">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductItems_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="ProductItems" Type="Self.ProductItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductItems">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductKindRejectionReasons_1CRejectionReasons">
           <End Role="1CRejectionReasons" Type="Self.1CRejectionReasons" Multiplicity="1" />
           <End Role="ProductKindRejectionReasons" Type="Self.ProductKindRejectionReasons" Multiplicity="*" />
@@ -3596,42 +3633,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="ProductKindRejectionReasons">
               <PropertyRef Name="ProductKindID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductPalletItems_1CCharacteristics">
-          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
-          <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CCharacteristics">
-              <PropertyRef Name="1CCharacteristicID" />
-            </Principal>
-            <Dependent Role="ProductPalletItems">
-              <PropertyRef Name="1CCharacteristicID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductPalletItems_1CNomenclature">
-          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
-          <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CNomenclature">
-              <PropertyRef Name="1CNomenclatureID" />
-            </Principal>
-            <Dependent Role="ProductPalletItems">
-              <PropertyRef Name="1CNomenclatureID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProductPalletItems_ProductPallets">
-          <End Role="ProductPallets" Type="Self.ProductPallets" Multiplicity="1" />
-          <End Role="ProductPalletItems" Type="Self.ProductPalletItems" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProductPallets">
-              <PropertyRef Name="ProductID" />
-            </Principal>
-            <Dependent Role="ProductPalletItems">
-              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4264,9 +4265,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskStates" EntityType="Self.ProductionTaskStates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskWR" EntityType="Self.ProductionTaskWR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductItems" EntityType="Self.ProductItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductKindRejectionReasons" EntityType="Self.ProductKindRejectionReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductKinds" EntityType="Self.ProductKinds" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ProductPalletItems" EntityType="Self.ProductPalletItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductPallets" EntityType="Self.ProductPallets" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductSpools" EntityType="Self.ProductSpools" Schema="dbo" store:Type="Tables" />
@@ -5210,6 +5211,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductItems_1CCharacteristics" Association="Self.FK_ProductItems_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductItems_1CNomenclature" Association="Self.FK_ProductItems_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductItems_Products" Association="Self.FK_ProductItems_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductKindRejectionReasons_1CRejectionReasons" Association="Self.FK_ProductKindRejectionReasons_1CRejectionReasons">
             <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
             <End Role="ProductKindRejectionReasons" EntitySet="ProductKindRejectionReasons" />
@@ -5217,18 +5230,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="FK_ProductKindRejectionReasons_ProductKinds" Association="Self.FK_ProductKindRejectionReasons_ProductKinds">
             <End Role="ProductKinds" EntitySet="ProductKinds" />
             <End Role="ProductKindRejectionReasons" EntitySet="ProductKindRejectionReasons" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductPalletItems_1CCharacteristics" Association="Self.FK_ProductPalletItems_1CCharacteristics">
-            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
-            <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductPalletItems_1CNomenclature" Association="Self.FK_ProductPalletItems_1CNomenclature">
-            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
-            <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProductPalletItems_ProductPallets" Association="Self.FK_ProductPalletItems_ProductPallets">
-            <End Role="ProductPallets" EntitySet="ProductPallets" />
-            <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductPallets_Products1" Association="Self.FK_ProductPallets_Products1">
             <End Role="Products" EntitySet="Products" />
@@ -5756,7 +5757,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductionTaskID" Type="Guid" />
           <Property Name="PlaceID" Type="Int32" />
           <Property Name="DocID" Type="Guid" Nullable="false" />
-          <Property Name="ProductKindID" Type="Byte" />
+          <Property Name="ProductKindID" Type="Byte" Nullable="false" />
           <Property Name="ProductID" Type="Guid" Nullable="false" />
           <Property Name="Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
@@ -6371,7 +6372,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="C1CProperties" EntitySet="C1CProperties" />
             <End Role="C1CSpecificationInputNomenclature" EntitySet="C1CSpecificationInputNomenclature" />
           </AssociationSet>
-          <EntitySet Name="ProductPalletItems" EntityType="GammaModel.ProductPalletItems" />
+          <EntitySet Name="ProductItems" EntityType="GammaModel.ProductItems" />
           <EntitySet Name="DocMovementOrderNomenclature" EntityType="GammaModel.DocMovementOrderNomenclature" />
           <FunctionImport Name="CreateGroupPackWithSpool" ReturnType="Collection(Guid)">
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
@@ -6674,14 +6675,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductPalletItems_1CCharacteristics" Association="GammaModel.FK_ProductPalletItems_1CCharacteristics">
+          <AssociationSet Name="FK_ProductItems_1CCharacteristics" Association="GammaModel.FK_ProductItems_1CCharacteristics">
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
-            <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
           </AssociationSet>
           <EntitySet Name="ProductPallets" EntityType="GammaModel.ProductPallets" />
-          <AssociationSet Name="FK_ProductPalletItems_ProductPallets" Association="GammaModel.FK_ProductPalletItems_ProductPallets">
+          <AssociationSet Name="FK_ProductItems_ProductPallets" Association="GammaModel.FK_ProductItems_ProductPallets">
             <End Role="ProductPallets" EntitySet="ProductPallets" />
-            <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductPallets_Products1" Association="GammaModel.FK_ProductPallets_Products1">
             <End Role="Products" EntitySet="Products" />
@@ -6944,9 +6945,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProductPalletItems_1CNomenclature" Association="GammaModel.FK_ProductPalletItems_1CNomenclature">
+          <AssociationSet Name="FK_ProductItems_1CNomenclature" Association="GammaModel.FK_ProductItems_1CNomenclature">
             <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
-            <End Role="ProductPalletItems" EntitySet="ProductPalletItems" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
           </AssociationSet>
           <AssociationSet Name="C1CNomenclatureGroupNomenclature" Association="GammaModel.C1CNomenclatureGroupNomenclature">
             <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
@@ -7075,6 +7076,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="FK_ProductionTaskConverting_ProductionTasks" Association="GammaModel.FK_ProductionTaskConverting_ProductionTasks">
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskConverting" EntitySet="ProductionTaskConverting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductItems_Products" Association="GammaModel.FK_ProductItems_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductItems" EntitySet="ProductItems" />
           </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -8063,18 +8068,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ProductPalletItems">
+        <EntityType Name="ProductItems">
           <Key>
-            <PropertyRef Name="ProductPalletItemID" />
+            <PropertyRef Name="ProductItemID" />
           </Key>
-          <Property Name="ProductPalletItemID" Type="Guid" Nullable="false" />
+          <Property Name="ProductItemID" Type="Guid" Nullable="false" />
           <Property Name="ProductID" Type="Guid" Nullable="false" />
           <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
           <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
           <Property Name="Quantity" Type="Int32" />
-          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="ProductPalletItems" ToRole="C1CCharacteristics" />
-          <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPalletItems" ToRole="ProductPallets" />
-          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="ProductPalletItems" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductItems_1CCharacteristics" FromRole="ProductItems" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductItems_ProductPallets" FromRole="ProductItems" ToRole="ProductPallets" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductItems_1CNomenclature" FromRole="ProductItems" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductItems_Products" FromRole="ProductItems" ToRole="Products" />
         </EntityType>
         <EntityType Name="DocMovementOrderNomenclature">
           <Key>
@@ -9147,6 +9153,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocInventarisationProducts" Relationship="GammaModel.FK_DocInventarisationProducts_Products" FromRole="Products" ToRole="DocInventarisationProducts" />
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_ProductSpools_Products" FromRole="Products" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_Products" FromRole="Products" ToRole="ProductBales" />
+          <NavigationProperty Name="ProductItems" Relationship="GammaModel.FK_ProductItems_Products" FromRole="Products" ToRole="ProductItems" />
         </EntityType>
         <Association Name="FK_Products_ProductKinds">
           <End Type="GammaModel.ProductKinds" Role="ProductKinds" Multiplicity="1" />
@@ -9195,7 +9202,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="NomenclatureBarcodes" Relationship="GammaModel.FK_NomenclatureBarcodes_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="NomenclatureBarcodes" />
           <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskRWCutting" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTasks" />
-          <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductPalletItems" />
+          <NavigationProperty Name="ProductItems" Relationship="GammaModel.FK_ProductItems_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductItems" />
           <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductGroupPacks" />
           <Property Name="PrintName" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="DocCloseShiftNomenclatureRests" Relationship="GammaModel.FK_DocCloseShiftNomenclatureRests_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftNomenclatureRests" />
@@ -9353,14 +9360,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductPalletItems_1CCharacteristics">
+        <Association Name="FK_ProductItems_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
-          <End Type="GammaModel.ProductPalletItems" Role="ProductPalletItems" Multiplicity="*" />
+          <End Type="GammaModel.ProductItems" Role="ProductItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="C1CCharacteristics">
               <PropertyRef Name="C1CCharacteristicID" />
             </Principal>
-            <Dependent Role="ProductPalletItems">
+            <Dependent Role="ProductItems">
               <PropertyRef Name="C1CCharacteristicID" />
             </Dependent>
           </ReferentialConstraint>
@@ -9370,18 +9377,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <PropertyRef Name="ProductID" />
           </Key>
           <Property Name="ProductID" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_ProductPallets" FromRole="ProductPallets" ToRole="ProductPalletItems" />
+          <NavigationProperty Name="ProductItems" Relationship="GammaModel.FK_ProductItems_ProductPallets" FromRole="ProductPallets" ToRole="ProductItems" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_ProductPallets_Products1" FromRole="ProductPallets" ToRole="Products" />
           <Property Name="IndexNumber" Type="Int32" />
         </EntityType>
-        <Association Name="FK_ProductPalletItems_ProductPallets">
+        <Association Name="FK_ProductItems_ProductPallets">
           <End Type="GammaModel.ProductPallets" Role="ProductPallets" Multiplicity="1" />
-          <End Type="GammaModel.ProductPalletItems" Role="ProductPalletItems" Multiplicity="*" />
+          <End Type="GammaModel.ProductItems" Role="ProductItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProductPallets">
               <PropertyRef Name="ProductID" />
             </Principal>
-            <Dependent Role="ProductPalletItems">
+            <Dependent Role="ProductItems">
               <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
@@ -10040,7 +10047,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductGroupPacks" Relationship="GammaModel.FK_ProductGroupPacks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductGroupPacks" />
           <NavigationProperty Name="ProductionTaskRWCutting" Relationship="GammaModel.FK_ProductionTaskRWCutting_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskRWCutting" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTasks" />
-          <NavigationProperty Name="ProductPalletItems" Relationship="GammaModel.FK_ProductPalletItems_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductPalletItems" />
+          <NavigationProperty Name="ProductItems" Relationship="GammaModel.FK_ProductItems_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductItems" />
           <NavigationProperty Name="C1CNomenclatureGroups" Relationship="GammaModel.C1CNomenclatureGroupNomenclature" FromRole="C1CNomenclature" ToRole="C1CNomenclatureGroups" />
           <NavigationProperty Name="MaterialTypes" Relationship="GammaModel.MaterialTypeNomenclature" FromRole="C1CNomenclature" ToRole="MaterialTypes" />
           <NavigationProperty Name="PlaceGroups" Relationship="GammaModel.PlaceGroup1CNomenclature" FromRole="C1CNomenclature" ToRole="PlaceGroups" />
@@ -10289,14 +10296,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProductPalletItems_1CNomenclature">
+        <Association Name="FK_ProductItems_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
-          <End Type="GammaModel.ProductPalletItems" Role="ProductPalletItems" Multiplicity="*" />
+          <End Type="GammaModel.ProductItems" Role="ProductItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="C1CNomenclature">
               <PropertyRef Name="C1CNomenclatureID" />
             </Principal>
-            <Dependent Role="ProductPalletItems">
+            <Dependent Role="ProductItems">
               <PropertyRef Name="C1CNomenclatureID" />
             </Dependent>
           </ReferentialConstraint>
@@ -10753,6 +10760,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="ProductionTaskConverting">
               <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductItems_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
+          <End Type="GammaModel.ProductItems" Role="ProductItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="ProductItems">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -11750,14 +11769,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ProductPalletItems">
-            <EntityTypeMapping TypeName="GammaModel.ProductPalletItems">
-              <MappingFragment StoreEntitySet="ProductPalletItems">
+          <EntitySetMapping Name="ProductItems">
+            <EntityTypeMapping TypeName="GammaModel.ProductItems">
+              <MappingFragment StoreEntitySet="ProductItems">
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
                 <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="ProductPalletItemID" ColumnName="ProductPalletItemID" />
+                <ScalarProperty Name="ProductItemID" ColumnName="ProductItemID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

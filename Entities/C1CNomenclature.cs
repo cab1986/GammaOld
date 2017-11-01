@@ -33,7 +33,7 @@ namespace Gamma.Entities
             this.ProductGroupPacks = new HashSet<ProductGroupPacks>();
             this.ProductionTaskRWCutting = new HashSet<ProductionTaskRWCutting>();
             this.ProductionTasks = new HashSet<ProductionTasks>();
-            this.ProductPalletItems = new HashSet<ProductPalletItems>();
+            this.ProductItems = new HashSet<ProductItems>();
             this.C1CNomenclatureGroups = new HashSet<C1CNomenclatureGroups>();
             this.MaterialTypes = new HashSet<MaterialTypes>();
             this.PlaceGroups = new HashSet<PlaceGroups>();
@@ -95,7 +95,7 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTasks> ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductPalletItems> ProductPalletItems { get; set; }
+        public virtual ICollection<ProductItems> ProductItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CNomenclatureGroups> C1CNomenclatureGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

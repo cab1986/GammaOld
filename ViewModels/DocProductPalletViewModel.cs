@@ -20,7 +20,7 @@ namespace Gamma.ViewModels
     {
         public DocProductPalletViewModel()
         {
-            PalletItems = new ObservableCollection<ProductPalletItem>();
+            PalletItems = new ObservableCollection<ProductItem>();
             Bars.Add(ReportManager.GetReportBar("Pallet", VMID));
             AddNomenclatureToPalletCommand = new DelegateCommand<string>(AddMomenclatureToPallet, (s) => !IsReadOnly );
             DeleteNomenclatureFromPalletCommand = new DelegateCommand(DeleteNomenclatureFromPallet, () => !IsReadOnly);
@@ -38,16 +38,16 @@ namespace Gamma.ViewModels
             ProductId = productId;
             DocId = gammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
                 SqlGuidUtil.NewSequentialid();
-            PalletItems = new ObservableCollection<ProductPalletItem>(
-                from palItems in gammaBase.ProductPalletItems
+            PalletItems = new ObservableCollection<ProductItem>(
+                from palItems in gammaBase.ProductItems
                 where palItems.ProductID == productId
-                select new ProductPalletItem()
+                select new ProductItem()
                 {
                     NomenclatureId = palItems.C1CNomenclatureID,
                     CharacteristicId = palItems.C1CCharacteristicID,
                     Quantity = palItems.Quantity??0,
                     NomenclatureName = palItems.C1CNomenclature.Name + " " + palItems.C1CCharacteristics.Name,
-                    ProductPalletItemId = palItems.ProductPalletItemID
+                    ProductItemId = palItems.ProductItemID
                 } 
                 );
             IsConfirmed = gammaBase.Docs.First(d => d.DocID == DocId).IsConfirmed;
@@ -56,7 +56,7 @@ namespace Gamma.ViewModels
         public Guid? ProductId { get; private set; }
         public Guid? DocId { get; private set; }
 
-        public ObservableCollection<ProductPalletItem> PalletItems
+        public ObservableCollection<ProductItem> PalletItems
         {
             get;
             set;
@@ -91,7 +91,7 @@ namespace Gamma.ViewModels
                         ProductPallets = new ProductPallets()
                         {
                             ProductID = productId,
-                            ProductPalletItems = new List<ProductPalletItems>()
+                            ProductItems = new List<ProductItems>()
                         },
                         DocProductionProducts = new List<DocProductionProducts>
                     {
@@ -109,38 +109,38 @@ namespace Gamma.ViewModels
                     product.ProductPallets = new ProductPallets()
                     {
                         ProductID = product.ProductID,
-                        ProductPalletItems = new List<ProductPalletItems>()
+                        ProductItems = new List<ProductItems>()
                     };
                 }
                 var palItemsToRemove =
-                    product.ProductPallets.ProductPalletItems.Where(
-                        palItem => !PalletItems.Select(p => p.ProductPalletItemId).Contains(palItem.ProductPalletItemID))
+                    product.ProductPallets.ProductItems.Where(
+                        palItem => !PalletItems.Select(p => p.ProductItemId).Contains(palItem.ProductItemID))
                         .ToArray();
                 foreach (var palItem in palItemsToRemove)
                 {
-                    product.ProductPallets.ProductPalletItems.Remove(palItem);
+                    product.ProductPallets.ProductItems.Remove(palItem);
                 }
                 gammaBase.SaveChanges();
                 var palItemsToAdd =
                     PalletItems.Where(
-                        p => !gammaBase.ProductPalletItems.Where(prodItem => prodItem.ProductID == product.ProductID)
-                            .Select(prodItem => prodItem.ProductPalletItemID).Contains(p.ProductPalletItemId));
+                        p => !gammaBase.ProductItems.Where(prodItem => prodItem.ProductID == product.ProductID)
+                            .Select(prodItem => prodItem.ProductItemID).Contains(p.ProductItemId));
                 var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
-                var productPalletItems = palItemsToAdd as IList<ProductPalletItem> ?? palItemsToAdd.ToList();
-                if (docProductionProduct != null && productPalletItems.Any())
+                var productItems = palItemsToAdd as IList<ProductItem> ?? palItemsToAdd.ToList();
+                if (docProductionProduct != null && productItems.Any())
                 {
-                    docProductionProduct.C1CNomenclatureID = productPalletItems.First().NomenclatureId;
-                    docProductionProduct.C1CCharacteristicID = productPalletItems.First().CharacteristicId;
-                    docProductionProduct.Quantity = productPalletItems.First().Quantity;
+                    docProductionProduct.C1CNomenclatureID = productItems.First().NomenclatureId;
+                    docProductionProduct.C1CCharacteristicID = productItems.First().CharacteristicId;
+                    docProductionProduct.Quantity = productItems.First().Quantity;
                 }
-                foreach (var palItem in productPalletItems)
+                foreach (var palItem in productItems)
                 {
-                    product.ProductPallets.ProductPalletItems.Add(new ProductPalletItems()
+                    product.ProductPallets.ProductItems.Add(new ProductItems()
                     {
                         ProductID = product.ProductID,
                         C1CNomenclatureID = palItem.NomenclatureId,
                         C1CCharacteristicID = palItem.CharacteristicId,
-                        ProductPalletItemID = palItem.ProductPalletItemId,
+                        ProductItemID = palItem.ProductItemId,
                         Quantity = palItem.Quantity
                     });
                 }
@@ -152,7 +152,7 @@ namespace Gamma.ViewModels
 
         public DelegateCommand<string> AddNomenclatureToPalletCommand { get; private set; }
         public DelegateCommand DeleteNomenclatureFromPalletCommand { get; private set; }
-        public ProductPalletItem SelectedProductPalletItem { get; set; }
+        public ProductItem SelectedProductItem { get; set; }
 
         private void AddMomenclatureToPallet(string barcode  = null)
         {
@@ -193,7 +193,7 @@ namespace Gamma.ViewModels
                                    gammaBase.C1CCharacteristics.FirstOrDefault(
                                        c => c.C1CCharacteristicID == model.CharacteristicID)?.Name;
             }
-            var item = new ProductPalletItem((Guid)model.NomenclatureID, (Guid)model.CharacteristicID, (int)model.Quantity, model.NomenclatureName);
+            var item = new ProductItem((Guid)model.NomenclatureID, (Guid)model.CharacteristicID, (int)model.Quantity, model.NomenclatureName);
             PalletItems.Add(item);
         }
 
@@ -204,8 +204,8 @@ namespace Gamma.ViewModels
 
         private void DeleteNomenclatureFromPallet()
         {
-            if (SelectedProductPalletItem == null) return;
-            PalletItems.Remove(SelectedProductPalletItem);
+            if (SelectedProductItem == null) return;
+            PalletItems.Remove(SelectedProductItem);
         }
     }
 }

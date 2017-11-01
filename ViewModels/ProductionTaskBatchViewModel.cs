@@ -584,7 +584,7 @@ namespace Gamma.ViewModels
                                     .ProductID;
                             product =
                                 gammaBase.Products.Include(p => p.ProductPallets)
-                                    .Include(p => p.ProductPallets.ProductPalletItems)
+                                    .Include(p => p.ProductPallets.ProductItems)
                                     .FirstOrDefault(p => p.ProductID == productId);
                             if (product == null)
                             {
@@ -595,11 +595,11 @@ namespace Gamma.ViewModels
                                     ProductPallets = new ProductPallets()
                                     {
                                         ProductID = productId,
-                                        ProductPalletItems = new List<ProductPalletItems>
+                                        ProductItems = new List<ProductItems>
                                         {
-                                            new ProductPalletItems()
+                                            new ProductItems()
                                             {
-                                                ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                                ProductItemID = SqlGuidUtil.NewSequentialid(),
                                                 ProductID = productId,
                                                 C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
                                                 C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
@@ -615,11 +615,11 @@ namespace Gamma.ViewModels
                                 product.ProductPallets = new ProductPallets()
                                 {
                                     ProductID = productId,
-                                    ProductPalletItems = new List<ProductPalletItems>
+                                    ProductItems = new List<ProductItems>
                                     {
-                                        new ProductPalletItems()
+                                        new ProductItems()
                                         {
-                                            ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                            ProductItemID = SqlGuidUtil.NewSequentialid(),
                                             ProductID = productId,
                                             C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
                                             C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
@@ -628,13 +628,13 @@ namespace Gamma.ViewModels
                                     }
                                 };
                             }
-                            else if (product.ProductPallets.ProductPalletItems == null)
+                            else if (product.ProductPallets.ProductItems == null)
                             {
-                                product.ProductPallets.ProductPalletItems = new List<ProductPalletItems>
+                                product.ProductPallets.ProductItems = new List<ProductItems>
                                 {
-                                    new ProductPalletItems()
+                                    new ProductItems()
                                     {
-                                        ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                        ProductItemID = SqlGuidUtil.NewSequentialid(),
                                         ProductID = productId,
                                         C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
                                         C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,
@@ -644,10 +644,10 @@ namespace Gamma.ViewModels
                             }
                             else
                             {
-                                var productPalletItem = product.ProductPallets.ProductPalletItems.First();
-                                productPalletItem.C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID;
-                                productPalletItem.C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID;
-                                productPalletItem.Quantity = baseQuantity;
+                                var productItem = product.ProductPallets.ProductItems.First();
+                                productItem.C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID;
+                                productItem.C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID;
+                                productItem.Quantity = baseQuantity;
                             }
                             doc.ShiftID = WorkSession.ShiftID;
                             doc.PrintName = WorkSession.PrintName;
@@ -660,7 +660,7 @@ namespace Gamma.ViewModels
                                 docProductionProduct.C1CNomenclatureID = productionTask.C1CNomenclatureID;
                                 docProductionProduct.C1CCharacteristicID = productionTask.C1CCharacteristicID;
                                 docProductionProduct.Quantity =
-                                    product.ProductPallets.ProductPalletItems.First().Quantity;
+                                    product.ProductPallets.ProductItems.First().Quantity;
                             }
                             gammaBase.SaveChanges();
                             gammaBase.GenerateNewNumbersForDoc(doc.DocID);
@@ -674,11 +674,11 @@ namespace Gamma.ViewModels
                                 ProductPallets = new ProductPallets()
                                 {
                                     ProductID = productId,
-                                    ProductPalletItems = new List<ProductPalletItems>
+                                    ProductItems = new List<ProductItems>
                                         {
-                                            new ProductPalletItems()
+                                            new ProductItems()
                                             {
-                                                ProductPalletItemID = SqlGuidUtil.NewSequentialid(),
+                                                ProductItemID = SqlGuidUtil.NewSequentialid(),
                                                 ProductID = productId,
                                                 C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID,
                                                 C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID,

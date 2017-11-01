@@ -620,7 +620,7 @@
     <Compile Include="Entities\ProductKinds.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ProductPalletItems.cs">
+    <Compile Include="Entities\ProductItems.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\ProductPallets.cs">
