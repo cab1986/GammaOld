@@ -160,6 +160,23 @@ namespace Gamma.ViewModels
                     MessageBox.Show("Данный тамбур уже установлен на раскат", "На раскате", MessageBoxButton.OK, MessageBoxImage.Hand);
                     return;
                 }
+
+                var checkResult = gammaBase.CheckInstallProductionTaskSourceSpools(WorkSession.PlaceID, msg.ProductID).First();
+                var resultMessage = checkResult.ResultMessage;
+                if (!(string.IsNullOrWhiteSpace(resultMessage) && !checkResult.BlockCreation))
+                {
+                    if (checkResult.BlockCreation)
+                    {
+                        MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                        return;
+                    }
+                    var dialogResult = MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (dialogResult == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
                 switch (CurrentUnwinder)
                 {
                     case 1:

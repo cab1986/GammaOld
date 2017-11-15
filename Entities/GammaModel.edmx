@@ -1452,14 +1452,16 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Key>
             <PropertyRef Name="ProdNumber" />
             <PropertyRef Name="ProductionLine" />
-            
             <PropertyRef Name="PlaceID" />
+            <PropertyRef Name="PlaceName" />
+            
           </Key>
           <Property Name="ProdNumber" Type="int" Nullable="false" />
           <Property Name="ProdDescription" Type="nvarchar" MaxLength="255" />
           <Property Name="EANFullPallet" Type="nvarchar" MaxLength="50" />
           <Property Name="ProductionLine" Type="int" Nullable="false" />
           <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="PlaceName" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="ProdName" Type="nvarchar" MaxLength="472" Nullable="false" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
@@ -3926,6 +3928,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="AddedProductId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="BaseProductId" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="CheckInstallProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="CheckProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
@@ -4512,6 +4518,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vRobotNomenclatures].[EANFullPallet] AS [EANFullPallet], 
     [vRobotNomenclatures].[ProductionLine] AS [ProductionLine], 
     [vRobotNomenclatures].[PlaceID] AS [PlaceID], 
+    [vRobotNomenclatures].[PlaceName] AS [PlaceName], 
     [vRobotNomenclatures].[ProdName] AS [ProdName]
     FROM [dbo].[vRobotNomenclatures] AS [vRobotNomenclatures]</DefiningQuery>
           </EntitySet>
@@ -7081,6 +7088,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Products" EntitySet="Products" />
             <End Role="ProductItems" EntitySet="ProductItems" />
           </AssociationSet>
+          <FunctionImport Name="CheckInstallProductionTaskSourceSpools" ReturnType="Collection(GammaModel.CheckInstallProductionTaskSourceSpools_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10741,6 +10752,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <PropertyRef Name="ProdNumber" />
             <PropertyRef Name="ProductionLine" />
             <PropertyRef Name="PlaceID" />
+            <PropertyRef Name="PlaceName" />
           </Key>
           <Property Name="ProdNumber" Type="Int32" Nullable="false" />
           <Property Name="ProdDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
@@ -10748,6 +10760,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductionLine" Type="Int32" Nullable="false" />
           <Property Name="PlaceID" Type="Int32" Nullable="false" />
           <Property Name="ProdName" Type="String" MaxLength="472" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PlaceName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_ProductionTaskConverting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
@@ -10775,6 +10788,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="CheckInstallProductionTaskSourceSpools_Result">
+          <Property Type="String" Name="ResultMessage" Nullable="false" MaxLength="255" />
+          <Property Type="Boolean" Name="BlockCreation" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12625,6 +12642,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vRobotNomenclatures">
             <EntityTypeMapping TypeName="GammaModel.vRobotNomenclatures">
               <MappingFragment StoreEntitySet="vRobotNomenclatures">
+                <ScalarProperty Name="PlaceName" ColumnName="PlaceName" />
                 <ScalarProperty Name="ProdName" ColumnName="ProdName" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="ProductionLine" ColumnName="ProductionLine" />
@@ -12634,6 +12652,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CheckInstallProductionTaskSourceSpools" FunctionName="GammaDBModel.CheckInstallProductionTaskSourceSpools">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.CheckInstallProductionTaskSourceSpools_Result">
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="BlockCreation" ColumnName="BlockCreation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

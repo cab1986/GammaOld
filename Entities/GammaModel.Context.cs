@@ -791,5 +791,18 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTaskBatchCuttingsSGB_Result1>("GetProductionTaskBatchCuttingsSGB", productionTaskBatchIDParameter);
         }
+    
+        public virtual ObjectResult<CheckInstallProductionTaskSourceSpools_Result> CheckInstallProductionTaskSourceSpools(Nullable<int> placeID, Nullable<System.Guid> productID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckInstallProductionTaskSourceSpools_Result>("CheckInstallProductionTaskSourceSpools", placeIDParameter, productIDParameter);
+        }
     }
 }

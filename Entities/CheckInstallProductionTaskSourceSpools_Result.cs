@@ -10,16 +10,10 @@
 namespace Gamma.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class vRobotNomenclatures
+    public partial class CheckInstallProductionTaskSourceSpools_Result
     {
-        public int ProdNumber { get; set; }
-        public string ProdDescription { get; set; }
-        public string EANFullPallet { get; set; }
-        public int ProductionLine { get; set; }
-        public int PlaceID { get; set; }
-        public string ProdName { get; set; }
-        public string PlaceName { get; set; }
+        public string ResultMessage { get; set; }
+        public bool BlockCreation { get; set; }
     }
 }
