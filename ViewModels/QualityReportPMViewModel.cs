@@ -124,7 +124,6 @@ namespace Gamma.ViewModels
                 var productIds =
                     QualityReportItems.Where(ri => ri.IsBroke && ri.ProductGroupPackId != null)
                         .Select(ri => (Guid)ri.ProductGroupPackId)
-                        .Distinct()
                         .ToList();
                 productIds.AddRange(QualityReportItems.Where(ri => ri.ProductGroupPackId == null && ri.IsBroke).Select(ri => ri.ProductId).ToList().Distinct());
                 foreach (var productId in productIds)
@@ -133,7 +132,7 @@ namespace Gamma.ViewModels
                     {
                         ProductID = productId,
                         DocID = doc.DocID,
-                        Quantity = QualityReportItems.First(item => item.ProductId == productId || item.ProductGroupPackId == productId).Weight
+                        Quantity = QualityReportItems.First(item => item.ProductId == productId).Weight
                     });
                 }
                 gammaBase.Docs.Add(doc);

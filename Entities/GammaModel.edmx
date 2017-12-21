@@ -4048,21 +4048,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="GetDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="GetDocBrokeEditable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="docDate" Type="datetime" Mode="In" />
-          <Parameter Name="docUserID" Type="uniqueidentifier" Mode="In" />
-          <Parameter Name="docShiftID" Type="int" Mode="In" />
-          <Parameter Name="docIsConfirmed" Type="bit" Mode="In" />
-          <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
-          <Parameter Name="ShiftID" Type="int" Mode="In" />
-        </Function>
-        <Function Name="GetDocBrokeID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="PlaceID" Type="int" Mode="In" />
-          <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
-          <Parameter Name="ShiftID" Type="int" Mode="In" />
-          <Parameter Name="docProductionPlaceID" Type="int" Mode="In" />
-          <Parameter Name="IsProductionPlace" Type="bit" Mode="In" />
-        </Function>
         <Function Name="GetDocCloseShiftConvertingPallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -7106,21 +7091,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImport Name="CheckInstallProductionTaskSourceSpools" ReturnType="Collection(GammaModel.CheckInstallProductionTaskSourceSpools_Result)">
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
-          </FunctionImport>
-          <FunctionImport Name="GetDocBrokeEditable" ReturnType="Collection(Boolean)">
-            <Parameter Name="docDate" Mode="In" Type="DateTime" />
-            <Parameter Name="docUserID" Mode="In" Type="Guid" />
-            <Parameter Name="docShiftID" Mode="In" Type="Int32" />
-            <Parameter Name="docIsConfirmed" Mode="In" Type="Boolean" />
-            <Parameter Name="UserID" Mode="In" Type="Guid" />
-            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="GetDocBrokeID" ReturnType="Collection(Guid)">
-            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
-            <Parameter Name="UserID" Mode="In" Type="Guid" />
-            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
-            <Parameter Name="docProductionPlaceID" Mode="In" Type="Int32" />
-            <Parameter Name="IsProductionPlace" Mode="In" Type="Boolean" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -12690,8 +12660,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetDocBrokeEditable" FunctionName="GammaDBModel.GetDocBrokeEditable" />
-          <FunctionImportMapping FunctionImportName="GetDocBrokeID" FunctionName="GammaDBModel.GetDocBrokeID" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

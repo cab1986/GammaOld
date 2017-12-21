@@ -35,7 +35,6 @@
         </Grid.RowDefinitions>
         <ToolBar>
             <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" />
-            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="Hidden" />
         </ToolBar>
         <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
             <dx:DXTabItem Header="Параметры задания">

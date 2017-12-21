@@ -31,7 +31,7 @@ namespace Gamma.ViewModels
         public DocProductSpoolViewModel(Guid productId)
         {
             ProductId = productId;
-            ShowCreateGroupPack = (WorkSession.PlaceID == 21 || WorkSession.PlaceID == 30);
+            ShowCreateGroupPack = WorkSession.PlaceID == 21;
             DocID = GammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
                             SqlGuidUtil.NewSequentialid();
             var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == DocID);

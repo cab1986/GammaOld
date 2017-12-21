@@ -59,8 +59,6 @@ namespace Gamma.ViewModels
                     PlaceStoreId = doc.DocBroke.PlaceStoreID;
                     IsInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false;
                     IsConfirmed = doc.IsConfirmed;
-                    UserID = doc.UserID;
-                    ShiftID = doc.ShiftID;
                     foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
                     {
                         AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
@@ -70,8 +68,6 @@ namespace Gamma.ViewModels
                 {
                     Date = DB.CurrentDateTime;
                     IsInFuturePeriod = isInFuturePeriod;
-                    UserID = WorkSession.UserID;
-                    ShiftID = WorkSession.ShiftID;
                     if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
                     {
                         PlaceDiscoverId = DiscoverPlaces.First(dp => dp.PlaceID == WorkSession.PlaceID).PlaceGuid;
@@ -97,14 +93,7 @@ namespace Gamma.ViewModels
                 DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
                 EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
                 OpenProductCommand = new DelegateCommand(OpenProduct);
-                var IsEditableCollection = new ObservableCollection<bool?>
-                (
-                    from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID)
-                    select pt
-                );
-                IsEditable = (IsEditableCollection.Count > 0 ) ? (bool)IsEditableCollection[0] : false;
-                //IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
-                IsReadOnly = (!IsEditable || !DB.HaveWriteAccess("DocBroke"));
+                IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
@@ -253,12 +242,6 @@ namespace Gamma.ViewModels
         public DateTime Date { get; set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public Guid? UserID { get; set; }
-
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        public byte? ShiftID { get; set; }
-
-        [UIAuth(UIAuthLevel.ReadOnly)]
         [Required(ErrorMessage = @"Место обнаружения не может быть пустым")]
         public Guid? PlaceDiscoverId { get; set; }
 
@@ -282,8 +265,7 @@ namespace Gamma.ViewModels
 
         public override bool CanSaveExecute()
         {
-            //return IsValid && DB.HaveWriteAccess("DocBroke");
-            return IsValid && DB.HaveWriteAccess("DocBroke") && IsEditable;
+            return IsValid && DB.HaveWriteAccess("DocBroke");
         }
         
         public DelegateCommand AddProductCommand { get; private set; }
@@ -310,8 +292,6 @@ namespace Gamma.ViewModels
         public Guid? VMID { get; } = Guid.NewGuid();
 
         public bool IsReadOnly { get; }
-
-        public bool IsEditable { get; }
 
         private BrokeDecisionProduct _selectedBrokeDecisionProduct;
 

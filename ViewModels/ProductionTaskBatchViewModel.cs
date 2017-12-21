@@ -79,14 +79,12 @@ namespace Gamma.ViewModels
                     break;
                 case BatchKinds.SGI:
                     NewProductText = WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать этикетки";
-                    ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить аппликатор" : "Включить аппликатор" : "Не нажимать";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
                     break;
 
             }
             CreateNewProductCommand = !WorkSession.IsRemotePrinting ? new DelegateCommand(CreateNewProduct, CanCreateNewProduct) 
                 : new DelegateCommand(MakeProductionTaskActiveForPlace, DB.HaveWriteAccess("ActiveProductionTasks"));
-            ChangeStatusApplicatorCommand = new DelegateCommand(ChangeStatusApplicator, CanChangeStatusApplicator);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
@@ -229,12 +227,6 @@ namespace Gamma.ViewModels
                     return false;
             }
         }
-
-        private bool CanChangeStatusApplicator()
-        {
-            return BatchKind == BatchKinds.SGI && WorkSession.IsRemotePrinting ? DB.HaveWriteAccess("ProductPallets") && IsActual : false;
-        }
-
         private SaveImplementedViewModel _currentView;
         public SaveImplementedViewModel CurrentView
         {
@@ -259,7 +251,6 @@ namespace Gamma.ViewModels
 
         private string _number;
         public string NewProductText { get; set; }
-        public string ChangeStatusApplicatorText { get; set; }
         private bool IsActual { get; set; } = true;
 
         public string Number
@@ -277,11 +268,6 @@ namespace Gamma.ViewModels
         /// Создание нового продукта. В конструкторе привязка к CreateNewProduct();
         /// </summary>
         public DelegateCommand CreateNewProductCommand { get; private set; }
-
-        /// <summary>
-        /// Отключение/включение аппликатора. В конструкторе привязка к ChangeStatusApplicator();
-        /// </summary>
-        public DelegateCommand ChangeStatusApplicatorCommand { get; private set; }
 
         private bool IsInProduction { get; set; }
         /// <summary>
@@ -526,7 +512,7 @@ namespace Gamma.ViewModels
                                     return;
                                 }
                                 //если предыдущий тамбур этой смены и не подтвержден, то открываем для редактирования
-                                if (docProduction != null && docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
+                                if (docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                                 {
                                     var firstOrDefault = gammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == docProduction.DocID);
                                      if (firstOrDefault !=
@@ -782,11 +768,6 @@ namespace Gamma.ViewModels
                         break;
                 }
             }
-        }
-
-        private void ChangeStatusApplicator()
-        {
-
         }
 
         public override bool CanSaveExecute()
