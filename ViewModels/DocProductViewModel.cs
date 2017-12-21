@@ -244,17 +244,26 @@ namespace Gamma.ViewModels
                         MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }
+                /*
                 var docBrokeId =
                     gammaBase.Docs.FirstOrDefault(
                         d => d.DocTypeID == (int)DocTypes.DocBroke && !d.IsConfirmed 
-                            && d.PlaceID == WorkSession.PlaceID 
+                            && d.PlaceID == WorkSession.PlaceID
                             && (((d.DocBroke.IsInFuturePeriod ?? false) && (docProduction.PlaceID != WorkSession.PlaceID))
-                            || ((!d.DocBroke.IsInFuturePeriod ?? true) && (docProduction.PlaceID == WorkSession.PlaceID))
-                            || !WorkSession.IsProductionPlace))?.DocID;
-                if (docBrokeId != null)
+                                || ((!d.DocBroke.IsInFuturePeriod ?? true) && (docProduction.PlaceID == WorkSession.PlaceID))
+                                || !WorkSession.IsProductionPlace
+                               )
+                           )?.DocID;
+                */
+                var docBrokeId = new ObservableCollection<Guid>
+                (
+                    from pt in GammaBase.GetDocBrokeID((int)WorkSession.PlaceID, WorkSession.UserID, (int)WorkSession.ShiftID, (int)docProduction.PlaceID, (bool)WorkSession.IsProductionPlace)
+                    select new Guid(pt.ToString())
+                );
+                if (docBrokeId.Count > 0)
                 {
                     MessageBox.Show("Есть незакрытый акт. Данный продукт будет добавлен в этот акт");
-                    MessageManager.OpenDocBroke((Guid)docBrokeId, productId);
+                    MessageManager.OpenDocBroke((Guid)docBrokeId[0], productId);
                 }
                 else
                 {

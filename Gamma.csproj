@@ -332,6 +332,9 @@
     <Compile Include="Entities\C1CWarehouses.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\CheckInstallProductionTaskSourceSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\CheckProductionTaskSourceSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -732,7 +735,7 @@
     <Compile Include="Models\PlaceZone.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductionTaskBalerGridItem.cs" />
-    <Compile Include="Models\ProductPalletItem.cs" />
+    <Compile Include="Models\ProductItem.cs" />
     <Compile Include="Models\ProductRelation.cs" />
     <Compile Include="Common\RequiredCollectionAttribute.cs" />
     <Compile Include="Models\QualityReportItem.cs" />
@@ -1452,7 +1455,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
