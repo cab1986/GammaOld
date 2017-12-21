@@ -804,5 +804,59 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckInstallProductionTaskSourceSpools_Result>("CheckInstallProductionTaskSourceSpools", placeIDParameter, productIDParameter);
         }
+    
+        public virtual ObjectResult<Nullable<bool>> GetDocBrokeEditable(Nullable<System.DateTime> docDate, Nullable<System.Guid> docUserID, Nullable<int> docShiftID, Nullable<bool> docIsConfirmed, Nullable<System.Guid> userID, Nullable<int> shiftID)
+        {
+            var docDateParameter = docDate.HasValue ?
+                new ObjectParameter("docDate", docDate) :
+                new ObjectParameter("docDate", typeof(System.DateTime));
+    
+            var docUserIDParameter = docUserID.HasValue ?
+                new ObjectParameter("docUserID", docUserID) :
+                new ObjectParameter("docUserID", typeof(System.Guid));
+    
+            var docShiftIDParameter = docShiftID.HasValue ?
+                new ObjectParameter("docShiftID", docShiftID) :
+                new ObjectParameter("docShiftID", typeof(int));
+    
+            var docIsConfirmedParameter = docIsConfirmed.HasValue ?
+                new ObjectParameter("docIsConfirmed", docIsConfirmed) :
+                new ObjectParameter("docIsConfirmed", typeof(bool));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(System.Guid));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("GetDocBrokeEditable", docDateParameter, docUserIDParameter, docShiftIDParameter, docIsConfirmedParameter, userIDParameter, shiftIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> GetDocBrokeID(Nullable<int> placeID, Nullable<System.Guid> userID, Nullable<int> shiftID, Nullable<int> docProductionPlaceID, Nullable<bool> isProductionPlace)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(System.Guid));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var docProductionPlaceIDParameter = docProductionPlaceID.HasValue ?
+                new ObjectParameter("docProductionPlaceID", docProductionPlaceID) :
+                new ObjectParameter("docProductionPlaceID", typeof(int));
+    
+            var isProductionPlaceParameter = isProductionPlace.HasValue ?
+                new ObjectParameter("IsProductionPlace", isProductionPlace) :
+                new ObjectParameter("IsProductionPlace", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("GetDocBrokeID", placeIDParameter, userIDParameter, shiftIDParameter, docProductionPlaceIDParameter, isProductionPlaceParameter);
+        }
     }
 }
