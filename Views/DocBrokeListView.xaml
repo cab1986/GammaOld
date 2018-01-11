@@ -19,7 +19,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <ToolBar HorizontalAlignment="Left" VerticalContentAlignment="Stretch">
-            <Button Content="Создать нвоый акт" Command="{Binding CreateNewDocBrokeCommand}"/>
+            <Button Content="Создать новый акт" Command="{Binding CreateNewDocBrokeCommand}"/>
         </ToolBar>
         <dxlc:LayoutControl Grid.Row="1">
             <dxlc:LayoutItem Label="Место обнаружения:">
