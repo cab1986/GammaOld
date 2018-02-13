@@ -27,7 +27,7 @@
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Характеристика">
                     <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}"
-                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" />
+                                      DisplayMember="CharacteristicName" ValueMember="CharacteristicID" IsReadOnly="{Binding CannotChooseCharacteristic}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">

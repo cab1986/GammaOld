@@ -18,6 +18,30 @@
   <wsdl:message name="IPrinterService_ActivateProductionTask_OutputMessage">
     <wsdl:part name="parameters" element="tns:ActivateProductionTaskResponse" />
   </wsdl:message>
+  <wsdl:message name="IPrinterService_ChangePrinterStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:ChangePrinterStatus" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_ChangePrinterStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ChangePrinterStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_GetPrinterStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPrinterStatus" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_GetPrinterStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPrinterStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_PrintLabel_InputMessage">
+    <wsdl:part name="parameters" element="tns:PrintLabel" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_PrintLabel_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PrintLabelResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_ChangePrintPortStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:ChangePrintPortStatus" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_ChangePrintPortStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ChangePrintPortStatusResponse" />
+  </wsdl:message>
   <wsdl:portType name="IPrinterService">
     <wsdl:operation name="PrintPallet">
       <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/PrintPallet" message="tns:IPrinterService_PrintPallet_InputMessage" />
@@ -26,6 +50,22 @@
     <wsdl:operation name="ActivateProductionTask">
       <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/ActivateProductionTask" message="tns:IPrinterService_ActivateProductionTask_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/ActivateProductionTaskResponse" message="tns:IPrinterService_ActivateProductionTask_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePrinterStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/ChangePrinterStatus" message="tns:IPrinterService_ChangePrinterStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/ChangePrinterStatusResponse" message="tns:IPrinterService_ChangePrinterStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPrinterStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/GetPrinterStatus" message="tns:IPrinterService_GetPrinterStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/GetPrinterStatusResponse" message="tns:IPrinterService_GetPrinterStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PrintLabel">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/PrintLabel" message="tns:IPrinterService_PrintLabel_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/PrintLabelResponse" message="tns:IPrinterService_PrintLabel_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePrintPortStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/ChangePrintPortStatus" message="tns:IPrinterService_ChangePrintPortStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/ChangePrintPortStatusResponse" message="tns:IPrinterService_ChangePrintPortStatus_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IPrinterService" type="tns:IPrinterService">
@@ -41,6 +81,42 @@
     </wsdl:operation>
     <wsdl:operation name="ActivateProductionTask">
       <soap:operation soapAction="http://tempuri.org/IPrinterService/ActivateProductionTask" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePrinterStatus">
+      <soap:operation soapAction="http://tempuri.org/IPrinterService/ChangePrinterStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPrinterStatus">
+      <soap:operation soapAction="http://tempuri.org/IPrinterService/GetPrinterStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PrintLabel">
+      <soap:operation soapAction="http://tempuri.org/IPrinterService/PrintLabel" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePrintPortStatus">
+      <soap:operation soapAction="http://tempuri.org/IPrinterService/ChangePrintPortStatus" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

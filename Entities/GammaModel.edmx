@@ -3932,6 +3932,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="CheckPermissionOnChooseNomenclatureAndCharacteristic" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductKindID" Type="int" Mode="In" />
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="CheckPermissionOnCreateNewProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchId" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="CheckProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
@@ -7121,6 +7130,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="docProductionPlaceID" Mode="In" Type="Int32" />
             <Parameter Name="IsProductionPlace" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="CheckPermissionOnCreateNewProduct" ReturnType="Collection(Boolean)">
+            <Parameter Name="ProductionTaskBatchId" Mode="In" Type="Guid" />
+            <Parameter Name="UserID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="CheckPermissionOnChooseNomenclatureAndCharacteristic" ReturnType="Collection(Boolean)">
+            <Parameter Name="ProductKindID" Mode="In" Type="Int32" />
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="UserID" Mode="In" Type="Guid" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -12692,6 +12710,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetDocBrokeEditable" FunctionName="GammaDBModel.GetDocBrokeEditable" />
           <FunctionImportMapping FunctionImportName="GetDocBrokeID" FunctionName="GammaDBModel.GetDocBrokeID" />
+          <FunctionImportMapping FunctionImportName="CheckPermissionOnCreateNewProduct" FunctionName="GammaDBModel.CheckPermissionOnCreateNewProduct" />
+          <FunctionImportMapping FunctionImportName="CheckPermissionOnChooseNomenclatureAndCharacteristic" FunctionName="GammaDBModel.CheckPermissionOnChooseNomenclatureAndCharacteristic" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -19,6 +19,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="productionTaskId" type="q2:guid" />
+        <xs:element minOccurs="0" name="placeId" type="xs:int" />
+        <xs:element minOccurs="0" name="remotePrinterLabelId" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -26,6 +28,67 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="ActivateProductionTaskResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangePrinterStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="placeId" type="xs:int" />
+        <xs:element minOccurs="0" name="remotePrinterLabelId" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangePrinterStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ChangePrinterStatusResult" nillable="true" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPrinterStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="placeId" type="xs:int" />
+        <xs:element minOccurs="0" name="remotePrinterLabelId" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetPrinterStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetPrinterStatusResult" nillable="true" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PrintLabel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="placeId" type="xs:int" />
+        <xs:element minOccurs="0" name="remotePrinterLabelId" type="xs:int" />
+        <xs:element xmlns:q3="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="productId" nillable="true" type="q3:guid" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PrintLabelResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="PrintLabelResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangePrintPortStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="placeId" type="xs:int" />
+        <xs:element minOccurs="0" name="remotePrinterLabelId" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangePrintPortStatusResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="ChangePrintPortStatusResult" nillable="true" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

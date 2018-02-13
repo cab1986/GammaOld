@@ -30,12 +30,16 @@
     </UserControl.Resources>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="40"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToolBar>
-            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" />
-            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="Hidden" />
+        <ToolBar Grid.Row="0">
+            <Button Content="{Binding MakeProductionTaskActiveForPlaceText}" Command="{Binding MakeProductionTaskActiveForPlaceCommand}" FontSize="20" FontWeight="Bold" />
+            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProduct}"/>
+        </ToolBar>
+        <ToolBar Grid.Row="0" HorizontalAlignment="Right" >
+            <Button Content="Напечатать групповую этикетку" Command="{Binding PrintGroupPackLabelCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}"/>
+            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}"/>
         </ToolBar>
         <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
             <dx:DXTabItem Header="Параметры задания">

@@ -858,5 +858,35 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("GetDocBrokeID", placeIDParameter, userIDParameter, shiftIDParameter, docProductionPlaceIDParameter, isProductionPlaceParameter);
         }
+    
+        public virtual ObjectResult<Nullable<bool>> CheckPermissionOnCreateNewProduct(Nullable<System.Guid> productionTaskBatchId, Nullable<System.Guid> userID)
+        {
+            var productionTaskBatchIdParameter = productionTaskBatchId.HasValue ?
+                new ObjectParameter("ProductionTaskBatchId", productionTaskBatchId) :
+                new ObjectParameter("ProductionTaskBatchId", typeof(System.Guid));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("CheckPermissionOnCreateNewProduct", productionTaskBatchIdParameter, userIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<bool>> CheckPermissionOnChooseNomenclatureAndCharacteristic(Nullable<int> productKindID, Nullable<int> placeID, Nullable<System.Guid> userID)
+        {
+            var productKindIDParameter = productKindID.HasValue ?
+                new ObjectParameter("ProductKindID", productKindID) :
+                new ObjectParameter("ProductKindID", typeof(int));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("CheckPermissionOnChooseNomenclatureAndCharacteristic", productKindIDParameter, placeIDParameter, userIDParameter);
+        }
     }
 }

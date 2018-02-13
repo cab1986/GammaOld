@@ -26,25 +26,21 @@ namespace Gamma.ViewModels
         {
             Contractors = GammaBase.C1CContractors.Where(c => c.IsBuyer ?? false).ToList();
             ProductionTaskBatchID = msg.ProductionTaskBatchID ?? SqlGuidUtil.NewSequentialid();
-            if (!WorkSession.IsRemotePrinting && WorkSession.PlaceGroup == PlaceGroup.Convertings)
-            {
-                MakeProductionTaskActiveForPlace();
-            }
             ChangeStateReadOnly = !DB.HaveWriteAccess("ProductionTasks");
             BatchKind = msg.BatchKind;
             TaskStates = new ProductionTaskStates().ToDictionary();
             ProcessModels = new ProcessModels().ToDictionary();
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
-            ShowProductCommand = new DelegateCommand(ShowProduct,() => SelectedProductionTaskProduct != null);
+            ShowProductCommand = new DelegateCommand(ShowProduct, () => SelectedProductionTaskProduct != null);
             DeleteProdutCommand = new DelegateCommand(DeleteProduct, () => SelectedProductionTaskProduct != null);
             if (msg.ProductionTaskBatchID == null)
             {
                 Date = DB.CurrentDateTime;
-//                ProductionTaskBatchID = SqlGuidUtil.NewSequentialid();
+                //                ProductionTaskBatchID = SqlGuidUtil.NewSequentialid();
                 Title = "Новое задание на производство";
                 IsActual = false;
-//                if (Places.Count > 0)
-//                    PlaceID = Places[0].PlaceID;
+                //                if (Places.Count > 0)
+                //                    PlaceID = Places[0].PlaceID;
                 ProductionTaskStateID = 0;
                 if (msg.BatchKind == BatchKinds.SGB)
                 {
@@ -78,19 +74,42 @@ namespace Gamma.ViewModels
                     //                    PlaceGroupID = (int)PlaceGroups.RW;
                     break;
                 case BatchKinds.SGI:
-                    NewProductText = WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать этикетки";
-                    ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить аппликатор" : "Включить аппликатор" : "Не нажимать";
+                    NewProductText = "Печать транспортной этикетки";//WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать транспортной этикетки";
+                    GetStatusApplicator();
+                    //ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить принтер" : "Включить принтер" : "Не нажимать";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
                     break;
 
             }
-            CreateNewProductCommand = !WorkSession.IsRemotePrinting ? new DelegateCommand(CreateNewProduct, CanCreateNewProduct) 
-                : new DelegateCommand(MakeProductionTaskActiveForPlace, DB.HaveWriteAccess("ActiveProductionTasks"));
+            MakeProductionTaskActiveForPlaceCommand = new DelegateCommand(MakeProductionTaskActiveForPlace, CanMakeProductionTaskActiveForPlace);
+            CreateNewProductCommand = new DelegateCommand(CreateNewProduct, CanCreateNewProduct);
+            //!WorkSession.IsRemotePrinting ? new DelegateCommand(CreateNewProduct, CanCreateNewProduct) 
+            //: new DelegateCommand(MakeProductionTaskActiveForPlace, DB.HaveWriteAccess("ActiveProductionTasks"));
             ChangeStatusApplicatorCommand = new DelegateCommand(ChangeStatusApplicator, CanChangeStatusApplicator);
+            PrintGroupPackLabelCommand = new DelegateCommand(PrintGroupPackLabel, CanPrintGroupPack);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             Messenger.Default.Register<ProductChangedMessage>(this, ProductChanged);
+
+            using (var gammaBase = DB.GammaDb)
+            {
+                var permissionOnCreateNewProduct = gammaBase.CheckPermissionOnCreateNewProduct(ProductionTaskBatchID, WorkSession.UserID).FirstOrDefault();
+                if (permissionOnCreateNewProduct != null)
+                {
+                    GrantPermissionOnCreateNewProduct = (bool)permissionOnCreateNewProduct;
+                }
+                else
+                {
+                    GrantPermissionOnCreateNewProduct = false;
+                }
+            }
+
+            //VisiblityMakeProductionTaskActiveForPlace = Visibility.Visible;
+            IsProductionTaskActiveForPlace = CheckProductionTaskActiveForPlace();
+            VisiblityPrintGroupPack = Visibility.Visible;
+            
+            //VisiblityCreateNewProduct = VisiblityMakeProductionTaskActiveForPlace == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public DelegateCommand DeleteProdutCommand { get; private set; }
@@ -113,36 +132,36 @@ namespace Gamma.ViewModels
 
             switch (SelectedProductionTaskProduct.ProductKind)
             {
-                    case ProductKind.ProductSpool:
-                        if (DB.HaveWriteAccess("ProductSpools"))
-                        {
-                            GammaBase.DeleteSpool(SelectedProductionTaskProduct.ProductID);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Не достаточно прав для удаления тамбура");
-                        }
-                        break;
-                    case ProductKind.ProductGroupPack:
-                        if (DB.HaveWriteAccess("ProductGroupPacks"))
-                        {
-                            GammaBase.DeleteGroupPack(SelectedProductionTaskProduct.ProductID);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Не достаточно прав для удаления групповой упаковки");
-                        }
-                        break;
-                    case ProductKind.ProductPallet:
-                        if (DB.HaveWriteAccess("ProductPallets"))
-                        {
-                            GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Не достаточно прав для удаления паллеты");
-                        }
-                        break;
+                case ProductKind.ProductSpool:
+                    if (DB.HaveWriteAccess("ProductSpools"))
+                    {
+                        GammaBase.DeleteSpool(SelectedProductionTaskProduct.ProductID);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не достаточно прав для удаления тамбура");
+                    }
+                    break;
+                case ProductKind.ProductGroupPack:
+                    if (DB.HaveWriteAccess("ProductGroupPacks"))
+                    {
+                        GammaBase.DeleteGroupPack(SelectedProductionTaskProduct.ProductID);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не достаточно прав для удаления групповой упаковки");
+                    }
+                    break;
+                case ProductKind.ProductPallet:
+                    if (DB.HaveWriteAccess("ProductPallets"))
+                    {
+                        GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не достаточно прав для удаления паллеты");
+                    }
+                    break;
             }
         }
 
@@ -217,22 +236,99 @@ namespace Gamma.ViewModels
             }
         }
 
+        private bool CanMakeProductionTaskActiveForPlace()
+        {
+            return DB.HaveWriteAccess("ActiveProductionTasks") && !IsProductionTaskActiveForPlace && GrantPermissionOnProductionTaskActiveForPlace;
+        }
+
         private bool CanCreateNewProduct()
         {
             switch (BatchKind)
             {
                 case BatchKinds.SGB:
-                    return DB.HaveWriteAccess("ProductSpools") && IsActual;
+                    return DB.HaveWriteAccess("ProductSpools") && IsActual && GrantPermissionOnCreateNewProduct && !WorkSession.IsRemotePrinting;
                 case BatchKinds.SGI:
-                    return DB.HaveWriteAccess("ProductPallets") && IsActual;
+                    return DB.HaveWriteAccess("ProductPallets") && IsActual && GrantPermissionOnCreateNewProduct && !WorkSession.IsRemotePrinting;
                 default:
                     return false;
             }
         }
+        /*
+        private Visibility _visiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
+
+        public Visibility VisiblityMakeProductionTaskActiveForPlace
+        {
+            get { return _visiblityMakeProductionTaskActiveForPlace; }
+            set
+            {
+                //if (value == Visibility.Visible && !CanMakeProductionTaskActiveForPlace())
+                //    return;
+                _visiblityMakeProductionTaskActiveForPlace = value;
+                RaisePropertyChanged("VisiblityMakeProductionTaskActiveForPlace");
+                //VisiblityCreateNewProduct = value == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+
+            }
+        }
+        */
+        private Visibility _visiblityCreateNewProduct = Visibility.Collapsed;
+        public Visibility VisiblityCreateNewProduct
+        {
+            get { return _visiblityCreateNewProduct; }
+            set
+            {
+                if (value == Visibility.Visible && !CanCreateNewProduct())
+                    return;
+                _visiblityCreateNewProduct = value;
+                RaisePropertyChanged("VisiblityCreateNewProduct");
+            }
+        }
+
+        private Visibility _visiblityPrintGroupPack = Visibility.Collapsed;
+        public Visibility VisiblityPrintGroupPack
+        {
+            get { return _visiblityPrintGroupPack; }
+            set
+            {
+                if (value == Visibility.Visible && !CanChangeStatusApplicator())
+                    return;
+                _visiblityPrintGroupPack = value;
+                RaisePropertyChanged("VisiblityPrintGroupPack");
+            }
+        }
+
+        
+        private bool _isProductionTaskActiveForPlace;
+        public bool IsProductionTaskActiveForPlace
+        {
+            get { return _isProductionTaskActiveForPlace; }
+            set
+            {
+                _isProductionTaskActiveForPlace = value;
+                if (value)
+                {
+                    MakeProductionTaskActiveForPlaceText = "Задание активно.";
+                    VisiblityCreateNewProduct = Visibility.Visible;
+                    VisiblityPrintGroupPack = Visibility.Visible;
+
+                }
+                else
+                {
+                    MakeProductionTaskActiveForPlaceText = "Сделать задание активным";
+                    VisiblityCreateNewProduct = Visibility.Collapsed;
+
+                }
+            }
+        }
+
 
         private bool CanChangeStatusApplicator()
         {
-            return BatchKind == BatchKinds.SGI && WorkSession.IsRemotePrinting ? DB.HaveWriteAccess("ProductPallets") && IsActual : false;
+            return BatchKind == BatchKinds.SGI && WorkSession.UseApplicator ? DB.HaveWriteAccess("ProductPallets") && IsActual && IsProductionTaskActiveForPlace : false;
+        }
+
+        private bool CanPrintGroupPack()
+        {
+            return BatchKind == BatchKinds.SGI && WorkSession.UseApplicator && StatusApplicator != null ? DB.HaveWriteAccess("ProductPallets") && IsActual && IsProductionTaskActiveForPlace : false;
         }
 
         private SaveImplementedViewModel _currentView;
@@ -259,8 +355,33 @@ namespace Gamma.ViewModels
 
         private string _number;
         public string NewProductText { get; set; }
-        public string ChangeStatusApplicatorText { get; set; }
+
+        
+        private string _makeProductionTaskActiveForPlaceText;
+        public string MakeProductionTaskActiveForPlaceText
+        {
+            get { return _makeProductionTaskActiveForPlaceText; }
+            private set
+            {
+                _makeProductionTaskActiveForPlaceText = value;
+                RaisePropertyChanged("MakeProductionTaskActiveForPlaceText");
+            }
+        }
+
+        private string _changeStatusApplicatorText;
+        public string ChangeStatusApplicatorText
+        {
+            get { return _changeStatusApplicatorText; }
+            private set
+            {
+                _changeStatusApplicatorText = value;
+                RaisePropertyChanged("ChangeStatusApplicatorText");
+            }
+        }
+
         private bool IsActual { get; set; } = true;
+        private bool GrantPermissionOnCreateNewProduct { get; set; } = false;
+        private bool GrantPermissionOnProductionTaskActiveForPlace { get; set; } = false;
 
         public string Number
         {
@@ -279,9 +400,19 @@ namespace Gamma.ViewModels
         public DelegateCommand CreateNewProductCommand { get; private set; }
 
         /// <summary>
+        /// Активация задания. В конструкторе привязка к MakeProductionTaskActiveForPlace();
+        /// </summary>
+        public DelegateCommand MakeProductionTaskActiveForPlaceCommand { get; private set; }
+
+        /// <summary>
         /// Отключение/включение аппликатора. В конструкторе привязка к ChangeStatusApplicator();
         /// </summary>
         public DelegateCommand ChangeStatusApplicatorCommand { get; private set; }
+
+        /// <summary>
+        /// Печать групповой упаковки. В конструкторе привязка к PrintGroupPackLabel();
+        /// </summary>
+        public DelegateCommand PrintGroupPackLabelCommand { get; private set; }
 
         private bool IsInProduction { get; set; }
         /// <summary>
@@ -428,16 +559,31 @@ namespace Gamma.ViewModels
             return true;
         }
 
-/*
-        private void SetProductionTaskProperties(ProductionTaskBatches productionTaskBatch)
+        /*
+                private void SetProductionTaskProperties(ProductionTaskBatches productionTaskBatch)
+                {
+                    productionTaskBatch.Date = Date;
+                    productionTaskBatch.Comment = Comment;
+                    productionTaskBatch.UserID = WorkSession.UserID;
+                    productionTaskBatch.BatchKindID = (short)BatchKind;
+                    productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID;
+                }
+        */
+
+        private bool CheckProductionTaskActiveForPlace()
         {
-            productionTaskBatch.Date = Date;
-            productionTaskBatch.Comment = Comment;
-            productionTaskBatch.UserID = WorkSession.UserID;
-            productionTaskBatch.BatchKindID = (short)BatchKind;
-            productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID;
+            using (var gammaBase = DB.GammaDb)
+            {
+                var productionTask =
+                    gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
+                        p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
+                             p.PlaceID == WorkSession.PlaceID);
+                GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null);
+                if (productionTask == null)
+                    return false;
+                return false; // Всегда ложь для того, чтобы активировать задание надо было каждый раз вручную (productionTask.ActiveProductionTasks != null);
+            }
         }
-*/
 
         private void MakeProductionTaskActiveForPlace()
         {
@@ -452,23 +598,50 @@ namespace Gamma.ViewModels
 	            {
 		            return;
 	            }
-                try
+                //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
+                IsProductionTaskActiveForPlace = true;
+                if (WorkSession.UseApplicator)
                 {
-                    using (var client = new GammaService.PrinterServiceClient())
+                    try
                     {
-                        if (!client.ActivateProductionTask(productionTask.ProductionTaskID))
+                        using (var client = new GammaService.PrinterServiceClient())
                         {
-                            MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
+                            if (!client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
+                            {
+                                MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                            }
+                            /*
+                            bool? res = client.ChangePrinterStatus(WorkSession.PlaceID, 2);
+                            if (res == null)
+                            {
+                                MessageBox.Show("Не удалось сменить состояние принтера", "Принтер",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                            }
+                            else if ((bool) res)
+                            {
+                                MessageBox.Show("Принтер активирован", "Принтер",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+
+                            }
+                            else
+                            {
+                                MessageBox.Show("Принтер остановлен", "Принтер",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                            }
+                            */
                         }
                     }
-                }
-                catch
-                {
-                    MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
+                    catch
+                    {
+                        MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                    }
                 }
             }
         }
@@ -783,10 +956,99 @@ namespace Gamma.ViewModels
                 }
             }
         }
+        private bool? _statusApplicator;
+        public bool? StatusApplicator 
+        {
+            get { return _statusApplicator; }
+            private set 
+            {
+                _statusApplicator = value;
+                ChangeStatusApplicatorText = WorkSession.UseApplicator ? (value != null) ? (bool)value ? "Остановить печать ГЭ" : "Запустить печать ГЭ" : "Обновить статус принтера ГЭ" : "";
+                //RaisePropertyChanged("CurrentView");
+            }
+        }
+
+        private void GetStatusApplicator()
+        {
+            try
+            {
+                if (WorkSession.UseApplicator)
+                {
+                    using (var client = new GammaService.PrinterServiceClient())
+                    {
+                        StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
+                    }
+                }
+                else
+                    StatusApplicator = null;
+            }
+            catch
+            {
+                StatusApplicator = null;
+                MessageBox.Show("Не удалось получить состояние принтера групповых этикеток", "Принтер групповых этикеток",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
 
         private void ChangeStatusApplicator()
         {
+            try
+            {
+                using (var client = new GammaService.PrinterServiceClient())
+                {
+                    if (StatusApplicator == null)
+                        StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
+                    else
+                    {
+                        StatusApplicator = client.ChangePrinterStatus(WorkSession.PlaceID, 2);
+                        if (StatusApplicator == null)
+                        {
+                            MessageBox.Show("Не удалось сменить состояние принтера групповых этикеток", "Принтер групповых этикеток",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                StatusApplicator = null;
+                MessageBox.Show("Не удалось изменить состояние принтера групповых этикеток", "Принтер групповых этикеток",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
 
+        private void PrintGroupPackLabel()
+        {
+            try
+            {
+                using (var client = new GammaService.PrinterServiceClient())
+                {
+                    bool? res = client.PrintLabel(WorkSession.PlaceID, 2, null);
+                    if (!res ?? true)
+                    {
+                        MessageBox.Show("Не удалось распечатать групповую этикетку", "Принтер групповых этикеток",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                    }
+                    //else
+                    //{
+                    //    MessageBox.Show("Групповая этикетка распечатана", "Принтер групповых этикеток",
+                    //        MessageBoxButton.OK,
+                    //        MessageBoxImage.Warning);
+                    //}
+                }
+            }
+            catch
+            {
+                StatusApplicator = null;
+                MessageBox.Show("Не удалось распечатать групповую этикетку", "Принтер групповых этикеток",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
         }
 
         public override bool CanSaveExecute()

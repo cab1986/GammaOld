@@ -85,12 +85,27 @@ namespace Gamma.ViewModels
             IsConfirmed = doc.IsConfirmed && IsValid;
             AllowEditProduct = DB.AllowEditProduct(ProductId, GammaBase);
             CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
+
+            using (var gammaBase = DB.GammaDb)
+            {
+                var permissionOnChooseNomenclatureAndCharacteristic = gammaBase.CheckPermissionOnChooseNomenclatureAndCharacteristic((int)ProductKind.ProductSpool, doc.PlaceID, WorkSession.UserID).FirstOrDefault();
+                if (permissionOnChooseNomenclatureAndCharacteristic != null)
+                {
+                    GrantPermissionOnChooseNomenclatureAndCharacteristic = (bool)permissionOnChooseNomenclatureAndCharacteristic;
+                }
+                else
+                {
+                    GrantPermissionOnChooseNomenclatureAndCharacteristic = false;
+                }
+            }
         }
+
+        public bool IsReadOnlyCharacteristic = true;
 
         private decimal? CoreDiameter { get; set; }
 
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        [Required(ErrorMessage = @"Необходимо выбрать характеристику")]
+        //[UIAuth(UIAuthLevel.ReadOnly)]
+        //[Required(ErrorMessage = @"Необходимо выбрать характеристику")]
         public override Guid? CharacteristicID
         {
             get { return base.CharacteristicID; }
@@ -372,33 +387,40 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
             return true;
         }
+
+        public bool GrantPermissionOnChooseNomenclatureAndCharacteristic { get; set; }
+
         public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools") || !AllowEditProduct;
 
         public override bool CanSaveExecute()
         {
             return base.CanSaveExecute() && DB.HaveWriteAccess("ProductSpools");
         }
+
+        public bool CannotChooseCharacteristic => IsReadOnly || !GrantPermissionOnChooseNomenclatureAndCharacteristic;
+
         protected override bool CanChooseNomenclature()
         {
-            return !IsConfirmed && DB.HaveWriteAccess("ProductSpools") && AllowEditProduct;
+            return !IsReadOnly && !CannotChooseCharacteristic;
         }
+
         //private byte? _stateid;
-/*
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        [Required(ErrorMessage=@"Необходимо выбрать качество")]
-        public byte? StateID
-        {
-            get
-            {
-                return _stateid;
-            }
-            set
-            {
-            	_stateid = value;
-                RaisePropertyChanged("StateID");
-            }
-        }
-*/
+        /*
+                [UIAuth(UIAuthLevel.ReadOnly)]
+                [Required(ErrorMessage=@"Необходимо выбрать качество")]
+                public byte? StateID
+                {
+                    get
+                    {
+                        return _stateid;
+                    }
+                    set
+                    {
+                        _stateid = value;
+                        RaisePropertyChanged("StateID");
+                    }
+                }
+        */
         private byte _toughnessKindID = 1;
         private decimal _currentLength;
         private int _currentDiameter;

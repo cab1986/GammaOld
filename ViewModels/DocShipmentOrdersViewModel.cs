@@ -18,7 +18,7 @@ namespace Gamma.ViewModels
         public DocShipmentOrdersViewModel(bool isOutOrders = true)
         {
             IsOutOrders = isOutOrders;
-            OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveWriteAccess("DocShipmentOrderInfo"));
+            OpenDocShipmentOrderCommand = new DelegateCommand(OpenDocShipmentOrder, () => DB.HaveReadAccess("DocShipmentOrderInfo"));
             Intervals = new List<string> { "Активные", "Последние 300", "Поиск" };
             FindCommand = new DelegateCommand(Find);
             RefreshCommand = FindCommand;
