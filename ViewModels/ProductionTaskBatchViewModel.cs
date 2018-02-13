@@ -577,7 +577,7 @@ namespace Gamma.ViewModels
                 var productionTask =
                     gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
                         p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
-                             p.PlaceID == WorkSession.PlaceID);
+                             ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
                 GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null);
                 if (productionTask == null)
                     return false;
@@ -593,9 +593,9 @@ namespace Gamma.ViewModels
 	            var productionTask =
 		            gammaBase.ProductionTasks.FirstOrDefault(
 			            p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
-			                 p.PlaceID == WorkSession.PlaceID);
+                             ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
 	            if (productionTask == null)
-	            {
+                {
 		            return;
 	            }
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
