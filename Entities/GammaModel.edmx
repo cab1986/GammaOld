@@ -766,6 +766,15 @@
           <Property Name="GammaPropertyID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="LocalSettings">
+          <Key>
+            <PropertyRef Name="BranchID" />
+          </Key>
+          <Property Name="BranchID" Type="int" Nullable="false" />
+          <Property Name="GammaServiceAddress" Type="varchar" MaxLength="250" />
+        </EntityType>
         <EntityType Name="MaterialTypeNomenclature">
           <Key>
             <PropertyRef Name="MaterialTypeID" />
@@ -4312,6 +4321,12 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="UserPlaces" EntityType="Self.UserPlaces" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPrintNames" EntityType="Self.UserPrintNames" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LocalSettings" EntityType="Self.LocalSettings" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [LocalSettings].[BranchID] AS [BranchID], 
+    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress]
+    FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [v1CDocComplectationPositions].[1CDocComplectationID] AS [1CDocComplectationID], 
@@ -7140,6 +7155,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="UserID" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="LocalSettings" EntityType="GammaModel.LocalSettings" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10840,6 +10856,13 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="ResultMessage" Nullable="false" MaxLength="255" />
           <Property Type="Boolean" Name="BlockCreation" Nullable="false" />
         </ComplexType>
+        <EntityType Name="LocalSettings">
+          <Key>
+            <PropertyRef Name="BranchID" />
+          </Key>
+          <Property Name="BranchID" Type="Int32" Nullable="false" />
+          <Property Name="GammaServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12712,6 +12735,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImportMapping FunctionImportName="GetDocBrokeID" FunctionName="GammaDBModel.GetDocBrokeID" />
           <FunctionImportMapping FunctionImportName="CheckPermissionOnCreateNewProduct" FunctionName="GammaDBModel.CheckPermissionOnCreateNewProduct" />
           <FunctionImportMapping FunctionImportName="CheckPermissionOnChooseNomenclatureAndCharacteristic" FunctionName="GammaDBModel.CheckPermissionOnChooseNomenclatureAndCharacteristic" />
+          <EntitySetMapping Name="LocalSettings">
+            <EntityTypeMapping TypeName="GammaModel.LocalSettings">
+              <MappingFragment StoreEntitySet="LocalSettings">
+                <ScalarProperty Name="GammaServiceAddress" ColumnName="GammaServiceAddress" />
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

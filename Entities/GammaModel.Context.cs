@@ -134,6 +134,7 @@ namespace Gamma.Entities
         public virtual DbSet<DocComplectation> DocComplectation { get; set; }
         public virtual DbSet<ProductionTaskConverting> ProductionTaskConverting { get; set; }
         public virtual DbSet<vRobotNomenclatures> vRobotNomenclatures { get; set; }
+        public virtual DbSet<LocalSettings> LocalSettings { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {

@@ -48,6 +48,8 @@ namespace Gamma
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
                 IsRemotePrinting = userInfo.Places.FirstOrDefault()?.IsRemotePrinting ?? false;
                 UseApplicator = userInfo.Places.FirstOrDefault()?.UseApplicator ?? false;
+                EndpointAddress = (from u in DB.GammaDb.LocalSettings
+                                   select u.GammaServiceAddress).FirstOrDefault();
             }
         }
         public static bool DBAdmin
@@ -84,5 +86,14 @@ namespace Gamma
         public static bool IsProductionPlace { get; private set; }
         public static PlaceGroup PlaceGroup { get; private set; }
         public static string PrintName { get; set; }
+
+        public static string EndpointConfigurationName = "BasicHttpBinding_IPrinterService";
+        /// <summary>
+        /// Адрес сервиса GammaService
+        /// </summary>
+        public static string EndpointAddress
+        {
+            get; private set;
+        }
     }
 }

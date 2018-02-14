@@ -604,7 +604,7 @@ namespace Gamma.ViewModels
                 {
                     try
                     {
-                        using (var client = new GammaService.PrinterServiceClient())
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
                         {
                             if (!client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
                             {
@@ -974,7 +974,7 @@ namespace Gamma.ViewModels
             {
                 if (WorkSession.UseApplicator)
                 {
-                    using (var client = new GammaService.PrinterServiceClient())
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
                     {
                         StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
                     }
@@ -996,7 +996,7 @@ namespace Gamma.ViewModels
         {
             try
             {
-                using (var client = new GammaService.PrinterServiceClient())
+                using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
                 {
                     if (StatusApplicator == null)
                         StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
@@ -1025,7 +1025,7 @@ namespace Gamma.ViewModels
         {
             try
             {
-                using (var client = new GammaService.PrinterServiceClient())
+                using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
                 {
                     bool? res = client.PrintLabel(WorkSession.PlaceID, 2, null);
                     if (!res ?? true)

@@ -310,6 +310,7 @@
         <EntityTypeShape EntityType="GammaModel.vRobotNomenclatures" Width="1.5" PointX="13.375" PointY="12.75" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskConverting_ProductionTasks" />
         <AssociationConnector Association="GammaModel.FK_ProductItems_Products" />
+        <EntityTypeShape EntityType="GammaModel.LocalSettings" Width="1.5" PointX="14.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
