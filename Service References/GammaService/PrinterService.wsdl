@@ -42,6 +42,12 @@
   <wsdl:message name="IPrinterService_ChangePrintPortStatus_OutputMessage">
     <wsdl:part name="parameters" element="tns:ChangePrintPortStatusResponse" />
   </wsdl:message>
+  <wsdl:message name="IPrinterService_UpdateGroupPackageLabelInProductionTask_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGroupPackageLabelInProductionTask" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_UpdateGroupPackageLabelInProductionTask_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGroupPackageLabelInProductionTaskResponse" />
+  </wsdl:message>
   <wsdl:portType name="IPrinterService">
     <wsdl:operation name="PrintPallet">
       <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/PrintPallet" message="tns:IPrinterService_PrintPallet_InputMessage" />
@@ -66,6 +72,10 @@
     <wsdl:operation name="ChangePrintPortStatus">
       <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/ChangePrintPortStatus" message="tns:IPrinterService_ChangePrintPortStatus_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/ChangePrintPortStatusResponse" message="tns:IPrinterService_ChangePrintPortStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGroupPackageLabelInProductionTask">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTask" message="tns:IPrinterService_UpdateGroupPackageLabelInProductionTask_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTaskResponse" message="tns:IPrinterService_UpdateGroupPackageLabelInProductionTask_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IPrinterService" type="tns:IPrinterService">
@@ -117,6 +127,15 @@
     </wsdl:operation>
     <wsdl:operation name="ChangePrintPortStatus">
       <soap:operation soapAction="http://tempuri.org/IPrinterService/ChangePrintPortStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGroupPackageLabelInProductionTask">
+      <soap:operation soapAction="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTask" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

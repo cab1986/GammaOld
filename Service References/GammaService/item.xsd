@@ -27,7 +27,7 @@
   <xs:element name="ActivateProductionTaskResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="ActivateProductionTaskResult" type="xs:boolean" />
+        <xs:element minOccurs="0" name="ActivateProductionTaskResult" nillable="true" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -89,6 +89,20 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="ChangePrintPortStatusResult" nillable="true" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGroupPackageLabelInProductionTask">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="productionTaskId" type="q4:guid" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGroupPackageLabelInProductionTaskResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="UpdateGroupPackageLabelInProductionTaskResult" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

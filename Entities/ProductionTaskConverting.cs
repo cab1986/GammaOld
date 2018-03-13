@@ -17,6 +17,8 @@ namespace Gamma.Entities
         public System.Guid ProductionTaskID { get; set; }
         public Nullable<int> RobotProductNumber { get; set; }
         public string RobotProductDescription { get; set; }
+        public byte[] GroupPackLabelPNG { get; set; }
+        public string GroupPackLabelMD5 { get; set; }
     
         public virtual ProductionTasks ProductionTasks { get; set; }
     }

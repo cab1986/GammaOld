@@ -12,6 +12,10 @@ using Gamma.Attributes;
 using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Models;
+using System.Drawing;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Gamma.ViewModels
 {
@@ -88,6 +92,9 @@ namespace Gamma.ViewModels
                         gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)
                             .Select(p => p.RobotProductNumber)
                             .FirstOrDefault();
+
+                    UpdateGroupPackageLabelImage(productionTask.ProductionTaskID);
+
                 }
                 ProductionTaskStateID =
                     gammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
@@ -103,6 +110,54 @@ namespace Gamma.ViewModels
         public DelegateCommand PrintExampleCommand { get; private set; }
 
         public SpoolWithdrawByShiftViewModel UsedSpools { get; private set; }
+
+        private BitmapImage _groupPackageLabelImage;
+        /// <summary>
+        /// Групповая этикетка.
+        /// </summary>
+        public BitmapImage GroupPackageLabelImage
+        {
+            get { return _groupPackageLabelImage; }
+            set
+            {
+                _groupPackageLabelImage = value;
+                RaisePropertiesChanged("GroupPackageLabelImage");
+            }
+        }
+
+
+        private Image ByteArrayToImage(byte[] inputArray)
+        {
+            var memoryStream = new System.IO.MemoryStream(inputArray);
+            return Image.FromStream(memoryStream);
+        }
+
+        public void UpdateGroupPackageLabelImage(Guid productionTaskId)
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var png = gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTaskId)
+                                .Select(p => p.GroupPackLabelPNG)
+                                .FirstOrDefault();
+                if (png != null)
+                {
+                    var GroupPackageLabelPNG = ByteArrayToImage(png);
+
+                    // ImageSource ...
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    MemoryStream ms = new MemoryStream();
+                    // Save to a memory stream...
+                    GroupPackageLabelPNG.Save(ms, ImageFormat.Bmp);
+                    // Rewind the stream... 
+                    ms.Seek(0, SeekOrigin.Begin);
+                    // Tell the WPF image to use this stream... 
+                    bi.StreamSource = ms;
+                    bi.EndInit();
+                    GroupPackageLabelImage = bi;
+                }
+            }
+        }
 
         private void PrintExample()
         {
@@ -323,10 +378,10 @@ namespace Gamma.ViewModels
                     return false;
                 }
             }
-            else
-            {
-                GammaBase.ProductionTaskConverting.RemoveRange(GammaBase.ProductionTaskConverting.Where(c => c.ProductionTaskID == productionTask.ProductionTaskID));
-            }
+            //else
+            //{
+            //    GammaBase.ProductionTaskConverting.RemoveRange(GammaBase.ProductionTaskConverting.Where(c => c.ProductionTaskID == productionTask.ProductionTaskID));
+            //}
 
             GammaBase.SaveChanges();
             ProductionTaskId = productionTask.ProductionTaskID;

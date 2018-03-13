@@ -19,7 +19,7 @@ namespace Gamma.GammaService {
         bool PrintPallet(System.Guid productId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/ActivateProductionTask", ReplyAction="http://tempuri.org/IPrinterService/ActivateProductionTaskResponse")]
-        bool ActivateProductionTask(System.Guid productionTaskId, int placeId, int remotePrinterLabelId);
+        System.Nullable<bool> ActivateProductionTask(System.Guid productionTaskId, int placeId, int remotePrinterLabelId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/ChangePrinterStatus", ReplyAction="http://tempuri.org/IPrinterService/ChangePrinterStatusResponse")]
         System.Nullable<bool> ChangePrinterStatus(int placeId, int remotePrinterLabelId);
@@ -32,6 +32,10 @@ namespace Gamma.GammaService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/ChangePrintPortStatus", ReplyAction="http://tempuri.org/IPrinterService/ChangePrintPortStatusResponse")]
         System.Nullable<bool> ChangePrintPortStatus(int placeId, int remotePrinterLabelId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTask", ReplyAction="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTaskRespons" +
+            "e")]
+        bool UpdateGroupPackageLabelInProductionTask(System.Guid productionTaskId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -65,7 +69,7 @@ namespace Gamma.GammaService {
             return base.Channel.PrintPallet(productId);
         }
         
-        public bool ActivateProductionTask(System.Guid productionTaskId, int placeId, int remotePrinterLabelId) {
+        public System.Nullable<bool> ActivateProductionTask(System.Guid productionTaskId, int placeId, int remotePrinterLabelId) {
             return base.Channel.ActivateProductionTask(productionTaskId, placeId, remotePrinterLabelId);
         }
         
@@ -83,6 +87,10 @@ namespace Gamma.GammaService {
         
         public System.Nullable<bool> ChangePrintPortStatus(int placeId, int remotePrinterLabelId) {
             return base.Channel.ChangePrintPortStatus(placeId, remotePrinterLabelId);
+        }
+        
+        public bool UpdateGroupPackageLabelInProductionTask(System.Guid productionTaskId) {
+            return base.Channel.UpdateGroupPackageLabelInProductionTask(productionTaskId);
         }
     }
 }

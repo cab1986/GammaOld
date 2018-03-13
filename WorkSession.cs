@@ -50,6 +50,8 @@ namespace Gamma
                 UseApplicator = userInfo.Places.FirstOrDefault()?.UseApplicator ?? false;
                 EndpointAddress = (from u in DB.GammaDb.LocalSettings
                                    select u.GammaServiceAddress).FirstOrDefault();
+                LabelPath = (from u in DB.GammaDb.LocalSettings
+                                   select u.LabelPath).FirstOrDefault();
             }
         }
         public static bool DBAdmin
@@ -91,9 +93,11 @@ namespace Gamma
         /// <summary>
         /// Адрес сервиса GammaService
         /// </summary>
-        public static string EndpointAddress
-        {
-            get; private set;
-        }
+        public static string EndpointAddress { get; private set; }
+
+        /// <summary>
+        /// Путь до этикеток (групповых, транспортных)
+        /// </summary>
+        public static string LabelPath { get; private set; }
     }
 }

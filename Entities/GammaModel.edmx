@@ -774,6 +774,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           </Key>
           <Property Name="BranchID" Type="int" Nullable="false" />
           <Property Name="GammaServiceAddress" Type="varchar" MaxLength="250" />
+          <Property Name="LabelPath" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="MaterialTypeNomenclature">
           <Key>
@@ -939,6 +940,8 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RobotProductNumber" Type="int" />
           <Property Name="RobotProductDescription" Type="varchar" MaxLength="500" />
+          <Property Name="GroupPackLabelPNG" Type="varbinary(max)" />
+          <Property Name="GroupPackLabelMD5" Type="varchar" MaxLength="32" />
         </EntityType>
         <EntityType Name="ProductionTaskRWCutting">
           <Key>
@@ -4324,7 +4327,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="LocalSettings" EntityType="Self.LocalSettings" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [LocalSettings].[BranchID] AS [BranchID], 
-    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress]
+    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress], 
+    [LocalSettings].[LabelPath] AS [LabelPath]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
@@ -10810,6 +10814,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="RobotProductNumber" Type="Int32" />
           <Property Name="RobotProductDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskConverting_ProductionTasks" FromRole="ProductionTaskConverting" ToRole="ProductionTasks" />
+          <Property Name="GroupPackLabelPNG" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="GroupPackLabelMD5" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="vRobotNomenclatures">
           <Key>
@@ -10862,6 +10868,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </Key>
           <Property Name="BranchID" Type="Int32" Nullable="false" />
           <Property Name="GammaServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="LabelPath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -12704,6 +12711,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="ProductionTaskConverting">
             <EntityTypeMapping TypeName="GammaModel.ProductionTaskConverting">
               <MappingFragment StoreEntitySet="ProductionTaskConverting">
+                <ScalarProperty Name="GroupPackLabelMD5" ColumnName="GroupPackLabelMD5" />
+                <ScalarProperty Name="GroupPackLabelPNG" ColumnName="GroupPackLabelPNG" />
                 <ScalarProperty Name="RobotProductDescription" ColumnName="RobotProductDescription" />
                 <ScalarProperty Name="RobotProductNumber" ColumnName="RobotProductNumber" />
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
@@ -12738,6 +12747,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="LocalSettings">
             <EntityTypeMapping TypeName="GammaModel.LocalSettings">
               <MappingFragment StoreEntitySet="LocalSettings">
+                <ScalarProperty Name="LabelPath" ColumnName="LabelPath" />
                 <ScalarProperty Name="GammaServiceAddress" ColumnName="GammaServiceAddress" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
               </MappingFragment>

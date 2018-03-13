@@ -600,13 +600,14 @@ namespace Gamma.ViewModels
 	            }
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
+                CheckGroupPackLabel(productionTask.ProductionTaskID);
                 if (WorkSession.UseApplicator)
                 {
                     try
                     {
                         using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
                         {
-                            if (!client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
+                            if (!(bool)client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
                             {
                                 MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
                                     MessageBoxButton.OK,
@@ -1208,6 +1209,34 @@ namespace Gamma.ViewModels
                 return dialogResult == MessageBoxResult.Yes ? SourceSpoolsCheckResult.Warning : SourceSpoolsCheckResult.Block;
             }
         }
+
+        public void CheckGroupPackLabel(Guid productionTaskId)
+        {
+            try
+            {
+                var view = CurrentView as ProductionTaskSGIViewModel;
+                if (view != null)
+                {
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
+                    {
+                        if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
+                        {
+                            MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                        }
+                    }
+                    view.UpdateGroupPackageLabelImage(productionTaskId);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+
     }
 
 }

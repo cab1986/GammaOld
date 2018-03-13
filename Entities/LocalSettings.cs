@@ -16,5 +16,6 @@ namespace Gamma.Entities
     {
         public int BranchID { get; set; }
         public string GammaServiceAddress { get; set; }
+        public string LabelPath { get; set; }
     }
 }
