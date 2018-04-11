@@ -639,7 +639,7 @@ namespace Gamma.ViewModels
                     }
                     catch
                     {
-                        MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
+                        MessageBox.Show("Техническая проблема при смене амбалажа для аппликатора: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Аппликатор",
                             MessageBoxButton.OK,
                             MessageBoxImage.Warning);
                     }
@@ -1219,9 +1219,12 @@ namespace Gamma.ViewModels
                 {
                     using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
                     {
-                        if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
+                        //if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
+                        var result = client.UpdateGroupPackLabelInProductionTask(productionTaskId);
+                        if (!result.Item1)
                         {
-                            MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
+                            //MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
+                            MessageBox.Show(result.Item2, "Аппликатор",
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Warning);
                         }
@@ -1231,7 +1234,7 @@ namespace Gamma.ViewModels
             }
             catch
             {
-                MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
+                MessageBox.Show("Техническая проблема при обновлении этикетки групповой упаковки в задании: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Аппликатор",
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
             }

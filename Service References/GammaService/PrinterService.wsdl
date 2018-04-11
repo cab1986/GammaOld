@@ -4,6 +4,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:8733/PrinterService/?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:8733/PrinterService/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8733/PrinterService/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/System" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IPrinterService_PrintPallet_InputMessage">
@@ -48,6 +49,12 @@
   <wsdl:message name="IPrinterService_UpdateGroupPackageLabelInProductionTask_OutputMessage">
     <wsdl:part name="parameters" element="tns:UpdateGroupPackageLabelInProductionTaskResponse" />
   </wsdl:message>
+  <wsdl:message name="IPrinterService_UpdateGroupPackLabelInProductionTask_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGroupPackLabelInProductionTask" />
+  </wsdl:message>
+  <wsdl:message name="IPrinterService_UpdateGroupPackLabelInProductionTask_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateGroupPackLabelInProductionTaskResponse" />
+  </wsdl:message>
   <wsdl:portType name="IPrinterService">
     <wsdl:operation name="PrintPallet">
       <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/PrintPallet" message="tns:IPrinterService_PrintPallet_InputMessage" />
@@ -76,6 +83,10 @@
     <wsdl:operation name="UpdateGroupPackageLabelInProductionTask">
       <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTask" message="tns:IPrinterService_UpdateGroupPackageLabelInProductionTask_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTaskResponse" message="tns:IPrinterService_UpdateGroupPackageLabelInProductionTask_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGroupPackLabelInProductionTask">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTask" message="tns:IPrinterService_UpdateGroupPackLabelInProductionTask_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTaskResponse" message="tns:IPrinterService_UpdateGroupPackLabelInProductionTask_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IPrinterService" type="tns:IPrinterService">
@@ -136,6 +147,15 @@
     </wsdl:operation>
     <wsdl:operation name="UpdateGroupPackageLabelInProductionTask">
       <soap:operation soapAction="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTask" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateGroupPackLabelInProductionTask">
+      <soap:operation soapAction="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTask" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

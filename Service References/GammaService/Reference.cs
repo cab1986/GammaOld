@@ -36,6 +36,9 @@ namespace Gamma.GammaService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTask", ReplyAction="http://tempuri.org/IPrinterService/UpdateGroupPackageLabelInProductionTaskRespons" +
             "e")]
         bool UpdateGroupPackageLabelInProductionTask(System.Guid productionTaskId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTask", ReplyAction="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTaskResponse")]
+        System.Tuple<bool, string> UpdateGroupPackLabelInProductionTask(System.Guid productionTaskId);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -91,6 +94,10 @@ namespace Gamma.GammaService {
         
         public bool UpdateGroupPackageLabelInProductionTask(System.Guid productionTaskId) {
             return base.Channel.UpdateGroupPackageLabelInProductionTask(productionTaskId);
+        }
+        
+        public System.Tuple<bool, string> UpdateGroupPackLabelInProductionTask(System.Guid productionTaskId) {
+            return base.Channel.UpdateGroupPackLabelInProductionTask(productionTaskId);
         }
     }
 }

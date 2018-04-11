@@ -134,6 +134,12 @@ namespace Gamma.ViewModels
                 case PlaceGroup.Baler:
                     CurrentView = new ProductionTasksBalerViewModel();
                     break;
+                case PlaceGroup.Warehouses:
+                    var role = (from u in DB.GammaDb.Users
+                                where u.Roles.Name == "PalletRepacker"
+                                select u.RoleID).FirstOrDefault();
+                    if (role != null) CurrentView = new DocComplectationsListViewModel();
+                    break;
             }
             var places = GammaBase.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
             PlaceProducts = new ObservableCollection<PlaceProduct>();

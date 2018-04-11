@@ -12,7 +12,7 @@
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              x:Class="Gamma.Views.ProductionTaskSGIView"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="650"
+             d:DesignHeight="600" d:DesignWidth="750"
              d:DataContext="{d:DesignInstance Type=viewModels:ProductionTaskSGIViewModel, IsDesignTimeCreatable=False}">
     <Grid>
 
@@ -69,10 +69,12 @@
                 <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutGroup Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="300" Height="200" Margin="0,0,-0.364,-97.673" >
-                    <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
+                <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="350" Height="250" >
+                    <Border BorderThickness="1" BorderBrush="#FF000000">
+                        <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
+                    </Border>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="300" Height="200" Margin="0,0,0.382,-97.673">
+                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="350" Height="250" >
                     <Image x:Name="TransportLabel"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>

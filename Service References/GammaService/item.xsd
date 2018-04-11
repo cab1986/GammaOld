@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8733/PrinterService/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:8733/PrinterService/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/System" />
   <xs:element name="PrintPallet">
     <xs:complexType>
       <xs:sequence>
@@ -103,6 +104,20 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="UpdateGroupPackageLabelInProductionTaskResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGroupPackLabelInProductionTask">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/" minOccurs="0" name="productionTaskId" type="q5:guid" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateGroupPackLabelInProductionTaskResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/System" minOccurs="0" name="UpdateGroupPackLabelInProductionTaskResult" nillable="true" type="q6:TupleOfbooleanstring" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

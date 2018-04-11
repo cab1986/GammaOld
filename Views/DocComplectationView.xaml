@@ -44,7 +44,7 @@
                     <ColumnDefinition Width="0.5*" />
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.Column="0" LastChildFill="True">
-                    <TextBlock DockPanel.Dock="Top" Text="РАСФОРМИРОВАТЬ ПАЛЛЕТУ" FontSize="20"
+                    <TextBlock DockPanel.Dock="Top" Text="РАСПАКОВАТЬ ПАЛЛЕТУ" FontSize="20"
                                HorizontalAlignment="Center" />
                     <Grid DockPanel.Dock="Top" Height="40">
                         <Grid.ColumnDefinitions>
@@ -52,7 +52,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Command="{Binding UnpackCommand}" Width="140">
-                            <TextBlock Text="Расформировать паллету" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" />
+                            <TextBlock Text="Распаковать паллету" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" />
                         </Button>
                         <TextBox Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                                  Text="{Binding Barcode, UpdateSourceTrigger=PropertyChanged}" />
@@ -109,7 +109,7 @@
                     </dxg:GridControl>
                 </DockPanel>
                 <DockPanel Grid.Column="1" LastChildFill="True">
-                    <TextBlock DockPanel.Dock="Top" Text="СКОМПЛЕКТОВАТЬ ПАЛЛЕТУ" FontSize="20"
+                    <TextBlock DockPanel.Dock="Top" Text="ЗАПАКОВАТЬ ПАЛЛЕТУ" FontSize="20"
                                HorizontalAlignment="Center" />
                     <Grid DockPanel.Dock="Top" Height="40">
                         <Grid.ColumnDefinitions>

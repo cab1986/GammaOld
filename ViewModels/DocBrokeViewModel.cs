@@ -462,6 +462,15 @@ namespace Gamma.ViewModels
                 MessageBox.Show("При решении \"на переделку\" необходимо указать номенклатуру и характеристику");
                 return false;
             }
+            if (
+                BrokeProducts.Any(
+                    dp =>
+                        (dp.RejectionReasonsString == null || dp.RejectionReasonsString.Length == 0 
+                        || dp.RejectionReasonCommentsString == null || dp.RejectionReasonCommentsString.Length == 0)))
+            {
+                MessageBox.Show("Обязательно требуется заполнить поле Дефекты и Причины несоответствия во всех продуктах");
+                return false;
+            }
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)

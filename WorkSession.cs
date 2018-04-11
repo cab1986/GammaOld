@@ -34,7 +34,7 @@ namespace Gamma
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
-                    MessageBox.Show("Не удалосьь получить информацию о пользователе");
+                    MessageBox.Show("Не удалось получить информацию о пользователе");
                     return;
                 }
                 DBAdmin = userInfo.DBAdmin;
