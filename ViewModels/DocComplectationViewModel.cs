@@ -256,7 +256,7 @@ namespace Gamma.ViewModels
 			};
 			item.PackedPallets.Add(complectedPallet);
 			LastCreatedPalletNumber = product.Number;
-			ReportManager.PrintReport("Амбалаж", "Pallet", product.ProductId, false, 2);
+			ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 2);
 		}
 
 		#endregion
