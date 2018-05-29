@@ -26,7 +26,8 @@ namespace Gamma.ViewModels
 			Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
 			RefreshCommand = new DelegateCommand(Find);
 			EditItemCommand = new DelegateCommand(() => OpenDocComplectation(SelectedDocComplectation), SelectedDocComplectation != null);
-			Find();
+            IntervalId = 0;
+            Find();
 		}
 
 		public int IntervalId

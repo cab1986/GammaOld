@@ -25,5 +25,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> NomenclatureID { get; set; }
         public Nullable<System.Guid> CharacteristicID { get; set; }
         public Nullable<int> Quantity { get; set; }
+        public Nullable<byte> StateID { get; set; }
+        public System.Guid DocProductionID { get; set; }
     }
 }

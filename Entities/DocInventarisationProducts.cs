@@ -17,6 +17,11 @@ namespace Gamma.Entities
         public System.Guid DocID { get; set; }
         public string Barcode { get; set; }
         public Nullable<System.Guid> ProductID { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
+        public Nullable<System.Guid> C1CQualityID { get; set; }
+        public string NomenclatureName { get; set; }
     
         public virtual Docs Docs { get; set; }
         public virtual Products Products { get; set; }

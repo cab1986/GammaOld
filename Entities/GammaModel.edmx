@@ -29,6 +29,7 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="PrintName" Type="varchar" MaxLength="8000" />
           <Property Name="PackageLabelPath" Type="nvarchar" MaxLength="1024" />
+          <Property Name="1CDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="1CContractors">
           <Key>
@@ -176,6 +177,7 @@
           <Property Name="FullName" Type="varchar" MaxLength="8000" />
           <Property Name="1CMeaureUnitStorage" Type="uniqueidentifier" />
           <Property Name="1CMeasureUnitSet" Type="uniqueidentifier" />
+          <Property Name="1CDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="1CNomenclatureAnalogs">
           <Key>
@@ -573,6 +575,11 @@
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Barcode" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ProductID" Type="uniqueidentifier" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="1CQualityID" Type="uniqueidentifier" />
+          <Property Name="NomenclatureName" Type="varchar" MaxLength="1000" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="DocMovement">
           <Key>
@@ -1339,6 +1346,8 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="InPlaceZone" Type="varchar" MaxLength="1000" />
           <Property Name="OutPlaceZoneID" Type="uniqueidentifier" />
           <Property Name="OutPlaceZone" Type="varchar" MaxLength="1000" />
+          <Property Name="CoefficientPackage" Type="decimal" Precision="10" Scale="3" />
+          <Property Name="CoefficientPallet" Type="decimal" Precision="10" Scale="3" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1401,6 +1410,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
             
             <PropertyRef Name="ProductID" />
             <PropertyRef Name="Date" />
+            <PropertyRef Name="DocProductionID" />
           </Key>
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
           <Property Name="PlaceID" Type="int" />
@@ -1413,6 +1423,8 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
           <Property Name="NomenclatureID" Type="uniqueidentifier" />
           <Property Name="CharacteristicID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="StateID" Type="tinyint" />
+          <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -4467,7 +4479,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vDocMovementProducts].[InPlaceZoneID] AS [InPlaceZoneID], 
     [vDocMovementProducts].[InPlaceZone] AS [InPlaceZone], 
     [vDocMovementProducts].[OutPlaceZoneID] AS [OutPlaceZoneID], 
-    [vDocMovementProducts].[OutPlaceZone] AS [OutPlaceZone]
+    [vDocMovementProducts].[OutPlaceZone] AS [OutPlaceZone], 
+    [vDocMovementProducts].[CoefficientPackage] AS [CoefficientPackage], 
+    [vDocMovementProducts].[CoefficientPallet] AS [CoefficientPallet]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
@@ -4518,7 +4532,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductionTaskProducts].[NomenclatureName] AS [NomenclatureName], 
     [vProductionTaskProducts].[NomenclatureID] AS [NomenclatureID], 
     [vProductionTaskProducts].[CharacteristicID] AS [CharacteristicID], 
-    [vProductionTaskProducts].[Quantity] AS [Quantity]
+    [vProductionTaskProducts].[Quantity] AS [Quantity], 
+    [vProductionTaskProducts].[StateID] AS [StateID], 
+    [vProductionTaskProducts].[DocProductionID] AS [DocProductionID]
     FROM [dbo].[vProductionTaskProducts] AS [vProductionTaskProducts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductsInfo" EntityType="Self.vProductsInfo" store:Type="Views" store:Schema="dbo">
@@ -5803,6 +5819,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <PropertyRef Name="DocID" />
             <PropertyRef Name="ProductID" />
             <PropertyRef Name="Date" />
+            <PropertyRef Name="DocProductionID" />
           </Key>
           <Property Name="ProductionTaskID" Type="Guid" />
           <Property Name="PlaceID" Type="Int32" />
@@ -5815,6 +5832,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="NomenclatureID" Type="Guid" />
           <Property Name="CharacteristicID" Type="Guid" />
           <Property Name="Quantity" Type="Int32" />
+          <Property Name="StateID" Type="Byte" />
+          <Property Name="DocProductionID" Type="Guid" Nullable="false" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CProperties">
           <End Role="C1CProperties" Type="Self.C1CProperties" Multiplicity="1" />
@@ -8881,6 +8900,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="InPlaceZone" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="OutPlaceZoneID" Type="Guid" />
           <Property Name="OutPlaceZone" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="CoefficientPackage" Type="Decimal" Precision="10" Scale="3" />
+          <Property Name="CoefficientPallet" Type="Decimal" Precision="10" Scale="3" />
         </EntityType>
         <EntityType Name="v1COrderGoods">
           <Key>
@@ -9294,6 +9315,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="PackageLabelPath" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="C1CDocComplectationNomenclature" />
           <NavigationProperty Name="C1CDocComplectationNomenclature1" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CCharacteristics1" FromRole="C1CCharacteristics" ToRole="C1CDocComplectationNomenclature" />
+          <Property Name="C1CDeleted" Type="Boolean" />
           </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -9892,6 +9914,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductID" Type="Guid" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocInventarisationProducts_Docs" FromRole="DocInventarisationProducts" ToRole="Docs" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocInventarisationProducts_Products" FromRole="DocInventarisationProducts" ToRole="Products" />
+          <Property Name="C1CNomenclatureID" Type="Guid" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="C1CQualityID" Type="Guid" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <Association Name="FK_DocInventarisationProducts_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -10134,6 +10161,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductBales" Relationship="GammaModel.FK_ProductBales_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductBales" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftSamples" />
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CDocComplectationNomenclature" />
+          <Property Name="C1CDeleted" Type="Boolean" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -11235,6 +11263,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductionTaskProducts">
             <EntityTypeMapping TypeName="GammaModel.vProductionTaskProducts">
               <MappingFragment StoreEntitySet="vProductionTaskProducts">
+                <ScalarProperty Name="DocProductionID" ColumnName="DocProductionID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
@@ -12240,6 +12270,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vDocMovementProducts">
             <EntityTypeMapping TypeName="GammaModel.vDocMovementProducts">
               <MappingFragment StoreEntitySet="vDocMovementProducts">
+                <ScalarProperty Name="CoefficientPallet" ColumnName="CoefficientPallet" />
+                <ScalarProperty Name="CoefficientPackage" ColumnName="CoefficientPackage" />
                 <ScalarProperty Name="OutPlaceZone" ColumnName="OutPlaceZone" />
                 <ScalarProperty Name="OutPlaceZoneID" ColumnName="OutPlaceZoneID" />
                 <ScalarProperty Name="InPlaceZone" ColumnName="InPlaceZone" />
@@ -12351,6 +12383,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CCharacteristics">
             <EntityTypeMapping TypeName="GammaModel.C1CCharacteristics">
               <MappingFragment StoreEntitySet="1CCharacteristics">
+                <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
                 <ScalarProperty Name="PackageLabelPath" ColumnName="PackageLabelPath" />
                 <ScalarProperty Name="PrintName" ColumnName="PrintName" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
@@ -12497,6 +12530,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocInventarisationProducts">
             <EntityTypeMapping TypeName="GammaModel.DocInventarisationProducts">
               <MappingFragment StoreEntitySet="DocInventarisationProducts">
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
                 <ScalarProperty Name="Barcode" ColumnName="Barcode" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
@@ -12553,6 +12591,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CNomenclature">
             <EntityTypeMapping TypeName="GammaModel.C1CNomenclature">
               <MappingFragment StoreEntitySet="1CNomenclature">
+                <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
                 <ScalarProperty Name="C1CMeasureUnitSet" ColumnName="1CMeasureUnitSet" />
                 <ScalarProperty Name="C1CMeaureUnitStorage" ColumnName="1CMeaureUnitStorage" />
                 <ScalarProperty Name="FullName" ColumnName="FullName" />

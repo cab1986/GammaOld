@@ -43,5 +43,7 @@ namespace Gamma.Entities
         public string InPlaceZone { get; set; }
         public Nullable<System.Guid> OutPlaceZoneID { get; set; }
         public string OutPlaceZone { get; set; }
+        public Nullable<decimal> CoefficientPackage { get; set; }
+        public Nullable<decimal> CoefficientPallet { get; set; }
     }
 }

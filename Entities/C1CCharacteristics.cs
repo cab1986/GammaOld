@@ -48,6 +48,7 @@ namespace Gamma.Entities
         public bool IsActive { get; set; }
         public string PrintName { get; set; }
         public string PackageLabelPath { get; set; }
+        public Nullable<bool> C1CDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }

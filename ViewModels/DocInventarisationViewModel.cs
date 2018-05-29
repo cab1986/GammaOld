@@ -43,9 +43,9 @@ namespace Gamma.ViewModels
                     var product = products.FirstOrDefault(p => p.ProductID == ip.ProductID);
                     Items.Add(new InventarisationItem()
                     {
-                        NomenclatureName = product?.NomenclatureName ?? "",
+                        NomenclatureName = ip.NomenclatureName ?? product?.NomenclatureName ?? "",
                         Number = product?.Number ?? ip.Barcode,
-                        Quantity = product?.Quantity ?? 0,
+                        Quantity = ip.Quantity ?? product?.Quantity ?? 0,
                         MeasureUnit = product?.BaseMeasureUnit ??""
                     });
                 }
