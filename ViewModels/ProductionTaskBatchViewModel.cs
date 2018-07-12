@@ -601,7 +601,7 @@ namespace Gamma.ViewModels
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
                 CheckGroupPackLabel(productionTask.ProductionTaskID);
-                if (WorkSession.UseApplicator)
+                if (WorkSession.UseApplicator && WorkSession.EndpointAddress != null)
                 {
                     try
                     {
@@ -973,7 +973,7 @@ namespace Gamma.ViewModels
         {
             try
             {
-                if (WorkSession.UseApplicator)
+                if (WorkSession.UseApplicator && WorkSession.EndpointAddress != null)
                 {
                     using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
                     {
@@ -997,18 +997,21 @@ namespace Gamma.ViewModels
         {
             try
             {
-                using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
+                if (WorkSession.EndpointAddress != null)
                 {
-                    if (StatusApplicator == null)
-                        StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
-                    else
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
                     {
-                        StatusApplicator = client.ChangePrinterStatus(WorkSession.PlaceID, 2);
                         if (StatusApplicator == null)
+                            StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
+                        else
                         {
-                            MessageBox.Show("Не удалось сменить состояние принтера групповых этикеток", "Принтер групповых этикеток",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
+                            StatusApplicator = client.ChangePrinterStatus(WorkSession.PlaceID, 2);
+                            if (StatusApplicator == null)
+                            {
+                                MessageBox.Show("Не удалось сменить состояние принтера групповых этикеток", "Принтер групповых этикеток",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                            }
                         }
                     }
                 }
@@ -1026,21 +1029,24 @@ namespace Gamma.ViewModels
         {
             try
             {
-                using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
+                if (WorkSession.EndpointAddress != null)
                 {
-                    bool? res = client.PrintLabel(WorkSession.PlaceID, 2, null);
-                    if (!res ?? true)
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
                     {
-                        MessageBox.Show("Не удалось распечатать групповую этикетку", "Принтер групповых этикеток",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Warning);
+                        bool? res = client.PrintLabel(WorkSession.PlaceID, 2, null);
+                        if (!res ?? true)
+                        {
+                            MessageBox.Show("Не удалось распечатать групповую этикетку", "Принтер групповых этикеток",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                        }
+                        //else
+                        //{
+                        //    MessageBox.Show("Групповая этикетка распечатана", "Принтер групповых этикеток",
+                        //        MessageBoxButton.OK,
+                        //        MessageBoxImage.Warning);
+                        //}
                     }
-                    //else
-                    //{
-                    //    MessageBox.Show("Групповая этикетка распечатана", "Принтер групповых этикеток",
-                    //        MessageBoxButton.OK,
-                    //        MessageBoxImage.Warning);
-                    //}
                 }
             }
             catch
@@ -1217,16 +1223,19 @@ namespace Gamma.ViewModels
                 var view = CurrentView as ProductionTaskSGIViewModel;
                 if (view != null)
                 {
-                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
+                    if (WorkSession.EndpointAddress != null && WorkSession.LabelPath != null)
                     {
-                        //if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
-                        var result = client.UpdateGroupPackLabelInProductionTask(productionTaskId);
-                        if (!result.Item1)
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
                         {
-                            //MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
-                            MessageBox.Show(result.Item2, "Аппликатор",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
+                            //if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
+                            var result = client.UpdateGroupPackLabelInProductionTask(productionTaskId);
+                            if (!result.Item1)
+                            {
+                                //MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
+                                MessageBox.Show(result.Item2, "Аппликатор",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Warning);
+                            }
                         }
                     }
                     view.UpdateGroupPackageLabelImage(productionTaskId);
