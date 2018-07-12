@@ -237,6 +237,7 @@ namespace Gamma.ViewModels
         }
         private byte? _breakNumber;
         [UIAuth(UIAuthLevel.ReadOnly)]
+        [Required(ErrorMessage = @"Необходимо указать количество обрывов")]
         public byte? BreakNumber
         {
             get

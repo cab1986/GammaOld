@@ -454,6 +454,19 @@ namespace Gamma.ViewModels
                     MessageBoxImage.Asterisk);
                 return;
             }
+            var reportName = GammaBase.Reports.Where(r => r.ReportID == msg.ReportID).Select(r => r.Name).FirstOrDefault();
+            var parentId = GammaBase.Reports.Where(r => r.ReportID == msg.ReportID).Select(r => r.ParentID).FirstOrDefault();
+            var parentName = GammaBase.Reports.Where(r => r.ReportID == parentId).Select(r => r.Name).FirstOrDefault();
+            if (reportName != null && parentName != null)
+                if (reportName == "Амбалаж" && parentName == "GroupPacks")
+                {
+                    if (Doc.DocID != null && !IsConfirmed)
+                    {
+                        IsConfirmed = true;
+                        var grouppackViewModel = CurrentViewModel as DocProductGroupPackViewModel;
+                        grouppackViewModel.IsAllowDelete = false;
+                    }
+                }
             if (!SaveToModel()) return;
             using (var gammaBase = DB.GammaDb)
                 {

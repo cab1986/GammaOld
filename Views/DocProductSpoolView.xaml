@@ -40,8 +40,8 @@
                                            MaskUseAsDisplayFormat="True" EditValueType="{x:Type sys:Int32}" ValidateOnTextInput="False" NullText="0"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
-                        <dxe:SpinEdit  EditValue="{Binding BreakNumber, UpdateSourceTrigger=LostFocus}" MinValue="0" MaxValue="500" ValidateOnTextInput="False"
-                                   EditValueType="{x:Type sys:Byte}" IsFloatValue="False"/>
+                        <dxe:SpinEdit  EditValue="{Binding BreakNumber, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="500" ValidateOnTextInput="False"
+                                   EditValueType="{x:Type sys:Byte}" IsFloatValue="False" NullText="Введите кол-во обрывов" AllowNullInput="False" />
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup>

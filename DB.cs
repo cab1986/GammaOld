@@ -83,7 +83,7 @@ namespace Gamma
                 (
                 (
                     from chars in gammaBase.C1CCharacteristics
-                    where chars.C1CNomenclatureID == nomenclatureid && chars.IsActive 
+                    where chars.C1CNomenclatureID == nomenclatureid && chars.IsActive && !(chars.C1CDeleted ?? false)
                     select new Characteristic { CharacteristicID = chars.C1CCharacteristicID, CharacteristicName = chars.Name }
                 ).OrderBy(c => c.CharacteristicName)
                 );

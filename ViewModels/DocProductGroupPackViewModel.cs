@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
 //            GetGrossWeightCommand = new DelegateCommand(GetGrossWeight, () => Scales.IsReady && !IsConfirmed);
             GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsReadOnly);
             AddSpoolCommand = new DelegateCommand(AddSpool, () => !IsReadOnly);
-            DeleteSpoolCommand = new DelegateCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly);
+            DeleteSpoolCommand = new DelegateCommand(DeleteSpool, () => SelectedSpool != null && !IsReadOnly && IsAllowDelete);
             OpenSpoolCommand = new DelegateCommand(OpenSpool, () => SelectedSpool != null);
             UnpackCommand = new DelegateCommand(Unpack, () => !IsNewGroupPack && ProductId != null && WorkSession.PlaceGroup == PlaceGroup.Wr);
             Spools = new AsyncObservableCollection<PaperBase>();
@@ -138,6 +138,8 @@ namespace Gamma.ViewModels
         public Guid? ProductId { get; set; }
 
         private Guid? DocId { get; set; }
+
+        public bool IsAllowDelete = true;
 
         public bool IsConfirmed
         {

@@ -147,7 +147,7 @@ namespace Gamma.ViewModels
                     if (value != null)
                     {
                         NomenclatureCharacteristics = new ObservableCollection<string>(
-                            GammaBase.C1CCharacteristics.Where(c => c.C1CNomenclatureID == value.Nomenclature1CID).
+                            GammaBase.C1CCharacteristics.Where(c => c.C1CNomenclatureID == value.Nomenclature1CID  && !(c.C1CDeleted ?? false)).
                             Select(c => c.Name));
                     }
                     else NomenclatureCharacteristics = null;
