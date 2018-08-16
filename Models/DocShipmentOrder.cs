@@ -17,7 +17,8 @@ namespace Gamma.Models
         public string ActivePerson { get; set; }
         public string OrderType { get; set; }
         public DateTime? OutDate { get; set; }
-        
+        public string Warehouse { get; set; }
+
         public ObservableCollection<DocNomenclatureItem> DocShipmentOrderGoods { get; set; }
     }
 }

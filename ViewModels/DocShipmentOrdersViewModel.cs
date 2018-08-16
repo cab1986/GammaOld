@@ -135,7 +135,8 @@ namespace Gamma.ViewModels
                                 Buyer = d.Buyer,
                                 ActivePerson = IsOutOrders?d.OutActivePerson:d.InActivePerson,
                                 OrderType = d.OrderType,
-                                OutDate = d.OutDate
+                                OutDate = d.OutDate,
+                                Warehouse = d.Warehouse ?? ""
                 }));
                         break;
                     case 1:
@@ -155,7 +156,8 @@ namespace Gamma.ViewModels
                                 Buyer = d.Buyer,
                                 ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
                                 OrderType = d.OrderType,
-                                OutDate = d.OutDate
+                                OutDate = d.OutDate,
+                                Warehouse = d.Warehouse ?? ""
                             }));
                         break;
                     case 2:
@@ -181,7 +183,8 @@ namespace Gamma.ViewModels
                                     Buyer = d.Buyer,
                                     ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
                                     OrderType = d.OrderType,
-                                    OutDate = d.OutDate
+                                    OutDate = d.OutDate,
+                                    Warehouse = d.Warehouse ?? ""
                                 }));
                         break;
                 }

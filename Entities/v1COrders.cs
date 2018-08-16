@@ -41,5 +41,8 @@ namespace Gamma.Entities
         public Nullable<int> OutPlaceID { get; set; }
         public int OrderKindID { get; set; }
         public string OrderType { get; set; }
+        public string InPlaceName { get; set; }
+        public string OutPlaceName { get; set; }
+        public string Warehouse { get; set; }
     }
 }

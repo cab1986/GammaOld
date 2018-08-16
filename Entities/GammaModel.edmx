@@ -949,6 +949,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="RobotProductDescription" Type="varchar" MaxLength="500" />
           <Property Name="GroupPackLabelPNG" Type="varbinary(max)" />
           <Property Name="GroupPackLabelMD5" Type="varchar" MaxLength="32" />
+          <Property Name="GroupPackLabelZPL" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="ProductionTaskRWCutting">
           <Key>
@@ -1252,6 +1253,9 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary ke
           <Property Name="OutPlaceID" Type="int" />
           <Property Name="OrderKindID" Type="int" Nullable="false" />
           <Property Name="OrderType" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="InPlaceName" Type="varchar" MaxLength="64" />
+          <Property Name="OutPlaceName" Type="varchar" MaxLength="64" />
+          <Property Name="Warehouse" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1486,7 +1490,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductionLine" Type="int" Nullable="false" />
           <Property Name="PlaceID" Type="int" Nullable="false" />
           <Property Name="PlaceName" Type="varchar" MaxLength="64" Nullable="false" />
-          <Property Name="ProdName" Type="nvarchar" MaxLength="472" Nullable="false" />
+          <Property Name="ProdName" Type="nvarchar" MaxLength="523" Nullable="false" />
         </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
@@ -4404,7 +4408,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [v1COrders].[OutShiftID] AS [OutShiftID], 
     [v1COrders].[OutPlaceID] AS [OutPlaceID], 
     [v1COrders].[OrderKindID] AS [OrderKindID], 
-    [v1COrders].[OrderType] AS [OrderType]
+    [v1COrders].[OrderType] AS [OrderType], 
+    [v1COrders].[InPlaceName] AS [InPlaceName], 
+    [v1COrders].[OutPlaceName] AS [OutPlaceName], 
+    [v1COrders].[Warehouse] AS [Warehouse]
     FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CWorkingSpecifications" EntityType="Self.v1CWorkingSpecifications" store:Type="Views" store:Schema="dbo">
@@ -8736,6 +8743,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="OutPlaceID" Type="Int32" />
           <Property Name="OrderKindID" Type="Int32" Nullable="false" />
           <Property Name="OrderType" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="InPlaceName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="OutPlaceName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Warehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
@@ -10844,6 +10854,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskConverting_ProductionTasks" FromRole="ProductionTaskConverting" ToRole="ProductionTasks" />
           <Property Name="GroupPackLabelPNG" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="GroupPackLabelMD5" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="GroupPackLabelZPL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="vRobotNomenclatures">
           <Key>
@@ -10857,7 +10868,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="EANFullPallet" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ProductionLine" Type="Int32" Nullable="false" />
           <Property Name="PlaceID" Type="Int32" Nullable="false" />
-          <Property Name="ProdName" Type="String" MaxLength="472" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProdName" Type="String" MaxLength="523" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PlaceName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_ProductionTaskConverting_ProductionTasks">
@@ -12149,6 +12160,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="v1COrders">
             <EntityTypeMapping TypeName="GammaModel.v1COrders">
               <MappingFragment StoreEntitySet="v1COrders">
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
+                <ScalarProperty Name="OutPlaceName" ColumnName="OutPlaceName" />
+                <ScalarProperty Name="InPlaceName" ColumnName="InPlaceName" />
                 <ScalarProperty Name="OrderType" ColumnName="OrderType" />
                 <ScalarProperty Name="OrderKindID" ColumnName="OrderKindID" />
                 <ScalarProperty Name="OutPlaceID" ColumnName="OutPlaceID" />
@@ -12750,6 +12764,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="ProductionTaskConverting">
             <EntityTypeMapping TypeName="GammaModel.ProductionTaskConverting">
               <MappingFragment StoreEntitySet="ProductionTaskConverting">
+                <ScalarProperty Name="GroupPackLabelZPL" ColumnName="GroupPackLabelZPL" />
                 <ScalarProperty Name="GroupPackLabelMD5" ColumnName="GroupPackLabelMD5" />
                 <ScalarProperty Name="GroupPackLabelPNG" ColumnName="GroupPackLabelPNG" />
                 <ScalarProperty Name="RobotProductDescription" ColumnName="RobotProductDescription" />
