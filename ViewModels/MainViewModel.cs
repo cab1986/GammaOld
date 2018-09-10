@@ -13,6 +13,7 @@ using Gamma.Dialogs;
 using System.Deployment.Application;
 using System.Diagnostics;
 using Gamma.Entities;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -289,13 +290,15 @@ namespace Gamma.ViewModels
             {
                 var lastReport =
                     gammaBase.Docs.Where(
-                        d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int) DocTypes.DocCloseShift && d.PlaceID == WorkSession.PlaceID)
+                        d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int) DocTypes.DocCloseShift && d.PlaceID == WorkSession.PlaceID &&
+                        d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))) &&
+                        d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))))
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
-                if (lastReport != null && !lastReport.IsConfirmed)
+                if (lastReport != null)
                 {
-                    MessageBox.Show("≈сть неподтвержденный рапорт, он будет открыт дл€ редактировани€",
-                        "Ќеподтвержденный рапорт", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("≈сть рапорт за смену, он будет открыт дл€ редактировани€",
+                        "–апорт за смену", MessageBoxButton.OK, MessageBoxImage.Information);
                     MessageManager.OpenDocCloseShift(lastReport.DocID);
                     return;
                 }

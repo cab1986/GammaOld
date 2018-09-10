@@ -7,6 +7,7 @@ using Gamma.Attributes;
 using Gamma.Entities;
 using Gamma.Interfaces;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.Models
 {
@@ -94,7 +95,7 @@ namespace Gamma.Models
         {
             var date =
                 GammaBase.DocWithdrawalProducts.Where(
-                    dw => dw.ProductID == productId && dw.DocWithdrawal.Docs.Date < docDate)
+                    dw => dw.ProductID == productId && dw.DocWithdrawal.Docs.ShiftID == WorkSession.ShiftID && dw.DocWithdrawal.Docs.Date < docDate && dw.DocWithdrawal.Docs.Date >= SqlFunctions.DateAdd("hh", -18, docDate))
                     .OrderByDescending(dw => dw.DocWithdrawal.Docs.Date)
                     .Select(dw => dw.DocWithdrawal.Docs)
                     .FirstOrDefault()?

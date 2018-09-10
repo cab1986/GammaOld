@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using Gamma.Entities;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.Dialogs
 {
@@ -17,7 +18,7 @@ namespace Gamma.Dialogs
         {
             InitializeComponent();
             gammaBase = gammaBase ?? DB.GammaDb;
-            var printNames = (from d in gammaBase.Docs where d.UserID == WorkSession.UserID select d.PrintName).Distinct().ToList();
+            var printNames = (from d in gammaBase.Docs where d.UserID == WorkSession.UserID && d.Date >= SqlFunctions.DateAdd("d", -45, SqlFunctions.GetDate()) select d.PrintName).Distinct().ToList();
             EdtPrintName.ItemsSource = printNames;
         }
 

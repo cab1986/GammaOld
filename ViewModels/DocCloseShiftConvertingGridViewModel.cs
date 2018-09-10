@@ -401,44 +401,47 @@ namespace Gamma.ViewModels
                     );
                 }
                 gammaBase.DocCloseShiftSamples.RemoveRange(docCloseShift.DocCloseShiftSamples);
-                foreach (var sample in Samples)
-                {
-                    docCloseShift.DocCloseShiftSamples.Add(new DocCloseShiftSamples
+                if (Samples != null)
+                    foreach (var sample in Samples)
                     {
-                        DocID = docId,
-                        C1CNomenclatureID = sample.NomenclatureID,
-                        C1CCharacteristicID = (Guid)sample.CharacteristicID,
-                        DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
-                        Quantity = sample.Quantity,
-                        C1CMeasureUnitID = sample.MeasureUnitId
-                    });
-                }
+                        docCloseShift.DocCloseShiftSamples.Add(new DocCloseShiftSamples
+                        {
+                            DocID = docId,
+                            C1CNomenclatureID = sample.NomenclatureID,
+                            C1CCharacteristicID = (Guid)sample.CharacteristicID,
+                            DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
+                            Quantity = sample.Quantity,
+                            C1CMeasureUnitID = sample.MeasureUnitId
+                        });
+                    }
                 gammaBase.DocCloseShiftNomenclatureRests.RemoveRange(docCloseShift.DocCloseShiftNomenclatureRests);
-                foreach (var rest in NomenclatureRests)
-                {
-                    docCloseShift.DocCloseShiftNomenclatureRests.Add(new DocCloseShiftNomenclatureRests
+                if (NomenclatureRests != null)
+                    foreach (var rest in NomenclatureRests)
                     {
-                        DocID = docId,
-                        C1CNomenclatureID = rest.NomenclatureID,
-                        C1CCharacteristicID = (Guid)rest.CharacteristicID,
-                        DocCloseShiftNomenclatureRestID = SqlGuidUtil.NewSequentialid(),
-                        Quantity = rest.Quantity * gammaBase.C1CCharacteristics
-                            .FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient ?? 1
-                    });
-                }
+                        docCloseShift.DocCloseShiftNomenclatureRests.Add(new DocCloseShiftNomenclatureRests
+                        {
+                            DocID = docId,
+                            C1CNomenclatureID = rest.NomenclatureID,
+                            C1CCharacteristicID = (Guid)rest.CharacteristicID,
+                            DocCloseShiftNomenclatureRestID = SqlGuidUtil.NewSequentialid(),
+                            Quantity = rest.Quantity * gammaBase.C1CCharacteristics
+                                .FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient ?? 1
+                        });
+                    }
                 gammaBase.DocCloseShiftWastes.RemoveRange(docCloseShift.DocCloseShiftWastes);
-                foreach (var waste in Wastes)
-                {
-                    docCloseShift.DocCloseShiftWastes.Add(new DocCloseShiftWastes
+                if (Wastes != null)
+                    foreach (var waste in Wastes)
                     {
-                        DocID = docId,
-                        C1CNomenclatureID = waste.NomenclatureID,
-                        C1CCharacteristicID = waste.CharacteristicID,
-                        DocCloseWhiftWasteID = SqlGuidUtil.NewSequentialid(),
-                        C1CMeasureUnitID = (Guid)waste.MeasureUnitId,
-                        Quantity = waste.Quantity
-                    });
-                }
+                        docCloseShift.DocCloseShiftWastes.Add(new DocCloseShiftWastes
+                        {
+                            DocID = docId,
+                            C1CNomenclatureID = waste.NomenclatureID,
+                            C1CCharacteristicID = waste.CharacteristicID,
+                            DocCloseWhiftWasteID = SqlGuidUtil.NewSequentialid(),
+                            C1CMeasureUnitID = (Guid)waste.MeasureUnitId,
+                            Quantity = waste.Quantity
+                        });
+                    }
                 if (IsChanged)
                 {
                     docCloseShift.DocCloseShiftDocs.Clear();
