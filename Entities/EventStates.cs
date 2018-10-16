@@ -12,26 +12,20 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class Departments
+    public partial class EventStates
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Departments()
+        public EventStates()
         {
-            this.Places = new HashSet<Places>();
             this.LogEvents = new HashSet<LogEvents>();
-            this.Users = new HashSet<Users>();
         }
     
-        public short DepartmentID { get; set; }
+        public int EventStateID { get; set; }
         public string Name { get; set; }
-        public string NameEng { get; set; }
-        public string Email { get; set; }
+        public bool IsVisible { get; set; }
+        public Nullable<bool> EventIsReadOnly { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Places> Places { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogEvents> LogEvents { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Users> Users { get; set; }
     }
 }

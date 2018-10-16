@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Gamma.Views.LogEventsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Views"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:LogEventsViewModel, IsDesignTimeCreatable = False}">
+    <UserControl.Resources>
+        <Style x:Key="DisableTextEdit" TargetType="{x:Type dxe:TextEdit}">
+            <Style.Triggers>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="0">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+                <DataTrigger 
+    				Binding ="{Binding SelectedIndex, ElementName=IntervalList}" 
+    				Value="1">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ToolBar HorizontalAlignment="Left" VerticalContentAlignment="Stretch">
+            <Button Content="Создать новую заявку" Command="{Binding NewItemCommand}"/>
+        </ToolBar>
+        <dxlc:LayoutControl Grid.Row="1">
+            <dxlc:LayoutItem Label="Диапазон:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" x:Name="IntervalList" IsTextEditable="False"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Обьект">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Places}" ValueMember="PlaceID" DisplayMember="PlaceName" EditValue="{Binding PlaceId}" NullText="Все"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Служба">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Departments}" ValueMember="DepartmentID" DisplayMember="DepartmentName" EditValue="{Binding DepartmentId}" NullText="Все"/>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Номер:">
+                <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Дата с:">
+                <dxe:DateEdit EditValue="{Binding DateBegin}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="по:">
+                <dxe:DateEdit EditValue="{Binding DateEnd}" Style="{StaticResource DisableTextEdit}" />
+            </dxlc:LayoutItem>
+            <Button Content="Поиск" Command="{Binding RefreshCommand}" Width="60"/>
+        </dxlc:LayoutControl>
+        <dxg:GridControl Grid.Row="2" ItemsSource="{Binding LogEventsList}" SelectedItem="{Binding SelectedLogEvent}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}" />
+            </dxmvvm:Interaction.Behaviors>
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True" AllowEditing="False" />
+            </dxg:GridControl.View>
+            <dxg:GridColumn Header="Номер" FieldName="Number" VisibleIndex="0" />
+            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="1" SortIndex="0" SortOrder="Descending"/>
+            <dxg:GridColumn Header="Вид" FieldName="EventKind" VisibleIndex="2" />
+            <dxg:GridColumn Header="Состояние" FieldName="EventState" VisibleIndex="3" />
+            <dxg:GridColumn Header="Описание" FieldName="Description" VisibleIndex="4" />
+            <dxg:GridColumn Header="Служба" FieldName="Department" VisibleIndex="5" />
+            <dxg:GridColumn Header="Автор" FieldName="PrintName" VisibleIndex="6" />
+            <dxg:GridColumn Header="Смена" FieldName="Shift" VisibleIndex="7" />
+            <dxg:GridColumn Header="Передел" FieldName="Place" VisibleIndex="8" />
+            <dxg:GridColumn Header="Устройство" FieldName="Device" VisibleIndex="8" />
+        </dxg:GridControl>
+    </Grid>
+</UserControl>

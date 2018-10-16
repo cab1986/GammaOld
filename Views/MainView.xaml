@@ -60,6 +60,9 @@
         <DataTemplate DataType="{x:Type vm:DocComplectationViewModel}">
             <views:DocComplectationView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LogEventsViewModel}">
+            <views:LogEventsView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
@@ -104,6 +107,9 @@
                             </DataTemplate>
                         </dxb:BarSubItem.ItemTemplate>
                     </dxb:BarSubItem>
+                    <dxb:BarSubItem Content="Журналы">
+                        <dxb:BarButtonItem Content="Журнал заявок" Command="{Binding OpenLogEventsCommand}" />
+                    </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Склад">
                         <dxb:BarButtonItem Content="Отгрузки" Command="{Binding OpenDocShipmentOrdersCommand}"/>
                         <dxb:BarButtonItem Content="Приемка" Command="{Binding OpenDocInOrdersCommand}" />
@@ -141,6 +147,9 @@
                     <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" BarItemDisplayMode="ContentAndGlyph" />
                     <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" 
                                        Command="{Binding CloseShiftCommand}"/>
+                    <dxb:BarItemLinkSeparator />
+                    <dxb:BarButtonItem Content="Журнал заявок" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=Reading_32x32.png}" 
+                                       Command="{Binding OpenLogEventsCommand}"/>
                     <dxb:BarItemLinkSeparator />
                     <dxb:BarButtonItem Content="Назад" Glyph="{dx:DXImage Image=Backward_16x16.png}" LargeGlyph="{dx:DXImage Image=Backward_32x32.png}" 
                                        BarItemDisplayMode="ContentAndGlyph" Command="{Binding BackCommand}"/>

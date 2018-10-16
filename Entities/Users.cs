@@ -21,6 +21,7 @@ namespace Gamma.Entities
             this.Docs = new HashSet<Docs>();
             this.UserPrintNames = new HashSet<UserPrintNames>();
             this.Places = new HashSet<Places>();
+            this.LogEvents = new HashSet<LogEvents>();
         }
     
         public System.Guid UserID { get; set; }
@@ -36,6 +37,7 @@ namespace Gamma.Entities
         public Nullable<bool> ProgramAdmin { get; set; }
         public byte ShiftID { get; set; }
         public Nullable<bool> MobileComputer { get; set; }
+        public Nullable<short> DepartmentID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentPlaceUsers> CurrentPlaceUsers { get; set; }
@@ -47,5 +49,8 @@ namespace Gamma.Entities
         public virtual ICollection<UserPrintNames> UserPrintNames { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Places> Places { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LogEvents> LogEvents { get; set; }
+        public virtual Departments Departments { get; set; }
     }
 }

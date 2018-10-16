@@ -38,6 +38,7 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenQualityReportPMMessage>(this, OpenQualityReportPM);
             Messenger.Default.Register<OpenDocInventarisationMessage>(this, OpenDocInventarisation);
             Messenger.Default.Register<OpenDocWithdrawalMessage>(this, OpenDocWithdrawal);
+            Messenger.Default.Register<OpenLogEventMessage>(this, OpenLogEvent);
         }
 
         private void OpenDocWithdrawal(OpenDocWithdrawalMessage msg)
@@ -185,6 +186,11 @@ namespace Gamma.Common
         private void RoleEdit(RoleEditMessage msg)
         {
             var view = new RoleEditView(msg);
+            view.Show();
+        }
+        private void OpenLogEvent(OpenLogEventMessage msg)
+        {
+            var view = new LogEventView(msg.EventID, msg.ParentEventID);
             view.Show();
         }
 

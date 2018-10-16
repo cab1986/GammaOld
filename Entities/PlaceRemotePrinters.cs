@@ -12,11 +12,16 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class vGroupPackSpools
+    public partial class PlaceRemotePrinters
     {
-        public System.Guid ProductGroupPackID { get; set; }
-        public System.Guid ProductID { get; set; }
-        public Nullable<System.Guid> ProductionTaskID { get; set; }
-        public Nullable<byte> BreakNumber { get; set; }
+        public int PlaceRemotePrinterID { get; set; }
+        public int PlaceID { get; set; }
+        public int ModbusDeviceID { get; set; }
+        public int RemotePrinterID { get; set; }
+        public Nullable<bool> IsEnabled { get; set; }
+    
+        public virtual ModbusDevices ModbusDevices { get; set; }
+        public virtual Places Places { get; set; }
+        public virtual RemotePrinters RemotePrinters { get; set; }
     }
 }

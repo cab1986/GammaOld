@@ -30,6 +30,8 @@ namespace Gamma.Entities
             this.DocMovementOrder = new HashSet<DocMovementOrder>();
             this.DocMovementOrder1 = new HashSet<DocMovementOrder>();
             this.Users = new HashSet<Users>();
+            this.LogEvents = new HashSet<LogEvents>();
+            this.PlaceRemotePrinters = new HashSet<PlaceRemotePrinters>();
         }
     
         public int PlaceID { get; set; }
@@ -84,5 +86,9 @@ namespace Gamma.Entities
         public virtual ICollection<DocMovementOrder> DocMovementOrder1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LogEvents> LogEvents { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PlaceRemotePrinters> PlaceRemotePrinters { get; set; }
     }
 }

@@ -353,6 +353,9 @@
     <Compile Include="Entities\Departments.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Devices.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DocBroke.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -434,6 +437,12 @@
     <Compile Include="Entities\Enterprises.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\EventKinds.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\EventStates.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FillDocCloseShiftConvertingMaterials_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -503,6 +512,9 @@
     <Compile Include="Entities\GetInputNomenclature_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetLogEventHierarchy_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetMaterialNomenclatureFolders1_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -563,7 +575,13 @@
     <Compile Include="Entities\LocalSettings.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\LogEvents.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\MaterialTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ModbusDevices.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\NomenclatureBarcodes.cs">
@@ -582,6 +600,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\PlaceGroups.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PlaceRemotePrinters.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Places.cs">
@@ -644,6 +665,9 @@
     <Compile Include="Entities\ProductStates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\RemotePrinters.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Reports.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -654,6 +678,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Roles.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Shifts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\SourceSpools.cs">
@@ -723,10 +750,14 @@
     <Compile Include="Models\Cutting.cs" />
     <Compile Include="Common\GridControlWithState.cs" />
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DocComplectationListItem.cs" />
     <Compile Include="Models\DocInventarisation.cs" />
     <Compile Include="Models\DocWithdrawal.cs" />
+    <Compile Include="Models\EventKind.cs" />
     <Compile Include="Models\InventarisationItem.cs" />
+    <Compile Include="Models\LogEvent.cs" />
     <Compile Include="Models\MovementGood.cs" />
     <Compile Include="Models\MovementItem.cs" />
     <Compile Include="Models\MovementOrderNomenclatureItem.cs" />
@@ -838,6 +869,8 @@
     <Compile Include="ViewModels\EditRejectionReasonsViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
+    <Compile Include="ViewModels\LogEventsViewModel.cs" />
+    <Compile Include="ViewModels\LogEventViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
     <Compile Include="Models\MovementProduct.cs" />
     <Compile Include="ViewModels\NomenclatureEditViewModel.cs" />
@@ -979,6 +1012,12 @@
     </Compile>
     <Compile Include="Views\ImportOldProductsView.xaml.cs">
       <DependentUpon>ImportOldProductsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LogEventsView.xaml.cs">
+      <DependentUpon>LogEventsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LogEventView.xaml.cs">
+      <DependentUpon>LogEventView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
@@ -1226,6 +1265,14 @@
     <Page Include="Views\ImportOldProductsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LogEventsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LogEventView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LoginView.xaml">
       <SubType>Form</SubType>

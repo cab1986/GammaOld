@@ -118,6 +118,7 @@ namespace Gamma.ViewModels
                 OpenDocWithdrawalsCommand = new DelegateCommand(() => CurrentView = new DocWithdrawalsViewModel());
                 OpenComplectedPalletsCommand = new DelegateCommand(() => CurrentView = new ComplectedPalletsViewModel());
 				OpenDocComplectationsCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel());
+                OpenLogEventsCommand = new DelegateCommand(() => CurrentView = new LogEventsViewModel());
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -170,7 +171,9 @@ namespace Gamma.ViewModels
 
         public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 
-		public DelegateCommand OpenDocComplectationsCommand { get; private set; }
+        public DelegateCommand OpenLogEventsCommand { get; private set; }
+
+        public DelegateCommand OpenDocComplectationsCommand { get; private set; }
 
         private void OpenInventarisations()
         {

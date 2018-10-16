@@ -11,7 +11,7 @@
     x:Class="Gamma.Views.UserEditView" 
     Title="Пользователь" 
     Width="500" 
-    Height="800">
+    Height="650">
     <Grid>
         <dxlc:LayoutControl Header="Header" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox">
             <dxlc:LayoutGroup x:Name="LayoutGroup" Orientation="Vertical" VerticalAlignment="Stretch" View="Group">
@@ -32,6 +32,9 @@
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Должность" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding Post}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Служба" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding DepartmentID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Departments}" DisplayMember="Name" ValueMember="DepartmentID" />
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Подразделения" LabelPosition="Top">
                     <dxb:BarManager>

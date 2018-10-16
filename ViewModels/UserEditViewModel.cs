@@ -44,6 +44,7 @@ namespace Gamma.ViewModels
             }));
             Post = User.Post;
             RoleID = User.RoleID;
+            DepartmentID = User.DepartmentID;
             IsDBAdmin = User.DBAdmin;
             ShiftID = User.ShiftID;
             InitializeFields();
@@ -57,6 +58,7 @@ namespace Gamma.ViewModels
             DeletePlaceCommand = new DelegateCommand(() => UserPlaces.Remove(SelectedPlaceID), () => SelectedPlaceID != null);
             Places = new ObservableCollection<Places>(GammaBase.Places);
             Roles = new ObservableCollection<Roles>(GammaBase.Roles);
+            Departments = new ObservableCollection<Departments>(GammaBase.Departments);
         }
         public DelegateCommand AddPlaceCommand { get; private set; }
         public DelegateCommand DeletePlaceCommand { get; private set; }
@@ -98,6 +100,9 @@ namespace Gamma.ViewModels
         public Guid RoleID { get; set; }
         public byte ShiftID { get; set; }
 
+        [Required(ErrorMessage = @"Укажите службу пользователя")]
+        public short? DepartmentID { get; set; }
+
         private Guid UserID { get; set; }
         private string _login;
         private string _name;
@@ -114,6 +119,7 @@ namespace Gamma.ViewModels
                 User.Places.Add(GammaBase.Places.Find(placeId.Value));
             }
             User.RoleID = RoleID;
+            User.DepartmentID = DepartmentID;
             User.ShiftID = ShiftID;
             User.Post = Post;
             User.DBAdmin = IsDBAdmin;
@@ -138,6 +144,7 @@ namespace Gamma.ViewModels
         public ObservableCollection<PlaceID> UserPlaces { get; set; } = new ObservableCollection<PlaceID>();
         public ObservableCollection<Places> Places { get; set; }
         public ObservableCollection<Roles> Roles { get; set; }
+        public ObservableCollection<Departments> Departments { get; set; }
 
         public class PlaceID
         {

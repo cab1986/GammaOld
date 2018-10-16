@@ -135,6 +135,14 @@ namespace Gamma.Entities
         public virtual DbSet<ProductionTaskConverting> ProductionTaskConverting { get; set; }
         public virtual DbSet<vRobotNomenclatures> vRobotNomenclatures { get; set; }
         public virtual DbSet<LocalSettings> LocalSettings { get; set; }
+        public virtual DbSet<Devices> Devices { get; set; }
+        public virtual DbSet<EventKinds> EventKinds { get; set; }
+        public virtual DbSet<LogEvents> LogEvents { get; set; }
+        public virtual DbSet<Shifts> Shifts { get; set; }
+        public virtual DbSet<EventStates> EventStates { get; set; }
+        public virtual DbSet<ModbusDevices> ModbusDevices { get; set; }
+        public virtual DbSet<PlaceRemotePrinters> PlaceRemotePrinters { get; set; }
+        public virtual DbSet<RemotePrinters> RemotePrinters { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -452,13 +460,17 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCharacteristicsForProdTaskPM_Result>("GetCharacteristicsForProdTaskPM", nomenclatureIDParameter, colorParameter, buyerParameter, placeIDParameter);
         }
     
-        public virtual int UploadDocCloseShiftReportTo1C(Nullable<System.Guid> docID)
+        public virtual int UploadDocCloseShiftReportTo1C(Nullable<System.Guid> docID, Nullable<bool> isPreviousDocClose)
         {
             var docIDParameter = docID.HasValue ?
                 new ObjectParameter("DocID", docID) :
                 new ObjectParameter("DocID", typeof(System.Guid));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UploadDocCloseShiftReportTo1C", docIDParameter);
+            var isPreviousDocCloseParameter = isPreviousDocClose.HasValue ?
+                new ObjectParameter("IsPreviousDocClose", isPreviousDocClose) :
+                new ObjectParameter("IsPreviousDocClose", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UploadDocCloseShiftReportTo1C", docIDParameter, isPreviousDocCloseParameter);
         }
     
         public virtual ObjectResult<GetOldProductInfo_Result> GetOldProductInfo(string number, Nullable<int> productKindId)
@@ -888,6 +900,15 @@ namespace Gamma.Entities
                 new ObjectParameter("UserID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("CheckPermissionOnChooseNomenclatureAndCharacteristic", productKindIDParameter, placeIDParameter, userIDParameter);
+        }
+    
+        public virtual ObjectResult<GetLogEventHierarchy_Result> GetLogEventHierarchy(Nullable<System.Guid> eventID)
+        {
+            var eventIDParameter = eventID.HasValue ?
+                new ObjectParameter("EventID", eventID) :
+                new ObjectParameter("EventID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLogEventHierarchy_Result>("GetLogEventHierarchy", eventIDParameter);
         }
     }
 }

@@ -1,0 +1,110 @@
+﻿<gamma:MvvmWindow x:Class="Gamma.Views.LogEventView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gamma.Views"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:models="clr-namespace:Gamma.Models"
+        xmlns:gamma="clr-namespace:Gamma"
+        xmlns:common="clr-namespace:Gamma.Common"
+        mc:Ignorable="d"
+        Title="Событие" Height="600" Width="900"
+        common:WindowSettings.Save="True"
+        d:DataContext="{d:DesignInstance Type=viewModels:LogEventViewModel, IsDesignTimeCreatable=False}">
+    <gamma:MvvmWindow.Resources>
+        <local:DepartmentToConverter x:Key="departmenttoconverter" />
+    </gamma:MvvmWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+            <RowDefinition Height="28" />
+        </Grid.RowDefinitions>
+        <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
+        <dxlc:LayoutControl Orientation="Horizontal" Grid.Row="1">
+            <dxlc:LayoutGroup Orientation="Vertical" View="GroupBox" Width="200" Header="Документ" >
+                <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
+                    <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False" Mask="dd.MM.yyyy HH:mm:ss" MaskUseAsDisplayFormat="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Обьект" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Place}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Служба" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding Department}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Изменил" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding PrintName}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Состояние" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding EventStateName}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="{Binding SolvedLabel}">
+                    <dxe:CheckEdit EditValue="{Binding IsSolved}" IsReadOnly="{Binding IsReadOnlySolved}"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dx:DXTabControl>
+                <dx:DXTabItem Header="Событие">
+                    <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" >
+                        <dxlc:LayoutItem Label="Автор" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding PrintName, ValidatesOnDataErrors=True}" ItemsSource="{Binding PrintNames}" IsTextEditable="True" AutoComplete="True" FindMode="Always" IsReadOnly="{Binding IsReadOnly}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Вид" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding EventKindID, ValidatesOnDataErrors=True}" ItemsSource="{Binding EventKinds}" DisplayMember="EventKindName" ValueMember="EventKindID" IsReadOnly="{Binding IsReadOnly}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Обьект" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" DisplayMember="PlaceName" ValueMember="PlaceID" IsReadOnly="{Binding IsReadOnlyPlace}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Узел" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding DeviceName, ValidatesOnDataErrors=True}" ItemsSource="{Binding Devices}" IsTextEditable="True" AutoComplete="True" FindMode="Always" IsReadOnly="{Binding IsReadOnlyDevice}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Передать в службу:" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding DepartmentTo, Converter={StaticResource departmenttoconverter}, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Departments}"  DisplayMember="DepartmentName" ValueMember="DepartmentID" IsReadOnly="{Binding IsReadOnly}" NullText="{Binding DepartmentToNullText}">
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings />
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Описание" LabelPosition="Top" VerticalAlignment="Stretch">
+                            <dxe:TextEdit EditValue="{Binding Description}" IsReadOnly="{Binding Path=IsReadOnly}" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" VerticalContentAlignment="Top"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                </dx:DXTabItem>
+                <dx:DXTabItem Header="Цепочка">
+                    <dxg:TreeListControl Name="treeList" ItemsSource="{Binding LogEventList}" SelectedItem="{Binding SelectedLogEvent}" >
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}" />
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:TreeListControl.Columns>
+                            <dxg:TreeListColumn FieldName="Number" Header="Номер" Width="70" />
+                            <dxg:TreeListColumn FieldName="Date" Header="Дата" AllowEditing="False">
+                                <dxg:TreeListColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="dd.MM.yyyy HH:mm:ss" MaskType="DateTime" MaskUseAsDisplayFormat="True"/>
+                                </dxg:TreeListColumn.EditSettings>
+                            </dxg:TreeListColumn>
+                            <dxg:TreeListColumn FieldName="Department" Header="Служба" />
+                            <dxg:TreeListColumn FieldName="EventState" Header="Состояние" />
+                            <dxg:TreeListColumn FieldName="EventKind" Header="Вид" />
+                            <dxg:TreeListColumn FieldName="Description" Header="Описание" />
+                        </dxg:TreeListControl.Columns>
+                        <dxg:TreeListControl.View>
+                            <dxg:TreeListView Name="treeListView1" AutoWidth="True"
+                                  KeyFieldName="EventID" ParentFieldName="ParentEventID" />
+                        </dxg:TreeListControl.View>
+                    </dxg:TreeListControl>
+                </dx:DXTabItem>
+            </dx:DXTabControl>
+        </dxlc:LayoutControl>
+        <Button Grid.Row="2" Content="OK" Command="{Binding SaveAndCloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,100,2"/>
+        <Button Grid.Row="2" Content="Отмена" Command="{Binding CloseCommand}"  Width="80" HorizontalAlignment="Right" Margin="0,2,10,2"/>
+    </Grid>
+</gamma:MvvmWindow>

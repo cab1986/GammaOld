@@ -30,7 +30,8 @@ namespace Gamma
                                      programAdmin = u.ProgramAdmin,
                                      u.Places.FirstOrDefault().BranchID,
                                      u.Places.FirstOrDefault().IsProductionPlace,
-                                     u.Places
+                                     u.Places,
+                                     u.DepartmentID
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -40,6 +41,10 @@ namespace Gamma
                 DBAdmin = userInfo.DBAdmin;
                 ProgramAdmin = userInfo.programAdmin ?? false;
                 PlaceID = userInfo.PlaceID;
+                DepartmentID = userInfo.DepartmentID; /*(from u in DB.GammaDb.Places
+                                    where u.PlaceID == PlaceID
+                                    select u.DepartmentID
+                                ).FirstOrDefault();*/
                 BranchID = userInfo.BranchID;
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
@@ -48,8 +53,11 @@ namespace Gamma
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
                 IsRemotePrinting = userInfo.Places.FirstOrDefault()?.IsRemotePrinting ?? false;
                 UseApplicator = userInfo.Places.FirstOrDefault()?.UseApplicator ?? false;
-                EndpointAddress = (from u in DB.GammaDb.LocalSettings
-                                   select u.GammaServiceAddress).FirstOrDefault();
+                //EndpointAddress = (from u in DB.GammaDb.LocalSettings
+                //                   select u.GammaServiceAddress).FirstOrDefault();
+                EndpointAddress = (from u in DB.GammaDb.PlaceRemotePrinters
+                                   where u.PlaceID == PlaceID && u.RemotePrinters.RemotePrinterLabelID == 2
+                                   select u.ModbusDevices.ServiceAddress).FirstOrDefault();
                 LabelPath = (from u in DB.GammaDb.LocalSettings
                                    select u.LabelPath).FirstOrDefault();
             }
@@ -60,6 +68,11 @@ namespace Gamma
         }
 
         public static int PlaceID
+        {
+            get; private set;
+        }
+
+        public static int? DepartmentID
         {
             get; private set;
         }

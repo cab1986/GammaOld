@@ -19,6 +19,7 @@ namespace Gamma
         public GammaEntities GammaBase { get; set; }
     }
 
+    public class RefreshMessage { }
     public class BaseReconnectedMessage { }
     public class OpenFilterDateMessage { }
 
@@ -322,6 +323,18 @@ namespace Gamma
     {
         public BatchKinds BatchKind;
     }
+
+    public class OpenLogEventMessage
+    {
+        public OpenLogEventMessage(Guid eventID, Guid? parentEventID)
+        {
+            EventID = eventID;
+            ParentEventID = parentEventID;
+        }
+        public Guid EventID { get; private set; }
+        public Guid? ParentEventID { get; private set; }
+    }
+
     public static class MessageManager
     {
         public static void NomenclatureEdit(Guid nomenclatureId)
@@ -560,6 +573,11 @@ namespace Gamma
         internal static void OpenDocInventarisation(Guid docId)
         {
             Messenger.Default.Send(new OpenDocInventarisationMessage(docId));
+        }
+
+        public static void OpenLogEvent(Guid eventID, Guid? parentEventID)
+        {
+            Messenger.Default.Send(new OpenLogEventMessage(eventID, parentEventID));
         }
     }
 }
