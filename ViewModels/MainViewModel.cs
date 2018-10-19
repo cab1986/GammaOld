@@ -142,6 +142,10 @@ namespace Gamma.ViewModels
                                 select u.RoleID).FirstOrDefault();
                     if (role != null) CurrentView = new DocComplectationsListViewModel();
                     break;
+                case PlaceGroup.Services:
+                    CurrentView = new LogEventsViewModel();
+                    break;
+
             }
             var places = GammaBase.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
             PlaceProducts = new ObservableCollection<PlaceProduct>();

@@ -56,7 +56,7 @@
                 <dx:DXTabItem Header="Событие">
                     <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" >
                         <dxlc:LayoutItem Label="Автор" LabelPosition="Top">
-                            <dxe:ComboBoxEdit EditValue="{Binding PrintName, ValidatesOnDataErrors=True}" ItemsSource="{Binding PrintNames}" IsTextEditable="True" AutoComplete="True" FindMode="Always" IsReadOnly="{Binding IsReadOnly}"/>
+                            <dxe:ComboBoxEdit EditValue="{Binding PrintName, ValidatesOnDataErrors=True}" ItemsSource="{Binding PrintNames}" IsTextEditable="True" AutoComplete="True" FindMode="Always" IsReadOnly="{Binding IsReadOnly}" NullText="{Binding PrintNameNullText}"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Вид" LabelPosition="Top">
                             <dxe:ComboBoxEdit EditValue="{Binding EventKindID, ValidatesOnDataErrors=True}" ItemsSource="{Binding EventKinds}" DisplayMember="EventKindName" ValueMember="EventKindID" IsReadOnly="{Binding IsReadOnly}"/>

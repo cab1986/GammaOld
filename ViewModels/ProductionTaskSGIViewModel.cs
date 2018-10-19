@@ -29,25 +29,33 @@ namespace Gamma.ViewModels
         /// </summary>
         public ProductionTaskSGIViewModel(GammaEntities gammaBase = null)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;            
+            GammaBase = gammaBase ?? DB.GammaDb;
             PlaceGroupID = (int)PlaceGroup.Convertings;
-            Places = new ObservableCollection<Place> (GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings).
+            Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings).
                 Select(p => new Place()
                 {
-                    PlaceID = p.PlaceID,PlaceName = p.Name
+                    PlaceID = p.PlaceID, PlaceName = p.Name
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
-            RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
-                Select(p => new RobotNomenclature()
-                {
-                    ProdNumber = p.ProdNumber,
-                    ProdDescription = p.ProdDescription,
-                    EANFullPallet = p.EANFullPallet,
-                    ProductionLine = p.ProductionLine,
-                    PlaceID = p.PlaceID,
-                    ProdName = p.ProdName
-                }));
+            try
+            {
+                RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
+                    Select(p => new RobotNomenclature()
+                    {
+                        ProdNumber = p.ProdNumber,
+                        ProdDescription = p.ProdDescription,
+                        EANFullPallet = p.EANFullPallet,
+                        ProductionLine = p.ProductionLine,
+                        PlaceID = p.PlaceID,
+                        ProdName = p.ProdName
+                    }));
+            }
+            catch
+            {
+                if (RobotNomenclatures == null)
+                    RobotNomenclatures = new ObservableCollection<RobotNomenclature>();
+            }
             PrintExampleCommand = new DelegateCommand(PrintExample);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
         }

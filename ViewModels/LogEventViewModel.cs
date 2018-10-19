@@ -25,7 +25,8 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("LogEvent", VMID));
             using (var gammaBase = DB.GammaDb)
             {
-                Places = gammaBase.Places//.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
+                Places = gammaBase.Places
+                .Where(p => WorkSession.BranchIds.Contains(p.BranchID))
                 .Select(p => new Place
                 {
                     PlaceGuid = p.PlaceGuid,
@@ -126,7 +127,8 @@ namespace Gamma.ViewModels
                 }
                 
             }
-            
+
+            if (String.IsNullOrEmpty(PrintName)) PrintNameNullText = WorkSession.UserID.ToString();
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             EditItemCommand = new DelegateCommand(() => MessageManager.OpenLogEvent((Guid)SelectedLogEvent.EventID, null), SelectedLogEvent != null);
             
@@ -194,9 +196,9 @@ namespace Gamma.ViewModels
 
         //public List<int> DepartmentTo { get; set; }
 
-        private List<int> _departmentTo;
+        private List<short> _departmentTo;
 
-        public List<int> DepartmentTo
+        public List<short> DepartmentTo
         {
             get { return _departmentTo; }
             set
@@ -235,8 +237,9 @@ namespace Gamma.ViewModels
         public string EventStateName { get; set; }
 
         public string DepartmentToNullText { get; set; }
+        public string PrintNameNullText { get; set; }
 
-        public int? DepartmentID { get; set; }
+        public short? DepartmentID { get; set; }
         public short? UserDepartmentID { get; set; }
 
         private string _solvedLabel;

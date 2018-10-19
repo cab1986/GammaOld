@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 Places = gammaBase.Places.Where(
-                    p => p.BranchID == WorkSession.BranchID)
+                    p => WorkSession.BranchIds.Contains(p.BranchID))
                     .Select(p => new Place()
                     {
                         PlaceID = p.PlaceID,
@@ -75,8 +75,8 @@ namespace Gamma.ViewModels
                               (d => 
                                 !(d.IsSolved == true)  
                                 && (PlaceId == null || d.PlaceID == PlaceId) 
-                                && (DepartmentIDs.Contains((short)d.DepartmentID) || DepartmentIDs.Contains((short)d.Users.DepartmentID))
-                                && (DepartmentId == null || (d.Users.DepartmentID == DepartmentId || d.DepartmentID == DepartmentId))
+                                && (DepartmentIDs.Contains((short)d.DepartmentID) || DepartmentIDs.Contains((short)d.Users.DepartmentID) || (WorkSession.PlaceID == 0 && DepartmentIDs.Contains((short)d.Places.DepartmentID)))
+                                && (DepartmentId == null || (d.Users.DepartmentID == DepartmentId || d.DepartmentID == DepartmentId || (WorkSession.PlaceID == 0 && d.Places.DepartmentID == DepartmentId)))
                               )
                             .OrderByDescending(d => d.Date).Take(500)
                             .Select(d => new LogEvent
@@ -101,8 +101,8 @@ namespace Gamma.ViewModels
                             .Where
                               (d =>
                                 (PlaceId == null || d.PlaceID == PlaceId)
-                                && (DepartmentIDs.Contains((short)d.DepartmentID) || DepartmentIDs.Contains((short)d.Users.DepartmentID))
-                                && (DepartmentId == null || (d.Users.DepartmentID == DepartmentId || d.DepartmentID == DepartmentId))
+                                && (DepartmentIDs.Contains((short)d.DepartmentID) || DepartmentIDs.Contains((short)d.Users.DepartmentID) || (WorkSession.PlaceID == 0 && DepartmentIDs.Contains((short)d.Places.DepartmentID)))
+                                && (DepartmentId == null || (d.Users.DepartmentID == DepartmentId || d.DepartmentID == DepartmentId || (WorkSession.PlaceID == 0 && d.Places.DepartmentID == DepartmentId)))
                               )
                             .Take(500)
                             .Select(d => new LogEvent
@@ -130,7 +130,7 @@ namespace Gamma.ViewModels
                                 && (DateEnd == null || d.Date <= DateEnd)
                                 && (PlaceId == null || d.PlaceID == PlaceId)
                                 && (DepartmentId == null || d.DepartmentID == DepartmentId)
-                                && (DepartmentIDs.Contains((short)d.DepartmentID) || DepartmentIDs.Contains((short)d.Users.DepartmentID))
+                                && (DepartmentIDs.Contains((short)d.DepartmentID) || DepartmentIDs.Contains((short)d.Users.DepartmentID) || (WorkSession.PlaceID == 0 && DepartmentIDs.Contains((short)d.Places.DepartmentID)))
                             )
                             .Take(500)
                             .Select(d => new LogEvent

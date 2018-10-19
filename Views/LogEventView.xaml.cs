@@ -23,7 +23,7 @@ namespace Gamma.Views
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            List<int> list = value as List<int>;
+            List<short> list = value as List<short>;
             if (list == null)
                 return null;
             return new List<object>(list.Cast<object>());
@@ -33,7 +33,7 @@ namespace Gamma.Views
             List<object> list = value as List<object>;
             if (list == null)
                 return null;
-            return new List<int>(list.Cast<int>());
+            return new List<short>(list.Cast<short>());
         }
     }
 }
