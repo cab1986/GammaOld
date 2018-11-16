@@ -389,6 +389,7 @@
           <Property Name="WebInfo" Type="varchar" MaxLength="8000" />
           <Property Name="QualityContacts" Type="varchar" MaxLength="8000" />
           <Property Name="1CSubdivisionID" Type="uniqueidentifier" />
+          <Property Name="LastAvailableJobTime" Type="datetime" />
         </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
@@ -806,8 +807,9 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
             <PropertyRef Name="BranchID" />
           </Key>
           <Property Name="BranchID" Type="int" Nullable="false" />
-          <Property Name="GammaServiceAddress" Type="varchar" MaxLength="250" />
+          <Property Name="MailServiceAddress" Type="varchar" MaxLength="250" />
           <Property Name="LabelPath" Type="varchar" MaxLength="500" />
+          <Property Name="GammaServiceAddress" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="LogEvents">
           <Key>
@@ -899,6 +901,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
           <Property Name="Barcode" Type="nvarchar" MaxLength="20" />
           <Property Name="Password" Type="nvarchar" MaxLength="255" />
+          <Property Name="PlaceID" Type="int" />
         </EntityType>
         <EntityType Name="PlaceGroup1CNomenclature">
           <Key>
@@ -1343,6 +1346,9 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary ke
           <Property Name="InPlaceName" Type="varchar" MaxLength="64" />
           <Property Name="OutPlaceName" Type="varchar" MaxLength="64" />
           <Property Name="Warehouse" Type="nvarchar" MaxLength="50" />
+          <Property Name="Shipper1CCode" Type="char" MaxLength="9" />
+          <Property Name="Consignee1CCode" Type="char" MaxLength="9" />
+          <Property Name="Buyer1CCode" Type="char" MaxLength="9" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1439,6 +1445,10 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="OutPlaceZone" Type="varchar" MaxLength="1000" />
           <Property Name="CoefficientPackage" Type="decimal" Precision="10" Scale="3" />
           <Property Name="CoefficientPallet" Type="decimal" Precision="10" Scale="3" />
+          <Property Name="ProductKindName" Type="varchar" MaxLength="50" />
+          <Property Name="OrderTypeName" Type="varchar" MaxLength="50" />
+          <Property Name="InPlace" Type="varchar" MaxLength="64" />
+          <Property Name="OutPlace" Type="varchar" MaxLength="64" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -3482,6 +3492,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Persons_Places">
+          <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
           <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
@@ -4252,6 +4274,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftWarehouseDocs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+          <Parameter Name="PersonID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="FillDocCloseShiftWarehouseMovements" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+          <Parameter Name="PersonID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SearchString" Type="varchar" Mode="In" />
           <Parameter Name="Id" Type="int" Mode="In" />
@@ -4325,6 +4359,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         </Function>
         <Function Name="GetDocCloseShiftPMSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetDocCloseShiftWarehouseMovements" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PersonGuid" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetDocCloseShiftWRGroupPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
@@ -4575,8 +4613,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="LocalSettings" EntityType="Self.LocalSettings" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [LocalSettings].[BranchID] AS [BranchID], 
-    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress], 
-    [LocalSettings].[LabelPath] AS [LabelPath]
+    [LocalSettings].[MailServiceAddress] AS [MailServiceAddress], 
+    [LocalSettings].[LabelPath] AS [LabelPath], 
+    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
@@ -4643,7 +4682,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [v1COrders].[OrderType] AS [OrderType], 
     [v1COrders].[InPlaceName] AS [InPlaceName], 
     [v1COrders].[OutPlaceName] AS [OutPlaceName], 
-    [v1COrders].[Warehouse] AS [Warehouse]
+    [v1COrders].[Warehouse] AS [Warehouse], 
+    [v1COrders].[Shipper1CCode] AS [Shipper1CCode], 
+    [v1COrders].[Consignee1CCode] AS [Consignee1CCode], 
+    [v1COrders].[Buyer1CCode] AS [Buyer1CCode]
     FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CWorkingSpecifications" EntityType="Self.v1CWorkingSpecifications" store:Type="Views" store:Schema="dbo">
@@ -4720,7 +4762,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vDocMovementProducts].[OutPlaceZoneID] AS [OutPlaceZoneID], 
     [vDocMovementProducts].[OutPlaceZone] AS [OutPlaceZone], 
     [vDocMovementProducts].[CoefficientPackage] AS [CoefficientPackage], 
-    [vDocMovementProducts].[CoefficientPallet] AS [CoefficientPallet]
+    [vDocMovementProducts].[CoefficientPallet] AS [CoefficientPallet], 
+    [vDocMovementProducts].[ProductKindName] AS [ProductKindName], 
+    [vDocMovementProducts].[OrderTypeName] AS [OrderTypeName], 
+    [vDocMovementProducts].[InPlace] AS [InPlace], 
+    [vDocMovementProducts].[OutPlace] AS [OutPlace]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
@@ -5447,6 +5493,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </AssociationSet>
           <AssociationSet Name="FK_Persons_Branches" Association="Self.FK_Persons_Branches">
             <End Role="Branches" EntitySet="Branches" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Places" Association="Self.FK_Persons_Places">
+            <End Role="Places" EntitySet="Places" />
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
@@ -7522,6 +7572,26 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Departments" EntitySet="Departments" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
+          <FunctionImport Name="GetDocCloseShiftWarehouseMovements" ReturnType="Collection(GammaModel.GetDocCloseShiftWarehouseMovements_Result)">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+            <Parameter Name="PersonGuid" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="FillDocCloseShiftWarehouseDocs" ReturnType="Collection(Guid)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+            <Parameter Name="PersonID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="FillDocCloseShiftWarehouseMovements" ReturnType="Collection(GammaModel.FillDocCloseShiftWarehouseMovements_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+            <Parameter Name="PersonID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <AssociationSet Name="FK_Persons_Places" Association="GammaModel.FK_Persons_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -8262,6 +8332,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Enterprises" Relationship="GammaModel.FK_Branches_Enterprises" FromRole="Branches" ToRole="Enterprises" />
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_Branches" FromRole="Branches" ToRole="Persons" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_Branches" FromRole="Branches" ToRole="Places" />
+          <Property Name="LastAvailableJobTime" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_Branches_Enterprises">
           <End Type="GammaModel.Enterprises" Role="Enterprises" Multiplicity="1" />
@@ -8551,6 +8622,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocShipmentOrders1" Relationship="GammaModel.FK_DocShipmentOrders_Persons1" FromRole="Persons" ToRole="DocShipmentOrders" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_Docs_Persons" FromRole="Persons" ToRole="Docs" />
           <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Persons_PostTypes" FromRole="Persons" ToRole="PostTypes" />
+          <Property Name="PlaceID" Type="Int32" />
+          <NavigationProperty Name="Places" Relationship="GammaModel.FK_Persons_Places" FromRole="Persons" ToRole="Places" />
         </EntityType>
         <Association Name="FK_Persons_Branches">
           <End Type="GammaModel.Branches" Role="Branches" Multiplicity="0..1" />
@@ -9082,6 +9155,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="InPlaceName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="OutPlaceName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="Warehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Shipper1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="Consignee1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="Buyer1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
@@ -9248,6 +9324,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="OutPlaceZone" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="CoefficientPackage" Type="Decimal" Precision="10" Scale="3" />
           <Property Name="CoefficientPallet" Type="Decimal" Precision="10" Scale="3" />
+          <Property Name="ProductKindName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InPlace" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="OutPlace" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="v1COrderGoods">
           <Key>
@@ -9372,6 +9452,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="IsRobot" Type="Boolean" />
           <NavigationProperty Name="LogEvents" Relationship="GammaModel.FK_LogEvents_Places" FromRole="Places" ToRole="LogEvents" />
           <NavigationProperty Name="PlaceRemotePrinters" Relationship="GammaModel.FK_PlaceRemotePrinters_Places" FromRole="Places" ToRole="PlaceRemotePrinters" />
+          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_Places" FromRole="Places" ToRole="Persons" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -11248,8 +11329,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <PropertyRef Name="BranchID" />
           </Key>
           <Property Name="BranchID" Type="Int32" Nullable="false" />
-          <Property Name="GammaServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="LabelPath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="MailServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="GammaServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Devices">
           <Key>
@@ -11501,6 +11583,44 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="Users">
               <PropertyRef Name="DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetDocCloseShiftWarehouseMovements_Result">
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="554" />
+          <Property Type="String" Name="ProductKindName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="OrderTypeName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="InPlace" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="InPlaceZone" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="OutPlace" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="OutPlaceZone" Nullable="true" MaxLength="1000" />
+        </ComplexType>
+        <ComplexType Name="FillDocCloseShiftWarehouseMovements_Result">
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="554" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="String" Name="ProductKindName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="OrderTypeName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="InPlace" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="InPlaceZone" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="OutPlace" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="OutPlaceZone" Nullable="true" MaxLength="1000" />
+        </ComplexType>
+        <Association Name="FK_Persons_Places">
+          <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="PlaceID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -12340,6 +12460,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Branches">
             <EntityTypeMapping TypeName="GammaModel.Branches">
               <MappingFragment StoreEntitySet="Branches">
+                <ScalarProperty Name="LastAvailableJobTime" ColumnName="LastAvailableJobTime" />
                 <ScalarProperty Name="C1CSubdivisionID" ColumnName="1CSubdivisionID" />
                 <ScalarProperty Name="QualityContacts" ColumnName="QualityContacts" />
                 <ScalarProperty Name="WebInfo" ColumnName="WebInfo" />
@@ -12527,6 +12648,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Persons">
             <EntityTypeMapping TypeName="GammaModel.Persons">
               <MappingFragment StoreEntitySet="Persons">
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Barcode" ColumnName="Barcode" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -12756,6 +12878,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="v1COrders">
             <EntityTypeMapping TypeName="GammaModel.v1COrders">
               <MappingFragment StoreEntitySet="v1COrders">
+                <ScalarProperty Name="Buyer1CCode" ColumnName="Buyer1CCode" />
+                <ScalarProperty Name="Consignee1CCode" ColumnName="Consignee1CCode" />
+                <ScalarProperty Name="Shipper1CCode" ColumnName="Shipper1CCode" />
                 <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
                 <ScalarProperty Name="OutPlaceName" ColumnName="OutPlaceName" />
                 <ScalarProperty Name="InPlaceName" ColumnName="InPlaceName" />
@@ -12880,6 +13005,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vDocMovementProducts">
             <EntityTypeMapping TypeName="GammaModel.vDocMovementProducts">
               <MappingFragment StoreEntitySet="vDocMovementProducts">
+                <ScalarProperty Name="OutPlace" ColumnName="OutPlace" />
+                <ScalarProperty Name="InPlace" ColumnName="InPlace" />
+                <ScalarProperty Name="OrderTypeName" ColumnName="OrderTypeName" />
+                <ScalarProperty Name="ProductKindName" ColumnName="ProductKindName" />
                 <ScalarProperty Name="CoefficientPallet" ColumnName="CoefficientPallet" />
                 <ScalarProperty Name="CoefficientPackage" ColumnName="CoefficientPackage" />
                 <ScalarProperty Name="OutPlaceZone" ColumnName="OutPlaceZone" />
@@ -13399,8 +13528,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="LocalSettings">
             <EntityTypeMapping TypeName="GammaModel.LocalSettings">
               <MappingFragment StoreEntitySet="LocalSettings">
-                <ScalarProperty Name="LabelPath" ColumnName="LabelPath" />
                 <ScalarProperty Name="GammaServiceAddress" ColumnName="GammaServiceAddress" />
+                <ScalarProperty Name="MailServiceAddress" ColumnName="MailServiceAddress" />
+                <ScalarProperty Name="LabelPath" ColumnName="LabelPath" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -13522,6 +13652,41 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDocCloseShiftWarehouseMovements" FunctionName="GammaDBModel.GetDocCloseShiftWarehouseMovements">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetDocCloseShiftWarehouseMovements_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+                <ScalarProperty Name="ProductKindName" ColumnName="ProductKindName" />
+                <ScalarProperty Name="OrderTypeName" ColumnName="OrderTypeName" />
+                <ScalarProperty Name="InPlace" ColumnName="InPlace" />
+                <ScalarProperty Name="InPlaceZone" ColumnName="InPlaceZone" />
+                <ScalarProperty Name="OutPlace" ColumnName="OutPlace" />
+                <ScalarProperty Name="OutPlaceZone" ColumnName="OutPlaceZone" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftWarehouseDocs" FunctionName="GammaDBModel.FillDocCloseShiftWarehouseDocs" />
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftWarehouseMovements" FunctionName="GammaDBModel.FillDocCloseShiftWarehouseMovements">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftWarehouseMovements_Result">
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductKindName" ColumnName="ProductKindName" />
+                <ScalarProperty Name="OrderTypeName" ColumnName="OrderTypeName" />
+                <ScalarProperty Name="InPlace" ColumnName="InPlace" />
+                <ScalarProperty Name="InPlaceZone" ColumnName="InPlaceZone" />
+                <ScalarProperty Name="OutPlace" ColumnName="OutPlace" />
+                <ScalarProperty Name="OutPlaceZone" ColumnName="OutPlaceZone" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

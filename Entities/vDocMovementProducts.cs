@@ -45,5 +45,9 @@ namespace Gamma.Entities
         public string OutPlaceZone { get; set; }
         public Nullable<decimal> CoefficientPackage { get; set; }
         public Nullable<decimal> CoefficientPallet { get; set; }
+        public string ProductKindName { get; set; }
+        public string OrderTypeName { get; set; }
+        public string InPlace { get; set; }
+        public string OutPlace { get; set; }
     }
 }

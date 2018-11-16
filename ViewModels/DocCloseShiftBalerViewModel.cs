@@ -116,7 +116,7 @@ namespace Gamma.ViewModels
             set
             {
                 _bales = value;
-                RaisePropertyChanged("GroupPacks");
+                RaisePropertyChanged("Bales");
             }
         }
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();

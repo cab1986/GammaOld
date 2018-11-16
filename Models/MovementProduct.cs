@@ -31,5 +31,13 @@ namespace Gamma.Models
                 RaisePropertyChanged("IsConfirmed");
             }
         }
+
+        public string ProductKindName { get; set; }
+        public string OrderTypeName { get; set; }
+        public string InPlaceName { get; set; }
+        public string InPlaceZoneName { get; set; }
+        public string OutPlaceName { get; set; }
+        public string OutPlaceZoneName { get; set; }
+
     }
 }

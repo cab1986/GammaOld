@@ -39,6 +39,9 @@ namespace Gamma.GammaService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTask", ReplyAction="http://tempuri.org/IPrinterService/UpdateGroupPackLabelInProductionTaskResponse")]
         System.Tuple<bool, string> UpdateGroupPackLabelInProductionTask(System.Guid productionTaskId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPrinterService/SendMessageNewEvent", ReplyAction="http://tempuri.org/IPrinterService/SendMessageNewEventResponse")]
+        bool SendMessageNewEvent(System.Guid eventID);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -98,6 +101,10 @@ namespace Gamma.GammaService {
         
         public System.Tuple<bool, string> UpdateGroupPackLabelInProductionTask(System.Guid productionTaskId) {
             return base.Channel.UpdateGroupPackLabelInProductionTask(productionTaskId);
+        }
+        
+        public bool SendMessageNewEvent(System.Guid eventID) {
+            return base.Channel.SendMessageNewEvent(eventID);
         }
     }
 }

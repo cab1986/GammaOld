@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Gamma.Attributes;
 using Gamma.Entities;
-using System.Windows.Data;
+using System.Windows;
 using System.Globalization;
 using System.Data.Entity.SqlServer;
 
@@ -128,7 +128,7 @@ namespace Gamma.ViewModels
                 
             }
 
-            if (String.IsNullOrEmpty(PrintName)) PrintNameNullText = WorkSession.UserID.ToString();
+            if (String.IsNullOrEmpty(PrintName)) PrintNameNullText = WorkSession.UserName;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             EditItemCommand = new DelegateCommand(() => MessageManager.OpenLogEvent((Guid)SelectedLogEvent.EventID, null), SelectedLogEvent != null);
             
@@ -297,6 +297,7 @@ namespace Gamma.ViewModels
                 }
                 doc.Number = Number;
                 doc.IsSolved = IsSolved;
+                List<Guid> SendMessageEvents = null;
                 if (!IsReadOnly)
                 {
                     doc.PlaceID = PlaceID;
@@ -311,11 +312,14 @@ namespace Gamma.ViewModels
 
                     if (DepartmentTo != null && DepartmentTo.Count > 0)
                     {
+                        Guid NewEventID;
+                        SendMessageEvents = new List<Guid>();
                         foreach (short i in DepartmentTo)
                         {
+                            NewEventID = SqlGuidUtil.NewSequentialid();
                             gammaBase.LogEvents.Add(new LogEvents
                             {
-                                EventID = SqlGuidUtil.NewSequentialid(),
+                                EventID = NewEventID,
                                 ParentEventID = EventID,
                                 Number = DB.CurrentDateTime.ToString("yyMMddHHmmssf"),
                                 Date = DB.CurrentDateTime,
@@ -326,11 +330,36 @@ namespace Gamma.ViewModels
                                 EventKindID = 0, //принять решение
                                 EventStateID = 0 //ожидает просмотра
                             });
+                            SendMessageEvents.Add(NewEventID);
                         }
                         doc.EventStateID = 3; //ожидает решения
                     }
                 }
                 gammaBase.SaveChanges();
+                if (SendMessageEvents != null)
+                {
+                    try
+                    {
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnMailService))
+                        {
+                            foreach (Guid m in SendMessageEvents)
+                            {
+                                if (!client.SendMessageNewEvent(m))
+                                {
+                                    MessageBox.Show("Не удалось отправить сообщение о новом задании " + m.ToString() + Environment.NewLine + "Сообщите службе о новом задании.", "Сервис",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Warning);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Техническая проблема при отправке сообщения о новом задании: сервис недоступен." + Environment.NewLine + "Сообщите службе о новом задании.", "Сервис",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                    }
+                }
             }
             Messenger.Default.Send(new RefreshMessage {});
             return true;

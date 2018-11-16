@@ -330,6 +330,7 @@
         <AssociationConnector Association="GammaModel.FK_PlaceRemotePrinters_Places" />
         <AssociationConnector Association="GammaModel.FK_PlaceRemotePrinters_RemotePrinters" />
         <AssociationConnector Association="GammaModel.FK_Users_Departments" />
+        <AssociationConnector Association="GammaModel.FK_Persons_Places" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

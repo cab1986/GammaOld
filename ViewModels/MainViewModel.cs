@@ -32,13 +32,14 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<EditDocComplectationMessage>(this, OpenDocComplectation);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
-            if (WorkSession.IsProductionPlace) // Если производственный передел
+            if (WorkSession.IsProductionPlace || WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse) // Если производственный передел
             {
                 var dialog = new ChoosePrintNameDialog();
                 dialog.ShowDialog();
                 if (dialog.DialogResult == true)
                 {
                     WorkSession.PrintName = dialog.PrintName;
+                    WorkSession.PersonID = dialog.PersonID;
                 }
                 else
                 {
@@ -64,8 +65,8 @@ namespace Gamma.ViewModels
                     GammaBase.SaveChanges();
                 }
             }
-            StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Пользователь: {2}, Имя для печати: {3}", settings.HostName, settings.DbName, 
-                settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл");
+            StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Логин: {2}, Имя для печати: {3}, ID пользователя: {5}", settings.HostName, settings.DbName, 
+                settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл", WorkSession.PersonID);
             if (IsInDesignMode)
             {
                 ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList);
@@ -299,7 +300,9 @@ namespace Gamma.ViewModels
                     gammaBase.Docs.Where(
                         d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int) DocTypes.DocCloseShift && d.PlaceID == WorkSession.PlaceID &&
                         d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))) &&
-                        d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))))
+                        d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate())))
+                        && (WorkSession.PersonID == null || WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" || (WorkSession.PersonID != null && d.PersonGuid == WorkSession.PersonID) )
+                        )
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
                 if (lastReport != null)
@@ -310,7 +313,7 @@ namespace Gamma.ViewModels
                     return;
                 }
             }
-            MessageManager.OpenDocCloseShift(WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID);
+            MessageManager.OpenDocCloseShift(WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID, WorkSession.PersonID);
         }
 
         private void CurrentViewChanged()

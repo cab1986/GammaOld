@@ -40,6 +40,9 @@
         <DataTemplate DataType="{x:Type vm:DocCloseShiftUnwinderRemainderViewModel}">
             <v:DocCloseShiftUnwinderRemainderView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftWarehouseGridViewModel}">
+            <v:DocCloseShiftWarehouseGridView />
+        </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>
                 <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>

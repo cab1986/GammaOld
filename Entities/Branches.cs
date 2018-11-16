@@ -29,6 +29,7 @@ namespace Gamma.Entities
         public string WebInfo { get; set; }
         public string QualityContacts { get; set; }
         public Nullable<System.Guid> C1CSubdivisionID { get; set; }
+        public Nullable<System.DateTime> LastAvailableJobTime { get; set; }
     
         public virtual Enterprises Enterprises { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

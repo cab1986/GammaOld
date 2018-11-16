@@ -68,10 +68,10 @@
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>D21B782ACE1265F031DA59AE97C4FAD8E4FA3AE3</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>2E48346887734A086EC55A733468F8E0A2DFF630</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Gamma_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Gamma_3_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -464,6 +464,9 @@
     <Compile Include="Entities\FillDocCloseShiftRwSpools_Result3.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocCloseShiftWarehouseMovements_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FindNomenclatureByStringWithFilter_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -498,6 +501,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetDocCloseShiftPMSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetDocCloseShiftWarehouseMovements_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetDocCloseShiftWRGroupPacks_Result.cs">
@@ -846,6 +852,7 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftWarehouseGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftBalerViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftRwGridViewModel.cs" />
@@ -925,6 +932,9 @@
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftWarehouseGridView.xaml.cs">
+      <DependentUpon>DocCloseShiftWarehouseGridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftBalerGridView.xaml.cs">
       <DependentUpon>DocCloseShiftBalerGridView.xaml</DependentUpon>
@@ -1149,6 +1159,10 @@
     <Page Include="Views\DocBrokeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftWarehouseGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocCloseShiftBalerGridView.xaml">
       <SubType>Designer</SubType>
@@ -1408,16 +1422,13 @@
     <None Include="GammaKey.snk" />
     <None Include="Gamma_1_TemporaryKey.pfx" />
     <None Include="Gamma_2_TemporaryKey.pfx" />
-    <None Include="Service References\GammaService\item2.xsd">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Gamma_3_TemporaryKey.pfx" />
     <None Include="Service References\GammaService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Service References\GammaService\configuration.svcinfo" />
     <None Include="Service References\GammaService\configuration91.svcinfo" />
-    <None Include="Service References\GammaService\item.disco" />
     <EmbeddedResource Include="Properties\Licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -1448,13 +1459,16 @@
     <Content Include="Russian.frl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Service References\GammaService\item.xsd">
+    <None Include="Service References\GammaService\service.wsdl" />
+    <None Include="Service References\GammaService\service.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\GammaService\item1.xsd">
+    <None Include="Service References\GammaService\service1.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\GammaService\PrinterService.wsdl" />
+    <None Include="Service References\GammaService\System.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -1508,7 +1522,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

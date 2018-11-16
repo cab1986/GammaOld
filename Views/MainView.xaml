@@ -84,6 +84,7 @@
                             <dxb:BarButtonItem Content="Закрытия смен упаковка" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Wr}" />
                             <dxb:BarButtonItem Content="Закрытия смен конвертингов" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Convertings}" />
                             <dxb:BarButtonItem Content="Закрытия смен киповщика" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Baler}" />
+                            <dxb:BarButtonItem Content="Закрытия смен грузчиков" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Warehouses}" />
                         </dxb:BarSubItem>
                         <dxb:BarSubItem Content="Отчеты" ItemLinksSource="{Binding Reports}">
                             <dxb:BarSubItem.ItemTemplate>
@@ -130,8 +131,9 @@
                             <dxb:BarButtonItem Content="Номенклатура групп переделов" Command="{Binding OpenPlaceGroupsNomenclatureCommand}" />
                             <dxb:BarButtonItem Content="Номенклатура по типам материалов" Command="{Binding OpenMaterialTypesNomenclatureCommand}"/>
                             <dxb:BarButtonItem Content="Редактирование шаблонов отчетов" Command="{Binding ShowReportListCommand}" />
-                            <dxb:BarButtonItem Content="Управление пользователями" Command="{Binding ManageUsersCommand}" />
+                            <dxb:BarButtonItem Content="Управление логинами" Command="{Binding ManageUsersCommand}" />
                             <dxb:BarButtonItem Content="Настройка COM-порта" Command="{Binding ConfigureComPortCommand}" />
+                            <dxb:BarButtonItem Content="Список пользователей" Command="{Binding OpenWarehousePersonsCommand}" />
                         </dxb:BarSubItem>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Помощь">

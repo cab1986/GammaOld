@@ -44,5 +44,8 @@ namespace Gamma.Entities
         public string InPlaceName { get; set; }
         public string OutPlaceName { get; set; }
         public string Warehouse { get; set; }
+        public string Shipper1CCode { get; set; }
+        public string Consignee1CCode { get; set; }
+        public string Buyer1CCode { get; set; }
     }
 }

@@ -31,13 +31,17 @@ namespace Gamma
                                      u.Places.FirstOrDefault().BranchID,
                                      u.Places.FirstOrDefault().IsProductionPlace,
                                      u.Places,
-                                     u.DepartmentID
+                                     u.DepartmentID,
+                                     u.Name,
+                                     u.Places.FirstOrDefault().IsShipmentWarehouse,
+                                     u.Places.FirstOrDefault().IsTransitWarehouse
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
                     MessageBox.Show("Не удалось получить информацию о пользователе");
                     return;
                 }
+                UserName = userInfo.Name;
                 DBAdmin = userInfo.DBAdmin;
                 ProgramAdmin = userInfo.programAdmin ?? false;
                 PlaceID = userInfo.PlaceID;
@@ -49,15 +53,21 @@ namespace Gamma
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
+                IsShipmentWarehouse = userInfo.IsShipmentWarehouse ?? false;
+                IsTransitWarehouse = userInfo.IsTransitWarehouse ?? false;
                 PlaceIds = userInfo.Places.Select(p => p.PlaceID).ToList();
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
                 IsRemotePrinting = userInfo.Places.FirstOrDefault()?.IsRemotePrinting ?? false;
                 UseApplicator = userInfo.Places.FirstOrDefault()?.UseApplicator ?? false;
-                //EndpointAddress = (from u in DB.GammaDb.LocalSettings
-                //                   select u.GammaServiceAddress).FirstOrDefault();
+                EndpointAddressOnMailService = (from u in DB.GammaDb.LocalSettings
+                                   select u.MailServiceAddress).FirstOrDefault();
                 EndpointAddress = (from u in DB.GammaDb.PlaceRemotePrinters
                                    where u.PlaceID == PlaceID && u.RemotePrinters.RemotePrinterLabelID == 2
                                    select u.ModbusDevices.ServiceAddress).FirstOrDefault();
+#if (DEBUG)
+                EndpointAddressOnMailService = "http://localhost:8733/PrinterService";
+                EndpointAddress = "http://localhost:8733/PrinterService";
+#endif
                 LabelPath = (from u in DB.GammaDb.LocalSettings
                                    select u.LabelPath).FirstOrDefault();
             }
@@ -99,12 +109,22 @@ namespace Gamma
         public static List<int> BranchIds { get; private set; }
 
         public static bool IsProductionPlace { get; private set; }
+        public static bool IsShipmentWarehouse { get; private set; }
+        public static bool IsTransitWarehouse { get; private set; }
         public static PlaceGroup PlaceGroup { get; private set; }
         public static string PrintName { get; set; }
+        public static string UserName { get; private set; }
+        public static Guid? PersonID { get; set; }
 
         public static string EndpointConfigurationName = "BasicHttpBinding_IPrinterService";
+
         /// <summary>
-        /// Адрес сервиса GammaService
+        /// Адрес сервиса отправки электронных писем MailService
+        /// </summary>
+
+        public static string EndpointAddressOnMailService { get; private set; }
+        /// <summary>
+        /// Адрес сервиса печати этикеток GammaService
         /// </summary>
         public static string EndpointAddress { get; private set; }
 

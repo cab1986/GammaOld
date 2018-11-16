@@ -308,8 +308,8 @@ namespace Gamma
         public int? PlaceID;
         public DateTime? CloseDate;
         public byte? ShiftID;
+        public Guid? PersonID;
     }
-
 
     public class OpenPlaceGroupsNomenclatureMessage  { }
     public class OpenMaterialTypesNomenclatureMessage { }
@@ -524,6 +524,11 @@ namespace Gamma
         {
             Messenger.Default.Send(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
         }
+        public static void OpenDocCloseShift(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
+        {
+            Messenger.Default.Send(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+        }
+
         public static void OpenDocCloseShifts(PlaceGroup placeGroup)
         {
             UIServices.SetBusyState();

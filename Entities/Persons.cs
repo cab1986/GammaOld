@@ -30,6 +30,7 @@ namespace Gamma.Entities
         public string Name { get; set; }
         public string Barcode { get; set; }
         public string Password { get; set; }
+        public Nullable<int> PlaceID { get; set; }
     
         public virtual Branches Branches { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -43,5 +44,6 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> Docs { get; set; }
         public virtual PostTypes PostTypes { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

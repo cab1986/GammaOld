@@ -27,7 +27,7 @@ namespace Gamma.ViewModels
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();
-            Places = (from p in GammaBase.Places where p.IsProductionPlace ?? false
+            Places = (from p in GammaBase.Places where (p.IsProductionPlace ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
                       select new
                       Place
                       {
@@ -44,7 +44,7 @@ namespace Gamma.ViewModels
             GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();
             Places = (from p in GammaBase.Places
-                      where p.PlaceGroupID == (byte)placeGroup && (p.IsProductionPlace ?? false)
+                      where p.PlaceGroupID == (byte)placeGroup && ((placeGroup != PlaceGroup.Warehouses && (p.IsProductionPlace ?? false)) || (placeGroup == PlaceGroup.Warehouses && ((p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false))))
                       select new
                       Place
                       {
@@ -102,7 +102,9 @@ namespace Gamma.ViewModels
                 DocCloseShiftID = d.DocID,
                 Date = d.Date,
                 ShiftID = d.ShiftID ?? 0,
-                Place = d.Places.Name
+                Place = d.Places.Name,
+                User = d.Users.Name,
+                Person = d.Persons.Name
             }
             ).Take(120));
         }

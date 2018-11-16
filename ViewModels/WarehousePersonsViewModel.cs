@@ -7,6 +7,7 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Gamma.Entities;
 using Gamma.Models;
+using System.Collections.Generic;
 
 namespace Gamma.ViewModels
 {
@@ -32,6 +33,15 @@ namespace Gamma.ViewModels
                     }
                 }
             });
+            Places = (from p in GammaBase.Places
+                      where (p.IsProductionPlace ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+                      select new
+                      Place
+                      {
+                          PlaceName = p.Name,
+                          PlaceID = p.PlaceID
+                      }
+                     ).ToList();
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 
@@ -55,7 +65,8 @@ namespace Gamma.ViewModels
                 PersonID = SqlGuidUtil.NewSequentialid(),
                 Name = NewPersonName,
                 PostTypeID = 1,
-                BranchID = WorkSession.BranchID
+                BranchID = WorkSession.BranchID,
+                PlaceID = PlaceID
             };
             GammaBase.Persons.Add(person);
             GammaBase.SaveChanges();
@@ -80,10 +91,11 @@ namespace Gamma.ViewModels
 
         private void RefreshPersons()
         {
-            Persons = new ObservableCollection<Person>(GammaBase.Persons.Where(p => p.PostTypeID == 1 && p.BranchID == WorkSession.BranchID).Select(p => new Person
+            Persons = new ObservableCollection<Person>(GammaBase.Persons.Where(p => p.PostTypeID == 1 && p.BranchID == WorkSession.BranchID && (PlaceID == null || (PlaceID != null && p.PlaceID == PlaceID))).Select(p => new Person
             {
                 PersonId = p.PersonID,
-                Name = p.Name
+                Name = p.Name,
+                PlaceName = p.Places.Name
             }));
         }
 
@@ -91,8 +103,24 @@ namespace Gamma.ViewModels
 
         public string NewPersonName { get; set; }
 
+        public List<Place> Places { get; set; }
+        
         public DelegateCommand AddPersonCommand { get; set; }
         public DelegateCommand DeletePersonCommand { get; private set; }
+
+        private int? _placeID;
+
+        public int? PlaceID
+        {
+            get { return _placeID; }
+            set
+            {
+                _placeID = value;
+                RaisePropertyChanged("PlaceID");
+                RefreshPersons();
+            }
+        }
+
 
         private ObservableCollection<Person> _persons;
 

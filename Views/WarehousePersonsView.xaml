@@ -13,7 +13,7 @@
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         x:Class="Gamma.Views.WarehousePersonsView"
         mc:Ignorable="d"
-        Title="Работники склада" Height="300" Width="300"
+        Title="Пользователи" Height="300" Width="450"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:WarehousePersonsViewModel}}"
         common:WindowSettings.Save="True">
     <Window.Resources>
@@ -43,6 +43,9 @@
         </Grid.RowDefinitions>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}" AllowCustomization="False" />
         <dxlc:LayoutControl Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+            <dxlc:LayoutItem Label="Передел" LabelPosition="Top">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Places}" EditValue="{Binding PlaceID, UpdateSourceTrigger=PropertyChanged}" DisplayMember="PlaceName" ValueMember="PlaceID"/>
+            </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Имя" LabelPosition="Top">
                 <dxe:TextEdit EditValue="{Binding NewPersonName, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
@@ -51,6 +54,7 @@
         <dxg:GridControl Grid.Row="2" ItemsSource="{Binding Persons}" SelectedItem="{Binding SelectedPerson}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn FieldName="Name" Header="Имя" />
+                <dxg:GridColumn FieldName="PlaceName" Header="Передел" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False" AutoWidth="True" AllowEditing="False" />

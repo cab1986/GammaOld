@@ -61,6 +61,9 @@ namespace Gamma.ViewModels
                 case (short)PlaceGroup.Baler:
                     CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);
                     break;
+                case (short)PlaceGroup.Warehouses:
+                    CurrentViewModelGrid = new DocCloseShiftWarehouseGridViewModel(msg);
+                    break;
             }
             var grid = CurrentViewModelGrid as IFillClearGrid;
             if (grid != null)
@@ -122,7 +125,8 @@ namespace Gamma.ViewModels
                     PlaceID = WorkSession.PlaceID,
                     ShiftID = WorkSession.ShiftID,
                     IsConfirmed = IsConfirmed,
-                    PrintName = WorkSession.PrintName
+                    PrintName = WorkSession.PrintName,
+                    PersonGuid = WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" ? null : WorkSession.PersonID
                 };
                 GammaBase.Docs.Add(Doc);
             }

@@ -910,5 +910,60 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLogEventHierarchy_Result>("GetLogEventHierarchy", eventIDParameter);
         }
+    
+        public virtual ObjectResult<GetDocCloseShiftWarehouseMovements_Result> GetDocCloseShiftWarehouseMovements(Nullable<System.Guid> docID, Nullable<System.Guid> personGuid)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var personGuidParameter = personGuid.HasValue ?
+                new ObjectParameter("PersonGuid", personGuid) :
+                new ObjectParameter("PersonGuid", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftWarehouseMovements_Result>("GetDocCloseShiftWarehouseMovements", docIDParameter, personGuidParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> FillDocCloseShiftWarehouseDocs(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate, Nullable<System.Guid> personID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            var personIDParameter = personID.HasValue ?
+                new ObjectParameter("PersonID", personID) :
+                new ObjectParameter("PersonID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("FillDocCloseShiftWarehouseDocs", placeIDParameter, shiftIDParameter, closeDateParameter, personIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftWarehouseMovements_Result> FillDocCloseShiftWarehouseMovements(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate, Nullable<System.Guid> personID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            var personIDParameter = personID.HasValue ?
+                new ObjectParameter("PersonID", personID) :
+                new ObjectParameter("PersonID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftWarehouseMovements_Result>("FillDocCloseShiftWarehouseMovements", placeIDParameter, shiftIDParameter, closeDateParameter, personIDParameter);
+        }
     }
 }

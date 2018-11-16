@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using Gamma.Entities;
 using System.Data.Entity.SqlServer;
+using System.Collections.Generic;
 
 namespace Gamma.Dialogs
 {
@@ -17,18 +18,34 @@ namespace Gamma.Dialogs
         public ChoosePrintNameDialog(GammaEntities gammaBase = null)
         {
             InitializeComponent();
-            gammaBase = gammaBase ?? DB.GammaDb;
-            var printNames = (from d in gammaBase.Docs where d.UserID == WorkSession.UserID && d.Date >= SqlFunctions.DateAdd("d", -45, SqlFunctions.GetDate()) select d.PrintName).Distinct().ToList();
+            GammaBase = gammaBase ?? DB.GammaDb;
+            List<string> printNames;
+            if (WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse)
+            {
+                printNames = (from d in GammaBase.Persons select d.Name).Distinct().ToList();
+                EdtPrintName.IsTextEditable = false;
+            }
+            else
+            {
+                printNames = (from d in GammaBase.Docs where d.UserID == WorkSession.UserID && d.Date >= SqlFunctions.DateAdd("d", -45, SqlFunctions.GetDate()) select d.PrintName).Distinct().ToList();
+                EdtPrintName.IsTextEditable = true;
+            }
             EdtPrintName.ItemsSource = printNames;
         }
 
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
             PrintName = EdtPrintName.Text.Trim();
+            if (WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse)
+            {
+                PersonID = (from d in GammaBase.Persons where d.Name == PrintName select d.PersonID).FirstOrDefault();
+            }
             DialogResult = true;
         }
 
         public string PrintName { get; private set; }
+        public Guid PersonID { get; private set; }
+        private GammaEntities GammaBase { get; set; }
 
         private void EdtPrintName_EditValueChanged(object sender, DevExpress.Xpf.Editors.EditValueChangedEventArgs e)
         {

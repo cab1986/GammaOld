@@ -10,5 +10,7 @@ namespace Gamma
         public DateTime Date { get; set; }
         public byte ShiftID { get; set; }
         public string Place { get; set; }
+        public string User { get; set; }
+        public string Person { get; set; }
     }
 }

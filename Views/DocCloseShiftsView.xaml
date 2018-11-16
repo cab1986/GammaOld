@@ -46,6 +46,8 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
+                <dxg:GridColumn Header="Логин" FieldName="User" Width="140" />
+                <dxg:GridColumn Header="Пользователь" FieldName="Person" Width="140"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" 
