@@ -331,6 +331,22 @@
         <AssociationConnector Association="GammaModel.FK_PlaceRemotePrinters_RemotePrinters" />
         <AssociationConnector Association="GammaModel.FK_Users_Departments" />
         <AssociationConnector Association="GammaModel.FK_Persons_Places" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftMaterials" Width="1.5" PointX="29.75" PointY="64" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftMaterialTypes" Width="1.5" PointX="27.5" PointY="67.75" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftMovementProducts" Width="1.5" PointX="33.5" PointY="57" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftUtilizationProducts" Width="1.5" PointX="33.5" PointY="53.625" />
+        <EntityTypeShape EntityType="GammaModel.RemainderTypes" Width="1.5" PointX="12" PointY="36.125" />
+        <EntityTypeShape EntityType="GammaModel.vProductsCurrentStateInfo" Width="1.5" PointX="15.375" PointY="12.75" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_DocCloseShiftMaterialTypes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMovementProducts_DocMovement" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMovementProducts_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMovementProducts_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftRemainders_RemainderTypes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftUtilizationProducts_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftUtilizationProducts_Products" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

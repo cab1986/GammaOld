@@ -20,6 +20,7 @@ namespace Gamma.Entities
             this.DocInProducts = new HashSet<DocInProducts>();
             this.DocOutProducts = new HashSet<DocOutProducts>();
             this.DocMovementOrder = new HashSet<DocMovementOrder>();
+            this.DocCloseShiftMovementProducts = new HashSet<DocCloseShiftMovementProducts>();
         }
     
         public System.Guid DocID { get; set; }
@@ -41,5 +42,7 @@ namespace Gamma.Entities
         public virtual Places OutPlaces { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMovementOrder> DocMovementOrder { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftMovementProducts> DocCloseShiftMovementProducts { get; set; }
     }
 }

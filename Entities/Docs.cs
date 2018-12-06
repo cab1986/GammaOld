@@ -31,6 +31,9 @@ namespace Gamma.Entities
             this.DocCloseShiftNomenclatureRests = new HashSet<DocCloseShiftNomenclatureRests>();
             this.DocCloseShiftWastes = new HashSet<DocCloseShiftWastes>();
             this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
+            this.DocCloseShiftMaterials = new HashSet<DocCloseShiftMaterials>();
+            this.DocCloseShiftMovementProducts = new HashSet<DocCloseShiftMovementProducts>();
+            this.DocCloseShiftUtilizationProducts = new HashSet<DocCloseShiftUtilizationProducts>();
         }
     
         public System.Guid DocID { get; set; }
@@ -87,5 +90,11 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftSamples> DocCloseShiftSamples { get; set; }
         public virtual DocComplectation DocComplectation { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftMaterials> DocCloseShiftMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftMovementProducts> DocCloseShiftMovementProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftUtilizationProducts> DocCloseShiftUtilizationProducts { get; set; }
     }
 }

@@ -143,6 +143,12 @@ namespace Gamma.Entities
         public virtual DbSet<ModbusDevices> ModbusDevices { get; set; }
         public virtual DbSet<PlaceRemotePrinters> PlaceRemotePrinters { get; set; }
         public virtual DbSet<RemotePrinters> RemotePrinters { get; set; }
+        public virtual DbSet<DocCloseShiftMaterials> DocCloseShiftMaterials { get; set; }
+        public virtual DbSet<DocCloseShiftMaterialTypes> DocCloseShiftMaterialTypes { get; set; }
+        public virtual DbSet<DocCloseShiftMovementProducts> DocCloseShiftMovementProducts { get; set; }
+        public virtual DbSet<DocCloseShiftUtilizationProducts> DocCloseShiftUtilizationProducts { get; set; }
+        public virtual DbSet<RemainderTypes> RemainderTypes { get; set; }
+        public virtual DbSet<vProductsCurrentStateInfo> vProductsCurrentStateInfo { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -964,6 +970,88 @@ namespace Gamma.Entities
                 new ObjectParameter("PersonID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftWarehouseMovements_Result>("FillDocCloseShiftWarehouseMovements", placeIDParameter, shiftIDParameter, closeDateParameter, personIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftMovementProducts_Result> FillDocCloseShiftMovementProducts(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMovementProducts_Result>("FillDocCloseShiftMovementProducts", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftPMMaterials_Result> FillDocCloseShiftPMMaterials(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftPMMaterials_Result>("FillDocCloseShiftPMMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftPMSpools_Result> FillDocCloseShiftPMSpools(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftPMSpools_Result>("FillDocCloseShiftPMSpools", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftPMWastes_Result> FillDocCloseShiftPMWastes(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftPMWastes_Result>("FillDocCloseShiftPMWastes", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        [DbFunction("GammaEntities", "GetDocCloseShiftWarehouseMovement")]
+        public virtual IQueryable<GetDocCloseShiftWarehouseMovement_Result> GetDocCloseShiftWarehouseMovement(Nullable<System.Guid> docID, Nullable<System.Guid> personGuid)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var personGuidParameter = personGuid.HasValue ?
+                new ObjectParameter("PersonGuid", personGuid) :
+                new ObjectParameter("PersonGuid", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetDocCloseShiftWarehouseMovement_Result>("[GammaEntities].[GetDocCloseShiftWarehouseMovement](@DocID, @PersonGuid)", docIDParameter, personGuidParameter);
         }
     }
 }

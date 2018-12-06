@@ -20,9 +20,12 @@ namespace Gamma.Entities
         public decimal Quantity { get; set; }
         public Nullable<bool> IsSourceProduct { get; set; }
         public Nullable<System.Guid> DocWithdrawalID { get; set; }
+        public Nullable<int> RemainderTypeID { get; set; }
+        public Nullable<int> StateID { get; set; }
     
         public virtual Docs DocWithdrawal { get; set; }
         public virtual Docs DocCloseShifts { get; set; }
         public virtual Products Products { get; set; }
+        public virtual RemainderTypes RemainderTypes { get; set; }
     }
 }

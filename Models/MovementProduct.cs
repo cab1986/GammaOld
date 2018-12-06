@@ -36,8 +36,10 @@ namespace Gamma.Models
         public string OrderTypeName { get; set; }
         public string InPlaceName { get; set; }
         public string InPlaceZoneName { get; set; }
+        public DateTime? InDate { get; set; }
         public string OutPlaceName { get; set; }
         public string OutPlaceZoneName { get; set; }
+        public DateTime? OutDate { get; set; }
 
     }
 }

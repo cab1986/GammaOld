@@ -167,4 +167,12 @@ namespace Gamma
         Block,
         Warning
     }
+
+    public enum RemainderType
+    {
+        [Description("На начало периода")]
+        Begin,
+        [Description("на конец периода")]
+        End
+    }
 }

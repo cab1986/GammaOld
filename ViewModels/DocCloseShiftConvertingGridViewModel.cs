@@ -378,28 +378,28 @@ namespace Gamma.ViewModels
                 if (docCloseShift.DocCloseShiftNomenclatureRests == null)
                     docCloseShift.DocCloseShiftNomenclatureRests = new List<DocCloseShiftNomenclatureRests>();
                 if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
-                {
-                    docWithdrawalId = SqlGuidUtil.NewSequentialid();
-                    docCloseShift.DocCloseShiftWithdrawals.Add
-                    (
-                        new DocWithdrawal
-                        {
-                            DocID = docWithdrawalId,
-                            DocWithdrawalMaterials = new List<DocWithdrawalMaterials>(),
-                            Docs = new Docs()
+                    {
+                        docWithdrawalId = SqlGuidUtil.NewSequentialid();
+                        docCloseShift.DocCloseShiftWithdrawals.Add
+                        (
+                            new DocWithdrawal
                             {
                                 DocID = docWithdrawalId,
-                                Date = docCloseShift.Date,
-                                DocTypeID = (byte)DocTypes.DocWithdrawal,
-                                IsConfirmed = docCloseShift.IsConfirmed,
-                                PlaceID = WorkSession.PlaceID,
-                                ShiftID = WorkSession.ShiftID,
-                                UserID = WorkSession.UserID,
-                                PrintName = WorkSession.PrintName
+                                DocWithdrawalMaterials = new List<DocWithdrawalMaterials>(),
+                                Docs = new Docs()
+                                {
+                                    DocID = docWithdrawalId,
+                                    Date = docCloseShift.Date,
+                                    DocTypeID = (byte)DocTypes.DocWithdrawal,
+                                    IsConfirmed = docCloseShift.IsConfirmed,
+                                    PlaceID = WorkSession.PlaceID,
+                                    ShiftID = WorkSession.ShiftID,
+                                    UserID = WorkSession.UserID,
+                                    PrintName = WorkSession.PrintName
+                                }
                             }
-                        }
-                    );
-                }
+                        );
+                    }
                 gammaBase.DocCloseShiftSamples.RemoveRange(docCloseShift.DocCloseShiftSamples);
                 if (Samples != null)
                     foreach (var sample in Samples)

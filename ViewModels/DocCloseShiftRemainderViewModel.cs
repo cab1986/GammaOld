@@ -50,7 +50,7 @@ namespace Gamma.ViewModels
             GammaBase = gammaDb ?? DB.GammaDb;
             using (var gammaBase = DB.GammaDb)
             {
-                DocCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Include(dr => dr.DocCloseShifts).Where(d => d.DocID == docID && (!d.IsSourceProduct ?? true)).
+                DocCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Include(dr => dr.DocCloseShifts).Where(d => d.DocID == docID && (d.RemainderTypeID ?? 0) == 0 && (!d.IsSourceProduct ?? true)).
                 Select(d => d).FirstOrDefault();
                 if (DocCloseShiftRemainder == null)
                 {
@@ -214,13 +214,19 @@ namespace Gamma.ViewModels
                         DocID = itemID,
                         ProductID = productId,
                         Quantity = Quantity * Coefficient,
-                        IsSourceProduct = false
+                        IsSourceProduct = false,
+                        RemainderTypeID = 0
                     };
                     gammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
                 }
                 else if (DocCloseShiftRemainder != null)
                 {
-                    DocCloseShiftRemainder.Quantity = Quantity * Coefficient;
+                    var docCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Where(d => d.DocCloseShiftRemainderID == DocCloseShiftRemainder.DocCloseShiftRemainderID).FirstOrDefault();
+                    if (docCloseShiftRemainder != null)
+                    {
+                        docCloseShiftRemainder.Quantity = Quantity * Coefficient;
+                        DocCloseShiftRemainder.Quantity = Quantity * Coefficient;
+                    }
                     if (
                         gammaBase.DocProductionProducts.Any(
                             d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))

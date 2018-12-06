@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>63</ApplicationRevision>
+    <ApplicationRevision>88</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -371,6 +371,15 @@
     <Compile Include="Entities\DocChangeStateProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DocCloseShiftMaterials.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocCloseShiftMaterialTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocCloseShiftMovementProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DocCloseShiftNomenclatureRests.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -378,6 +387,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocCloseShiftSamples.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocCloseShiftUtilizationProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocCloseShiftWastes.cs">
@@ -450,6 +462,30 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocCloseShiftConvertingWastes_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftMovementProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftPMMaterials_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftPMSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftPMWastes_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetDocCloseShiftWarehouseMovement_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\RemainderTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vProductsCurrentStateInfo.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vRobotNomenclatures.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocCloseShiftRwSpools_Result.cs">
@@ -743,9 +779,6 @@
     <Compile Include="Entities\vProductsInfo.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\vRobotNomenclatures.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Bale.cs" />
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
@@ -772,6 +805,7 @@
     <Compile Include="Models\Nomenclature1CFolder.cs" />
     <Compile Include="Models\NomenclatureBarcode.cs" />
     <Compile Include="Models\Pallet.cs" />
+    <Compile Include="Models\DocCloseShiftRemainder.cs" />
     <Compile Include="Models\PlaceZone.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductionTaskBalerGridItem.cs" />
@@ -873,6 +907,7 @@
     <Compile Include="Models\EditBrokeDecisionItem.cs" />
     <Compile Include="ViewModels\DocWithdrawalsViewModel.cs" />
     <Compile Include="ViewModels\DocWithdrawalViewModel.cs" />
+    <Compile Include="ViewModels\DocWithdrawalMaterialsViewModel.cs" />
     <Compile Include="ViewModels\EditRejectionReasonsViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
@@ -1010,6 +1045,9 @@
     </Compile>
     <Compile Include="Views\DocWithdrawalView.xaml.cs">
       <DependentUpon>DocWithdrawalView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocWithdrawalMaterialsView.xaml.cs">
+      <DependentUpon>DocWithdrawalMaterialsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EditRejectionReasonsView.xaml.cs">
       <DependentUpon>EditRejectionReasonsView.xaml</DependentUpon>
@@ -1264,6 +1302,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DocWithdrawalMaterialsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\EditRejectionReasonsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1473,7 +1515,7 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 %28x86 и x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -1522,7 +1564,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

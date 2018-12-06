@@ -1,0 +1,47 @@
+﻿<gamma:MvvmWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gamma.Views"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:common="clr-namespace:Gamma.Common"
+        xmlns:gamma="clr-namespace:Gamma"
+        x:Class="Gamma.Views.DocWithdrawalMaterialsView"
+        mc:Ignorable="d"
+        Title="Списание материалов" Height="300" Width="1000"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocWithdrawalMaterialsViewModel}}"
+        common:WindowSettings.Save="True">
+    <dxb:BarManager>
+        <dxb:BarManager.Bars>
+            <dxb:Bar>
+                <dxb:BarButtonItem Content="BarButtonItem" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" 
+                                   GlyphSize="Small" Command="{Binding AddWithdrawalMaterialCommand}"/>
+                <dxb:BarButtonItem Content="BarButtonItem" Glyph="{dx:DXImage Image=Cancel_16x16.png}" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" 
+                                   GlyphSize="Small" Command="{Binding DeleteWithdrawalMaterialCommand}"/>
+            </dxb:Bar>
+        </dxb:BarManager.Bars>
+        <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit x:Name="PART_Editor"   
+                                       DisplayMember="NomenclatureName" 
+                                       ValueMember="NomenclatureID" 
+                                       ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="Quantity" Header="Количество"/>
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False"/>
+            </dxg:GridControl.View>
+        </dxg:GridControl>
+    </dxb:BarManager>
+</gamma:MvvmWindow>

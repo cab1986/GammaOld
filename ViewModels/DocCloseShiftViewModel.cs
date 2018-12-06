@@ -41,7 +41,10 @@ namespace Gamma.ViewModels
             switch (placeGroupID)
             {
                 case (short)PlaceGroup.PM:
-                    CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
+                    //CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
+                    CurrentViewModelGrid = msg.DocID == null
+                        ? new DocCloseShiftPMGridViewModel()
+                        : new DocCloseShiftPMGridViewModel((Guid)msg.DocID);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
                     break;
                 case (short)PlaceGroup.Wr:
@@ -130,12 +133,56 @@ namespace Gamma.ViewModels
                 };
                 GammaBase.Docs.Add(Doc);
             }
+            var utilizationProductsBeforeSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
             Doc.IsConfirmed = IsConfirmed;
             GammaBase.SaveChanges();
             IsNewDoc = false;
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
             CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
+            
+            // удаляем с остатков или добавляем на остатки по утилизации
+            var utilizationProductsAfterSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
+            if ((utilizationProductsBeforeSave?.Count ?? 0) > 0 || (utilizationProductsAfterSave?.Count ?? 0) > 0)
+            {
+                if ((utilizationProductsBeforeSave?.Count ?? 0) > 0)
+                {
+                    foreach (var productBefore in utilizationProductsBeforeSave)
+                    {
+                        //if (utilizationProductsAfterSave != null)
+                        {
+                            if (!utilizationProductsAfterSave?.Any(d => d.ProductID == productBefore.ProductID) ?? true)
+                            {
+                                if (!GammaBase.Rests.Any(r => r.ProductID == productBefore.ProductID))
+                                    GammaBase.Rests.Add(new Rests()
+                                    {
+                                        ProductID = productBefore.ProductID,
+                                        Quantity = 1
+                                    });
+                            }
+                        }
+                    }
+                }
+                if ((utilizationProductsAfterSave?.Count ?? 0) > 0)
+                {
+                    foreach (var productAfter in utilizationProductsAfterSave)
+                    {
+                        {
+                            var res = !utilizationProductsBeforeSave?.Any(d => d.ProductID == productAfter.ProductID) ?? true;
+                            if (!utilizationProductsBeforeSave?.Any(d => d.ProductID == productAfter.ProductID) ?? true)
+                            {
+                                if (GammaBase.Rests.Any(r => r.ProductID == productAfter.ProductID))
+                                {
+                                    var restsUtilization = GammaBase.Rests.Where(r => r.ProductID == productAfter.ProductID);
+                                    GammaBase.Rests.RemoveRange(restsUtilization);
+                                }
+                            }
+                        }
+                    }
+                }
+                GammaBase.SaveChanges();
+            }
+
 #if !DEBUG
             var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;
             if (currenGridViewModel != null && currenGridViewModel.IsChanged)
