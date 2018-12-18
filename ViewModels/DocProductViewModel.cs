@@ -525,6 +525,12 @@ namespace Gamma.ViewModels
                 case DocTypes.DocMovement:
                     MessageManager.OpenDocMovement(SelectedRelation.DocID);
                     break;
+                case DocTypes.DocWithdrawal:
+                    MessageManager.OpenDocWithdrawal(SelectedRelation.DocID);
+                    break;
+                case DocTypes.DocUtilization:
+                    MessageManager.OpenDocWithdrawal(SelectedRelation.DocID);
+                    break;
                 default:
                     switch (SelectedRelation.ProductKindID)
                     {

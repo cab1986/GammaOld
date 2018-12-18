@@ -10,7 +10,7 @@ namespace Gamma.Models
     public class BrokeDecisionProduct : ViewModelBase
     {
         public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, ProductState state, decimal maxQuantity,  string nomenclatureName, 
-            string measureUnit, Guid nomenclatureOldId , Guid characteristicOldId, decimal quantity = 0)
+            string measureUnit, Guid nomenclatureOldId , Guid characteristicOldId, decimal quantity = 0, bool decisionApplied = false, Guid? docWithdrawalID = null)
         {
             MaxQuantity = maxQuantity;
             Quantity = quantity;
@@ -22,6 +22,8 @@ namespace Gamma.Models
             NomenclatureOldId = nomenclatureOldId;
             CharacteristicOldId = characteristicOldId;
             ProductKind = productKind;
+            DecisionApplied = decisionApplied;
+            DocWithdrawalID = docWithdrawalID;
         }
 
         public decimal MaxQuantity { get; set; }
@@ -118,5 +120,20 @@ namespace Gamma.Models
                 return ((int) _productState*397) ^ ProductId.GetHashCode();
             }
         }
+
+        private bool _DecisionApplied;
+
+        public bool DecisionApplied
+        {
+            get { return _DecisionApplied; }
+            set
+            {
+                _DecisionApplied = value;
+                RaisePropertyChanged("DecisionApplied");
+            }
+
+        }
+
+        public Guid? DocWithdrawalID { get; set; }
     }
 }

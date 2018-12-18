@@ -204,6 +204,7 @@ namespace Gamma.ViewModels
                 {
                     foreach (var decisionProduct in docBrokeDecisionProducts)
                     {
+                        var docWithdrawalID = decisionProduct.DocBrokeDecisionProductWithdrawalProducts?.FirstOrDefault();
                         brokeDecisionProducts.Add(new BrokeDecisionProduct(
                                 decisionProduct.ProductID,
                                 (ProductKind)product.ProductKindID,
@@ -214,7 +215,9 @@ namespace Gamma.ViewModels
                                 product.BaseMeasureUnit,
                                 product.C1CNomenclatureID,
                                 (Guid)product.C1CCharacteristicID,
-                                decisionProduct.Quantity ?? 0
+                                decisionProduct.Quantity ?? 0,
+                                decisionProduct.DecisionApplied,
+                                (docWithdrawalID?.DocWithdrawalID == Guid.Empty ? null : docWithdrawalID?.DocWithdrawalID)
                             )
                         {
                             Comment = decisionProduct.Comment,
@@ -332,22 +335,32 @@ namespace Gamma.ViewModels
                 InternalUsageProduct.IsChecked = false;
                 InternalUsageProduct.Quantity = 0;
                 InternalUsageProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                InternalUsageProduct.DecisionApplied = false;
+                InternalUsageProduct.DocWithdrawalID = null;
                 GoodProduct.BrokeDecisionProduct = null;
                 GoodProduct.IsChecked = false;
                 GoodProduct.Quantity = 0;
                 GoodProduct.IsReadOnly = (value == null || IsReadOnly);
+                GoodProduct.DecisionApplied = false;
+                GoodProduct.DocWithdrawalID = null;
                 LimitedProduct.BrokeDecisionProduct = null;
                 LimitedProduct.IsChecked = false;
                 LimitedProduct.Quantity = 0;
                 LimitedProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                LimitedProduct.DecisionApplied = false;
+                LimitedProduct.DocWithdrawalID = null;
                 BrokeProduct.BrokeDecisionProduct = null;
                 BrokeProduct.IsChecked = false;
                 BrokeProduct.Quantity = 0;
                 BrokeProduct.IsReadOnly = value == null || IsReadOnly;
+                BrokeProduct.DecisionApplied = false;
+                BrokeProduct.DocWithdrawalID = null;
                 RepackProduct.BrokeDecisionProduct = null;
                 RepackProduct.IsChecked = false;
                 RepackProduct.Quantity = 0;
                 RepackProduct.IsReadOnly = (value == null) || WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                RepackProduct.DecisionApplied = false;
+                RepackProduct.DocWithdrawalID = null;
                 if (value == null) return;
                 var products = BrokeDecisionProducts.Where(p => p.ProductId == value.ProductId).ToList();
                 foreach (var product in products)
@@ -358,26 +371,36 @@ namespace Gamma.ViewModels
                             BrokeProduct.Quantity = product.Quantity;
                             BrokeProduct.BrokeDecisionProduct = product;
                             BrokeProduct.IsChecked = true;
+                            BrokeProduct.DecisionApplied = product.DecisionApplied;
+                            BrokeProduct.DocWithdrawalID = product.DocWithdrawalID;
                             break;
                         case ProductState.Good:
                             GoodProduct.Quantity = product.Quantity;
                             GoodProduct.BrokeDecisionProduct = product;
                             GoodProduct.IsChecked = true;
+                            GoodProduct.DecisionApplied = product.DecisionApplied;
+                            GoodProduct.DocWithdrawalID = product.DocWithdrawalID;
                             break;
                         case ProductState.InternalUsage:
                             InternalUsageProduct.Quantity = product.Quantity;
                             InternalUsageProduct.BrokeDecisionProduct = product;
                             InternalUsageProduct.IsChecked = true;
+                            InternalUsageProduct.DecisionApplied = product.DecisionApplied;
+                            InternalUsageProduct.DocWithdrawalID = product.DocWithdrawalID;
                             break;
                         case ProductState.Limited:
                             LimitedProduct.Quantity = product.Quantity;
                             LimitedProduct.BrokeDecisionProduct = product;
                             LimitedProduct.IsChecked = true;
+                            LimitedProduct.DecisionApplied = product.DecisionApplied;
+                            LimitedProduct.DocWithdrawalID = product.DocWithdrawalID;
                             break;
                         case ProductState.Repack:
                             RepackProduct.Quantity = product.Quantity;
                             RepackProduct.BrokeDecisionProduct = product;
                             RepackProduct.IsChecked = true;
+                            RepackProduct.DecisionApplied = product.DecisionApplied;
+                            RepackProduct.DocWithdrawalID = product.DocWithdrawalID;
                             break;
                     }
                 }
@@ -549,7 +572,8 @@ namespace Gamma.ViewModels
                         ProductID = decisionProduct.ProductId,
                         DocID = DocId,
                         StateID = (byte)decisionProduct.ProductState,
-                        Comment = decisionProduct.Comment
+                        Comment = decisionProduct.Comment,
+                        DecisionApplied = decisionProduct.DecisionApplied
                     });
                 }
 #endregion

@@ -23,6 +23,7 @@ namespace Gamma.Entities
             this.DocUnpack = new HashSet<Docs>();
             this.DocProduction = new HashSet<DocProduction>();
             this.DocComplectation = new HashSet<DocComplectation>();
+            this.DocBrokeDecisionProductWithdrawalProducts = new HashSet<DocBrokeDecisionProductWithdrawalProducts>();
         }
     
         public System.Guid DocID { get; set; }
@@ -42,5 +43,7 @@ namespace Gamma.Entities
         public virtual Places Places { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocComplectation> DocComplectation { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
     }
 }

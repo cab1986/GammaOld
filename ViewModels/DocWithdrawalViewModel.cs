@@ -31,6 +31,8 @@ namespace Gamma.ViewModels
                 PrintName = doc.PrintName;
                 DocNumber = doc.Number;
                 Place = doc.DocWithdrawal.Places?.Name;
+                UserName = doc.Users.Name;
+                ShiftID = doc.ShiftID;
                 WithdrawalProducts = new ObservableCollection<WithdrawalProduct>(
                     gammaBase.DocWithdrawalProducts.Where(dw => dw.DocID == DocId).Join(gammaBase.vProductsInfo, dw => dw.ProductID, pi => pi.ProductID, (dw, pi) => new WithdrawalProduct
                     {
@@ -68,6 +70,8 @@ namespace Gamma.ViewModels
         public string PrintName { get; set; }
         public string DocNumber { get; set; }
         private Guid DocId { get; set; }
+        public string UserName { get; set; }
+        public byte? ShiftID { get; set; }
 
         public ObservableCollection<WithdrawalProduct> WithdrawalProducts
         {

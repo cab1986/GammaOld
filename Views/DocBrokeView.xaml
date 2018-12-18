@@ -16,7 +16,7 @@
         xmlns:models="clr-namespace:Gamma.Models"
         x:Class="Gamma.Views.DocBrokeView"
         mc:Ignorable="d"
-        Title="Акт о браке" Height="1000" Width="1200"
+        Title="Акт о браке" Height="750" Width="1200"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocBrokeViewModel}}"
         common:WindowSettings.Save="True">
     <Window.Resources>
@@ -41,6 +41,14 @@
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding Path=BrokeDecisionProduct.Comment}" IsReadOnly="{Binding Path=IsReadOnly}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Распущен в брак" Width="120" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <dxe:CheckEdit EditValue="{Binding Path=BrokeDecisionProduct.DecisionApplied}" AllowNullInput="True" IsReadOnly="{Binding Path=IsReadOnly}" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Width="15" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <dxe:ButtonEdit AllowDefaultButton="False" IsReadOnly="True">
+                                <dxe:ButtonInfo Command="{Binding OpenWithdrawalCommand}" Content="i" IsEnabled="{Binding Path=BrokeDecisionProduct.DecisionApplied}"/>
+                            </dxe:ButtonEdit>
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">

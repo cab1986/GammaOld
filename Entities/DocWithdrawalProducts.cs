@@ -14,6 +14,12 @@ namespace Gamma.Entities
     
     public partial class DocWithdrawalProducts
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocWithdrawalProducts()
+        {
+            this.DocBrokeDecisionProductWithdrawalProducts = new HashSet<DocBrokeDecisionProductWithdrawalProducts>();
+        }
+    
         public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
@@ -21,5 +27,7 @@ namespace Gamma.Entities
     
         public virtual DocWithdrawal DocWithdrawal { get; set; }
         public virtual Products Products { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
     }
 }

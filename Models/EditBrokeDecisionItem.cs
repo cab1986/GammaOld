@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gamma.Common;
 using Gamma.ViewModels;
+using DevExpress.Mvvm;
 
 namespace Gamma.Models
 {
@@ -16,7 +17,10 @@ namespace Gamma.Models
             ProductState = productState;
             NomenclatureVisible = canChooseNomenclature;
             BrokeDecisionProducts = decisionProducts;
+            OpenWithdrawalCommand = new DelegateCommand(OpenWithdrawal);
         }
+
+        public DelegateCommand OpenWithdrawalCommand { get; private set; }
 
         private decimal _quantity;
 
@@ -261,7 +265,17 @@ namespace Gamma.Models
 
         public string Name { get; set; }
 
-        private ProductState ProductState { get; set; }
+        private ProductState _productState { get; set; }
+
+        private ProductState ProductState
+        {
+            get { return _productState; }
+            set
+            {
+                _productState = value;
+                IsDecisionAppliedVisible = (value == ProductState.Broke);
+            }
+        }
 
         private BrokeDecisionProduct _brokeDecisionProduct;
 
@@ -278,6 +292,38 @@ namespace Gamma.Models
                 }
                 RaisePropertyChanged("BrokeDecisionProduct");
             }
+        }
+
+        private bool _isDecisionAppliedVisible;
+
+        public bool IsDecisionAppliedVisible
+        {
+            get { return _isDecisionAppliedVisible; }
+            set
+            {
+                _isDecisionAppliedVisible = value;
+                RaisePropertyChanged("IsDecisionAppliedVisible");
+            }
+        }
+
+        private bool _decisionApplied;
+
+        public bool DecisionApplied
+        {
+            get { return _decisionApplied; }
+            set
+            {
+                _decisionApplied = value;
+                RaisePropertyChanged("DecisionApplied");
+            }
+        }
+
+        public Guid? DocWithdrawalID { get; set; }
+
+        private void OpenWithdrawal()
+        {
+            if (DocWithdrawalID == null ) return;
+            MessageManager.OpenDocWithdrawal((Guid)DocWithdrawalID);
         }
     }
 }

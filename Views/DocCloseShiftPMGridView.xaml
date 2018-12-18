@@ -270,7 +270,7 @@
                                     <dxb:BarButtonItem Content="Добавить тамбур" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddBeginSpoolCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
                                     <dxb:BarButtonItem Content="Удалить тамбур" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteBeginSpoolCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
                                 </dxb:Bar>
-                            </dxb:BarManager.Bars>                            
+                            </dxb:BarManager.Bars>
                             <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding BeginSpools}" SelectedItem="{Binding SelectedBeginSpool}" VerticalAlignment="Stretch">
                                 <dxg:GridControl.Columns>
                                     <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
@@ -281,24 +281,24 @@
                                         <dxg:GridColumn.EditSettings>
                                             <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                                         </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                        </dxg:GridControl.Columns>
-                        <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
-                        </dxg:GridControl.GroupSummary>
-                        <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:d} кг"/>
-                        </dxg:GridControl.TotalSummary>
-                        <dxg:GridControl.View>
-                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+                                    </dxg:GridColumn>
+                                </dxg:GridControl.Columns>
+                                <dxg:GridControl.GroupSummary>
+                                    <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                                    <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
+                                </dxg:GridControl.GroupSummary>
+                                <dxg:GridControl.TotalSummary>
+                                    <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                                    <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:d} кг"/>
+                                </dxg:GridControl.TotalSummary>
+                                <dxg:GridControl.View>
+                                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
 								ShowFixedTotalSummary="True"/>
-                        </dxg:GridControl.View>
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowBeginSpoolCommand}"/>
-                        </dxmvvm:Interaction.Behaviors>
-                    </dxg:GridControl>
+                                </dxg:GridControl.View>
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowBeginSpoolCommand}"/>
+                                </dxmvvm:Interaction.Behaviors>
+                            </dxg:GridControl>
                         </dxb:BarManager>
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="Принято">
@@ -426,7 +426,7 @@
                                     <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowEndSpoolCommand}"/>
                                 </dxmvvm:Interaction.Behaviors>
                             </dxg:GridControl>
-
+                            
                         </dxb:BarManager>
                     </dx:DXTabItem>
                 </dx:DXTabControl>

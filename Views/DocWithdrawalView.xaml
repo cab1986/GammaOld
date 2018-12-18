@@ -27,8 +27,14 @@
                 <dxlc:LayoutItem Label="Передел" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding Place}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Логин" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding UserName}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Оператор" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding PrintName}" IsReadOnly="True"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Смена" LabelPosition="Top">
+                    <dxe:TextEdit EditValue="{Binding ShiftID}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Списано" LabelPosition="Top">

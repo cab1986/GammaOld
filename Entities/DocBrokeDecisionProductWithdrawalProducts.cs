@@ -12,14 +12,18 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocCloseShiftUtilizationProducts
+    public partial class DocBrokeDecisionProductWithdrawalProducts
     {
-        public System.Guid DocCloseShiftUtilizationProductID { get; set; }
+        public System.Guid DocWithdrawalID { get; set; }
         public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
+        public byte StateID { get; set; }
     
-        public virtual Docs Docs { get; set; }
+        public virtual DocBroke DocBroke { get; set; }
+        public virtual DocBrokeDecisionProducts DocBrokeDecisionProducts { get; set; }
+        public virtual DocWithdrawal DocWithdrawal { get; set; }
+        public virtual DocWithdrawalProducts DocWithdrawalProducts { get; set; }
         public virtual Products Products { get; set; }
+        public virtual ProductStates ProductStates { get; set; }
     }
 }

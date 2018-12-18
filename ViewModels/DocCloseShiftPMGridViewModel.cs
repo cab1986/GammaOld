@@ -176,7 +176,7 @@ namespace Gamma.ViewModels
                         Nomenclature = p.NomenclatureName,
                         Number = p.Number,
                         ProductID = d.ProductID,
-                        Weight = p.ProductionQuantity * 1000
+                        Weight = d.Quantity ?? 0
                     }));
                 // Получение отходов
                 Wastes = new ObservableCollection<Sample>(gammaBase.DocCloseShiftWastes.Where(dw => dw.DocID == docId)
@@ -250,8 +250,8 @@ namespace Gamma.ViewModels
             {
                 DocCloseDocIds = gammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
-                    d.Date >= SqlFunctions.DateAdd("hh", -10, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
-                    d.Date <= SqlFunctions.DateAdd("hh", 10, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                    d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                    d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)).Select(d => d.DocID).ToList();
                 Spools = new ObservableCollection<PaperBase>(gammaBase.FillDocCloseShiftPMSpools(PlaceID, ShiftID, CloseDate).Select(p => new PaperBase()
                 {
@@ -381,23 +381,13 @@ namespace Gamma.ViewModels
                 }
                 Wastes = wastes;
 
-                EndSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                    .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
-                    , (d, p) => new DocCloseShiftRemainder
-                    {
-                        ProductID = (Guid)d.ProductID,
-                        StateID = (p.StateID == null ? 0 : p.StateID),
-                        Quantity = (d.Products.ProductSpools.DecimalWeight == null ? 0 : d.Products.ProductSpools.DecimalWeight) * 1000,
-                        RemainderTypeID = 2
-                    }));
-
                 if (BeginSpools == null || BeginSpools?.Count() == 0)
                 {
                     var PreviousDocCloseShift = gammaBase.Docs
                         .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
-                    BeginSpools = new ObservableCollection<DocCloseShiftRemainder> (gammaBase.DocCloseShiftRemainders
+                    BeginSpools = new ObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
                         .Where(d => (d.RemainderTypeID == 2 || d.RemainderTypeID == 0 || d.RemainderTypeID == null) && d.DocCloseShifts.DocID == PreviousDocCloseShift.DocID)
                         .Select(d => new DocCloseShiftRemainder
                         {
@@ -406,28 +396,9 @@ namespace Gamma.ViewModels
                             Quantity = d.Quantity,
                             RemainderTypeID = d.RemainderTypeID == 0 || d.RemainderTypeID == null ? 3 : 1
                         }));
-                    /*    BeginSpools = new ObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
-                            .Where(d => d.RemainderTypeID == 1 && d.DocCloseShifts.PlaceID == PlaceID)
-                            .OrderByDescending(d => d.DocCloseShifts.Date)
-                            .Take(1)
-                            .Select(d => new DocCloseShiftRemainder
-                            {
-                                ProductID = (Guid)d.ProductID,
-                                Quantity = d.Products.ProductSpools.DecimalWeight * 1000
-                            }));
-                    */
-                    /*foreach (var spool in EndSpools)
-                    {
-                        if (Spools.Where(d => d.ProductID == spool.ProductID).Count() == 0 && BeginSpools.Where(d => d.ProductID == spool.ProductID).Count() == 0)
-                        {
-                            BeginSpools.Add(new DocCloseShiftRemainder()
-                            {
-                                ProductID = spool.ProductID,
-                                Quantity = spool.Quantity
-                            });
-                        }
-                    }*/
                 }
+
+                FillEndSpools();
 
                 InSpools = new ObservableCollection<MovementProduct>(gammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
                             .Where(d => (bool)d.IsMovementIn).Select(d => new MovementProduct
@@ -443,6 +414,7 @@ namespace Gamma.ViewModels
                                 OutPlaceZoneName = d.OutPlaceZone,
                                 OutDate = d.OutDate
                             }));
+
                 OutSpools = new ObservableCollection<MovementProduct>(gammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
                             .Where(d => (bool)d.IsMovementOut).Select(d => new MovementProduct
                             {
@@ -457,7 +429,87 @@ namespace Gamma.ViewModels
                                 InPlaceZoneName = d.InPlaceZone,
                                 InDate = d.InDate
                             }));
+
+                var utilizationSpools = new ObservableCollection<PaperBase>(gammaBase.FillDocCloseShiftUtilizationSpools(PlaceID, ShiftID, CloseDate).Select(p => new PaperBase()
+                {
+                    CharacteristicID = p.CharacteristicID,
+                    NomenclatureID = p.NomenclatureID,
+                    Nomenclature = p.NomenclatureName,
+                    Number = p.Number,
+                    ProductID = p.ProductID,
+                    Weight = (p.Quantity ?? 0) * 1000
+                }));
+
+                foreach (PaperBase spool in utilizationSpools)
+                {
+                    if (UtilizationSpools.Count(d => d.ProductID == spool.ProductID) == 0)
+                    {
+                        UtilizationSpools.Add(new PaperBase()
+                        {
+                            NomenclatureID = spool.NomenclatureID,
+                            CharacteristicID = spool.CharacteristicID,
+                            Nomenclature = spool.Nomenclature,
+                            Number = spool.Number,
+                            ProductID = spool.ProductID,
+                            Weight = spool.Weight
+                        });
+                    }
+                    else
+                    {
+                        var item = UtilizationSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
+                        if (item != null)
+                        {
+                            item.Weight = spool.Weight;
+                            item.NomenclatureID = spool.NomenclatureID;
+                            item.CharacteristicID = spool.CharacteristicID;
+                            item.Nomenclature = spool.Nomenclature;
+                        }
+                    }
+                }
+
                 IsChanged = true;
+            }
+        }
+
+        private void FillEndSpools()
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                EndSpools?.Clear();
+                EndSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
+                    .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
+                    , (d, p) => new DocCloseShiftRemainder
+                    {
+                        ProductID = (Guid)d.ProductID,
+                        StateID = (p.StateID == null ? 0 : p.StateID),
+                        Quantity = (d.Products.ProductSpools.DecimalWeight == null ? 0 : d.Products.ProductSpools.DecimalWeight) * 1000,
+                        RemainderTypeID = 2
+                    }));
+
+                //убираем из остатков тамбур, который утилизирован в этой смене
+                if (UtilizationSpools != null)
+                {
+                    foreach (var spool in UtilizationSpools)
+                    {
+                        var removeSpool = EndSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
+                        if (removeSpool != null)
+                            EndSpools.Remove(removeSpool);
+                    }
+                }
+
+                //убираем из остатков переходящий следующей смене тамбур в процессе производства
+                var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
+                if (doc != null)
+                {
+                    var endSpoolsProductIDs = EndSpools.Select(d => (Guid?)d.ProductID).ToList();
+                    var spoolRemainders = gammaBase.DocCloseShiftRemainders.Where(r => (r.RemainderTypeID ?? 0) == 0 && r.DocID == doc.DocID && endSpoolsProductIDs.Contains(r.ProductID));
+                    foreach (var spool in spoolRemainders)
+                    {
+                        var removeSpool = EndSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
+                        if (removeSpool != null)
+                            EndSpools.Remove(removeSpool);
+                    }
+                }
             }
         }
 
@@ -861,13 +913,15 @@ namespace Gamma.ViewModels
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
             using (var gammaBase = DB.GammaDb)
             {
-                /*var isWrittenOff = gammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
-                if (isWrittenOff ?? false && CurrentAddSpoolRemainder == RemainderType.End)
+                var productBroke = gammaBase.DocBrokeDecisionProducts.Where(p => p.ProductID == msg.ProductID && p.StateID == 2).OrderByDescending(p => p.DocBroke.Docs.Date).Take(1).FirstOrDefault();
+                if (productBroke?.Quantity == null)
                 {
-                    MessageBox.Show("Нельзя добавить в остаток на конец смены списанный тамбур", "Списанный тамбур", MessageBoxButton.OK, MessageBoxImage.Hand);
-                    return;
+                    var dlgResult = MessageBox.Show("По тамбуру не принято решение на утилизацию. Вы уверены?", "Тамбур на утилизацию", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (dlgResult != MessageBoxResult.Yes)
+                        return;
                 }
-                */
+
+                var brokeQuantity = productBroke?.Quantity;
                 var product = new ObservableCollection<PaperBase>(gammaBase.vProductsInfo
                     .Where(p => p.ProductID == msg.ProductID)
                     .Select(p => new PaperBase()
@@ -877,10 +931,15 @@ namespace Gamma.ViewModels
                     Nomenclature = p.NomenclatureName,
                     Number = p.Number,
                     ProductID = p.ProductID,
-                    Weight = p.ProductionQuantity * 1000
+                    Weight = (brokeQuantity ?? p.ProductionQuantity) * 1000
                 }));
                 foreach (var item in product)
+                {
                     UtilizationSpools.Add(item);
+                    var remainderSpool = EndSpools.FirstOrDefault(s => s.ProductID == item.ProductID && (s.RemainderTypeID ?? 0) == 2);
+                    if (remainderSpool != null)
+                        EndSpools.Remove(remainderSpool);
+                }
             }
         }
 
@@ -888,6 +947,7 @@ namespace Gamma.ViewModels
         {
             if (SelectedUtilizationSpool == null) return;
             UtilizationSpools.Remove(SelectedUtilizationSpool);
+            FillEndSpools();
         }
 
         /// <summary>
@@ -1047,7 +1107,8 @@ namespace Gamma.ViewModels
                         {
                             DocID = docId,
                             DocCloseShiftUtilizationProductID = SqlGuidUtil.NewSequentialid(),
-                            ProductID = utilizationSpool.ProductID
+                            ProductID = utilizationSpool.ProductID,
+                            Quantity = utilizationSpool.Weight
                         });
                     }
                 gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);

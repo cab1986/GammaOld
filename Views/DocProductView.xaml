@@ -114,7 +114,11 @@
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn Header="Вид связи" FieldName="Description" GroupIndex="0" />
                         <dxg:GridColumn Header="Номер" FieldName="Number" />
-                        <dxg:GridColumn Header="Дата" FieldName="Date" />
+                        <dxg:GridColumn Header="Дата" FieldName="Date">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
                         <dxg:TableView AutoWidth="True" ShowGroupPanel="False" AllowEditing="False"/>

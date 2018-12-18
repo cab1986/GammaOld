@@ -20,6 +20,7 @@ namespace Gamma.Entities
             this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
             this.DocBrokeDecisionProducts = new HashSet<DocBrokeDecisionProducts>();
             this.Products = new HashSet<Products>();
+            this.DocBrokeDecisionProductWithdrawalProducts = new HashSet<DocBrokeDecisionProductWithdrawalProducts>();
         }
     
         public byte StateID { get; set; }
@@ -34,5 +35,7 @@ namespace Gamma.Entities
         public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Products> Products { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
     }
 }
