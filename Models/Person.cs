@@ -9,5 +9,6 @@ namespace Gamma.Models
         public Guid PersonId { get; set; }
         public string Name { get; set; }
         public string PlaceName { get; set; }
+        public string UserName { get; set; }
     }
 }

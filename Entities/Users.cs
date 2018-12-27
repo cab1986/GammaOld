@@ -22,6 +22,7 @@ namespace Gamma.Entities
             this.UserPrintNames = new HashSet<UserPrintNames>();
             this.Places = new HashSet<Places>();
             this.LogEvents = new HashSet<LogEvents>();
+            this.Persons = new HashSet<Persons>();
         }
     
         public System.Guid UserID { get; set; }
@@ -52,5 +53,7 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogEvents> LogEvents { get; set; }
         public virtual Departments Departments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Persons> Persons { get; set; }
     }
 }

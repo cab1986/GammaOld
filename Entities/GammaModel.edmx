@@ -959,6 +959,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="Barcode" Type="nvarchar" MaxLength="20" />
           <Property Name="Password" Type="nvarchar" MaxLength="255" />
           <Property Name="PlaceID" Type="int" />
+          <Property Name="UserID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="PlaceGroup1CNomenclature">
           <Key>
@@ -3781,6 +3782,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Persons_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Persons" Type="Self.Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
           <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
@@ -5905,6 +5918,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </AssociationSet>
           <AssociationSet Name="FK_Persons_Places" Association="Self.FK_Persons_Places">
             <End Role="Places" EntitySet="Places" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Persons_Users" Association="Self.FK_Persons_Users">
+            <End Role="Users" EntitySet="Users" />
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
@@ -8102,6 +8119,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <AssociationSet Name="FK_Persons_Users" Association="GammaModel.FK_Persons_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -9138,6 +9159,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="PostTypes" Relationship="GammaModel.FK_Persons_PostTypes" FromRole="Persons" ToRole="PostTypes" />
           <Property Name="PlaceID" Type="Int32" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Persons_Places" FromRole="Persons" ToRole="Places" />
+          <Property Name="UserID" Type="Guid" />
+          <NavigationProperty Name="Users" Relationship="GammaModel.FK_Persons_Users" FromRole="Persons" ToRole="Users" />
         </EntityType>
         <Association Name="FK_Persons_Branches">
           <End Type="GammaModel.Branches" Role="Branches" Multiplicity="0..1" />
@@ -10586,6 +10609,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="LogEvents" Relationship="GammaModel.FK_LogEvents_Users" FromRole="Users" ToRole="LogEvents" />
           <Property Name="DepartmentID" Type="Int16" />
           <NavigationProperty Name="Departments" Relationship="GammaModel.FK_Users_Departments" FromRole="Users" ToRole="Departments" />
+          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_Users" FromRole="Users" ToRole="Persons" />
         </EntityType>
         <Association Name="FK_CurrentPlaceUsers_Users">
           <End Type="GammaModel.Users" Role="Users" Multiplicity="1" />
@@ -12507,6 +12531,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
         </ComplexType>
+        <Association Name="FK_Persons_Users">
+          <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Persons">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -13532,6 +13568,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Persons">
             <EntityTypeMapping TypeName="GammaModel.Persons">
               <MappingFragment StoreEntitySet="Persons">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Barcode" ColumnName="Barcode" />

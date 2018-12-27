@@ -826,6 +826,7 @@
     <Compile Include="Common\UIServices.cs" />
     <Compile Include="Common\ViewsManager.cs" />
     <Compile Include="Common\WindowSettings.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\WithdrawalMaterial.cs" />
     <Compile Include="Converters\ElementEmptyConverter.cs" />
     <Compile Include="DB.cs" />
@@ -1570,7 +1571,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

@@ -49,12 +49,16 @@
             <dxlc:LayoutItem Label="Имя" LabelPosition="Top">
                 <dxe:TextEdit EditValue="{Binding NewPersonName, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Логин" LabelPosition="Top">
+                <dxe:ComboBoxEdit ItemsSource="{Binding Users}" EditValue="{Binding UserID, UpdateSourceTrigger=PropertyChanged}" DisplayMember="UserName" ValueMember="UserID"/>
+            </dxlc:LayoutItem>
             <Button Content="Добавить" Command="{Binding AddPersonCommand}"  Height="22" VerticalAlignment="Center" HorizontalAlignment="Right" Width="79" Margin="0,18,0,0"/>
         </dxlc:LayoutControl>
         <dxg:GridControl Grid.Row="2" ItemsSource="{Binding Persons}" SelectedItem="{Binding SelectedPerson}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn FieldName="Name" Header="Имя" />
                 <dxg:GridColumn FieldName="PlaceName" Header="Передел" />
+                <dxg:GridColumn FieldName="UserName" Header="Логин" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView ShowGroupPanel="False" AutoWidth="True" AllowEditing="False" />

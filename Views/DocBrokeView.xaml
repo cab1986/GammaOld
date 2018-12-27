@@ -42,8 +42,8 @@
                         <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding Path=BrokeDecisionProduct.Comment}" IsReadOnly="{Binding Path=IsReadOnly}"/>
                         </dxlc:LayoutItem>
-                        <dxlc:LayoutItem Label="Распущен в брак" Width="120" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <dxe:CheckEdit EditValue="{Binding Path=BrokeDecisionProduct.DecisionApplied}" AllowNullInput="True" IsReadOnly="{Binding Path=IsReadOnly}" />
+                        <dxlc:LayoutItem Label="Срезан в брак" Width="120" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <dxe:CheckEdit EditValue="{Binding Path=BrokeDecisionProduct.DecisionApplied}" AllowNullInput="True" IsReadOnly="False" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Width="15" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <dxe:ButtonEdit AllowDefaultButton="False" IsReadOnly="True">

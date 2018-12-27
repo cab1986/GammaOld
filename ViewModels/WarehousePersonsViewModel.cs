@@ -34,14 +34,23 @@ namespace Gamma.ViewModels
                 }
             });
             Places = (from p in GammaBase.Places
-                      where (p.IsProductionPlace ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+                      where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
                       select new
                       Place
                       {
                           PlaceName = p.Name,
                           PlaceID = p.PlaceID
                       }
-                     ).ToList();
+                    ).ToList();
+            Users = (from p in GammaBase.Users
+                      where (p.DepartmentID == 9 && p.ShiftID == 0)
+                      select new
+                      User
+                      {
+                          UserName = p.Name,
+                          UserID = p.UserID
+                      }
+                    ).ToList();
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 
@@ -66,7 +75,8 @@ namespace Gamma.ViewModels
                 Name = NewPersonName,
                 PostTypeID = 1,
                 BranchID = WorkSession.BranchID,
-                PlaceID = PlaceID
+                PlaceID = PlaceID,
+                UserID = UserID
             };
             GammaBase.Persons.Add(person);
             GammaBase.SaveChanges();
@@ -95,7 +105,8 @@ namespace Gamma.ViewModels
             {
                 PersonId = p.PersonID,
                 Name = p.Name,
-                PlaceName = p.Places.Name
+                PlaceName = p.Places.Name,
+                UserName = p.Users.Name
             }));
         }
 
@@ -104,7 +115,9 @@ namespace Gamma.ViewModels
         public string NewPersonName { get; set; }
 
         public List<Place> Places { get; set; }
-        
+
+        public List<User> Users { get; set; }
+
         public DelegateCommand AddPersonCommand { get; set; }
         public DelegateCommand DeletePersonCommand { get; private set; }
 
@@ -121,6 +134,19 @@ namespace Gamma.ViewModels
             }
         }
 
+
+        private Guid _userID;
+
+        public Guid UserID
+        {
+            get { return _userID; }
+            set
+            {
+                _userID = value;
+                RaisePropertyChanged("UserID");
+                RefreshPersons();
+            }
+        }
 
         private ObservableCollection<Person> _persons;
 
