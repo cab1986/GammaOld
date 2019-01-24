@@ -38,6 +38,10 @@ namespace Gamma.ViewModels
             {
                 AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, true);
             }
+            if (sourceSpools.Unwinder4Spool != null)
+            {
+                AddSpoolRemainder((Guid)sourceSpools.Unwinder4Spool, date, true);
+            }
         }
 
         private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct)

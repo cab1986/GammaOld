@@ -49,9 +49,11 @@ namespace Gamma.ViewModels
                     Unwinder1ProductID = SourceSpools.Unwinder1Spool;
                     Unwinder2ProductID = SourceSpools.Unwinder2Spool;
                     Unwinder3ProductID = SourceSpools.Unwinder3Spool;
+                    Unwinder4ProductID = SourceSpools.Unwinder4Spool;
                     Unwinder1Active = SourceSpools.Unwinder1Active ?? false;
                     Unwinder2Active = SourceSpools.Unwinder2Active ?? false;
                     Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
+                    Unwinder4Active = SourceSpools.Unwinder4Active ?? false;
                 }
                 var unwindersCount = DB.GetUnwindersCount(WorkSession.PlaceID, GammaBase);
                 switch (unwindersCount)
@@ -59,14 +61,20 @@ namespace Gamma.ViewModels
                     case 1:
                         Unwinder2Visible = false;
                         Unwinder3Visible = false;
-                        break;
+                        Unwinder4Visible = false;
+                    break;
                     case 2:
                         Unwinder3Visible = false;
+                        Unwinder4Visible = false;
+                    break;
+                    case 3:
+                        Unwinder4Visible = false;
                         break;
                     default:
-                        Unwinder3Visible = true;
                         Unwinder2Visible = true;
-                        break;
+                        Unwinder3Visible = true;
+                        Unwinder4Visible = true;
+                    break;
                 }
         }
 
@@ -85,6 +93,10 @@ namespace Gamma.ViewModels
                 case 3:
                     if (Unwinder3ProductID == null) return;
                     MessageManager.OpenDocProduct(ProductKind.ProductSpool, (Guid)Unwinder3ProductID);
+                    break;
+                case 4:
+                    if (Unwinder4ProductID == null) return;
+                    MessageManager.OpenDocProduct(ProductKind.ProductSpool, (Guid)Unwinder4ProductID);
                     break;
             }
         }
@@ -155,7 +167,7 @@ namespace Gamma.ViewModels
                     MessageBox.Show("Нельзя повторно использовать списанный тамбур", "Списанный тамбур", MessageBoxButton.OK, MessageBoxImage.Hand);
                     return;
                 }
-                if (Unwinder1ProductID == msg.ProductID || Unwinder2ProductID == msg.ProductID || Unwinder3ProductID == msg.ProductID)
+                if (Unwinder1ProductID == msg.ProductID || Unwinder2ProductID == msg.ProductID || Unwinder3ProductID == msg.ProductID || Unwinder4ProductID == msg.ProductID)
                 {
                     MessageBox.Show("Данный тамбур уже установлен на раскат", "На раскате", MessageBoxButton.OK, MessageBoxImage.Hand);
                     return;
@@ -199,6 +211,13 @@ namespace Gamma.ViewModels
                         Unwinder3ProductID = msg.ProductID;
                         SourceSpools.Unwinder3Spool = msg.ProductID;
                         SourceSpools.Unwinder3Active = Unwinder3Active;
+                        break;
+                    case 4:
+                        if (Unwinder4ProductID != null)
+                            if (!DeleteSpool(3)) return;
+                        Unwinder4ProductID = msg.ProductID;
+                        SourceSpools.Unwinder4Spool = msg.ProductID;
+                        SourceSpools.Unwinder4Active = Unwinder4Active;
                         break;
                 }
                 gammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
@@ -297,6 +316,35 @@ namespace Gamma.ViewModels
                     Unwinder3ProductID = null;
                     Unwinder3Active = false;
                     break;
+                case 4:
+                    if (Unwinder4ProductID == null) return true;
+                    if (CheckSpoolIsUsed(Unwinder4ProductID))
+                    {
+                        var dialog = new ChangeSpoolDialog((Guid)Unwinder4ProductID);
+                        dialog.ShowDialog();
+                        if (dialog.DialogResult == true)
+                        {
+                            switch (dialog.ChangeState)
+                            {
+                                case SpoolChangeState.WithBroke:
+                                    BrokeProduct((Guid)Unwinder4ProductID, dialog.Weight, dialog.RejectionReasonID);
+                                    break;
+                                case SpoolChangeState.WithRemainder:
+                                    CreateRemainderSpool((Guid)Unwinder4ProductID, dialog.Weight);
+                                    break;
+                                case SpoolChangeState.FullyConverted:
+                                    CompleteWithdraw((Guid)Unwinder4ProductID);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    Unwinder4ProductID = null;
+                    Unwinder4Active = false;
+                    break;
             }
             GammaBase.SaveChanges();
             MessageManager.SpoolWithdrawed();
@@ -392,6 +440,16 @@ namespace Gamma.ViewModels
                     GammaBase.SaveChanges();
                     if (Unwinder3Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
                     break;
+                case 4:
+                    if (Unwinder4ProductID == null)
+                    {
+                        Unwinder4Active = false;
+                        return;
+                    }
+                    Unwinder4Active = !Unwinder4Active;
+                    GammaBase.SaveChanges();
+                    if (Unwinder4Active && WorkSession.PlaceGroup == PlaceGroup.Convertings) CheckSourceSpools();
+                    break;
             }
         }
 
@@ -460,12 +518,30 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Unwinder3Active");
             }
         }
+        private bool _unwinder4Active;
+        public bool Unwinder4Active
+        {
+            get
+            {
+                return _unwinder4Active;
+            }
+            set
+            {
+                if (_unwinder4Active == value)
+                    return;
+                _unwinder4Active = value;
+                SourceSpools.Unwinder4Active = value;
+                RaisePropertyChanged("Unwinder4Active");
+            }
+        }
 
         public bool Unwinder2Visible { get; set; } = true;
         public bool Unwinder3Visible { get; set; } = true;
+        public bool Unwinder4Visible { get; set; } = true;
         private Guid? _unwinder1ProductID;
         private Guid? _unwinder2ProductID;
         private Guid? _unwinder3ProductID;
+        private Guid? _unwinder4ProductID;
         private Guid? Unwinder1ProductID
         {
             get
@@ -508,9 +584,24 @@ namespace Gamma.ViewModels
                 Unwinder3Nomenclature = ProductNomenclature(_unwinder3ProductID);
             }
         }
+        private Guid? Unwinder4ProductID
+        {
+            get
+            {
+                return _unwinder4ProductID;
+            }
+            set
+            {
+                if (_unwinder4ProductID == value) return;
+                _unwinder4ProductID = value;
+                SourceSpools.Unwinder4Spool = value;
+                Unwinder4Nomenclature = ProductNomenclature(_unwinder4ProductID);
+            }
+        }
         private string _unwinder1Nomenclature;
         private string _unwinder2Nomenclature;
         private string _unwinder3Nomenclature;
+        private string _unwinder4Nomenclature;
         public string Unwinder1Nomenclature
         {
             get
@@ -545,6 +636,18 @@ namespace Gamma.ViewModels
             {
                 _unwinder3Nomenclature = value;
                 RaisePropertyChanged("Unwinder3Nomenclature");
+            }
+        }
+        public string Unwinder4Nomenclature
+        {
+            get
+            {
+                return _unwinder4Nomenclature;
+            }
+            set
+            {
+                _unwinder4Nomenclature = value;
+                RaisePropertyChanged("Unwinder4Nomenclature");
             }
         }
 

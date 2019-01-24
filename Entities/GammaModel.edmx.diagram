@@ -355,6 +355,7 @@
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_Products" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_ProductStates" />
         <AssociationConnector Association="GammaModel.FK_Persons_Users" />
+        <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools3" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

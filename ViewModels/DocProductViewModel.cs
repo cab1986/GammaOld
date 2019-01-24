@@ -228,7 +228,7 @@ namespace Gamma.ViewModels
                     gammaBase.SourceSpools.Any(
                         s =>
                             s.Unwinder1Spool == productId || s.Unwinder2Spool == productId ||
-                            s.Unwinder3Spool == productId))
+                            s.Unwinder3Spool == productId || s.Unwinder4Spool == productId))
                 {
                     MessageBox.Show(
                         "Нельзя актировать тамбур, который находится на раскате. Актируйте тамбур при снятии или снимите тамбур с раската и затем актируйте",

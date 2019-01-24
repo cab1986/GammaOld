@@ -632,6 +632,7 @@
           <Property Name="PlaceZoneCellID" Type="uniqueidentifier" />
           <Property Name="PersonID" Type="uniqueidentifier" />
           <Property Name="Date" Type="datetime" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <EntityType Name="DocInventarisationProducts">
           <Key>
@@ -698,6 +699,7 @@
           <Property Name="PlaceZoneCellID" Type="uniqueidentifier" />
           <Property Name="PersonID" Type="uniqueidentifier" />
           <Property Name="Date" Type="datetime" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <EntityType Name="DocProduction">
           <Key>
@@ -1274,6 +1276,8 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="Unwinder2Active" Type="bit" />
           <Property Name="Unwinder3Spool" Type="uniqueidentifier" />
           <Property Name="Unwinder3Active" Type="bit" />
+          <Property Name="Unwinder4Spool" Type="uniqueidentifier" />
+          <Property Name="Unwinder4Active" Type="bit" />
         </EntityType>
         <EntityType Name="SpoolInstallLog">
           <Key>
@@ -4382,6 +4386,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SourceSpools_ProductSpools3">
+          <End Role="ProductSpools" Type="Self.ProductSpools" Multiplicity="0..1" />
+          <End Role="SourceSpools" Type="Self.SourceSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductSpools">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="SourceSpools">
+              <PropertyRef Name="Unwinder4Spool" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SpoolInstallLog_Places">
           <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
           <End Role="SpoolInstallLog" Type="Self.SpoolInstallLog" Multiplicity="*" />
@@ -4696,6 +4712,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <Property Name="Date" Type="datetime" />
                 <Property Name="InDate" Type="datetime" />
                 <Property Name="OutDate" Type="datetime" />
+                <Property Name="State" Type="varchar" MaxLength="9" Nullable="false" />
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -6116,6 +6133,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductSpools" EntitySet="ProductSpools" />
             <End Role="SourceSpools" EntitySet="SourceSpools" />
           </AssociationSet>
+          <AssociationSet Name="FK_SourceSpools_ProductSpools3" Association="Self.FK_SourceSpools_ProductSpools3">
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+            <End Role="SourceSpools" EntitySet="SourceSpools" />
+          </AssociationSet>
           <AssociationSet Name="FK_SpoolInstallLog_Places" Association="Self.FK_SpoolInstallLog_Places">
             <End Role="Places" EntitySet="Places" />
             <End Role="SpoolInstallLog" EntitySet="SpoolInstallLog" />
@@ -6537,6 +6558,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="SourceSpools" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="SourceSpools" ToRole="ProductSpools" />
           <NavigationProperty Name="ProductSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="SourceSpools" ToRole="ProductSpools" />
+          <Property Name="Unwinder4Spool" Type="Guid" />
+          <Property Name="Unwinder4Active" Type="Boolean" />
+          <NavigationProperty Name="ProductSpools3" Relationship="GammaModel.FK_SourceSpools_ProductSpools3" FromRole="SourceSpools" ToRole="ProductSpools" />
           </EntityType>
         <EntityType Name="SpoolInstallLog">
           <Key>
@@ -8123,6 +8147,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Users" EntitySet="Users" />
             <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
+          <AssociationSet Name="FK_SourceSpools_ProductSpools3" Association="GammaModel.FK_SourceSpools_ProductSpools3">
+            <End Role="ProductSpools" EntitySet="ProductSpools" />
+            <End Role="SourceSpools" EntitySet="SourceSpools" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -9570,6 +9598,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocInProducts_Persons" FromRole="DocInProducts" ToRole="Persons" />
           <NavigationProperty Name="PlaceZones" Relationship="GammaModel.FK_DocInProducts_PlaceZones1" FromRole="DocInProducts" ToRole="PlaceZones" />
           <Property Name="PlaceZoneCellID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
         </EntityType>
         <EntityType Name="DocOutProducts">
           <Key>
@@ -9585,6 +9614,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocOutProducts_Persons" FromRole="DocOutProducts" ToRole="Persons" />
           <NavigationProperty Name="PlaceZones" Relationship="GammaModel.FK_DocOutProducts_PlaceZones1" FromRole="DocOutProducts" ToRole="PlaceZones" />
           <Property Name="PlaceZoneCellID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
         </EntityType>
         <Association Name="FK_DocInProducts_DocMovement">
           <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="1" />
@@ -11433,6 +11463,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="SourceSpools" Relationship="GammaModel.FK_SourceSpools_ProductSpools" FromRole="ProductSpools" ToRole="SourceSpools" />
           <NavigationProperty Name="SourceSpools1" Relationship="GammaModel.FK_SourceSpools_ProductSpools1" FromRole="ProductSpools" ToRole="SourceSpools" />
           <NavigationProperty Name="SourceSpools2" Relationship="GammaModel.FK_SourceSpools_ProductSpools2" FromRole="ProductSpools" ToRole="SourceSpools" />
+          <NavigationProperty Name="SourceSpools3" Relationship="GammaModel.FK_SourceSpools_ProductSpools3" FromRole="ProductSpools" ToRole="SourceSpools" />
         </EntityType>
         <Association Name="FK_ProductSpools_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -12543,6 +12574,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SourceSpools_ProductSpools3">
+          <End Type="GammaModel.ProductSpools" Role="ProductSpools" Multiplicity="0..1" />
+          <End Type="GammaModel.SourceSpools" Role="SourceSpools" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductSpools">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="SourceSpools">
+              <PropertyRef Name="Unwinder4Spool" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -12856,6 +12899,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="SourceSpools">
             <EntityTypeMapping TypeName="GammaModel.SourceSpools">
               <MappingFragment StoreEntitySet="SourceSpools">
+                <ScalarProperty Name="Unwinder4Active" ColumnName="Unwinder4Active" />
+                <ScalarProperty Name="Unwinder4Spool" ColumnName="Unwinder4Spool" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="Unwinder1Spool" ColumnName="Unwinder1Spool" />
                 <ScalarProperty Name="Unwinder1Active" ColumnName="Unwinder1Active" />
@@ -13773,6 +13818,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocInProducts">
             <EntityTypeMapping TypeName="GammaModel.DocInProducts">
               <MappingFragment StoreEntitySet="DocInProducts">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="PlaceZoneCellID" ColumnName="PlaceZoneCellID" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
@@ -13786,6 +13832,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocOutProducts">
             <EntityTypeMapping TypeName="GammaModel.DocOutProducts">
               <MappingFragment StoreEntitySet="DocOutProducts">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="PlaceZoneCellID" ColumnName="PlaceZoneCellID" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />

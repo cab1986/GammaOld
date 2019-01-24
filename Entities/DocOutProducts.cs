@@ -20,6 +20,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> PersonID { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public Nullable<System.Guid> PlaceZoneCellID { get; set; }
+        public Nullable<decimal> Quantity { get; set; }
     
         public virtual DocMovement DocMovement { get; set; }
         public virtual Persons Persons { get; set; }

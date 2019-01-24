@@ -515,6 +515,7 @@ namespace Gamma.ViewModels
                     {
                         DocID = docWithdrawal.DocID,
                         ProductID = spool.ProductID,
+                        Quantity = product.ProductGroupPacks.Weight/Spools.Count,
                         CompleteWithdrawal = true
                     });
                 }

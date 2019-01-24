@@ -31,7 +31,7 @@
                             </Style.Triggers>
                         </Style>
                     </dxe:ButtonEdit.Style>
-                    <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="1"/>
+                    <dxe:ButtonInfo Content="..." ToolTip="Выбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="1"/>
                     <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="1"/>
                     <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="1"/>
                     <dxe:ButtonInfo Content="i" ToolTip="Открыть информацию по рулону" Command="{Binding OpenSpoolInfoCommand}" CommandParameter="1" Visibility="Collapsed"/>
@@ -53,7 +53,7 @@
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenSpoolInfoCommand}" CommandParameter="2"/>
                     </dxmvvm:Interaction.Behaviors>
-                    <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="2"/>
+                    <dxe:ButtonInfo Content="..." ToolTip="Выбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="2"/>
                     <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="2"/>
                     <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="2"/>
                     <dxe:ButtonInfo Content="i" ToolTip="Открыть информацию по рулону" Command="{Binding OpenSpoolInfoCommand}" CommandParameter="2" Visibility="Collapsed" />
@@ -84,10 +84,41 @@
                             </Style.Triggers>
                         </Style>
                     </dxe:ButtonEdit.Style>
-                    <dxe:ButtonInfo Content="..." ToolTip="ВЫбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="3"/>
+                    <dxe:ButtonInfo Content="..." ToolTip="Выбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="3"/>
                     <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="3"/>
                     <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="3"/>
                     <dxe:ButtonInfo Content="i" ToolTip="Открыть информацию по рулону" Command="{Binding OpenSpoolInfoCommand}" CommandParameter="3" Visibility="Collapsed"/>
+                </dxe:ButtonEdit>
+            </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Раскат 4" LabelPosition="Top" Visibility="{Binding Unwinder4Visible, Converter={StaticResource BooleanToVisibility}}">
+                <dxlc:LayoutItem.Style>
+                    <Style TargetType="{x:Type dxlc:LayoutItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Unwinder4Visible}" Value="False">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </dxlc:LayoutItem.Style>
+                <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding Unwinder4Nomenclature}" ToolTip="{Binding Unwinder4Nomenclature}" IsReadOnly="True" IsTextEditable="False"
+                                Foreground="White" FontSize="16">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenSpoolInfoCommand}" CommandParameter="4"/>
+                    </dxmvvm:Interaction.Behaviors>
+                    <dxe:ButtonEdit.Style>
+                        <Style TargetType="{x:Type dxe:ButtonEdit}">
+                            <Setter Property="Background" Value="Red"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Unwinder4Active}" Value="True">
+                                    <Setter Property="Background" Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </dxe:ButtonEdit.Style>
+                    <dxe:ButtonInfo Content="..." ToolTip="Выбор рулона" Command="{Binding ChooseSpoolCommand}" CommandParameter="4"/>
+                    <dxe:ButtonInfo GlyphKind="Cancel" ToolTip="Удалить" Command="{Binding DeleteSpoolCommand}" CommandParameter="4"/>
+                    <dxe:ButtonInfo Content="V" ToolTip="Смена активности раската" Command="{Binding ChangeUnwinderActiveCommand}" CommandParameter="4"/>
+                    <dxe:ButtonInfo Content="i" ToolTip="Открыть информацию по рулону" Command="{Binding OpenSpoolInfoCommand}" CommandParameter="4" Visibility="Collapsed"/>
                 </dxe:ButtonEdit>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>
