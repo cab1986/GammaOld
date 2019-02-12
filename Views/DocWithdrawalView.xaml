@@ -58,7 +58,22 @@
                         </dxg:GridControl>
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="Материалы">
-                        
+                        <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}" MaxHeight="2000">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AutoWidth="True" />
+                            </dxg:GridControl.View>
+                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False"/>
+                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во"/>
+                            <dxg:GridColumn FieldName="MeasureUnit" Header="Ед. изм." AllowEditing="False"/>
+                        </dxg:GridControl>
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="Списано на производство:">
+                        <dxg:GridControl ItemsSource="{Binding ProductWithdrawals}" MaxHeight="2000">
+                            <dxg:GridControl.View>
+                                <dxg:TableView AutoWidth="True" />
+                            </dxg:GridControl.View>
+                            <dxg:GridColumn FieldName="Number" Header="Номенклатура" AllowEditing="False"/>
+                        </dxg:GridControl>
                     </dx:DXTabItem>
                 </dx:DXTabControl>
             </dxlc:LayoutItem>

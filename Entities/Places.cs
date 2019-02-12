@@ -53,6 +53,7 @@ namespace Gamma.Entities
         public Nullable<bool> UseApplicator { get; set; }
         public string ApplicatorLabelPath { get; set; }
         public Nullable<bool> IsRobot { get; set; }
+        public bool IsWithdrawalMaterial { get; set; }
     
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }

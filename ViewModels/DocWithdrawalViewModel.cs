@@ -13,6 +13,7 @@ namespace Gamma.ViewModels
     {
         private ObservableCollection<WithdrawalProduct> _withdrawalProducts;
         private ObservableCollection<WithdrawalMaterial> _withdrawalMaterials;
+        private ObservableCollection<Products> _productWithdrawals;
 
         public DocWithdrawalViewModel(Guid docId)
         {
@@ -59,7 +60,9 @@ namespace Gamma.ViewModels
                         MeasureUnitID = wm.C1CNomenclature.C1CMeaureUnitStorage,
                         DocWithdrawalMaterialID = wm.DocWithdrawalMaterialID
                     }));
-
+                var docProductionIDs = gammaBase.DocWithdrawal.FirstOrDefault(dw => dw.DocID == docId).DocProduction.Select(x => x.DocID).ToList();
+                ProductWithdrawals = new ObservableCollection<Products>(
+                    gammaBase.Products.Where(x => x.DocProductionProducts.Any(dpp => docProductionIDs.Contains(dpp.DocID))));
             }
         }
 
@@ -90,6 +93,16 @@ namespace Gamma.ViewModels
             {
                 _withdrawalMaterials = value;
                 RaisePropertyChanged("WithdrawalMaterials");
+            }
+        }
+
+        public ObservableCollection<Products> ProductWithdrawals
+        {
+            get { return _productWithdrawals; }
+            set
+            {
+                _productWithdrawals = value;
+                RaisePropertyChanged("ProductWithdrawals");
             }
         }
 

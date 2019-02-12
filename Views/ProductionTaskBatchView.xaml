@@ -34,12 +34,15 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <ToolBar Grid.Row="0">
-            <Button Content="{Binding MakeProductionTaskActiveForPlaceText}" Command="{Binding MakeProductionTaskActiveForPlaceCommand}" FontSize="20" FontWeight="Bold" />
-            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProduct}"/>
+            <ToolBar.Resources>
+                <Style x:Key="{x:Static ToolBar.ButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" />
+            </ToolBar.Resources>
+            <Button Content="{Binding MakeProductionTaskActiveForPlaceText}" Command="{Binding MakeProductionTaskActiveForPlaceCommand}" FontSize="20" FontWeight="Bold" Background="LightSteelBlue"/>
+            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProduct}" Background="LightSteelBlue"/>
         </ToolBar>
         <ToolBar Grid.Row="0" HorizontalAlignment="Right" >
-            <Button Content="Напечатать групповую этикетку" Command="{Binding PrintGroupPackLabelCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}"/>
-            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}"/>
+            <Button Content="Напечатать групповую этикетку" Command="{Binding PrintGroupPackLabelCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue"/>
+            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue"/>
         </ToolBar>
         <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
             <dx:DXTabItem Header="Параметры задания">

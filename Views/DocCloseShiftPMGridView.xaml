@@ -11,7 +11,7 @@
         >
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <dx:DXTabControl>
-            <dx:DXTabItem Header="Материалы">
+            <dx:DXTabItem Header="Материалы" Height="22" Margin="0,0,0.164,-0.182" VerticalAlignment="Top" Visibility="{Binding Path=IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex, Mode=OneWayToSource}">
                 <dx:DXTabItem Header="Принято">
                 <dxb:BarManager>
@@ -25,6 +25,7 @@
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                         <dxmvvm:Interaction.Behaviors>
+                                            <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding MaterialRowUpdatedCommand}"/>
                                             <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
                                                EventName="RowUpdated">
                                                 <dxmvvm:EventToCommand.EventArgsConverter>
@@ -78,7 +79,7 @@
                                     </dxg:TableView>
                                 </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
+                                    <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
@@ -121,7 +122,7 @@
                                     </dxg:TableView>
                                 </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
+                                    <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
@@ -144,12 +145,21 @@
             </dx:DXTabItem>
                     <dx:DXTabItem Header="Использовано">
                         <dxb:BarManager>
-                            <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}">
+                            <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}">
                                 <dxg:GridControl.View>
-                                    <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False"/>
+                                    <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
+                                        <dxmvvm:Interaction.Behaviors>
+                                            <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
+                                               EventName="RowUpdated">
+                                                <dxmvvm:EventToCommand.EventArgsConverter>
+                                                    <dx:EventArgsToDataCellConverter/>
+                                                </dxmvvm:EventToCommand.EventArgsConverter>
+                                            </dxmvvm:EventToCommand>
+                                        </dxmvvm:Interaction.Behaviors>
+                                    </dxg:TableView>
                                 </dxg:GridControl.View>
                                 <dxg:GridControl.Columns>
-                                    <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="True">
+                                    <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="True" SortOrder="Ascending">
                                         <dxg:GridColumn.CellTemplate>
                                             <DataTemplate>
                                                 <dxe:ComboBoxEdit x:Name="PART_Editor"   
@@ -158,7 +168,16 @@
                                             </DataTemplate>
                                         </dxg:GridColumn.CellTemplate>
                                     </dxg:GridColumn>
-                                    <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="True" >
+                                    <dxg:GridColumn Header="На производство" FieldName="ProductionProductCharacteristicID" ReadOnly="{Binding IsReadOnly}">
+                                        <dxg:GridColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <dxe:ComboBoxEdit x:Name="PART_Editor"   
+                                                      DisplayMember="NomenclatureName" 
+                                                      ValueMember="CharacteristicID" ItemsSource="{Binding RowData.Row.AvailableProductionProducts}" />
+                                            </DataTemplate>
+                                        </dxg:GridColumn.CellTemplate>
+                                    </dxg:GridColumn>
+                                    <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="False" >
                                         <dxg:GridColumn.CellTemplate>
                                             <DataTemplate>
                                                 <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />

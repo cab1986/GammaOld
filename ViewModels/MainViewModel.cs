@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<EditDocComplectationMessage>(this, OpenDocComplectation);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
-            if (WorkSession.IsProductionPlace || WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse) // Если производственный передел
+            if (WorkSession.ShiftID != 0 && (WorkSession.IsProductionPlace || WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse)) // Если производственный передел
             {
                 var dialog = new ChoosePrintNameDialog();
                 dialog.ShowDialog();

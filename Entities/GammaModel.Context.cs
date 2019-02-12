@@ -150,6 +150,7 @@ namespace Gamma.Entities
         public virtual DbSet<RemainderTypes> RemainderTypes { get; set; }
         public virtual DbSet<vProductsCurrentStateInfo> vProductsCurrentStateInfo { get; set; }
         public virtual DbSet<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
+        public virtual DbSet<vProductionMaterials> vProductionMaterials { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1070,6 +1071,12 @@ namespace Gamma.Entities
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftUtilizationSpools_Result>("FillDocCloseShiftUtilizationSpools", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        [DbFunction("GammaEntities", "GetProductMaterials")]
+        public virtual IQueryable<GetProductMaterials_Result> GetProductMaterials()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetProductMaterials_Result>("[GammaEntities].[GetProductMaterials]()");
         }
     }
 }

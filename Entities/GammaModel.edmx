@@ -1010,6 +1010,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="UseApplicator" Type="bit" />
           <Property Name="ApplicatorLabelPath" Type="nvarchar" MaxLength="500" />
           <Property Name="IsRobot" Type="bit" />
+          <Property Name="IsWithdrawalMaterial" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PlaceZones">
           <Key>
@@ -1562,6 +1563,24 @@ warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a
           <Property Name="PlaceID" Type="int" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vProductionMaterials">
+          <Key>
+            <PropertyRef Name="ProductNomenclatureID" />
+            <PropertyRef Name="ProductPlaceID" />
+          </Key>
+          <Property Name="NomenclatureID" Type="uniqueidentifier" />
+          <Property Name="CharacteristicID" Type="uniqueidentifier" />
+          <Property Name="WithdrawByFact" Type="bit" />
+          <Property Name="MeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="MeasureUnit" Type="varchar" MaxLength="50" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ProductNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="ProductPlaceID" Type="int" Nullable="false" />
+          <Property Name="ProductNomenclatureName" Type="varchar" MaxLength="511" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -5163,6 +5182,20 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vPMSpoolsToGroupPack].[1CCharacteristicID] AS [1CCharacteristicID]
     FROM [dbo].[vPMSpoolsToGroupPack] AS [vPMSpoolsToGroupPack]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vProductionMaterials" EntityType="Self.vProductionMaterials" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vProductionMaterials].[NomenclatureID] AS [NomenclatureID], 
+    [vProductionMaterials].[CharacteristicID] AS [CharacteristicID], 
+    [vProductionMaterials].[WithdrawByFact] AS [WithdrawByFact], 
+    [vProductionMaterials].[MeasureUnitID] AS [MeasureUnitID], 
+    [vProductionMaterials].[MeasureUnit] AS [MeasureUnit], 
+    [vProductionMaterials].[Quantity] AS [Quantity], 
+    [vProductionMaterials].[ProductNomenclatureID] AS [ProductNomenclatureID], 
+    [vProductionMaterials].[ProductCharacteristicID] AS [ProductCharacteristicID], 
+    [vProductionMaterials].[ProductPlaceID] AS [ProductPlaceID], 
+    [vProductionMaterials].[ProductNomenclatureName] AS [ProductNomenclatureName]
+    FROM [dbo].[vProductionMaterials] AS [vProductionMaterials]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vProductionTaskBatches].[ProductionTaskBatchID] AS [ProductionTaskBatchID], 
@@ -8151,6 +8184,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductSpools" EntitySet="ProductSpools" />
             <End Role="SourceSpools" EntitySet="SourceSpools" />
           </AssociationSet>
+          <FunctionImport Name="GetProductMaterials" IsComposable="true" ReturnType="Collection(GammaModel.GetProductMaterials_Result)" />
+          <EntitySet Name="vProductionMaterials" EntityType="GammaModel.vProductionMaterials" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10024,6 +10059,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="LogEvents" Relationship="GammaModel.FK_LogEvents_Places" FromRole="Places" ToRole="LogEvents" />
           <NavigationProperty Name="PlaceRemotePrinters" Relationship="GammaModel.FK_PlaceRemotePrinters_Places" FromRole="Places" ToRole="PlaceRemotePrinters" />
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_Places" FromRole="Places" ToRole="Persons" />
+          <Property Name="IsWithdrawalMaterial" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -12422,6 +12458,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
           <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
           <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
         </ComplexType>
         <ComplexType Name="FillDocCloseShiftPMSpools_Result">
           <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
@@ -12586,6 +12623,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetProductMaterials_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+        </ComplexType>
+        <EntityType Name="vProductionMaterials">
+          <Key>
+            <PropertyRef Name="ProductNomenclatureID" />
+            <PropertyRef Name="ProductPlaceID" />
+          </Key>
+          <Property Name="NomenclatureID" Type="Guid" />
+          <Property Name="CharacteristicID" Type="Guid" />
+          <Property Name="WithdrawByFact" Type="Boolean" />
+          <Property Name="MeasureUnitID" Type="Guid" />
+          <Property Name="MeasureUnit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Decimal" Precision="18" Scale="5" />
+          <Property Name="ProductNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="ProductCharacteristicID" Type="Guid" />
+          <Property Name="ProductPlaceID" Type="Int32" Nullable="false" />
+          <Property Name="ProductNomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14055,6 +14116,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsWithdrawalMaterial" ColumnName="IsWithdrawalMaterial" />
                 <ScalarProperty Name="IsRobot" ColumnName="IsRobot" />
                 <ScalarProperty Name="ApplicatorLabelPath" ColumnName="ApplicatorLabelPath" />
                 <ScalarProperty Name="UseApplicator" ColumnName="UseApplicator" />
@@ -14754,6 +14816,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
                 <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -14826,6 +14889,22 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="vProductionMaterials">
+            <EntityTypeMapping TypeName="GammaModel.vProductionMaterials">
+              <MappingFragment StoreEntitySet="vProductionMaterials">
+                <ScalarProperty Name="ProductNomenclatureName" ColumnName="ProductNomenclatureName" />
+                <ScalarProperty Name="ProductPlaceID" ColumnName="ProductPlaceID" />
+                <ScalarProperty Name="ProductCharacteristicID" ColumnName="ProductCharacteristicID" />
+                <ScalarProperty Name="ProductNomenclatureID" ColumnName="ProductNomenclatureID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

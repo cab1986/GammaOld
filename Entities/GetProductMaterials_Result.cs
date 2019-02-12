@@ -11,7 +11,7 @@ namespace Gamma.Entities
 {
     using System;
     
-    public partial class FillDocCloseShiftPMMaterials_Result
+    public partial class GetProductMaterials_Result
     {
         public Nullable<System.Guid> NomenclatureID { get; set; }
         public Nullable<System.Guid> CharacteristicID { get; set; }
@@ -19,6 +19,5 @@ namespace Gamma.Entities
         public Nullable<System.Guid> MeasureUnitID { get; set; }
         public string MeasureUnit { get; set; }
         public Nullable<decimal> Quantity { get; set; }
-        public string NomenclatureName { get; set; }
     }
 }

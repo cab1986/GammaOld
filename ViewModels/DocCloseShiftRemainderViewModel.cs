@@ -8,6 +8,7 @@ using Gamma.Interfaces;
 using Gamma.Attributes;
 using System.Data.Entity;
 using Gamma.Entities;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -138,6 +139,11 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.First(d => d.DocID == itemID);
+                if ((DocCloseShiftRemainder != null | Quantity > 0) && (NomenclatureID == null || NomenclatureID == Guid.Empty || CharacteristicID == null || CharacteristicID == Guid.Empty))
+                {
+                    MessageBox.Show("Ошибка! Не заполнены номенклатура и/или характеристика переходящего остатка!", "Поля не заполнены", MessageBoxButton.OK,
+                   MessageBoxImage.Asterisk);
+                }
                 if (DocCloseShiftRemainder == null && Quantity > 0)
                 {
                     var productId = SqlGuidUtil.NewSequentialid();
