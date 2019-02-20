@@ -43,6 +43,9 @@
         <DataTemplate DataType="{x:Type vm:DocCloseShiftWarehouseGridViewModel}">
             <v:DocCloseShiftWarehouseGridView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftWithdrawalMaterialViewModel}">
+            <v:DocCloseShiftWithdrawalMaterialView />
+        </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>
                 <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>

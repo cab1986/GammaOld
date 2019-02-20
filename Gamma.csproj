@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>94</ApplicationRevision>
+    <ApplicationRevision>95</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -803,6 +803,7 @@
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\DocCloseShiftWithdrawalMaterial.cs" />
     <Compile Include="Models\DocComplectationListItem.cs" />
     <Compile Include="Models\DocInventarisation.cs" />
     <Compile Include="Models\DocWithdrawal.cs" />
@@ -899,6 +900,7 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftWithdrawalMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWarehouseGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftBalerViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftConvertingGridViewModel.cs" />
@@ -980,6 +982,9 @@
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftWithdrawalMaterialView.xaml.cs">
+      <DependentUpon>DocCloseShiftWithdrawalMaterialView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftWarehouseGridView.xaml.cs">
       <DependentUpon>DocCloseShiftWarehouseGridView.xaml</DependentUpon>
@@ -1210,6 +1215,10 @@
     <Page Include="Views\DocBrokeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftWithdrawalMaterialView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocCloseShiftWarehouseGridView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1577,7 +1586,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

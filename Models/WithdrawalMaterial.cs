@@ -272,7 +272,7 @@ namespace Gamma.Models
                         NomenclatureID = x.ProductNomenclatureID,
                         CharacteristicID = (Guid)x.ProductCharacteristicID,
                         NomenclatureName = x.ProductNomenclatureName
-                    }).ToList();
+                    }).Distinct().ToList();
                 }
                 if (AvailableProductionProducts == null || AvailableProductionProducts?.Count == 0)
                 {
