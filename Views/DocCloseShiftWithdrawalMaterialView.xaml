@@ -16,7 +16,7 @@
              d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftWithdrawalMaterialViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex, Mode=OneWayToSource}">
-            <dx:DXTabItem Header="Принято">
+            <dx:DXTabItem Header="{Binding NameWithdrawalMaterialIn}" Visibility="{Binding IsWithdrawalMaterialIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
                     <dxb:BarManager.Bars>
                         <dxb:Bar>
@@ -60,7 +60,7 @@
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Отдано">
+            <dx:DXTabItem Header="Отдано" Visibility="{Binding IsWithdrawalMaterialOut, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
                     <dxb:BarManager.Bars>
                         <dxb:Bar>
@@ -103,7 +103,7 @@
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Передано след.смене">
+            <dx:DXTabItem Header="Передано след.смене" Visibility="{Binding IsWithdrawalMaterialRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
                     <dxb:BarManager.Bars>
                         <dxb:Bar>
@@ -146,7 +146,7 @@
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Использовано">
+            <dx:DXTabItem Header="Использовано" Visibility="{Binding IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
                     <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True">
                         <dxg:GridControl.View>

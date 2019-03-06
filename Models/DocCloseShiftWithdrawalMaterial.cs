@@ -26,6 +26,12 @@ namespace Gamma.Models
 
         private GammaEntities GammaBase { get; }
 
+        public class Product
+        {
+            public Guid ProductID;
+            public Guid CharacteristicID;
+        }
+
         private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();
 
         public ItemsChangeObservableCollection<WithdrawalMaterial> WithdrawalMaterials
@@ -120,6 +126,7 @@ namespace Gamma.Models
                 }).OrderBy(d => d.NomenclatureName));
             //Получение списка списанных материалов
             WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(GammaBase.DocWithdrawalMaterials
+                //.Join(GammaBase.Docs, dm => dm.DocWithdrawal.Docs.DocID, dw => dw.DocCloseShift.DocID, (dm, dw) => new { })
                 .Where(dm => dm.DocWithdrawal.DocCloseShift.FirstOrDefault().DocID == docId)
                 .Select(d => new WithdrawalMaterial()
                 {
@@ -147,7 +154,7 @@ namespace Gamma.Models
             ProductionProductCharacteristicIDs = productionProductCharacteristicIDs;
             var WithdrawalMaterialsLoad =
                     new ItemsChangeObservableCollection<WithdrawalMaterial>(
-                        GammaBase.FillDocCloseShiftPMMaterials(PlaceID, ShiftID, CloseDate)
+                        GammaBase.FillDocCloseShiftMaterials(PlaceID, ShiftID, CloseDate)
                         //.Take(0)    
                         .Select(m => new WithdrawalMaterial()
                         {

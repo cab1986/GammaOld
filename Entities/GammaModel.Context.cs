@@ -151,6 +151,7 @@ namespace Gamma.Entities
         public virtual DbSet<vProductsCurrentStateInfo> vProductsCurrentStateInfo { get; set; }
         public virtual DbSet<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
         public virtual DbSet<vProductionMaterials> vProductionMaterials { get; set; }
+        public virtual DbSet<PlaceWithdrawalMaterialTypes> PlaceWithdrawalMaterialTypes { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1077,6 +1078,23 @@ namespace Gamma.Entities
         public virtual IQueryable<GetProductMaterials_Result> GetProductMaterials()
         {
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetProductMaterials_Result>("[GammaEntities].[GetProductMaterials]()");
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftMaterials_Result> FillDocCloseShiftMaterials(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterials_Result>("FillDocCloseShiftMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }
 }

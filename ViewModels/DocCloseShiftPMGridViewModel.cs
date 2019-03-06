@@ -49,7 +49,7 @@ namespace Gamma.ViewModels
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedUtilizationSpool != null);
 
-            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsWithdrawalMaterial).First();
+            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
         }
 
@@ -76,8 +76,13 @@ namespace Gamma.ViewModels
                 //Получение списка материалов
                 //productionProductCharacteristicIDs = new List<Guid>(Spools
                 //    .Select(p => p.CharacteristicID).Distinct().ToList());
-                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsWithdrawalMaterial).First();
-                WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, Spools, IsConfirmed, productionProductCharacteristicIDs);
+                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+                var spools = new List<DocCloseShiftWithdrawalMaterial.Product>(Spools.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
+                {
+                    ProductID = x.ProductID,
+                    CharacteristicID = x.CharacteristicID
+                })).ToList();
+                WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, spools, IsConfirmed, productionProductCharacteristicIDs);
                 
                 BeginSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
                     //.Include(dr => dr.DocCloseShifts)
@@ -645,8 +650,8 @@ namespace Gamma.ViewModels
                 .Include(d => d.DocCloseShiftWastes).Include(d => d.DocCloseShiftNomenclatureRests).Include(d => d.DocCloseShiftUtilizationProducts)
                 .First(d => d.DocID == docId);
                 if (docCloseShift.DocCloseShiftDocs == null) docCloseShift.DocCloseShiftDocs = new List<Docs>();
-                if (docCloseShift.DocCloseShiftWithdrawals == null)
-                    docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
+                //if (docCloseShift.DocCloseShiftWithdrawals == null)
+                //    docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
                 if (docCloseShift.DocCloseShiftWastes == null)
                     docCloseShift.DocCloseShiftWastes = new List<DocCloseShiftWastes>();
                 if (docCloseShift.DocCloseShiftNomenclatureRests == null)
@@ -729,6 +734,11 @@ namespace Gamma.ViewModels
                             ProductID = utilizationSpool.ProductID,
                             Quantity = utilizationSpool.Weight
                         });
+                        var decisionProduct = gammaBase.DocBrokeDecisionProducts.Where(d => d.ProductID == utilizationSpool.ProductID && d.Quantity * 1000 == utilizationSpool.Weight).OrderByDescending(d => d.DocBroke.Docs.Date).FirstOrDefault();
+                        if (!(decisionProduct?.DecisionApplied == true))
+                        {
+                            decisionProduct.DecisionApplied = true;
+                        }
                     }
                 gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);
                 if (InSpools != null)

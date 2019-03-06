@@ -12,6 +12,7 @@ using System.Windows;
 using Gamma.Models;
 using DevExpress.Mvvm;
 using Gamma.Common;
+using System.Collections;
 
 namespace Gamma.ViewModels
 {
@@ -43,16 +44,17 @@ namespace Gamma.ViewModels
 
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
+            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
         }
 
-        public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, ObservableCollection<PaperBase> spools, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null)
+        public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null)
         {
             GammaBase = gammaDb ?? DB.GammaDb;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
 
-            Spools = spools;
+            ProductionProducts = products;
             IsConfirmed = isConfirmed;
 
             AddWithdrawalMaterialInCommand = new DelegateCommand(AddWithdrawalMaterialIn, () => !IsReadOnly);
@@ -66,7 +68,7 @@ namespace Gamma.ViewModels
             
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
             DocCloseShiftWithdrawalMaterials.LoadWithdrawalMaterials(docID, productionProductCharacteristicIDs);
-           
+            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
         }
 
         private int PlaceID;
@@ -96,7 +98,44 @@ namespace Gamma.ViewModels
             //    Console.WriteLine("OnCellValueChanged");
         }
 
-        private ObservableCollection<PaperBase> Spools { get; set; }
+        
+        private List<DocCloseShiftWithdrawalMaterial.Product> ProductionProducts { get; set; }
+
+        public bool IsWithdrawalMaterialIn { get; set; }
+        public string NameWithdrawalMaterialIn { get; set; }
+        public bool IsWithdrawalMaterialOut { get; set; }
+        public bool IsWithdrawalMaterialRemainder { get; set; }
+        public bool IsWithdrawalMaterial { get; set; }
+
+        private int _placeWithdrawalMaterialTypeID;
+        public int PlaceWithdrawalMaterialTypeID
+        {
+            get { return _placeWithdrawalMaterialTypeID; }
+            set
+            {
+                _placeWithdrawalMaterialTypeID = value;
+                if (value == 1)
+                {
+                    IsWithdrawalMaterialIn = true;
+                    NameWithdrawalMaterialIn = "Использовано";
+                    IsWithdrawalMaterialOut = false;
+                    IsWithdrawalMaterialRemainder = false;
+                    IsWithdrawalMaterial = false;
+                    if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Count()>0 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsIn?.Count() == 0)
+                    {
+                        DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsIn = DocCloseShiftWithdrawalMaterials.WithdrawalMaterials;
+                    }
+                }
+                else if (value == 2)
+                {
+                    IsWithdrawalMaterialIn = true;
+                    NameWithdrawalMaterialIn = "Принято";
+                    IsWithdrawalMaterialOut = true;
+                    IsWithdrawalMaterialRemainder = true;
+                    IsWithdrawalMaterial = true;
+                }
+            }
+        }
 
         private int _selectedMaterialTabIndex;
         public int SelectedMaterialTabIndex
@@ -133,7 +172,7 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterialIn()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGB);
+            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
         }
 
         public WithdrawalMaterial SelectedWithdrawalMaterialOut { get; set; }
@@ -147,7 +186,7 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterialOut()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGB);
+            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
         }
 
         public WithdrawalMaterial SelectedWithdrawalMaterialRemainder { get; set; }
@@ -161,7 +200,7 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterialRemainder()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGB);
+            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
         }
 
         private void SetMaterialNomenclature(Nomenclature1CMessage msg)
@@ -192,7 +231,7 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel(Guid docId)
         {
-            if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
+            if (PlaceWithdrawalMaterialTypeID == 2 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
             {
                 MessageBox.Show("Внимание! Есть использованные материалы, которые не распределены на произведенную за смену продукцию!", "Ошибка сохранения",
                         MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -292,7 +331,7 @@ namespace Gamma.ViewModels
                             }
                         );
                     var docWithdrawal = docCloseShift.DocCloseShiftWithdrawals.Where(x => x.DocID == docWithdrawalId).ToList();
-                    var spoolIDs = Spools.Where(x => x.CharacteristicID == productionProductCharacteristicID).Select(x => x.ProductID).ToList();
+                    var spoolIDs = ProductionProducts.Where(x => x.CharacteristicID == productionProductCharacteristicID).Select(x => x.ProductID).ToList();
                     if (spoolIDs != null)
                     {
                         var docProductionIDs = gammaBase.DocProductionProducts.Where(d => spoolIDs.Contains(d.ProductID)).Select(d => d.DocID).Distinct().ToList();

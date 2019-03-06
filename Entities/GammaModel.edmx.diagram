@@ -357,6 +357,8 @@
         <AssociationConnector Association="GammaModel.FK_Persons_Users" />
         <AssociationConnector Association="GammaModel.FK_SourceSpools_ProductSpools3" />
         <EntityTypeShape EntityType="GammaModel.vProductionMaterials" Width="1.5" PointX="16.375" PointY="0.75" />
+        <EntityTypeShape EntityType="GammaModel.PlaceWithdrawalMaterialTypes" Width="1.5" PointX="13.375" PointY="16.875" />
+        <AssociationConnector Association="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

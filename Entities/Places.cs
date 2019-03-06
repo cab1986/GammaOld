@@ -54,6 +54,7 @@ namespace Gamma.Entities
         public string ApplicatorLabelPath { get; set; }
         public Nullable<bool> IsRobot { get; set; }
         public bool IsWithdrawalMaterial { get; set; }
+        public int PlaceWithdrawalMaterialTypeID { get; set; }
     
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }
@@ -94,5 +95,6 @@ namespace Gamma.Entities
         public virtual ICollection<PlaceRemotePrinters> PlaceRemotePrinters { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Persons> Persons { get; set; }
+        public virtual PlaceWithdrawalMaterialTypes PlaceWithdrawalMaterialTypes { get; set; }
     }
 }

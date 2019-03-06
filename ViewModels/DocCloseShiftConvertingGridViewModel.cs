@@ -25,8 +25,11 @@ namespace Gamma.ViewModels
             PlaceID = WorkSession.PlaceID;
             ShiftID = WorkSession.ShiftID;
             CloseDate = DB.CurrentDateTime;
-            AddWithdrawalMaterialCommand = new DelegateCommand(AddWithdrawalMaterial, () => !IsReadOnly);
+            /*AddWithdrawalMaterialCommand = new DelegateCommand(AddWithdrawalMaterial, () => !IsReadOnly);
             DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
+            */
+            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+            WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
         }
 
         public DocCloseShiftConvertingGridViewModel(Guid docId) : this()
@@ -49,30 +52,39 @@ namespace Gamma.ViewModels
                 ShiftID = doc.ShiftID ?? 0;
                 CloseDate = doc.Date;
                 IsConfirmed = doc.IsConfirmed;
+                DocId = docId;
                 //Получение списка списанных материалов
-                WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(gammaBase.DocWithdrawalMaterials
-                    .Where(dm => dm.DocWithdrawal.DocCloseShift.FirstOrDefault().DocID == docId)
-                    .Select(d => new WithdrawalMaterial
-                    {
-                        CharacteristicID = d.C1CCharacteristicID,
-                        NomenclatureID = d.C1CNomenclatureID,
-                        NomenclatureName = d.C1CNomenclature.Name,
-                        DocWithdrawalMaterialID = d.DocWithdrawalMaterialID,
-                        Quantity = d.Quantity,
-                        BaseQuantity = d.Quantity,
-                        MeasureUnit = d.C1CNomenclature.C1CMeasureUnitStorage.Name,
-                        MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    /*                AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>()
-                                    {
-                                        new WithdrawalMaterial.NomenclatureAnalog()
-                                        {
-                                            NomenclatureID = d.C1CNomenclatureID,
-                                            IsMarked = d.C1CNomenclature.IsArchive ?? false
-                                        }
-                                    },
-                    */
-                        QuantityIsReadOnly = !d.WithdrawByFact ?? true
-                    }));
+                //WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(gammaBase.DocWithdrawalMaterials
+                //    .Where(dm => dm.DocWithdrawal.DocCloseShift.FirstOrDefault().DocID == docId)
+                //    .Select(d => new WithdrawalMaterial
+                //    {
+                //        CharacteristicID = d.C1CCharacteristicID,
+                //        NomenclatureID = d.C1CNomenclatureID,
+                //        NomenclatureName = d.C1CNomenclature.Name,
+                //        DocWithdrawalMaterialID = d.DocWithdrawalMaterialID,
+                //        Quantity = d.Quantity,
+                //        BaseQuantity = d.Quantity,
+                //        MeasureUnit = d.C1CNomenclature.C1CMeasureUnitStorage.Name,
+                //        MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                //    /*                AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>()
+                //                    {
+                //                        new WithdrawalMaterial.NomenclatureAnalog()
+                //                        {
+                //                            NomenclatureID = d.C1CNomenclatureID,
+                //                            IsMarked = d.C1CNomenclature.IsArchive ?? false
+                //                        }
+                //                    },
+                //    */
+                //        QuantityIsReadOnly = !d.WithdrawByFact ?? true
+                //    }));
+                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+                var pallets = new List<DocCloseShiftWithdrawalMaterial.Product>(Pallets.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
+                {
+                    ProductID = x.ProductId,
+                    CharacteristicID = x.CharacteristicID
+                })).ToList();
+                WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, pallets, IsConfirmed, productionProductCharacteristicIDs);
+
                 // Получение количества образцов
                 var samples = new ObservableCollection<Sample>(gammaBase.DocCloseShiftSamples.Where(ds => ds.DocID == docId)
                     .Select(ds => new Sample
@@ -124,6 +136,20 @@ namespace Gamma.ViewModels
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
 
+        private DocCloseShiftWithdrawalMaterialViewModel _withdrawalMaterialsGrid;
+        public DocCloseShiftWithdrawalMaterialViewModel WithdrawalMaterialsGrid
+        {
+            get
+            {
+                return _withdrawalMaterialsGrid;
+            }
+            set
+            {
+                _withdrawalMaterialsGrid = value;
+                //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
+            }
+        }
+
         public void FillGrid()
         {
             UIServices.SetBusyState();
@@ -167,27 +193,29 @@ namespace Gamma.ViewModels
                         Quantity = 0,
                         NomenclatureName = p.NomenclatureName,
                     }).Distinct());
-                WithdrawalMaterials =
-                    new ItemsChangeObservableCollection<WithdrawalMaterial>(
-                        gammaBase.FillDocCloseShiftConvertingMaterials(PlaceID, ShiftID, CloseDate)
-                            .Select(m => new WithdrawalMaterial()
-                            {
-                                NomenclatureID = (Guid)m.NomenclatureID,
-                                CharacteristicID = m.CharacteristicID,
-                                QuantityIsReadOnly = !m.WithdrawByFact ?? true,
-                                Quantity = m.Quantity ?? 0,
-                                BaseQuantity = m.Quantity ?? 0,
-                                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
-                            /*                          AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>
-                                                      {
-                                                          new WithdrawalMaterial.NomenclatureAnalog()
-                                                          {
-                                                              NomenclatureID = (Guid) m.NomenclatureID
-                                                          }
-                                                      },*/
-                                MeasureUnit = m.MeasureUnit,
-                                MeasureUnitID = m.MeasureUnitID
-                            }));
+
+                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs);
+                //WithdrawalMaterials =
+                //    new ItemsChangeObservableCollection<WithdrawalMaterial>(
+                //        gammaBase.FillDocCloseShiftConvertingMaterials(PlaceID, ShiftID, CloseDate)
+                //            .Select(m => new WithdrawalMaterial()
+                //            {
+                //                NomenclatureID = (Guid)m.NomenclatureID,
+                //                CharacteristicID = m.CharacteristicID,
+                //                QuantityIsReadOnly = !m.WithdrawByFact ?? true,
+                //                Quantity = m.Quantity ?? 0,
+                //                BaseQuantity = m.Quantity ?? 0,
+                //                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                //            /*                          AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>
+                //                                      {
+                //                                          new WithdrawalMaterial.NomenclatureAnalog()
+                //                                          {
+                //                                              NomenclatureID = (Guid) m.NomenclatureID
+                //                                          }
+                //                                      },*/
+                //                MeasureUnit = m.MeasureUnit,
+                //                MeasureUnitID = m.MeasureUnitID
+                //            }));
                 var wastes = new ItemsChangeObservableCollection<Sample>(
                     gammaBase.FillDocCloseShiftConvertingWastes(PlaceID, ShiftID, CloseDate)
                     .Select(w => new Sample
@@ -243,7 +271,7 @@ namespace Gamma.ViewModels
             return dict;
         }
 
-        public DelegateCommand AddWithdrawalMaterialCommand { get; private set; }
+        /*public DelegateCommand AddWithdrawalMaterialCommand { get; private set; }
         public DelegateCommand DeleteWithdrawalMaterialCommand { get; private set; }
 
         private void DeleteWithdrawalMaterial()
@@ -279,16 +307,25 @@ namespace Gamma.ViewModels
                 });
             }
             
-        }
+        }*/
 
+        private Guid DocId { get; set; }
         private int PlaceID { get; set; }
         private int ShiftID { get; set; }
         private DateTime CloseDate { get; set; }
+
+        public bool IsWithdrawalMaterial { get; set; }
+
+        private List<Guid> productionProductCharacteristicIDs { get; set; }
+
         public void ClearGrid()
         {
             Pallets?.Clear();
             DocCloseDocIds?.Clear();
-            WithdrawalMaterials?.Clear();
+
+            //WithdrawalMaterials?.Clear();
+            //WithdrawalMaterialsGrid?.Clear();
+
             Samples?.Clear();
             IsChanged = true;
             Wastes?.Clear();
@@ -296,7 +333,7 @@ namespace Gamma.ViewModels
 //            gammaBase.SaveChanges();           
         }
 
-        private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();
+        /*private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();
 
         public ItemsChangeObservableCollection<WithdrawalMaterial> WithdrawalMaterials
         {
@@ -306,7 +343,7 @@ namespace Gamma.ViewModels
                 _withdrawalMaterials = value;
                 RaisePropertiesChanged("WithdrawalMaterials");
             }
-        }
+        }*/
 
         private ObservableCollection<Sample> _samples = new ObservableCollection<Sample>();
 
@@ -352,6 +389,8 @@ namespace Gamma.ViewModels
             set
             {
                 _pallets = value;
+                productionProductCharacteristicIDs = new List<Guid>(_pallets
+                    .Select(p => p.CharacteristicID).Distinct().ToList());
                 RaisePropertiesChanged("Pallets");
             }
         }
@@ -368,16 +407,16 @@ namespace Gamma.ViewModels
                 .Include(d => d.DocCloseShiftSamples).Include(d => d.DocCloseShiftWastes).Include(d => d.DocCloseShiftNomenclatureRests)
                 .First(d => d.DocID == docId);
                 if (docCloseShift.DocCloseShiftDocs == null) docCloseShift.DocCloseShiftDocs = new List<Docs>();
-                Guid docWithdrawalId;
-                if (docCloseShift.DocCloseShiftWithdrawals == null)
-                    docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
+                //  Guid docWithdrawalId;
+                //if (docCloseShift.DocCloseShiftWithdrawals == null)
+                //    docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
                 if (docCloseShift.DocCloseShiftSamples == null)
                     docCloseShift.DocCloseShiftSamples = new List<DocCloseShiftSamples>();
                 if (docCloseShift.DocCloseShiftWastes == null)
                     docCloseShift.DocCloseShiftWastes = new List<DocCloseShiftWastes>();
                 if (docCloseShift.DocCloseShiftNomenclatureRests == null)
                     docCloseShift.DocCloseShiftNomenclatureRests = new List<DocCloseShiftNomenclatureRests>();
-                if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
+                /*if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
                     {
                         docWithdrawalId = SqlGuidUtil.NewSequentialid();
                         docCloseShift.DocCloseShiftWithdrawals.Add
@@ -399,7 +438,7 @@ namespace Gamma.ViewModels
                                 }
                             }
                         );
-                    }
+                    }*/
                 gammaBase.DocCloseShiftSamples.RemoveRange(docCloseShift.DocCloseShiftSamples);
                 if (Samples != null)
                     foreach (var sample in Samples)
@@ -455,6 +494,8 @@ namespace Gamma.ViewModels
                         docCloseShift.DocCloseShiftDocs.Add(gammaBase.Docs.First(d => d.DocID == id));
                     }
                 }
+
+                /*
                 gammaBase.DocWithdrawalMaterials.RemoveRange(
                     docCloseShift.DocCloseShiftWithdrawals.FirstOrDefault()?.DocWithdrawalMaterials);
                 docWithdrawalId = docCloseShift.DocCloseShiftWithdrawals.First().DocID;
@@ -469,7 +510,9 @@ namespace Gamma.ViewModels
                         Quantity = material.Quantity,
                         WithdrawByFact = !material.QuantityIsReadOnly
                     });
-                }
+                }*/
+                WithdrawalMaterialsGrid?.SaveToModel(docId);
+
                 gammaBase.SaveChanges();
             }
             return true;

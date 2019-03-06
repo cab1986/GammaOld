@@ -1011,6 +1011,14 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="ApplicatorLabelPath" Type="nvarchar" MaxLength="500" />
           <Property Name="IsRobot" Type="bit" />
           <Property Name="IsWithdrawalMaterial" Type="bit" Nullable="false" />
+          <Property Name="PlaceWithdrawalMaterialTypeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PlaceWithdrawalMaterialTypes">
+          <Key>
+            <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+          </Key>
+          <Property Name="PlaceWithdrawalMaterialTypeID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PlaceZones">
           <Key>
@@ -1581,6 +1589,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a
           <Property Name="ProductCharacteristicID" Type="uniqueidentifier" />
           <Property Name="ProductPlaceID" Type="int" Nullable="false" />
           <Property Name="ProductNomenclatureName" Type="varchar" MaxLength="511" />
+          <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -3925,6 +3934,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Places_PlaceWithdrawalMaterialTypes">
+          <End Role="PlaceWithdrawalMaterialTypes" Type="Self.PlaceWithdrawalMaterialTypes" Multiplicity="1" />
+          <End Role="Places" Type="Self.Places" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlaceWithdrawalMaterialTypes">
+              <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+            </Principal>
+            <Dependent Role="Places">
+              <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlaceZones_Places">
           <End Role="Places" Type="Self.Places" Multiplicity="1" />
           <End Role="PlaceZones" Type="Self.PlaceZones" Multiplicity="*" />
@@ -4594,6 +4615,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftMovementProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -4960,6 +4986,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceRemotePrinters" EntityType="Self.PlaceRemotePrinters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Places" EntityType="Self.Places" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlaceWithdrawalMaterialTypes" EntityType="Self.PlaceWithdrawalMaterialTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceZones" EntityType="Self.PlaceZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PostTypes" EntityType="Self.PostTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProcessModels" EntityType="Self.ProcessModels" Schema="dbo" store:Type="Tables" />
@@ -5193,7 +5220,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductionMaterials].[ProductNomenclatureID] AS [ProductNomenclatureID], 
     [vProductionMaterials].[ProductCharacteristicID] AS [ProductCharacteristicID], 
     [vProductionMaterials].[ProductPlaceID] AS [ProductPlaceID], 
-    [vProductionMaterials].[ProductNomenclatureName] AS [ProductNomenclatureName]
+    [vProductionMaterials].[ProductNomenclatureName] AS [ProductNomenclatureName], 
+    [vProductionMaterials].[NomenclatureName] AS [NomenclatureName]
     FROM [dbo].[vProductionMaterials] AS [vProductionMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -6008,6 +6036,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </AssociationSet>
           <AssociationSet Name="FK_Places_PlaceGroups1" Association="Self.FK_Places_PlaceGroups1">
             <End Role="PlaceGroups" EntitySet="PlaceGroups" />
+            <End Role="Places" EntitySet="Places" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Places_PlaceWithdrawalMaterialTypes" Association="Self.FK_Places_PlaceWithdrawalMaterialTypes">
+            <End Role="PlaceWithdrawalMaterialTypes" EntitySet="PlaceWithdrawalMaterialTypes" />
             <End Role="Places" EntitySet="Places" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaceZones_Places" Association="Self.FK_PlaceZones_Places">
@@ -8186,6 +8218,16 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </AssociationSet>
           <FunctionImport Name="GetProductMaterials" IsComposable="true" ReturnType="Collection(GammaModel.GetProductMaterials_Result)" />
           <EntitySet Name="vProductionMaterials" EntityType="GammaModel.vProductionMaterials" />
+          <FunctionImport Name="FillDocCloseShiftMaterials" ReturnType="Collection(GammaModel.FillDocCloseShiftMaterials_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="PlaceWithdrawalMaterialTypes" EntityType="GammaModel.PlaceWithdrawalMaterialTypes" />
+          <AssociationSet Name="FK_Places_PlaceWithdrawalMaterialTypes" Association="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes">
+            <End Role="PlaceWithdrawalMaterialTypes" EntitySet="PlaceWithdrawalMaterialTypes" />
+            <End Role="Places" EntitySet="Places" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10060,6 +10102,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="PlaceRemotePrinters" Relationship="GammaModel.FK_PlaceRemotePrinters_Places" FromRole="Places" ToRole="PlaceRemotePrinters" />
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_Persons_Places" FromRole="Places" ToRole="Persons" />
           <Property Name="IsWithdrawalMaterial" Type="Boolean" Nullable="false" />
+          <Property Name="PlaceWithdrawalMaterialTypeID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PlaceWithdrawalMaterialTypes" Relationship="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes" FromRole="Places" ToRole="PlaceWithdrawalMaterialTypes" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -12646,7 +12690,37 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductCharacteristicID" Type="Guid" />
           <Property Name="ProductPlaceID" Type="Int32" Nullable="false" />
           <Property Name="ProductNomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="FillDocCloseShiftMaterials_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+        </ComplexType>
+        <EntityType Name="PlaceWithdrawalMaterialTypes">
+          <Key>
+            <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+          </Key>
+          <Property Name="PlaceWithdrawalMaterialTypeID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Places" Relationship="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes" FromRole="PlaceWithdrawalMaterialTypes" ToRole="Places" />
+        </EntityType>
+        <Association Name="FK_Places_PlaceWithdrawalMaterialTypes">
+          <End Type="GammaModel.PlaceWithdrawalMaterialTypes" Role="PlaceWithdrawalMaterialTypes" Multiplicity="1" />
+          <End Type="GammaModel.Places" Role="Places" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlaceWithdrawalMaterialTypes">
+              <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+            </Principal>
+            <Dependent Role="Places">
+              <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14116,6 +14190,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="PlaceWithdrawalMaterialTypeID" ColumnName="PlaceWithdrawalMaterialTypeID" />
                 <ScalarProperty Name="IsWithdrawalMaterial" ColumnName="IsWithdrawalMaterial" />
                 <ScalarProperty Name="IsRobot" ColumnName="IsRobot" />
                 <ScalarProperty Name="ApplicatorLabelPath" ColumnName="ApplicatorLabelPath" />
@@ -14892,6 +14967,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductionMaterials">
             <EntityTypeMapping TypeName="GammaModel.vProductionMaterials">
               <MappingFragment StoreEntitySet="vProductionMaterials">
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="ProductNomenclatureName" ColumnName="ProductNomenclatureName" />
                 <ScalarProperty Name="ProductPlaceID" ColumnName="ProductPlaceID" />
                 <ScalarProperty Name="ProductCharacteristicID" ColumnName="ProductCharacteristicID" />
@@ -14902,6 +14978,27 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
                 <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
                 <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterials" FunctionName="GammaDBModel.FillDocCloseShiftMaterials">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterials_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="PlaceWithdrawalMaterialTypes">
+            <EntityTypeMapping TypeName="GammaModel.PlaceWithdrawalMaterialTypes">
+              <MappingFragment StoreEntitySet="PlaceWithdrawalMaterialTypes">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PlaceWithdrawalMaterialTypeID" ColumnName="PlaceWithdrawalMaterialTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -8,6 +8,7 @@
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              xmlns:common="clr-namespace:Gamma.Common"
              xmlns:models="clr-namespace:Gamma.Models"
@@ -17,39 +18,10 @@
             d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftConvertingGridViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <dx:DXTabControl>
-            <dx:DXTabItem Header="Использованные материалы">
-                <dxb:BarManager>
-                    <dxb:BarManager.Bars>
-                        <dxb:Bar>
-                            <dxb:BarButtonItem Content="Добавить материал" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddWithdrawalMaterialCommand}"/>
-                            <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteWithdrawalMaterialCommand}"/>
-                        </dxb:Bar>
-                    </dxb:BarManager.Bars>
-                    <dxg:GridControl ItemsSource="{Binding WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}">
-                        <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False"/>
-                        </dxg:GridControl.View>
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:ComboBoxEdit x:Name="PART_Editor"   
-                                                      DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Количество" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Ед. изм." FieldName="MeasureUnit" Width="70" FixedWidth="True" ReadOnly="True"/>
-                        </dxg:GridControl.Columns>
-                    </dxg:GridControl>
-                </dxb:BarManager>
+            <dx:DXTabItem Header="Материалы" Height="22" Margin="0,0,0.164,-0.182" VerticalAlignment="Top" Visibility="{Binding Path=IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <dxlc:LayoutItem VerticalAlignment="Stretch">
+                    <ContentControl Content="{Binding WithdrawalMaterialsGrid}" />
+                </dxlc:LayoutItem>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Отобранные образцы">
                 <dxg:GridControl ItemsSource="{Binding Samples}">
