@@ -481,6 +481,40 @@ namespace Gamma.ViewModels
                             Quantity = waste.Quantity
                         });
                     }
+                gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);
+                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.InProducts != null)
+                    foreach (var spool in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.InProducts)
+                    {
+                        docCloseShift.DocCloseShiftMovementProducts.Add(new DocCloseShiftMovementProducts
+                        {
+                            DocID = docId,
+                            DocCloseShiftMovementProductID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = spool.ProductId,
+                            DocMovementID = spool.DocMovementId,
+                            Quantity = spool.Quantity,
+                            MovementPlaceName = spool.OutPlaceName,
+                            MovementPlaceZoneName = spool.OutPlaceZoneName,
+                            DateMovement = spool.OutDate,
+                            IsMovementIn = true
+                        });
+                    }
+                //gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);
+                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.OutProducts != null)
+                    foreach (var spool in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.OutProducts)
+                    {
+                        docCloseShift.DocCloseShiftMovementProducts.Add(new DocCloseShiftMovementProducts
+                        {
+                            DocID = docId,
+                            DocCloseShiftMovementProductID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = spool.ProductId,
+                            DocMovementID = spool.DocMovementId,
+                            Quantity = spool.Quantity,
+                            MovementPlaceName = spool.InPlaceName,
+                            MovementPlaceZoneName = spool.InPlaceZoneName,
+                            DateMovement = spool.InDate,
+                            IsMovementIn = false
+                        });
+                    }
                 if (IsChanged)
                 {
                     docCloseShift.DocCloseShiftDocs.Clear();

@@ -28,5 +28,10 @@ namespace Gamma.Entities
         public Nullable<bool> IsMovementIn { get; set; }
         public Nullable<bool> IsMovementOut { get; set; }
         public System.Guid DocMovementID { get; set; }
+        public System.Guid NomenclatureID { get; set; }
+        public Nullable<System.Guid> CharacteristicID { get; set; }
+        public string MeasureUnit { get; set; }
+        public Nullable<System.Guid> MeasureUnitID { get; set; }
+        public Nullable<byte> NomenclatureKindID { get; set; }
     }
 }

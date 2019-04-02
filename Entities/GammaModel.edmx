@@ -1584,12 +1584,12 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a
           <Property Name="WithdrawByFact" Type="bit" />
           <Property Name="MeasureUnitID" Type="uniqueidentifier" />
           <Property Name="MeasureUnit" Type="varchar" MaxLength="50" />
-          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ProductNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductCharacteristicID" Type="uniqueidentifier" />
           <Property Name="ProductPlaceID" Type="int" Nullable="false" />
           <Property Name="ProductNomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1683,6 +1683,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="IsConfirmed" Type="bit" Nullable="false" />
           <Property Name="IsWrittenOff" Type="bit" />
           <Property Name="State" Type="varchar" MaxLength="50" />
+          <Property Name="BaseMeasureUnitID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -5216,12 +5217,12 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductionMaterials].[WithdrawByFact] AS [WithdrawByFact], 
     [vProductionMaterials].[MeasureUnitID] AS [MeasureUnitID], 
     [vProductionMaterials].[MeasureUnit] AS [MeasureUnit], 
-    [vProductionMaterials].[Quantity] AS [Quantity], 
     [vProductionMaterials].[ProductNomenclatureID] AS [ProductNomenclatureID], 
     [vProductionMaterials].[ProductCharacteristicID] AS [ProductCharacteristicID], 
     [vProductionMaterials].[ProductPlaceID] AS [ProductPlaceID], 
     [vProductionMaterials].[ProductNomenclatureName] AS [ProductNomenclatureName], 
-    [vProductionMaterials].[NomenclatureName] AS [NomenclatureName]
+    [vProductionMaterials].[NomenclatureName] AS [NomenclatureName], 
+    [vProductionMaterials].[Quantity] AS [Quantity]
     FROM [dbo].[vProductionMaterials] AS [vProductionMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -5288,7 +5289,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductsInfo].[RejectionReason] AS [RejectionReason], 
     [vProductsInfo].[IsConfirmed] AS [IsConfirmed], 
     [vProductsInfo].[IsWrittenOff] AS [IsWrittenOff], 
-    [vProductsInfo].[State] AS [State]
+    [vProductsInfo].[State] AS [State], 
+    [vProductsInfo].[BaseMeasureUnitID] AS [BaseMeasureUnitID]
     FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vRobotNomenclatures" EntityType="Self.vRobotNomenclatures" store:Type="Views" store:Schema="dbo">
@@ -9868,6 +9870,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
           <Property Name="IsWrittenOff" Type="Boolean" />
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BaseMeasureUnitID" Type="Guid" />
         </EntityType>
         <EntityType Name="DocShipmentOrders">
           <Key>
@@ -12494,6 +12497,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Boolean" Name="IsMovementIn" Nullable="true" />
           <Property Type="Boolean" Name="IsMovementOut" Nullable="true" />
           <Property Type="Guid" Name="DocMovementID" Nullable="false" />
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="false" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="Byte" Name="NomenclatureKindID" Nullable="true" />
         </ComplexType>
         <ComplexType Name="FillDocCloseShiftPMMaterials_Result">
           <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
@@ -14041,6 +14049,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductsInfo">
             <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
               <MappingFragment StoreEntitySet="vProductsInfo">
+                <ScalarProperty Name="BaseMeasureUnitID" ColumnName="BaseMeasureUnitID" />
                 <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />
                 <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
@@ -14879,6 +14888,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="IsMovementIn" ColumnName="IsMovementIn" />
                 <ScalarProperty Name="IsMovementOut" ColumnName="IsMovementOut" />
                 <ScalarProperty Name="DocMovementID" ColumnName="DocMovementID" />
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="NomenclatureKindID" ColumnName="NomenclatureKindID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

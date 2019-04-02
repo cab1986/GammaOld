@@ -352,8 +352,9 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 EndSpools?.Clear();
+                
                 EndSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                    .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
+                    .Where(d => d.PlaceID == PlaceID && WorkSession.BranchID != 2).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
                     , (d, p) => new DocCloseShiftRemainder
                     {
                         ProductID = (Guid)d.ProductID,
@@ -757,7 +758,7 @@ namespace Gamma.ViewModels
                             IsMovementIn = true
                         });
                     }
-                gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);
+                //gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);
                 if (OutSpools != null)
                     foreach (var spool in OutSpools)
                     {

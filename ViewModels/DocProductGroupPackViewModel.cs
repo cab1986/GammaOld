@@ -269,7 +269,7 @@ namespace Gamma.ViewModels
                                  ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
-                                 Weight = p.Quantity ?? 0,
+                                 Weight = 1000 * p.Quantity ?? 0,
                                  Number = p.Number + " от " + p.Date
                              }).FirstOrDefault();
             AddSpoolIfCorrect(spool);
@@ -312,7 +312,7 @@ namespace Gamma.ViewModels
                                  ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
-                                 Weight = p.Quantity ?? 0,
+                                 Weight = 1000 * p.Quantity ?? 0,
                                  Number = $"{p.Number} от {p.Date}"
                              };
             AddSpoolIfCorrect(spool);
@@ -370,6 +370,7 @@ namespace Gamma.ViewModels
                 Diameter = DB.GetSpoolDiameter(spool.ProductID);
                 Spools.Add(spool);
                 CoreWeight = BaseCoreWeight * Spools.Count;
+                GrossWeight = (int)Math.Ceiling(CoreWeight) + (int)Spools.Sum(sp => sp.Weight);
             }
             else
             {
@@ -390,6 +391,7 @@ namespace Gamma.ViewModels
                 {
                     Spools.Add(spool);
                     CoreWeight = BaseCoreWeight * Spools.Count;
+                    GrossWeight = (int)Math.Ceiling(CoreWeight) + (int)Spools.Sum(sp => sp.Weight);
                 }
             }
         }

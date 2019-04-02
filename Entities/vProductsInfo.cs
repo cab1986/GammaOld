@@ -43,5 +43,6 @@ namespace Gamma.Entities
         public bool IsConfirmed { get; set; }
         public Nullable<bool> IsWrittenOff { get; set; }
         public string State { get; set; }
+        public Nullable<System.Guid> BaseMeasureUnitID { get; set; }
     }
 }

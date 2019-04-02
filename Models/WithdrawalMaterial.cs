@@ -182,10 +182,14 @@ namespace Gamma.Models
             }
         }
         public Guid? CharacteristicID { get; set; }
+        public Guid? ProductID { get; set; }
         public string NomenclatureName { get; set; }
         public decimal BaseQuantity { get; set; }
         public decimal Quantity { get; set; }
         public bool IsFloatValue { get; set; }
+        public Guid? DocMovementID { get; set; }
+        public int NomenclatureKindID { get; set; }
+
         /// <summary>
         /// Можно ли менять количество
         /// </summary>

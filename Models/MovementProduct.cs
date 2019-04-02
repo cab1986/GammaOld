@@ -40,6 +40,10 @@ namespace Gamma.Models
         public string OutPlaceName { get; set; }
         public string OutPlaceZoneName { get; set; }
         public DateTime? OutDate { get; set; }
+        public string MeasureUnit { get; set; }
+        public Guid? MeasureUnitID { get; set; }
+        public int? NomenclatureKindID { get; set; }
+
 
     }
 }

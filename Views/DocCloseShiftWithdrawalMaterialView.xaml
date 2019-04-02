@@ -24,7 +24,7 @@
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteWithdrawalMaterialInCommand}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
-                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsIn}" SelectedItem="{Binding SelectedWithdrawalMaterialIn}">
+                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsIn}" SelectedItem="{Binding SelectedWithdrawalMaterialIn}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                 <dxmvvm:Interaction.Behaviors>
@@ -39,19 +39,22 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="QuantityIsReadOnly" Header="Группа" GroupIndex="0" ShowGroupedColumn="False"/>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                                      ValueMember="NomenclatureID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
+                            <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" >
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" 
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>

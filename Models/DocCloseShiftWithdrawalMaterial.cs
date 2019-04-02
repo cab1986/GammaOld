@@ -80,6 +80,28 @@ namespace Gamma.Models
             }
         }
 
+        private ItemsChangeObservableCollection<MovementProduct> _inProducts = new ItemsChangeObservableCollection<MovementProduct>();
+        public ItemsChangeObservableCollection<MovementProduct> InProducts
+        {
+            get { return _inProducts; }
+            private set
+            {
+                _inProducts = value;
+                RaisePropertiesChanged("InProducts");
+            }
+        }
+
+        private ItemsChangeObservableCollection<MovementProduct> _outProducts = new ItemsChangeObservableCollection<MovementProduct>();
+        public ItemsChangeObservableCollection<MovementProduct> OutProducts
+        {
+            get { return _outProducts; }
+            private set
+            {
+                _outProducts = value;
+                RaisePropertiesChanged("OutProducts");
+            }
+        }
+
         private List<Guid> ProductionProductCharacteristicIDs { get; set; }
 
         public void LoadWithdrawalMaterials(Guid docId, List<Guid> productionProductCharacteristicIDs)
@@ -111,6 +133,87 @@ namespace Gamma.Models
                     MeasureUnit = d.C1CNomenclature.C1CMeasureUnitStorage.Name,
                     MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID
                 }).OrderBy(d => d.NomenclatureName));
+
+            InProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.DocCloseShiftMovementProducts.Where(d => d.DocID == docId && (bool)d.IsMovementIn)
+                    .Join(GammaBase.vProductsInfo, d => d.ProductID, p => p.ProductID
+                    , (d, p) => new MovementProduct
+                    {
+                        NomenclatureName = p.NomenclatureName,
+                        Number = d.Products.Number,
+                        ProductId = d.ProductID,
+                        Quantity = d.Quantity ?? 0,
+                        ProductKindName = d.Products.ProductKinds.Name,
+                        //OrderTypeName = p.OrderTypeName,
+                        DocMovementId = d.DocMovementID,
+                        OutPlaceName = d.MovementPlaceName,
+                        OutPlaceZoneName = d.MovementPlaceZoneName,
+                        OutDate = d.DateMovement,
+                        NomenclatureId = p.C1CNomenclatureID,
+                        CharacteristicId = p.C1CCharacteristicID,
+                        NomenclatureKindID = p.NomenclatureKindID,
+                        MeasureUnit = p.BaseMeasureUnit,
+                        MeasureUnitID = p.BaseMeasureUnitID
+                    }));
+
+            OutProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.DocCloseShiftMovementProducts.Where(d => d.DocID == docId && !((bool)d.IsMovementIn))
+                    .Join(GammaBase.vProductsInfo, d => d.ProductID, p => p.ProductID
+                    , (d, p) => new MovementProduct
+                    {
+                        NomenclatureName = p.NomenclatureName,
+                        Number = d.Products.Number,
+                        ProductId = d.ProductID,
+                        Quantity = d.Quantity ?? 0,
+                        ProductKindName = d.Products.ProductKinds.Name,
+                        //OrderTypeName = p.OrderTypeName,
+                        DocMovementId = d.DocMovementID,
+                        OutPlaceName = d.MovementPlaceName,
+                        OutPlaceZoneName = d.MovementPlaceZoneName,
+                        OutDate = d.DateMovement,
+                        NomenclatureId = p.C1CNomenclatureID,
+                        CharacteristicId = p.C1CCharacteristicID,
+                        NomenclatureKindID = p.NomenclatureKindID,
+                        MeasureUnit = p.BaseMeasureUnit,
+                        MeasureUnitID = p.BaseMeasureUnitID
+                    }));
+
+            /*foreach (MovementProduct addedItem in InProducts)
+            {
+                WithdrawalMaterialsIn.Add(new WithdrawalMaterial()
+                {
+                    ProductID = addedItem.ProductId,
+                    NomenclatureID = (Guid)addedItem.NomenclatureId,
+                    CharacteristicID = addedItem.CharacteristicId,
+                    NomenclatureName = addedItem.NomenclatureName,
+                    QuantityIsReadOnly = true,
+                    Quantity = addedItem.Quantity,
+                    BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                    DocMovementID = addedItem.DocMovementId,
+                    NomenclatureKindID = (int)addedItem.NomenclatureKindID,
+                    MeasureUnit = addedItem.MeasureUnit,
+                    MeasureUnitID = (Guid)addedItem.MeasureUnitID
+                });
+            }
+            
+            foreach (MovementProduct addedItem in OutProducts)
+            {
+                WithdrawalMaterialsOut.Add(new WithdrawalMaterial()
+                {
+                    ProductID = addedItem.ProductId,
+                    NomenclatureID = (Guid)addedItem.NomenclatureId,
+                    CharacteristicID = addedItem.CharacteristicId,
+                    NomenclatureName = addedItem.NomenclatureName,
+                    QuantityIsReadOnly = true,
+                    Quantity = addedItem.Quantity,
+                    BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                    DocMovementID = addedItem.DocMovementId,
+                    NomenclatureKindID = (int)addedItem.NomenclatureKindID,
+                    MeasureUnit = addedItem.MeasureUnit,
+                    MeasureUnitID = (Guid)addedItem.MeasureUnitID
+                });
+            }
+            */
             WithdrawalMaterialsRemainder = new ItemsChangeObservableCollection<WithdrawalMaterial>(GammaBase.DocCloseShiftMaterials
                 .Where(dm => dm.DocID == docId && dm.DocCloseShiftMaterialTypeID == 3)
                 .Select(d => new WithdrawalMaterial
@@ -161,13 +264,15 @@ namespace Gamma.Models
                             NomenclatureID = (Guid)m.NomenclatureID,
                             CharacteristicID = m.CharacteristicID,
                             NomenclatureName = m.NomenclatureName,
-                            QuantityIsReadOnly = !m.WithdrawByFact ?? true,
+                            QuantityIsReadOnly = false, //!m.WithdrawByFact ?? true,
                             Quantity = m.Quantity ?? 0,
                             BaseQuantity = m.Quantity ?? 0,
                             DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                             MeasureUnit = m.MeasureUnit,
                             MeasureUnitID = m.MeasureUnitID
                         }).OrderBy(m => m.NomenclatureName));
+
+            Clear();
 
             foreach (WithdrawalMaterial addedItem in WithdrawalMaterialsLoad)
             {
@@ -210,6 +315,121 @@ namespace Gamma.Models
                         MeasureUnit = addedItem.MeasureUnit,
                         MeasureUnitID = addedItem.MeasureUnitID
                     });
+            }
+
+            InProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
+                            .Where(d => (bool)d.IsMovementIn).Select(d => new MovementProduct
+                            {
+                                NomenclatureName = d.NomenclatureName,
+                                Number = d.Number,
+                                ProductId = d.ProductID,
+                                Quantity = (d.Quantity ?? 0),
+                                ProductKindName = d.ProductKindName,
+                                OrderTypeName = d.OrderTypeName,
+                                DocMovementId = d.DocMovementID,
+                                OutPlaceName = d.OutPlace,
+                                OutPlaceZoneName = d.OutPlaceZone,
+                                OutDate = d.OutDate,
+                                NomenclatureId = d.NomenclatureID,
+                                CharacteristicId = d.CharacteristicID,
+                                NomenclatureKindID = d.NomenclatureKindID,
+                                MeasureUnit = d.MeasureUnit,
+                                MeasureUnitID = d.MeasureUnitID
+                            }));
+            foreach (MovementProduct addedItem in InProducts)
+            {
+                var item = WithdrawalMaterialsIn.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
+                if (item == null)
+                    WithdrawalMaterialsIn.Add(new WithdrawalMaterial()
+                    {
+                        NomenclatureID = (Guid)addedItem.NomenclatureId,
+                        CharacteristicID = addedItem.CharacteristicId,
+                        NomenclatureName = addedItem.NomenclatureName,
+                        QuantityIsReadOnly = true,
+                        Quantity = addedItem.Quantity,
+                        BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                        DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                        MeasureUnit = addedItem.MeasureUnit,
+                        MeasureUnitID = addedItem.MeasureUnitID
+                    });
+                else
+                {
+                    item.Quantity = item.Quantity + addedItem.Quantity;
+                    item.BaseQuantity = item.BaseQuantity + addedItem.Quantity;
+                };
+               /* WithdrawalMaterialsIn.Add(new WithdrawalMaterial()
+                {
+                    ProductID = addedItem.ProductId,
+                    NomenclatureID = (Guid)addedItem.NomenclatureId,
+                    CharacteristicID = addedItem.CharacteristicId,
+                    NomenclatureName = addedItem.NomenclatureName,
+                    QuantityIsReadOnly = true,
+                    Quantity = addedItem.Quantity,
+                    BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                    DocMovementID = addedItem.DocMovementId,
+                    NomenclatureKindID = (int)addedItem.NomenclatureKindID,
+                    MeasureUnit = addedItem.MeasureUnit,
+                    MeasureUnitID = (Guid)addedItem.MeasureUnitID
+                });*/
+            }
+
+            OutProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
+                        .Where(d => (bool)d.IsMovementOut).Select(d => new MovementProduct
+                        {
+                            NomenclatureName = d.NomenclatureName,
+                            Number = d.Number,
+                            ProductId = d.ProductID,
+                            Quantity = (d.Quantity ?? 0),
+                            ProductKindName = d.ProductKindName,
+                            OrderTypeName = d.OrderTypeName,
+                            DocMovementId = d.DocMovementID,
+                            InPlaceName = d.InPlace,
+                            InPlaceZoneName = d.InPlaceZone,
+                            InDate = d.InDate,
+                            NomenclatureId = d.NomenclatureID,
+                            CharacteristicId = d.CharacteristicID,
+                            NomenclatureKindID = d.NomenclatureKindID,
+                            MeasureUnit = d.MeasureUnit,
+                            MeasureUnitID = d.MeasureUnitID
+                        }));
+            foreach (MovementProduct addedItem in OutProducts)
+            {
+                var item = WithdrawalMaterialsOut.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
+                if (item == null)
+                    WithdrawalMaterialsOut.Add(new WithdrawalMaterial()
+                    {
+                        NomenclatureID = (Guid)addedItem.NomenclatureId,
+                        CharacteristicID = addedItem.CharacteristicId,
+                        NomenclatureName = addedItem.NomenclatureName,
+                        QuantityIsReadOnly = true,
+                        Quantity = addedItem.Quantity,
+                        BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                        DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                        MeasureUnit = addedItem.MeasureUnit,
+                        MeasureUnitID = addedItem.MeasureUnitID
+                    });
+                else
+                {
+                    item.Quantity = item.Quantity + addedItem.Quantity;
+                    item.BaseQuantity = item.BaseQuantity + addedItem.Quantity;
+                };
+
+                /*WithdrawalMaterialsOut.Add(new WithdrawalMaterial()
+                {
+                    ProductID = addedItem.ProductId,
+                    NomenclatureID = (Guid)addedItem.NomenclatureId,
+                    CharacteristicID = addedItem.CharacteristicId,
+                    NomenclatureName = addedItem.NomenclatureName,
+                    QuantityIsReadOnly = true,
+                    Quantity = addedItem.Quantity,
+                    BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                    DocMovementID = addedItem.DocMovementId,
+                    NomenclatureKindID = (int)addedItem.NomenclatureKindID,
+                    MeasureUnit = addedItem.MeasureUnit,
+                    MeasureUnitID = (Guid)addedItem.MeasureUnitID
+                });*/
             }
 
             foreach (WithdrawalMaterial addedItem in WithdrawalMaterialsIn.Where(x => x.Quantity != 0))
