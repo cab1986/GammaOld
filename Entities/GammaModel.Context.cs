@@ -827,7 +827,7 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckInstallProductionTaskSourceSpools_Result>("CheckInstallProductionTaskSourceSpools", placeIDParameter, productIDParameter);
         }
     
-        public virtual ObjectResult<Nullable<bool>> GetDocBrokeEditable(Nullable<System.DateTime> docDate, Nullable<System.Guid> docUserID, Nullable<int> docShiftID, Nullable<bool> docIsConfirmed, Nullable<System.Guid> userID, Nullable<int> shiftID)
+        public virtual ObjectResult<Nullable<bool>> GetDocBrokeEditable(Nullable<System.DateTime> docDate, Nullable<System.Guid> docUserID, Nullable<int> docShiftID, Nullable<bool> docIsConfirmed, Nullable<System.Guid> userID, Nullable<int> shiftID, Nullable<System.Guid> DocID)
         {
             var docDateParameter = docDate.HasValue ?
                 new ObjectParameter("docDate", docDate) :
@@ -852,8 +852,12 @@ namespace Gamma.Entities
             var shiftIDParameter = shiftID.HasValue ?
                 new ObjectParameter("ShiftID", shiftID) :
                 new ObjectParameter("ShiftID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("GetDocBrokeEditable", docDateParameter, docUserIDParameter, docShiftIDParameter, docIsConfirmedParameter, userIDParameter, shiftIDParameter);
+
+            var docIDParameter = DocID.HasValue ?
+                new ObjectParameter("DocID", DocID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("GetDocBrokeEditable", docDateParameter, docUserIDParameter, docShiftIDParameter, docIsConfirmedParameter, userIDParameter, shiftIDParameter, docIDParameter);
         }
     
         public virtual ObjectResult<Nullable<System.Guid>> GetDocBrokeID(Nullable<int> placeID, Nullable<System.Guid> userID, Nullable<int> shiftID, Nullable<int> docProductionPlaceID, Nullable<bool> isProductionPlace)

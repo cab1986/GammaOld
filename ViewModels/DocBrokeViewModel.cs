@@ -99,7 +99,7 @@ namespace Gamma.ViewModels
                 OpenProductCommand = new DelegateCommand(OpenProduct);
                 var IsEditableCollection = new ObservableCollection<bool?>
                 (
-                    from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int?)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID)
+                    from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int?)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID, doc?.DocID)
                     select pt
                 );
                 IsEditable = (IsEditableCollection.Count > 0 ) ? (bool)IsEditableCollection[0] : false;

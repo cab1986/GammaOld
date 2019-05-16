@@ -11,6 +11,7 @@ using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Interfaces;
 using Gamma.Models;
+using System.Data.Entity.Validation;
 
 namespace Gamma.ViewModels
 {
@@ -548,6 +549,7 @@ namespace Gamma.ViewModels
                 WithdrawalMaterialsGrid?.SaveToModel(docId);
 
                 gammaBase.SaveChanges();
+
             }
             return true;
         }

@@ -79,7 +79,7 @@ namespace Gamma.ViewModels
         //private List<Guid> ProductionProductCharacteristicIDs { get; set; }
 
         private bool IsConfirmed { get; }
-        public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftWithdrawalMaterials") || WorkSession.DBAdmin) || IsConfirmed;
+        public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftMaterials") || WorkSession.DBAdmin) || IsConfirmed;
 
         public DelegateCommand AddWithdrawalMaterialInCommand { get; private set; }
         public DelegateCommand DeleteWithdrawalMaterialInCommand { get; private set; }

@@ -168,7 +168,7 @@ namespace Gamma.ViewModels
                     foreach (var productAfter in utilizationProductsAfterSave)
                     {
                         {
-                            var res = !utilizationProductsBeforeSave?.Any(d => d.ProductID == productAfter.ProductID) ?? true;
+                            //var res = !utilizationProductsBeforeSave?.Any(d => d.ProductID == productAfter.ProductID) ?? true;
                             if (!utilizationProductsBeforeSave?.Any(d => d.ProductID == productAfter.ProductID) ?? true)
                             {
                                 if (GammaBase.Rests.Any(r => r.ProductID == productAfter.ProductID))
