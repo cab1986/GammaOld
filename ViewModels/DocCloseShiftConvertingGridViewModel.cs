@@ -195,7 +195,12 @@ namespace Gamma.ViewModels
                         NomenclatureName = p.NomenclatureName,
                     }).Distinct());
 
-                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs);
+                var pallets = new List<DocCloseShiftWithdrawalMaterial.Product>(Pallets.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
+                {
+                    ProductID = x.ProductId,
+                    CharacteristicID = x.CharacteristicID
+                })).ToList();
+                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs, pallets);
                 //WithdrawalMaterials =
                 //    new ItemsChangeObservableCollection<WithdrawalMaterial>(
                 //        gammaBase.FillDocCloseShiftConvertingMaterials(PlaceID, ShiftID, CloseDate)

@@ -236,7 +236,12 @@ namespace Gamma.ViewModels
                 //    .Select(p => p.CharacteristicID).Distinct().ToList());
 
                 //DocCloseShiftWithdrawalMaterials.FillWithdrawalMaterials(productionProductCharacteristicIDs);
-                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs);
+                var spools = new List<DocCloseShiftWithdrawalMaterial.Product>(Spools.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
+                {
+                    ProductID = x.ProductID,
+                    CharacteristicID = x.CharacteristicID
+                })).ToList();
+                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs, spools);
                 
 
                 var wastes = new ItemsChangeObservableCollection<Sample>(

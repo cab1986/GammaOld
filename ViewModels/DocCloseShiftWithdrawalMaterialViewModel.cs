@@ -215,8 +215,9 @@ namespace Gamma.ViewModels
             }
         }
 
-        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs)
+        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, List<DocCloseShiftWithdrawalMaterial.Product> products)
         {
+            ProductionProducts = products;
             DocCloseShiftWithdrawalMaterials.FillWithdrawalMaterials(productionProductCharacteristicIDs);
         }
 

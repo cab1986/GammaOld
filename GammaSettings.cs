@@ -87,7 +87,18 @@ namespace Gamma
             sqlBuilder.InitialCatalog = dbName;
             sqlBuilder.UserID = user;
             sqlBuilder.Password = password;
-            sqlBuilder.ApplicationName = "EntityFramework";
+
+            string version;
+            try
+            {
+                version = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+            catch
+            {
+                version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+
+            sqlBuilder.ApplicationName = "Gamma v" + version;
             sqlBuilder.PersistSecurityInfo = true;
             sqlBuilder.MultipleActiveResultSets = true;
             sqlBuilder.ConnectTimeout = 300;
