@@ -94,7 +94,7 @@ namespace Gamma.ViewModels
 
         private bool CanCreateSpools()
         {
-            return !IsReadOnly && IsValid;
+            return !IsReadOnly && IsValid && UnloadSpools?.Count == 0;
         }
 
         private List<Guid> SourceSpools { get; set; }
