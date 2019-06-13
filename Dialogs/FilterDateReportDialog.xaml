@@ -5,17 +5,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
-        Height="160" Width="500"
+        Height="240" Width="500"
         Title="Фильтр дат" Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="90"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
-            <dxlc:LayoutGroup Header="" View="GroupBox" Margin="-12">
+        <dxlc:LayoutControl Name="lcDate" Grid.Row="0" Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
+            <dxlc:LayoutGroup Header="Фильтр дат" View="GroupBox" Margin="-12">
                 <dxlc:LayoutItem Label="Начальная дата" LabelPosition="Top">
                     <dxe:DateEdit Name="EdtDateBegin" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm"/>
@@ -26,8 +27,15 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
-        <Button Content="OK" Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
-        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="1"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />
+        <dxlc:LayoutControl Name="lcPlace" Grid.Row="1" >
+            <dxlc:LayoutGroup Header="Фильтр переделов" View="GroupBox" Margin="-12">
+                <dxlc:LayoutItem Label="Передел" LabelPosition="Top">
+                    <dxe:ComboBoxEdit Name="EdtPlace" DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <Button Content="OK" Name="BtnOk" Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="2"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />
     </Grid>
 </Window>
 

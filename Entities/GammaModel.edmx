@@ -4621,6 +4621,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftMaterialsAtBegin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftMovementProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -8223,6 +8228,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImport Name="GetProductMaterials" IsComposable="true" ReturnType="Collection(GammaModel.GetProductMaterials_Result)" />
           <EntitySet Name="vProductionMaterials" EntityType="GammaModel.vProductionMaterials" />
           <FunctionImport Name="FillDocCloseShiftMaterials" ReturnType="Collection(GammaModel.FillDocCloseShiftMaterials_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="FillDocCloseShiftMaterialsAtBegin" ReturnType="Collection(GammaModel.FillDocCloseShiftMaterialsAtBegin_Result)">
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
@@ -12711,6 +12721,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
         </ComplexType>
+        <ComplexType Name="FillDocCloseShiftMaterialsAtBegin_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+        </ComplexType>
         <EntityType Name="PlaceWithdrawalMaterialTypes">
           <Key>
             <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
@@ -15000,6 +15019,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterials" FunctionName="GammaDBModel.FillDocCloseShiftMaterials">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterials_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterialsAtBegin" FunctionName="GammaDBModel.FillDocCloseShiftMaterialsAtBegin">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterialsAtBegin_Result">
                 <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
                 <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />

@@ -140,7 +140,7 @@ namespace Gamma.ViewModels
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
             CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
-            
+            /*
             // удаляем с остатков или добавляем на остатки по утилизации
             var utilizationProductsAfterSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
             if ((utilizationProductsBeforeSave?.Count ?? 0) > 0 || (utilizationProductsAfterSave?.Count ?? 0) > 0)
@@ -181,7 +181,7 @@ namespace Gamma.ViewModels
                     }
                 }
                 GammaBase.SaveChanges();
-            }
+            }*/
 
 #if !DEBUG
             var currenGridViewModel = CurrentViewModelGrid as IFillClearGrid;

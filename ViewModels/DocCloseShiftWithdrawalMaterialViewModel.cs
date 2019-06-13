@@ -13,6 +13,7 @@ using Gamma.Models;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using System.Collections;
+using System.Windows.Data;
 
 namespace Gamma.ViewModels
 {
@@ -39,8 +40,10 @@ namespace Gamma.ViewModels
             DeleteWithdrawalMaterialInCommand = new DelegateCommand(DeleteWithdrawalMaterialIn, () => !IsReadOnly);
             AddWithdrawalMaterialOutCommand = new DelegateCommand(AddWithdrawalMaterialOut, () => !IsReadOnly);
             DeleteWithdrawalMaterialOutCommand = new DelegateCommand(DeleteWithdrawalMaterialOut, () => !IsReadOnly);
-            AddWithdrawalMaterialRemainderCommand = new DelegateCommand(AddWithdrawalMaterialRemainder, () => !IsReadOnly);
-            DeleteWithdrawalMaterialRemainderCommand = new DelegateCommand(DeleteWithdrawalMaterialRemainder, () => !IsReadOnly);
+            AddWithdrawalMaterialRemainderAtBeginCommand = new DelegateCommand(AddWithdrawalMaterialRemainderAtBegin, () => !IsReadOnly);
+            DeleteWithdrawalMaterialRemainderAtBeginCommand = new DelegateCommand(DeleteWithdrawalMaterialRemainderAtBegin, () => !IsReadOnly);
+            AddWithdrawalMaterialRemainderAtEndCommand = new DelegateCommand(AddWithdrawalMaterialRemainderAtEnd, () => !IsReadOnly);
+            DeleteWithdrawalMaterialRemainderAtEndCommand = new DelegateCommand(DeleteWithdrawalMaterialRemainderAtEnd, () => !IsReadOnly);
 
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
@@ -61,8 +64,10 @@ namespace Gamma.ViewModels
             DeleteWithdrawalMaterialInCommand = new DelegateCommand(DeleteWithdrawalMaterialIn, () => !IsReadOnly);
             AddWithdrawalMaterialOutCommand = new DelegateCommand(AddWithdrawalMaterialOut, () => !IsReadOnly);
             DeleteWithdrawalMaterialOutCommand = new DelegateCommand(DeleteWithdrawalMaterialOut, () => !IsReadOnly);
-            AddWithdrawalMaterialRemainderCommand = new DelegateCommand(AddWithdrawalMaterialRemainder, () => !IsReadOnly);
-            DeleteWithdrawalMaterialRemainderCommand = new DelegateCommand(DeleteWithdrawalMaterialRemainder, () => !IsReadOnly);
+            AddWithdrawalMaterialRemainderAtBeginCommand = new DelegateCommand(AddWithdrawalMaterialRemainderAtBegin, () => !IsReadOnly);
+            DeleteWithdrawalMaterialRemainderAtBeginCommand = new DelegateCommand(DeleteWithdrawalMaterialRemainderAtBegin, () => !IsReadOnly);
+            AddWithdrawalMaterialRemainderAtEndCommand = new DelegateCommand(AddWithdrawalMaterialRemainderAtEnd, () => !IsReadOnly);
+            DeleteWithdrawalMaterialRemainderAtEndCommand = new DelegateCommand(DeleteWithdrawalMaterialRemainderAtEnd, () => !IsReadOnly);
 
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
             
@@ -71,7 +76,21 @@ namespace Gamma.ViewModels
             PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
         }
 
-        private int PlaceID;
+        private MaterialType CurrentMaterialType;
+
+        private int _placeID;
+        private int PlaceID
+        {
+            get { return _placeID; }
+            set
+            {
+                _placeID = value;
+                if (_placeID == 1 || _placeID == 2 || _placeID == 21)
+                    CurrentMaterialType = MaterialType.MaterialsSGB;
+                else if (_placeID == 6 || _placeID == 7 || _placeID == 12 || _placeID == 13)
+                    CurrentMaterialType = MaterialType.MaterialsSGI;
+            }
+        }
         private int ShiftID;
         DateTime CloseDate;
 
@@ -85,14 +104,16 @@ namespace Gamma.ViewModels
         public DelegateCommand DeleteWithdrawalMaterialInCommand { get; private set; }
         public DelegateCommand AddWithdrawalMaterialOutCommand { get; private set; }
         public DelegateCommand DeleteWithdrawalMaterialOutCommand { get; private set; }
-        public DelegateCommand AddWithdrawalMaterialRemainderCommand { get; private set; }
-        public DelegateCommand DeleteWithdrawalMaterialRemainderCommand { get; private set; }
+        public DelegateCommand AddWithdrawalMaterialRemainderAtBeginCommand { get; private set; }
+        public DelegateCommand DeleteWithdrawalMaterialRemainderAtBeginCommand { get; private set; }
+        public DelegateCommand AddWithdrawalMaterialRemainderAtEndCommand { get; private set; }
+        public DelegateCommand DeleteWithdrawalMaterialRemainderAtEndCommand { get; private set; }
 
 
         public ICommand<CellValue> MaterialRowUpdatedCommand { get; private set; }
         private void OnMaterialRowUpdated(CellValue value)
         {
-            var selectedMaterial = SelectedMaterialTabIndex == 0 ? SelectedWithdrawalMaterialIn : SelectedMaterialTabIndex == 1 ? SelectedWithdrawalMaterialOut : SelectedMaterialTabIndex == 2 ? SelectedWithdrawalMaterialRemainder : SelectedMaterialTabIndex == 3 ? SelectedWithdrawalMaterial : null;
+            var selectedMaterial = SelectedMaterialTabIndex == 0 ? SelectedWithdrawalMaterialRemainderAtBegin : SelectedMaterialTabIndex == 1 ? SelectedWithdrawalMaterialIn : SelectedMaterialTabIndex == 2 ? SelectedWithdrawalMaterialOut : SelectedMaterialTabIndex == 3 ? SelectedWithdrawalMaterialRemainderAtEnd : SelectedMaterialTabIndex == 4 ? SelectedWithdrawalMaterial : null;
             DocCloseShiftWithdrawalMaterials.MaterialChanged(SelectedMaterialTabIndex, selectedMaterial);
             //if (value.Property == "Quantity")
             //    Console.WriteLine("OnCellValueChanged");
@@ -104,7 +125,8 @@ namespace Gamma.ViewModels
         public bool IsWithdrawalMaterialIn { get; set; }
         public string NameWithdrawalMaterialIn { get; set; }
         public bool IsWithdrawalMaterialOut { get; set; }
-        public bool IsWithdrawalMaterialRemainder { get; set; }
+        public bool IsWithdrawalMaterialRemainderAtBegin { get; set; }
+        public bool IsWithdrawalMaterialRemainderAtEnd { get; set; }
         public bool IsWithdrawalMaterial { get; set; }
 
         private int _placeWithdrawalMaterialTypeID;
@@ -119,8 +141,9 @@ namespace Gamma.ViewModels
                     IsWithdrawalMaterialIn = true;
                     NameWithdrawalMaterialIn = "Использовано";
                     IsWithdrawalMaterialOut = false;
-                    IsWithdrawalMaterialRemainder = false;
-                    IsWithdrawalMaterial = false;
+                    IsWithdrawalMaterialRemainderAtBegin = false;
+                    IsWithdrawalMaterialRemainderAtEnd = false;
+                    IsWithdrawalMaterial = true;
                     if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Count()>0 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsIn?.Count() == 0)
                     {
                         DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsIn = DocCloseShiftWithdrawalMaterials.WithdrawalMaterials;
@@ -131,7 +154,8 @@ namespace Gamma.ViewModels
                     IsWithdrawalMaterialIn = true;
                     NameWithdrawalMaterialIn = "Принято";
                     IsWithdrawalMaterialOut = true;
-                    IsWithdrawalMaterialRemainder = true;
+                    IsWithdrawalMaterialRemainderAtBegin = true;
+                    IsWithdrawalMaterialRemainderAtEnd = true;
                     IsWithdrawalMaterial = true;
                 }
             }
@@ -147,7 +171,7 @@ namespace Gamma.ViewModels
             set
             {
                 _selectedMaterialTabIndex = value;
-                if (value == 3)
+                if (value == 4)
                 {
                     var currentWithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(DocCloseShiftWithdrawalMaterials.WithdrawalMaterials);
                     DocCloseShiftWithdrawalMaterials?.WithdrawalMaterials?.Clear();
@@ -172,7 +196,7 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterialIn()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
+            MessageManager.FindNomenclature(CurrentMaterialType);
         }
 
         public WithdrawalMaterial SelectedWithdrawalMaterialOut { get; set; }
@@ -186,21 +210,35 @@ namespace Gamma.ViewModels
         private void AddWithdrawalMaterialOut()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
+            MessageManager.FindNomenclature(CurrentMaterialType);
         }
 
-        public WithdrawalMaterial SelectedWithdrawalMaterialRemainder { get; set; }
+        public WithdrawalMaterial SelectedWithdrawalMaterialRemainderAtBegin { get; set; }
 
-        private void DeleteWithdrawalMaterialRemainder()
+        private void DeleteWithdrawalMaterialRemainderAtBegin()
         {
-            if (SelectedWithdrawalMaterialRemainder == null) return;
-            DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainder.Remove(SelectedWithdrawalMaterialRemainder);
+            if (SelectedWithdrawalMaterialRemainderAtBegin == null) return;
+            DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtBegin.Remove(SelectedWithdrawalMaterialRemainderAtBegin);
         }
 
-        private void AddWithdrawalMaterialRemainder()
+        private void AddWithdrawalMaterialRemainderAtBegin()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
+            MessageManager.FindNomenclature(CurrentMaterialType);
+        }
+
+        public WithdrawalMaterial SelectedWithdrawalMaterialRemainderAtEnd { get; set; }
+
+        private void DeleteWithdrawalMaterialRemainderAtEnd()
+        {
+            if (SelectedWithdrawalMaterialRemainderAtEnd == null) return;
+            DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtEnd.Remove(SelectedWithdrawalMaterialRemainderAtEnd);
+        }
+
+        private void AddWithdrawalMaterialRemainderAtEnd()
+        {
+            Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
+            MessageManager.FindNomenclature(CurrentMaterialType);
         }
 
         private void SetMaterialNomenclature(Nomenclature1CMessage msg)
@@ -272,8 +310,21 @@ namespace Gamma.ViewModels
                             Quantity = material.Quantity
                         });
                     }
-                if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainder != null)
-                    foreach (var material in DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainder)
+                if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtBegin != null)
+                    foreach (var material in DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtBegin)
+                    {
+                        docCloseShift.DocCloseShiftMaterials.Add(new DocCloseShiftMaterials
+                        {
+                            DocID = docId,
+                            C1CNomenclatureID = material.NomenclatureID,
+                            C1CCharacteristicID = material.CharacteristicID,
+                            DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
+                            DocCloseShiftMaterialTypeID = 4,
+                            Quantity = material.Quantity
+                        });
+                    }
+                if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtEnd != null)
+                    foreach (var material in DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtEnd)
                     {
                         docCloseShift.DocCloseShiftMaterials.Add(new DocCloseShiftMaterials
                         {

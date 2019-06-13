@@ -74,15 +74,19 @@ namespace Gamma
 				report.Load(stream);
 				var paramBeginDate = report.Parameters.FindByName("ParamBeginDate"); // new Parameter("ParamBeginDate");
 				var paramEndDate = report.Parameters.FindByName("ParamEndDate");
-				if (paramBeginDate != null && paramEndDate != null)
+                var paramPlaceID = report.Parameters.FindByName("ParamPlaceID");
+                if (paramBeginDate != null | paramEndDate != null | paramPlaceID != null)
 				{
 					var dialog = new FilterDateReportDialog();
-					dialog.ShowDialog();
+                    dialog.lcDate.Visibility = (paramBeginDate != null || paramEndDate != null) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    dialog.lcPlace.Visibility = (paramPlaceID != null) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed; 
+                    dialog.ShowDialog();
 					if (dialog.DialogResult == true)
 					{
-						paramBeginDate.Value = dialog.DateBegin;
-						paramEndDate.Value = dialog.DateEnd;
-					}
+                        if (paramBeginDate!= null) paramBeginDate.Value = dialog.DateBegin;
+                        if (paramEndDate != null) paramEndDate.Value = dialog.DateEnd;
+                        if (paramPlaceID != null) paramPlaceID.Value = dialog.PlaceID;
+                    }
 					else
 					{
 						return;
@@ -101,7 +105,8 @@ namespace Gamma
 					reportConnectionBuilder.Password = settingsConnectionBuilder.Password;
 					reportConnectionBuilder.DataSource = settingsConnectionBuilder.DataSource;
 					reportConnectionBuilder.InitialCatalog = settingsConnectionBuilder.InitialCatalog;
-					report.Dictionary.Connections[0].ConnectionString = reportConnectionBuilder.ToString();
+                    reportConnectionBuilder.ApplicationName = settingsConnectionBuilder.ApplicationName.Replace("Gamma","Gamma (report)");
+                    report.Dictionary.Connections[0].ConnectionString = reportConnectionBuilder.ToString();
 				}
 
 				if (showPreview)
