@@ -285,6 +285,11 @@ namespace Gamma.Models
         /// </summary>
         public bool QuantityIsReadOnly { get; set; }
 
+        /// <summary>
+        /// Списание по факту (или по нормативам)
+        /// </summary>
+        public bool? WithdrawByFact { get; set; }
+
         public string MeasureUnit { get; set; }
 
         public Guid? MeasureUnitID { get; set; }

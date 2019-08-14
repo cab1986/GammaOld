@@ -341,6 +341,7 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_DocCloseShiftMaterialTypes" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftMaterials_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftMovementProducts_DocMovement" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftMovementProducts_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftMovementProducts_Products" />

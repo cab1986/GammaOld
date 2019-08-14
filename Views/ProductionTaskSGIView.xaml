@@ -12,7 +12,7 @@
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              x:Class="Gamma.Views.ProductionTaskSGIView"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="750"
+             d:DesignHeight="620" d:DesignWidth="850"
              d:DataContext="{d:DesignInstance Type=viewModels:ProductionTaskSGIViewModel, IsDesignTimeCreatable=False}">
     <Grid>
 
@@ -74,8 +74,10 @@
                         <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
                     </Border>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="350" Height="250" >
-                    <Image x:Name="TransportLabel"/>
+                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="450" Height="325" >
+                    <Border BorderThickness="1" BorderBrush="#FF000000">
+                        <Image Source="{Binding TransportPackageLabelImage, Mode=OneWay}"/>
+                    </Border>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

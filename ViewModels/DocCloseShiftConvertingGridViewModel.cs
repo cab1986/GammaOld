@@ -336,7 +336,8 @@ namespace Gamma.ViewModels
             IsChanged = true;
             Wastes?.Clear();
             NomenclatureRests?.Clear();
-//            gammaBase.SaveChanges();           
+            WithdrawalMaterialsGrid.Clear();
+            //            gammaBase.SaveChanges();           
         }
 
         /*private ItemsChangeObservableCollection<WithdrawalMaterial> _withdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>();

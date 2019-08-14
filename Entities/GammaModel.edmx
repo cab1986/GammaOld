@@ -505,6 +505,8 @@
           <Property Name="DocCloseShiftMaterialTypeID" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
           <Property Name="Comment" Type="varchar" MaxLength="500" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="WithdrawByFact" Type="bit" />
         </EntityType>
         <EntityType Name="DocCloseShiftMaterialTypes">
           <Key>
@@ -1089,6 +1091,9 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="GroupPackLabelPNG" Type="varbinary(max)" />
           <Property Name="GroupPackLabelMD5" Type="varchar" MaxLength="32" />
           <Property Name="GroupPackLabelZPL" Type="varchar(max)" />
+          <Property Name="TransportPackLabelPNG" Type="varbinary(max)" />
+          <Property Name="TransportPackLabelMD5" Type="varchar" MaxLength="32" />
+          <Property Name="TransportPackLabelZPL" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="ProductionTaskRWCutting">
           <Key>
@@ -2744,6 +2749,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocCloseShiftMaterials">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftMaterials_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="DocCloseShiftMaterials" Type="Self.DocCloseShiftMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftMaterials">
+              <PropertyRef Name="1CMeasureUnitID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4626,6 +4643,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftMaterialsAtEnd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftMovementProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -5654,6 +5676,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftMaterials_1CMeasureUnits" Association="Self.FK_DocCloseShiftMaterials_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+            <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMovementProducts_DocMovement" Association="Self.FK_DocCloseShiftMovementProducts_DocMovement">
             <End Role="DocMovement" EntitySet="DocMovement" />
             <End Role="DocCloseShiftMovementProducts" EntitySet="DocCloseShiftMovementProducts" />
@@ -6304,6 +6330,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CNomenclature1" Relationship="GammaModel.FK_1CNomenclature_1CMeasureUnits1" FromRole="C1CMeasureUnits" ToRole="C1CNomenclature" />
           <NavigationProperty Name="DocCloseShiftSamples" Relationship="GammaModel.FK_DocCloseShiftSamples_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftSamples" />
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CDocComplectationNomenclature" />
+          <NavigationProperty Name="DocCloseShiftMaterials" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftMaterials" />
         </EntityType>
         <EntityType Name="C1CNomenclatureGroups">
           <Key>
@@ -8139,6 +8166,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftMaterials_1CMeasureUnits" Association="GammaModel.FK_DocCloseShiftMaterials_1CMeasureUnits">
+            <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+            <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMovementProducts_DocMovement" Association="GammaModel.FK_DocCloseShiftMovementProducts_DocMovement">
             <End Role="DocMovement" EntitySet="DocMovement" />
             <End Role="DocCloseShiftMovementProducts" EntitySet="DocCloseShiftMovementProducts" />
@@ -8233,6 +8264,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="FillDocCloseShiftMaterialsAtBegin" ReturnType="Collection(GammaModel.FillDocCloseShiftMaterialsAtBegin_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="FillDocCloseShiftMaterialsAtEnd" ReturnType="Collection(GammaModel.FillDocCloseShiftMaterialsAtEnd_Result)">
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
@@ -11954,6 +11990,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="GroupPackLabelPNG" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="GroupPackLabelMD5" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="GroupPackLabelZPL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TransportPackLabelPNG" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="TransportPackLabelMD5" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="TransportPackLabelZPL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="vRobotNomenclatures">
           <Key>
@@ -12311,10 +12350,13 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="DocCloseShiftMaterialTypeID" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
           <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="WithdrawByFact" Type="Boolean" />
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CCharacteristics" FromRole="DocCloseShiftMaterials" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CNomenclature" FromRole="DocCloseShiftMaterials" ToRole="C1CNomenclature" />
           <NavigationProperty Name="DocCloseShiftMaterialTypes" Relationship="GammaModel.FK_DocCloseShiftMaterials_DocCloseShiftMaterialTypes" FromRole="DocCloseShiftMaterials" ToRole="DocCloseShiftMaterialTypes" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftMaterials_Docs" FromRole="DocCloseShiftMaterials" ToRole="Docs" />
+          <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CMeasureUnits" FromRole="DocCloseShiftMaterials" ToRole="C1CMeasureUnits" />
         </EntityType>
         <EntityType Name="DocCloseShiftMaterialTypes">
           <Key>
@@ -12418,6 +12460,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocCloseShiftMaterials">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftMaterials_1CMeasureUnits">
+          <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftMaterials" Role="DocCloseShiftMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CMeasureUnits">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftMaterials">
+              <PropertyRef Name="C1CMeasureUnitID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -12722,6 +12776,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
         </ComplexType>
         <ComplexType Name="FillDocCloseShiftMaterialsAtBegin_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+        </ComplexType>
+        <ComplexType Name="FillDocCloseShiftMaterialsAtEnd_Result">
           <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
           <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
           <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
@@ -14634,6 +14697,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="RobotProductDescription" ColumnName="RobotProductDescription" />
                 <ScalarProperty Name="RobotProductNumber" ColumnName="RobotProductNumber" />
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="TransportPackLabelZPL" ColumnName="TransportPackLabelZPL" />
+                <ScalarProperty Name="TransportPackLabelMD5" ColumnName="TransportPackLabelMD5" />
+                <ScalarProperty Name="TransportPackLabelPNG" ColumnName="TransportPackLabelPNG" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -14834,6 +14900,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
                 <ScalarProperty Name="DocCloseShiftMaterialID" ColumnName="DocCloseShiftMaterialID" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -15032,6 +15100,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterialsAtBegin" FunctionName="GammaDBModel.FillDocCloseShiftMaterialsAtBegin">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterialsAtBegin_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterialsAtEnd" FunctionName="GammaDBModel.FillDocCloseShiftMaterialsAtEnd">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterialsAtEnd_Result">
                 <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
                 <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />

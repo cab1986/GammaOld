@@ -24,7 +24,7 @@
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteWithdrawalMaterialRemainderAtBeginCommand}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
-                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtBegin}" SelectedItem="{Binding SelectedWithdrawalMaterialRemainderAtBegin}">
+                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtBegin}" SelectedItem="{Binding SelectedWithdrawalMaterialRemainderAtBegin}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                 <dxmvvm:Interaction.Behaviors>
@@ -38,19 +38,22 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
                             <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" 
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
@@ -82,7 +85,7 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="QuantityIsReadOnly" Header="Группа" GroupIndex="0" ShowGroupedColumn="False"/>
+                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
@@ -114,7 +117,7 @@
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteWithdrawalMaterialOutCommand}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
-                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsOut}" SelectedItem="{Binding SelectedWithdrawalMaterialOut}">
+                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsOut}" SelectedItem="{Binding SelectedWithdrawalMaterialOut}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                 <dxmvvm:Interaction.Behaviors>
@@ -128,6 +131,7 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
@@ -157,7 +161,7 @@
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteWithdrawalMaterialRemainderAtEndCommand}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
-                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtEnd}" SelectedItem="{Binding SelectedWithdrawalMaterialRemainderAtEnd}">
+                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtEnd}" SelectedItem="{Binding SelectedWithdrawalMaterialRemainderAtEnd}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                 <dxmvvm:Interaction.Behaviors>
@@ -171,19 +175,22 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                                          IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
                             <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" 
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
@@ -194,7 +201,7 @@
             </dx:DXTabItem>
             <dx:DXTabItem Header="Использовано" Visibility="{Binding IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
-                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True">
+                    <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                 <dxmvvm:Interaction.Behaviors>
@@ -208,6 +215,7 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="True" SortMode="DisplayText"  ColumnFilterMode="DisplayText"
                                             >
                                 <dxg:GridColumn.CellTemplate>

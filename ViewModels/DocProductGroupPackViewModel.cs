@@ -330,7 +330,10 @@ namespace Gamma.ViewModels
                 var groupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == productId).Join(gammaBase.Products,
                             gs => gs.ProductGroupPackID,
                             p => p.ProductID,
-                            (gs, p) => new { ProductId = p.ProductID, Number = p.Number }).FirstOrDefault();
+                            (gs, p) => new { ProductId = p.ProductID, Number = p.Number }).Join(gammaBase.Rests,
+                            p => p.ProductId,
+                            r => r.ProductID,
+                            (p, r) => new { ProductId = r.ProductID, Number = p.Number }).FirstOrDefault();
                 if (groupPack == null)
                 {
                     MessageBox.Show("Выбранный рулон в упаковке, но при поиске упаковки произошел сбой");

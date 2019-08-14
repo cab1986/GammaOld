@@ -294,7 +294,9 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = material.CharacteristicID,
                             DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
                             DocCloseShiftMaterialTypeID = 1,
-                            Quantity = material.Quantity
+                            Quantity = material.Quantity,
+                            C1CMeasureUnitID = material.MeasureUnitID,
+                            WithdrawByFact = material.WithdrawByFact
                         });
                     }
                 if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsOut != null)
@@ -307,7 +309,9 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = material.CharacteristicID,
                             DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
                             DocCloseShiftMaterialTypeID = 2,
-                            Quantity = material.Quantity
+                            Quantity = material.Quantity,
+                            C1CMeasureUnitID = material.MeasureUnitID,
+                            WithdrawByFact = material.WithdrawByFact
                         });
                     }
                 if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtBegin != null)
@@ -320,7 +324,9 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = material.CharacteristicID,
                             DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
                             DocCloseShiftMaterialTypeID = 4,
-                            Quantity = material.Quantity
+                            Quantity = material.Quantity,
+                            C1CMeasureUnitID = material.MeasureUnitID,
+                            WithdrawByFact = material.WithdrawByFact
                         });
                     }
                 if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterialsRemainderAtEnd != null)
@@ -333,7 +339,9 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = material.CharacteristicID,
                             DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
                             DocCloseShiftMaterialTypeID = 3,
-                            Quantity = material.Quantity
+                            Quantity = material.Quantity,
+                            C1CMeasureUnitID = material.MeasureUnitID,
+                            WithdrawByFact = material.WithdrawByFact
                         });
                     }
                 if (DocCloseShiftWithdrawalMaterials.WithdrawalMaterials != null)
@@ -346,7 +354,9 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = material.CharacteristicID,
                             DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
                             DocCloseShiftMaterialTypeID = 0,
-                            Quantity = material.Quantity
+                            Quantity = material.Quantity,
+                            C1CMeasureUnitID = material.MeasureUnitID,
+                            WithdrawByFact = material.WithdrawByFact
                             //ProductionProductCharacteristicID = material.ProductionProductCharacteristicID
                         });
                     }
@@ -401,7 +411,7 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = material.CharacteristicID,
                             C1CNomenclatureID = material.NomenclatureID,
                             Quantity = material.Quantity,
-                            WithdrawByFact = !material.QuantityIsReadOnly
+                            WithdrawByFact = material.WithdrawByFact //!material.QuantityIsReadOnly
                         });
                     }
                 }

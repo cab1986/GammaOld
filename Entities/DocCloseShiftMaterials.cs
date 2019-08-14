@@ -21,10 +21,13 @@ namespace Gamma.Entities
         public int DocCloseShiftMaterialTypeID { get; set; }
         public decimal Quantity { get; set; }
         public string Comment { get; set; }
-    
+        public Nullable<System.Guid> C1CMeasureUnitID { get; set; }
+        public Nullable<bool> WithdrawByFact { get; set; }
+
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual DocCloseShiftMaterialTypes DocCloseShiftMaterialTypes { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
     }
 }

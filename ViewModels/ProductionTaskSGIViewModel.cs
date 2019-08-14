@@ -133,6 +133,19 @@ namespace Gamma.ViewModels
             }
         }
 
+        private BitmapImage _transportPackageLabelImage;
+        /// <summary>
+        /// Групповая этикетка.
+        /// </summary>
+        public BitmapImage TransportPackageLabelImage
+        {
+            get { return _transportPackageLabelImage; }
+            set
+            {
+                _transportPackageLabelImage = value;
+                RaisePropertiesChanged("TransportPackageLabelImage");
+            }
+        }
 
         private Image ByteArrayToImage(byte[] inputArray)
         {
@@ -163,6 +176,34 @@ namespace Gamma.ViewModels
                     bi.StreamSource = ms;
                     bi.EndInit();
                     GroupPackageLabelImage = bi;
+                }
+            }
+            UpdateTransportPackageLabelImage(productionTaskId);
+        }
+
+        public void UpdateTransportPackageLabelImage(Guid productionTaskId)
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                var png = gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTaskId)
+                                .Select(p => p.TransportPackLabelPNG)
+                                .FirstOrDefault();
+                if (png != null)
+                {
+                    var TransportPackageLabelPNG = ByteArrayToImage(png);
+
+                    // ImageSource ...
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    MemoryStream ms = new MemoryStream();
+                    // Save to a memory stream...
+                    TransportPackageLabelPNG.Save(ms, ImageFormat.Bmp);
+                    // Rewind the stream... 
+                    ms.Seek(0, SeekOrigin.Begin);
+                    // Tell the WPF image to use this stream... 
+                    bi.StreamSource = ms;
+                    bi.EndInit();
+                    TransportPackageLabelImage = bi;
                 }
             }
         }

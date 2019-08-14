@@ -68,45 +68,6 @@
                     </dxg:GridControl.View>
                 </dxg:GridControl>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Утилизация">
-                <dxb:BarManager>
-                    <dxb:BarManager.Bars>
-                        <dxb:Bar>
-                            <dxb:BarButtonItem Content="Добавить тамбур" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddUtilizationSpoolCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
-                            <dxb:BarButtonItem Content="Удалить тамбур" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteUtilizationSpoolCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
-                        </dxb:Bar>
-                    </dxb:BarManager.Bars>
-                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding UtilizationSpools}" SelectedItem="{Binding SelectedUtilizationSpool}" VerticalAlignment="Stretch">
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
-                            <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                            <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True">
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                        </dxg:GridControl.Columns>
-                        <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
-                        </dxg:GridControl.GroupSummary>
-                        <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} кг"/>
-                        </dxg:GridControl.TotalSummary>
-                        <dxg:GridControl.View>
-                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="True" AutoWidth="True"
-								ShowFixedTotalSummary="True">
-                            </dxg:TableView>
-                        </dxg:GridControl.View>
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowUtilizationSpoolCommand}"/>
-                        </dxmvvm:Interaction.Behaviors>
-                    </dxg:GridControl>
-                </dxb:BarManager>
-            </dx:DXTabItem>
             <dx:DXTabItem Header="Тамбура">
                 <dx:DXTabControl>
                     <dx:DXTabItem Header="На начало смены">
@@ -204,6 +165,45 @@
                                     <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
 								ShowFixedTotalSummary="True"/>
                                 </dxg:GridControl.View>
+                            </dxg:GridControl>
+                        </dxb:BarManager>
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="Утилизация">
+                        <dxb:BarManager>
+                            <dxb:BarManager.Bars>
+                                <dxb:Bar>
+                                    <dxb:BarButtonItem Content="Добавить тамбур" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddUtilizationSpoolCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
+                                    <dxb:BarButtonItem Content="Удалить тамбур" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteUtilizationSpoolCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
+                                </dxb:Bar>
+                            </dxb:BarManager.Bars>
+                            <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding UtilizationSpools}" SelectedItem="{Binding SelectedUtilizationSpool}" VerticalAlignment="Stretch">
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                                    <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
+                                    <dxg:GridColumn Header="Вес, кг" FieldName="Weight" Width="80" FixedWidth="True">
+                                        <dxg:GridColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
+                                            </DataTemplate>
+                                        </dxg:GridColumn.CellTemplate>
+                                    </dxg:GridColumn>
+                                </dxg:GridControl.Columns>
+                                <dxg:GridControl.GroupSummary>
+                                    <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                                    <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} кг" />
+                                </dxg:GridControl.GroupSummary>
+                                <dxg:GridControl.TotalSummary>
+                                    <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                                    <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} кг"/>
+                                </dxg:GridControl.TotalSummary>
+                                <dxg:GridControl.View>
+                                    <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="True" AutoWidth="True"
+								ShowFixedTotalSummary="True">
+                                    </dxg:TableView>
+                                </dxg:GridControl.View>
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowUtilizationSpoolCommand}"/>
+                                </dxmvvm:Interaction.Behaviors>
                             </dxg:GridControl>
                         </dxb:BarManager>
                     </dx:DXTabItem>

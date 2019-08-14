@@ -473,6 +473,9 @@
     <Compile Include="Entities\FillDocCloseShiftMaterialsAtBegin_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocCloseShiftMaterialsAtEnd_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FillDocCloseShiftMovementProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>

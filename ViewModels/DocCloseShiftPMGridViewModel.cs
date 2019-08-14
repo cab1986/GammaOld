@@ -433,7 +433,7 @@ namespace Gamma.ViewModels
             DocCloseDocIds?.Clear();
 
             //WithdrawalMaterialsGrid?.Clear();
-
+            BeginSpools?.Clear();
             EndSpools?.Clear();
             InSpools?.Clear();
             OutSpools?.Clear();
