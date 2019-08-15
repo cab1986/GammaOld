@@ -241,7 +241,8 @@ namespace Gamma.Models
                     BaseQuantity = d.Quantity,
                     MeasureUnit = d.C1CNomenclature.C1CMeasureUnitStorage.Name,
                     MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    WithdrawByFact = d.WithdrawByFact
+                    WithdrawByFact = d.WithdrawByFact,
+                    QuantityIsReadOnly = true
                 }).OrderBy(d => d.NomenclatureName));
             WithdrawalMaterialsRemainderAtEnd = new ItemsChangeObservableCollection<WithdrawalMaterial>(GammaBase.DocCloseShiftMaterials
                 .Where(dm => dm.DocID == docId && dm.DocCloseShiftMaterialTypeID == 3)
@@ -330,9 +331,35 @@ namespace Gamma.Models
                             });
                         else
                         {
+                        if (!item.QuantityIsReadOnly)
+                        {
+                            WithdrawalMaterialsIn.Remove(item);
+                            WithdrawalMaterialsIn.Add(new WithdrawalMaterial()
+                            {
+                                NomenclatureID = (Guid)addedItem.NomenclatureId,
+                                CharacteristicID = addedItem.CharacteristicId,
+                                NomenclatureName = addedItem.NomenclatureName,
+                                QuantityIsReadOnly = true,
+                                Quantity = addedItem.Quantity,
+                                BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                                MeasureUnit = addedItem.MeasureUnit,
+                                MeasureUnitID = addedItem.MeasureUnitID,
+                                WithdrawByFact = true
+                            });
+                        }
+                        else
+                        {
                             item.Quantity = item.Quantity + addedItem.Quantity;
                             item.BaseQuantity = item.BaseQuantity + addedItem.Quantity;
+                        }
                         };
+
+                        item = WithdrawalMaterialsOut.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
+                        if (item != null)
+                        {
+                            if (!item.QuantityIsReadOnly) item.QuantityIsReadOnly = true;
+                        }
 
                         item = WithdrawalMaterialsRemainderAtEnd.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
                         if (item == null)
@@ -409,10 +436,36 @@ namespace Gamma.Models
                             });
                         else
                         {
+                        if (!item.QuantityIsReadOnly)
+                        {
+                            WithdrawalMaterialsOut.Remove(item);
+                            WithdrawalMaterialsOut.Add(new WithdrawalMaterial()
+                            {
+                                NomenclatureID = (Guid)addedItem.NomenclatureId,
+                                CharacteristicID = addedItem.CharacteristicId,
+                                NomenclatureName = addedItem.NomenclatureName,
+                                QuantityIsReadOnly = true,
+                                Quantity = addedItem.Quantity,
+                                BaseQuantity = addedItem.Quantity,//addedItem.BaseQuantity,
+                                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                                MeasureUnit = addedItem.MeasureUnit,
+                                MeasureUnitID = addedItem.MeasureUnitID,
+                                WithdrawByFact = true
+                            });
+                        }
+                        else
+                        {
                             item.Quantity = item.Quantity + addedItem.Quantity;
                             item.BaseQuantity = item.BaseQuantity + addedItem.Quantity;
+                        }
                         };
-                        
+
+                        item = WithdrawalMaterialsIn.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
+                        if (item != null)
+                        {
+                            if (!item.QuantityIsReadOnly) item.QuantityIsReadOnly = true;
+                        }
+
                         item = WithdrawalMaterialsRemainderAtEnd.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
                         if (item == null)
                             WithdrawalMaterialsRemainderAtEnd.Add(new WithdrawalMaterial()
