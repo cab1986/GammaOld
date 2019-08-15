@@ -4,6 +4,7 @@
     xmlns:vm="clr-namespace:Gamma.ViewModels" 
     xmlns:v="clr-namespace:Gamma.Views" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
     xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -71,7 +72,7 @@
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
             <dxlc:LayoutControl Orientation="Vertical">
                 <dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="170" Height="200">
+                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="170" Height="215">
                         <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
                         </dxlc:LayoutItem>
@@ -83,14 +84,14 @@
                         </dxlc:LayoutItem>
                         <Button Command="{Binding UploadTo1CCommand}" Content="Выгрузить в 1С" Height="25"/>
                     </dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup Orientation="Vertical">
-                        <dxlc:LayoutItem>
+                    <dx:DXTabControl Height="215">
+                        <dx:DXTabItem Header="На раскатах" Visibility="{Binding IsVisibilityUnwinderRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ContentControl Content="{Binding CurrentViewModelUnwinderRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
-                        </dxlc:LayoutItem>
-                        <dxlc:LayoutItem>
+                        </dx:DXTabItem>
+                        <dx:DXTabItem Header="Передано следующей смене" Visibility="{Binding IsVisibilityRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ContentControl Content="{Binding CurrentViewModelRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
-                        </dxlc:LayoutItem>
-                    </dxlc:LayoutGroup>
+                        </dx:DXTabItem>
+                    </dx:DXTabControl>
                     <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
                         <Button Content="Заполнить рапорт"  Height="30" Margin="10,15" Command="{Binding FillGridCommand}"/>
                         <Button Content="Очистить рапорт" Height="30" Margin="10" Command = "{Binding ClearGridCommand}"/>

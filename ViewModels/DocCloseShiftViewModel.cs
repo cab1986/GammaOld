@@ -37,6 +37,9 @@ namespace Gamma.ViewModels
                 IsNewDoc = false;
                 Title = "Закрытие смены №" + Doc.Number;
             }
+            IsVisibilityUnwinderRemainder = false;
+            IsVisibilityRemainder = false;
+
             var placeGroupID = GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
             switch (placeGroupID)
             {
@@ -46,6 +49,7 @@ namespace Gamma.ViewModels
                         ? new DocCloseShiftPMGridViewModel()
                         : new DocCloseShiftPMGridViewModel((Guid)msg.DocID);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
+                    IsVisibilityRemainder = true;
                     break;
                 case (short)PlaceGroup.Wr:
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
@@ -53,10 +57,13 @@ namespace Gamma.ViewModels
                 case (short)PlaceGroup.Rw:
                     CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg);
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
+                    IsVisibilityUnwinderRemainder = true; 
                     break;
                 case (short)PlaceGroup.Convertings:
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
+                    IsVisibilityUnwinderRemainder = true;
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
+                    IsVisibilityRemainder = true;
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel()
                         : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
@@ -95,6 +102,9 @@ namespace Gamma.ViewModels
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public bool IsConfirmed { get; set; }
+        public bool IsVisibilityUnwinderRemainder { get; set; }
+        public bool IsVisibilityRemainder { get; set; }
+
         private SaveImplementedViewModel _currentViewModelGrid;
         public SaveImplementedViewModel CurrentViewModelGrid 
         {
