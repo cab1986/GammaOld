@@ -12,6 +12,7 @@ using Gamma.Entities;
 using Gamma.Interfaces;
 using Gamma.Models;
 using System.Data.Entity.Validation;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -33,7 +34,12 @@ namespace Gamma.ViewModels
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
         }
 
-        public DocCloseShiftConvertingGridViewModel(Guid docId) : this()
+        public DocCloseShiftConvertingGridViewModel(DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
+        {
+            CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
+        }
+
+        public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
         {
             using (var gammaBase = DB.GammaDb)
             {
@@ -54,6 +60,7 @@ namespace Gamma.ViewModels
                 CloseDate = doc.Date;
                 IsConfirmed = doc.IsConfirmed;
                 DocId = docId;
+                CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
                 //Получение списка списанных материалов
                 //WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(gammaBase.DocWithdrawalMaterials
                 //    .Where(dm => dm.DocWithdrawal.DocCloseShift.FirstOrDefault().DocID == docId)
@@ -154,6 +161,9 @@ namespace Gamma.ViewModels
         public void FillGrid()
         {
             UIServices.SetBusyState();
+            var dlgResult = MessageBox.Show("Обновить на текущий момент тамбура на раскатах?", "Тамбур на раскате", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (dlgResult == MessageBoxResult.Yes)
+                CurrentViewModelUnwinderRemainder?.FillGrid();
             ClearGrid();
             using (var gammaBase = DB.GammaDb)
             {
@@ -319,8 +329,9 @@ namespace Gamma.ViewModels
         private int PlaceID { get; set; }
         private int ShiftID { get; set; }
         private DateTime CloseDate { get; set; }
+        private DocCloseShiftUnwinderRemainderViewModel CurrentViewModelUnwinderRemainder { get; set; }
 
-        public bool IsWithdrawalMaterial { get; set; }
+    public bool IsWithdrawalMaterial { get; set; }
 
         private List<Guid> productionProductCharacteristicIDs { get; set; }
 

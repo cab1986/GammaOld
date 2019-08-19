@@ -64,9 +64,10 @@ namespace Gamma.ViewModels
                     IsVisibilityUnwinderRemainder = true;
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
                     IsVisibilityRemainder = true;
+                    var cc = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
-                        ? new DocCloseShiftConvertingGridViewModel()
-                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
+                        ? new DocCloseShiftConvertingGridViewModel(cc)
+                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, cc);
                     break;
                 case (short)PlaceGroup.Baler:
                     CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);

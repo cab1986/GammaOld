@@ -72,7 +72,7 @@
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
             <dxlc:LayoutControl Orientation="Vertical">
                 <dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="170" Height="215">
+                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="170" Height="218">
                         <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
                         </dxlc:LayoutItem>
@@ -84,7 +84,7 @@
                         </dxlc:LayoutItem>
                         <Button Command="{Binding UploadTo1CCommand}" Content="Выгрузить в 1С" Height="25"/>
                     </dxlc:LayoutGroup>
-                    <dx:DXTabControl Height="215">
+                    <dx:DXTabControl Height="218">
                         <dx:DXTabItem Header="На раскатах" Visibility="{Binding IsVisibilityUnwinderRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ContentControl Content="{Binding CurrentViewModelUnwinderRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
                         </dx:DXTabItem>
