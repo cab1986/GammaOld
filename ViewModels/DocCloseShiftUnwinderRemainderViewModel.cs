@@ -75,7 +75,8 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {
-                gammaBase.DocCloseShiftRemainders.RemoveRange(gammaBase.DocCloseShiftRemainders.Where(d => d.DocID == itemID));
+                //d.Products.ProductKindID == 0 - мне надо удалить остатки на раскате, по другому никак не определить именно тамбура на раскате, так как для конвертингов остатки на раскате - это полуфабрикат переходящий, а для БДМ - это выработка переходящая.Поэтому ни IsSourceProduct, ни RemainderTypeID не подходит
+                gammaBase.DocCloseShiftRemainders.RemoveRange(gammaBase.DocCloseShiftRemainders.Where(d => d.DocID == itemID && (d.Products.ProductKindID == 0)));
                 //gammaBase.SaveChanges();
                 var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
                 foreach (var remainder in remainders)
