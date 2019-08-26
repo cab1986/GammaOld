@@ -136,11 +136,11 @@ namespace Gamma.Models
                     return;
                 }
                 // Если не тамбур или тамбур, но не утилизация, то возврат (2 состояния недоступно)
-                if (value && (ProductState != ProductState.Broke || BrokeDecisionProduct.ProductKind != ProductKind.ProductSpool) && 
+                if (value && (ProductState != ProductState.Broke || (ProductState == ProductState.Broke && (BrokeDecisionProduct.ProductKind != ProductKind.ProductSpool && BrokeDecisionProduct.ProductKind != ProductKind.ProductPallet))) && 
                     (
                         BrokeDecisionProducts.Any(p => p.ProductState != ProductState 
                         && p.ProductId == BrokeDecisionProduct.ProductId
-                        && (p.ProductState != ProductState.Broke || BrokeDecisionProduct.ProductKind != ProductKind.ProductSpool) && p.ProductState != ProductState.NeedsDecision)
+                        && (p.ProductState != ProductState.Broke || (p.ProductState == ProductState.Broke && (BrokeDecisionProduct.ProductKind != ProductKind.ProductSpool && BrokeDecisionProduct.ProductKind != ProductKind.ProductPallet))) && p.ProductState != ProductState.NeedsDecision)
                     )) return;
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
@@ -153,7 +153,7 @@ namespace Gamma.Models
                     
                     if (!BrokeDecisionProducts.Contains(BrokeDecisionProduct))
                         BrokeDecisionProducts.Add(BrokeDecisionProduct);
-                    if (BrokeDecisionProduct.ProductKind == ProductKind.ProductSpool) // ветка для тамбуров
+                    if (BrokeDecisionProduct.ProductKind == ProductKind.ProductSpool || BrokeDecisionProduct.ProductKind == ProductKind.ProductPallet) // ветка для тамбуров
                     {
                         var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId).Except(new List<BrokeDecisionProduct>
                         {
@@ -202,7 +202,7 @@ namespace Gamma.Models
                 }
                 else
                 {
-                    if (BrokeDecisionProduct.ProductKind == ProductKind.ProductSpool)
+                    if (BrokeDecisionProduct.ProductKind == ProductKind.ProductSpool || BrokeDecisionProduct.ProductKind == ProductKind.ProductPallet)
                     {
                         var sumQuantity = BrokeDecisionProducts.Except(new List<BrokeDecisionProduct>
                         {
