@@ -17,7 +17,7 @@
         <dx:DialogService DialogWindowStartupLocation="CenterOwner">
             <dx:DialogService.ViewTemplate>
                 <DataTemplate>
-                    <dialogs:SetBaleWeightDialog/>
+                    <dialogs:SetQuantityDialog/>
                 </DataTemplate>
             </dx:DialogService.ViewTemplate>
             <dx:DialogService.DialogStyle>

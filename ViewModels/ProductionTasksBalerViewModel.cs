@@ -64,7 +64,7 @@ namespace Gamma.ViewModels
 
         private void CreateNewBale()
         {
-            var model = new SetBaleWeightDialogModel(SelectedProductionTaskBaler.NomenclatureName);
+            var model = new SetQuantityDialogModel("Укажите вес кипы " + SelectedProductionTaskBaler.NomenclatureName, "Вес кипы, кг");
             var okCommand = new UICommand()
             {
                 Caption = "OK",
@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
                 IsDefault = true,
                 Command = new DelegateCommand<CancelEventArgs>(
             x => DebugFunc(),
-            x => model.Weight > 0),
+            x => model.Quantity > 0),
             };
             var cancelCommand = new UICommand()
             {
@@ -119,7 +119,7 @@ namespace Gamma.ViewModels
                             {
                                 DocID = docId,
                                 ProductID = productId,
-                                Quantity = (decimal)model.Weight/1000,
+                                Quantity = (decimal)model.Quantity/1000,
                                 C1CNomenclatureID = productionTask.C1CNomenclatureID,
                                 C1CCharacteristicID = productionTask.C1CCharacteristicID,
                                 Products = new Products()
@@ -132,7 +132,7 @@ namespace Gamma.ViewModels
                                         ProductID = productId,
                                         C1CNomenclatureID = (Guid)productionTask.C1CNomenclatureID,
                                         C1CCharacteristicID = productionTask.C1CCharacteristicID,
-                                        Weight = (decimal)model.Weight/1000
+                                        Weight = (decimal)model.Quantity/1000
                                     }
                                 }
                             }

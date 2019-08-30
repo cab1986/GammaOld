@@ -53,7 +53,11 @@ namespace Gamma.ViewModels
             IsConfirmed = gammaBase.Docs.First(d => d.DocID == DocId).IsConfirmed;
         }
 
+        /// <summary>
+        /// ID продукта
+        /// </summary>
         public Guid? ProductId { get; private set; }
+
         public Guid? DocId { get; private set; }
 
         public ObservableCollection<ProductItem> PalletItems

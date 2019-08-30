@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using Gamma.Common;
 using Gamma.Entities;
+using Gamma.DialogViewModels;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Gamma.ViewModels
 {
@@ -75,6 +78,7 @@ namespace Gamma.ViewModels
                     break;
                 case BatchKinds.SGI:
                     NewProductText = "Печать транспортной этикетки";//WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать транспортной этикетки";
+                    NewProductRText = "Печать неполной этикетки";
                     GetStatusApplicator();
                     //ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить принтер" : "Включить принтер" : "Не нажимать";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
@@ -83,6 +87,7 @@ namespace Gamma.ViewModels
             }
             MakeProductionTaskActiveForPlaceCommand = new DelegateCommand(MakeProductionTaskActiveForPlace, CanMakeProductionTaskActiveForPlace);
             CreateNewProductCommand = new DelegateCommand(CreateNewProduct, CanCreateNewProduct);
+            CreateNewProductRCommand = new DelegateCommand(CreateNewProductR, CanCreateNewProductR);
             //!WorkSession.IsRemotePrinting ? new DelegateCommand(CreateNewProduct, CanCreateNewProduct) 
             //: new DelegateCommand(MakeProductionTaskActiveForPlace, DB.HaveWriteAccess("ActiveProductionTasks"));
             ChangeStatusApplicatorCommand = new DelegateCommand(ChangeStatusApplicator, CanChangeStatusApplicator);
@@ -253,6 +258,12 @@ namespace Gamma.ViewModels
                     return false;
             }
         }
+
+        private bool CanCreateNewProductR()
+        {
+            return CanCreateNewProduct();
+        }
+
         /*
         private Visibility _visiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
 
@@ -279,7 +290,23 @@ namespace Gamma.ViewModels
                 if (value == Visibility.Visible && !CanCreateNewProduct())
                     return;
                 _visiblityCreateNewProduct = value;
+                if (VisiblityCreateNewProductR != value)
+                    VisiblityCreateNewProductR = value;
                 RaisePropertyChanged("VisiblityCreateNewProduct");
+            }
+        }
+
+
+        private Visibility _visiblityCreateNewProductR = Visibility.Collapsed;
+        public Visibility VisiblityCreateNewProductR
+        {
+            get { return _visiblityCreateNewProductR; }
+            set
+            {
+                if (value == Visibility.Visible && BatchKind != BatchKinds.SGI)
+                    return;
+                _visiblityCreateNewProductR = value;
+                RaisePropertyChanged("VisiblityCreateNewProductR");
             }
         }
 
@@ -355,8 +382,12 @@ namespace Gamma.ViewModels
 
         private string _number;
         public string NewProductText { get; set; }
+        /// <summary>
+        /// Печать транспортной этикетки  неполной паллеты
+        /// </summary>
+        public string NewProductRText { get; set; }
 
-        
+
         private string _makeProductionTaskActiveForPlaceText;
         public string MakeProductionTaskActiveForPlaceText
         {
@@ -398,6 +429,11 @@ namespace Gamma.ViewModels
         /// Создание нового продукта. В конструкторе привязка к CreateNewProduct();
         /// </summary>
         public DelegateCommand CreateNewProductCommand { get; private set; }
+
+        /// <summary>
+        /// Создание нового продукта. В конструкторе привязка к CreateNewProductR();
+        /// </summary>
+        public DelegateCommand CreateNewProductRCommand { get; private set; }
 
         /// <summary>
         /// Активация задания. В конструкторе привязка к MakeProductionTaskActiveForPlace();
@@ -647,8 +683,52 @@ namespace Gamma.ViewModels
             }
         }
 
-        //Создание нового продукта
+        private void CreateNewProductR()
+        {
+            var dialogResult = MessageBox.Show("Создание транспортной этикетки неполной паллеты! Вы уверены?", "Внимание!",MessageBoxButton.YesNo,MessageBoxImage.Warning);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете","Кол-во, рул/пачка");
+                var okCommand = new UICommand()
+                {
+                    Caption = "OK",
+                    IsCancel = false,
+                    IsDefault = true,
+                    Command = new DelegateCommand<CancelEventArgs>(
+                x => DebugFunc(),
+                x => model.Quantity > 0),
+                };
+                var cancelCommand = new UICommand()
+                {
+                    Id = MessageBoxResult.Cancel,
+                    Caption = "Отмена",
+                    IsCancel = true,
+                    IsDefault = false,
+                };
+                var dialogService = GetService<IDialogService>("");
+                var result = dialogService.ShowDialog(
+                    dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                    title: "Кол-во рулончиков/пачек",
+                    viewModel: model);
+                if (result == okCommand)
+                    CreateNewProduct(model.Quantity);
+            }
+        }
+
+        //protected IDialogService dialogService { get { return this.GetService<IDialogService>(); } }
+
+        private void DebugFunc()
+        {
+            Debug.Print("Кол-во задано");
+        }
+
         private void CreateNewProduct()
+        {
+            CreateNewProduct(null);
+        }
+
+        //Создание нового продукта
+        private void CreateNewProduct(int? baseQuantity )
         {
             using (var gammaBase = DB.GammaDb)
             {
@@ -751,11 +831,18 @@ namespace Gamma.ViewModels
                         var productionTask =
                             gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
                                     (short)PlaceGroup.Convertings).FirstOrDefault();
-                            if (productionTask == null) return;
-                            var baseQuantity =
-                            (int)(gammaBase.C1CCharacteristics.Where(
-                                c => c.C1CCharacteristicID == productionTask.C1CCharacteristicID)
-                                .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First() ?? 0);
+                        if (productionTask == null) return;
+                        byte productKindID = (byte)ProductKind.ProductPallet;
+                        var reportName = "Амбалаж";
+                        if (baseQuantity == null)
+                            baseQuantity = (int)(gammaBase.C1CCharacteristics.Where(
+                            c => c.C1CCharacteristicID == productionTask.C1CCharacteristicID)
+                            .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First() ?? 0);
+                        else
+                        {
+                            productKindID = (byte)ProductKind.ProductPalletR;
+                            reportName = "Неполная паллета";
+                        }
                         // получаем предыдущий документ в базе
                         var doc = gammaBase.Docs.Include(d => d.DocProduction)
                             .Where(d => d.PlaceID == WorkSession.PlaceID // && d.ShiftID == null
@@ -779,7 +866,7 @@ namespace Gamma.ViewModels
                                 product = new Products()
                                 {
                                     ProductID = productId,
-                                    ProductKindID = (byte) ProductKind.ProductPallet,
+                                    ProductKindID = productKindID,
                                     ProductPallets = new ProductPallets()
                                     {
                                         ProductID = productId,
@@ -858,7 +945,7 @@ namespace Gamma.ViewModels
                             product = new Products()
                             {
                                 ProductID = productId,
-                                ProductKindID = (byte)ProductKind.ProductPallet,
+                                ProductKindID = productKindID,
                                 ProductPallets = new ProductPallets()
                                 {
                                     ProductID = productId,
@@ -947,12 +1034,12 @@ namespace Gamma.ViewModels
                                 if (docWithdrawalProduct.DocWithdrawal.DocProduction == null) docWithdrawalProduct.DocWithdrawal.DocProduction = new List<DocProduction>();
                                 docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
-                            gammaBase.SaveChanges();
+                        gammaBase.SaveChanges();
                         
-#if (!DEBUG)
-                        ReportManager.PrintReport("Амбалаж", "Pallet", doc.DocID, false, 2);
-#endif
-                            RefreshProduction();
+//#if (!DEBUG)
+                        ReportManager.PrintReport(reportName, "Pallet", doc.DocID, false, 2);
+//#endif
+                        RefreshProduction();
                         break;
                 }
             }
@@ -1111,6 +1198,9 @@ namespace Gamma.ViewModels
                     break;
                 case ProductKind.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.ProductID);
+                    break;
+                case ProductKind.ProductPalletR:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedProductionTaskProduct.ProductID);
                     break;
                 default:
                     MessageBox.Show("Ошибка программы, действие не предусмотрено");

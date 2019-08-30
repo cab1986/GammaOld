@@ -81,7 +81,10 @@ namespace Gamma.ViewModels
                                 ? (byte) ProductKind.ProductSpool
                                 : msg.DocProductKind == DocProductKinds.DocProductGroupPack
                                     ? (byte) ProductKind.ProductGroupPack
-                                    : msg.DocProductKind == DocProductKinds.DocProductPallet ? (byte) ProductKind.ProductPallet
+                                    : msg.DocProductKind == DocProductKinds.DocProductPallet 
+                                    ? (byte) ProductKind.ProductPallet
+                                    : msg.DocProductKind == DocProductKinds.DocProductPalletR
+                                    ? (byte)ProductKind.ProductPalletR
                                     : (byte) ProductKind.ProductBale
                     };
                     GammaBase.Products.Add(product);
@@ -157,6 +160,14 @@ namespace Gamma.ViewModels
                     break;
                 case DocProductKinds.DocProductPallet:
                     Title = "Паллета";
+                    Number = product?.Number;
+                    Title = $"{Title} № {Number}";
+                    AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke");
+                    //CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
+                    CurrentViewModel = new DocProductPalletViewModel(product.ProductID);
+                    break;
+                case DocProductKinds.DocProductPalletR:
+                    Title = "Неполная паллета";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke");
@@ -470,6 +481,17 @@ namespace Gamma.ViewModels
                     }
                 }
             
+            if (CurrentViewModel is DocProductPalletViewModel)
+            {
+                var palletViewModel = CurrentViewModel as DocProductPalletViewModel;
+                var palletKindID = GammaBase.Products.Where(r => r.ProductID == palletViewModel.ProductId).Select(r => r.ProductKindID).FirstOrDefault();
+                if (palletKindID == (byte)ProductKind.ProductPalletR  && reportName != "Неполная паллета" && parentName == "Pallet")
+                {
+                    MessageBox.Show("Нельзя печатать этикетку полной паллеты на неполную!", "Ошибка печати неполной паллеты", MessageBoxButton.OK,
+                        MessageBoxImage.Asterisk);
+                    return;
+                }
+            }
             using (var gammaBase = DB.GammaDb)
                 {
                     var state =
@@ -542,6 +564,9 @@ namespace Gamma.ViewModels
                             break;
                         case (int)ProductKind.ProductPallet:
                             MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedRelation.ProductID);
+                            break;
+                        case (int)ProductKind.ProductPalletR:
+                            MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedRelation.ProductID);
                             break;
                     }
                     break;

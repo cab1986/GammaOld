@@ -48,6 +48,8 @@ namespace Gamma
         ProductPallet,
         [Description("Групповые упаковки")]
         ProductGroupPack,
+        [Description("Россыпь")]
+        ProductPalletR,
         [Description("Кипы")]
         ProductBale
     }
@@ -110,7 +112,8 @@ namespace Gamma
         DocProductUnload,
         DocProductPallet,
         DocProductGroupPack,
-        DocProductBale
+        DocProductBale,
+        DocProductPalletR
     }
     public enum DocTypes
     {
