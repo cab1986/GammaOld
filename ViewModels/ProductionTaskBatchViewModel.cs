@@ -77,8 +77,8 @@ namespace Gamma.ViewModels
                     //                    PlaceGroupID = (int)PlaceGroups.RW;
                     break;
                 case BatchKinds.SGI:
-                    NewProductText = "Печать транспортной этикетки";//WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать транспортной этикетки";
-                    NewProductRText = "Печать неполной этикетки";
+                    NewProductText = "Транспортная этикетка";//WorkSession.IsRemotePrinting? "Сделать задание активным" : "Печать транспортной этикетки";
+                    NewProductRText = "Неполная этикетка";
                     GetStatusApplicator();
                     //ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить принтер" : "Включить принтер" : "Не нажимать";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
@@ -165,6 +165,16 @@ namespace Gamma.ViewModels
                     else
                     {
                         MessageBox.Show("Не достаточно прав для удаления паллеты");
+                    }
+                    break;
+                case ProductKind.ProductPalletR:
+                    if (DB.HaveWriteAccess("ProductPallets"))
+                    {
+                        GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не достаточно прав для удаления неполной паллеты");
                     }
                     break;
             }

@@ -717,7 +717,20 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpecificationInputNomenclature_Result>("GetSpecificationInputNomenclature", nomenclatureIDParameter, characteristicIDParameter, placeGroupIDParameter);
         }
-    
+
+        public virtual ObjectResult<GetSpecificationNomenclatureOnPlace_Result> GetSpecificationNomenclatureOnPlace(Nullable<int> placeID, Nullable<System.DateTime> date)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpecificationNomenclatureOnPlace_Result>("GetSpecificationNomenclatureOnPlace", placeIDParameter, dateParameter);
+        }
+
         public virtual ObjectResult<string> DeletPlaceZone(Nullable<System.Guid> placeZoneID)
         {
             var placeZoneIDParameter = placeZoneID.HasValue ?

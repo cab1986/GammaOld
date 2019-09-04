@@ -338,6 +338,7 @@
           <Property Name="Marked" Type="bit" />
           <Property Name="Folder" Type="bit" />
           <Property Name="SpecificationType" Type="tinyint" />
+          <Property Name="ValidTill" Type="datetime" />
         </EntityType>
         <EntityType Name="1CWarehouses">
           <Key>
@@ -4869,7 +4870,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
         </Function>
-        <Function Name="GetSpoolCoreWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="decimal">
+      <Function Name="GetSpecificationNomenclatureOnPlace" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Parameter Name="PlaceID" Type="int" Mode="In" />
+        <Parameter Name="Date" Type="datetime2" Mode="In" />
+      </Function>
+      <Function Name="GetSpoolCoreWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="decimal">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetSpoolDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="smallint">
@@ -7438,6 +7443,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
             <Parameter Name="PlaceGroupID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetSpecificationNomenclatureOnPlace" ReturnType="Collection(GammaModel.GetSpecificationNomenclatureOnPlace_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
+          </FunctionImport>
           <EntitySet Name="vPlacePropertiesValues" EntityType="GammaModel.vPlacePropertiesValues" />
           <EntitySet Name="PlaceZones" EntityType="GammaModel.PlaceZones" />
           <AssociationSet Name="FK_PlaceZones_PlaceZones" Association="GammaModel.FK_PlaceZones_PlaceZones">
@@ -8455,6 +8464,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Marked" Type="Boolean" />
           <Property Name="Folder" Type="Boolean" />
           <Property Name="SpecificationType" Type="Byte" />
+          <Property Name="ValidTill" Type="DateTime" Precision="3" />
           <NavigationProperty Name="C1CSpecificationInputNomenclature" Relationship="GammaModel.FK_1CSpecificationInputNomenclature_1CSpecifications1" FromRole="C1CSpecifications" ToRole="C1CSpecificationInputNomenclature" />
           <NavigationProperty Name="C1CSpecificationOutputNomenclature" Relationship="GammaModel.FK_1CSpecificationOutputNomenclature_1CSpecifications1" FromRole="C1CSpecifications" ToRole="C1CSpecificationOutputNomenclature" />
           <NavigationProperty Name="C1CNomenclatureAnalogs" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CSpecifications" FromRole="C1CSpecifications" ToRole="C1CNomenclatureAnalogs" />
@@ -9661,6 +9671,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="GetSpecificationNomenclatureOnPlace_Result">
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
+          <Property Name="Date" Type="DateTime" Nullable="true" Precision="3" />
+          <Property Name="ValidTill" Type="DateTime" Nullable="true" Precision="3" />
         </ComplexType>
         <EntityType Name="vPlacePropertiesValues">
           <Key>
@@ -13372,6 +13390,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+                <ScalarProperty Name="ValidTill" ColumnName="ValidTill" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -14019,6 +14038,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="CharacteristicName" ColumnName="CharacteristicName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetSpecificationNomenclatureOnPlace" FunctionName="GammaDBModel.GetSpecificationNomenclatureOnPlace">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetSpecificationNomenclatureOnPlace_Result">
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="CharacteristicName" ColumnName="CharacteristicName" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ValidTill" ColumnName="ValidTill" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

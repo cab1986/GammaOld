@@ -53,13 +53,13 @@
             <ToolBar.Resources>
                 <Style x:Key="{x:Static ToolBar.ButtonStyleKey}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}" />
             </ToolBar.Resources>
-            <Button Content="{Binding MakeProductionTaskActiveForPlaceText}" Command="{Binding MakeProductionTaskActiveForPlaceCommand}" FontSize="20" FontWeight="Bold" Background="LightSteelBlue"/>
-            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProduct}" Background="LightSteelBlue"/>
-            <Button Content="{Binding NewProductRText}" Command="{Binding CreateNewProductRCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProductR}" Background="LightSteelBlue"/>
+            <Button Content="{Binding MakeProductionTaskActiveForPlaceText}" Command="{Binding MakeProductionTaskActiveForPlaceCommand}" FontSize="20" FontWeight="Bold" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
+            <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProduct}" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
+            <Button Content="{Binding NewProductRText}" Command="{Binding CreateNewProductRCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityCreateNewProductR}" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
         </ToolBar>
         <ToolBar Grid.Row="0" HorizontalAlignment="Right" >
-            <Button Content="Напечатать групповую этикетку" Command="{Binding PrintGroupPackLabelCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue"/>
-            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue"/>
+            <Button Content="Напечатать этикетку ГУ" Command="{Binding PrintGroupPackLabelCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
+            <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
         </ToolBar>
         <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
             <dx:DXTabItem Header="Параметры задания">

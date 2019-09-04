@@ -229,7 +229,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        private ObservableCollection<Place> _places;
+        private ObservableCollection<Place> _places = new ObservableCollection<Place>();
 
         /// <summary>
         /// Список конвертингов
@@ -239,7 +239,12 @@ namespace Gamma.ViewModels
             get { return _places; }
             set
             {
-                _places = value;
+                //_places = value;
+                _places.Clear();
+                foreach (var place in value)
+                {
+                    _places.Add(place);
+                }
                 if (_places.Select(p => p.PlaceID).Contains(PlaceID??-1)) return;
                 if (_places.Count > 0) PlaceID = _places[0].PlaceID;
                 else PlaceID = null;
@@ -326,9 +331,14 @@ namespace Gamma.ViewModels
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)
         {
             base.NomenclatureChanged(msg);
+            RefreshPlaces();
+        }
+        
+        public void RefreshPlaces()
+        {
             if (
                 GammaBase.C1CMainSpecifications.Any(
-                    ms => ms.C1CNomenclatureID == NomenclatureID && !ms.C1CPlaceID.HasValue))
+                    ms => ms.C1CNomenclatureID == NomenclatureID && !ms.C1CPlaceID.HasValue && ms.Period <= DateBegin && (ms.C1CSpecifications.ValidTill == null || ms.C1CSpecifications.ValidTill >= DateBegin)))
             {
                 Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings
                     && p.BranchID == WorkSession.BranchID).Select(p => new Place()
@@ -338,18 +348,20 @@ namespace Gamma.ViewModels
                     }));
                 return;
             }
-            Places = new ObservableCollection<Place>(GammaBase.C1CMainSpecifications.Where(ms => ms.C1CNomenclatureID == NomenclatureID 
+            Places = new ObservableCollection<Place>(GammaBase.C1CMainSpecifications.Where(ms => ms.C1CNomenclatureID == NomenclatureID
+                && ms.Period <= DateBegin && (ms.C1CSpecifications.ValidTill == null || ms.C1CSpecifications.ValidTill >= DateBegin)
                 && ms.C1CPlaces.Places.FirstOrDefault().BranchID == WorkSession.BranchID && ms.C1CPlaces.Places.FirstOrDefault().PlaceGroupID == (short)PlaceGroup.Convertings)
                 .Select(ms => new Place()
                 {
                     PlaceID = ms.C1CPlaces.Places.FirstOrDefault().PlaceID,
                     PlaceName = ms.C1CPlaces.Places.FirstOrDefault().Name
                 }).Distinct());
-            if (Places.Count == 0)
+            if (Places.Count == 0 && NomenclatureID != null && DateBegin != null)
                 MessageBox.Show(
                     "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
                     "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
+
         //public override bool CanSaveExecute()
         //{
         //    return false;
@@ -467,6 +479,7 @@ namespace Gamma.ViewModels
             {
                 _dateBegin = value;
                 DateEnd = value;
+                RefreshPlaces();
                 RaisePropertyChanged("DateBegin");
             }
         }
