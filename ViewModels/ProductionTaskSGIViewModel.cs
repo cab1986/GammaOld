@@ -31,7 +31,7 @@ namespace Gamma.ViewModels
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             PlaceGroupID = (int)PlaceGroup.Convertings;
-            Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings).
+            Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings && p.BranchID == WorkSession.BranchID).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID, PlaceName = p.Name
@@ -265,6 +265,7 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
+                RefreshCharacteristics();
                 RaisePropertiesChanged("PlaceID");
             }
         }
@@ -334,32 +335,37 @@ namespace Gamma.ViewModels
             RefreshPlaces();
         }
         
+        public void RefreshCharacteristics()
+        {
+            Characteristics = new ObservableCollection<Characteristic>(GammaBase.GetSpecificationNomenclatureOnPlace(PlaceID, null)
+                .Where(n => n.C1CNomenclatureID == NomenclatureID && n.C1CCharacteristicID != Guid.Empty)
+                .Select(n => new Characteristic()
+                {
+                    CharacteristicID = (Guid)n.C1CCharacteristicID,
+                    CharacteristicName = n.CharacteristicName
+                }).Distinct()
+                );
+        }
         public void RefreshPlaces()
         {
-            if (
-                GammaBase.C1CMainSpecifications.Any(
-                    ms => ms.C1CNomenclatureID == NomenclatureID && !ms.C1CPlaceID.HasValue && ms.Period <= DateBegin && (ms.C1CSpecifications.ValidTill == null || ms.C1CSpecifications.ValidTill >= DateBegin)))
-            {
-                Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings
-                    && p.BranchID == WorkSession.BranchID).Select(p => new Place()
-                    {
-                        PlaceID = p.PlaceID,
-                        PlaceName = p.Name
-                    }));
-                return;
-            }
-            Places = new ObservableCollection<Place>(GammaBase.C1CMainSpecifications.Where(ms => ms.C1CNomenclatureID == NomenclatureID
-                && ms.Period <= DateBegin && (ms.C1CSpecifications.ValidTill == null || ms.C1CSpecifications.ValidTill >= DateBegin)
-                && ms.C1CPlaces.Places.FirstOrDefault().BranchID == WorkSession.BranchID && ms.C1CPlaces.Places.FirstOrDefault().PlaceGroupID == (short)PlaceGroup.Convertings)
-                .Select(ms => new Place()
+            var places = GammaBase.GetSpecificationNomenclatureOnPlace(null, null)
+                .Where(n => n.C1CNomenclatureID == NomenclatureID)
+                .Select(n => new Place()
                 {
-                    PlaceID = ms.C1CPlaces.Places.FirstOrDefault().PlaceID,
-                    PlaceName = ms.C1CPlaces.Places.FirstOrDefault().Name
-                }).Distinct());
+                    PlaceID = n.PlaceID,
+                    PlaceName = n.PlaceName
+                }).Distinct();
+            Places.Clear();
+            foreach (var place in places)
+            {
+                if (!Places.Any(n => n.PlaceID == place.PlaceID))
+                    Places.Add(place);
+            }
+            RefreshCharacteristics();
             if (Places.Count == 0 && NomenclatureID != null && DateBegin != null)
-                MessageBox.Show(
-                    "Не найдено ни одного подходящего передела для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
-                    "Нет переделов", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            MessageBox.Show(
+                "Не найдено ни одной основной спецификации для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
+                "Нет спецификаций", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
         }
 
         //public override bool CanSaveExecute()

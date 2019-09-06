@@ -17,7 +17,9 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public string NomenclatureName { get; set; }
         public string CharacteristicName { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public Nullable<System.DateTime> Period { get; set; }
         public Nullable<System.DateTime> ValidTill { get; set; }
+        public int PlaceID { get; set; }
+        public string PlaceName { get; set; }
     }
 }

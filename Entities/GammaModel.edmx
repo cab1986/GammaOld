@@ -9677,8 +9677,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="CharacteristicName" Nullable="true" MaxLength="255" />
-          <Property Name="Date" Type="DateTime" Nullable="true" Precision="3" />
-          <Property Name="ValidTill" Type="DateTime" Nullable="true" Precision="3" />
+          <Property Type="DateTime" Name="Period" Nullable="true" Precision="3" />
+          <Property Type="DateTime" Name="ValidTill" Nullable="true" Precision="3" />
+          <Property Type="Int32" Name="PlaceID" Nullable="true" />
+          <Property Type="String" Name="PlaceName" Nullable="true" MaxLength="255" />
         </ComplexType>
         <EntityType Name="vPlacePropertiesValues">
           <Key>
@@ -14048,8 +14050,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="CharacteristicName" ColumnName="CharacteristicName" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
                 <ScalarProperty Name="ValidTill" ColumnName="ValidTill" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="PlaceName" ColumnName="PlaceName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
