@@ -239,6 +239,9 @@ namespace Gamma.ViewModels
                 case ProductKind.ProductPallet:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
                     break;
+                case ProductKind.ProductPalletR:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedProduct.ProductID);
+                    break;
                 case ProductKind.ProductBale:
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductBale, SelectedProduct.ProductID);
                     break;
