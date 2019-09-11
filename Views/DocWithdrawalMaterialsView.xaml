@@ -33,7 +33,8 @@
                             <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                        DisplayMember="NomenclatureName" 
                                        ValueMember="NomenclatureID" 
-                                       ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                       ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                       AllowSpinOnMouseWheel="False"/>
                         </DataTemplate>
                     </dxg:GridColumn.CellTemplate>
                 </dxg:GridColumn>

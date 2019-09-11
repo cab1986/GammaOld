@@ -45,7 +45,8 @@
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
                                                       ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
-                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"
+                                                          AllowSpinOnMouseWheel="False"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
@@ -92,7 +93,8 @@
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
                                                       ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
-                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
+                                                      IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"
+                                                      AllowSpinOnMouseWheel="False"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
@@ -137,7 +139,9 @@
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                                      ValueMember="NomenclatureIDDiezCharacteristicID" 
+                                                          ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                                          AllowSpinOnMouseWheel="False"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
@@ -181,8 +185,10 @@
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
-                                                          IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
+                                                      ValueMember="NomenclatureIDDiezCharacteristicID" 
+                                                          ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                                          IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"
+                                                          AllowSpinOnMouseWheel="False"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
@@ -222,7 +228,9 @@
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
                                                       DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureIDDiezCharacteristicID" ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" />
+                                                      ValueMember="NomenclatureIDDiezCharacteristicID" 
+                                                          ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
+                                                          AllowSpinOnMouseWheel="False"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>

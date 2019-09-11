@@ -52,7 +52,7 @@
                     </dxg:GridControl.View>
                 </dxg:GridControl>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Остатки продукции от переходов">
+            <dx:DXTabItem Header="Остатки продукции от переходов" Visibility="Collapsed">
                 <dxg:GridControl ItemsSource="{Binding NomenclatureRests}">
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Номенклатура"/>
