@@ -70,12 +70,21 @@ namespace Gamma.ViewModels
                 var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Convertings).FirstOrDefault();
                 if (productionTask != null)
                 {
-                    DateBegin = productionTask.DateBegin;
-                    DateEnd = productionTask.DateEnd;
                     NomenclatureID = productionTask.C1CNomenclatureID;
                     CharacteristicID = productionTask.C1CCharacteristicID;
-                    Quantity = (int)productionTask.Quantity;
                     PlaceID = productionTask.PlaceID;
+                    //после NomenclatureID, чтобы обновился список Places
+                    DateBegin = productionTask.DateBegin;
+                    DateEnd = productionTask.DateEnd;
+                    Quantity = (int)productionTask.Quantity;
+                    if (!Places.Any(p => p.PlaceID == PlaceID))
+                        foreach (var place in GammaBase.Places.Where(p => p.PlaceID == PlaceID).
+                                                Select(p => new Place()
+                                                {
+                                                    PlaceID = p.PlaceID,
+                                                    PlaceName = p.Name
+                                                }))
+                            Places.Add(place);
                     if (productionTask.PlaceID == WorkSession.PlaceID)
                     {
                         var checkResult = gammaBase.CheckProductionTaskSourceSpools(productionTask.PlaceID,
@@ -337,6 +346,7 @@ namespace Gamma.ViewModels
         
         public void RefreshCharacteristics()
         {
+            var currentCharacteristicID = CharacteristicID;
             Characteristics = new ObservableCollection<Characteristic>(GammaBase.GetSpecificationNomenclatureOnPlace(PlaceID, null)
                 .Where(n => n.C1CNomenclatureID == NomenclatureID && n.C1CCharacteristicID != Guid.Empty)
                 .Select(n => new Characteristic()
@@ -345,6 +355,16 @@ namespace Gamma.ViewModels
                     CharacteristicName = n.CharacteristicName
                 }).Distinct()
                 );
+            if (currentCharacteristicID != CharacteristicID)
+                CharacteristicID = currentCharacteristicID;
+            if (!Characteristics.Any(p => p.CharacteristicID == CharacteristicID))
+                foreach (var characteristic in GammaBase.C1CCharacteristics.Where(p => p.C1CCharacteristicID == CharacteristicID).
+                                        Select(p => new Characteristic()
+                                        {
+                                            CharacteristicID = p.C1CCharacteristicID,
+                                            CharacteristicName = p.Name
+                                        }))
+                    Characteristics.Add(characteristic);
         }
         public void RefreshPlaces()
         {
