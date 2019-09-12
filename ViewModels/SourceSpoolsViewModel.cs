@@ -116,9 +116,10 @@ namespace Gamma.ViewModels
         private void CreateRemainderSpool(Guid productId, decimal weight)
         {
             UIServices.SetBusyState();
-            
+            using (var gammaBase = DB.GammaDb)
+            {
                 var docWithdrawalProduct =
-                GammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
+                gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
                     .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
                 if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                 {
@@ -144,14 +145,15 @@ namespace Gamma.ViewModels
                             }
                         }
                     };
-                    GammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+                    gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
                 };
-                var product = GammaBase.vProductsInfo.First(p => p.ProductID == productId);
+                var product = gammaBase.vProductsInfo.First(p => p.ProductID == productId);
                 docWithdrawalProduct.Quantity = product.BaseMeasureUnitQuantity - weight / 1000;
                 docWithdrawalProduct.CompleteWithdrawal = false;
                 docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
-                GammaBase.SaveChanges();
+                gammaBase.SaveChanges();
                 ReportManager.PrintReport("Амбалаж", "Spool", docWithdrawalProduct.ProductID);
+            }
         }
 
         private byte CurrentUnwinder { get; set; }
