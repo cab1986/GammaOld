@@ -97,7 +97,7 @@ namespace Gamma.ViewModels
                     //}
                     docRemainder.Quantity = remainder.Weight;
                     // Списание части тамбура                
-                    if (remainder.IsSourceProduct && (remainder.MaxWeight - remainder.Weight) != 0)
+                    if (remainder.IsSourceProduct )// Чтобы в любом случае закрылась строка списания, пусть и с 0 расходом тамбура на раскате.&& (remainder.MaxWeight - remainder.Weight) != 0)
                     {
                         DocWithdrawalProducts docWithdrawalProduct;
                         if (remainder.DocWithdrawalId != null)

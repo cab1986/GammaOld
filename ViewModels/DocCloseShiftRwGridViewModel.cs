@@ -133,9 +133,12 @@ namespace Gamma.ViewModels
             {
                 DocCloseShift.DocCloseShiftDocs.Clear();
                 DocCloseShift.DocCloseShiftProducts.Clear();
-                foreach (var doc in DocCloseDocIds)
+                if (DocCloseDocIds != null)
                 {
-                    DocCloseShift.DocCloseShiftDocs.Add(GammaBase.Docs.First(d => d.DocID == doc));
+                    foreach (var doc in DocCloseDocIds)
+                    {
+                        DocCloseShift.DocCloseShiftDocs.Add(GammaBase.Docs.First(d => d.DocID == doc));
+                    }
                 }
             }
             var productIds = Spools.Select(s => s.ProductID).ToList();
