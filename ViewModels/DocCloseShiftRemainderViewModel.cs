@@ -129,6 +129,7 @@ namespace Gamma.ViewModels
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal Quantity { get; set; }
+
         protected override bool CanChooseNomenclature()
         {
             return base.CanChooseNomenclature() && DB.HaveWriteAccess("ProductSpools") && !IsConfirmed;
@@ -224,47 +225,100 @@ namespace Gamma.ViewModels
                         RemainderTypeID = 0
                     };
                     gammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
+                    gammaBase.SaveChanges();
                 }
                 else if (DocCloseShiftRemainder != null)
                 {
-                    var docCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Where(d => d.DocCloseShiftRemainderID == DocCloseShiftRemainder.DocCloseShiftRemainderID).FirstOrDefault();
-                    if (docCloseShiftRemainder != null)
+                    if (gammaBase.Products.FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID && d.Number == String.Empty) != null)
                     {
-                        docCloseShiftRemainder.Quantity = Quantity * Coefficient;
-                        DocCloseShiftRemainder.Quantity = Quantity * Coefficient;
-                    }
-                    if (
-                        gammaBase.DocProductionProducts.Any(
-                            d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))
-                    {
-                        var docProductionProduct =
-                            gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools).Include(d => d.Products.ProductPallets.ProductItems)
-                                .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
-                        if (docProductionProduct != null && NomenclatureID != null)
+                        var docCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Where(d => d.DocCloseShiftRemainderID == DocCloseShiftRemainder.DocCloseShiftRemainderID).FirstOrDefault();
+                        if (docCloseShiftRemainder != null)
                         {
-                            docProductionProduct.C1CNomenclatureID = NomenclatureID;
-                            docProductionProduct.C1CCharacteristicID = CharacteristicID;
-                            switch (PlaceGroup)
+                            //if (Quantity != 0)
+                            //{
+                            docCloseShiftRemainder.Quantity = Quantity * Coefficient;
+                            DocCloseShiftRemainder.Quantity = Quantity * Coefficient;
+                            //}
+                            //else
+                            //{
+                            //    gammaBase.DocCloseShiftRemainders.Remove(docCloseShiftRemainder);
+                            //}
+                        }
+                        if (
+                            gammaBase.DocProductionProducts.Any(
+                                d => d.ProductID == DocCloseShiftRemainder.ProductID && d.DocProduction.Docs.ShiftID == null))
+                        {
+                            var docProductionProduct =
+                                gammaBase.DocProductionProducts.Include(d => d.Products.ProductSpools).Include(d => d.Products.ProductPallets.ProductItems)
+                                    .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
+                            if (docProductionProduct != null && NomenclatureID != null)
                             {
-                                case PlaceGroup.PM:
-                                    docProductionProduct.Products.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
-                                    docProductionProduct.Products.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
-                                    break;
-                                case PlaceGroup.Convertings:
-                                    var productItem =
-                                        docProductionProduct.Products.ProductPallets.ProductItems.FirstOrDefault();
-                                    if (productItem != null)
+                                if (Quantity != 0)
+                                {
+                                    docProductionProduct.C1CNomenclatureID = NomenclatureID;
+                                    docProductionProduct.C1CCharacteristicID = CharacteristicID;
+                                    switch (PlaceGroup)
                                     {
-                                        productItem.C1CNomenclatureID = (Guid)NomenclatureID;
-                                        productItem.C1CCharacteristicID = (Guid)CharacteristicID;
+                                        case PlaceGroup.PM:
+                                            docProductionProduct.Products.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
+                                            docProductionProduct.Products.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
+                                            break;
+                                        case PlaceGroup.Convertings:
+                                            var productItem =
+                                                docProductionProduct.Products.ProductPallets.ProductItems.FirstOrDefault();
+                                            if (productItem != null)
+                                            {
+                                                productItem.C1CNomenclatureID = (Guid)NomenclatureID;
+                                                productItem.C1CCharacteristicID = (Guid)CharacteristicID;
+                                            }
+                                            break;
                                     }
-                                    break;
-                            }
+                                }
+                                else
+                                {
+                                    gammaBase.DocProductionProducts.RemoveRange(gammaBase.DocProductionProducts.Where(d => d.ProductID == DocCloseShiftRemainder.ProductID));
+                                    gammaBase.DocProduction.RemoveRange(gammaBase.DocProduction.Where(d => d.DocID == docProductionProduct.DocID));
+                                    gammaBase.Docs.RemoveRange(gammaBase.Docs.Where(d => d.DocID == docProductionProduct.DocID));
+                                    gammaBase.ProductItems.RemoveRange(gammaBase.ProductItems.Where(d => d.ProductID == DocCloseShiftRemainder.ProductID));
+                                    switch (PlaceGroup)
+                                    {
+                                        case PlaceGroup.PM:
+                                            {
+                                                gammaBase.ProductSpools.RemoveRange(gammaBase.ProductSpools.Where(d => d.ProductID == DocCloseShiftRemainder.ProductID));
+                                            }
+                                            break;
+                                        case PlaceGroup.Convertings:
+                                            {
+                                                gammaBase.ProductItems.RemoveRange(gammaBase.ProductItems.Where(d => d.ProductID == DocCloseShiftRemainder.ProductID));
+                                            }
+                                            break;
+                                    }
+                                    gammaBase.Products.RemoveRange(gammaBase.Products.Where(d => d.ProductID == DocCloseShiftRemainder.ProductID));
+                                    gammaBase.DocCloseShiftRemainders.Remove(docCloseShiftRemainder);
 
+                                }
+                            }
+                        }
+                        gammaBase.SaveChanges();
+                        if (DocCloseShiftRemainder?.Quantity == 0) DocCloseShiftRemainder = null;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка! Невозможно изменить переходящий остаток, так как из него уже сделана прродукция!", "Ошибка!", MessageBoxButton.OK,
+                   MessageBoxImage.Asterisk);
+                        Quantity = (Decimal)DocCloseShiftRemainder?.Quantity / Coefficient;
+                        var docProductionProduct =
+                                gammaBase.DocProductionProducts
+                                    .FirstOrDefault(d => d.ProductID == DocCloseShiftRemainder.ProductID);
+                        if (docProductionProduct != null)
+                        {
+                            NomenclatureID = docProductionProduct.C1CNomenclatureID;
+                            CharacteristicID = docProductionProduct.C1CCharacteristicID;
                         }
                     }
+                    
                 }
-                gammaBase.SaveChanges();
+                
             }
             return true;
         }
