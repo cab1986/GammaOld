@@ -38,7 +38,7 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
-            try
+           /* try
             {
                 RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
                     Select(p => new RobotNomenclature()
@@ -55,7 +55,7 @@ namespace Gamma.ViewModels
             {
                 if (RobotNomenclatures == null)
                     RobotNomenclatures = new ObservableCollection<RobotNomenclature>();
-            }
+            }*/
             PrintExampleCommand = new DelegateCommand(PrintExample);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
         }
@@ -95,7 +95,7 @@ namespace Gamma.ViewModels
                                 MessageBoxImage.Asterisk);
                         }
                     }
-                    RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
+                    /*RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
                         Select(p => new RobotNomenclature()
                         {
                             ProdNumber = p.ProdNumber,
@@ -109,7 +109,7 @@ namespace Gamma.ViewModels
                         gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)
                             .Select(p => p.RobotProductNumber)
                             .FirstOrDefault();
-
+                            */
                     UpdateGroupPackageLabelImage(productionTask.ProductionTaskID);
 
                 }
@@ -302,7 +302,7 @@ namespace Gamma.ViewModels
         /// </summary>
         private void PlaceChanged(int PlaceID)
         {
-            using (var gammaBase = DB.GammaDb)
+            /*using (var gammaBase = DB.GammaDb)
             {
                 var IsRobot =
                 gammaBase.Places.Where(p => p.PlaceID == PlaceID)
@@ -327,7 +327,7 @@ namespace Gamma.ViewModels
                     RobotNomenclatureVisible = Visibility.Collapsed;
                     RobotNomenclatures = null;
                 }
-            }
+            }*/
             //RobotProductNumber = null;
         }
 
@@ -429,7 +429,7 @@ namespace Gamma.ViewModels
                 productionTask.DateEnd = DateEnd;
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
-
+            /*
             var placeIsRobot =
                 GammaBase.Places.Where(p => p.PlaceID == PlaceID)
                         .Select(p => p.IsRobot)
@@ -464,7 +464,7 @@ namespace Gamma.ViewModels
                     MessageBox.Show("Вы попытались сохранить задание в производстве без указания номера задания робота. Оно не будет сохранено");
                     return false;
                 }
-            }
+            }*/
             //else
             //{
             //    GammaBase.ProductionTaskConverting.RemoveRange(GammaBase.ProductionTaskConverting.Where(c => c.ProductionTaskID == productionTask.ProductionTaskID));
@@ -532,7 +532,7 @@ namespace Gamma.ViewModels
         /// Только для чтения, если по каким-то причинам не задание невалидно, то есть возможность редактирования
         /// </summary>
         public bool IsReadOnly => (IsConfirmed || !DB.HaveWriteAccess("ProductionTasks")) && IsValid;
-
+        /*
         public Visibility _robotNomenclatureVisible { get; set; } = Visibility.Visible;
         /// <summary>
         /// Видимость задания номера для робота
@@ -578,6 +578,6 @@ namespace Gamma.ViewModels
                 //else RobotProductNumberID = null;
                 RaisePropertyChanged("RobotNomenclatures");
             }
-        }
+        }*/
     }
 }

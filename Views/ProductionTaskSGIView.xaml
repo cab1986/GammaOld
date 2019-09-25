@@ -58,12 +58,12 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
+                <!--<dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
                     <dxe:ComboBoxEdit IsTextEditable="False" 
                                                       ItemsSource="{Binding RobotNomenclatures}" EditValue="{Binding RobotProductNumber, UpdateSourceTrigger=PropertyChanged}"
                                                       DisplayMember="ProdName" ValueMember="ProdNumber"  AllowNullInput="True">
                     </dxe:ComboBoxEdit>
-                </dxlc:LayoutItem>                
+                </dxlc:LayoutItem>-->                
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Использованные тамбура" LabelPosition="Top">
                 <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>
