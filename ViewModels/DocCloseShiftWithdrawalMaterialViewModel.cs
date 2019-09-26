@@ -272,14 +272,14 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel(Guid docId)
         {
-            if (PlaceWithdrawalMaterialTypeID == 2 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
-            {
-                MessageBox.Show("Внимание! Есть использованные материалы, которые не распределены на произведенную за смену продукцию!", "Ошибка сохранения",
-                        MessageBoxButton.OK, MessageBoxImage.Asterisk);
-            }
             if (IsReadOnly) return true;
             using (var gammaBase = DB.GammaDb)
             {
+                if (gammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First() == 0 && PlaceWithdrawalMaterialTypeID == 2 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
+                {
+                    MessageBox.Show("Внимание! Есть использованные материалы, которые не распределены на произведенную за смену продукцию!", "Ошибка сохранения",
+                            MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
                 var docCloseShift = gammaBase.Docs
                .First(d => d.DocID == docId);
                 if (docCloseShift.DocCloseShiftMaterials == null)
