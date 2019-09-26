@@ -85,10 +85,12 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
-                if (_placeID == 1 || _placeID == 2 || _placeID == 21)
-                    CurrentMaterialType = MaterialType.MaterialsSGB;
-                else if (_placeID == 6 || _placeID == 7 || _placeID == 12 || _placeID == 13)
-                    CurrentMaterialType = MaterialType.MaterialsSGI;
+                var placeGroupID =  GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
+                    if (placeGroupID == 0)
+                        CurrentMaterialType = MaterialType.MaterialsSGB;
+                    else if (placeGroupID == 2)
+                        CurrentMaterialType = MaterialType.MaterialsSGI;
+                
             }
         }
         private int ShiftID;
