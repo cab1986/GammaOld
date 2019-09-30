@@ -491,6 +491,12 @@ namespace Gamma.ViewModels
                         MessageBoxImage.Asterisk);
                     return;
                 }
+                if (palletKindID == (byte)ProductKind.ProductPallet && reportName == "Неполная паллета" && parentName == "Pallet")
+                {
+                    MessageBox.Show("Нельзя печатать этикетку неполной паллеты на полную!", "Ошибка печати неполной паллеты", MessageBoxButton.OK,
+                        MessageBoxImage.Asterisk);
+                    return;
+                }
             }
             using (var gammaBase = DB.GammaDb)
                 {

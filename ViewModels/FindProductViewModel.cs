@@ -166,44 +166,82 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDb)
             {
-                if (isFromScanner)
+                if (NomenclatureID == null && SelectedCharacteristic?.CharacteristicID == null && 
+                    DateBegin == null && DateEnd == null && (SelectedPlaces == null || SelectedPlaces?.Count == 0) && SelectedStateIndex == States.Count - 1)
                 {
                     FoundProducts = new ObservableCollection<ProductInfo>
-                        (
-                        gammaBase.vProductsInfo.Where(pinfo =>
-                            pinfo.BarCode == Barcode 
-                            &&
-                            (!ButtonPanelVisible || !(pinfo.IsWrittenOff ?? false) ||
-                             gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
-                                 .Join(gammaBase.vProductsInfo,
-                                     gs => gs.ProductGroupPackID,
-                                     pi => pi.ProductID,
-                                     (gs, pi) => new {IsWrittenOff = pi.IsWrittenOff ?? false}
-                                 ).Any(j => !j.IsWrittenOff))
-                            ).Select(pinfo => new ProductInfo
-                            {
-                                DocID = pinfo.DocID,
-                                ProductID = pinfo.ProductID,
-                                Number = pinfo.Number,
-                                CharacteristicID = pinfo.C1CCharacteristicID,
-                                Date = pinfo.Date,
-                                NomenclatureID = pinfo.C1CNomenclatureID,
-                                NomenclatureName = pinfo.NomenclatureName,
-                                ProductKind = (ProductKind) pinfo.ProductKindID,
-                                Quantity = pinfo.Quantity,
-                                ShiftID = pinfo.ShiftID,
-                                State = pinfo.State,
-                                Place = pinfo.Place,
-                                PlaceGroup = (PlaceGroup) pinfo.PlaceGroupID,
-                                IsWrittenOff = pinfo.IsWrittenOff ?? false,
-                                InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
-                                    .Join(gammaBase.vProductsInfo,
-                                        gs => gs.ProductGroupPackID,
-                                        pi => pi.ProductID,
-                                        (gs, pi) => new {IsWrittenOff = pi.IsWrittenOff ?? false}
-                                    ).Any(j => !j.IsWrittenOff)
-                            })
-                        );
+                       (
+                       gammaBase.Products.Where(pinfo =>
+                           (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
+                            (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
+                            (pinfo.ProductKindID == SelectedProductKindIndex ||
+                             SelectedProductKindIndex == ProductKindsList.Count - 1) &&
+                            (!ButtonPanelVisible || (gammaBase.Rests.Any(gs => gs.ProductID == pinfo.ProductID && gs.Quantity >= 1)
+                                ) ||
+                            gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
+                                .Join(gammaBase.vProductsInfo,
+                                    gs => gs.ProductGroupPackID,
+                                    pi => pi.ProductID,
+                                    (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
+                                ).Any(j => !j.IsWrittenOff))
+                           )
+                           .Select(pinfo => new ProductInfo
+                           {
+                               //DocID = pinfo.DocID,
+                               ProductID = pinfo.ProductID,
+                               Number = pinfo.Number,
+                               //CharacteristicID = pinfo.C1CCharacteristicID,
+                               //Date = pinfo.Date,
+                               //NomenclatureID = pinfo.C1CNomenclatureID,
+                               //NomenclatureName = pinfo.NomenclatureName,
+                               ProductKind = (ProductKind)pinfo.ProductKindID,
+                               //Quantity = pinfo.Quantity,
+                               // ShiftID = pinfo.ShiftID,
+                               //State = pinfo.State,
+                               //Place = pinfo.Place,
+                               //PlaceGroup = (PlaceGroup)pinfo.PlaceGroupID,
+                               IsWrittenOff = !(gammaBase.Rests.Any(gs => gs.ProductID == pinfo.ProductID && gs.Quantity >= 1)
+                                ),
+                               InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
+                                   .Join(gammaBase.vProductsInfo,
+                                       gs => gs.ProductGroupPackID,
+                                       pi => pi.ProductID,
+                                       (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
+                                   ).Any(j => !j.IsWrittenOff)
+                           })
+                       );
+                    if ((FoundProducts?.Count == 1 && !ButtonPanelVisible) || FoundProducts?.Count > 1)
+                    {
+                        var foundProductIDs = FoundProducts.Select(g => g.ProductID).ToList();
+                        FoundProducts = new ObservableCollection<ProductInfo>
+                            (
+                            gammaBase.vProductsInfo.Where(pinfo =>
+                                foundProductIDs.Contains(pinfo.ProductID)
+                                ).Select(pinfo => new ProductInfo
+                                {
+                                    DocID = pinfo.DocID,
+                                    ProductID = pinfo.ProductID,
+                                    Number = pinfo.Number,
+                                    CharacteristicID = pinfo.C1CCharacteristicID,
+                                    Date = pinfo.Date,
+                                    NomenclatureID = pinfo.C1CNomenclatureID,
+                                    NomenclatureName = pinfo.NomenclatureName,
+                                    ProductKind = (ProductKind)pinfo.ProductKindID,
+                                    Quantity = pinfo.Quantity,
+                                    ShiftID = pinfo.ShiftID,
+                                    State = pinfo.State,
+                                    Place = pinfo.Place,
+                                    PlaceGroup = (PlaceGroup)pinfo.PlaceGroupID,
+                                    IsWrittenOff = pinfo.IsWrittenOff ?? false,
+                                    InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
+                                        .Join(gammaBase.vProductsInfo,
+                                            gs => gs.ProductGroupPackID,
+                                            pi => pi.ProductID,
+                                            (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
+                                        ).Any(j => !j.IsWrittenOff)
+                                })
+                            );
+                    }
                 }
                 else
                 {
@@ -227,7 +265,7 @@ namespace Gamma.ViewModels
                                  .Join(gammaBase.vProductsInfo,
                                      gs => gs.ProductGroupPackID,
                                      pi => pi.ProductID,
-                                     (gs, pi) => new {IsWrittenOff = pi.IsWrittenOff ?? false}
+                                     (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
                                  ).Any(j => !j.IsWrittenOff)) &&
                             (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
                             (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
@@ -240,18 +278,18 @@ namespace Gamma.ViewModels
                                 Date = pinfo.Date,
                                 NomenclatureID = pinfo.C1CNomenclatureID,
                                 NomenclatureName = pinfo.NomenclatureName,
-                                ProductKind = (ProductKind) pinfo.ProductKindID,
+                                ProductKind = (ProductKind)pinfo.ProductKindID,
                                 Quantity = pinfo.Quantity,
                                 ShiftID = pinfo.ShiftID,
                                 State = pinfo.State,
                                 Place = pinfo.Place,
-                                PlaceGroup = (PlaceGroup) pinfo.PlaceGroupID,
+                                PlaceGroup = (PlaceGroup)pinfo.PlaceGroupID,
                                 IsWrittenOff = pinfo.IsWrittenOff ?? false,
                                 InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
                                     .Join(gammaBase.vProductsInfo,
                                         gs => gs.ProductGroupPackID,
                                         pi => pi.ProductID,
-                                        (gs, pi) => new {IsWrittenOff = pi.IsWrittenOff ?? false}
+                                        (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
                                     ).Any(j => !j.IsWrittenOff)
                             })
                         );
