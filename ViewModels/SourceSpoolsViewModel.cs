@@ -31,7 +31,7 @@ namespace Gamma.ViewModels
             }
             GammaBase = DB.GammaDb;
             
-                if (WorkSession.PlaceGroup == PlaceGroup.Rw || WorkSession.PlaceGroup == PlaceGroup.Convertings) SourceSpoolsVisible = Visibility.Visible;
+                if (WorkSession.RoleName == "OperatorRW" || WorkSession.RoleName == "OperatorConverting") SourceSpoolsVisible = Visibility.Visible;
                 else SourceSpoolsVisible = Visibility.Collapsed;
                 ChangeUnwinderActiveCommand = new DelegateCommand<byte>(ChangeUnwinderActive);
                 DeleteSpoolCommand = new DelegateCommand<byte>(x => DeleteSpool(x));

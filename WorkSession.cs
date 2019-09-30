@@ -34,7 +34,8 @@ namespace Gamma
                                      u.DepartmentID,
                                      u.Name,
                                      u.Places.FirstOrDefault().IsShipmentWarehouse,
-                                     u.Places.FirstOrDefault().IsTransitWarehouse
+                                     u.Places.FirstOrDefault().IsTransitWarehouse,
+                                     RoleName = u.Roles.Name
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -70,6 +71,7 @@ namespace Gamma
 #endif
                 LabelPath = (from u in DB.GammaDb.LocalSettings
                                    select u.LabelPath).FirstOrDefault();
+                RoleName = userInfo.RoleName;
             }
         }
         public static bool DBAdmin
@@ -115,6 +117,7 @@ namespace Gamma
         public static string PrintName { get; set; }
         public static string UserName { get; private set; }
         public static Guid? PersonID { get; set; }
+        public static string RoleName { get; private set; }
 
         public static string EndpointConfigurationName = "BasicHttpBinding_IPrinterService";
 
