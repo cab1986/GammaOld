@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
 				.Select(gp => new UsedSpool
 					{
 						ProductId = gp.Key,
-						UsedQuantity = (int)gp.Sum(dw => dw.Quantity ?? 0) * 1000,
+						UsedQuantity = (int)(gp.Sum(dw => dw.Quantity ?? 0) * 1000),
 						Number = gp.FirstOrDefault().Products.Number,
 						RemainderQuantity = (int)(gp.FirstOrDefault().Products.ProductSpools.DecimalWeight*1000),
 						Nomenclature = gp.FirstOrDefault().Products.ProductSpools.C1CNomenclature.Name + gp.FirstOrDefault().Products.ProductSpools.C1CCharacteristics.Name,
