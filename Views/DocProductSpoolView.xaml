@@ -85,6 +85,7 @@
                 <dxlc:LayoutItem Label="Плотность рулона, кг/м3" LabelPosition="Top" Width="160">
                     <dxe:TextEdit EditValue="{Binding Density}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
+                <Button Content="Получить вес" Command="{Binding GetWeightCommand}" Width="100" Height="22" Margin="0,18,0,6" />
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <Button Grid.Row="1" HorizontalAlignment="Right" Content="Создать упаковку" Command="{Binding CreateGroupPackCommand}" 

@@ -22,12 +22,12 @@ namespace Gamma
         [Description("Материалы СГИ")]
         MaterialsSGI
     }
-    public enum ProcessModels 
-    { 
+    public enum ProcessModels
+    {
         [Description("БДМ")]
-        PM, 
+        PM,
         [Description("БДМ=>ПРС")]
-        PMRw, 
+        PMRw,
         [Description("БДМ=>Упаковка")]
         PMWr,
         [Description("БДМ=>ПРС=>Упаковка")]
@@ -36,14 +36,14 @@ namespace Gamma
         Rw,
         [Description("ПРС=>Упаковка")]
         RwWr
-        
+
     }
     public enum BatchKinds { SGB, SGI, Baler }
 
     public enum ProductKind
-    { 
+    {
         [Description("Тамбура")]
-        ProductSpool, 
+        ProductSpool,
         [Description("Паллеты")]
         ProductPallet,
         [Description("Групповые упаковки")]
@@ -88,7 +88,7 @@ namespace Gamma
     /// <summary>
     /// Фильтр качества для поиска
     /// </summary>
-    public enum ProductStatesFilter 
+    public enum ProductStatesFilter
     {
         [Description("Годная")]
         Good,
@@ -104,8 +104,8 @@ namespace Gamma
     /// <summary>
     /// Как переработан тамбур
     /// </summary>
-    public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder} 
-    
+    public enum SpoolChangeState { FullyConverted, WithBroke, WithRemainder }
+
     public enum DocProductKinds
     {
         DocProductSpool,
@@ -128,7 +128,7 @@ namespace Gamma
         DocMovementOrder,
         DocWarehouseAccept,
         DocInventarisation,
-		DocComplectation,
+        DocComplectation,
         DocUtilization
     }
     public enum PermissionMark
@@ -178,5 +178,13 @@ namespace Gamma
         Begin,
         [Description("на конец периода")]
         End
+    }
+    /// <summary>
+    /// Тип возвращаемых данных из com порта
+    /// </summary>
+    public enum DateReadFromComPortType
+    {
+        Byte = 0,
+        String = 1
     }
 }

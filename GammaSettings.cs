@@ -146,6 +146,9 @@ namespace Gamma
             public StopBits StopBits = StopBits.One;
             public int DataBits = 8;
             public Handshake HandShake = Handshake.None;
+            public string Prefix = "";
+            public string Postfix = "";
+            public DateReadFromComPortType TypeDateReadFromComPort = DateReadFromComPortType.Byte;
         }
     }
    

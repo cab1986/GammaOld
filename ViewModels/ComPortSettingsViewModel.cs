@@ -30,6 +30,7 @@ namespace Gamma.ViewModels
             StopBitsList = new StopBits().ToDictionary();
             ParityList = new Parity().ToDictionary();
             HandShakeList = new Handshake().ToDictionary();
+            TypeDateReadFromComPortList = new DateReadFromComPortType().ToDictionary();
             var settings = GammaSettings.Get();
             ScannerComPortNumber = settings.ScannerComPort.ComPortNumber;
             ScannerBaudRate = settings.ScannerComPort.BaudRate;
@@ -43,6 +44,9 @@ namespace Gamma.ViewModels
             ScalesStopBits = (byte)settings.ScalesComPort.StopBits;
             ScalesParity = (byte)settings.ScalesComPort.Parity;
             ScalesHandShake = (byte)settings.ScalesComPort.HandShake;
+            TypeDateReadFromComPort = (byte)settings.ScalesComPort.TypeDateReadFromComPort;
+            ScalesPrefix = (string)settings.ScalesComPort.Prefix;
+            ScalesPostfix = (string)settings.ScalesComPort.Postfix;
             GetWeightCommand = new DelegateCommand(GetWeight);
  
         }
@@ -52,6 +56,7 @@ namespace Gamma.ViewModels
         public Dictionary<byte,string> StopBitsList { get; set; }
         public Dictionary<byte, string> ParityList { get; set; }
         public Dictionary<byte, string> HandShakeList { get; set; }
+        public Dictionary<byte, string> TypeDateReadFromComPortList { get; set; }
         public String ScannerComPortNumber { get; set; }
         public int ScannerBaudRate { get; set; }
         public int ScannerDataBits { get; set; }
@@ -64,6 +69,41 @@ namespace Gamma.ViewModels
         public byte ScalesStopBits { get; set; }
         public byte ScalesParity { get; set; }
         public byte ScalesHandShake { get; set; }
+
+        private byte _typeDateReadFromComPort { get; set; }
+        public byte TypeDateReadFromComPort
+        {
+            get
+            {
+                return _typeDateReadFromComPort;
+            }
+            set
+            {
+                _typeDateReadFromComPort = value;
+                if (_typeDateReadFromComPort == (byte)DateReadFromComPortType.String)
+                    IsEnabledDependingOnTypeDataRead = true;
+                else
+                    IsEnabledDependingOnTypeDataRead = false;
+
+            }
+        }
+
+        private bool _isEnabledDependingOnTypeDataRead { get; set; }
+        public bool IsEnabledDependingOnTypeDataRead
+        {
+            get
+            {
+                return _isEnabledDependingOnTypeDataRead;
+            }
+            set
+            {
+                _isEnabledDependingOnTypeDataRead = value;
+                RaisePropertiesChanged("IsEnabledDependingOnTypeDataRead");
+            }
+        }
+
+        public string ScalesPrefix { get; set; }
+        public string ScalesPostfix { get; set; }
         private string _weight;
         public string Weight
         {
@@ -77,12 +117,26 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Weight");
             }
         }
+        private string _readLineFromSerialPort;
+        public string ReadLineFromSerialPort
+        {
+            get
+            {
+                return _readLineFromSerialPort;
+            }
+            set
+            {
+                _readLineFromSerialPort = value;
+                RaisePropertyChanged("ReadLineFromSerialPort");
+            }
+        }
         public DelegateCommand GetWeightCommand { get; private set; }
         private void GetWeight()
         {
             if (Scales.IsReady)
             {
                 Weight = Scales.Weight.ToString(CultureInfo.InvariantCulture);
+                ReadLineFromSerialPort = Scales.ReadLineFromSerialPort;
                 //Weight = weight?.ToString(CultureInfo.InvariantCulture) ?? "Ошибка";
             }
             else
@@ -106,6 +160,9 @@ namespace Gamma.ViewModels
             settings.ScalesComPort.Parity = (Parity)ScalesParity;
             settings.ScalesComPort.StopBits = (StopBits)ScalesStopBits;
             settings.ScalesComPort.HandShake = (Handshake)ScalesHandShake;
+            settings.ScalesComPort.TypeDateReadFromComPort = (DateReadFromComPortType)TypeDateReadFromComPort;
+            settings.ScalesComPort.Prefix = (string)ScalesPrefix;
+            settings.ScalesComPort.Postfix = (string)ScalesPostfix;
             return true;
         }
         

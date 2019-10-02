@@ -438,10 +438,32 @@ namespace Gamma.ViewModels
             }
         }
         public Dictionary<byte, string> ToughnessKinds { get; set; }
-//        public Dictionary<byte, string> States { get; set; }
-//        public ObservableCollection<RejectionReason> RejectionReasons { get; set; }
-//        [UIAuth(UIAuthLevel.ReadOnly)]
-//        public Guid? RejectionReasonID { get; set; }
+        //        public Dictionary<byte, string> States { get; set; }
+        //        public ObservableCollection<RejectionReason> RejectionReasons { get; set; }
+        //        [UIAuth(UIAuthLevel.ReadOnly)]
+        //        public Guid? RejectionReasonID { get; set; }
+
+        private void GetWeight()
+        {
+            if (!Scales.IsReady)
+            {
+                MessageBox.Show("Не удалось соедениться с весами", "Ошибка весов", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                //ManualWeightInput = true;
+                return;
+            }
+            UIServices.SetBusyState();
+            var startTime = DateTime.Now;
+            do
+            {
+                Weight = (int)Scales.Weight;
+                //Thread.Sleep(500);
+                //if (!((DateTime.Now - startTime).TotalSeconds > 15)) continue;
+                //MessageBox.Show("Вес не стабилизировался в течении 15 секунд");
+                //ManualWeightInput = true;
+                break;
+            } while (!Scales.IsStable);
+        }
 
     }
 }
