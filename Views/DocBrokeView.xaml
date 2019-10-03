@@ -87,9 +87,12 @@
                     <dxlc:LayoutItem Label="Место хранения" LabelPosition="Top">
                         <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId, ValidatesOnDataErrors=True}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
                     </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Акт 10к" >
-                        <dxe:CheckEdit EditValue="{Binding IsInFuturePeriod}" />
+                    <dxlc:LayoutItem Label="Акт" LabelPosition="Left">
+                        <dxe:ComboBoxEdit ItemsSource="{Binding InFuturePeriodList}" EditValue="{Binding IsInFuturePeriod, UpdateSourceTrigger=PropertyChanged}" DisplayMember="Value" ValueMember="Key"/>
                     </dxlc:LayoutItem>
+                    <!--<dxlc:LayoutItem Label="Акт 10к" >
+                        <dxe:CheckEdit EditValue="{Binding IsInFuturePeriod}" />
+                    </dxlc:LayoutItem>-->
                     <dxlc:LayoutItem Label="Подтвержден">
                         <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
                     </dxlc:LayoutItem>

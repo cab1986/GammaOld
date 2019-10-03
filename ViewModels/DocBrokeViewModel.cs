@@ -44,6 +44,9 @@ namespace Gamma.ViewModels
                     .Include(d => d.DocBroke.DocBrokeProducts)
                     .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons))
                     .FirstOrDefault(d => d.DocID == DocId);
+                InFuturePeriodList = new Dictionary<bool, string>();
+                InFuturePeriodList.Add(false, "25к - I передел");
+                InFuturePeriodList.Add(true, "10к - II передел");
                 BrokeProducts = new ItemsChangeObservableCollection<BrokeProduct>();
                 InternalUsageProduct = new EditBrokeDecisionItem("Хоз. нужды", ProductState.InternalUsage, BrokeDecisionProducts);
                 GoodProduct = new EditBrokeDecisionItem("Годная", ProductState.Good, BrokeDecisionProducts);
@@ -58,6 +61,7 @@ namespace Gamma.ViewModels
                     PlaceDiscoverId = doc.DocBroke.PlaceDiscoverID;
                     PlaceStoreId = doc.DocBroke.PlaceStoreID;
                     IsInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false;
+                    //SelectedInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false ? FuturePeriodDocBrokeType.NextPlace : FuturePeriodDocBrokeType.FirstPlace;
                     IsConfirmed = doc.IsConfirmed;
                     UserID = doc.UserID;
                     ShiftID = doc.ShiftID;
@@ -70,6 +74,7 @@ namespace Gamma.ViewModels
                 {
                     Date = DB.CurrentDateTime;
                     IsInFuturePeriod = isInFuturePeriod;
+                    //SelectedInFuturePeriod = isInFuturePeriod ? FuturePeriodDocBrokeType.NextPlace : FuturePeriodDocBrokeType.FirstPlace;
                     UserID = WorkSession.UserID;
                     ShiftID = WorkSession.ShiftID;
                     if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
@@ -150,7 +155,7 @@ namespace Gamma.ViewModels
                 if (!IsInFuturePeriod && BrokeProducts.Count > 0 &&
                     BrokeProducts.Select(bp => bp.ProductionPlaceId).First() != product.PlaceID)
                 {
-                    MessageBox.Show("Нельзя добавлять продукт другого передела в акт 25к", "Ошибка добавления",
+                    MessageBox.Show("Нельзя добавлять продукт другого передела в акт '25к - I передел'", "Ошибка добавления",
                         MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
@@ -246,6 +251,7 @@ namespace Gamma.ViewModels
         public List<Place> DiscoverPlaces { get; set; }
         public List<Place> StorePlaces { get; set; }
         public List<Place> BrokePlaces { get; set; }
+        public Dictionary<bool, string> InFuturePeriodList { get; set; }
 
         public bool IsConfirmed { get; set; }
         
@@ -304,7 +310,26 @@ namespace Gamma.ViewModels
             BrokeProducts.Remove(SelectedBrokeProduct);
         }
         
-        public bool IsInFuturePeriod { get; set; }
+        private bool _isInFuturePeriod { get; set; }
+        public bool IsInFuturePeriod
+        {
+            get
+            {
+                return _isInFuturePeriod;
+            }
+            set
+            {
+                if (_isInFuturePeriod && !value && BrokeProducts.Count > 0 &&
+                    BrokeProducts.Select(bp => bp.ProductionPlaceId).Distinct().Count() > 1)
+                {
+                    MessageBox.Show("Нельзя изменить акт на '25к - I передел', так как в акте продукты других переделов", "Ошибка изменения",
+                        MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    return;
+                }
+                _isInFuturePeriod = value;
+                RaisePropertiesChanged("IsInFuturePeriod");
+            }
+        }
 
         private Guid DocId { get; }
 

@@ -102,7 +102,8 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutControl>
         </dxb:BarManager>
-        <Button Content="OK" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Margin="5,5,120,5"/>
-        <Button Content="Отмена" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="5,5,15,5" Width="90"/>
+        <Button Content="Сохранить" Grid.Row="1" Command="{Binding OnlySaveCommand}" HorizontalAlignment="Right" Margin="5,5,280,5"/>
+        <Button Content="Сохранить и закрыть" Grid.Row="1" Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right" Margin="5,5,120,5"/>
+        <Button Content="Закрыть" Grid.Row="1" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Margin="5,5,15,5" Width="90"/>
     </Grid>
 </gamma:MvvmWindow>

@@ -18,9 +18,11 @@ namespace Gamma.ViewModels
         public SaveImplementedViewModel()
         {
             SaveAndCloseCommand = new DelegateCommand(SaveToModelAndClose,CanSaveExecute);
+            OnlySaveCommand = new DelegateCommand(OnlySaveToModel, CanSaveExecute);
         }
 
         public DelegateCommand SaveAndCloseCommand { get; private set; }
+        public DelegateCommand OnlySaveCommand { get; private set; }
 
         public virtual bool SaveToModel()
         {
@@ -48,11 +50,18 @@ namespace Gamma.ViewModels
         {
             base.Dispose();
             SaveAndCloseCommand = null;
+            OnlySaveCommand = null;
         }
 
         public virtual bool CanSaveExecute()
         {
             return IsValid;
+        }
+
+        protected virtual void OnlySaveToModel()
+        {
+            UIServices.SetBusyState();
+            SaveToModel();
         }
     }
 }
