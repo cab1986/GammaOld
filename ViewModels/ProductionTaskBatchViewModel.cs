@@ -1231,7 +1231,27 @@ namespace Gamma.ViewModels
                 case 2:
                     ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                               where taskProducts.Date >= SqlFunctions.DateAdd("hh", -24, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                               where taskProducts.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-24)//DateTime.Now.AddHours(-24)
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID
+                                                                                              });
+                    break;
+                default:
+                    ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
+                                                                              GammaBase.GetBatchProducts(ProductionTaskBatchID)
                                                                                               select new ProductInfo
                                                                                               {
                                                                                                   DocID = taskProducts.DocID,
