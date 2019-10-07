@@ -338,7 +338,20 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result>("GetProductionTasks", batchKindIDParameter);
         }
-    
+
+        public virtual ObjectResult<GetProductionTasksOnState_Result> GetProductionTasksOnState(Nullable<int> batchKindID, Nullable<int> productionTaskStateID)
+        {
+            var batchKindIDParameter = batchKindID.HasValue ?
+                new ObjectParameter("BatchKindID", batchKindID) :
+                new ObjectParameter("BatchKindID", typeof(int));
+
+            var productionTaskStateIDParameter = productionTaskStateID.HasValue ?
+                new ObjectParameter("ProductionTaskStateID", productionTaskStateID) :
+                new ObjectParameter("ProductionTaskStateID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasksOnState_Result>("GetProductionTasksOnState", batchKindIDParameter, productionTaskStateIDParameter);
+        }
+
         public virtual ObjectResult<GetSpoolRejectionReasons_Result> GetSpoolRejectionReasons()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpoolRejectionReasons_Result>("GetSpoolRejectionReasons");

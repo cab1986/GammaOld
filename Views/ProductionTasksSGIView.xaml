@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <dxlc:LayoutControl Grid.Row="0">
             <dxlc:LayoutItem Label="Состояние:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding ProductionTaskStates}" EditValue="{Binding ProductionTaskStateID}" ValueMember="Key" DisplayMember="Value" NullValueButtonPlacement="EditBox" AllowNullInput="True" AssignNullValueOnClearingEditText="True"/>
+                <dxe:ComboBoxEdit ItemsSource="{Binding ProductionTaskStates}" EditValue="{Binding ProductionTaskStateID, UpdateSourceTrigger=PropertyChanged}" ValueMember="Key" DisplayMember="Value" NullValueButtonPlacement="EditBox" AllowNullInput="True" AssignNullValueOnClearingEditText="True" IsEnabled="{Binding IsEnabledProductionTaskStates}"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
         <dxg:GridControl Grid.Row="1" ItemsSource="{Binding ProductionTasks}" SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskSGI}" AutoExpandAllGroups="True"

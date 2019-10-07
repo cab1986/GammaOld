@@ -4610,6 +4610,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="DeletePallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="DeleteProductionTaskBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="DeleteSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -4853,7 +4856,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="GetProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="BatchKindID" Type="int" Mode="In" />
         </Function>
-        <Function Name="GetProductionTaskSGIMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+      <Function Name="GetProductionTasksOnState" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Parameter Name="BatchKindID" Type="int" Mode="In" />
+        <Parameter Name="ProductionTaskStateID" Type="int" Mode="In" />
+      </Function>
+      <Function Name="GetProductionTaskSGIMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="ProductionTaskBatchId" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetProductRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -7110,6 +7117,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImport Name="GetProductionTasks" ReturnType="Collection(GammaModel.GetProductionTasks_Result)">
           <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="GetProductionTasksOnState" ReturnType="Collection(GammaModel.GetProductionTasksOnState_Result)">
+            <Parameter Name="BatchKindID" Mode="In" Type="Int32" />
+            <Parameter Name="ProductionTaskStateID" Mode="In" Type="Int32" />
+          </FunctionImport>
           <FunctionImport Name="GetSpoolRejectionReasons" ReturnType="Collection(GammaModel.GetSpoolRejectionReasons_Result)" />
           <FunctionImport Name="UserPermit" ReturnType="Collection(Byte)">
           <Parameter Name="TableName" Mode="In" Type="String" />
@@ -8422,6 +8433,17 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Int32" Name="Quantity" Nullable="true" />
         </ComplexType>
         <ComplexType Name="GetProductionTasks_Result">
+          <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
+          <Property Type="Guid" Name="ProductionTaskBatchID" Nullable="false" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="255" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="String" Name="Nomenclature" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Characteristic" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="EnumColor" Nullable="true" />
+          <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="MadeQuantity" Nullable="true" MaxLength="8000" />
+        </ComplexType>
+        <ComplexType Name="GetProductionTasksOnState_Result">
           <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
           <Property Type="Guid" Name="ProductionTaskBatchID" Nullable="false" />
           <Property Type="String" Name="Number" Nullable="true" MaxLength="255" />
@@ -13370,6 +13392,21 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetProductionTasksOnState" FunctionName="GammaDBModel.GetProductionTasksOnState">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetProductionTasksOnState_Result">
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="ProductionTaskBatchID" ColumnName="ProductionTaskBatchID" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Nomenclature" ColumnName="Nomenclature" />
+                <ScalarProperty Name="Characteristic" ColumnName="Characteristic" />
+                <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetSpoolRejectionReasons" FunctionName="GammaDBModel.GetSpoolRejectionReasons">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GammaModel.GetSpoolRejectionReasons_Result">
@@ -13827,6 +13864,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="DeletePallet" FunctionName="GammaDBModel.DeletePallet" />
+          <FunctionImportMapping FunctionImportName="DeleteProductionTaskBatch" FunctionName="GammaDBModel.DeleteProductionTaskBatch" />
           <EntitySetMapping Name="NomenclatureGammaInfo">
             <EntityTypeMapping TypeName="GammaModel.NomenclatureGammaInfo">
               <MappingFragment StoreEntitySet="NomenclatureGammaInfo">

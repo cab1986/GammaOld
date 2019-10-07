@@ -7,6 +7,8 @@ using System;
 using System.Linq;
 using Gamma.Common;
 using Gamma.Entities;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -23,24 +25,49 @@ namespace Gamma.ViewModels
         /// </summary>
         public ProductionTasksSGIViewModel()
         {
-            GetProductionTasks();
+            IsEnabledProductionTaskStates = WorkSession.ShiftID == 0;
+            ProductionTaskStates = new ProductionTaskStates().ToDictionary();
+            ProductionTaskStateID = 1;
+            //GetProductionTasks();
             EditItemCommand = new DelegateCommand(EditItem);
             NewItemCommand = new DelegateCommand(NewProductionTask);
             RefreshCommand = new DelegateCommand(GetProductionTasks);
             DeleteItemCommand = new DelegateCommand(DeleteProductionTask);
         }
 
+        public Dictionary<byte, string> ProductionTaskStates { get; set; }
+        private byte? _productionTaskStateID { get; set; }
+        public byte? ProductionTaskStateID
+        {
+            get { return _productionTaskStateID; }
+            set
+            {
+                if (_productionTaskStateID == value) return;
+                _productionTaskStateID = value< 0 ? 0 : value;
+                if (_productionTaskStateID < 3) GetProductionTasks();
+            }
+        }
+
+        public bool IsEnabledProductionTaskStates { get; set; }
+
         private void DeleteProductionTask()
         {
             if (SelectedProductionTaskSGI == null) return;
-            DB.GammaDb.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID);
+            //DB.GammaDb.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID);
+            var delResult = GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+                ProductionTasks.Remove(SelectedProductionTaskSGI);
         }
 
         private void GetProductionTasks()
         {
             UIServices.SetBusyState();
             ProductionTasks = new ObservableCollection<ProductionTaskSGI>(
-                from pt in DB.GammaDb.GetProductionTasks((int) BatchKinds.SGI)
+                from pt in DB.GammaDb.GetProductionTasksOnState((int) BatchKinds.SGI, ProductionTaskStateID)
                 select new ProductionTaskSGI()
                 {
                     ProductionTaskBatchID = pt.ProductionTaskBatchID,
@@ -53,6 +80,8 @@ namespace Gamma.ViewModels
                     EnumColor = (byte?)pt.EnumColor ?? 0 // Если 3, то как на СГБ розовым цветить будем(активные задания)
                 }
                 );
+            
+
         }
 
         private void EditItem()
