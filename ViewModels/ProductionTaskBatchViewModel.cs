@@ -1211,7 +1211,7 @@ namespace Gamma.ViewModels
                 case 1:
                     ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                               where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                               where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-10)//SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
                                                                                               select new ProductInfo
                                                                                               {
                                                                                                   DocID = taskProducts.DocID,
