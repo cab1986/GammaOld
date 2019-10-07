@@ -357,7 +357,8 @@ namespace Gamma.ViewModels
                 else
                 {
                     MakeProductionTaskActiveForPlaceText = "Сделать задание активным";
-                    VisiblityCreateNewProduct = Visibility.Collapsed;
+                    //VisiblityCreateNewProduct = Visibility.Collapsed; Всегда можно напечатать транспортную этикетку
+                    VisiblityCreateNewProduct = Visibility.Visible;
 
                 }
             }
