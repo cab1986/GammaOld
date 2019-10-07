@@ -164,7 +164,11 @@ namespace Gamma.ViewModels
             var dlgResult = MessageBox.Show("Обновить на текущий момент тамбура на раскатах?", "Тамбур на раскате", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (dlgResult == MessageBoxResult.Yes)
                 CurrentViewModelUnwinderRemainder?.FillGrid();
-            ClearGrid();
+            //при заполнении рапорта очищаем только паллеты и документы
+            //ClearGrid();
+            Pallets?.Clear();
+            DocCloseDocIds?.Clear();
+
             using (var gammaBase = DB.GammaDb)
             {
                 DocCloseDocIds = gammaBase.Docs.
@@ -194,9 +198,14 @@ namespace Gamma.ViewModels
                 {
                     sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
                     sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
+                    if (!Samples.Any(s => s.NomenclatureID == sample.NomenclatureID && (s.CharacteristicID == sample.CharacteristicID || (s.CharacteristicID == null && sample.CharacteristicID == null))))
+                    {
+                        Samples.Add(sample);
+                    }
                 }
-                Samples = samples;
-                NomenclatureRests = new ObservableCollection<Sample>(Pallets
+                //Samples = samples;
+                
+                var nomenclatureRests = new ObservableCollection<Sample>(Pallets
                     .Select(p => new Sample
                     {
                         NomenclatureID = p.NomenclatureID,
@@ -204,6 +213,13 @@ namespace Gamma.ViewModels
                         Quantity = 0,
                         NomenclatureName = p.NomenclatureName,
                     }).Distinct());
+                foreach (var rest in nomenclatureRests)
+                {
+                    if (!NomenclatureRests.Any(s => s.NomenclatureID == rest.NomenclatureID && (s.CharacteristicID == rest.CharacteristicID || (s.CharacteristicID == null && rest.CharacteristicID == null))))
+                    {
+                        NomenclatureRests.Add(rest);
+                    }
+                }
 
                 var pallets = new List<DocCloseShiftWithdrawalMaterial.Product>(Pallets.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
                 {
@@ -247,8 +263,12 @@ namespace Gamma.ViewModels
                 {
                     waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
                     waste.MeasureUnitId = waste.MeasureUnits.FirstOrDefault().Key;
+                    if (!Wastes.Any(s => s.NomenclatureID == waste.NomenclatureID && (s.CharacteristicID == waste.CharacteristicID || (s.CharacteristicID == null && waste.CharacteristicID == null))))
+                    {
+                        Wastes.Add(waste);
+                    }
                 }
-                Wastes = wastes;
+                //Wastes = wastes;
                 IsChanged = true;
             }
         }

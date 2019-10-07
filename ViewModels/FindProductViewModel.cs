@@ -53,7 +53,10 @@ namespace Gamma.ViewModels
         public FindProductViewModel(FindProductMessage msg) : this()
         {
             ButtonPanelVisible = msg.ChooseProduct;
-            SelectedProductKindIndex = (byte)msg.ProductKind;
+            if (msg.ChooseProduct) //для выбора по умолчанию пункта Все
+                SelectedProductKindIndex = (byte)msg.ProductKind;
+            else
+                SelectedProductKindIndex = (byte)(ProductKindsList.Count - 1);
             ProductKindSelectEnabled = msg.AllowChangeProductKind;
         }
         private bool _buttonPanelVisible;

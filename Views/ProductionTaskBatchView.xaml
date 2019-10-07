@@ -108,6 +108,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
+                        <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <dxb:BarManager>
@@ -119,7 +120,12 @@
                             </dxb:Bar>
                         </dxb:BarManager.Bars>
                     </dxb:BarManager>
-                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="1" ItemsSource="{Binding ProductionTaskProducts}"
+                    <dxlc:LayoutControl Grid.Row="1">
+                        <dxlc:LayoutItem Label="Диапазон:">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding Intervalid}" x:Name="IntervalList" IsTextEditable="False"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutControl>
+                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="2" ItemsSource="{Binding ProductionTaskProducts}"
                                      SelectionMode="Row" SelectedItem="{Binding SelectedProductionTaskProduct}" AutoExpandAllGroups="{Binding ExpandProductionTaskProducts}">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn FieldName="Place" Header="Передел" GroupIndex="0" />
@@ -130,13 +136,14 @@
                                     <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="ShiftID" Header="Смена" VisibleIndex="3" Width="9" />
                             <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="2"  Header="Номенклатура"/>
-                            <dxg:GridColumn FieldName="IsConfirmed" Header="Подтвержден" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="3">
+                            <dxg:GridColumn FieldName="IsConfirmed" Header="Подтвержден" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="4">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:CheckEditSettings/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="4" Width="120" FixedWidth="True">
+                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="5" Width="120" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:TextEditSettings Mask="f" MaskType="Numeric"/>
                                 </dxg:GridColumn.EditSettings>
@@ -144,9 +151,11 @@
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
                             <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Number" ShowInColumn="Number" SummaryType="Count" DisplayFormat="Кол-во: {0:d}" />
                         </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
                             <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Number" ShowInColumn="Number" SummaryType="Count" DisplayFormat="Кол-во: {0:i}"/>
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>

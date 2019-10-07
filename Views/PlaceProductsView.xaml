@@ -40,7 +40,7 @@
             <Button Content="{Binding NewProductText}" Command="{Binding CreateNewProductCommand}"/>
         </ToolBar>
         <dxlc:LayoutControl Grid.Row="1">
-            <dxlc:LayoutItem Label="Диапозон:">
+            <dxlc:LayoutItem Label="Диапазон:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding Intervalid}" x:Name="IntervalList" IsTextEditable="False"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номер:">

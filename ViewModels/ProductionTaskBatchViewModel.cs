@@ -14,6 +14,7 @@ using Gamma.Entities;
 using Gamma.DialogViewModels;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -36,6 +37,11 @@ namespace Gamma.ViewModels
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
             ShowProductCommand = new DelegateCommand(ShowProduct, () => SelectedProductionTaskProduct != null);
             DeleteProdutCommand = new DelegateCommand(DeleteProduct, () => SelectedProductionTaskProduct != null);
+            Intervals = new List<string> { "Все", "За мою смену", "За последние сутки"};
+            if (WorkSession.IsProductionPlace)
+            {
+                Intervalid = 1;
+            }
             if (msg.ProductionTaskBatchID == null)
             {
                 Date = DB.CurrentDateTime;
@@ -1178,24 +1184,73 @@ namespace Gamma.ViewModels
 
         private void RefreshProduction()
         {
-            ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in 
+
+            switch (Intervalid)
+            {
+                case 0:
+                    ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                           select new ProductInfo { 
-                                                                               DocID = taskProducts.DocID,
-                                                                               ProductKind = (ProductKind)taskProducts.ProductKindID,
-                                                                               CharacteristicID = taskProducts.CharacteristicID,
-                                                                               NomenclatureID = taskProducts.NomenclatureID,
-                                                                               Date = taskProducts.Date,
-                                                                               NomenclatureName = taskProducts.NomenclatureName,
-                                                                               Number = taskProducts.Number,
-                                                                               Quantity = taskProducts.Quantity,
-                                                                               ProductID = taskProducts.ProductID,
-                                                                               Place = taskProducts.Place,
-                                                                               IsConfirmed = taskProducts.IsConfirmed,
-                                                                               PlaceID = taskProducts.PlaceID,
-                                                                               ShiftID = taskProducts.ShiftID
-                                                                           });
-        }
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID
+                                                                                              });
+                    break;
+                case 1:
+                    ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
+                                                                               GammaBase.GetBatchProducts(ProductionTaskBatchID)
+                                                                               where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID
+                                                                                              });
+                    break;
+                case 2:
+                    ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
+                                                                               GammaBase.GetBatchProducts(ProductionTaskBatchID)
+                                                                               where taskProducts.Date >= SqlFunctions.DateAdd("hh", -24, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID
+                                                                                              });
+                    break;
+            }
+            }
         private void ShowProduct()
         {
             switch (SelectedProductionTaskProduct.ProductKind)
@@ -1283,6 +1338,20 @@ namespace Gamma.ViewModels
         public Dictionary<byte, string> ProcessModels { get; set; }
         public bool ChangeStateReadOnly { get; set; }
         public string Title { get; private set; }
+
+        public List<string> Intervals { get; set; }
+        private int _intervalid;
+
+        public int Intervalid
+        {
+            get { return _intervalid; }
+            set
+            {
+                if (_intervalid == value) return;
+                _intervalid = value < 0 ? 0 : value;
+                if (_intervalid < 3) RefreshProduction();
+            }
+        }
 
         private SourceSpoolsCheckResult SourceSpoolsCorrect(int placeId, Guid productionTaskId)
         {
