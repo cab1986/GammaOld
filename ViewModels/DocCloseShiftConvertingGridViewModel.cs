@@ -213,6 +213,8 @@ namespace Gamma.ViewModels
                         Quantity = 0,
                         NomenclatureName = p.NomenclatureName,
                     }).Distinct());
+                if (NomenclatureRests == null)
+                    NomenclatureRests = new ObservableCollection<Sample>();
                 foreach (var rest in nomenclatureRests)
                 {
                     if (!NomenclatureRests.Any(s => s.NomenclatureID == rest.NomenclatureID && (s.CharacteristicID == rest.CharacteristicID || (s.CharacteristicID == null && rest.CharacteristicID == null))))
@@ -259,6 +261,8 @@ namespace Gamma.ViewModels
                         MeasureUnitId = w.MeasureUnitID,
                         MeasureUnit = w.MeasureUnit
                     }));
+                if (Wastes == null)
+                    Wastes = new ObservableCollection<Sample>();
                 foreach (var waste in wastes)
                 {
                     waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
