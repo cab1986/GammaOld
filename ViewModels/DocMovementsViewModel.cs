@@ -82,7 +82,8 @@ namespace Gamma.ViewModels
                                 Date = d.Docs.Date,
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed
+                                IsConfirmed = d.Docs.IsConfirmed,
+                                Person = d.Docs.Persons.Name
                             }).ToList();
                         break;
                     case 1:
@@ -95,7 +96,8 @@ namespace Gamma.ViewModels
                                 Date = d.Docs.Date,
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed
+                                IsConfirmed = d.Docs.IsConfirmed,
+                                Person = d.Docs.Persons.Name
                             }).ToList();
                         break;
                     case 2:
@@ -112,7 +114,8 @@ namespace Gamma.ViewModels
                                 Date = d.Docs.Date,
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed
+                                IsConfirmed = d.Docs.IsConfirmed,
+                                Person = d.Docs.Persons.Name
                             }).ToList();
                         break;
                 }

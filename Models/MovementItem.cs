@@ -14,6 +14,7 @@ namespace Gamma.Models
         public string PlaceTo { get; set; }
         public string PlaceFrom { get; set; }
         public bool IsConfirmed { get; set; }
+        public string Person { get; set; }
 
         private ObservableCollection<DocNomenclatureItem> _nomenclatureItems;
 

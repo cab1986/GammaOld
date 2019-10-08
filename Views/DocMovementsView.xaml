@@ -79,7 +79,8 @@
             <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"/>
             <dxg:GridColumn Header="Со склада" FieldName="PlaceFrom" VisibleIndex="3" />
             <dxg:GridColumn Header="На склад" FieldName="PlaceTo" VisibleIndex="4" />
-            <dxg:GridColumn Header="Закрыто" FieldName="IsConfirmed" />
+            <dxg:GridColumn Header="Грузчик" FieldName="Person" VisibleIndex="5" />
+            <dxg:GridColumn Header="Закрыто" FieldName="IsConfirmed" VisibleIndex="6"  />
         </dxg:GridControl>
     </Grid>
 </UserControl>
