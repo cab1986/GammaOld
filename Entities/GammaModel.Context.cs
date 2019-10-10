@@ -645,7 +645,16 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletePallet", productIDParameter);
         }
-    
+
+        public virtual ObjectResult<string> DeleteDocFromDocCloseShiftDocs(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteDocFromDocCloseShiftDocs", docIDParameter);
+        }
+
         public virtual ObjectResult<Nullable<System.Guid>> CreateGroupPackWithSpool(Nullable<System.Guid> productID, string printName)
         {
             var productIDParameter = productID.HasValue ?

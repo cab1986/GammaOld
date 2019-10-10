@@ -4610,6 +4610,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="DeletePallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="DeleteDocFromDocCloseShiftDocs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="DeleteProductionTaskBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -7340,6 +7343,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </FunctionImport>
           <FunctionImport Name="DeletePallet" ReturnType="Collection(String)">
           <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteDocFromDocCloseShiftDocs" ReturnType="Collection(String)">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="NomenclatureGammaInfo" EntityType="GammaModel.NomenclatureGammaInfo" />
           <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CProperties" Association="GammaModel.FK_1CSpecificationInputNomenclature_1CProperties">
@@ -13864,6 +13870,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="DeletePallet" FunctionName="GammaDBModel.DeletePallet" />
+          <FunctionImportMapping FunctionImportName="DeleteDocFromDocCloseShiftDocs" FunctionName="GammaDBModel.DeleteDocFromDocCloseShiftDocs" />
           <FunctionImportMapping FunctionImportName="DeleteProductionTaskBatch" FunctionName="GammaDBModel.DeleteProductionTaskBatch" />
           <EntitySetMapping Name="NomenclatureGammaInfo">
             <EntityTypeMapping TypeName="GammaModel.NomenclatureGammaInfo">

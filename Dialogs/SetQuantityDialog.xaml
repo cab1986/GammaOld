@@ -13,8 +13,8 @@
         d:DataContext="{d:DesignInstance Type=dialogViewModels:SetQuantityDialogModel, IsDesignTimeCreatable=False}">
     <dxlc:LayoutControl Orientation="Vertical">
         <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
-        <dxlc:LayoutItem Width="100" Label="{Binding Label}"> 
-            <dxe:SpinEdit MinValue="0" EditValue="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+        <dxlc:LayoutItem Width="100" Label="{Binding Label}">
+            <dxe:TextEdit EditValue="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="Numeric" Mask="d" />
         </dxlc:LayoutItem>
     </dxlc:LayoutControl>
 </UserControl>

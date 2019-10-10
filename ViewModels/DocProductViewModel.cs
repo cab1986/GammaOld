@@ -388,11 +388,26 @@ namespace Gamma.ViewModels
             }
             set
             {
-                if (!AllowEditDoc && _isConfirmed)
-                {
-                    MessageBox.Show("Правка невозможна. Продукция уже в выработке или с ней связаны другие документы");
-                    return;
-                }
+                if (_isConfirmed)
+                    if (!AllowEditDoc)
+                    {
+                        MessageBox.Show("Правка невозможна. Продукция уже в выработке или с ней связаны другие документы");
+                        return;
+                    }
+                    else
+                    {
+                        if (Doc != null && GammaBase.Docs.Any(p => p.DocID == Doc.DocID && p.DocCloseShift.Any(d => !d.IsConfirmed)))
+                        {
+                            var docCloseShift = Doc.DocCloseShift.FirstOrDefault();
+                            MessageBox.Show("Продукт № " + Number + " будет удален из рапорта закрытия смены № "+ docCloseShift?.Number + " от " +docCloseShift?.Date.ToString() + " Смена " +docCloseShift?.ShiftID.ToString() + ". ОБЯЗАТЕЛЬНО откройте рапорт закрытия смены и заполните повторно!");
+                            var delResult = GammaBase.DeleteDocFromDocCloseShiftDocs(Doc.DocID).FirstOrDefault();
+                            if (delResult != "")
+                            {
+                                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                                return;
+                            }
+                        }
+                    };
                 if (value && !IsValid)
                     _isConfirmed = false;
                 else 

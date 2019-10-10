@@ -18,7 +18,7 @@ namespace Gamma.ViewModels
 
         public DocMovementsViewModel()
         {
-            Intervals = new List<string> { "Активные", "Последние 500", "Поиск" };
+            Intervals = new List<string> { "Активные", "Закрытые", "Последние 500", "Поиск" };
             IntervalId = 0;
             RefreshCommand = new DelegateCommand(Find);
             EditItemCommand = new DelegateCommand(() => MessageManager.OpenDocMovement(SelectedDocMovement.DocId), SelectedDocMovement != null);
@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
             {
                 if (_intervalId == value) return;
                 _intervalId = value;
-                if (_intervalId < 2) Find();
+                if (_intervalId < 3) Find();
             }
         }
 
@@ -74,7 +74,7 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Where(d => !d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(500)
+                            .Where(d => !d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(200)
                             .Select(d => new MovementItem
                             {
                                 DocId = d.DocID,
@@ -88,7 +88,7 @@ namespace Gamma.ViewModels
                         break;
                     case 1:
                         DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Take(500)
+                            .Where(d => d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(200)
                             .Select(d => new MovementItem
                             {
                                 DocId = d.DocID,
@@ -102,10 +102,26 @@ namespace Gamma.ViewModels
                         break;
                     case 2:
                         DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
+                            .OrderByDescending(d => d.Docs.Date)
+                            .Take(500)
+                            .Select(d => new MovementItem
+                            {
+                                DocId = d.DocID,
+                                Number = d.Docs.Number,
+                                Date = d.Docs.Date,
+                                PlaceFrom = d.OutPlaces.Name,
+                                PlaceTo = d.InPlaces.Name,
+                                IsConfirmed = d.Docs.IsConfirmed,
+                                Person = d.Docs.Persons.Name
+                            }).ToList();
+                        break;
+                    case 3:
+                        DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
                             .Where(d => (string.IsNullOrEmpty(Number) || Number == d.Docs.Number)
                                 && (DateBegin == null || d.Docs.Date >= DateBegin)
                                 && (DateEnd == null || d.Docs.Date <= DateEnd)
                             )
+                            .OrderByDescending(d => d.Docs.Date)
                             .Take(500)
                             .Select(d => new MovementItem
                             {

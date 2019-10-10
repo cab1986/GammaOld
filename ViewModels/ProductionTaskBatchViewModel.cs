@@ -139,14 +139,14 @@ namespace Gamma.ViewModels
                 MessageBoxResult.Yes) != MessageBoxResult.Yes)
             {
                 return;
-            }
-
+            };
+            string delResult = "";
             switch (SelectedProductionTaskProduct.ProductKind)
             {
                 case ProductKind.ProductSpool:
                     if (DB.HaveWriteAccess("ProductSpools"))
                     {
-                        GammaBase.DeleteSpool(SelectedProductionTaskProduct.ProductID);
+                        delResult = GammaBase.DeleteSpool(SelectedProductionTaskProduct.ProductID).FirstOrDefault();
                     }
                     else
                     {
@@ -156,7 +156,7 @@ namespace Gamma.ViewModels
                 case ProductKind.ProductGroupPack:
                     if (DB.HaveWriteAccess("ProductGroupPacks"))
                     {
-                        GammaBase.DeleteGroupPack(SelectedProductionTaskProduct.ProductID);
+                        delResult = GammaBase.DeleteGroupPack(SelectedProductionTaskProduct.ProductID).FirstOrDefault();
                     }
                     else
                     {
@@ -166,7 +166,7 @@ namespace Gamma.ViewModels
                 case ProductKind.ProductPallet:
                     if (DB.HaveWriteAccess("ProductPallets"))
                     {
-                        GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
+                        delResult = GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID).FirstOrDefault();
                     }
                     else
                     {
@@ -176,14 +176,20 @@ namespace Gamma.ViewModels
                 case ProductKind.ProductPalletR:
                     if (DB.HaveWriteAccess("ProductPallets"))
                     {
-                        GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID);
+                        delResult = GammaBase.DeletePallet(SelectedProductionTaskProduct.ProductID).FirstOrDefault();
                     }
                     else
                     {
                         MessageBox.Show("Не достаточно прав для удаления неполной паллеты");
                     }
-                    break;
+                    break;                    
             }
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+                ProductionTaskProducts.Remove(SelectedProductionTaskProduct);
         }
 
 
