@@ -34,6 +34,7 @@ namespace Gamma.ViewModels
                 Place = doc.DocWithdrawal.Places?.Name;
                 UserName = doc.Users.Name;
                 ShiftID = doc.ShiftID;
+                IsConfirmed = doc.IsConfirmed || !AllowEditDoc;
                 WithdrawalProducts = new ObservableCollection<WithdrawalProduct>(
                     gammaBase.DocWithdrawalProducts.Where(dw => dw.DocID == DocId).Join(gammaBase.vProductsInfo, dw => dw.ProductID, pi => pi.ProductID, (dw, pi) => new WithdrawalProduct
                     {
@@ -64,9 +65,17 @@ namespace Gamma.ViewModels
                 ProductWithdrawals = new ObservableCollection<Products>(
                     gammaBase.Products.Where(x => x.DocProductionProducts.Any(dpp => docProductionIDs.Contains(dpp.DocID))));
             }
+            AllowEditDoc = DB.AllowEditDoc(DocId);
+            IsReadOnly = !DB.HaveWriteAccess("DocWithdrawalProducts") || (IsConfirmed && IsValid);
         }
 
         public bool IsReadOnly { get; }
+        public bool IsAllowEditing
+        { get
+            {
+                return !IsReadOnly;
+            }
+        }
 
         public string Place { get; set; }
         public DateTime Date { get; set; }
@@ -75,6 +84,46 @@ namespace Gamma.ViewModels
         private Guid DocId { get; set; }
         public string UserName { get; set; }
         public byte? ShiftID { get; set; }
+        private bool _isConfirmed;
+
+        private bool AllowEditDoc { get; set; } = true;
+
+        public bool IsConfirmed
+        {
+            get
+            {
+                return _isConfirmed;
+            }
+            set
+            {
+                if (_isConfirmed)
+                    if (!AllowEditDoc)
+                    {
+                        MessageBox.Show("Правка невозможна. Продукция уже в выработке или с ней связаны другие документы");
+                        return;
+                    }
+                    //else
+                    //{
+                    //    if (Doc != null && GammaBase.Docs.Any(p => p.DocID == Doc.DocID && p.DocCloseShift.Any(d => !d.IsConfirmed)))
+                    //    {
+                    //        var docCloseShift = Doc.DocCloseShift.FirstOrDefault();
+                    //        MessageBox.Show("Продукт № " + Number + " будет удален из рапорта закрытия смены № " + docCloseShift?.Number + " от " + docCloseShift?.Date.ToString() + " Смена " + docCloseShift?.ShiftID.ToString() + ". ОБЯЗАТЕЛЬНО откройте рапорт закрытия смены и заполните повторно!");
+                    //        var delResult = GammaBase.DeleteDocFromDocCloseShiftDocs(Doc.DocID).FirstOrDefault();
+                    //        if (delResult != "")
+                    //        {
+                    //            MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    //            return;
+                    //        }
+                    //    }
+                    //};
+                if (value && !IsValid)
+                    _isConfirmed = false;
+                else
+                    _isConfirmed = value;
+                
+                RaisePropertyChanged("IsConfirmed");
+            }
+        }
 
         public ObservableCollection<WithdrawalProduct> WithdrawalProducts
         {
@@ -106,9 +155,16 @@ namespace Gamma.ViewModels
             }
         }
 
+
+        public override bool CanSaveExecute()
+        {
+            return IsValid && DB.HaveWriteAccess("DocWithdrawalProducts");
+        }
+
         public override bool SaveToModel()
         {
-            if (!DB.HaveWriteAccess("DocWithdrawalProducts")) return true;
+            //if (!DB.HaveWriteAccess("DocWithdrawalProducts")) return true;
+            if (IsReadOnly && IsConfirmed) return true;
             using (var gammaBase = DB.GammaDb)
             {
                 var doc = gammaBase.Docs.FirstOrDefault(d => d.DocID == DocId);
@@ -117,26 +173,33 @@ namespace Gamma.ViewModels
                     MessageBox.Show("Не удалось сохранить документ");
                     return false;
                 }
-                var productIds = WithdrawalProducts.Select(wp => wp.ProductId).ToList();
-                gammaBase.DocWithdrawalProducts.RemoveRange(
-                    gammaBase.DocWithdrawalProducts.Where(dw => dw.DocID == DocId && !productIds.Contains(dw.ProductID)));
-                foreach (var product in WithdrawalProducts)
+                if (doc.IsConfirmed != IsConfirmed)
+                    doc.IsConfirmed = IsConfirmed;
+
+                if (WithdrawalProducts != null)
                 {
-                    var withdrawalProduct =
-                        gammaBase.DocWithdrawalProducts.FirstOrDefault(
-                            dw => dw.DocID == DocId && dw.ProductID == product.ProductId);
-                    if (withdrawalProduct == null)
+                    var productIds = WithdrawalProducts.Select(wp => wp.ProductId).ToList();
+                    gammaBase.DocWithdrawalProducts.RemoveRange(
+                        gammaBase.DocWithdrawalProducts.Where(dw => dw.DocID == DocId && !productIds.Contains(dw.ProductID)));
+                    foreach (var product in WithdrawalProducts)
                     {
-                        withdrawalProduct = new DocWithdrawalProducts
+                        var withdrawalProduct =
+                            gammaBase.DocWithdrawalProducts.FirstOrDefault(
+                                dw => dw.DocID == DocId && dw.ProductID == product.ProductId);
+                        if (withdrawalProduct == null)
                         {
-                            DocID = DocId,
-                            ProductID = product.ProductId                            
-                        };
-                        gammaBase.DocWithdrawalProducts.Add(withdrawalProduct);
+                            withdrawalProduct = new DocWithdrawalProducts
+                            {
+                                DocID = DocId,
+                                ProductID = product.ProductId
+                            };
+                            gammaBase.DocWithdrawalProducts.Add(withdrawalProduct);
+                        }
+                        withdrawalProduct.Quantity = product.Quantity;
+                        withdrawalProduct.CompleteWithdrawal = product.CompleteWithdrawal;
                     }
-                    withdrawalProduct.Quantity = product.Quantity;
-                    withdrawalProduct.CompleteWithdrawal = product.CompleteWithdrawal;
                 }
+                /* Изменения можно внести только в продуктах списанных
                 var materilaIds = WithdrawalMaterials.Select(wm => wm.DocWithdrawalMaterialID).ToList();
                 gammaBase.DocWithdrawalMaterials.RemoveRange(
                     gammaBase.DocWithdrawalMaterials.Where(
@@ -158,7 +221,7 @@ namespace Gamma.ViewModels
                     withdrawalMaterial.Quantity = material.Quantity;
                     withdrawalMaterial.C1CNomenclatureID = material.NomenclatureID;
                     withdrawalMaterial.C1CCharacteristicID = material.CharacteristicID;
-                }
+                }*/
                 gammaBase.SaveChanges();
             }
             return true;

@@ -7,6 +7,7 @@
         xmlns:gamma="clr-namespace:Gamma"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:conv="clr-namespace:Gamma.Converters"
         xmlns:viewModels="clr-namespace:Gamma.ViewModels"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
@@ -16,7 +17,11 @@
         Title="Списание" Height="500" Width="700"
                   d:DataContext="{d:DesignInstance Type=viewModels:DocWithdrawalViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <dxlc:LayoutControl Orientation="Horizontal" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Orientation="Horizontal" Grid.Row="0" >
             <dxlc:LayoutGroup Orientation="Vertical" Width="200" View="GroupBox" Header="Списание">
                 <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding DocNumber}"/>
@@ -36,6 +41,9 @@
                 <dxlc:LayoutItem Label="Смена" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding ShiftID}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Подтвержден:">
+                    <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left" IsReadOnly="False"/>
+                </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Списано" LabelPosition="Top">
                 <dx:DXTabControl>
@@ -49,12 +57,12 @@
                             <dxg:GridColumn FieldName="Quantity" Header="Кол-во">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit EditValue="{Binding RowData.Row.Quantity}" IsReadOnly="True" MaxValue="{Binding RowData.Row.MaxQuantity}"/>
+                                        <dxe:SpinEdit EditValue="{Binding RowData.Row.Quantity}" IsReadOnly="{Binding View.DataContext.IsReadOnly}" MaxValue="{Binding RowData.Row.MaxQuantity}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
                             <dxg:GridColumn FieldName="MeasureUnit" Header="Ед. изм." AllowEditing="False"/>
-                            <dxg:GridColumn FieldName="CompleteWithdrawal" Header="Полное списание" AllowEditing="False" Name="CompleteWithdrawal"/>
+                            <dxg:GridColumn FieldName="CompleteWithdrawal" Header="Полное списание" AllowEditing="{Binding IsAllowEditing, Converter={StaticResource DefaultBooleanConverter}}" Name="CompleteWithdrawal"/>
                         </dxg:GridControl>
                     </dx:DXTabItem>
                     <dx:DXTabItem Header="Материалы">
@@ -78,5 +86,7 @@
                 </dx:DXTabControl>
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
+        <Button Content="Сохранить" Grid.Row="1" HorizontalAlignment="Right" Width="90" Height="30" Margin="0,8,115,8" Command="{Binding SaveAndCloseCommand}" />
+        <Button Content="Отмена" Grid.Row="1" Height ="30" Command="{Binding CloseCommand}" Width="90" Margin="0,8,10,8" HorizontalAlignment="Right"/>
     </Grid>
 </gamma:MvvmWindow>
