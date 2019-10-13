@@ -495,6 +495,15 @@
           <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="DocShipmentOrderPersons">
+          <Key>
+            <PropertyRef Name="DocOrderID" />
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="DocOrderID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsInActive" Type="bit" Nullable="true" />
+        </EntityType>
         <EntityType Name="DocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocCloseShiftMaterialID" />
@@ -2702,6 +2711,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocCloseShiftDocs">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocShipmentOrderPersons_DocOrder">
+          <End Role="DocShipmentOrders" Type="Self.DocShipmentOrders" Multiplicity="1" />
+          <End Role="DocShipmentOrderPersons" Type="Self.DocShipmentOrderPersons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocShipmentOrders">
+              <PropertyRef Name="DocOrderID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderPersons">
+              <PropertyRef Name="DocOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocShipmentOrderPersons_Person">
+          <End Role="Persons" Type="Self.Persons" Multiplicity="1" />
+          <End Role="DocShipmentOrderPersons" Type="Self.DocShipmentOrderPersons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persons">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderPersons">
+              <PropertyRef Name="PersonID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5007,6 +5040,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocShipmentOrderPersons" EntityType="Self.DocShipmentOrderPersons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocShipmentOrders" EntityType="Self.DocShipmentOrders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocUnpackWithdrawals" EntityType="Self.DocUnpackWithdrawals" Schema="dbo" store:Type="Tables" />
@@ -5674,6 +5708,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="FK_DocCloseShiftDocs_Docs3" Association="Self.FK_DocCloseShiftDocs_Docs3">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocShipmentOrderPersons_DocOrder" Association="Self.FK_DocShipmentOrderPersons_DocOrder">
+            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
+            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocShipmentOrderPersons_Person" Association="Self.FK_DocShipmentOrderPersons_Person">
+            <End Role="Persons" EntitySet="Persons" />
+            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMaterials_1CCharacteristics" Association="Self.FK_DocCloseShiftMaterials_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -7420,6 +7462,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="DocCloseShiftDocs" Association="GammaModel.DocCloseShiftDocs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="Docs1" EntitySet="Docs" />
+          </AssociationSet>
+          <AssociationSet Name="DocShipmentOrderPersons" Association="GammaModel.DocShipmentOrderPersons">
+            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
+            <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
           <AssociationSet Name="DocCloseShiftWithdrawals" Association="GammaModel.DocCloseShiftWithdrawals">
             <End Role="Docs" EntitySet="Docs" />
@@ -9354,6 +9400,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Persons_Places" FromRole="Persons" ToRole="Places" />
           <Property Name="UserID" Type="Guid" />
           <NavigationProperty Name="Users" Relationship="GammaModel.FK_Persons_Users" FromRole="Persons" ToRole="Users" />
+          <NavigationProperty Name="DocShipmentOrderPersons" Relationship="GammaModel.DocShipmentOrderPersons" FromRole="Persons" ToRole="DocShipmentOrders" />
         </EntityType>
         <Association Name="FK_Persons_Branches">
           <End Type="GammaModel.Branches" Role="Branches" Multiplicity="0..1" />
@@ -9613,6 +9660,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Association Name="DocCloseShiftDocs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
           <End Type="GammaModel.Docs" Role="Docs1" Multiplicity="*" />
+        </Association>
+        <Association Name="DocShipmentOrderPersons">
+          <End Type="GammaModel.DocShipmentOrders" Role="DocShipmentOrders" Multiplicity="*" />
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="*" />
         </Association>
         <Association Name="DocCloseShiftWithdrawals">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
@@ -9990,6 +10041,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipmentOrders_Persons" FromRole="DocShipmentOrders" ToRole="Persons" />
           <NavigationProperty Name="Persons1" Relationship="GammaModel.FK_DocShipmentOrders_Persons1" FromRole="DocShipmentOrders" ToRole="Persons" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_DocShipmentOrders" FromRole="DocShipmentOrders" ToRole="DocProduction" />
+          <NavigationProperty Name="DocShipmentOrderPersons" Relationship="GammaModel.DocShipmentOrderPersons" FromRole="DocShipmentOrders" ToRole="Persons" />          
         </EntityType>
         <EntityType Name="DocBrokeProducts">
           <Key>
@@ -14026,6 +14078,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               <ScalarProperty Name="DocID" ColumnName="DocCloseShiftID" />
             </EndProperty>
           </AssociationSetMapping>
+          <AssociationSetMapping Name="DocShipmentOrderPersons" TypeName="GammaModel.DocShipmentOrderPersons" StoreEntitySet="DocShipmentOrderPersons">
+            <EndProperty Name="Persons">
+              <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+            </EndProperty>
+            <EndProperty Name="DocShipmentOrders">
+              <ScalarProperty Name="DocOrderID" ColumnName="DocOrderID" />
+            </EndProperty>
+          </AssociationSetMapping>
           <AssociationSetMapping Name="DocCloseShiftWithdrawals" TypeName="GammaModel.DocCloseShiftWithdrawals" StoreEntitySet="DocCloseShiftWithdrawals">
             <EndProperty Name="DocWithdrawal">
               <ScalarProperty Name="DocID" ColumnName="DocWithdrawalID" />
@@ -15399,6 +15459,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocCloseShiftDocs" ManuallyRouted="false" />
+        <AssociationConnector Association="GammaModel.DocShipmentOrderPersons" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocCloseShiftWithdrawals" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocUnpackWithdrawals" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Docs" ManuallyRouted="false" />

@@ -11,7 +11,7 @@ namespace Gamma.ViewModels
     {
         public ComplectedPalletsViewModel()
         {
-            Intervals = new List<string> { "Последние 500", "За последний день", "Поиск" };
+            Intervals = new List<string> { "Последние 100", "За последний день", "Поиск" };
             RefreshCommand = new DelegateCommand(Find);
             NewItemCommand = new DelegateCommand(ComplectPallet);
             Find();
@@ -66,7 +66,7 @@ namespace Gamma.ViewModels
                                 d.DocProduction.DocOrderId != null &&
                                 d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductKindID ==
                                 (int) ProductKind.ProductPallet).
-                            OrderByDescending(d => d.Date).Take(500).
+                            OrderByDescending(d => d.Date).Take(100).
                             Select(d => new ComplectedPallet
                             {
                                 DocId = d.DocID,
@@ -81,6 +81,32 @@ namespace Gamma.ViewModels
                                         NomenclatureId = p.C1CNomenclatureID,
                                         CharacteristicId = p.C1CCharacteristicID,
                                         Quantity = p.Quantity ??0,
+                                        NomenclatureName = p.C1CNomenclature.Name + " " + p.C1CCharacteristics.Name
+                                    }).ToList()
+                            }).ToList();
+                        break;
+                    case 1:
+                        Pallets = gammaBase.Docs.Where(
+                            d =>
+                                d.DocProduction.DocOrderId != null &&
+                                d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductKindID ==
+                                (int)ProductKind.ProductPallet).
+                            OrderByDescending(d => d.Date).
+                            Where(d => d.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-24)).
+                            Select(d => new ComplectedPallet
+                            {
+                                DocId = d.DocID,
+                                Number = d.DocProduction.DocProductionProducts.FirstOrDefault().Products.Number,
+                                Date = d.Date,
+                                ProductId = d.DocProduction.DocProductionProducts.FirstOrDefault().ProductID,
+                                DocOrderId = (Guid)d.DocProduction.DocOrderId,
+                                OrderNumber = gammaBase.v1COrders.FirstOrDefault(order => order.C1COrderID == d.DocProduction.DocOrderId).Number,
+                                PalletItems = d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductPallets.ProductItems
+                                    .Select(p => new PalletItem
+                                    {
+                                        NomenclatureId = p.C1CNomenclatureID,
+                                        CharacteristicId = p.C1CCharacteristicID,
+                                        Quantity = p.Quantity ?? 0,
                                         NomenclatureName = p.C1CNomenclature.Name + " " + p.C1CCharacteristics.Name
                                     }).ToList()
                             }).ToList();

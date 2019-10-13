@@ -131,6 +131,7 @@
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_Docs" />
         <AssociationConnector Association="GammaModel.DocCloseShiftDocs" />
+        <AssociationConnector Association="GammaModel.DocShipmentOrderPersons" />
         <AssociationConnector Association="GammaModel.DocCloseShiftWithdrawals" />
         <AssociationConnector Association="GammaModel.DocUnpackWithdrawals" />
         <EntityTypeShape EntityType="GammaModel.DocProduction" Width="1.5" PointX="21.75" PointY="69" />

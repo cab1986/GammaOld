@@ -112,7 +112,7 @@ namespace Gamma.ViewModels
 						DocComplectations = gammaBase.C1CDocComplectation.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID
                         && (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger
                         && (!dc.DocComplectation.Any() || !dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed))
-							.OrderByDescending(dc => dc.Date).Take(500)
+							.OrderByDescending(dc => dc.Date).Take(100)
 							.Select(dc => new DocComplectationListItem
 							{
 								DocId = dc.DocComplectation.Any() ? (Guid?)dc.DocComplectation.FirstOrDefault().DocComplectationID : null,

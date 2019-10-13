@@ -12,6 +12,7 @@ using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Interfaces;
 using Gamma.Models;
+using DevExpress.XtraEditors;
 
 namespace Gamma.ViewModels
 {
@@ -76,6 +77,9 @@ namespace Gamma.ViewModels
             Title = $"{docShipmentOrderInfo.OrderType} № {Number}";
             VehicleNumber = docShipmentOrderInfo.VehicleNumber;
             ActivePersonOutId = docShipmentOrderInfo.OutActivePersonID;
+            ActivePersonsOut = new List<object>();
+            foreach (var personsItem in PersonsOut.Where(p => p.PersonID == docShipmentOrderInfo.OutActivePersonID))
+                ActivePersonsOut.Add(personsItem);
             ActivePersonInId = docShipmentOrderInfo.InActivePersonID;
             ShiftOutId = docShipmentOrderInfo.OutShiftID;
             ShiftInId = docShipmentOrderInfo.InShiftId;
@@ -104,6 +108,10 @@ namespace Gamma.ViewModels
             DocShipmentOrderGoods.CollectionChanged +=DocShipmentOrderGoodsOnCollectionChanged;
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
         }
+
+        public List<Persons> TestItems { get; set; }
+        public List<Object> TestItem { get; set; }
+
 
         public string Driver { get; set; }
 
@@ -275,6 +283,8 @@ namespace Gamma.ViewModels
         public string VehicleNumber { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public Guid? ActivePersonOutId { get; set; }
+        public List<Object> ActivePersonsOut { get; set; }
+
         public Guid? ActivePersonInId { get; set; }
         public List<Persons> PersonsOut { get; set; }
         public List<Persons> PersonsIn { get; set; }
