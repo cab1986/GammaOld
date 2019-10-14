@@ -38,10 +38,10 @@ namespace Gamma.ViewModels
                 Title = "Закрытие смены №" + Doc.Number;
             }
             IsVisibilityUnwinderRemainder = false;
-            IsVisibilityRemainder = false;
+            //IsVisibilityRemainder = false;
 
-            var placeGroupID = GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceGroupID).FirstOrDefault();
-            switch (placeGroupID)
+            var place = GammaBase.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
+            switch (place?.PlaceGroupID)
             {
                 case (short)PlaceGroup.PM:
                     //CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
@@ -49,7 +49,7 @@ namespace Gamma.ViewModels
                         ? new DocCloseShiftPMGridViewModel()
                         : new DocCloseShiftPMGridViewModel((Guid)msg.DocID);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
-                    IsVisibilityRemainder = true;
+                    //IsVisibilityRemainder = true;
                     break;
                 case (short)PlaceGroup.Wr:
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
@@ -63,7 +63,7 @@ namespace Gamma.ViewModels
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     IsVisibilityUnwinderRemainder = true;
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
-                    IsVisibilityRemainder = true;
+                    //IsVisibilityRemainder = true;
                     var cc = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel(cc)
@@ -76,6 +76,7 @@ namespace Gamma.ViewModels
                     CurrentViewModelGrid = new DocCloseShiftWarehouseGridViewModel(msg);
                     break;
             }
+            IsVisibilityRemainder = place?.IsEnabledRemainderInDocCloseShift ?? false;
             var grid = CurrentViewModelGrid as IFillClearGrid;
             if (grid != null)
             {
@@ -83,7 +84,7 @@ namespace Gamma.ViewModels
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed);
             }
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && !grid.IsChanged &&
-                (placeGroupID == (int)PlaceGroup.PM || placeGroupID == (int)PlaceGroup.Rw || placeGroupID == (int)PlaceGroup.Convertings));
+                (place?.PlaceGroupID == (int)PlaceGroup.PM || place?.PlaceGroupID == (int)PlaceGroup.Rw || place?.PlaceGroupID == (int)PlaceGroup.Convertings));
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
         }
 

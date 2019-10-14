@@ -55,6 +55,7 @@ namespace Gamma.Entities
         public Nullable<bool> IsRobot { get; set; }
         public bool IsWithdrawalMaterial { get; set; }
         public int PlaceWithdrawalMaterialTypeID { get; set; }
+        public Nullable<bool> IsEnabledRemainderInDocCloseShift { get; set; }
     
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }
