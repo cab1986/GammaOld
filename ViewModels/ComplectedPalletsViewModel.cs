@@ -79,7 +79,7 @@ namespace Gamma.ViewModels
                                     .Select(p => new PalletItem
                                     {
                                         NomenclatureId = p.C1CNomenclatureID,
-                                        CharacteristicId = p.C1CCharacteristicID,
+                                        CharacteristicId = (Guid)p.C1CCharacteristicID,
                                         Quantity = p.Quantity ??0,
                                         NomenclatureName = p.C1CNomenclature.Name + " " + p.C1CCharacteristics.Name
                                     }).ToList()
@@ -105,7 +105,7 @@ namespace Gamma.ViewModels
                                     .Select(p => new PalletItem
                                     {
                                         NomenclatureId = p.C1CNomenclatureID,
-                                        CharacteristicId = p.C1CCharacteristicID,
+                                        CharacteristicId = (Guid)p.C1CCharacteristicID,
                                         Quantity = p.Quantity ?? 0,
                                         NomenclatureName = p.C1CNomenclature.Name + " " + p.C1CCharacteristics.Name
                                     }).ToList()

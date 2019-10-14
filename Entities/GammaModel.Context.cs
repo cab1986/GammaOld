@@ -152,6 +152,7 @@ namespace Gamma.Entities
         public virtual DbSet<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
         public virtual DbSet<vProductionMaterials> vProductionMaterials { get; set; }
         public virtual DbSet<PlaceWithdrawalMaterialTypes> PlaceWithdrawalMaterialTypes { get; set; }
+        public virtual DbSet<DocShipmentOrderPersons> DocShipmentOrderPersons { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -338,20 +339,20 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasks_Result>("GetProductionTasks", batchKindIDParameter);
         }
-
+    
         public virtual ObjectResult<GetProductionTasksOnState_Result> GetProductionTasksOnState(Nullable<int> batchKindID, Nullable<int> productionTaskStateID)
         {
             var batchKindIDParameter = batchKindID.HasValue ?
                 new ObjectParameter("BatchKindID", batchKindID) :
                 new ObjectParameter("BatchKindID", typeof(int));
-
+    
             var productionTaskStateIDParameter = productionTaskStateID.HasValue ?
                 new ObjectParameter("ProductionTaskStateID", productionTaskStateID) :
                 new ObjectParameter("ProductionTaskStateID", typeof(int));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetProductionTasksOnState_Result>("GetProductionTasksOnState", batchKindIDParameter, productionTaskStateIDParameter);
         }
-
+    
         public virtual ObjectResult<GetSpoolRejectionReasons_Result> GetSpoolRejectionReasons()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpoolRejectionReasons_Result>("GetSpoolRejectionReasons");
@@ -645,16 +646,16 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeletePallet", productIDParameter);
         }
-
+    
         public virtual ObjectResult<string> DeleteDocFromDocCloseShiftDocs(Nullable<System.Guid> docID)
         {
             var docIDParameter = docID.HasValue ?
                 new ObjectParameter("DocID", docID) :
                 new ObjectParameter("DocID", typeof(System.Guid));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteDocFromDocCloseShiftDocs", docIDParameter);
         }
-
+    
         public virtual ObjectResult<Nullable<System.Guid>> CreateGroupPackWithSpool(Nullable<System.Guid> productID, string printName)
         {
             var productIDParameter = productID.HasValue ?
@@ -739,20 +740,20 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpecificationInputNomenclature_Result>("GetSpecificationInputNomenclature", nomenclatureIDParameter, characteristicIDParameter, placeGroupIDParameter);
         }
-
+    
         public virtual ObjectResult<GetSpecificationNomenclatureOnPlace_Result> GetSpecificationNomenclatureOnPlace(Nullable<int> placeID, Nullable<System.DateTime> date)
         {
             var placeIDParameter = placeID.HasValue ?
                 new ObjectParameter("PlaceID", placeID) :
                 new ObjectParameter("PlaceID", typeof(int));
-
+    
             var dateParameter = date.HasValue ?
                 new ObjectParameter("Date", date) :
                 new ObjectParameter("Date", typeof(System.DateTime));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSpecificationNomenclatureOnPlace_Result>("GetSpecificationNomenclatureOnPlace", placeIDParameter, dateParameter);
         }
-
+    
         public virtual ObjectResult<string> DeletPlaceZone(Nullable<System.Guid> placeZoneID)
         {
             var placeZoneIDParameter = placeZoneID.HasValue ?
@@ -862,7 +863,7 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckInstallProductionTaskSourceSpools_Result>("CheckInstallProductionTaskSourceSpools", placeIDParameter, productIDParameter);
         }
     
-        public virtual ObjectResult<Nullable<bool>> GetDocBrokeEditable(Nullable<System.DateTime> docDate, Nullable<System.Guid> docUserID, Nullable<int> docShiftID, Nullable<bool> docIsConfirmed, Nullable<System.Guid> userID, Nullable<int> shiftID, Nullable<System.Guid> DocID)
+        public virtual ObjectResult<Nullable<bool>> GetDocBrokeEditable(Nullable<System.DateTime> docDate, Nullable<System.Guid> docUserID, Nullable<int> docShiftID, Nullable<bool> docIsConfirmed, Nullable<System.Guid> userID, Nullable<int> shiftID, Nullable<System.Guid> docID)
         {
             var docDateParameter = docDate.HasValue ?
                 new ObjectParameter("docDate", docDate) :
@@ -887,11 +888,11 @@ namespace Gamma.Entities
             var shiftIDParameter = shiftID.HasValue ?
                 new ObjectParameter("ShiftID", shiftID) :
                 new ObjectParameter("ShiftID", typeof(int));
-
-            var docIDParameter = DocID.HasValue ?
-                new ObjectParameter("DocID", DocID) :
+    
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
                 new ObjectParameter("DocID", typeof(System.Guid));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("GetDocBrokeEditable", docDateParameter, docUserIDParameter, docShiftIDParameter, docIsConfirmedParameter, userIDParameter, shiftIDParameter, docIDParameter);
         }
     
@@ -1135,36 +1136,38 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterials_Result>("FillDocCloseShiftMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
+    
         public virtual ObjectResult<FillDocCloseShiftMaterialsAtBegin_Result> FillDocCloseShiftMaterialsAtBegin(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
         {
             var placeIDParameter = placeID.HasValue ?
                 new ObjectParameter("PlaceID", placeID) :
                 new ObjectParameter("PlaceID", typeof(int));
-
+    
             var shiftIDParameter = shiftID.HasValue ?
                 new ObjectParameter("ShiftID", shiftID) :
                 new ObjectParameter("ShiftID", typeof(int));
-
+    
             var closeDateParameter = closeDate.HasValue ?
                 new ObjectParameter("CloseDate", closeDate) :
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterialsAtBegin_Result>("FillDocCloseShiftMaterialsAtBegin", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
+    
         public virtual ObjectResult<FillDocCloseShiftMaterialsAtEnd_Result> FillDocCloseShiftMaterialsAtEnd(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
         {
             var placeIDParameter = placeID.HasValue ?
                 new ObjectParameter("PlaceID", placeID) :
                 new ObjectParameter("PlaceID", typeof(int));
-
+    
             var shiftIDParameter = shiftID.HasValue ?
                 new ObjectParameter("ShiftID", shiftID) :
                 new ObjectParameter("ShiftID", typeof(int));
-
+    
             var closeDateParameter = closeDate.HasValue ?
                 new ObjectParameter("CloseDate", closeDate) :
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterialsAtEnd_Result>("FillDocCloseShiftMaterialsAtEnd", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }

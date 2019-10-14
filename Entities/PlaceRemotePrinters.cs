@@ -19,6 +19,7 @@ namespace Gamma.Entities
         public int ModbusDeviceID { get; set; }
         public int RemotePrinterID { get; set; }
         public Nullable<bool> IsEnabled { get; set; }
+        public Nullable<bool> IsDefaultPrinterForGamma { get; set; }
     
         public virtual ModbusDevices ModbusDevices { get; set; }
         public virtual Places Places { get; set; }

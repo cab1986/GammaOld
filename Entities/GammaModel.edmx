@@ -137,7 +137,7 @@
           <Property Name="Period" Type="datetime" Nullable="false" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
-          <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CSpecificationID" Type="uniqueidentifier" />
           <Property Name="1CPlaceID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CMeasureUnitQualifiers">
@@ -495,15 +495,6 @@
           <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
-        <EntityType Name="DocShipmentOrderPersons">
-          <Key>
-            <PropertyRef Name="DocOrderID" />
-            <PropertyRef Name="PersonID" />
-          </Key>
-          <Property Name="DocOrderID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="IsInActive" Type="bit" Nullable="true" />
-        </EntityType>
         <EntityType Name="DocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocCloseShiftMaterialID" />
@@ -772,6 +763,15 @@
           <Property Name="BranchID" Type="tinyint" />
           <Property Name="PersonGuid" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="DocShipmentOrderPersons">
+          <Key>
+            <PropertyRef Name="DocShipmentOrderPersonID" />
+          </Key>
+          <Property Name="DocShipmentOrderPersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocOrderID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsInActive" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="DocShipmentOrders">
           <Key>
             <PropertyRef Name="DocOrderID" />
@@ -999,6 +999,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="ModbusDeviceID" Type="int" Nullable="false" />
           <Property Name="RemotePrinterID" Type="int" Nullable="false" />
           <Property Name="IsEnabled" Type="bit" />
+          <Property Name="IsDefaultPrinterForGamma" Type="bit" />
         </EntityType>
         <EntityType Name="Places">
           <Key>
@@ -1165,7 +1166,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="ProductItemID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="int" />
         </EntityType>
         <EntityType Name="ProductKindRejectionReasons">
@@ -1442,6 +1443,8 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary ke
           <Property Name="Shipper1CCode" Type="char" MaxLength="9" />
           <Property Name="Consignee1CCode" Type="char" MaxLength="9" />
           <Property Name="Buyer1CCode" Type="char" MaxLength="9" />
+          <Property Name="InActivePersons" Type="varchar(max)" />
+          <Property Name="OutActivePersons" Type="varchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1456,6 +1459,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not ha
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="1CPlaceID" Type="uniqueidentifier" />
           <Property Name="1CSpecificationID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ValidTill" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1475,6 +1479,7 @@ warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does no
           <Property Name="Color" Type="varchar" MaxLength="50" />
           <Property Name="Buyer" Type="varchar" MaxLength="50" />
           <Property Name="TypeKind" Type="varchar" MaxLength="50" />
+          <Property Name="TypeTransition" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1488,7 +1493,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a pr
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="1CQualityID" Type="uniqueidentifier" />
-          <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+          <Property Name="NomenclatureName" Type="nvarchar" MaxLength="554" />
           <Property Name="OutQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="InQuantity" Type="decimal" Precision="38" Scale="5" />
           <Property Name="AcceptedQuantity" Type="decimal" Precision="38" Scale="5" />
@@ -1542,6 +1547,8 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="OrderTypeName" Type="varchar" MaxLength="50" />
           <Property Name="InPlace" Type="varchar" MaxLength="64" />
           <Property Name="OutPlace" Type="varchar" MaxLength="64" />
+          <Property Name="ShiftID" Type="tinyint" />
+          <Property Name="NumberDocMovement" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1995,7 +2002,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_1CMainSpecifications_1CSpecifications">
-          <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="1" />
+          <End Role="1CSpecifications" Type="Self.1CSpecifications" Multiplicity="0..1" />
           <End Role="1CMainSpecifications" Type="Self.1CMainSpecifications" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="1CSpecifications">
@@ -2714,30 +2721,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocShipmentOrderPersons_DocOrder">
-          <End Role="DocShipmentOrders" Type="Self.DocShipmentOrders" Multiplicity="1" />
-          <End Role="DocShipmentOrderPersons" Type="Self.DocShipmentOrderPersons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocShipmentOrders">
-              <PropertyRef Name="DocOrderID" />
-            </Principal>
-            <Dependent Role="DocShipmentOrderPersons">
-              <PropertyRef Name="DocOrderID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocShipmentOrderPersons_Person">
-          <End Role="Persons" Type="Self.Persons" Multiplicity="1" />
-          <End Role="DocShipmentOrderPersons" Type="Self.DocShipmentOrderPersons" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Persons">
-              <PropertyRef Name="PersonID" />
-            </Principal>
-            <Dependent Role="DocShipmentOrderPersons">
-              <PropertyRef Name="PersonID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DocCloseShiftMaterials_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
           <End Role="DocCloseShiftMaterials" Type="Self.DocCloseShiftMaterials" Multiplicity="*" />
@@ -2747,6 +2730,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocCloseShiftMaterials">
               <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftMaterials_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="DocCloseShiftMaterials" Type="Self.DocCloseShiftMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftMaterials">
+              <PropertyRef Name="1CMeasureUnitID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2783,18 +2778,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocCloseShiftMaterials">
               <PropertyRef Name="DocID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocCloseShiftMaterials_1CMeasureUnits">
-          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
-          <End Role="DocCloseShiftMaterials" Type="Self.DocCloseShiftMaterials" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="1CMeasureUnits">
-              <PropertyRef Name="1CMeasureUnitID" />
-            </Principal>
-            <Dependent Role="DocCloseShiftMaterials">
-              <PropertyRef Name="1CMeasureUnitID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3540,6 +3523,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocShipmentOrderPersons_DocOrder">
+          <End Role="DocShipmentOrders" Type="Self.DocShipmentOrders" Multiplicity="1" />
+          <End Role="DocShipmentOrderPersons" Type="Self.DocShipmentOrderPersons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocShipmentOrders">
+              <PropertyRef Name="DocOrderID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderPersons">
+              <PropertyRef Name="DocOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocShipmentOrderPersons_Person">
+          <End Role="Persons" Type="Self.Persons" Multiplicity="1" />
+          <End Role="DocShipmentOrderPersons" Type="Self.DocShipmentOrderPersons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persons">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderPersons">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocShipmentOrders_Persons">
           <End Role="Persons" Type="Self.Persons" Multiplicity="0..1" />
           <End Role="DocShipmentOrders" Type="Self.DocShipmentOrders" Multiplicity="*" />
@@ -4223,7 +4230,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProductItems_1CCharacteristics">
-          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
           <End Role="ProductItems" Type="Self.ProductItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="1CCharacteristics">
@@ -4637,14 +4644,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="Length" Type="decimal" Mode="In" />
         </Function>
         <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
+        <Function Name="DeleteDocFromDocCloseShiftDocs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="DeletePallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
-        </Function>
-        <Function Name="DeleteDocFromDocCloseShiftDocs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="DeleteProductionTaskBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
@@ -4827,6 +4834,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <Property Name="InDate" Type="datetime" />
                 <Property Name="OutDate" Type="datetime" />
                 <Property Name="State" Type="varchar" MaxLength="9" Nullable="false" />
+                <Property Name="NumberDocMovement" Type="varchar" MaxLength="50" />
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -4892,12 +4900,12 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="GetProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="BatchKindID" Type="int" Mode="In" />
         </Function>
-      <Function Name="GetProductionTasksOnState" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-        <Parameter Name="BatchKindID" Type="int" Mode="In" />
-        <Parameter Name="ProductionTaskStateID" Type="int" Mode="In" />
-      </Function>
-      <Function Name="GetProductionTaskSGIMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+        <Function Name="GetProductionTaskSGIMadeQuantity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="ProductionTaskBatchId" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetProductionTasksOnState" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BatchKindID" Type="int" Mode="In" />
+          <Parameter Name="ProductionTaskStateID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetProductRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -4913,11 +4921,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
         </Function>
-      <Function Name="GetSpecificationNomenclatureOnPlace" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-        <Parameter Name="PlaceID" Type="int" Mode="In" />
-        <Parameter Name="Date" Type="datetime2" Mode="In" />
-      </Function>
-      <Function Name="GetSpoolCoreWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="decimal">
+        <Function Name="GetSpecificationNomenclatureOnPlace" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="Date" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="GetSpoolCoreWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="decimal">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetSpoolDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="smallint">
@@ -5172,7 +5180,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [v1COrders].[Warehouse] AS [Warehouse], 
     [v1COrders].[Shipper1CCode] AS [Shipper1CCode], 
     [v1COrders].[Consignee1CCode] AS [Consignee1CCode], 
-    [v1COrders].[Buyer1CCode] AS [Buyer1CCode]
+    [v1COrders].[Buyer1CCode] AS [Buyer1CCode], 
+    [v1COrders].[InActivePersons] AS [InActivePersons], 
+    [v1COrders].[OutActivePersons] AS [OutActivePersons]
     FROM [dbo].[v1COrders] AS [v1COrders]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CWorkingSpecifications" EntityType="Self.v1CWorkingSpecifications" store:Type="Views" store:Schema="dbo">
@@ -5181,7 +5191,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [v1CWorkingSpecifications].[1CNomenclatureID] AS [1CNomenclatureID], 
     [v1CWorkingSpecifications].[1CCharacteristicID] AS [1CCharacteristicID], 
     [v1CWorkingSpecifications].[1CPlaceID] AS [1CPlaceID], 
-    [v1CWorkingSpecifications].[1CSpecificationID] AS [1CSpecificationID]
+    [v1CWorkingSpecifications].[1CSpecificationID] AS [1CSpecificationID], 
+    [v1CWorkingSpecifications].[ValidTill] AS [ValidTill]
     FROM [dbo].[v1CWorkingSpecifications] AS [v1CWorkingSpecifications]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vCharacteristicSGBProperties" EntityType="Self.vCharacteristicSGBProperties" store:Type="Views" store:Schema="dbo">
@@ -5197,7 +5208,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vCharacteristicSGBProperties].[FormatNumeric] AS [FormatNumeric], 
     [vCharacteristicSGBProperties].[Color] AS [Color], 
     [vCharacteristicSGBProperties].[Buyer] AS [Buyer], 
-    [vCharacteristicSGBProperties].[TypeKind] AS [TypeKind]
+    [vCharacteristicSGBProperties].[TypeKind] AS [TypeKind], 
+    [vCharacteristicSGBProperties].[TypeTransition] AS [TypeTransition]
     FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
@@ -5253,7 +5265,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vDocMovementProducts].[ProductKindName] AS [ProductKindName], 
     [vDocMovementProducts].[OrderTypeName] AS [OrderTypeName], 
     [vDocMovementProducts].[InPlace] AS [InPlace], 
-    [vDocMovementProducts].[OutPlace] AS [OutPlace]
+    [vDocMovementProducts].[OutPlace] AS [OutPlace], 
+    [vDocMovementProducts].[ShiftID] AS [ShiftID], 
+    [vDocMovementProducts].[NumberDocMovement] AS [NumberDocMovement]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
@@ -5709,16 +5723,12 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocShipmentOrderPersons_DocOrder" Association="Self.FK_DocShipmentOrderPersons_DocOrder">
-            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
-            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocShipmentOrderPersons_Person" Association="Self.FK_DocShipmentOrderPersons_Person">
-            <End Role="Persons" EntitySet="Persons" />
-            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
-          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMaterials_1CCharacteristics" Association="Self.FK_DocCloseShiftMaterials_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftMaterials_1CMeasureUnits" Association="Self.FK_DocCloseShiftMaterials_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
             <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMaterials_1CNomenclature" Association="Self.FK_DocCloseShiftMaterials_1CNomenclature">
@@ -5731,10 +5741,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMaterials_Docs" Association="Self.FK_DocCloseShiftMaterials_Docs">
             <End Role="Docs" EntitySet="Docs" />
-            <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocCloseShiftMaterials_1CMeasureUnits" Association="Self.FK_DocCloseShiftMaterials_1CMeasureUnits">
-            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
             <End Role="DocCloseShiftMaterials" EntitySet="DocCloseShiftMaterials" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMovementProducts_DocMovement" Association="Self.FK_DocCloseShiftMovementProducts_DocMovement">
@@ -5980,6 +5986,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="FK_Docs_Users" Association="Self.FK_Docs_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Docs" EntitySet="Docs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocShipmentOrderPersons_DocOrder" Association="Self.FK_DocShipmentOrderPersons_DocOrder">
+            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
+            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocShipmentOrderPersons_Person" Association="Self.FK_DocShipmentOrderPersons_Person">
+            <End Role="Persons" EntitySet="Persons" />
+            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
           </AssociationSet>
           <AssociationSet Name="FK_DocShipmentOrders_Persons" Association="Self.FK_DocShipmentOrders_Persons">
             <End Role="Persons" EntitySet="Persons" />
@@ -7387,7 +7401,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ProductID" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="DeleteDocFromDocCloseShiftDocs" ReturnType="Collection(String)">
-            <Parameter Name="DocID" Mode="In" Type="Guid" />
+          <Parameter Name="DocID" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="NomenclatureGammaInfo" EntityType="GammaModel.NomenclatureGammaInfo" />
           <AssociationSet Name="FK_1CSpecificationInputNomenclature_1CProperties" Association="GammaModel.FK_1CSpecificationInputNomenclature_1CProperties">
@@ -7462,10 +7476,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="DocCloseShiftDocs" Association="GammaModel.DocCloseShiftDocs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="Docs1" EntitySet="Docs" />
-          </AssociationSet>
-          <AssociationSet Name="DocShipmentOrderPersons" Association="GammaModel.DocShipmentOrderPersons">
-            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
-            <End Role="Persons" EntitySet="Persons" />
           </AssociationSet>
           <AssociationSet Name="DocCloseShiftWithdrawals" Association="GammaModel.DocCloseShiftWithdrawals">
             <End Role="Docs" EntitySet="Docs" />
@@ -8350,6 +8360,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="PlaceWithdrawalMaterialTypes" EntitySet="PlaceWithdrawalMaterialTypes" />
             <End Role="Places" EntitySet="Places" />
           </AssociationSet>
+          <EntitySet Name="DocShipmentOrderPersons" EntityType="GammaModel.DocShipmentOrderPersons" />
+          <AssociationSet Name="FK_DocShipmentOrderPersons_DocOrder" Association="GammaModel.FK_DocShipmentOrderPersons_DocOrder">
+            <End Role="DocShipmentOrders" EntitySet="DocShipmentOrders" />
+            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocShipmentOrderPersons_Person" Association="GammaModel.FK_DocShipmentOrderPersons_Person">
+            <End Role="Persons" EntitySet="Persons" />
+            <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -8800,6 +8819,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="CoreDiameterNumeric" Type="Int32" />
           <Property Name="Buyer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TypeKind" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TypeTransition" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="GetCharacteristicsForPM_Result">
           <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
@@ -9361,7 +9381,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductItemID" Type="Guid" Nullable="false" />
           <Property Name="ProductID" Type="Guid" Nullable="false" />
           <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
-          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
           <Property Name="Quantity" Type="Int32" />
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductItems_1CCharacteristics" FromRole="ProductItems" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="ProductPallets" Relationship="GammaModel.FK_ProductItems_ProductPallets" FromRole="ProductItems" ToRole="ProductPallets" />
@@ -9400,7 +9420,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Persons_Places" FromRole="Persons" ToRole="Places" />
           <Property Name="UserID" Type="Guid" />
           <NavigationProperty Name="Users" Relationship="GammaModel.FK_Persons_Users" FromRole="Persons" ToRole="Users" />
-          <NavigationProperty Name="DocShipmentOrderPersons" Relationship="GammaModel.DocShipmentOrderPersons" FromRole="Persons" ToRole="DocShipmentOrders" />
+          <NavigationProperty Name="DocShipmentOrderPersons" Relationship="GammaModel.FK_DocShipmentOrderPersons_Person" FromRole="Persons" ToRole="DocShipmentOrderPersons" />
         </EntityType>
         <Association Name="FK_Persons_Branches">
           <End Type="GammaModel.Branches" Role="Branches" Multiplicity="0..1" />
@@ -9454,7 +9474,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="DocMovementID" Type="Guid" Nullable="false" />
           <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
           <Property Name="C1CCharacteristicID" Type="Guid" />
-          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="554" FixedLength="false" Unicode="true" />
           <Property Name="OutQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="InQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="C1CQualityID" Type="Guid" />
@@ -9660,10 +9680,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Association Name="DocCloseShiftDocs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
           <End Type="GammaModel.Docs" Role="Docs1" Multiplicity="*" />
-        </Association>
-        <Association Name="DocShipmentOrderPersons">
-          <End Type="GammaModel.DocShipmentOrders" Role="DocShipmentOrders" Multiplicity="*" />
-          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="*" />
         </Association>
         <Association Name="DocCloseShiftWithdrawals">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
@@ -9955,6 +9971,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Shipper1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
           <Property Name="Consignee1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
           <Property Name="Buyer1CCode" Type="String" MaxLength="9" FixedLength="true" Unicode="false" />
+          <Property Name="InActivePersons" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="OutActivePersons" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
@@ -9978,6 +9996,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="C1CCharacteristicID" Type="Guid" />
           <Property Name="C1CPlaceID" Type="Guid" />
           <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
+          <Property Name="ValidTill" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="vProductsInfo">
           <Key>
@@ -10041,7 +10060,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipmentOrders_Persons" FromRole="DocShipmentOrders" ToRole="Persons" />
           <NavigationProperty Name="Persons1" Relationship="GammaModel.FK_DocShipmentOrders_Persons1" FromRole="DocShipmentOrders" ToRole="Persons" />
           <NavigationProperty Name="DocProduction" Relationship="GammaModel.FK_DocProduction_DocShipmentOrders" FromRole="DocShipmentOrders" ToRole="DocProduction" />
-          <NavigationProperty Name="DocShipmentOrderPersons" Relationship="GammaModel.DocShipmentOrderPersons" FromRole="DocShipmentOrders" ToRole="Persons" />          
+          <NavigationProperty Name="DocShipmentOrderPersons" Relationship="GammaModel.FK_DocShipmentOrderPersons_DocOrder" FromRole="DocShipmentOrders" ToRole="DocShipmentOrderPersons" />
         </EntityType>
         <EntityType Name="DocBrokeProducts">
           <Key>
@@ -10127,6 +10146,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="OrderTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="InPlace" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="OutPlace" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="ShiftID" Type="Byte" />
+          <Property Name="NumberDocMovement" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="v1COrderGoods">
           <Key>
@@ -10697,7 +10718,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ProductItems_1CCharacteristics">
-          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
           <End Type="GammaModel.ProductItems" Role="ProductItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="C1CCharacteristics">
@@ -11264,7 +11285,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Period" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
           <Property Name="C1CCharacteristicID" Type="Guid" />
-          <Property Name="C1CSpecificationID" Type="Guid" Nullable="false" />
+          <Property Name="C1CSpecificationID" Type="Guid" />
           <Property Name="C1CPlaceID" Type="Guid" />
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_1CMainSpecifications_1CCharacteristics" FromRole="C1CMainSpecifications" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CPlaces" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CMainSpecifications" ToRole="C1CPlaces" />
@@ -11296,7 +11317,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_1CMainSpecifications_1CSpecifications">
-          <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="1" />
+          <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="0..1" />
           <End Type="GammaModel.C1CMainSpecifications" Role="C1CMainSpecifications" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="C1CSpecifications">
@@ -12340,6 +12361,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ModbusDevices" Relationship="GammaModel.FK_PlaceRemotePrinters_ModbusDevices" FromRole="PlaceRemotePrinters" ToRole="ModbusDevices" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_PlaceRemotePrinters_Places" FromRole="PlaceRemotePrinters" ToRole="Places" />
           <NavigationProperty Name="RemotePrinters" Relationship="GammaModel.FK_PlaceRemotePrinters_RemotePrinters" FromRole="PlaceRemotePrinters" ToRole="RemotePrinters" />
+          <Property Name="IsDefaultPrinterForGamma" Type="Boolean" />
         </EntityType>
         <EntityType Name="RemotePrinters">
           <Key>
@@ -12910,6 +12932,41 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="Places">
               <PropertyRef Name="PlaceWithdrawalMaterialTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocShipmentOrderPersons">
+          <Key>
+            <PropertyRef Name="DocShipmentOrderPersonID" />
+          </Key>
+          <Property Name="DocShipmentOrderPersonID" Type="Guid" Nullable="false" />
+          <Property Name="DocOrderID" Type="Guid" Nullable="false" />
+          <Property Name="PersonID" Type="Guid" Nullable="false" />
+          <Property Name="IsInActive" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DocShipmentOrders" Relationship="GammaModel.FK_DocShipmentOrderPersons_DocOrder" FromRole="DocShipmentOrderPersons" ToRole="DocShipmentOrders" />
+          <NavigationProperty Name="Persons" Relationship="GammaModel.FK_DocShipmentOrderPersons_Person" FromRole="DocShipmentOrderPersons" ToRole="Persons" />
+        </EntityType>
+        <Association Name="FK_DocShipmentOrderPersons_DocOrder">
+          <End Type="GammaModel.DocShipmentOrders" Role="DocShipmentOrders" Multiplicity="1" />
+          <End Type="GammaModel.DocShipmentOrderPersons" Role="DocShipmentOrderPersons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocShipmentOrders">
+              <PropertyRef Name="DocOrderID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderPersons">
+              <PropertyRef Name="DocOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocShipmentOrderPersons_Person">
+          <End Type="GammaModel.Persons" Role="Persons" Multiplicity="1" />
+          <End Type="GammaModel.DocShipmentOrderPersons" Role="DocShipmentOrderPersons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Persons">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="DocShipmentOrderPersons">
+              <PropertyRef Name="PersonID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -13607,6 +13664,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vCharacteristicSGBProperties">
             <EntityTypeMapping TypeName="GammaModel.vCharacteristicSGBProperties">
               <MappingFragment StoreEntitySet="vCharacteristicSGBProperties">
+                <ScalarProperty Name="TypeTransition" ColumnName="TypeTransition" />
                 <ScalarProperty Name="TypeKind" ColumnName="TypeKind" />
                 <ScalarProperty Name="Buyer" ColumnName="Buyer" />
                 <ScalarProperty Name="CoreDiameterNumeric" ColumnName="CoreDiameterNumeric" />
@@ -14078,14 +14136,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               <ScalarProperty Name="DocID" ColumnName="DocCloseShiftID" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="DocShipmentOrderPersons" TypeName="GammaModel.DocShipmentOrderPersons" StoreEntitySet="DocShipmentOrderPersons">
-            <EndProperty Name="Persons">
-              <ScalarProperty Name="PersonID" ColumnName="PersonID" />
-            </EndProperty>
-            <EndProperty Name="DocShipmentOrders">
-              <ScalarProperty Name="DocOrderID" ColumnName="DocOrderID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="DocCloseShiftWithdrawals" TypeName="GammaModel.DocCloseShiftWithdrawals" StoreEntitySet="DocCloseShiftWithdrawals">
             <EndProperty Name="DocWithdrawal">
               <ScalarProperty Name="DocID" ColumnName="DocWithdrawalID" />
@@ -14213,6 +14263,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="v1COrders">
             <EntityTypeMapping TypeName="GammaModel.v1COrders">
               <MappingFragment StoreEntitySet="v1COrders">
+                <ScalarProperty Name="OutActivePersons" ColumnName="OutActivePersons" />
+                <ScalarProperty Name="InActivePersons" ColumnName="InActivePersons" />
                 <ScalarProperty Name="Buyer1CCode" ColumnName="Buyer1CCode" />
                 <ScalarProperty Name="Consignee1CCode" ColumnName="Consignee1CCode" />
                 <ScalarProperty Name="Shipper1CCode" ColumnName="Shipper1CCode" />
@@ -14262,6 +14314,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="v1CWorkingSpecifications">
             <EntityTypeMapping TypeName="GammaModel.v1CWorkingSpecifications">
               <MappingFragment StoreEntitySet="v1CWorkingSpecifications">
+                <ScalarProperty Name="ValidTill" ColumnName="ValidTill" />
                 <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
                 <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
@@ -14341,6 +14394,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vDocMovementProducts">
             <EntityTypeMapping TypeName="GammaModel.vDocMovementProducts">
               <MappingFragment StoreEntitySet="vDocMovementProducts">
+                <ScalarProperty Name="NumberDocMovement" ColumnName="NumberDocMovement" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
                 <ScalarProperty Name="OutPlace" ColumnName="OutPlace" />
                 <ScalarProperty Name="InPlace" ColumnName="InPlace" />
                 <ScalarProperty Name="OrderTypeName" ColumnName="OrderTypeName" />
@@ -14975,6 +15030,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="PlaceRemotePrinters">
             <EntityTypeMapping TypeName="GammaModel.PlaceRemotePrinters">
               <MappingFragment StoreEntitySet="PlaceRemotePrinters">
+                <ScalarProperty Name="IsDefaultPrinterForGamma" ColumnName="IsDefaultPrinterForGamma" />
                 <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
                 <ScalarProperty Name="RemotePrinterID" ColumnName="RemotePrinterID" />
                 <ScalarProperty Name="ModbusDeviceID" ColumnName="ModbusDeviceID" />
@@ -15271,6 +15327,16 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DocShipmentOrderPersons">
+            <EntityTypeMapping TypeName="GammaModel.DocShipmentOrderPersons">
+              <MappingFragment StoreEntitySet="DocShipmentOrderPersons">
+                <ScalarProperty Name="IsInActive" ColumnName="IsInActive" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="DocOrderID" ColumnName="DocOrderID" />
+                <ScalarProperty Name="DocShipmentOrderPersonID" ColumnName="DocShipmentOrderPersonID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -15459,7 +15525,6 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_Docs" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocCloseShiftDocs" ManuallyRouted="false" />
-        <AssociationConnector Association="GammaModel.DocShipmentOrderPersons" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocCloseShiftWithdrawals" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.DocUnpackWithdrawals" ManuallyRouted="false" />
         <AssociationConnector Association="GammaModel.FK_DocProduction_Docs" ManuallyRouted="false" />

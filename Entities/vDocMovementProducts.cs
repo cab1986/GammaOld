@@ -49,5 +49,7 @@ namespace Gamma.Entities
         public string OrderTypeName { get; set; }
         public string InPlace { get; set; }
         public string OutPlace { get; set; }
+        public Nullable<byte> ShiftID { get; set; }
+        public string NumberDocMovement { get; set; }
     }
 }

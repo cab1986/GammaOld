@@ -44,7 +44,7 @@ namespace Gamma.ViewModels
                 select new ProductItem()
                 {
                     NomenclatureId = palItems.C1CNomenclatureID,
-                    CharacteristicId = palItems.C1CCharacteristicID,
+                    CharacteristicId = (Guid)palItems.C1CCharacteristicID,
                     Quantity = palItems.Quantity??0,
                     NomenclatureName = palItems.C1CNomenclature.Name + " " + palItems.C1CCharacteristics.Name,
                     ProductItemId = palItems.ProductItemID

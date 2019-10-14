@@ -47,5 +47,7 @@ namespace Gamma.Entities
         public string Shipper1CCode { get; set; }
         public string Consignee1CCode { get; set; }
         public string Buyer1CCode { get; set; }
+        public string InActivePersons { get; set; }
+        public string OutActivePersons { get; set; }
     }
 }

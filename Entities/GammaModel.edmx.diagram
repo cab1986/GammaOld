@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="80" ShowGrid="false">
+      <Diagram DiagramId="00ae44711a8f419f936a8b09489c3da7" Name="Diagram1" ZoomLevel="18" ShowGrid="false">
         <EntityTypeShape EntityType="GammaModel.C1CCharacteristicProperties" Width="1.5" PointX="22.5" PointY="52" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CEnumGroupTypes" Width="1.5" PointX="8.25" PointY="41.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GammaModel.C1CMeasureUnitQualifiers" Width="1.5" PointX="0.75" PointY="49.375" IsExpanded="true" />
@@ -131,7 +131,6 @@
         <AssociationConnector Association="GammaModel.FK_DocWithdrawal_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocWithdrawalMaterials_Docs" />
         <AssociationConnector Association="GammaModel.DocCloseShiftDocs" />
-        <AssociationConnector Association="GammaModel.DocShipmentOrderPersons" />
         <AssociationConnector Association="GammaModel.DocCloseShiftWithdrawals" />
         <AssociationConnector Association="GammaModel.DocUnpackWithdrawals" />
         <EntityTypeShape EntityType="GammaModel.DocProduction" Width="1.5" PointX="21.75" PointY="69" />
@@ -361,6 +360,9 @@
         <EntityTypeShape EntityType="GammaModel.vProductionMaterials" Width="1.5" PointX="16.375" PointY="0.75" />
         <EntityTypeShape EntityType="GammaModel.PlaceWithdrawalMaterialTypes" Width="1.5" PointX="13.375" PointY="16.875" />
         <AssociationConnector Association="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes" />
+        <EntityTypeShape EntityType="GammaModel.DocShipmentOrderPersons" Width="1.5" PointX="14.625" PointY="38.375" />
+        <AssociationConnector Association="GammaModel.FK_DocShipmentOrderPersons_DocOrder" />
+        <AssociationConnector Association="GammaModel.FK_DocShipmentOrderPersons_Person" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

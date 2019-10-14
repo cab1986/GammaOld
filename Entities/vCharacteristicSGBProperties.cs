@@ -26,5 +26,6 @@ namespace Gamma.Entities
         public Nullable<int> CoreDiameterNumeric { get; set; }
         public string Buyer { get; set; }
         public string TypeKind { get; set; }
+        public string TypeTransition { get; set; }
     }
 }

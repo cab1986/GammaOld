@@ -19,9 +19,9 @@ namespace Gamma.Entities
         {
             this.DocMovement = new HashSet<DocMovement>();
             this.DocProduction = new HashSet<DocProduction>();
-            this.DocShipmentOrderPersons = new HashSet<Persons>();
+            this.DocShipmentOrderPersons = new HashSet<DocShipmentOrderPersons>();
         }
-
+    
         public System.Guid DocOrderID { get; set; }
         public Nullable<byte> OrderTypeID { get; set; }
         public string VehicleNumber { get; set; }
@@ -44,6 +44,6 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocProduction> DocProduction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Persons> DocShipmentOrderPersons { get; set; }
+        public virtual ICollection<DocShipmentOrderPersons> DocShipmentOrderPersons { get; set; }
     }
 }

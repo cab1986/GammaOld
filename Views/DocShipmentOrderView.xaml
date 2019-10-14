@@ -79,11 +79,6 @@
                                             <dxe:CheckedComboBoxStyleSettings/>
                                         </dxe:ComboBoxEdit.StyleSettings>
                                     </dxe:ComboBoxEdit>
-                                    <!--<dxe:ComboBoxEdit EditValue="{Binding TestItem}" ItemsSource="{Binding TestItems}" ValueMember="PersonID" DisplayMember="Name">
-                                        <dxe:ComboBoxEdit.StyleSettings>
-                                            <dxe:CheckedComboBoxStyleSettings/>
-                                        </dxe:ComboBoxEdit.StyleSettings>
-                                    </dxe:ComboBoxEdit>-->
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem Label="Смена №" Width="100">
                                     <dxe:SpinEdit EditValue="{Binding ShiftOutId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 
@@ -114,7 +109,12 @@
                                                   IsReadOnly="{Binding DenyEditIn}"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Груз собирает">
-                                <dxe:ComboBoxEdit EditValue="{Binding ActivePersonInId}" ItemsSource="{Binding PersonsIn}" ValueMember="PersonID" DisplayMember="Name" IsReadOnly="{Binding DenyEditIn}"/>
+                                <dxe:ComboBoxEdit EditValue="{Binding ActivePersonsIn}" ItemsSource="{Binding PersonsIn}" DisplayMember="Name"
+                                              IsReadOnly="{Binding DenyEditOut}">
+                                    <dxe:ComboBoxEdit.StyleSettings>
+                                        <dxe:CheckedComboBoxStyleSettings/>
+                                    </dxe:ComboBoxEdit.StyleSettings>
+                                </dxe:ComboBoxEdit>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Смена №" Width="100">
                                 <dxe:SpinEdit EditValue="{Binding ShiftInId, UpdateSourceTrigger=PropertyChanged}" MinValue="1" MaxValue="4" 

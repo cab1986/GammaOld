@@ -37,8 +37,8 @@ namespace Gamma.ViewModels
                 CloseWindow();
                 return;
             }
-            PersonsOut = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1COutSubdivisionID).BranchID).ToList();
-            PersonsIn = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID).ToList();
+            //PersonsOut = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1COutSubdivisionID).BranchID).ToList();
+            //PersonsIn = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID).ToList();
             PlacesIn =
                 GammaBase.Places.Where(
                     p =>
@@ -78,18 +78,21 @@ namespace Gamma.ViewModels
             VehicleNumber = docShipmentOrderInfo.VehicleNumber;
             ActivePersonOutId = docShipmentOrderInfo.OutActivePersonID;
             ActivePersonsOut = new List<object>();
-            foreach (var personsItem in PersonsOut.Where(p => p.PersonID == docShipmentOrderInfo.OutActivePersonID))
+            foreach (var personsItem in GammaBase.Persons.Where(p => p.DocShipmentOrderPersons.Any(d => !d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
                 ActivePersonsOut.Add(personsItem);
+            ActivePersonsIn = new List<object>();
+            foreach (var personsItem in GammaBase.Persons.Where(p => p.DocShipmentOrderPersons.Any(d => d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
+                ActivePersonsIn.Add(personsItem);
             ActivePersonInId = docShipmentOrderInfo.InActivePersonID;
             ShiftOutId = docShipmentOrderInfo.OutShiftID;
             ShiftInId = docShipmentOrderInfo.InShiftId;
             IsShipped = docShipmentOrderInfo.IsShipped;
             IsConfirmed = docShipmentOrderInfo.IsConfirmed??false;
-            OutPlaceId = docShipmentOrderInfo.OutPlaceID??PlacesOut.FirstOrDefault()?.PlaceID;
-            InPlaceId = docShipmentOrderInfo.InPlaceID??PlacesIn.FirstOrDefault()?.PlaceID;
+            OutPlaceId = docShipmentOrderInfo.OutPlaceID;//??PlacesOut.FirstOrDefault()?.PlaceID;
+            InPlaceId = docShipmentOrderInfo.InPlaceID;//??PlacesIn.FirstOrDefault()?.PlaceID;
             FillDocShipmentOrderGoods(docShipmentOrderId);
-            DenyEditIn = InPlaceId != null && !WorkSession.PlaceIds.Contains((int)InPlaceId) || docShipmentOrderInfo.InBranchID != WorkSession.BranchID;
-            DenyEditOut = OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID;
+            DenyEditIn = (InPlaceId != null && !WorkSession.PlaceIds.Contains((int)InPlaceId)) || docShipmentOrderInfo.InBranchID != WorkSession.BranchID;
+            DenyEditOut = (OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId)) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID;
             InVisibible = docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ
             IsReadOnly = !DB.HaveWriteAccess("DocMovement") || IsShipped;
             Movements = GammaBase.DocMovement.Include(m => m.Docs).Include(m => m.OutPlaces).Include(m => m.InPlaces)
@@ -149,8 +152,32 @@ namespace Gamma.ViewModels
             IsConfirmed = DocShipmentOrderGoods.SelectMany(g => g.Products).All(p => p.IsConfirmed == true);
         }
 
-        public int? OutPlaceId { get; set; }
-        public int? InPlaceId { get; set; }
+        private int? _outPlaceId { get; set; }
+        public int? OutPlaceId 
+        {
+            get { return _outPlaceId; }
+            set
+            {
+                _outPlaceId = value;
+
+                PersonsOut = GammaBase.Persons.Where(p => value != null && (p.PlaceID == value || (value == 104 && p.PlaceID == 28)) ).OrderBy(p => p.Name).ToList();
+                RaisePropertyChanged("OutPlaceId");
+            }
+        }
+        
+
+        private int? _inPlaceId { get; set; }
+        public int? InPlaceId
+        {
+            get { return _inPlaceId; }
+            set
+            {
+                _inPlaceId = value;
+
+                PersonsIn = GammaBase.Persons.Where(p => value != null && (p.PlaceID == value || (value == 104 && p.PlaceID == 28))).OrderBy(p => p.Name).ToList();
+                RaisePropertyChanged("InPlaceId");
+            }
+        }
 
         public List<Place> PlacesIn { get; set; }
         public List<Place> PlacesOut { get; set; }
@@ -283,11 +310,42 @@ namespace Gamma.ViewModels
         public string VehicleNumber { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
         public Guid? ActivePersonOutId { get; set; }
-        public List<Object> ActivePersonsOut { get; set; }
+        private List<Object> _activePersonsOut { get; set; }
+        public List<Object> ActivePersonsOut
+        {
+            get { return _activePersonsOut; }
+            set
+            {
+                _activePersonsOut = value;
+                RaisePropertyChanged("ActivePersonsOut");
+            }
+
+        }
+
+        public List<Object> ActivePersonsIn { get; set; }
 
         public Guid? ActivePersonInId { get; set; }
-        public List<Persons> PersonsOut { get; set; }
-        public List<Persons> PersonsIn { get; set; }
+        private List<Persons> _personsOut { get; set; }
+        public List<Persons> PersonsOut
+        {
+            get { return _personsOut; }
+            set
+            {
+                _personsOut = value;
+                RaisePropertyChanged("PersonsOut");
+            }
+        }
+
+        public List<Persons> _personsIn { get; set; }
+        public List<Persons> PersonsIn
+        {
+            get { return _personsIn; }
+            set
+            {
+                _personsIn = value;
+                RaisePropertyChanged("PersonsIn");
+            }
+        }
 
         public List<MovementItem> Movements { get; set; }
         public MovementItem SelectedMovementItem { get; set; }
@@ -322,6 +380,44 @@ namespace Gamma.ViewModels
                 doc.InPlaceID = InPlaceId;
                 doc.InActivePersonID = ActivePersonInId;
                 doc.OutActivePersonID = ActivePersonOutId;
+
+                List<Guid> outActivePersonIds = new List<Guid>();
+                if (ActivePersonsOut != null)
+                    foreach (object item in ((List<object>)ActivePersonsOut))
+                        outActivePersonIds.Add(((Persons)item).PersonID);
+                //gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => !p.IsInActive && p.Persons.PlaceID != OutPlaceId && p.DocOrderID == DocShipmentOrderID && !outActivePersonIds.Contains(p.PersonID)));
+                gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => !p.IsInActive && p.DocOrderID == DocShipmentOrderID));
+                foreach (var personsItem in GammaBase.Persons.Where(p => outActivePersonIds.Contains(p.PersonID) && (p.PlaceID == OutPlaceId || (OutPlaceId == 104 && p.PlaceID == 28)) && !p.DocShipmentOrderPersons.Any(d => !d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
+                {
+                    var docShipmentOrderPerson = new DocShipmentOrderPersons
+                    {
+                        DocShipmentOrderPersonID = SqlGuidUtil.NewSequentialid(),
+                        DocOrderID = DocShipmentOrderID,
+                        PersonID = personsItem.PersonID,
+                        IsInActive = false
+                    };
+                    gammaBase.DocShipmentOrderPersons.Add(docShipmentOrderPerson);
+
+                }
+                List<Guid> inActivePersonIds = new List<Guid>();
+                if (ActivePersonsIn != null)
+                    foreach (object item in ((List<object>)ActivePersonsIn))
+                        inActivePersonIds.Add(((Persons)item).PersonID);
+                //gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => p.IsInActive && p.Persons.PlaceID != InPlaceId && p.DocOrderID == DocShipmentOrderID && !inActivePersonIds.Contains(p.PersonID)));
+                gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => p.IsInActive && p.DocOrderID == DocShipmentOrderID));
+                foreach (var personsItem in GammaBase.Persons.Where(p => inActivePersonIds.Contains(p.PersonID) && (p.PlaceID == InPlaceId || (InPlaceId == 104 && p.PlaceID == 28)) && !p.DocShipmentOrderPersons.Any(d => d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
+                {
+                    var docShipmentOrderPerson = new DocShipmentOrderPersons
+                    {
+                        DocShipmentOrderPersonID = SqlGuidUtil.NewSequentialid(),
+                        DocOrderID = DocShipmentOrderID,
+                        PersonID = personsItem.PersonID,
+                        IsInActive = true
+                    };
+                    gammaBase.DocShipmentOrderPersons.Add(docShipmentOrderPerson);
+
+                }
+
                 doc.Driver = Driver;
                 doc.DriverDocument = DriverDocument;
                 foreach (var docMovement in Movements.Select(movement => gammaBase.Docs.FirstOrDefault(d => d.DocID == movement.DocId)).Where(docMovement => docMovement != null))

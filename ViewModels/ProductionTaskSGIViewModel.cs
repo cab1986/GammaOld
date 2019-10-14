@@ -372,7 +372,7 @@ namespace Gamma.ViewModels
                 .Where(n => n.C1CNomenclatureID == NomenclatureID)
                 .Select(n => new Place()
                 {
-                    PlaceID = n.PlaceID,
+                    PlaceID = (int)n.PlaceID,
                     PlaceName = n.PlaceName
                 }).Distinct();
             Places.Clear();

@@ -43,7 +43,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <dxlc:LayoutControl>
-                <dxlc:LayoutItem Label="Диапозон:">
+                <dxlc:LayoutItem Label="Диапазон:">
                     <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" x:Name="IntervalList" IsTextEditable="False"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Номер:">
@@ -64,7 +64,7 @@
                 <dxg:GridControl.View>
                     <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
                 </dxg:GridControl.View>
-                <dxg:GridControl.DetailDescriptor>
+                <!--<dxg:GridControl.DetailDescriptor>
                     <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding DocShipmentOrderGoods}">
                         <dxg:GridControl>
                             <dxg:GridControl.View>
@@ -80,7 +80,7 @@
                             </dxg:GridColumn>
                         </dxg:GridControl>
                     </dxg:DataControlDetailDescriptor>
-                </dxg:GridControl.DetailDescriptor>
+                </dxg:GridControl.DetailDescriptor>-->
                 <dxg:GridColumn Header="Номер приказа" FieldName="Number" VisibleIndex="0" />
                 <dxg:GridColumn Header="Тип приказа" FieldName ="OrderType" VisibleIndex="1" />
                 <dxg:GridColumn Header="Дата приказа" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"/>

@@ -12,13 +12,14 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class v1CWorkingSpecifications
+    public partial class DocShipmentOrderPersons
     {
-        public System.DateTime Period { get; set; }
-        public System.Guid C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public Nullable<System.Guid> C1CPlaceID { get; set; }
-        public System.Guid C1CSpecificationID { get; set; }
-        public Nullable<System.DateTime> ValidTill { get; set; }
+        public System.Guid DocShipmentOrderPersonID { get; set; }
+        public System.Guid DocOrderID { get; set; }
+        public System.Guid PersonID { get; set; }
+        public bool IsInActive { get; set; }
+    
+        public virtual DocShipmentOrders DocShipmentOrders { get; set; }
+        public virtual Persons Persons { get; set; }
     }
 }

@@ -138,10 +138,10 @@ namespace Gamma.ViewModels
                     CurrentView = new ProductionTasksBalerViewModel();
                     break;
                 case PlaceGroup.Warehouses:
-                    var role = (from u in DB.GammaDb.Users
-                                where u.Roles.Name == "PalletRepacker"
-                                select u.RoleID).FirstOrDefault();
-                    if (role != null) CurrentView = new DocComplectationsListViewModel();
+                    if (WorkSession.RoleName == "PalletRepacker")
+                        CurrentView = new DocComplectationsListViewModel();
+                    else
+                        CurrentView = new DocShipmentOrdersViewModel(); 
                     break;
                 case PlaceGroup.Services:
                     CurrentView = new LogEventsViewModel();

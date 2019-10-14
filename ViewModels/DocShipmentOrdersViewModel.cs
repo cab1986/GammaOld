@@ -115,7 +115,7 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             SelectedDocShipmentOrder = null;
             using (var gammaBase = DB.GammaDb)
-            {
+            {                
                 switch (IntervalId)
                 {
                     case 0:
@@ -133,11 +133,11 @@ namespace Gamma.ViewModels
                                 Shipper = d.Shipper,
                                 Consignee = d.Consignee,
                                 Buyer = d.Buyer,
-                                ActivePerson = IsOutOrders?d.OutActivePerson:d.InActivePerson,
+                                ActivePerson = IsOutOrders?d.OutActivePersons:d.InActivePersons,
                                 OrderType = d.OrderType,
                                 OutDate = d.OutDate,
                                 Warehouse = d.Warehouse ?? ""
-                }));
+                            }));
                         break;
                     case 1:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
@@ -154,7 +154,7 @@ namespace Gamma.ViewModels
                                 Shipper = d.Shipper,
                                 Consignee = d.Consignee,
                                 Buyer = d.Buyer,
-                                ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
+                                ActivePerson = IsOutOrders ? d.OutActivePersons : d.InActivePersons,
                                 OrderType = d.OrderType,
                                 OutDate = d.OutDate,
                                 Warehouse = d.Warehouse ?? ""
@@ -181,7 +181,7 @@ namespace Gamma.ViewModels
                                     Shipper = d.Shipper,
                                     Consignee = d.Consignee,
                                     Buyer = d.Buyer,
-                                    ActivePerson = IsOutOrders ? d.OutActivePerson : d.InActivePerson,
+                                    ActivePerson = IsOutOrders ? d.OutActivePersons : d.InActivePersons,
                                     OrderType = d.OrderType,
                                     OutDate = d.OutDate,
                                     Warehouse = d.Warehouse ?? ""
@@ -189,7 +189,7 @@ namespace Gamma.ViewModels
                         break;
                 }
             }
-            FillDocShipmentOrdersWithGoods(DocShipmentOrders);
+            //FillDocShipmentOrdersWithGoods(DocShipmentOrders);
         }
 
         private void FillDocShipmentOrdersWithGoods(IEnumerable<DocShipmentOrder> docShipmentOrders)
