@@ -9,12 +9,12 @@
         xmlns:dialogViewModels="clr-namespace:Gamma.DialogViewModels"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         mc:Ignorable="d"
-        d:DesignHeight="300" d:DesignWidth="600"
+        d:DesignHeight="350" d:DesignWidth="600"
         d:DataContext="{d:DesignInstance Type=dialogViewModels:SetQuantityDialogModel, IsDesignTimeCreatable=False}">
     <dxlc:LayoutControl Orientation="Vertical">
         <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
         <dxlc:LayoutItem Width="100" Label="{Binding Label}">
-            <dxe:TextEdit EditValue="{Binding TextEditValue, UpdateSourceTrigger=PropertyChanged}"/>
+            <dxe:TextEdit EditValue="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
         </dxlc:LayoutItem>
     </dxlc:LayoutControl>
 </UserControl>

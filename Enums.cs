@@ -129,7 +129,8 @@ namespace Gamma
         DocWarehouseAccept,
         DocInventarisation,
         DocComplectation,
-        DocUtilization
+        DocUtilization,
+        DocSpecificstionQuantity
     }
     public enum PermissionMark
     {

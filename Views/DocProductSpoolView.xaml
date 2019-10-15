@@ -6,13 +6,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:dialogs="clr-namespace:Gamma.Dialogs"
         x:Class="Gamma.Views.DocProductSpoolView"
         mc:Ignorable="d ignore"
              DataContext="{Binding}"
          d:DataContext="{d:DesignInstance Type=viewModels:DocProductSpoolViewModel, IsDesignTimeCreatable=False}">
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:SetQuantityDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="300"/>
+                    <Setter Property="Height" Value="160"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+        <g:UIAuthBehavior />
+    </dxmvvm:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -85,13 +103,11 @@
                 <dxlc:LayoutItem Label="Плотность рулона, кг/м3" LabelPosition="Top" Width="160">
                     <dxe:TextEdit EditValue="{Binding Density}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
-                <Button Content="Получить вес" Command="{Binding GetWeightCommand}" Width="100" Height="22" Margin="0,18,0,6" />
+                <Button Content="Получить вес" Command="{Binding GetWeightCommand}" Width="100" Height="22" Margin="0,0,0,6" />
+                <Button Content="Уменьшить вес" Command="{Binding SetWeightCommand}" Width="110" Height="22" Margin="0,0,0,6" />
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <Button Grid.Row="1" HorizontalAlignment="Right" Content="Создать упаковку" Command="{Binding CreateGroupPackCommand}" 
                 Visibility="{Binding ShowCreateGroupPack, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
-    <dxmvvm:Interaction.Behaviors>
-        <g:UIAuthBehavior />
-    </dxmvvm:Interaction.Behaviors>
 </UserControl>

@@ -12,7 +12,8 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Entities;
-
+using Gamma.DialogViewModels;
+using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -85,6 +86,8 @@ namespace Gamma.ViewModels
             IsConfirmed = doc.IsConfirmed && IsValid;
             AllowEditProduct = DB.AllowEditProduct(ProductId, GammaBase);
             CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
+            GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsReadOnly);
+            SetWeightCommand = new DelegateCommand(SetWeight, () => RestWeight > 0 && ( WorkSession.RoleName == "Dispetcher" || WorkSession.RoleName == "WarehouseOperator"));
 
             using (var gammaBase = DB.GammaDb)
             {
@@ -186,6 +189,9 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Length");
             }
         }
+
+        public DelegateCommand GetWeightCommand { get; private set; }
+        public DelegateCommand SetWeightCommand { get; private set; }
 
         public DelegateCommand CreateGroupPackCommand { get; private set; }
 
@@ -443,11 +449,81 @@ namespace Gamma.ViewModels
         //        [UIAuth(UIAuthLevel.ReadOnly)]
         //        public Guid? RejectionReasonID { get; set; }
 
+        private void SetWeight()
+        {
+            var model = new SetQuantityDialogModel("Укажите текущий вес тамбура в килограммах", "Текущий вес, кг", 0, (int)RestWeight);
+            var okCommand = new UICommand()
+            {
+                Caption = "OK",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
+            x => DebugFunc(),
+            x => model.Quantity >= 0 && model.Quantity < RestWeight),
+            };
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                title: "Текущий вес тамбура",
+                viewModel: model);
+            if (result == okCommand)
+            {
+                if (model.Quantity < RestWeight)
+                {
+                    using (var gammaBase = DB.GammaDb)
+                    {
+                        var currentDateTime = DB.CurrentDateTime;
+                        var docWithdrawalid = SqlGuidUtil.NewSequentialid();
+                        var docWithdrawalProduct = new DocWithdrawalProducts
+                        {
+                            DocID = docWithdrawalid,
+                            ProductID = ProductId,
+                            DocWithdrawal = new DocWithdrawal
+                            {
+                                DocID = docWithdrawalid,
+                                OutPlaceID = WorkSession.PlaceID,
+                                Docs = new Docs()
+                                {
+                                    DocID = docWithdrawalid,
+                                    Date = currentDateTime,
+                                    DocTypeID = (int)DocTypes.DocSpecificstionQuantity,
+                                    PlaceID = WorkSession.PlaceID,
+                                    UserID = WorkSession.UserID,
+                                    ShiftID = WorkSession.ShiftID,
+                                    PrintName = WorkSession.PrintName,
+                                    IsConfirmed = false
+                                }
+                            },
+                            Quantity = Math.Round((decimal)(RestWeight - model.Quantity) / 1000, 3),
+                            CompleteWithdrawal = (model.Quantity == 0) ? (bool?)true : null
+                        };
+                        gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+                        gammaBase.SaveChanges();
+                    }
+
+                }
+                else
+                    MessageBox.Show("Не удалось уменьшить вес. Новый вес больше текущего.", "Ошибка уменьшения веса", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void DebugFunc()
+        {
+            System.Diagnostics.Debug.Print("Кол-во задано");
+        }
+
         private void GetWeight()
         {
             if (!Scales.IsReady)
             {
-                MessageBox.Show("Не удалось соедениться с весами", "Ошибка весов", MessageBoxButton.OK,
+                MessageBox.Show("Не удалось соединиться с весами", "Ошибка весов", MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 //ManualWeightInput = true;
                 return;

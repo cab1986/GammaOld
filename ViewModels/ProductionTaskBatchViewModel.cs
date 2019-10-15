@@ -711,7 +711,14 @@ namespace Gamma.ViewModels
             var dialogResult = MessageBox.Show("Создание транспортной этикетки неполной паллеты! Вы уверены?", "Внимание!",MessageBoxButton.YesNo,MessageBoxImage.Warning);
             if (dialogResult == MessageBoxResult.Yes)
             {
-                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете","Кол-во, рул/пачка");
+                var productionTaskID = GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
+                        Select(p => p.ProductionTasks.FirstOrDefault(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).ProductionTaskID).
+                        FirstOrDefault();
+                var baseQuantity = (int)(GammaBase.C1CCharacteristics.Where(
+                                c => c.C1CCharacteristicID == GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskID).Select(p => p.C1CCharacteristicID).FirstOrDefault())
+                                .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First() ?? 9999);
+
+                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете","Кол-во, рул/пачка", 1, baseQuantity);
                 var okCommand = new UICommand()
                 {
                     Caption = "OK",
@@ -719,7 +726,7 @@ namespace Gamma.ViewModels
                     IsDefault = true,
                     Command = new DelegateCommand<CancelEventArgs>(
                 x => DebugFunc(),
-                x => model.Quantity > 0),
+                x => model.Quantity >= 1 && model.Quantity < baseQuantity),
                 };
                 var cancelCommand = new UICommand()
                 {

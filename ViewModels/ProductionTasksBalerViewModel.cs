@@ -64,7 +64,7 @@ namespace Gamma.ViewModels
 
         private void CreateNewBale()
         {
-            var model = new SetQuantityDialogModel("Укажите вес кипы " + SelectedProductionTaskBaler.NomenclatureName, "Вес кипы, кг");
+            var model = new SetQuantityDialogModel("Укажите вес кипы " + SelectedProductionTaskBaler.NomenclatureName, "Вес кипы, кг", 1, 1000);
             var okCommand = new UICommand()
             {
                 Caption = "OK",
@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
                 IsDefault = true,
                 Command = new DelegateCommand<CancelEventArgs>(
             x => DebugFunc(),
-            x => model.Quantity > 0),
+            x => model.Quantity >= 1 && model.Quantity < 1000),
             };
             var cancelCommand = new UICommand()
             {
