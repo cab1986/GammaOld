@@ -14,7 +14,7 @@
     <dxlc:LayoutControl Orientation="Vertical">
         <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
         <dxlc:LayoutItem Width="100" Label="{Binding Label}">
-            <dxe:TextEdit EditValue="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" MaskType="Numeric" Mask="d" />
+            <dxe:TextEdit EditValue="{Binding TextEditValue, UpdateSourceTrigger=PropertyChanged}"/>
         </dxlc:LayoutItem>
     </dxlc:LayoutControl>
 </UserControl>
