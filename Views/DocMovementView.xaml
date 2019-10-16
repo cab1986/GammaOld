@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Gamma.Views"
         xmlns:gamma="clr-namespace:Gamma"
         xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:common="clr-namespace:Gamma.Common"
         xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
@@ -88,7 +89,10 @@
                                 </dxg:GridColumn.HeaderCustomizationAreaTemplate>
                             </dxg:GridColumn>
                         </dxg:GridControl.Columns>
-                    </dxg:GridControl>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                        </dxg:GridControl>
                     </dxb:BarManager>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>

@@ -1026,6 +1026,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="IsWithdrawalMaterial" Type="bit" Nullable="false" />
           <Property Name="PlaceWithdrawalMaterialTypeID" Type="int" Nullable="false" />
           <Property Name="IsEnabledRemainderInDocCloseShift" Type="bit" />
+          <Property Name="IsEnabledSamplesInDocCloseShift" Type="bit" />
         </EntityType>
         <EntityType Name="PlaceWithdrawalMaterialTypes">
           <Key>
@@ -10278,6 +10279,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="PlaceWithdrawalMaterialTypeID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="PlaceWithdrawalMaterialTypes" Relationship="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes" FromRole="Places" ToRole="PlaceWithdrawalMaterialTypes" />
           <Property Name="IsEnabledRemainderInDocCloseShift" Type="Boolean" />
+          <Property Name="IsEnabledSamplesInDocCloseShift" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -14480,6 +14482,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsEnabledSamplesInDocCloseShift" ColumnName="IsEnabledSamplesInDocCloseShift" />
                 <ScalarProperty Name="IsEnabledRemainderInDocCloseShift" ColumnName="IsEnabledRemainderInDocCloseShift" />
                 <ScalarProperty Name="PlaceWithdrawalMaterialTypeID" ColumnName="PlaceWithdrawalMaterialTypeID" />
                 <ScalarProperty Name="IsWithdrawalMaterial" ColumnName="IsWithdrawalMaterial" />

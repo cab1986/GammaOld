@@ -76,11 +76,13 @@ namespace Gamma.ViewModels
                         ProductId = dp.ProductID,
                         NomenclatureName = dp.NomenclatureName,
                         IsShipped = dp.IsShipped ?? false,
-                        IsAccepted = dp.IsAccepted ?? false
+                        IsAccepted = dp.IsAccepted ?? false,
+                        ProductKind = (ProductKind) dp.ProductKindID
                     }));
             }
             OpendDocOrderCommand = new DelegateCommand(OpenDocOrder, () => DocOrderId != null);
             MovementProducts.CollectionChanged += MovementProductsOnCollectionChanged;
+            ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
             Bars.Add(ReportManager.GetReportBar("DocMovement", VMID));
         }
@@ -102,6 +104,29 @@ namespace Gamma.ViewModels
         public bool DenyEditIn { get; private set; }
 
         public MovementProduct SelectedProduct { get; set; }
+        public DelegateCommand ShowProductCommand { get; private set; }
+
+        private void ShowProduct()
+        {
+            switch (SelectedProduct.ProductKind)
+            {
+                case ProductKind.ProductSpool:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProduct.ProductId);
+                    break;
+                case ProductKind.ProductGroupPack:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProduct.ProductId);
+                    break;
+                case ProductKind.ProductPallet:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductId);
+                    break;
+                case ProductKind.ProductPalletR:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedProduct.ProductId);
+                    break;
+                default:
+                    MessageBox.Show("Ошибка программы, действие не предусмотрено");
+                    return;
+            }
+        }
 
         public DelegateCommand DeleteProductCommand { get; private set; }
 

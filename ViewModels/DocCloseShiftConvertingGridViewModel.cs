@@ -30,8 +30,7 @@ namespace Gamma.ViewModels
             /*AddWithdrawalMaterialCommand = new DelegateCommand(AddWithdrawalMaterial, () => !IsReadOnly);
             DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
             */
-            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
-            WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+            ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
         }
 
         public DocCloseShiftConvertingGridViewModel(DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
@@ -43,6 +42,17 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDb)
             {
+                var doc = gammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == docId);
+                DocCloseDocIds = doc.DocCloseShiftDocs.Select(dc => dc.DocID).ToList();
+                PlaceID = (int)doc.PlaceID;
+                ShiftID = doc.ShiftID ?? 0;
+                CloseDate = doc.Date;
+                IsConfirmed = doc.IsConfirmed;
+                DocId = docId;
+                CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
+                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+                WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+                IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
                 Pallets = new ObservableCollection<Pallet>(gammaBase.GetDocCloseShiftConvertingPallets(docId).Select(d => new Pallet()
                 {
                     DocId = d.DocID,
@@ -53,14 +63,6 @@ namespace Gamma.ViewModels
                     CharacteristicID = d.CharacteristicID,
                     Number = d.Number
                 }));
-                var doc = gammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == docId);
-                DocCloseDocIds = doc.DocCloseShiftDocs.Select(dc => dc.DocID).ToList();
-                PlaceID = (int)doc.PlaceID;
-                ShiftID = doc.ShiftID ?? 0;
-                CloseDate = doc.Date;
-                IsConfirmed = doc.IsConfirmed;
-                DocId = docId;
-                CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
                 //Получение списка списанных материалов
                 //WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(gammaBase.DocWithdrawalMaterials
                 //    .Where(dm => dm.DocWithdrawal.DocCloseShift.FirstOrDefault().DocID == docId)
@@ -144,6 +146,15 @@ namespace Gamma.ViewModels
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
 
+        public Pallet SelectedProduct { get; set; }
+        public DelegateCommand ShowProductCommand { get; private set; }
+
+        private void ShowProduct()
+        {
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductId);
+        }
+
+
         private DocCloseShiftWithdrawalMaterialViewModel _withdrawalMaterialsGrid;
         public DocCloseShiftWithdrawalMaterialViewModel WithdrawalMaterialsGrid
         {
@@ -186,25 +197,27 @@ namespace Gamma.ViewModels
                     NomenclatureName = p.NomenclatureName,
                     Number = p.Number
                 }));
-                var samples = new ObservableCollection<Sample>(Pallets
-                    .Select(p => new Sample
-                    {
-                        NomenclatureID = p.NomenclatureID,
-                        CharacteristicID = p.CharacteristicID,
-                        Quantity = 0,
-                        NomenclatureName = p.NomenclatureName,
-                    }).Distinct());
-                foreach (var sample in samples)
+                if (IsEnabledSamples)
                 {
-                    sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
-                    sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
-                    if (!Samples.Any(s => s.NomenclatureID == sample.NomenclatureID && (s.CharacteristicID == sample.CharacteristicID || (s.CharacteristicID == null && sample.CharacteristicID == null))))
+                    var samples = new ObservableCollection<Sample>(Pallets
+                        .Select(p => new Sample
+                        {
+                            NomenclatureID = p.NomenclatureID,
+                            CharacteristicID = p.CharacteristicID,
+                            Quantity = 0,
+                            NomenclatureName = p.NomenclatureName,
+                        }).Distinct());
+                    foreach (var sample in samples)
                     {
-                        Samples.Add(sample);
+                        sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
+                        sample.MeasureUnitId = sample.MeasureUnits.FirstOrDefault().Key;
+                        if (!Samples.Any(s => s.NomenclatureID == sample.NomenclatureID && (s.CharacteristicID == sample.CharacteristicID || (s.CharacteristicID == null && sample.CharacteristicID == null))))
+                        {
+                            Samples.Add(sample);
+                        }
                     }
+                    //Samples = samples;
                 }
-                //Samples = samples;
-                
                 var nomenclatureRests = new ObservableCollection<Sample>(Pallets
                     .Select(p => new Sample
                     {
@@ -355,7 +368,8 @@ namespace Gamma.ViewModels
         private DateTime CloseDate { get; set; }
         private DocCloseShiftUnwinderRemainderViewModel CurrentViewModelUnwinderRemainder { get; set; }
 
-    public bool IsWithdrawalMaterial { get; set; }
+        public bool IsWithdrawalMaterial { get; set; }
+        public bool IsEnabledSamples { get; set; }
 
         private List<Guid> productionProductCharacteristicIDs { get; set; }
 

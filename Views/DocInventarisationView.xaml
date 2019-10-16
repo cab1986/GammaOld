@@ -10,6 +10,7 @@
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:models="clr-namespace:Gamma.Models"
         xmlns:gamma="clr-namespace:Gamma"
         xmlns:common="clr-namespace:Gamma.Common"
@@ -41,7 +42,7 @@
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Vertical">
                 <dxlc:LayoutItem Label="Проинвентаризировано" LabelPosition="Top" VerticalAlignment="Stretch">
-                    <dxg:GridControl ItemsSource="{Binding Items}" DesignTimeDataObjectType="{x:Type models:InventarisationItem}" MaxHeight="2000">
+                    <dxg:GridControl ItemsSource="{Binding Items}" DesignTimeDataObjectType="{x:Type models:InventarisationItem}" MaxHeight="2000" SelectedItem="{Binding SelectedProduct}">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True"/>
                         </dxg:GridControl.View>
@@ -58,6 +59,9 @@
                             <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60" AllowEditing="False"/>
                             <dxg:GridColumn FieldName="MeasureUnit" Header="Ед. изм." Width="60" FixedWidth="True"/>
                         </dxg:GridControl.Columns>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
                     </dxg:GridControl>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>

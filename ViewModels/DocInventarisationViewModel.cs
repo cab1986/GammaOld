@@ -46,11 +46,14 @@ namespace Gamma.ViewModels
                         NomenclatureName = ip.NomenclatureName ?? product?.NomenclatureName ?? "",
                         Number = product?.Number ?? ip.Barcode,
                         Quantity = ip.Quantity ?? product?.Quantity ?? 0,
-                        MeasureUnit = product?.BaseMeasureUnit ??""
+                        MeasureUnit = product?.BaseMeasureUnit ??"",
+                        ProductKind = (ProductKind)product?.ProductKindID,
+                        ProductID = ip.ProductID
                     });
                 }
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
+            ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
         }
 
         private void PrintReport(PrintReportMessage msg)
@@ -69,6 +72,32 @@ namespace Gamma.ViewModels
         public string Place { get; set; }
         public bool IsConfirmed { get; set; }
         public ObservableCollection<InventarisationItem> Items { get; set; } = new ObservableCollection<InventarisationItem>();
+
+        public InventarisationItem SelectedProduct { get; set; }
+        public DelegateCommand ShowProductCommand { get; private set; }
+
+        private void ShowProduct()
+        {
+            if (SelectedProduct.ProductID != null && SelectedProduct.ProductID != Guid.Empty)
+                switch (SelectedProduct.ProductKind)
+                {
+                    case ProductKind.ProductSpool:
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SelectedProduct.ProductID);
+                        break;
+                    case ProductKind.ProductGroupPack:
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, (Guid)SelectedProduct.ProductID);
+                        break;
+                    case ProductKind.ProductPallet:
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, (Guid)SelectedProduct.ProductID);
+                        break;
+                    case ProductKind.ProductPalletR:
+                        MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, (Guid)SelectedProduct.ProductID);
+                        break;
+                    default:
+                        MessageBox.Show("Ошибка программы, действие не предусмотрено");
+                        return;
+                }
+        }
 
         public override bool SaveToModel()
         {

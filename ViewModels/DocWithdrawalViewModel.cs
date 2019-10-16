@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
                 PrintName = doc.PrintName;
                 DocNumber = doc.Number;
                 Place = doc.DocWithdrawal.Places?.Name;
-                UserName = doc.Users.Name;
+                UserName = doc.Users?.Name;
                 ShiftID = doc.ShiftID;
                 IsConfirmed = doc.IsConfirmed || !AllowEditDoc;
                 WithdrawalProducts = new ObservableCollection<WithdrawalProduct>(

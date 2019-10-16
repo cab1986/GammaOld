@@ -9,6 +9,7 @@
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
              xmlns:common="clr-namespace:Gamma.Common"
              xmlns:models="clr-namespace:Gamma.Models"
@@ -23,7 +24,7 @@
                     <ContentControl Content="{Binding WithdrawalMaterialsGrid}" />
                 </dxlc:LayoutItem>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Отобранные образцы">
+            <dx:DXTabItem Header="Отобранные образцы" Visibility="{Binding IsEnabledSamples, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxg:GridControl ItemsSource="{Binding Samples}">
                     <dxg:GridControl.Columns>
                         <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Вид продукции"/>
@@ -103,7 +104,7 @@
                 </dxg:GridControl>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Паллеты">
-                <dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type models:Pallet}">
+                <dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type models:Pallet}" SelectedItem="{Binding SelectedProduct}">
                     <dxg:GridControl.TotalSummary>
                         <dxg:GridSummaryItem FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}"/>
                         <dxg:GridSummaryItem FieldName="Number" ShowInColumn="Number" SummaryType="Count"/>
@@ -116,6 +117,9 @@
                     <dxg:GridControl.View>
                         <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False" ShowTotalSummary="True"/>
                     </dxg:GridControl.View>
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
                 </dxg:GridControl>
             </dx:DXTabItem>
         </dx:DXTabControl>
