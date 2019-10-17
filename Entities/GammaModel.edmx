@@ -529,6 +529,7 @@
           <Property Name="MovementPlaceZoneName" Type="varchar" MaxLength="250" />
           <Property Name="DateMovement" Type="datetime" />
           <Property Name="IsMovementIn" Type="bit" />
+          <Property Name="IsRemainderOnPlace" Type="bit" />
         </EntityType>
         <EntityType Name="DocCloseShiftNomenclatureRests">
           <Key>
@@ -12508,6 +12509,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocCloseShiftMovementProducts_DocMovement" FromRole="DocCloseShiftMovementProducts" ToRole="DocMovement" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftMovementProducts_Docs" FromRole="DocCloseShiftMovementProducts" ToRole="Docs" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocCloseShiftMovementProducts_Products" FromRole="DocCloseShiftMovementProducts" ToRole="Products" />
+          <Property Name="IsRemainderOnPlace" Type="Boolean" />
         </EntityType>
         <EntityType Name="DocCloseShiftUtilizationProducts">
           <Key>
@@ -15118,6 +15120,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocCloseShiftMovementProducts">
             <EntityTypeMapping TypeName="GammaModel.DocCloseShiftMovementProducts">
               <MappingFragment StoreEntitySet="DocCloseShiftMovementProducts">
+                <ScalarProperty Name="IsRemainderOnPlace" ColumnName="IsRemainderOnPlace" />
                 <ScalarProperty Name="IsMovementIn" ColumnName="IsMovementIn" />
                 <ScalarProperty Name="DateMovement" ColumnName="DateMovement" />
                 <ScalarProperty Name="MovementPlaceZoneName" ColumnName="MovementPlaceZoneName" />

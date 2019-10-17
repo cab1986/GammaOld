@@ -23,6 +23,7 @@ namespace Gamma.Entities
         public string MovementPlaceZoneName { get; set; }
         public Nullable<System.DateTime> DateMovement { get; set; }
         public Nullable<bool> IsMovementIn { get; set; }
+        public Nullable<bool> IsRemainderOnPlace { get; set; }
     
         public virtual DocMovement DocMovement { get; set; }
         public virtual Docs Docs { get; set; }

@@ -36,6 +36,9 @@ namespace Gamma.ViewModels
         public DocCloseShiftConvertingGridViewModel(DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
         {
             CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
+            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+            WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+            IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
 
         public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()

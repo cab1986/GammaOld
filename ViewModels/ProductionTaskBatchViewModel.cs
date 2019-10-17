@@ -768,6 +768,7 @@ namespace Gamma.ViewModels
                         FirstOrDefault();
                 var productId = SqlGuidUtil.NewSequentialid();
                 var checkResult = SourceSpoolsCheckResult.Correct;
+                Guid c1CCharacteristicID = Guid.Empty;
                 switch (BatchKind)
                 {
                     case BatchKinds.SGB:
@@ -787,26 +788,26 @@ namespace Gamma.ViewModels
                                 if (docProduction != null && docProduction.ShiftID == null)
                                 {
                                     docProduction.Date = curDate;
-                                        docProduction.ShiftID = WorkSession.ShiftID;
-                                        docProduction.UserID = WorkSession.UserID;
-                                        docProduction.PrintName = WorkSession.PrintName;
-                                        docProduction.DocProduction.ProductionTaskID = productionTaskID;
-                                        productId = gammaBase.DocProductionProducts.Where(d => d.DocID == docProduction.DocID)
-                                            .Select(d => d.ProductID)
-                                            .First();
-                                        var productSpool =
-                                            gammaBase.ProductSpools.First(p => p.ProductID == productId);
-                                        var productionTaskPM =
-                                            gammaBase.ProductionTasks.FirstOrDefault(
-                                                p => p.ProductionTaskID == productionTaskID);
-                                        if (productionTaskPM != null)
-                                        {
-                                            productSpool.C1CNomenclatureID = (Guid)productionTaskPM.C1CNomenclatureID;
-                                            productSpool.C1CCharacteristicID = (Guid)productionTaskPM.C1CCharacteristicID;
-                                        }
-                                        gammaBase.SaveChanges();
-                                        gammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
-                                        MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
+                                    docProduction.ShiftID = WorkSession.ShiftID;
+                                    docProduction.UserID = WorkSession.UserID;
+                                    docProduction.PrintName = WorkSession.PrintName;
+                                    docProduction.DocProduction.ProductionTaskID = productionTaskID;
+                                    productId = gammaBase.DocProductionProducts.Where(d => d.DocID == docProduction.DocID)
+                                        .Select(d => d.ProductID)
+                                        .First();
+                                    var productSpool =
+                                        gammaBase.ProductSpools.First(p => p.ProductID == productId);
+                                    var productionTaskPM =
+                                        gammaBase.ProductionTasks.FirstOrDefault(
+                                            p => p.ProductionTaskID == productionTaskID);
+                                    if (productionTaskPM != null)
+                                    {
+                                        productSpool.C1CNomenclatureID = (Guid)productionTaskPM.C1CNomenclatureID;
+                                        productSpool.C1CCharacteristicID = (Guid)productionTaskPM.C1CCharacteristicID;
+                                    }
+                                    gammaBase.SaveChanges();
+                                    gammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
+                                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
                                 }
                                 //если предыдущий тамбур этой смены и не подтвержден, то открываем для редактирования
@@ -965,7 +966,7 @@ namespace Gamma.ViewModels
                                 docProductionProduct.C1CNomenclatureID = productionTask.C1CNomenclatureID;
                                 docProductionProduct.C1CCharacteristicID = productionTask.C1CCharacteristicID;
                                 docProductionProduct.Quantity =
-                                    product.ProductPallets.ProductItems.First().Quantity;
+                                product.ProductPallets.ProductItems.First().Quantity;
                             }
                             gammaBase.SaveChanges();
                             gammaBase.GenerateNewNumbersForDoc(doc.DocID);
@@ -1065,9 +1066,12 @@ namespace Gamma.ViewModels
                                 docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
                         gammaBase.SaveChanges();
-                        
-//#if (!DEBUG)
-                        ReportManager.PrintReport(reportName, "Pallet", doc.DocID, false, 2);
+
+                        //#if (!DEBUG)
+                        var c1CPropertyID = new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6");
+                        int numCopies = productionTask == null ? 2 : gammaBase.C1CPropertyValues.Where(c => c.C1CCharacteristicProperties.Any(p => p.C1CPropertyID == c1CPropertyID && p.C1CCharacteristicID == (Guid)productionTask.C1CCharacteristicID)).Select(c => c.C1CCode).FirstOrDefault() == "000000532" ? 1 : 2;
+                        //int numCopies = gammaBase.C1CCharacteristicProperties.Where(c => c.C1CPropertyID == c1CPropertyID && c.C1CCharacteristicID == (Guid)productionTask.C1CCharacteristicID).Select().FirstOrDefault() == "000000532" ? 1 : 2;
+                        ReportManager.PrintReport(reportName, "Pallet", doc.DocID, false, numCopies);
 //#endif
                         RefreshProduction();
                         break;
