@@ -26,5 +26,6 @@ namespace Gamma.Entities
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<int> PlaceID { get; set; }
         public Nullable<byte> ShiftID { get; set; }
+        public string CurrentPlace { get; set; }
     }
 }

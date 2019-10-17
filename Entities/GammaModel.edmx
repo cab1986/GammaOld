@@ -1677,6 +1677,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
             
             <PropertyRef Name="StateID" />
             
+            <PropertyRef Name="CurrentPlace" />
             <PropertyRef Name="PlaceGroupID" />
           </Key>
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
@@ -1709,6 +1710,9 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="IsWrittenOff" Type="bit" />
           <Property Name="State" Type="varchar" MaxLength="50" />
           <Property Name="BaseMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="CurrentPlaceID" Type="int" />
+          <Property Name="CurrentPlaceZoneID" Type="uniqueidentifier" />
+          <Property Name="CurrentPlace" Type="varchar" MaxLength="1066" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -5384,7 +5388,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductsInfo].[IsConfirmed] AS [IsConfirmed], 
     [vProductsInfo].[IsWrittenOff] AS [IsWrittenOff], 
     [vProductsInfo].[State] AS [State], 
-    [vProductsInfo].[BaseMeasureUnitID] AS [BaseMeasureUnitID]
+    [vProductsInfo].[BaseMeasureUnitID] AS [BaseMeasureUnitID], 
+    [vProductsInfo].[CurrentPlaceID] AS [CurrentPlaceID], 
+    [vProductsInfo].[CurrentPlaceZoneID] AS [CurrentPlaceZoneID], 
+    [vProductsInfo].[CurrentPlace] AS [CurrentPlace]
     FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vRobotNomenclatures" EntityType="Self.vRobotNomenclatures" store:Type="Views" store:Schema="dbo">
@@ -8805,6 +8812,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="15" Scale="5" />
           <Property Type="Int32" Name="PlaceID" Nullable="true" />
           <Property Type="Byte" Name="ShiftID" Nullable="true" />
+          <Property Type="String" Name="CurrentPlace" Nullable="true" MaxLength="511" />
         </ComplexType>
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
@@ -10009,6 +10017,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <PropertyRef Name="Date" />
             <PropertyRef Name="PlaceGroupID" />
             <PropertyRef Name="StateID" />
+            <PropertyRef Name="CurrentPlace" />
           </Key>
           <Property Name="DocID" Type="Guid" Nullable="false" />
           <Property Name="ProductID" Type="Guid" Nullable="false" />
@@ -10040,6 +10049,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="IsWrittenOff" Type="Boolean" />
           <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="BaseMeasureUnitID" Type="Guid" />
+          <Property Name="CurrentPlaceID" Type="Int32" />
+          <Property Name="CurrentPlaceZoneID" Type="Guid" />
+          <Property Name="CurrentPlace" Type="String" Nullable="false" MaxLength="1066" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DocShipmentOrders">
           <Key>
@@ -13664,6 +13676,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="CurrentPlace" ColumnName="CurrentPlace" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -14332,6 +14345,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductsInfo">
             <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
               <MappingFragment StoreEntitySet="vProductsInfo">
+                <ScalarProperty Name="CurrentPlace" ColumnName="CurrentPlace" />
+                <ScalarProperty Name="CurrentPlaceZoneID" ColumnName="CurrentPlaceZoneID" />
+                <ScalarProperty Name="CurrentPlaceID" ColumnName="CurrentPlaceID" />
                 <ScalarProperty Name="BaseMeasureUnitID" ColumnName="BaseMeasureUnitID" />
                 <ScalarProperty Name="State" ColumnName="State" />
                 <ScalarProperty Name="IsWrittenOff" ColumnName="IsWrittenOff" />

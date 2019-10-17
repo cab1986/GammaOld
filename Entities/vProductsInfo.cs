@@ -44,5 +44,8 @@ namespace Gamma.Entities
         public Nullable<bool> IsWrittenOff { get; set; }
         public string State { get; set; }
         public Nullable<System.Guid> BaseMeasureUnitID { get; set; }
+        public Nullable<int> CurrentPlaceID { get; set; }
+        public Nullable<System.Guid> CurrentPlaceZoneID { get; set; }
+        public string CurrentPlace { get; set; }
     }
 }

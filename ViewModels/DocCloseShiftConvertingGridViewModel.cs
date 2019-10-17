@@ -24,9 +24,6 @@ namespace Gamma.ViewModels
         public DocCloseShiftConvertingGridViewModel()
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftConverting", VMID));
-            PlaceID = WorkSession.PlaceID;
-            ShiftID = WorkSession.ShiftID;
-            CloseDate = DB.CurrentDateTime;
             /*AddWithdrawalMaterialCommand = new DelegateCommand(AddWithdrawalMaterial, () => !IsReadOnly);
             DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
             */
@@ -35,6 +32,9 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftConvertingGridViewModel(DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
         {
+            PlaceID = WorkSession.PlaceID;
+            ShiftID = WorkSession.ShiftID;
+            CloseDate = DB.CurrentDateTime;
             CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);

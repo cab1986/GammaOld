@@ -60,14 +60,20 @@
                 <dxg:GridSummaryItem SummaryType="Count" ShowInColumn="Number" />
             </dxg:GridControl.TotalSummary>
             <dxg:GridControl.Columns>
-                <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
-                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
+                <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" VisibleIndex="0" />
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" VisibleIndex="1" >
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
-                <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
-                <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
+                <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" VisibleIndex="2" />
+                <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True" VisibleIndex="3" />
+                <dxg:GridColumn Header="Текущий передел" FieldName="CurrentPlace" VisibleIndex="4" Width="30" />
+                <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="5">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:CheckEditSettings/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
                 <dxg:GridColumn Header="{Binding QuantityHeader}" FieldName="Quantity" FixedWidth="True" Width="100" >
                     <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>

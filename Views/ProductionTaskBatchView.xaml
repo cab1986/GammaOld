@@ -136,14 +136,15 @@
                                     <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="ShiftID" Header="Смена" VisibleIndex="3" Width="9" />
                             <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="2"  Header="Номенклатура"/>
-                            <dxg:GridColumn FieldName="IsConfirmed" Header="Подтвержден" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="4">
+                            <dxg:GridColumn FieldName="ShiftID" Header="Смена" VisibleIndex="3" Width="13" />
+                            <dxg:GridColumn FieldName="CurrentPlace" Header="Текущий передел" VisibleIndex="4" Width="30" />
+                            <dxg:GridColumn FieldName="IsConfirmed" Header="Подтвержден" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="5">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:CheckEditSettings/>
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="5" Width="120" FixedWidth="True">
+                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="6" Width="120" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:TextEditSettings Mask="f" MaskType="Numeric"/>
                                 </dxg:GridColumn.EditSettings>
