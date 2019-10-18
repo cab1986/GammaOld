@@ -832,7 +832,8 @@ namespace Gamma.Models
                 //MessageBox.Show("Внимание! Во вкладке Принято или Отдано есть строки с кол-вом больше 0. Загрузка материалов не произведена! Обнулите материалы в этих вкладках.", "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             }
             WithdrawalMaterialsRemainderAtBegin?.Clear();
-            WithdrawalMaterialsRemainderAtEnd?.Clear();
+            if (WithdrawalMaterialsRemainderAtEnd?.Count(d => d.Quantity != 0) == 0)
+                WithdrawalMaterialsRemainderAtEnd?.Clear();
         }
 
       
