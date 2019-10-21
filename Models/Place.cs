@@ -9,5 +9,7 @@ namespace Gamma.Models
         public Guid? PlaceGuid { get; set; }
         public int PlaceID { get; set; }
         public string PlaceName { get; set; }
+        public int? BranchID { get; set; }
+        public int? PlaceGroupID { get; set; }
     }
 }

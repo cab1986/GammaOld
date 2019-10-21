@@ -55,10 +55,10 @@
                     <dxlc:LayoutGroup View="Group">
                         <dxlc:LayoutGroup View="Group">
                             <dxlc:LayoutItem Label="Произведено с:" LabelPosition="Top">
-                                <dxe:DateEdit EditValue="{Binding DateBegin}"/>
+                                <dxe:DateEdit EditValue="{Binding DateBegin}" Mask="g" MaskUseAsDisplayFormat="True"/>
                             </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Произведено по:" LabelPosition="Top">
-                                <dxe:DateEdit EditValue="{Binding DateEnd}" />
+                                <dxe:DateEdit EditValue="{Binding DateEnd}"  Mask="g" MaskUseAsDisplayFormat="True"/>
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                         <dxlc:LayoutGroup HorizontalAlignment="Right" Height="40">
@@ -74,10 +74,10 @@
                     <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
                 </dxmvvm:Interaction.Behaviors>
                 <dxg:GridControl.Columns>
-                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="100" FixedWidth="True"/>
-                    <dxg:GridColumn FieldName="Date" Header="Дата" Width="70" FixedWidth="True">
+                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="115" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="Date" Header="Дата" Width="120" FixedWidth="True">
                         <dxg:GridColumn.EditSettings>
-                            <dxe:DateEditSettings Mask="g"/>
+                            <dxe:DateEditSettings Mask="G" MaskUseAsDisplayFormat="True"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
                     <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" />
@@ -86,7 +86,7 @@
                             <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
-                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="60" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="70" FixedWidth="True"/>
                     <dxg:GridColumn FieldName="ShiftID" Header="Смена" Width="50" FixedWidth="True"/>
                     <dxg:GridColumn FieldName="State" Header="Статус" Width="100" FixedWidth="True"/>
                 </dxg:GridControl.Columns>
@@ -105,6 +105,7 @@
                     </Style.Triggers>
                 </Style>
             </StackPanel.Style>
+            <Button Content="Выбрать все" Margin="0,0,10,0" Command="{Binding ChooseAllProductCommand}" Height="30" HorizontalContentAlignment="Right"/>
             <Button Content="Выбрать" Margin="0,0,10,0" Command="{Binding ChooseProductCommand}" Height="30" HorizontalContentAlignment="Right"/>
             <Button Content="Отмена" Command="{Binding CloseCommand}" HorizontalAlignment="Right" Height="30" Margin="0,0,5,0"/>
         </StackPanel>

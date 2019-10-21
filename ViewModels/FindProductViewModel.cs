@@ -24,10 +24,10 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Initializes a new instance of the FindProductViewModel class.
         /// </summary>
-        
+
         private FindProductViewModel()
         {
-            Messenger.Default.Register<BarcodeMessage>(this,BarcodeReceived);
+            Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKind));
             ProductKindsList.Add("Все");
             States = Functions.EnumDescriptionsToList(typeof(ProductState));
@@ -36,6 +36,7 @@ namespace Gamma.ViewModels
             ResetSearchCommand = new DelegateCommand(ResetSearch);
             FindCommand = new DelegateCommand(() => Find(false));
             ChooseProductCommand = new DelegateCommand(ChooseProduct, () => SelectedProduct != null);
+            ChooseAllProductCommand = new DelegateCommand(ChooseAllProduct, () => ChooseAllProductEnabled && FoundProducts?.Count > 0);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductCommand = new DelegateCommand(OpenProduct, () => SelectedProduct != null);
@@ -44,20 +45,23 @@ namespace Gamma.ViewModels
                           Place
                           {
                               PlaceName = p.Name,
-                              PlaceID = p.PlaceID
+                              PlaceID = p.PlaceID,
+                              BranchID = p.BranchID,
+                              PlaceGroupID = p.PlaceGroupID
                           }
-                          ).ToList();
-            SelectedPlaces = new List<Object>(PlacesList);
+                          ).OrderBy(p => p.BranchID == WorkSession.BranchID ? 0 : 1).ThenBy(p => p.PlaceGroupID)
+                          .ToList();
         }
 
         public FindProductViewModel(FindProductMessage msg) : this()
         {
             ButtonPanelVisible = msg.ChooseProduct;
-            if (msg.ChooseProduct) //для выбора по умолчанию пункта Все
-                SelectedProductKindIndex = (byte)msg.ProductKind;
+            if (msg.ChooseProduct && (int)msg.ProductKind >= 0) //для выбора по умолчанию пункта Все
+                SelectedProductKindIndex = (int)msg.ProductKind;
             else
-                SelectedProductKindIndex = (byte)(ProductKindsList.Count - 1);
+                SelectedProductKindIndex = (ProductKindsList.Count - 1);
             ProductKindSelectEnabled = msg.AllowChangeProductKind;
+            ChooseAllProductEnabled = !msg.AllowChooseOneValueOnly;
         }
         private bool _buttonPanelVisible;
         public bool ButtonPanelVisible
@@ -311,8 +315,8 @@ namespace Gamma.ViewModels
             if (SelectedPlaces != null) SelectedPlaces = null;
             SelectedStateIndex = States.Count - 1;
         }      
-        private byte _selectedProductKindIndex;
-        public byte SelectedProductKindIndex
+        private int _selectedProductKindIndex;
+        public int SelectedProductKindIndex
         {
             get
             {
@@ -381,10 +385,14 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductKindSelectEnabled");
             }
         }
+
+        private bool ChooseAllProductEnabled { get; set; }
         private DateTime? _dateBegin;
         private DateTime? _dateEnd;
 
         public DelegateCommand ChooseProductCommand { get; set; }
+
+        public DelegateCommand ChooseAllProductCommand { get; set; }
 
         /// <summary>
         /// Распаковка упаковки, в которой находится рулон
@@ -428,6 +436,18 @@ namespace Gamma.ViewModels
             Messenger.Default.Send(new ChoosenProductMessage { ProductID = SelectedProduct.ProductID });
             CloseWindow();
         }
+
+        private void ChooseAllProduct()
+        {
+            if (FoundProducts == null) return;
+            if (FoundProducts.Count == 0)
+            {
+                return;
+            }
+            Messenger.Default.Send(new ChoosenProductMessage { ProductIDs = FoundProducts.Select(p => p.ProductID).ToList() });
+            CloseWindow();
+        }
+
         public DelegateCommand ActivatedCommand { get; private set; }
         public DelegateCommand DeactivatedCommand { get; private set; }
         private bool IsActive { get; set; }

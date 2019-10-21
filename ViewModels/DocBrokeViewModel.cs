@@ -239,12 +239,20 @@ namespace Gamma.ViewModels
         private void ChooseProductToAdd()
         {
             Messenger.Default.Register<ChoosenProductMessage>(this, AddChoosenProduct);
-            MessageManager.OpenFindProduct(ProductKind.ProductSpool, true, true);
+            MessageManager.OpenFindProduct(ProductKind.ProductSpool-1, true, true, false);
         }
 
         private void AddChoosenProduct(ChoosenProductMessage msg)
         {
-            AddProduct(msg.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
+            if (msg.ProductIDs?.Count == 0)
+                AddProduct(msg.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
+            else
+            {
+                foreach (var product in msg.ProductIDs)
+                {
+                    AddProduct(product, DocId, BrokeProducts, BrokeDecisionProducts);
+                }
+            }
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
         }
 

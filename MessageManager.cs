@@ -250,11 +250,13 @@ namespace Gamma
         public bool ChooseProduct;
         public ProductKind ProductKind;
         public bool AllowChangeProductKind = true;
+        public bool AllowChooseOneValueOnly = true;
     }
     public class ConfigureComPortMessage  { }
     public class ChoosenProductMessage
     {
         public Guid ProductID;
+        public List<Guid> ProductIDs;
     }
     public class BarcodeMessage
     {
@@ -507,13 +509,14 @@ namespace Gamma
 		    Messenger.Default.Send(new EditDocComplectationMessage(docId));
 	    }
         
-        public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, bool allowChangeProductKind = false)
+        public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, bool allowChangeProductKind = false, bool allowChooseOneValueOnly = true )
         {
             Messenger.Default.Send(new FindProductMessage
             {
                     ProductKind = productKind,
                     ChooseProduct = chooseProduct,
-                    AllowChangeProductKind = allowChangeProductKind
+                    AllowChangeProductKind = allowChangeProductKind,
+                    AllowChooseOneValueOnly = allowChooseOneValueOnly
             });
         }
         public static void OpenDocCloseShift(Guid docID)
