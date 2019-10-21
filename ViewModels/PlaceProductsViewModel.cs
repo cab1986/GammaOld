@@ -278,7 +278,8 @@ namespace Gamma.ViewModels
                                 State = vpi.State,
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
-                                CurrentPlace = vpi.CurrentPlace
+                                CurrentPlace = vpi.CurrentPlace,
+                                IsConfirmed = vpi.IsConfirmed
                             })   
                         );
                         break;
@@ -305,7 +306,8 @@ namespace Gamma.ViewModels
                                 State = vpi.State,
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
-                                CurrentPlace = vpi.CurrentPlace
+                                CurrentPlace = vpi.CurrentPlace,
+                                IsConfirmed = vpi.IsConfirmed
                             }
                         );
                         break;
@@ -334,7 +336,8 @@ namespace Gamma.ViewModels
                                 State = vpi.State,
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
-                                CurrentPlace = vpi.CurrentPlace
+                                CurrentPlace = vpi.CurrentPlace,
+                                IsConfirmed = vpi.IsConfirmed
                             }
                         );
                         break;
@@ -363,7 +366,8 @@ namespace Gamma.ViewModels
                                 State = vpi.State,
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
-                                CurrentPlace = vpi.CurrentPlace
+                                CurrentPlace = vpi.CurrentPlace,
+                                IsConfirmed = vpi.IsConfirmed
                             }
                         );
                         break;

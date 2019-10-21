@@ -91,7 +91,8 @@ namespace Gamma.ViewModels
                             DocID = itemID,
                             DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                             ProductID = remainder.ProductID,
-                            IsSourceProduct = remainder.IsSourceProduct
+                            IsSourceProduct = remainder.IsSourceProduct,
+                            DocWithdrawalID = remainder.DocWithdrawalId
                         };
                         gammaBase.DocCloseShiftRemainders.Add(docRemainder);
                     //}
