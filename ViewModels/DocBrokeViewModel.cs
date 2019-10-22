@@ -22,6 +22,7 @@ namespace Gamma.ViewModels
         public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false)
         {
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
+            Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             DocId = docBrokeId;
             using (var gammaBase = DB.GammaDb)
             {
@@ -98,6 +99,9 @@ namespace Gamma.ViewModels
                 {
                     AddProduct((Guid)productId, DocId, BrokeProducts, BrokeDecisionProducts);
                 }
+
+                RefreshRejectionReasonsList();
+
                 AddProductCommand = new DelegateCommand(ChooseProductToAdd, () => !IsReadOnly);
                 DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
                 EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
@@ -113,6 +117,39 @@ namespace Gamma.ViewModels
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
+            SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
+        }
+
+        private void BarcodeReceived(BarcodeMessage msg)
+        {
+            switch (SelectedTabIndex)
+            {
+                case 0:
+                    if (BrokeProducts?.Count > 0)
+                    {
+                        var selectedBrokeProduct = BrokeProducts.Where(b => GammaBase.Products.Any(p => p.BarCode == msg.Barcode && p.ProductID == b.ProductId)).FirstOrDefault();
+                        if (selectedBrokeProduct == null)
+                        {
+                            MessageBox.Show("Продукт со штрихкодом " + msg.Barcode + " в 'Несоответствующей продукции' не найден");
+                            return;
+                        }
+                        SelectedBrokeProduct = selectedBrokeProduct;
+                    }
+
+                    break;
+                case 1:
+                    if (BrokeDecisionProducts?.Count > 0)
+                    {
+                        var selectedBrokeDecisionProduct = BrokeDecisionProducts.Where(b => GammaBase.Products.Any(p => p.BarCode == msg.Barcode && p.ProductID == b.ProductId)).FirstOrDefault();
+                        if (selectedBrokeDecisionProduct == null)
+                        {
+                            MessageBox.Show("Продукт со штрихкодом " + msg.Barcode + " в 'Решениях' не найден");
+                            return;
+                        }
+                        SelectedBrokeDecisionProduct = selectedBrokeDecisionProduct;
+                    }
+                    break;
+            }
         }
 
         private void DecisionProductsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -137,6 +174,7 @@ namespace Gamma.ViewModels
             ReportManager.PrintReport(msg.ReportID, DocId);
         }
 
+        
         /// <summary>
         /// Добавление продукта к списку продукции акта
         /// </summary>
@@ -233,6 +271,7 @@ namespace Gamma.ViewModels
                     }
                 }
                 #endregion AddBrokeDecisionProduct
+                RefreshRejectionReasonsList();
             }
         }
 
@@ -244,7 +283,7 @@ namespace Gamma.ViewModels
 
         private void AddChoosenProduct(ChoosenProductMessage msg)
         {
-            if (msg.ProductIDs?.Count == 0)
+            if (msg.ProductIDs == null || msg.ProductIDs?.Count == 0)
                 AddProduct(msg.ProductID, DocId, BrokeProducts, BrokeDecisionProducts);
             else
             {
@@ -302,7 +341,70 @@ namespace Gamma.ViewModels
             //return IsValid && DB.HaveWriteAccess("DocBroke");
             return IsValid && DB.HaveWriteAccess("DocBroke") && IsEditable;
         }
-        
+
+        public int SelectedTabIndex { get; set; }
+
+        public DelegateCommand SetRejectionReasonForAllProductCommand { get; private set; }
+
+        public string ForAllProductRejectionReasonComment { get; set; }
+
+        public RejectionReason ForAllProductRejectionReasonID { get; set; }
+        private List<RejectionReason> _rejectionReasonsList { get; set; }
+        public List<RejectionReason> RejectionReasonsList 
+          {
+            get { return _rejectionReasonsList; }
+            set
+            {
+                _rejectionReasonsList = value;
+                RaisePropertyChanged("RejectionReasonsList");
+            }
+        }
+
+        private void RefreshRejectionReasonsList()
+        {
+            if (BrokeProducts?.Count > 0 && (RejectionReasonsList == null || RejectionReasonsList?.Count == 0))
+            {
+                if (BrokeProducts.Select(p => p.ProductKind).Distinct().Count() == 1 ||
+                    (BrokeProducts.Select(p => p.ProductKind).Distinct().Count() == 2 && BrokeProducts.Any(p => p.ProductKind == ProductKind.ProductPallet) && BrokeProducts.Any(p => p.ProductKind == ProductKind.ProductPalletR)))
+                {
+                    var productKind = (int)BrokeProducts.Select(p => p.ProductKind).FirstOrDefault();
+                    RejectionReasonsList = new List<RejectionReason>(GammaBase.C1CRejectionReasons
+                        .Where(r => (!r.IsFolder ?? true) && (!r.IsMarked ?? true) && (r.ParentID == null || (r.ParentID != null
+                        && GammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == productKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))))
+                        .Select(r => new RejectionReason
+                        {
+                            RejectionReasonID = r.C1CRejectionReasonID,
+                            Description = r.Description,
+                            FullDescription = r.FullDescription
+                        }).OrderBy(r => r.Description));
+                }
+                else
+                {
+                    RejectionReasonsList = new List<RejectionReason>();
+                }
+            }
+            else
+            {
+                RejectionReasonsList = new List<RejectionReason>();
+            }
+        }
+
+        private void SetRejectionReasonForAllProduct()
+        {
+            if (BrokeProducts != null)
+            {
+                foreach(var brokeProduct in BrokeProducts)
+                {
+                    brokeProduct.RejectionReasons.Clear();
+                    brokeProduct.RejectionReasons.Add(new RejectionReason()
+                    { 
+                        RejectionReasonID = ForAllProductRejectionReasonID.RejectionReasonID,
+                        Comment = ForAllProductRejectionReasonComment
+                    });
+                }
+            }
+        }
+
         public DelegateCommand AddProductCommand { get; private set; }
         public DelegateCommand DeleteProductCommand { get; private set; }
 
@@ -316,6 +418,7 @@ namespace Gamma.ViewModels
                 BrokeDecisionProducts.Remove(product);
             }
             BrokeProducts.Remove(SelectedBrokeProduct);
+            RefreshRejectionReasonsList();
         }
         
         private bool _isInFuturePeriod { get; set; }

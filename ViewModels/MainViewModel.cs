@@ -120,6 +120,7 @@ namespace Gamma.ViewModels
                 OpenComplectedPalletsCommand = new DelegateCommand(() => CurrentView = new ComplectedPalletsViewModel());
 				OpenDocComplectationsCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel());
                 OpenLogEventsCommand = new DelegateCommand(() => CurrentView = new LogEventsViewModel());
+                CreateNewDocBrokeCommand = new DelegateCommand(() => MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid()));
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -177,6 +178,8 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 
         public DelegateCommand OpenLogEventsCommand { get; private set; }
+
+        public DelegateCommand CreateNewDocBrokeCommand { get; private set; }
 
         public DelegateCommand OpenDocComplectationsCommand { get; private set; }
 

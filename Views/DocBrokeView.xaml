@@ -74,6 +74,7 @@
                 <gamma:UIAuthBehavior />
             </dxmvvm:Interaction.Behaviors>
             <dxlc:LayoutControl Header="Header" Orientation="Horizontal">
+                <dxlc:LayoutControl Orientation="Vertical" Width="255">
                 <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" Width="230">
                     <dxlc:LayoutItem Label="Номер">
                         <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" />
@@ -97,7 +98,17 @@
                         <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
-                <dx:DXTabControl>
+                <dxlc:LayoutGroup Header="Дефект и причина" Orientation="Vertical" Width="230" VerticalAlignment="Bottom">
+                        <dxlc:LayoutItem Label="Дефект" LabelPosition="Top">
+                            <dxe:ComboBoxEdit SelectedItem="{Binding ForAllProductRejectionReasonID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding RejectionReasonsList}" DisplayMember="Description" ValueMember="RejectionReasonID"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Причина">
+                            <dxe:TextEdit EditValue="{Binding ForAllProductRejectionReasonComment, UpdateSourceTrigger=PropertyChanged}" />
+                        </dxlc:LayoutItem>
+                        <Button Content="Изменить для всех" Grid.Row="1" Command="{Binding SetRejectionReasonForAllProductCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,0,0"/>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutControl>
+                <dx:DXTabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}">
                     <dx:DXTabItem Header="Несоответствующая продукция">
                         <dxlc:LayoutGroup>
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">

@@ -83,7 +83,9 @@ namespace Gamma.ViewModels
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
                                 IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name
+                                Person = d.Docs.Persons.Name,
+                                ShiftID = d.Docs.ShiftID,
+                                PlacePerson = d.Docs.Persons.Places.Name
                             }).ToList();
                         break;
                     case 1:
@@ -97,7 +99,9 @@ namespace Gamma.ViewModels
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
                                 IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name
+                                Person = d.Docs.Persons.Name,
+                                ShiftID = d.Docs.ShiftID,
+                                PlacePerson = d.Docs.Persons.Places.Name
                             }).ToList();
                         break;
                     case 2:
@@ -112,7 +116,9 @@ namespace Gamma.ViewModels
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
                                 IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name
+                                Person = d.Docs.Persons.Name,
+                                ShiftID = d.Docs.ShiftID,
+                                PlacePerson = d.Docs.Persons.Places.Name
                             }).ToList();
                         break;
                     case 3:
@@ -131,7 +137,9 @@ namespace Gamma.ViewModels
                                 PlaceFrom = d.OutPlaces.Name,
                                 PlaceTo = d.InPlaces.Name,
                                 IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name
+                                Person = d.Docs.Persons.Name,
+                                ShiftID = d.Docs.ShiftID,
+                                PlacePerson = d.Docs.Persons.Places.Name
                             }).ToList();
                         break;
                 }

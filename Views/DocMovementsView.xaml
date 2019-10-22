@@ -76,11 +76,13 @@
                 </dxg:DataControlDetailDescriptor>
             </dxg:GridControl.DetailDescriptor>
             <dxg:GridColumn Header="Номер перемещения" FieldName="Number" VisibleIndex="0" />
-            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"/>
+            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"  Width="80" FixedWidth="True"/>
             <dxg:GridColumn Header="Со склада" FieldName="PlaceFrom" VisibleIndex="3" />
             <dxg:GridColumn Header="На склад" FieldName="PlaceTo" VisibleIndex="4" />
-            <dxg:GridColumn Header="Грузчик" FieldName="Person" VisibleIndex="5" />
-            <dxg:GridColumn Header="Закрыто" FieldName="IsConfirmed" VisibleIndex="6"  />
+            <dxg:GridColumn Header="Смена" FieldName="ShiftID" VisibleIndex="5" Width="50" FixedWidth="True"/>
+            <dxg:GridColumn Header="Передел" FieldName="PlacePerson" VisibleIndex="6"  Width="80"/>
+            <dxg:GridColumn Header="Грузчик" FieldName="Person" VisibleIndex="7" />
+            <dxg:GridColumn Header="Закрыто" FieldName="IsConfirmed" VisibleIndex="8"  Width="50" FixedWidth="True" />
         </dxg:GridControl>
     </Grid>
 </UserControl>

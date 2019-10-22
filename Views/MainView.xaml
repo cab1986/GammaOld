@@ -153,6 +153,9 @@
                     <dxb:BarButtonItem Content="Журнал заявок" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=Reading_32x32.png}" 
                                        Command="{Binding OpenLogEventsCommand}"/>
                     <dxb:BarItemLinkSeparator />
+                    <dxb:BarButtonItem Content="Создать акт о браке" BarItemDisplayMode="ContentAndGlyph" 
+                                       Command="{Binding CreateNewDocBrokeCommand}"/>
+                    <dxb:BarItemLinkSeparator />
                     <dxb:BarButtonItem Content="Назад" Glyph="{dx:DXImage Image=Backward_16x16.png}" LargeGlyph="{dx:DXImage Image=Backward_32x32.png}" 
                                        BarItemDisplayMode="ContentAndGlyph" Command="{Binding BackCommand}"/>
                 </dxb:Bar>

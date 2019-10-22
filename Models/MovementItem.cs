@@ -11,10 +11,12 @@ namespace Gamma.Models
         public Guid DocId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
+        public int? ShiftID { get; set; }
         public string PlaceTo { get; set; }
         public string PlaceFrom { get; set; }
         public bool IsConfirmed { get; set; }
         public string Person { get; set; }
+        public string PlacePerson { get; set; }
 
         private ObservableCollection<DocNomenclatureItem> _nomenclatureItems;
 
