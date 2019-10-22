@@ -117,7 +117,7 @@ namespace Gamma.ViewModels
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
-            SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
+            SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && SelectedTabIndex != 1 && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
         }
 
         private void BarcodeReceived(BarcodeMessage msg)
