@@ -1068,9 +1068,7 @@ namespace Gamma.ViewModels
                         gammaBase.SaveChanges();
 
 //#if (!DEBUG)
-                        var c1CPropertyID = new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6");
-                        int numCopies = productionTask == null ? 2 : gammaBase.C1CPropertyValues.Where(c => c.C1CCharacteristicProperties.Any(p => p.C1CPropertyID == c1CPropertyID && p.C1CCharacteristicID == (Guid)productionTask.C1CCharacteristicID)).Select(c => c.C1CCode).FirstOrDefault() == "000000532" ? 1 : 2;
-                        ReportManager.PrintReport(reportName, "Pallet", doc.DocID, false, numCopies);
+                        ReportManager.PrintReport(reportName, "Pallet", doc.DocID, false, 1);
 //#endif
                         RefreshProduction();
                         break;
