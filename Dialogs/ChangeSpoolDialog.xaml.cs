@@ -18,7 +18,7 @@ namespace Gamma.Dialogs
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             InitializeComponent();
-            RadioCompletly.IsChecked = true;
+            //RadioCompletly.IsChecked = true;
             RejectionReasons = (from r in GammaBase.GetSpoolRejectionReasons()
                  select new RejectionReason
                  {
@@ -48,10 +48,14 @@ namespace Gamma.Dialogs
                     break;
                 case SpoolChangeState.WithRemainder:
                     Weight = Convert.ToDecimal(EdtRemainderWeight.Text);
+                    RejectionReasonID = null;
                     break;
-                default:
+                case SpoolChangeState.FullyConverted:
                     Weight = 0;
                     RejectionReasonID = null;
+                    break;
+                default:
+                    DialogResult = false;
                     break;
             }
             DialogResult = true;
@@ -59,18 +63,21 @@ namespace Gamma.Dialogs
         private void RadioCompletly_Checked(object sender, RoutedEventArgs e)
         {
             ChangeState = SpoolChangeState.FullyConverted;
+            BtnOk.IsEnabled = true;
         }
         private void RadioBroke_Checked(object sender, RoutedEventArgs e)
         {
             ChangeState = SpoolChangeState.WithBroke;
-//            Weight = edtBrokeWeight.Text;
-//            RejectionReasonID = (Guid)lkpBrokeReason.EditValue;
+            BtnOk.IsEnabled = true;
+            //            Weight = edtBrokeWeight.Text;
+            //            RejectionReasonID = (Guid)lkpBrokeReason.EditValue;
         }
 
         private void RadioReminder_Checked(object sender, RoutedEventArgs e)
         {
             ChangeState = SpoolChangeState.WithRemainder;
- //           Weight = edtRemainderWeight.Text;
+            BtnOk.IsEnabled = true;
+            //           Weight = edtRemainderWeight.Text;
         }
         public decimal Weight { get; set; }
         public Guid? RejectionReasonID { get; set; }

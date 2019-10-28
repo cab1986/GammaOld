@@ -43,7 +43,7 @@
                 </RadioButton>
             </dxlc:LayoutItem>
         </dxlc:LayoutControl>
-        <Button Content="OK" Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="5,5,95,5" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="OK" x:Name="BtnOk" Grid.Row="1" HorizontalAlignment="Right" Margin="5,5,95,5" Width="50" Click="BtnOK_Click" IsEnabled="False"/>
         <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="1"  Width="80" HorizontalAlignment="Right" Margin="5,5,10,5" />
     </Grid>
 </Window>

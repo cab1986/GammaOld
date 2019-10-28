@@ -25,6 +25,7 @@ namespace Gamma.ViewModels
                 PlaceID = (int)msg.PlaceID;
                 IsNewDoc = true;
                 Title = "Закрытие смены";
+                ShiftID = msg.ShiftID;
             }
             else
             {
@@ -36,6 +37,7 @@ namespace Gamma.ViewModels
                 PlaceID = (int)Doc.PlaceID;
                 IsNewDoc = false;
                 Title = "Закрытие смены №" + Doc.Number;
+                ShiftID = Doc.ShiftID;
             }
             IsVisibilityUnwinderRemainder = false;
             //IsVisibilityRemainder = false;
@@ -80,8 +82,8 @@ namespace Gamma.ViewModels
             var grid = CurrentViewModelGrid as IFillClearGrid;
             if (grid != null)
             {
-                FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed);
-                ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed);
+                FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed && CanEditable());
+                ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed && CanEditable());
             }
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && !grid.IsChanged &&
                 (place?.PlaceGroupID == (int)PlaceGroup.PM || place?.PlaceGroupID == (int)PlaceGroup.Rw || place?.PlaceGroupID == (int)PlaceGroup.Convertings));
@@ -104,8 +106,20 @@ namespace Gamma.ViewModels
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public bool IsConfirmed { get; set; }
+        private byte? ShiftID { get; set; }
         public bool IsVisibilityUnwinderRemainder { get; set; }
         public bool IsVisibilityRemainder { get; set; }
+        public override bool IsValid
+        {
+            get
+            {
+                return base.IsValid && CanEditable();
+            }
+        }
+        public bool CanEditable ()
+        {
+            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID));
+        }
 
         private SaveImplementedViewModel _currentViewModelGrid;
         public SaveImplementedViewModel CurrentViewModelGrid 

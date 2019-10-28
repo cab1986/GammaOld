@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
         {
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
             PlaceID = placeID;
-            FillGrid();
+            //FillGrid();
         }
 
         private int PlaceID { get; set; }
