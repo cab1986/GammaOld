@@ -57,19 +57,20 @@ namespace Gamma.ViewModels
                     CurrentViewModelGrid = new DocCloseShiftWrGridViewModel(msg);
                     break;
                 case (short)PlaceGroup.Rw:
-                    CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg);
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
-                    IsVisibilityUnwinderRemainder = true; 
+                    IsVisibilityUnwinderRemainder = true;
+                    var rwUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
+                    CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg, rwUnwinderRemainder);
                     break;
                 case (short)PlaceGroup.Convertings:
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     IsVisibilityUnwinderRemainder = true;
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
                     //IsVisibilityRemainder = true;
-                    var cc = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
+                    var convertingrUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
-                        ? new DocCloseShiftConvertingGridViewModel(cc)
-                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, cc);
+                        ? new DocCloseShiftConvertingGridViewModel(convertingrUnwinderRemainder)
+                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, convertingrUnwinderRemainder);
                     break;
                 case (short)PlaceGroup.Baler:
                     CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);
@@ -94,7 +95,7 @@ namespace Gamma.ViewModels
         private void PrintReport(PrintReportMessage msg)
         {
             if (msg.VMID != (CurrentViewModelGrid as IBarImplemented)?.VMID) return;
-            if (!IsValid) return;
+            //if (!IsValid) return;
             if (CanSaveExecute())
                 SaveToModel();
             else if (IsNewDoc) return;
@@ -164,8 +165,8 @@ namespace Gamma.ViewModels
             GammaBase.SaveChanges();
             IsNewDoc = false;
             CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
-            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
+            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             /*
             // удаляем с остатков или добавляем на остатки по утилизации
             var utilizationProductsAfterSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();

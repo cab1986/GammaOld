@@ -666,8 +666,6 @@ namespace Gamma.ViewModels
                     docCloseShift.DocCloseShiftMaterials = new List<DocCloseShiftMaterials>();
                 if (docCloseShift.DocCloseShiftRemainders == null)
                     docCloseShift.DocCloseShiftRemainders = new List<DocCloseShiftRemainders>();
-                if (docCloseShift.DocCloseShiftRemainders == null)
-                    docCloseShift.DocCloseShiftRemainders = new List<DocCloseShiftRemainders>();
                 if (docCloseShift.DocCloseShiftUtilizationProducts == null)
                     docCloseShift.DocCloseShiftUtilizationProducts = new List<DocCloseShiftUtilizationProducts>();
                 

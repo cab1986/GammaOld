@@ -28,15 +28,20 @@ namespace Gamma.ViewModels
 
         private int PlaceID { get; set; }
 
-        private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct)
+        private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct, Guid? docWithdrawalId, int index)
         {
-            var newSpoolRemainders = new List<SpoolRemainder>();
-            newSpoolRemainders.AddRange(SpoolRemainders);
-            var spoolRemainder = new SpoolRemainder(date, productId, isSourceProduct);
-            spoolRemainder.Weight = spoolRemainder.MaxWeight;
-            spoolRemainder.Index = SpoolRemainders.Count;
-            newSpoolRemainders.Add(spoolRemainder);
-            SpoolRemainders = newSpoolRemainders;
+            if (!SpoolRemainders.Any(s => s.ProductID == productId && s.Index == index))
+            {
+                var newSpoolRemainders = new List<SpoolRemainder>();
+                newSpoolRemainders.AddRange(SpoolRemainders.Where(s => s.Index != index));// не копируем предыдущий сохраненный тамбур на этом раскате
+                var spoolRemainder = new SpoolRemainder(date, productId, isSourceProduct);
+                spoolRemainder.Weight = spoolRemainder.MaxWeight;
+                spoolRemainder.Index = index;
+                spoolRemainder.DocWithdrawalId = docWithdrawalId;
+
+                newSpoolRemainders.Add(spoolRemainder);
+                SpoolRemainders = newSpoolRemainders;
+            }
         }
 
         //<Summary>
@@ -54,11 +59,12 @@ namespace Gamma.ViewModels
             {
                 Weight = (int)remainder.Quantity,
                 IsReadOnly = IsConfirmed || (remainder.DocWithdrawalID != null && !DB.AllowEditDoc((Guid)remainder.DocWithdrawalID)),
-                Index = SpoolRemainders.Count,
+                
                 DocWithdrawalId = remainder.DocWithdrawalID
             }))
             {
                 if (spoolRemainder.MaxWeight < spoolRemainder.Weight) spoolRemainder.MaxWeight = spoolRemainder.Weight;
+                spoolRemainder.Index = SpoolRemainders.Count + 1;
                 var newSpoolRemainders = new List<SpoolRemainder>(SpoolRemainders);
                 newSpoolRemainders.Add(spoolRemainder);
                 SpoolRemainders = newSpoolRemainders;
@@ -76,6 +82,8 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 //d.Products.ProductKindID == 0 - мне надо удалить остатки на раскате, по другому никак не определить именно тамбура на раскате, так как для конвертингов остатки на раскате - это полуфабрикат переходящий, а для БДМ - это выработка переходящая.Поэтому ни IsSourceProduct, ни RemainderTypeID не подходит
+                //удаляем списание, так как удаляем запись в остатках
+                gammaBase.DocWithdrawalProducts.RemoveRange(gammaBase.DocWithdrawalProducts.Where(d => gammaBase.DocCloseShiftRemainders.Any(r => r.DocWithdrawalID == d.DocID && r.ProductID == d.ProductID && r.DocID == itemID && (r.Products.ProductKindID == 0))));
                 gammaBase.DocCloseShiftRemainders.RemoveRange(gammaBase.DocCloseShiftRemainders.Where(d => d.DocID == itemID && (d.Products.ProductKindID == 0)));
                 //gammaBase.SaveChanges();
                 var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
@@ -92,7 +100,7 @@ namespace Gamma.ViewModels
                             DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                             ProductID = remainder.ProductID,
                             IsSourceProduct = remainder.IsSourceProduct,
-                            DocWithdrawalID = remainder.DocWithdrawalId
+                            //DocWithdrawalID = remainder.DocWithdrawalId
                         };
                         gammaBase.DocCloseShiftRemainders.Add(docRemainder);
                     //}
@@ -101,13 +109,14 @@ namespace Gamma.ViewModels
                     if (remainder.IsSourceProduct )// Чтобы в любом случае закрылась строка списания, пусть и с 0 расходом тамбура на раскате.&& (remainder.MaxWeight - remainder.Weight) != 0)
                     {
                         DocWithdrawalProducts docWithdrawalProduct;
-                        if (remainder.DocWithdrawalId != null)
-                        {
-                            docWithdrawalProduct =
-                                gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal.Docs)
-                                    .First(d => d.DocID == remainder.DocWithdrawalId);
-                        }
-                        else
+                        //закоментировал, так как выше мы удаляем списание, то в каждом случае надо создать новое
+                        //if (remainder.DocWithdrawalId != null)
+                        //{
+                        //    docWithdrawalProduct =
+                        //        gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal.Docs)
+                        //            .First(d => d.DocID == remainder.DocWithdrawalId);
+                        //}
+                        //else
                         {
                             docWithdrawalProduct =
                                 gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
@@ -176,26 +185,33 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var date = DB.CurrentDateTime;
-                ClearGrid();
+                //ClearGrid();
                 var sourceSpools = gammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == PlaceID);
-                if (sourceSpools == null) return;
-                if (sourceSpools.Unwinder1Spool != null)
+                if (sourceSpools == null)
                 {
-                    AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date, true);
+                    ClearGrid();
                 }
-                if (sourceSpools.Unwinder2Spool != null)
+                else
                 {
-                    AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date, true);
+                    //var spoolWithdrawals = SpoolRemainders.Where(s => s.DocWithdrawalId != null);
+                    if (sourceSpools.Unwinder1Spool != null)
+                    {
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder1Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),1);
+                    }
+                    if (sourceSpools.Unwinder2Spool != null)
+                    {
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder2Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),2);
+                    }
+                    if (sourceSpools.Unwinder3Spool != null)
+                    {
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder3Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),3);
+                    }
+                    if (sourceSpools.Unwinder4Spool != null)
+                    {
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder4Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder4Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),4);
+                    }
+                    IsChanged = true;
                 }
-                if (sourceSpools.Unwinder3Spool != null)
-                {
-                    AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, true);
-                }
-                if (sourceSpools.Unwinder4Spool != null)
-                {
-                    AddSpoolRemainder((Guid)sourceSpools.Unwinder4Spool, date, true);
-                }
-                IsChanged = true;
             }
         }
 

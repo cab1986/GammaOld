@@ -138,6 +138,27 @@ namespace Gamma.ViewModels
                 {
                     waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
                 }
+                //Получение остатков
+                BeginProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
+                   //.Include(dr => dr.DocCloseShifts)
+                   .Where(d => d.DocID == docId && (d.RemainderTypes.RemainderTypeID == 1 || d.RemainderTypes.RemainderTypeID == 3))
+                   .Select(d => new DocCloseShiftRemainder()
+                   {
+                       ProductID = (Guid)d.ProductID,
+                       StateID = d.StateID,
+                       Quantity = d.Quantity,
+                       RemainderTypeID = d.RemainderTypeID
+                   }));
+                EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
+                    //.Include(dr => dr.DocCloseShifts)
+                    .Where(d => d.DocID == docId && d.RemainderTypes.RemainderTypeID == 2)
+                    .Select(d => new DocCloseShiftRemainder()
+                    {
+                        ProductID = (Guid)d.ProductID,
+                        StateID = d.StateID,
+                        Quantity = d.Quantity,
+                        RemainderTypeID = d.RemainderTypeID
+                    }));
             }
         }
 
@@ -289,6 +310,23 @@ namespace Gamma.ViewModels
                     }
                 }
                 //Wastes = wastes;
+
+                var PreviousDocCloseShift = gammaBase.Docs
+                    .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
+                    .OrderByDescending(d => d.Date)
+                    .FirstOrDefault();
+                BeginProducts = new ObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
+                    .Where(d => (d.RemainderTypeID == 2 || (d.RemainderTypeID ?? 0) == 0) && d.DocCloseShifts.DocID == PreviousDocCloseShift.DocID)
+                    .Select(d => new DocCloseShiftRemainder
+                    {
+                        ProductID = (Guid)d.ProductID,
+                        StateID = d.StateID,
+                        Quantity = d.Quantity,
+                        RemainderTypeID = d.RemainderTypeID == 0 || d.RemainderTypeID == null ? 3 : 1
+                    }));
+
+                FillEndProducts();
+
                 IsChanged = true;
             }
         }
@@ -327,43 +365,40 @@ namespace Gamma.ViewModels
             return dict;
         }
 
-        /*public DelegateCommand AddWithdrawalMaterialCommand { get; private set; }
-        public DelegateCommand DeleteWithdrawalMaterialCommand { get; private set; }
-
-        private void DeleteWithdrawalMaterial()
+        private void FillEndProducts()
         {
-            if (SelectedWithdrawalMaterial == null) return;
-            WithdrawalMaterials.Remove(SelectedWithdrawalMaterial);
-        }
-
-        public WithdrawalMaterial SelectedWithdrawalMaterial { get; set; }
-        
-        private void AddWithdrawalMaterial()
-        {
-            Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
-            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
-        }
-
-        private void SetMaterialNomenclature(Nomenclature1CMessage msg)
-        {
-            Messenger.Default.Unregister<Nomenclature1CMessage>(this);
             using (var gammaBase = DB.GammaDb)
             {
-                var nomenclatureInfo =
-                gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
-                    .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
-                WithdrawalMaterials.Add(new WithdrawalMaterial
+                EndProducts?.Clear();
+
+                EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
+                    .Where(d => d.PlaceID == PlaceID && WorkSession.BranchID != 2).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
+                    , (d, p) => new DocCloseShiftRemainder
+                    {
+                        ProductID = (Guid)d.ProductID,
+                        StateID = (p.StateID == null ? 0 : p.StateID),
+                        Quantity = d.Products.ProductKindID == (byte)ProductKind.ProductSpool ? d.Products.ProductSpools.DecimalWeight * 1000 :
+                            d.Products.ProductKindID == (byte)ProductKind.ProductGroupPack ? d.Products.ProductGroupPacks.Weight ?? 0 * 1000 :
+                            d.Products.ProductItems.Sum(pi => pi.Quantity) ?? 0 ,
+                        RemainderTypeID = 2
+                    }));
+
+                
+                //убираем из остатков переходящую следующей смене палету в процессе производства
+                var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
+                if (doc != null)
                 {
-                    NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
-                    QuantityIsReadOnly = false,
-                    Quantity = 0,
-                    MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
-                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid()
-                });
+                    var endProductsProductIDs = EndProducts.Select(d => (Guid?)d.ProductID).ToList();
+                    var ProductRemainders = gammaBase.DocCloseShiftRemainders.Where(r => (r.RemainderTypeID ?? 0) == 0 && r.DocID == doc.DocID && endProductsProductIDs.Contains(r.ProductID));
+                    foreach (var Product in ProductRemainders)
+                    {
+                        var removeProduct = EndProducts.FirstOrDefault(d => d.ProductID == Product.ProductID);
+                        if (removeProduct != null)
+                            EndProducts.Remove(removeProduct);
+                    }
+                }
             }
-            
-        }*/
+        }
 
         private Guid DocId { get; set; }
         private int PlaceID { get; set; }
@@ -453,6 +488,29 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("Pallets");
             }
         }
+
+        private ObservableCollection<DocCloseShiftRemainder> _beginProducts = new ObservableCollection<DocCloseShiftRemainder>();
+        public ObservableCollection<DocCloseShiftRemainder> BeginProducts
+        {
+            get { return _beginProducts; }
+            set
+            {
+                _beginProducts = value;
+                RaisePropertiesChanged("BeginProducts");
+            }
+        }
+
+        private ObservableCollection<DocCloseShiftRemainder> _endProducts = new ObservableCollection<DocCloseShiftRemainder>();
+        public ObservableCollection<DocCloseShiftRemainder> EndProducts
+        {
+            get { return _endProducts; }
+            set
+            {
+                _endProducts = value;
+                RaisePropertiesChanged("EndProducts");
+            }
+        }
+
         /// <summary>
         /// Сохранение в БД
         /// </summary>
@@ -473,6 +531,8 @@ namespace Gamma.ViewModels
                     docCloseShift.DocCloseShiftSamples = new List<DocCloseShiftSamples>();
                 if (docCloseShift.DocCloseShiftWastes == null)
                     docCloseShift.DocCloseShiftWastes = new List<DocCloseShiftWastes>();
+                if (docCloseShift.DocCloseShiftRemainders == null)
+                    docCloseShift.DocCloseShiftRemainders = new List<DocCloseShiftRemainders>();
                 if (docCloseShift.DocCloseShiftNomenclatureRests == null)
                     docCloseShift.DocCloseShiftNomenclatureRests = new List<DocCloseShiftNomenclatureRests>();
                 /*if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
@@ -512,6 +572,36 @@ namespace Gamma.ViewModels
                             C1CMeasureUnitID = sample.MeasureUnitId
                         });
                     }
+
+                gammaBase.DocCloseShiftRemainders.RemoveRange(docCloseShift.DocCloseShiftRemainders.Where(p => p.RemainderTypeID != null));//(p => (p.RemainderTypeID ?? 0) != 0));
+                if (BeginProducts != null)
+                    foreach (var Product in BeginProducts)
+                    {
+                        docCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
+                        {
+                            DocID = docId,
+                            ProductID = Product.ProductID,
+                            DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
+                            RemainderTypeID = Product.RemainderTypeID,
+                            Quantity = Product.Quantity,
+                            StateID = Product.StateID
+                        });
+                    }
+                if (EndProducts != null)
+                    foreach (var Product in EndProducts)
+                    {
+                        if (docCloseShift.DocCloseShiftRemainders.Where(p => (p.RemainderTypeID ?? 0) == 0 && p.ProductID == Product.ProductID).Count() == 0)
+                            docCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
+                            {
+                                DocID = docId,
+                                ProductID = Product.ProductID,
+                                DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
+                                RemainderTypeID = Product.RemainderTypeID,
+                                Quantity = Product.Quantity,
+                                StateID = Product.StateID
+                            });
+                    }
+
                 gammaBase.DocCloseShiftNomenclatureRests.RemoveRange(docCloseShift.DocCloseShiftNomenclatureRests);
                 if (NomenclatureRests != null)
                     foreach (var rest in NomenclatureRests)
