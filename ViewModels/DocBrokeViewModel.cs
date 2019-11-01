@@ -362,21 +362,24 @@ namespace Gamma.ViewModels
 
         private void RefreshRejectionReasonsList()
         {
-            if (BrokeProducts?.Count > 0 && (RejectionReasonsList == null || RejectionReasonsList?.Count == 0))
+            if (BrokeProducts?.Count > 0)
             {
                 if (BrokeProducts.Select(p => p.ProductKind).Distinct().Count() == 1 ||
                     (BrokeProducts.Select(p => p.ProductKind).Distinct().Count() == 2 && BrokeProducts.Any(p => p.ProductKind == ProductKind.ProductPallet) && BrokeProducts.Any(p => p.ProductKind == ProductKind.ProductPalletR)))
                 {
-                    var productKind = (int)BrokeProducts.Select(p => p.ProductKind).FirstOrDefault();
-                    RejectionReasonsList = new List<RejectionReason>(GammaBase.C1CRejectionReasons
-                        .Where(r => (!r.IsFolder ?? true) && (!r.IsMarked ?? true) && (r.ParentID == null || (r.ParentID != null
-                        && GammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == productKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))))
-                        .Select(r => new RejectionReason
-                        {
-                            RejectionReasonID = r.C1CRejectionReasonID,
-                            Description = r.Description,
-                            FullDescription = r.FullDescription
-                        }).OrderBy(r => r.Description));
+                    if ((RejectionReasonsList == null || RejectionReasonsList?.Count == 0))
+                    {
+                        var productKind = (int)BrokeProducts.Select(p => p.ProductKind).FirstOrDefault();
+                        RejectionReasonsList = new List<RejectionReason>(GammaBase.C1CRejectionReasons
+                            .Where(r => (!r.IsFolder ?? true) && (!r.IsMarked ?? true) && (r.ParentID == null || (r.ParentID != null
+                            && GammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == productKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))))
+                            .Select(r => new RejectionReason
+                            {
+                                RejectionReasonID = r.C1CRejectionReasonID,
+                                Description = r.Description,
+                                FullDescription = r.FullDescription
+                            }).OrderBy(r => r.Description));
+                    }
                 }
                 else
                 {

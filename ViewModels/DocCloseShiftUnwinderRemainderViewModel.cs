@@ -77,7 +77,7 @@ namespace Gamma.ViewModels
         /// <param name="itemID">ID документа закрытия смены</param>
         public override bool SaveToModel(Guid itemID)
         {
-            if (!DB.HaveWriteAccess("DocCloseShiftRemainders")) return true;
+            if (IsReadOnly) return true;
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {
