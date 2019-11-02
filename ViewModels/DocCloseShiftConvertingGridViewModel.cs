@@ -166,7 +166,7 @@ namespace Gamma.ViewModels
 
         private bool IsConfirmed { get; set; }
         private List<Guid> DocCloseDocIds { get; set; }
-        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || !DB.HaveWriteAccess("DocCloseShiftSamples") || IsConfirmed;
+        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || !DB.HaveWriteAccess("DocCloseShiftSamples");// || IsConfirmed;
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
 
@@ -372,18 +372,22 @@ namespace Gamma.ViewModels
                 EndProducts?.Clear();
 
                 EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                    .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
+                    .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsInfo, d => d.ProductID, p => p.ProductID
                     , (d, p) => new DocCloseShiftRemainder
                     {
                         ProductID = (Guid)d.ProductID,
                         StateID = (p.StateID == null ? 0 : p.StateID),
-                        Quantity = d.Products.ProductKindID == (byte)ProductKind.ProductSpool ? d.Products.ProductSpools.DecimalWeight * 1000 :
-                            d.Products.ProductKindID == (byte)ProductKind.ProductGroupPack ? d.Products.ProductGroupPacks.Weight ?? 0 * 1000 :
-                            d.Products.ProductItems.Sum(pi => pi.Quantity) ?? 0 ,
-                        RemainderTypeID = 2
+                        Quantity = p.Quantity ?? 0 ,
+                        RemainderTypeID = 2,
+                        ProductKindID = p.ProductKindID
                     }));
 
-                
+                foreach (var endProduct in EndProducts)
+                {
+                    endProduct.Quantity = endProduct.ProductKindID == 0 ? endProduct.Quantity * 1000 :
+                            endProduct.ProductKindID == 2 ? endProduct.Quantity * 1000 :
+                            endProduct.Quantity;
+                }
                 //убираем из остатков переходящую следующей смене палету в процессе производства
                 var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
                 if (doc != null)

@@ -19,7 +19,7 @@ namespace Gamma.Models
         public string Number { get; set; }
         public string Nomenclature { get; set; }
         public decimal Quantity { get; set; }
-
+        public byte? ProductKindID { get; set; }
         private int? _remainderTypeID;
         public int? RemainderTypeID
         {

@@ -323,6 +323,6 @@ namespace Gamma.ViewModels
             return true;
         }
 
-        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftRemainders") && !WorkSession.DBAdmin || IsConfirmed;
+        public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftRemainders") && !WorkSession.DBAdmin;// || IsConfirmed;
     }
 }

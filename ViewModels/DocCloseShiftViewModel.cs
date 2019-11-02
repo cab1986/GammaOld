@@ -161,12 +161,17 @@ namespace Gamma.ViewModels
                 GammaBase.Docs.Add(Doc);
             }
             var utilizationProductsBeforeSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
+            var isConfirmedPrev = Doc.IsConfirmed;
             Doc.IsConfirmed = IsConfirmed;
             GammaBase.SaveChanges();
+            if (IsNewDoc || !isConfirmedPrev || !IsConfirmed)
+            {
+                CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
+                CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
+                CurrentViewModelGrid?.SaveToModel(Doc.DocID);
+            }
             IsNewDoc = false;
-            CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
-            CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);
-            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
+
             /*
             // удаляем с остатков или добавляем на остатки по утилизации
             var utilizationProductsAfterSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
