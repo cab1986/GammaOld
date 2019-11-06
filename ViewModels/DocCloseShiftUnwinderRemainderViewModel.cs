@@ -170,11 +170,19 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Очистка тамбуров с раската
         /// </summary>
-        public void ClearGrid()
+         public void ClearGrid()
+        {
+            ClearGridWithIndex(1);
+            ClearGridWithIndex(2);
+            ClearGridWithIndex(3);
+            ClearGridWithIndex(4);
+        }
+
+        public void ClearGridWithIndex(byte index)
         {
             var newSpoolRemainders = new List<SpoolRemainder>();
-            SpoolRemainders = newSpoolRemainders;
-            //SpoolRemainders?.Clear();
+            newSpoolRemainders.AddRange(SpoolRemainders.Where(s => s.Index != index));// не копируем предыдущий сохраненный тамбур на этом раскате
+            SpoolRemainders = newSpoolRemainders;//SpoolRemainders?.Clear();
         }
         
         /// <summary>
@@ -189,26 +197,42 @@ namespace Gamma.ViewModels
                 var sourceSpools = gammaBase.SourceSpools.FirstOrDefault(ss => ss.PlaceID == PlaceID);
                 if (sourceSpools == null)
                 {
-                    ClearGrid();
+                    //ClearGrid();
                 }
                 else
                 {
-                    //var spoolWithdrawals = SpoolRemainders.Where(s => s.DocWithdrawalId != null);
+                    var spoolWithdrawals = SpoolRemainders.Where(s => s.DocWithdrawalId != null);
                     if (sourceSpools.Unwinder1Spool != null)
                     {
-                        AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder1Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),1);
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder1Spool, date, true, spoolWithdrawals.Where(s => s.ProductID == sourceSpools.Unwinder1Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),1);
                     }
                     if (sourceSpools.Unwinder2Spool != null)
                     {
-                        AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder2Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),2);
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder2Spool, date, true, spoolWithdrawals.Where(s => s.ProductID == sourceSpools.Unwinder2Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),2);
                     }
                     if (sourceSpools.Unwinder3Spool != null)
                     {
-                        AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder3Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),3);
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder3Spool, date, true, spoolWithdrawals.Where(s => s.ProductID == sourceSpools.Unwinder3Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),3);
                     }
                     if (sourceSpools.Unwinder4Spool != null)
                     {
-                        AddSpoolRemainder((Guid)sourceSpools.Unwinder4Spool, date, true, SpoolRemainders.Where(s => s.ProductID == sourceSpools.Unwinder4Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),4);
+                        AddSpoolRemainder((Guid)sourceSpools.Unwinder4Spool, date, true, spoolWithdrawals.Where(s => s.ProductID == sourceSpools.Unwinder4Spool && s.DocWithdrawalId != null).Select(s => s.DocWithdrawalId).FirstOrDefault(),4);
+                    }
+                    if (sourceSpools.Unwinder1Spool == null)
+                    {
+                        ClearGridWithIndex(1);
+                    }
+                    if (sourceSpools.Unwinder2Spool == null)
+                    {
+                        ClearGridWithIndex(2);
+                    }
+                    if (sourceSpools.Unwinder3Spool == null)
+                    {
+                        ClearGridWithIndex(3);
+                    }
+                    if (sourceSpools.Unwinder4Spool == null)
+                    {
+                        ClearGridWithIndex(4);
                     }
                     IsChanged = true;
                 }

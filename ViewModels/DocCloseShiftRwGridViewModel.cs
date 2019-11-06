@@ -17,7 +17,7 @@ namespace Gamma.ViewModels
 {
     class DocCloseShiftRwGridViewModel: SaveImplementedViewModel, IFillClearGrid, IBarImplemented
     {
-        public DocCloseShiftRwGridViewModel(OpenDocCloseShiftMessage msg, DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder)
+        public DocCloseShiftRwGridViewModel(OpenDocCloseShiftMessage msg)
         {
             if (msg.DocID == null)
             {
@@ -51,7 +51,6 @@ namespace Gamma.ViewModels
                 ShiftID = (byte)DocCloseShift.ShiftID;
                 PlaceID = (byte)DocCloseShift.PlaceID;
             }
-            CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
             ShowSpoolCommand = new DelegateCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedSpool != null);
@@ -69,14 +68,9 @@ namespace Gamma.ViewModels
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         private List<Guid> DocCloseDocIds { get; set; }
 
-        private DocCloseShiftUnwinderRemainderViewModel CurrentViewModelUnwinderRemainder { get; set; }
-
         public void FillGrid()
         {
             UIServices.SetBusyState();
-            var dlgResult = MessageBox.Show("Обновить на текущий момент тамбура на раскатах?", "Тамбур на раскате", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (dlgResult == MessageBoxResult.Yes)
-                CurrentViewModelUnwinderRemainder?.FillGrid();
             ClearGrid();
             DocCloseDocIds = GammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID &&

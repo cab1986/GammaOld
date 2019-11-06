@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Models;
+using System.Data.Entity.SqlServer;
+using System.Windows;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -60,7 +62,7 @@ namespace Gamma.ViewModels
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
                     IsVisibilityUnwinderRemainder = true;
                     var rwUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
-                    CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg, rwUnwinderRemainder);
+                    CurrentViewModelGrid = new DocCloseShiftRwGridViewModel(msg);
                     break;
                 case (short)PlaceGroup.Convertings:
                     CurrentViewModelUnwinderRemainder = msg.DocID == null ? new DocCloseShiftUnwinderRemainderViewModel(PlaceID) : new DocCloseShiftUnwinderRemainderViewModel((Guid)msg.DocID);
@@ -69,8 +71,8 @@ namespace Gamma.ViewModels
                     //IsVisibilityRemainder = true;
                     var convertingrUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
-                        ? new DocCloseShiftConvertingGridViewModel(convertingrUnwinderRemainder)
-                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, convertingrUnwinderRemainder);
+                        ? new DocCloseShiftConvertingGridViewModel()
+                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
                     break;
                 case (short)PlaceGroup.Baler:
                     CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);
@@ -80,6 +82,11 @@ namespace Gamma.ViewModels
                     break;
             }
             IsVisibilityRemainder = place?.IsEnabledRemainderInDocCloseShift ?? false;
+            var unwinderRemainder = CurrentViewModelUnwinderRemainder as IFillClearGrid;
+            if (unwinderRemainder != null)
+            {
+                FillUnwinderRemainderCommand = new DelegateCommand(unwinderRemainder.FillGrid, () => !IsConfirmed && CanEditable());
+            }
             var grid = CurrentViewModelGrid as IFillClearGrid;
             if (grid != null)
             {
@@ -140,6 +147,7 @@ namespace Gamma.ViewModels
         public SaveImplementedViewModel CurrentViewModelRemainder { get; set; }
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
+        public DelegateCommand FillUnwinderRemainderCommand { get; set; }
 
         public override bool SaveToModel()
         {
@@ -171,7 +179,17 @@ namespace Gamma.ViewModels
                 CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             }
             IsNewDoc = false;
+            var now = (DateTime)GammaBase.LocalSettings.Select(s => SqlFunctions.GetDate()).FirstOrDefault();
+            if (now != null && (now.Hour == 7 || now.Hour == 8 || now.Hour == 19 || now.Hour == 20 ))
+            {
+                var ur = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
+                if (GammaBase.SourceSpools.Any(ss => ss.PlaceID == PlaceID && (ss.Unwinder1Spool != null || ss.Unwinder2Spool != null || ss.Unwinder3Spool != null || ss.Unwinder4Spool != null)) && (ur == null || ur.SpoolRemainders == null || ur.SpoolRemainders?.Count() == 0))
+                {
+                    MessageBox.Show("Внимание! Вы не забыли обновить остатки на раскатах (кнопка Обновить во вкладке Остатки на раскатах)?",
+                        "Остатки на раскатах", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                }
+            }
             /*
             // удаляем с остатков или добавляем на остатки по утилизации
             var utilizationProductsAfterSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();

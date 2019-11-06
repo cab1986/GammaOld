@@ -28,20 +28,15 @@ namespace Gamma.ViewModels
             DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
             */
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
-        }
-
-        public DocCloseShiftConvertingGridViewModel(DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
-        {
             PlaceID = WorkSession.PlaceID;
             ShiftID = WorkSession.ShiftID;
             CloseDate = DB.CurrentDateTime;
-            CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
 
-        public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel currentViewModelUnwinderRemainder) : this()
+        public DocCloseShiftConvertingGridViewModel(Guid docId) : this()
         {
             using (var gammaBase = DB.GammaDb)
             {
@@ -52,7 +47,6 @@ namespace Gamma.ViewModels
                 CloseDate = doc.Date;
                 IsConfirmed = doc.IsConfirmed;
                 DocId = docId;
-                CurrentViewModelUnwinderRemainder = currentViewModelUnwinderRemainder;
                 IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
                 IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
@@ -196,9 +190,6 @@ namespace Gamma.ViewModels
         public void FillGrid()
         {
             UIServices.SetBusyState();
-            var dlgResult = MessageBox.Show("Обновить на текущий момент тамбура на раскатах?", "Тамбур на раскате", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (dlgResult == MessageBoxResult.Yes)
-                CurrentViewModelUnwinderRemainder?.FillGrid();
             //при заполнении рапорта очищаем только паллеты и документы
             //ClearGrid();
             Pallets?.Clear();
@@ -408,8 +399,7 @@ namespace Gamma.ViewModels
         private int PlaceID { get; set; }
         private int ShiftID { get; set; }
         private DateTime CloseDate { get; set; }
-        private DocCloseShiftUnwinderRemainderViewModel CurrentViewModelUnwinderRemainder { get; set; }
-
+        
         public bool IsWithdrawalMaterial { get; set; }
         public bool IsEnabledSamples { get; set; }
 
