@@ -1170,5 +1170,10 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterialsAtEnd_Result>("FillDocCloseShiftMaterialsAtEnd", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
+    
+        public virtual int CheckConnection()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CheckConnection");
+        }
     }
 }

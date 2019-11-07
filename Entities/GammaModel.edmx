@@ -1186,6 +1186,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           </Key>
           <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="IsDelWithdrawalAfterDelProducts" Type="bit" />
         </EntityType>
         <EntityType Name="ProductPallets">
           <Key>
@@ -4610,6 +4611,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="AddedProductId" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="BaseProductId" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="CheckConnection" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="CheckInstallProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -8379,6 +8381,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Persons" EntitySet="Persons" />
             <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
           </AssociationSet>
+          <FunctionImport Name="CheckConnection" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -9504,6 +9507,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.ProductKindRejectionReasons" FromRole="ProductKinds" ToRole="C1CRejectionReasons" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_Products_ProductKinds" FromRole="ProductKinds" ToRole="Products" />
+          <Property Name="IsDelWithdrawalAfterDelProducts" Type="Boolean" />
         </EntityType>
         <Association Name="ProductKindRejectionReasons">
           <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="*" />
@@ -14094,6 +14098,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="ProductKinds">
             <EntityTypeMapping TypeName="GammaModel.ProductKinds">
               <MappingFragment StoreEntitySet="ProductKinds">
+                <ScalarProperty Name="IsDelWithdrawalAfterDelProducts" ColumnName="IsDelWithdrawalAfterDelProducts" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
               </MappingFragment>
@@ -15362,6 +15367,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CheckConnection" FunctionName="GammaDBModel.CheckConnection" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

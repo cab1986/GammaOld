@@ -30,6 +30,24 @@ namespace Gamma
         {
             get
             {
+                try
+                {
+                    var context = GammaDbWithNoCheckConnection;
+                    context.CheckConnection();
+                    return context;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException.Message}");
+                    return null as GammaEntities;
+                }
+            }
+        }
+
+        public static GammaEntities GammaDbWithNoCheckConnection
+        {
+            get
+            {
                 var context = new GammaEntities(GammaSettings.ConnectionString);
                 context.Database.CommandTimeout = 300;
                 return context;
@@ -43,12 +61,19 @@ namespace Gamma
 //            GammaBase.Database.CommandTimeout = 300;      
             try
             {
-//                GammaBase.Database.Connection.Open();
-                WorkSession.UserID = CurrentUserID;
-                return true;
+                //                GammaBase.Database.Connection.Open();
+                var currentUser = CurrentUserID;
+                if (currentUser != Guid.Empty)
+                {
+                    WorkSession.UserID = CurrentUserID;
+                    return true;
+                }
+                else
+                    return false;
             }
             catch(Exception e)
             {
+                var ee = e.GetType();
                 MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException}");
                 return false;
             }
@@ -128,7 +153,7 @@ namespace Gamma
 
         public static DateTime CurrentDateTime => ((IObjectContextAdapter)GammaDb).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
 
-        public static Guid CurrentUserID => GammaDb.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
+        public static Guid CurrentUserID => GammaDb == null ? Guid.Empty : GammaDb.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
 
         public static int GetLastFormat(int placeID, GammaEntities gammaBase = null)
         {
@@ -271,7 +296,7 @@ namespace Gamma
         }
         public static bool HaveWriteAccess(string tableName, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase??GammaDb;
+            gammaBase = gammaBase?? GammaDbWithNoCheckConnection;
             if (WorkSession.DBAdmin) return true;
             var permit = GetCachedPermission(tableName);
             if (permit != null) return permit == 2;
