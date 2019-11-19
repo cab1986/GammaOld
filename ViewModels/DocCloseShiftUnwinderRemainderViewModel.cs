@@ -257,8 +257,8 @@ namespace Gamma.ViewModels
 
         private void ShowProduct(int i)
         {
-            if (SpoolRemainders[i].ProductID == null) return;
-            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders[i].ProductID);
+            if (SpoolRemainders.Where(s => s.Index == i).FirstOrDefault().ProductID == null) return;
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, (Guid)SpoolRemainders.Where(s => s.Index == i).FirstOrDefault().ProductID);
         }
 
         private bool IsConfirmed { get; set; }
