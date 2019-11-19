@@ -227,130 +227,94 @@ namespace Gamma.ViewModels
             }
         }
 
+        private bool changeSpoolDialogResult (Guid productID, byte unum)
+        {
+            var ret = false;
+            if (CheckSpoolIsUsed(productID))
+            {
+                var dialog = new ChangeSpoolDialog((Guid)productID);
+                dialog.ShowDialog();
+                if (dialog.DialogResult == true)
+                {
+                    switch (dialog.ChangeState)
+                    {
+                        case SpoolChangeState.WithBroke:
+                            BrokeProduct((Guid)productID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
+                            break;
+                        case SpoolChangeState.WithRemainder:
+                            CreateRemainderSpool((Guid)productID, dialog.Weight);
+                            break;
+                        case SpoolChangeState.FullyConverted:
+                            CompleteWithdraw((Guid)productID);
+                            break;
+                    }
+                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка ОК, выбор " + dialog.ChangeState.ToString() + " (" + dialog.Weight.ToString() + ")" });
+                    ret = true;
+                }
+                else
+                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка Отмена, тамбур не снят." });
+            }
+            else
+            {
+                GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Продукция не была произведена, снят без списания." });
+                ret = true;
+            }
+            return ret;
+        }
+
         private bool DeleteSpool(byte unum)
         {
+            bool ret = false;
             switch (unum)
             {
                 case 1:
                    if (Unwinder1ProductID == null) return true;
-                   if (CheckSpoolIsUsed(Unwinder1ProductID))
+                    if (changeSpoolDialogResult((Guid)Unwinder1ProductID, 1))
                     {
-                        var dialog = new ChangeSpoolDialog((Guid)Unwinder1ProductID);
-                        dialog.ShowDialog();
-                        if (dialog.DialogResult == true)
-                        {
-                            switch (dialog.ChangeState)
-                            {
-                                case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder1ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
-                                    break;
-                                case SpoolChangeState.WithRemainder:
-                                    CreateRemainderSpool((Guid)Unwinder1ProductID, dialog.Weight);
-                                    break;
-                                case SpoolChangeState.FullyConverted:
-                                    CompleteWithdraw((Guid) Unwinder1ProductID);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        ret = true;
+                        Unwinder1ProductID = null;
+                        Unwinder1Active = false;
                     }
-                    Unwinder1ProductID = null;
-                    Unwinder1Active = false;
+                    else
+                        ret = false;
                     break;
                 case 2:
                     if (Unwinder2ProductID == null) return true;
-                    if (CheckSpoolIsUsed(Unwinder2ProductID))
+                    if (changeSpoolDialogResult((Guid)Unwinder2ProductID, 2))
                     {
-                        var dialog = new ChangeSpoolDialog((Guid)Unwinder2ProductID);
-                        dialog.ShowDialog();
-                        if (dialog.DialogResult == true)
-                        {
-                            switch (dialog.ChangeState)
-                            {
-                                case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder2ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
-                                    break;
-                                case SpoolChangeState.WithRemainder:
-                                    CreateRemainderSpool((Guid)Unwinder2ProductID, dialog.Weight);
-                                    break;
-                                case SpoolChangeState.FullyConverted:
-                                    CompleteWithdraw((Guid)Unwinder2ProductID);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        ret = true;
+                        Unwinder2ProductID = null;
+                        Unwinder2Active = false;
                     }
-                    Unwinder2ProductID = null;
-                    Unwinder2Active = false;
+                    else
+                        ret = false;
                     break;
                 case 3:
                     if (Unwinder3ProductID == null) return true;
-                    if (CheckSpoolIsUsed(Unwinder3ProductID))
+                    if (changeSpoolDialogResult((Guid)Unwinder3ProductID, 3))
                     {
-                        var dialog = new ChangeSpoolDialog((Guid)Unwinder3ProductID);
-                        dialog.ShowDialog();
-                        if (dialog.DialogResult == true)
-                        {
-                            switch (dialog.ChangeState)
-                            {
-                                case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder3ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
-                                    break;
-                                case SpoolChangeState.WithRemainder:
-                                    CreateRemainderSpool((Guid)Unwinder3ProductID, dialog.Weight);
-                                    break;
-                                case SpoolChangeState.FullyConverted:
-                                    CompleteWithdraw((Guid)Unwinder3ProductID);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        ret = true;
+                        Unwinder3ProductID = null;
+                        Unwinder3Active = false;
                     }
-                    Unwinder3ProductID = null;
-                    Unwinder3Active = false;
+                    else
+                        ret = false;
                     break;
                 case 4:
                     if (Unwinder4ProductID == null) return true;
-                    if (CheckSpoolIsUsed(Unwinder4ProductID))
+                    if (changeSpoolDialogResult((Guid)Unwinder4ProductID, 4))
                     {
-                        var dialog = new ChangeSpoolDialog((Guid)Unwinder4ProductID);
-                        dialog.ShowDialog();
-                        if (dialog.DialogResult == true)
-                        {
-                            switch (dialog.ChangeState)
-                            {
-                                case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder4ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
-                                    break;
-                                case SpoolChangeState.WithRemainder:
-                                    CreateRemainderSpool((Guid)Unwinder4ProductID, dialog.Weight);
-                                    break;
-                                case SpoolChangeState.FullyConverted:
-                                    CompleteWithdraw((Guid)Unwinder4ProductID);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        ret = true;
+                        Unwinder4ProductID = null;
+                        Unwinder4Active = false;
                     }
-                    Unwinder4ProductID = null;
-                    Unwinder4Active = false;
+                    else
+                        ret = false;
                     break;
             }
             GammaBase.SaveChanges();
-            MessageManager.SpoolWithdrawed();
-            return true;
+            if (ret) MessageManager.SpoolWithdrawed();
+            return ret;
         }
 
         private void CompleteWithdraw(Guid productId)

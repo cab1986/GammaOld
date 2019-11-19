@@ -392,6 +392,15 @@
           <Property Name="1CSubdivisionID" Type="uniqueidentifier" />
           <Property Name="LastAvailableJobTime" Type="datetime" />
         </EntityType>
+        <EntityType Name="CriticalLogs">
+          <Key>
+            <PropertyRef Name="LogID" />
+          </Key>
+          <Property Name="LogID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Log" Type="varchar" MaxLength="500" />
+          <Property Name="LogDate" Type="datetime" />
+          <Property Name="LogUserID" Type="varchar" MaxLength="150" />
+        </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -5031,6 +5040,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="BarcodeTypes" EntityType="Self.BarcodeTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BatchProductionTasks" EntityType="Self.BatchProductionTasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CriticalLogs" EntityType="Self.CriticalLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CurrentPlaceUsers" EntityType="Self.CurrentPlaceUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Devices" EntityType="Self.Devices" Schema="dbo" store:Type="Tables" />
@@ -8400,6 +8410,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="PrintName" Mode="In" Type="String" />
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="CriticalLogs" EntityType="GammaModel.CriticalLogs" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -13010,6 +13021,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CriticalLogs">
+          <Key>
+            <PropertyRef Name="LogID" />
+          </Key>
+          <Property Name="LogID" Type="Guid" Nullable="false" />
+          <Property Name="Log" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="LogDate" Type="DateTime" Precision="3" />
+          <Property Name="LogUserID" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -15387,6 +15407,16 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="CheckConnection" FunctionName="GammaDBModel.CheckConnection" />
           <FunctionImportMapping FunctionImportName="CreateDocBrokeWithBrokeDecisionComment" FunctionName="GammaDBModel.CreateDocBrokeWithBrokeDecisionComment" />
+          <EntitySetMapping Name="CriticalLogs">
+            <EntityTypeMapping TypeName="GammaModel.CriticalLogs">
+              <MappingFragment StoreEntitySet="CriticalLogs">
+                <ScalarProperty Name="LogUserID" ColumnName="LogUserID" />
+                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
+                <ScalarProperty Name="Log" ColumnName="Log" />
+                <ScalarProperty Name="LogID" ColumnName="LogID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -153,6 +153,7 @@ namespace Gamma.Entities
         public virtual DbSet<vProductionMaterials> vProductionMaterials { get; set; }
         public virtual DbSet<PlaceWithdrawalMaterialTypes> PlaceWithdrawalMaterialTypes { get; set; }
         public virtual DbSet<DocShipmentOrderPersons> DocShipmentOrderPersons { get; set; }
+        public virtual DbSet<CriticalLogs> CriticalLogs { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
