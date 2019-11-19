@@ -1175,5 +1175,38 @@ namespace Gamma.Entities
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CheckConnection");
         }
+    
+        public virtual int CreateDocBrokeWithBrokeDecisionComment(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> brokeQuantity, Nullable<System.Guid> rejectionReasonID, string comment, string printName, Nullable<int> placeID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var brokeQuantityParameter = brokeQuantity.HasValue ?
+                new ObjectParameter("BrokeQuantity", brokeQuantity) :
+                new ObjectParameter("BrokeQuantity", typeof(decimal));
+    
+            var rejectionReasonIDParameter = rejectionReasonID.HasValue ?
+                new ObjectParameter("RejectionReasonID", rejectionReasonID) :
+                new ObjectParameter("RejectionReasonID", typeof(System.Guid));
+    
+            var commentParameter = comment != null ?
+                new ObjectParameter("Comment", comment) :
+                new ObjectParameter("Comment", typeof(string));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecisionComment", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, commentParameter, printNameParameter, placeIDParameter);
+        }
     }
 }

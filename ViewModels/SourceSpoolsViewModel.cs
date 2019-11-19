@@ -242,7 +242,7 @@ namespace Gamma.ViewModels
                             switch (dialog.ChangeState)
                             {
                                 case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder1ProductID, dialog.Weight, dialog.RejectionReasonID);
+                                    BrokeProduct((Guid)Unwinder1ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
                                     break;
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder1ProductID, dialog.Weight);
@@ -271,7 +271,7 @@ namespace Gamma.ViewModels
                             switch (dialog.ChangeState)
                             {
                                 case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder2ProductID, dialog.Weight, dialog.RejectionReasonID);
+                                    BrokeProduct((Guid)Unwinder2ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
                                     break;
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder2ProductID, dialog.Weight);
@@ -300,7 +300,7 @@ namespace Gamma.ViewModels
                             switch (dialog.ChangeState)
                             {
                                 case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder3ProductID, dialog.Weight, dialog.RejectionReasonID);
+                                    BrokeProduct((Guid)Unwinder3ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
                                     break;
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder3ProductID, dialog.Weight);
@@ -329,7 +329,7 @@ namespace Gamma.ViewModels
                             switch (dialog.ChangeState)
                             {
                                 case SpoolChangeState.WithBroke:
-                                    BrokeProduct((Guid)Unwinder4ProductID, dialog.Weight, dialog.RejectionReasonID);
+                                    BrokeProduct((Guid)Unwinder4ProductID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
                                     break;
                                 case SpoolChangeState.WithRemainder:
                                     CreateRemainderSpool((Guid)Unwinder4ProductID, dialog.Weight);
@@ -396,13 +396,13 @@ namespace Gamma.ViewModels
             }
         }
 
-        private void BrokeProduct(Guid productId, decimal weight, Guid? rejectionReasonId)
+        private void BrokeProduct(Guid productId, decimal weight, Guid? rejectionReasonId, string rejectionReasonComment)
         {
             UIServices.SetBusyState();
             var docID = SqlGuidUtil.NewSequentialid();
             using (var gammaBase = DB.GammaDb)
             {
-                gammaBase.CreateDocBrokeWithBrokeDecision(docID, productId, weight / 1000, rejectionReasonId,
+                gammaBase.CreateDocBrokeWithBrokeDecisionComment(docID, productId, weight / 1000, rejectionReasonId,rejectionReasonComment,
                 WorkSession.PrintName, WorkSession.PlaceID);
             }
             ReportManager.PrintReport("Амбалаж", "Spool", productId);

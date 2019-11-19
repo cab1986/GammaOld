@@ -4641,6 +4641,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
           <Parameter Name="PlaceID" Type="int" Mode="In" />
         </Function>
+        <Function Name="CreateDocBrokeWithBrokeDecisionComment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="BrokeQuantity" Type="decimal" Mode="In" />
+          <Parameter Name="RejectionReasonID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Comment" Type="varchar" Mode="In" />
+          <Parameter Name="PrintName" Type="varchar" Mode="In" />
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+        </Function>
         <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
@@ -8382,6 +8391,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="DocShipmentOrderPersons" EntitySet="DocShipmentOrderPersons" />
           </AssociationSet>
           <FunctionImport Name="CheckConnection" />
+          <FunctionImport Name="CreateDocBrokeWithBrokeDecisionComment">
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+            <Parameter Name="BrokeQuantity" Mode="In" Type="Decimal" />
+            <Parameter Name="RejectionReasonID" Mode="In" Type="Guid" />
+            <Parameter Name="Comment" Mode="In" Type="String" />
+            <Parameter Name="PrintName" Mode="In" Type="String" />
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -15368,6 +15386,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="CheckConnection" FunctionName="GammaDBModel.CheckConnection" />
+          <FunctionImportMapping FunctionImportName="CreateDocBrokeWithBrokeDecisionComment" FunctionName="GammaDBModel.CreateDocBrokeWithBrokeDecisionComment" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
