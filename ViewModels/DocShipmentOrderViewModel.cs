@@ -387,7 +387,7 @@ namespace Gamma.ViewModels
                         outActivePersonIds.Add(((Persons)item).PersonID);
                 //gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => !p.IsInActive && p.Persons.PlaceID != OutPlaceId && p.DocOrderID == DocShipmentOrderID && !outActivePersonIds.Contains(p.PersonID)));
                 gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => !p.IsInActive && p.DocOrderID == DocShipmentOrderID));
-                foreach (var personsItem in GammaBase.Persons.Where(p => outActivePersonIds.Contains(p.PersonID) && (p.PlaceID == OutPlaceId || (OutPlaceId == 104 && p.PlaceID == 28)) && !p.DocShipmentOrderPersons.Any(d => !d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
+                foreach (var personsItem in gammaBase.Persons.Where(p => outActivePersonIds.Contains(p.PersonID)))// && (p.PlaceID == OutPlaceId || (OutPlaceId == 104 && p.PlaceID == 28)) && !p.DocShipmentOrderPersons.Any(d => !d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
                 {
                     var docShipmentOrderPerson = new DocShipmentOrderPersons
                     {
@@ -405,7 +405,7 @@ namespace Gamma.ViewModels
                         inActivePersonIds.Add(((Persons)item).PersonID);
                 //gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => p.IsInActive && p.Persons.PlaceID != InPlaceId && p.DocOrderID == DocShipmentOrderID && !inActivePersonIds.Contains(p.PersonID)));
                 gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => p.IsInActive && p.DocOrderID == DocShipmentOrderID));
-                foreach (var personsItem in GammaBase.Persons.Where(p => inActivePersonIds.Contains(p.PersonID) && (p.PlaceID == InPlaceId || (InPlaceId == 104 && p.PlaceID == 28)) && !p.DocShipmentOrderPersons.Any(d => d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
+                foreach (var personsItem in gammaBase.Persons.Where(p => inActivePersonIds.Contains(p.PersonID)))// && (p.PlaceID == InPlaceId || (InPlaceId == 104 && p.PlaceID == 28)) && !p.DocShipmentOrderPersons.Any(d => d.IsInActive && d.DocShipmentOrders.DocOrderID == DocShipmentOrderID)))
                 {
                     var docShipmentOrderPerson = new DocShipmentOrderPersons
                     {
