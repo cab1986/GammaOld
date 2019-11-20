@@ -659,12 +659,12 @@ namespace Gamma.ViewModels
 	            }
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
-                CheckGroupPackLabel(productionTask.ProductionTaskID);
-                if (WorkSession.UseApplicator && WorkSession.EndpointAddress != null)
+                CheckGroupAndTransportPackLabel(productionTask.ProductionTaskID);
+                if (WorkSession.UseApplicator && WorkSession.EndpointAddressOnGroupPackService != null) //пока такое условие нормально, так как в принтер по zpl только для групповых, а транспортные чрез виндовый spooler
                 {
                     try
                     {
-                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddressOnGroupPackService))
                         {
                             if (!(bool)client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
                             {
@@ -1091,9 +1091,9 @@ namespace Gamma.ViewModels
         {
             try
             {
-                if (WorkSession.UseApplicator && WorkSession.EndpointAddress != null)
+                if (WorkSession.UseApplicator && WorkSession.EndpointAddressOnGroupPackService != null)
                 {
-                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddress))
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddressOnGroupPackService))
                     {
                         StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
                     }
@@ -1115,9 +1115,9 @@ namespace Gamma.ViewModels
         {
             try
             {
-                if (WorkSession.EndpointAddress != null)
+                if (WorkSession.EndpointAddressOnGroupPackService != null)
                 {
-                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnGroupPackService))
                     {
                         if (StatusApplicator == null)
                             StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
@@ -1147,9 +1147,9 @@ namespace Gamma.ViewModels
         {
             try
             {
-                if (WorkSession.EndpointAddress != null)
+                if (WorkSession.EndpointAddressOnGroupPackService != null)
                 {
-                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnGroupPackService))
                     {
                         bool? res = client.PrintLabel(WorkSession.PlaceID, 2, null);
                         if (!res ?? true)
@@ -1424,16 +1424,16 @@ namespace Gamma.ViewModels
             }
         }
 
-        public void CheckGroupPackLabel(Guid productionTaskId)
+        public void CheckGroupAndTransportPackLabel(Guid productionTaskId)
         {
             try
             {
                 var view = CurrentView as ProductionTaskSGIViewModel;
                 if (view != null)
                 {
-                    if (WorkSession.EndpointAddress != null && WorkSession.LabelPath != null)
+                    if ((WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService) != null && WorkSession.LabelPath != null)
                     {
-                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddress))
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService))
                         {
                             //if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
                             var result = client.UpdateGroupPackLabelInProductionTask(productionTaskId);
@@ -1451,7 +1451,7 @@ namespace Gamma.ViewModels
             }
             catch
             {
-                MessageBox.Show("Техническая проблема при обновлении этикетки групповой упаковки в задании: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Аппликатор",
+                MessageBox.Show("Техническая проблема при обновлении этикетки упаковки в задании: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Аппликатор",
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
             }

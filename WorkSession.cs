@@ -62,13 +62,16 @@ namespace Gamma
                 UseApplicator = userInfo.Places.FirstOrDefault()?.UseApplicator ?? false;
                 EndpointAddressOnMailService = (from u in DB.GammaDb.LocalSettings
                                    select u.MailServiceAddress).FirstOrDefault();
-                EndpointAddress = (from u in DB.GammaDb.PlaceRemotePrinters
-                                   where u.PlaceID == PlaceID && u.RemotePrinters.RemotePrinterLabelID == 2
+                EndpointAddressOnGroupPackService = (from u in DB.GammaDb.PlaceRemotePrinters
+                                   where u.PlaceID == PlaceID && u.IsEnabled == true && (u.RemotePrinters.RemotePrinterLabelID == 2 || u.RemotePrinters.RemotePrinterLabelID == 3)
                                    select u.ModbusDevices.ServiceAddress).FirstOrDefault();
-#if (DEBUG)
-                EndpointAddressOnMailService = "http://localhost:8733/PrinterService";
-                EndpointAddress = "http://localhost:8733/PrinterService";
-#endif
+                EndpointAddressOnGroupPackService = (from u in DB.GammaDb.PlaceRemotePrinters
+                                                     where u.PlaceID == PlaceID && u.IsEnabled == true && !(u.RemotePrinters.RemotePrinterLabelID == 2 || u.RemotePrinters.RemotePrinterLabelID == 3)
+                                                     select u.ModbusDevices.ServiceAddress).FirstOrDefault();
+                //#if (DEBUG)
+                //                EndpointAddressOnMailService = "http://localhost:8735/PrinterService";
+                //                EndpointAddress = "http://localhost:8735/PrinterService";
+                //#endif
                 LabelPath = (from u in DB.GammaDb.LocalSettings
                                    select u.LabelPath).FirstOrDefault();
                 RoleName = userInfo.RoleName;
@@ -127,9 +130,13 @@ namespace Gamma
 
         public static string EndpointAddressOnMailService { get; private set; }
         /// <summary>
-        /// Адрес сервиса печати этикеток GammaService
+        /// Адрес сервиса печати групповых этикеток GammaService
         /// </summary>
-        public static string EndpointAddress { get; private set; }
+        public static string EndpointAddressOnGroupPackService { get; private set; }
+
+        /// Адрес сервиса печати транспортных этикеток GammaService
+        /// </summary>
+        public static string EndpointAddressOnTransportPackService { get; private set; }
 
         /// <summary>
         /// Путь до этикеток (групповых, транспортных)
