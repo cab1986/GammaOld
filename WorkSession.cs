@@ -65,13 +65,13 @@ namespace Gamma
                 EndpointAddressOnGroupPackService = (from u in DB.GammaDb.PlaceRemotePrinters
                                    where u.PlaceID == PlaceID && u.IsEnabled == true && (u.RemotePrinters.RemotePrinterLabelID == 2 || u.RemotePrinters.RemotePrinterLabelID == 3)
                                    select u.ModbusDevices.ServiceAddress).FirstOrDefault();
-                EndpointAddressOnGroupPackService = (from u in DB.GammaDb.PlaceRemotePrinters
+                EndpointAddressOnTransportPackService = (from u in DB.GammaDb.PlaceRemotePrinters
                                                      where u.PlaceID == PlaceID && u.IsEnabled == true && !(u.RemotePrinters.RemotePrinterLabelID == 2 || u.RemotePrinters.RemotePrinterLabelID == 3)
                                                      select u.ModbusDevices.ServiceAddress).FirstOrDefault();
-                //#if (DEBUG)
-                //                EndpointAddressOnMailService = "http://localhost:8735/PrinterService";
-                //                EndpointAddress = "http://localhost:8735/PrinterService";
-                //#endif
+//#if (DEBUG)
+//                EndpointAddressOnMailService = "http://localhost:8735/PrinterService";
+//                EndpointAddressOnTransportPackService = "http://localhost:8735/PrinterService";
+//#endif
                 LabelPath = (from u in DB.GammaDb.LocalSettings
                                    select u.LabelPath).FirstOrDefault();
                 RoleName = userInfo.RoleName;

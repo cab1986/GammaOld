@@ -133,7 +133,9 @@ namespace Gamma.Common
         }
         private void OpenDocProduct(OpenDocProductMessage msg)
         {
-            new DocProductView(msg).Show();
+            var view = new DocProductView(msg);
+            view.ShowDialog();
+
         }
         private void ConfigureComPort(ConfigureComPortMessage obj)
         {
