@@ -223,8 +223,8 @@ namespace Gamma.ViewModels
             ReportManager.PrintReport("PalletExample","Examples",ProductionTaskId);
         }
 
-        private Guid ProductionTaskId { get; set; }
-        
+        public Guid ProductionTaskId { get; private set; }
+
         public byte ProductionTaskStateID { get; set; }
 
         [UIAuth(UIAuthLevel.ReadOnly)]

@@ -580,7 +580,7 @@ namespace Gamma.ViewModels
                     break;
                 case BatchKinds.SGI:
                     CurrentView = new ProductionTaskSGIViewModel(ProductionTaskBatchID);
-                    ((ProductionTaskSGIViewModel)CurrentView).PrintExampleEvent += SaveToModel;
+                    ((ProductionTaskSGIViewModel)CurrentView).PrintExampleEvent += PrinExampleLabelFromSGICurrentView;
                     break;
                 case BatchKinds.Baler:
                     CurrentView = new ProductionTaskBalerViewModel(ProductionTaskBatchID);
@@ -588,7 +588,26 @@ namespace Gamma.ViewModels
             }
         }
 
-        
+
+        public bool PrinExampleLabelFromSGICurrentView()
+        {
+            if (SaveToModel())
+            {
+                var currentView = CurrentView as ProductionTaskSGIViewModel;
+
+                if (currentView?.ProductionTaskId != null && currentView?.ProductionTaskId != Guid.Empty)
+                {
+                    if ((WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService) == null)
+                        CheckGroupAndTransportPackLabel((Guid)currentView?.ProductionTaskId, WorkSession.EndpointAddressOnMailService); 
+                    else
+                        CheckGroupAndTransportPackLabel((Guid)currentView?.ProductionTaskId, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService);
+
+                }
+                return true;
+            }
+            else
+                return false;
+        }
 
         public override bool SaveToModel()
         {
@@ -659,7 +678,7 @@ namespace Gamma.ViewModels
 	            }
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
-                CheckGroupAndTransportPackLabel(productionTask.ProductionTaskID);
+                CheckGroupAndTransportPackLabel(productionTask.ProductionTaskID, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService);
                 if (WorkSession.UseApplicator && WorkSession.EndpointAddressOnGroupPackService != null) //пока такое условие нормально, так как в принтер по zpl только для групповых, а транспортные чрез виндовый spooler
                 {
                     try
@@ -1424,16 +1443,16 @@ namespace Gamma.ViewModels
             }
         }
 
-        public void CheckGroupAndTransportPackLabel(Guid productionTaskId)
+        public void CheckGroupAndTransportPackLabel(Guid productionTaskId, string endpointAddress)
         {
             try
             {
                 var view = CurrentView as ProductionTaskSGIViewModel;
                 if (view != null)
                 {
-                    if ((WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService) != null && WorkSession.LabelPath != null)
+                    if ((endpointAddress) != null && endpointAddress != String.Empty && WorkSession.LabelPath != null)
                     {
-                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService))
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, endpointAddress))
                         {
                             //if (!client.UpdateGroupPackageLabelInProductionTask(productionTaskId))
                             var result = client.UpdateGroupPackLabelInProductionTask(productionTaskId);
