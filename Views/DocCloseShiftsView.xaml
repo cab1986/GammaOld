@@ -14,7 +14,7 @@
     Title="Закрытия смен" 
     Height="1200" 
     Width="600"
-    gc:WindowSettings.Save="True">
+    gc:WindowSettings.Save="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
