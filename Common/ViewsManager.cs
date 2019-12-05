@@ -151,7 +151,11 @@ namespace Gamma.Common
         private void OpenDocCloseShift(OpenDocCloseShiftMessage msg)
         {
             var view = new DocCloseShiftView(msg);
-            view.Show();
+            if (view != null)
+            {
+                view.WindowState = System.Windows.WindowState.Maximized;
+                view.ShowDialog();
+            }
         }
         private void OpenManageUsers(OpenManageUsersMessage obj)
         {
