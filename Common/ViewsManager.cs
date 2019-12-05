@@ -154,7 +154,6 @@ namespace Gamma.Common
             if (view != null)
             {
                 view.WindowState = System.Windows.WindowState.Maximized;
-                view.ResizeMode = System.Windows.ResizeMode.NoResize;
                 view.ShowDialog();
             }
         }
