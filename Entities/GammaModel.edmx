@@ -12486,6 +12486,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="InPlaceZone" Nullable="true" MaxLength="1000" />
           <Property Type="String" Name="OutPlace" Nullable="true" MaxLength="64" />
           <Property Type="String" Name="OutPlaceZone" Nullable="true" MaxLength="1000" />
+          <Property Type="DateTime" Name="Date"  Precision="3" />
+          <Property Type="String" Name="State" Nullable="true" MaxLength="100" />
+          <Property Type="Byte" Name="StateID" Nullable="true" />
         </ComplexType>
         <ComplexType Name="FillDocCloseShiftWarehouseMovements_Result">
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="554" />
@@ -12498,6 +12501,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="InPlaceZone" Nullable="true" MaxLength="1000" />
           <Property Type="String" Name="OutPlace" Nullable="true" MaxLength="64" />
           <Property Type="String" Name="OutPlaceZone" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="State" Nullable="true" MaxLength="100" />
+          <Property Type="Byte" Name="StateID" Nullable="true" />
         </ComplexType>
         <Association Name="FK_Persons_Places">
           <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />

@@ -44,6 +44,7 @@ namespace Gamma.Models
         public Guid? MeasureUnitID { get; set; }
         public int? NomenclatureKindID { get; set; }
 
-
+        public int? StateID { get; set; }
+        public string StateName { get; set; }
     }
 }

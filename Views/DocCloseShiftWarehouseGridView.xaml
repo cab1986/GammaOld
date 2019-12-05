@@ -20,6 +20,7 @@
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" />
+                            <dxg:GridColumn Header="Качество" FieldName="StateName" />
                             <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="80" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>

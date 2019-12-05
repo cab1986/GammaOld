@@ -25,5 +25,8 @@ namespace Gamma.Entities
         public string InPlaceZone { get; set; }
         public string OutPlace { get; set; }
         public string OutPlaceZone { get; set; }
+        public Nullable<System.DateTime> Date { get; set; }
+        public string State { get; set; }
+        public Nullable<byte> StateID { get; set; }
     }
 }

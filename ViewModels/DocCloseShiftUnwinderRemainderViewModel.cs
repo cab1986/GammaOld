@@ -27,6 +27,8 @@ namespace Gamma.ViewModels
         }
 
         private int PlaceID { get; set; }
+        private int? ShiftID { get; set; }
+        private DateTime DocDate { get; set; }
 
         private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct, Guid? docWithdrawalId, int index)
         {
@@ -54,6 +56,8 @@ namespace Gamma.ViewModels
             var doc = gammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docID);
             IsConfirmed = doc.IsConfirmed;
             PlaceID = (int) doc.PlaceID;
+            ShiftID = doc.ShiftID;
+            DocDate = doc.Date;
             var remainders = doc.DocCloseShiftRemainders.Where(dr => dr.IsSourceProduct ?? false).ToList();
             foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, remainder.ProductID, remainder.IsSourceProduct ?? false)
             {
@@ -198,6 +202,7 @@ namespace Gamma.ViewModels
                 if (sourceSpools == null)
                 {
                     //ClearGrid();
+                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Загрузка раскатов в рапорте закрытия смены @PlaceID " + WorkSession.PlaceID.ToString() + ", @ShiftID " + ShiftID?.ToString() + ", @Date " + DocDate.ToString() +" Нет тамбуров на раскатах!"});
                 }
                 else
                 {
@@ -235,6 +240,7 @@ namespace Gamma.ViewModels
                         ClearGridWithIndex(4);
                     }
                     IsChanged = true;
+                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Загрузка раскатов в рапорте закрытия смены @PlaceID " + WorkSession.PlaceID.ToString() + ", @ShiftID " + ShiftID?.ToString() + ", @Date " + DocDate.ToString() });
                 }
             }
         }

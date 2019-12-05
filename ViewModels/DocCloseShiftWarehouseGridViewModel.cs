@@ -41,7 +41,9 @@ namespace Gamma.ViewModels
                         InPlaceName = d.InPlace,
                         InPlaceZoneName = d.InPlaceZone,
                         OutPlaceName = d.OutPlace,
-                        OutPlaceZoneName = d.OutPlaceZone
+                        OutPlaceZoneName = d.OutPlaceZone,
+                        StateID = d.StateID,
+                        StateName = d.State
                     }));
                 var docCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == msg.DocID);
                 DocCloseShiftDocs = new ObservableCollection<Docs>(docCloseShift.DocCloseShiftDocs);
@@ -105,7 +107,9 @@ namespace Gamma.ViewModels
                 InPlaceName = d.InPlace,
                 InPlaceZoneName = d.InPlaceZone,
                 OutPlaceName = d.OutPlace,
-                OutPlaceZoneName = d.OutPlaceZone
+                OutPlaceZoneName = d.OutPlaceZone,
+                StateID = d.StateID,
+                StateName = d.State
             }));
 
             IsChanged = true;
