@@ -18,7 +18,9 @@
     Title="{Binding Title}" 
     Height="800"
     Width="1200" 
-    gc:WindowSettings.Save="True">
+    WindowState="Maximized"
+    ResizeMode="NoResize"
+    gc:WindowSettings.Save="False">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftConvertingGridViewModel}">
             <v:DocCloseShiftConvertingGridView />
