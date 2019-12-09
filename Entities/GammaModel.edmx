@@ -5001,7 +5001,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="CountRolls" Type="int" Mode="In" />
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+      <Function Name="ValidateSpoolBeforeSaveInGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Parameter Name="Weight" Type="decimal" Mode="In" />
+        <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+      </Function>
+      <Function Name="WriteSpoolInstallLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -7407,6 +7411,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="Diameter" Mode="In" Type="Decimal" />
             <Parameter Name="Weight" Mode="In" Type="Decimal" />
             <Parameter Name="CountRolls" Mode="In" Type="Int32" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="ValidateSpoolBeforeSaveInGroupPack" ReturnType="Collection(String)">
+            <Parameter Name="Weight" Mode="In" Type="Decimal" />
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="Rests" EntityType="GammaModel.Rests" />
@@ -13999,6 +14007,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="ValidateGroupPackBeforeSave" FunctionName="GammaDBModel.ValidateGroupPackBeforeSave" />
+          <FunctionImportMapping FunctionImportName="ValidateSpoolBeforeSaveInGroupPack" FunctionName="GammaDBModel.ValidateSpoolBeforeSaveInGroupPack" />
           <EntitySetMapping Name="Rests">
             <EntityTypeMapping TypeName="GammaModel.Rests">
               <MappingFragment StoreEntitySet="Rests">

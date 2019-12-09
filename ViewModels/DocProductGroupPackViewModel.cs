@@ -514,16 +514,44 @@ namespace Gamma.ViewModels
                 GammaBase.Docs.Add(docWithdrawal);
             }
             docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Clear();
-            foreach (var spool in Spools)
+            var countUnweightedSpools = Spools?.Where(s => s.Weight == 1).Count();
+            if (countUnweightedSpools != null && countUnweightedSpools > 0)
+            {
+                var quantityWeightedSpools = Spools.Where(s => s.Weight != 1).Sum(s => s.Weight);
+                var quantityUnweightedSpool = (int)((Weight - quantityWeightedSpools) / countUnweightedSpools);
+                var quantityLastUnweightedSpool = (int)(quantityUnweightedSpool + (Weight - quantityWeightedSpools - (quantityUnweightedSpool * countUnweightedSpools)));
+                var lastUnweightedSpool = Spools.Where(s => s.Weight == 1).Last();
+                var resultValidateUnweightedSpool = GammaBase.ValidateSpoolBeforeSaveInGroupPack(quantityLastUnweightedSpool, lastUnweightedSpool.ProductID).FirstOrDefault();
+                if (!string.IsNullOrEmpty(resultValidateUnweightedSpool))
                 {
-                    docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Add(new DocWithdrawalProducts()
-                    {
-                        DocID = docWithdrawal.DocID,
-                        ProductID = spool.ProductID,
-                        Quantity = product.ProductGroupPacks.Weight/Spools.Count,
-                        CompleteWithdrawal = true
-                    });
+                    MessageBox.Show(resultValidateUnweightedSpool, "Проверка упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    return false;
                 }
+                lastUnweightedSpool.Weight = (decimal)quantityLastUnweightedSpool;
+                if (countUnweightedSpools > 1)
+                {
+                    resultValidateUnweightedSpool = GammaBase.ValidateSpoolBeforeSaveInGroupPack(quantityUnweightedSpool, Spools.Where(s => s.Weight == 1).FirstOrDefault().ProductID).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(resultValidateUnweightedSpool))
+                    {
+                        MessageBox.Show(resultValidateUnweightedSpool, "Проверка упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                        return false;
+                    }
+                    foreach (var spool in Spools.Where(s => s.Weight == 1))
+                        spool.Weight = quantityUnweightedSpool;
+                }
+            }
+            foreach (var spool in Spools)
+            {
+                docWithdrawal.DocWithdrawal.DocWithdrawalProducts.Add(new DocWithdrawalProducts()
+                {
+                    DocID = docWithdrawal.DocID,
+                    ProductID = spool.ProductID,
+                    Quantity = spool.Weight / 1000,// product.ProductGroupPacks.Weight/Spools.Count,
+                    CompleteWithdrawal = true
+                });
+            }
+            if (Weight != Spools.Sum(s => s.Weight))
+                MessageBox.Show("Внимание! Вес групповой упаковки не совпадает с общим весом катушек внутри!", "Проверка общего веса упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);
             GammaBase.SaveChanges();
             return true;
         }

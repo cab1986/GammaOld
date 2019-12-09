@@ -219,6 +219,7 @@ namespace Gamma.ViewModels
                     else MessageManager.CreateNewProduct(DocProductKinds.DocProductGroupPack);
                     break;
             }
+            Find();
         }
 
         private void OpenDocProduct()

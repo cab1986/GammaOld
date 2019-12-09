@@ -58,7 +58,7 @@ namespace Gamma.ViewModels
         }
         private byte _numFilmLayers;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(0,300,ErrorMessage=@"Количество слоев за пределами диапозона")]
+        [Range(0,300,ErrorMessage=@"Количество слоев за пределами диапазона")]
         public byte NumFilmLayers
         {
             get

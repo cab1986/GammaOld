@@ -77,6 +77,12 @@
                         <dxb:BarButtonItem Content="Задания на пр-во СГИ" Command="{Binding ShowProductionTasksSGICommand}" />
                         <dxb:BarButtonItem Content="Задания киповщика" Command ="{Binding ShowProductionTasksBalerCommand}"/>
                     </dxb:BarSubItem>
+                    <dxb:BarSubItem Content="Правка">
+                        <dxb:BarButtonItem Content="Добавить" Command="{Binding NewItemCommand}" Glyph="{dx:DXImage Image=Add_16x16.png}" LargeGlyph="{dx:DXImage Image=Add_32x32.png}" />
+                        <dxb:BarButtonItem Content="Изменить" Command="{Binding EditItemCommand}" Glyph="{dx:DXImage Image=Edit_16x16.png}" LargeGlyph="{dx:DXImage Image=Edit_32x32.png}"/>
+                        <dxb:BarButtonItem Content="Удалить" Command ="{Binding DeleteItemCommand}" Glyph="{dx:DXImage Image=Cancel_16x16.png}" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}"/>
+                        <dxb:BarButtonItem Content="Обновить" Command ="{Binding RefreshCommand}" Glyph="{dx:DXImage Image=Refresh2_16x16.png}" LargeGlyph="{dx:DXImage Image=Refresh2_32x32.png}"/>
+                    </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Документы">
                         <dxb:BarSubItem Content="Закрытия смен">
                             <dxb:BarButtonItem Content="Закрытия смен БДМ" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.PM}" />
