@@ -296,6 +296,9 @@ namespace Gamma.ViewModels
                 ).Any(j => !j.IsWrittenOff) ) 
                 {
                     if (!UnpackGroupPack(p.ProductID)) return;
+                    p.Quantity = (from pinf in GammaBase.vProductsInfo
+                                          where pinf.BarCode == barcode
+                                          select pinf.Quantity).FirstOrDefault();
                 }
                 else
                 {
