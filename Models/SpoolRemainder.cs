@@ -11,17 +11,20 @@ using System.Data.Entity.SqlServer;
 
 namespace Gamma.Models
 {
-    public class SpoolRemainder: ViewModelBase, ICheckedAccess
+    public class SpoolRemainder : ViewModelBase, ICheckedAccess
     {
-        public SpoolRemainder(DateTime docDate, Guid? productId, bool isSourceProduct)
+        public SpoolRemainder(DateTime docDate, byte? shiftID, Guid? productId, bool isSourceProduct, Guid? docWithdrawalId)
         {
             GammaBase = DB.GammaDb;
             DocDate = docDate;
+            DocShiftID = shiftID;
             IsSourceProduct = isSourceProduct;
-            ProductID = productId;            
+            DocWithdrawalId = docWithdrawalId;
+            ProductID = productId;
         }
 
         private DateTime DocDate { get; set; }
+        private byte? DocShiftID { get; set; }
         private GammaEntities GammaBase { get; }
         public int Index { get; set; }
         private Guid? _productid;
@@ -35,16 +38,21 @@ namespace Gamma.Models
             {
                 _productid = value;
                 if (value == null) return;
-                MaxWeight = GetRemainderMaxWeight((Guid)value, DocDate);
-                Nomenclature = GetProductSpoolNomenclature((Guid)value) + MaxWeight + "кг";
                 using (var gammaBase = DB.GammaDb)
                 {
+                    var date = (DocWithdrawalId == null || DocWithdrawalId == Guid.Empty) 
+                        ? DB.CurrentDateTime 
+                        : gammaBase.DocWithdrawal.Where(
+                            dw => dw.DocID == (Guid)DocWithdrawalId)
+                            .Select(dw => dw.Docs.Date)
+                            .FirstOrDefault();
+                    MaxWeight = GetRemainderMaxWeight((Guid)value, date);
                     var productSpool =
                         gammaBase.ProductSpools.Include(ps => ps.Products.DocProductionProducts)
                             .FirstOrDefault(ps => ps.ProductID == value);
-                    var quantity = productSpool?.Products.DocProductionProducts.First().Quantity*1000 ?? 0;
+                    var quantity = productSpool?.Products.DocProductionProducts.First().Quantity * 1000 ?? 0;
                     if (quantity == 0) return;
-                    MaxLength = (productSpool?.Length ?? 0)*MaxWeight/quantity;
+                    MaxLength = (productSpool?.Length ?? 0) * MaxWeight / quantity;
                 }
             }
         }
@@ -60,7 +68,7 @@ namespace Gamma.Models
                 if (_weight == value) return;
                 _weight = value;
                 if (MaxWeight == 0) return;
-                Length = Math.Round(Weight*MaxLength/MaxWeight,2);
+                Length = Math.Round(Weight * MaxLength / MaxWeight, 2);
                 RaisePropertyChanged("Weight");
             }
         }
@@ -74,12 +82,21 @@ namespace Gamma.Models
                 if (_length == value) return;
                 _length = value;
                 if (MaxLength == 0) return;
-                Weight = Math.Round(Length*MaxWeight/MaxLength);
+                Weight = Math.Round(Length * MaxWeight / MaxLength);
                 RaisePropertyChanged("Length");
             }
         }
 
-        public decimal MaxWeight { get; set; }
+        private decimal _maxWeight { get; set; }
+        public decimal MaxWeight
+        {
+            get { return _maxWeight; }
+            set
+            {
+                _maxWeight = value;
+                Nomenclature = GetProductSpoolNomenclature((Guid)ProductID) + value + "кг";
+            }
+        }
         public decimal MaxLength { get; private set; }
 
         private string GetProductSpoolNomenclature(Guid productid)
@@ -93,15 +110,8 @@ namespace Gamma.Models
 
         private decimal GetRemainderMaxWeight(Guid productId, DateTime docDate)
         {
-            var date =
-                GammaBase.DocWithdrawalProducts.Where(
-                    dw => dw.ProductID == productId && dw.DocWithdrawal.Docs.ShiftID == WorkSession.ShiftID && dw.DocWithdrawal.Docs.Date < docDate && dw.DocWithdrawal.Docs.Date >= SqlFunctions.DateAdd("hh", -18, docDate))
-                    .OrderByDescending(dw => dw.DocWithdrawal.Docs.Date)
-                    .Select(dw => dw.DocWithdrawal.Docs)
-                    .FirstOrDefault()?
-                    .Date;
-            date = date ?? docDate;
-            return DB.CalculateSpoolWeightBeforeDate(productId, (DateTime)date, GammaBase)*1000;
+            var date = docDate.AddMilliseconds(-1);
+            return DB.CalculateSpoolWeightBeforeDate(productId, (DateTime)date, GammaBase) * 1000;
         }
 
         public bool IsReadOnly { get; set; }

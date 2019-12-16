@@ -27,7 +27,7 @@ namespace Gamma.ViewModels
         }
 
         private int PlaceID { get; set; }
-        private int? ShiftID { get; set; }
+        private byte? ShiftID { get; set; }
         private DateTime DocDate { get; set; }
 
         private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct, Guid? docWithdrawalId, int index)
@@ -36,11 +36,10 @@ namespace Gamma.ViewModels
             {
                 var newSpoolRemainders = new List<SpoolRemainder>();
                 newSpoolRemainders.AddRange(SpoolRemainders.Where(s => s.Index != index));// не копируем предыдущий сохраненный тамбур на этом раскате
-                var spoolRemainder = new SpoolRemainder(date, productId, isSourceProduct);
+                var spoolRemainder = new SpoolRemainder(date, ShiftID, productId, isSourceProduct, docWithdrawalId);
                 spoolRemainder.Weight = spoolRemainder.MaxWeight;
                 spoolRemainder.Index = index;
-                spoolRemainder.DocWithdrawalId = docWithdrawalId;
-
+                
                 newSpoolRemainders.Add(spoolRemainder);
                 SpoolRemainders = newSpoolRemainders;
             }
@@ -59,12 +58,10 @@ namespace Gamma.ViewModels
             ShiftID = doc.ShiftID;
             DocDate = doc.Date;
             var remainders = doc.DocCloseShiftRemainders.Where(dr => dr.IsSourceProduct ?? false).ToList();
-            foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, remainder.ProductID, remainder.IsSourceProduct ?? false)
+            foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, doc.ShiftID, remainder.ProductID, remainder.IsSourceProduct ?? false, remainder.DocWithdrawalID)
             {
                 Weight = (int)remainder.Quantity,
                 IsReadOnly = IsConfirmed || (remainder.DocWithdrawalID != null && !DB.AllowEditDoc((Guid)remainder.DocWithdrawalID)),
-                
-                DocWithdrawalId = remainder.DocWithdrawalID
             }))
             {
                 if (spoolRemainder.MaxWeight < spoolRemainder.Weight) spoolRemainder.MaxWeight = spoolRemainder.Weight;
