@@ -84,10 +84,24 @@ namespace Gamma.ViewModels
             {
                 //d.Products.ProductKindID == 0 - мне надо удалить остатки на раскате, по другому никак не определить именно тамбура на раскате, так как для конвертингов остатки на раскате - это полуфабрикат переходящий, а для БДМ - это выработка переходящая.Поэтому ни IsSourceProduct, ни RemainderTypeID не подходит
                 //удаляем списание, так как удаляем запись в остатках
-                gammaBase.DocWithdrawalProducts.RemoveRange(gammaBase.DocWithdrawalProducts.Where(d => gammaBase.DocCloseShiftRemainders.Any(r => r.DocWithdrawalID == d.DocID && r.ProductID == d.ProductID && r.DocID == itemID && (r.Products.ProductKindID == 0))));
+                //gammaBase.DocWithdrawalProducts.RemoveRange(gammaBase.DocWithdrawalProducts.Where(d => gammaBase.DocCloseShiftRemainders.Any(r => r.DocWithdrawalID == d.DocID && r.ProductID == d.ProductID && r.DocID == itemID && (r.Products.ProductKindID == 0))));
+                var remainderProductWithdrawalIDs = gammaBase.DocCloseShiftRemainders.Where(d => d.DocID == itemID && (d.Products.ProductKindID == 0)).Select(d => d.DocWithdrawalID).ToList();
                 gammaBase.DocCloseShiftRemainders.RemoveRange(gammaBase.DocCloseShiftRemainders.Where(d => d.DocID == itemID && (d.Products.ProductKindID == 0)));
                 //gammaBase.SaveChanges();
                 var remainders = SpoolRemainders.Where(sr => sr.ProductID != null).ToList();
+                var withdrawalIds = remainders.Select(s => s.DocWithdrawalId).ToList();
+                var removeDocWithdrawalProducts = gammaBase.DocWithdrawalProducts.Where(r => remainderProductWithdrawalIDs.Contains(r.DocID) && !withdrawalIds.Contains(r.DocID));
+                foreach (var item in gammaBase.DocWithdrawalProducts.Where(r => remainderProductWithdrawalIDs.Contains(r.DocID) && !withdrawalIds.Contains(r.DocID)))
+                {
+                    //если есть привязанная произведенная продукция, то обнуляем, чтобы не потерять привязку.
+                    if (gammaBase.DocProductionProducts.Any(p => p.DocProduction.DocWithdrawal.Any(w => w.DocID == item.DocID)))
+                    {
+                        item.Quantity = null;
+                        item.CompleteWithdrawal = null;
+                    }
+                    else
+                        gammaBase.DocWithdrawalProducts.Remove(item);
+                }
                 foreach (var remainder in remainders)
                 {
                     // Занесение остатков в таблицу остатков закрытия смены
@@ -101,7 +115,7 @@ namespace Gamma.ViewModels
                             DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                             ProductID = remainder.ProductID,
                             IsSourceProduct = remainder.IsSourceProduct,
-                            //DocWithdrawalID = remainder.DocWithdrawalId
+                            DocWithdrawalID = remainder.DocWithdrawalId
                         };
                         gammaBase.DocCloseShiftRemainders.Add(docRemainder);
                     //}
@@ -110,14 +124,14 @@ namespace Gamma.ViewModels
                     if (remainder.IsSourceProduct )// Чтобы в любом случае закрылась строка списания, пусть и с 0 расходом тамбура на раскате.&& (remainder.MaxWeight - remainder.Weight) != 0)
                     {
                         DocWithdrawalProducts docWithdrawalProduct;
-                        //закоментировал, так как выше мы удаляем списание, то в каждом случае надо создать новое
-                        //if (remainder.DocWithdrawalId != null)
-                        //{
-                        //    docWithdrawalProduct =
-                        //        gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal.Docs)
-                        //            .First(d => d.DocID == remainder.DocWithdrawalId);
-                        //}
-                        //else
+                        ////закоментировал, так как выше мы удаляем списание, то в каждом случае надо создать новое
+                        if (remainder.DocWithdrawalId != null)
+                        {
+                            docWithdrawalProduct =
+                                gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal.Docs)
+                                    .First(d => d.DocID == remainder.DocWithdrawalId);
+                        }
+                        else
                         {
                             docWithdrawalProduct =
                                 gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)

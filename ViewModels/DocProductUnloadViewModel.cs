@@ -13,6 +13,7 @@ using System.Data.Entity;
 using Gamma.Common;
 using System.ComponentModel.DataAnnotations;
 using Gamma.Entities;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -178,8 +179,12 @@ namespace Gamma.ViewModels
             foreach (var spoolId in SourceSpools)
             {
                 var docWithdrawal = GammaBase.Docs.FirstOrDefault(d => d.DocTypeID == (byte) DocTypes.DocWithdrawal 
-                                                            && d.DocWithdrawal.DocWithdrawalProducts.Any(dp => dp.ProductID == spoolId && dp.Quantity == null &&
-                                                            (dp.CompleteWithdrawal == null || dp.CompleteWithdrawal == false)));
+                                                            && d.DocWithdrawal.DocWithdrawalProducts.Any(dp => dp.ProductID == spoolId 
+                                                            && ((dp.Quantity == null && (dp.CompleteWithdrawal == null || dp.CompleteWithdrawal == false))
+                                                                || (dp.Quantity != null
+                                                                    && GammaBase.DocCloseShiftRemainders.Any(r => r.ProductID == spoolId && (r.IsSourceProduct ?? false) && r.DocWithdrawalID == dp.DocID && r.DocCloseShifts.PlaceID == WorkSession.PlaceID && r.DocCloseShifts.ShiftID == WorkSession.ShiftID
+                                                                            && r.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime)))
+                                                                            && r.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))))))));
                 //&& d.DocWithdrawal.DocWithdrawalProducts.Select(dp => dp.ProductID)
                 //                                                     .Contains(spoolId));
                 if (docWithdrawal == null)

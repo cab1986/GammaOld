@@ -8,6 +8,7 @@ using Gamma.Dialogs;
 using System.Windows;
 using Gamma.Common;
 using Gamma.Entities;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -109,8 +110,14 @@ namespace Gamma.ViewModels
         private void ChooseSpool(byte unum)
         {
             CurrentUnwinder = unum;
-            Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
-            MessageManager.OpenFindProduct(ProductKind.ProductSpool,true);
+            if ((unum == 1 && (Unwinder1ProductID == null || CheckSpoolInDocCloseShift((Guid)Unwinder1ProductID)))
+                || (unum == 2 && (Unwinder2ProductID == null || CheckSpoolInDocCloseShift((Guid)Unwinder2ProductID)))
+                || (unum == 3 && (Unwinder3ProductID == null || CheckSpoolInDocCloseShift((Guid)Unwinder3ProductID)))
+                || (unum == 4 && (Unwinder4ProductID == null || CheckSpoolInDocCloseShift((Guid)Unwinder4ProductID))))
+            {
+                Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
+                MessageManager.OpenFindProduct(ProductKind.ProductSpool, true);
+            }
         }
 
         private void CreateRemainderSpool(Guid productId, decimal weight)
@@ -269,7 +276,7 @@ namespace Gamma.ViewModels
             {
                 case 1:
                    if (Unwinder1ProductID == null) return true;
-                    if (changeSpoolDialogResult((Guid)Unwinder1ProductID, 1))
+                    if (CheckSpoolInDocCloseShift((Guid)Unwinder1ProductID) && changeSpoolDialogResult((Guid)Unwinder1ProductID, 1))
                     {
                         ret = true;
                         Unwinder1ProductID = null;
@@ -280,7 +287,7 @@ namespace Gamma.ViewModels
                     break;
                 case 2:
                     if (Unwinder2ProductID == null) return true;
-                    if (changeSpoolDialogResult((Guid)Unwinder2ProductID, 2))
+                    if (CheckSpoolInDocCloseShift((Guid)Unwinder2ProductID) && changeSpoolDialogResult((Guid)Unwinder2ProductID, 2))
                     {
                         ret = true;
                         Unwinder2ProductID = null;
@@ -291,7 +298,7 @@ namespace Gamma.ViewModels
                     break;
                 case 3:
                     if (Unwinder3ProductID == null) return true;
-                    if (changeSpoolDialogResult((Guid)Unwinder3ProductID, 3))
+                    if (CheckSpoolInDocCloseShift((Guid)Unwinder3ProductID) && changeSpoolDialogResult((Guid)Unwinder3ProductID, 3))
                     {
                         ret = true;
                         Unwinder3ProductID = null;
@@ -302,7 +309,7 @@ namespace Gamma.ViewModels
                     break;
                 case 4:
                     if (Unwinder4ProductID == null) return true;
-                    if (changeSpoolDialogResult((Guid)Unwinder4ProductID, 4))
+                    if (CheckSpoolInDocCloseShift((Guid)Unwinder4ProductID) && changeSpoolDialogResult((Guid)Unwinder4ProductID, 4))
                     {
                         ret = true;
                         Unwinder4ProductID = null;
@@ -314,6 +321,16 @@ namespace Gamma.ViewModels
             }
             GammaBase.SaveChanges();
             if (ret) MessageManager.SpoolWithdrawed();
+            return ret;
+        }
+
+        private bool CheckSpoolInDocCloseShift(Guid productId)
+        {
+            var ret = !GammaBase.DocCloseShiftRemainders.Any(r => r.ProductID == productId && (r.IsSourceProduct ?? false) && r.DocWithdrawalID != null && r.DocCloseShifts.PlaceID == WorkSession.PlaceID && r.DocCloseShifts.ShiftID == WorkSession.ShiftID &&
+                    r.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))) &&
+                    r.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))));
+            if (!ret) MessageBox.Show("Нельзя снять тамбур с раската, так как он в текущем рапорте закрытия смены. Сначала очистите раскаты в текущем рапорте закрытия смены, затем повторите.", "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Asterisk);
             return ret;
         }
 

@@ -86,6 +86,7 @@ namespace Gamma.ViewModels
             if (unwinderRemainder != null)
             {
                 FillUnwinderRemainderCommand = new DelegateCommand(unwinderRemainder.FillGrid, () => !IsConfirmed && CanEditable());
+                ClearUnwinderRemainderCommand = new DelegateCommand(unwinderRemainder.ClearGrid, () => !IsConfirmed && CanEditable());
             }
             var grid = CurrentViewModelGrid as IFillClearGrid;
             if (grid != null)
@@ -148,6 +149,7 @@ namespace Gamma.ViewModels
         public DelegateCommand FillGridCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
         public DelegateCommand FillUnwinderRemainderCommand { get; set; }
+        public DelegateCommand ClearUnwinderRemainderCommand { get; set; }
 
         public override bool SaveToModel()
         {

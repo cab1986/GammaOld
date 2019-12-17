@@ -93,10 +93,12 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="На раскатах"/>
                                     <Button Content="Обновить" Grid.Column="1" Margin="5,0,0,0" Command="{Binding FillUnwinderRemainderCommand}"/>
+                                    <Button Content="Очистить" Grid.Column="2" Margin="5,0,0,0" Command="{Binding ClearUnwinderRemainderCommand}"/>
                                 </Grid>
                             </dx:DXTabItem.Header>
                         </dx:DXTabItem>

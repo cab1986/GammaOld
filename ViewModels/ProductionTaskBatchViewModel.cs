@@ -1052,9 +1052,11 @@ namespace Gamma.ViewModels
                                     gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal).Include(d => d.DocWithdrawal.Docs)
                                     .Include(d => d.DocWithdrawal.DocProduction)
                                     .FirstOrDefault(d => d.ProductID == spoolId
-                                                                                        && d.Quantity == null &&
-                                                                                        (d.CompleteWithdrawal == null ||
-                                                                                         d.CompleteWithdrawal == false));
+                                                        && ((d.Quantity == null && (d.CompleteWithdrawal == null || d.CompleteWithdrawal == false)) 
+                                                            || (d.Quantity != null 
+                                                                && gammaBase.DocCloseShiftRemainders.Any(r => r.ProductID == spoolId && (r.IsSourceProduct ?? false) && r.DocWithdrawalID == d.DocID && r.DocCloseShifts.PlaceID == WorkSession.PlaceID && r.DocCloseShifts.ShiftID == WorkSession.ShiftID 
+                                                                        && r.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))) 
+                                                                        && r.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime)))))));
                                 if (docWithdrawalProduct == null)
                                 {
                                     var docWithdrawalid = SqlGuidUtil.NewSequentialid();
