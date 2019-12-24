@@ -69,12 +69,12 @@
                 <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutGroup Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="350" Height="250" >
+                <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="400" Height="325" >
                     <Border BorderThickness="1" BorderBrush="#FF000000">
                         <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
                     </Border>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="450" Height="325" >
+                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="400" Height="325" >
                     <Border BorderThickness="1" BorderBrush="#FF000000">
                         <Image Source="{Binding TransportPackageLabelImage, Mode=OneWay}"/>
                     </Border>

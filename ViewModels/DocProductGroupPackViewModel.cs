@@ -269,7 +269,7 @@ namespace Gamma.ViewModels
                                  ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
-                                 Weight = (int)(1000 * p.Quantity ?? 0),
+                                 Weight = (int)(1000 * Decimal.Round(p.Quantity ?? 0, 3)),
                                  Number = p.Number + " от " + p.Date
                              }).FirstOrDefault();
             AddSpoolIfCorrect(spool);
@@ -315,7 +315,7 @@ namespace Gamma.ViewModels
                                  ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
-                                 Weight = (int)(1000 * p.Quantity ?? 0),
+                                 Weight = (int)(1000 * Decimal.Round(p.Quantity ?? 0, 3)),
                                  Number = $"{p.Number} от {p.Date}"
                              };
             AddSpoolIfCorrect(spool);
