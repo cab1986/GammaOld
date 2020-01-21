@@ -79,6 +79,18 @@ namespace Gamma.Models
             }
         }
 
+        private ItemsChangeObservableCollection<PaperBase> _utilizationSpools = new ItemsChangeObservableCollection<PaperBase>();
+        public ItemsChangeObservableCollection<PaperBase> UtilizationSpools
+        {
+            get { return _utilizationSpools; }
+            private set
+            {
+                _utilizationSpools = value;
+                RaisePropertiesChanged("UtilizationSpools");
+            }
+        }
+
+
         private List<Guid> ProductionProductCharacteristicIDs { get; set; }
 
         public void LoadWithdrawalMaterials(Guid docId, List<Guid> productionProductCharacteristicIDs)
@@ -147,6 +159,19 @@ namespace Gamma.Models
                         MeasureUnitID = p.BaseMeasureUnitID
                     }));
 
+            //Получение списка утилизированных тамбуров
+            UtilizationSpools = new ItemsChangeObservableCollection<PaperBase>(GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == docId)
+                .Join(GammaBase.vProductsInfo, d => d.ProductID, p => p.ProductID
+                , (d, p) => new PaperBase()
+                {
+                    CharacteristicID = (Guid)p.C1CCharacteristicID,
+                    NomenclatureID = p.C1CNomenclatureID,
+                    Nomenclature = p.NomenclatureName,
+                    Number = p.Number,
+                    ProductID = d.ProductID,
+                    Weight = d.Quantity ?? 0
+                }));
+
             //Получение списка списанных материалов
             WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(GammaBase.DocWithdrawalMaterials
                 //.Join(GammaBase.Docs, dm => dm.DocWithdrawal.Docs.DocID, dw => dw.DocCloseShift.DocID, (dm, dw) => new { })
@@ -178,7 +203,7 @@ namespace Gamma.Models
             ProductionProductCharacteristicIDs = productionProductCharacteristicIDs;
             {
                 Clear();
-                
+
                 InProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
                                 .Where(d => (bool)d.IsMovementIn).Select(d => new MovementProduct
                                 {
@@ -216,7 +241,7 @@ namespace Gamma.Models
                             NomenclatureKindID = addedItem.NomenclatureKindID
                         });
                     else
-                        item.QuantityIn = item.QuantityIn + addedItem.Quantity;
+                        item.QuantityIn = (item.QuantityIn ?? 0) + addedItem.Quantity;
                 }
 
                 OutProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
@@ -256,7 +281,39 @@ namespace Gamma.Models
                             NomenclatureKindID = addedItem.NomenclatureKindID
                         });
                     else
-                        item.QuantityOut = item.QuantityOut + addedItem.Quantity;
+                        item.QuantityOut = (item.QuantityOut ?? 0) + addedItem.Quantity;
+                }
+
+                UtilizationSpools = new ItemsChangeObservableCollection<PaperBase>(GammaBase.FillDocCloseShiftUtilizationSpools(PlaceID, ShiftID, CloseDate).Select(p => new PaperBase()
+                {
+                    CharacteristicID = p.CharacteristicID,
+                    NomenclatureID = p.NomenclatureID,
+                    Nomenclature = p.NomenclatureName,
+                    Number = p.Number,
+                    ProductID = p.ProductID,
+                    Weight = (p.Quantity ?? 0),// * 1000
+                    BaseMeasureUnit = p.BaseMeasureUnit,
+                    BaseMeasureUnitID = p.BaseMeasureUnitID
+                }));
+
+                foreach (PaperBase addedItem in UtilizationSpools)
+                {
+                    var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
+                    if (item == null)
+                        DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
+                        {
+                            NomenclatureID = (Guid)addedItem.NomenclatureID,
+                            CharacteristicID = addedItem.CharacteristicID,
+                            NomenclatureName = addedItem.Nomenclature,
+                            QuantityIsReadOnly = true,
+                            QuantityUtil = addedItem.Weight,
+                            DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                            MeasureUnit = addedItem.BaseMeasureUnit,
+                            MeasureUnitID = addedItem.BaseMeasureUnitID,
+                            WithdrawByFact = true
+                        });
+                    else
+                        item.QuantityUtil = (item.QuantityUtil ?? 0) + addedItem.Weight;
                 }
 
                 var WithdrawalMaterialsLoad =
@@ -332,7 +389,7 @@ namespace Gamma.Models
                     else
                         item.QuantityRemainderAtBegin = addedItem.Quantity;
                 }
-                                
+
                 var withdrawalMaterialsRemainderAtEnd =
                         new ItemsChangeObservableCollection<WithdrawalMaterial>(
                             GammaBase.FillDocCloseShiftMaterialsAtEnd(PlaceID, ShiftID, CloseDate)
@@ -421,7 +478,7 @@ namespace Gamma.Models
                 */
         }
 
-      
+
         public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo)//, List<Guid> productionProductCharacteristicIDs)
         {
             var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
@@ -440,19 +497,19 @@ namespace Gamma.Models
                     WithdrawByFact = true
                 });
 
-           /* if (WithdrawalMaterials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
-                WithdrawalMaterials.Add(new WithdrawalMaterial(new ArrayList() { ProductionProductCharacteristicIDs, PlaceID })
-                {
-                    NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
-                    CharacteristicID = characteristicID,
-                    NomenclatureName = nomenclatureName,
-                    QuantityIsReadOnly = false,
-                    Quantity = 0,
-                    MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
-                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
-                    WithdrawByFact = true
-                });*/
+            /* if (WithdrawalMaterials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
+                 WithdrawalMaterials.Add(new WithdrawalMaterial(new ArrayList() { ProductionProductCharacteristicIDs, PlaceID })
+                 {
+                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
+                     CharacteristicID = characteristicID,
+                     NomenclatureName = nomenclatureName,
+                     QuantityIsReadOnly = false,
+                     Quantity = 0,
+                     MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                     MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                     DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                     WithdrawByFact = true
+                 });*/
         }
 
 
@@ -525,10 +582,10 @@ namespace Gamma.Models
                     });
             }
 
-            
+
             RaisePropertiesChanged("DocCloseShiftWithdrawalMaterials.WithdrawalMaterials");
         }
 
-        
+
     }
 }

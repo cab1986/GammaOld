@@ -20,5 +20,7 @@ namespace Gamma.Entities
         public System.Guid DocID { get; set; }
         public string NomenclatureName { get; set; }
         public string Number { get; set; }
+        public System.Guid BaseMeasureUnitID { get; set; }
+        public string BaseMeasureUnit { get; set; }
     }
 }

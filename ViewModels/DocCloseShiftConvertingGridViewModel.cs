@@ -658,6 +658,20 @@ namespace Gamma.ViewModels
                             IsMovementIn = false
                         });
                     }
+
+                gammaBase.DocCloseShiftUtilizationProducts.RemoveRange(docCloseShift.DocCloseShiftUtilizationProducts);
+                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.UtilizationSpools != null)
+                    foreach (var utilizationSpool in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.UtilizationSpools)
+                    {
+                        docCloseShift.DocCloseShiftUtilizationProducts.Add(new DocCloseShiftUtilizationProducts
+                        {
+                            DocID = docId,
+                            DocCloseShiftUtilizationProductID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = utilizationSpool.ProductID,
+                            Quantity = utilizationSpool.Weight
+                        });
+                    }
+
                 if (IsChanged)
                 {
                     docCloseShift.DocCloseShiftDocs.Clear();
