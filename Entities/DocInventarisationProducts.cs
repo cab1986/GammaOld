@@ -22,6 +22,7 @@ namespace Gamma.Entities
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<System.Guid> C1CQualityID { get; set; }
         public string NomenclatureName { get; set; }
+        public Nullable<System.DateTime> Date { get; set; }
     
         public virtual Docs Docs { get; set; }
         public virtual Products Products { get; set; }

@@ -51,5 +51,7 @@ namespace Gamma.Entities
         public string OutPlace { get; set; }
         public Nullable<byte> ShiftID { get; set; }
         public string NumberDocMovement { get; set; }
+        public Nullable<byte> StateID { get; set; }
+        public string StateName { get; set; }
     }
 }

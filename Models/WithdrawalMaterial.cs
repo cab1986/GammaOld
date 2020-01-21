@@ -278,7 +278,7 @@ namespace Gamma.Models
         public decimal Quantity { get; set; }
         public bool IsFloatValue { get; set; }
         public Guid? DocMovementID { get; set; }
-        public int NomenclatureKindID { get; set; }
+        public int? NomenclatureKindID { get; set; }
 
         /// <summary>
         /// Можно ли менять количество

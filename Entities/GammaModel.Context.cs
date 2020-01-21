@@ -154,6 +154,7 @@ namespace Gamma.Entities
         public virtual DbSet<PlaceWithdrawalMaterialTypes> PlaceWithdrawalMaterialTypes { get; set; }
         public virtual DbSet<DocShipmentOrderPersons> DocShipmentOrderPersons { get; set; }
         public virtual DbSet<CriticalLogs> CriticalLogs { get; set; }
+        public virtual DbSet<vDocCloseShiftMaterials> vDocCloseShiftMaterials { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -599,20 +600,20 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateGroupPackBeforeSave", nomenclatureIDParameter, characteristicIDParameter, diameterParameter, weightParameter, countRollsParameter, productIDParameter);
         }
-
+    
         public virtual ObjectResult<string> ValidateSpoolBeforeSaveInGroupPack(Nullable<decimal> weight, Nullable<System.Guid> productID)
         {
             var weightParameter = weight.HasValue ?
                 new ObjectParameter("Weight", weight) :
                 new ObjectParameter("Weight", typeof(decimal));
-
+    
             var productIDParameter = productID.HasValue ?
                 new ObjectParameter("ProductID", productID) :
                 new ObjectParameter("ProductID", typeof(System.Guid));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateSpoolBeforeSaveInGroupPack", weightParameter, productIDParameter);
         }
-
+    
         public virtual ObjectResult<string> CheckAddedGroupPackSpool(Nullable<System.Guid> addedProductId, Nullable<System.Guid> baseProductId)
         {
             var addedProductIdParameter = addedProductId.HasValue ?
