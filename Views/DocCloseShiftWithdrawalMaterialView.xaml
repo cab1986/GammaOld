@@ -27,7 +27,7 @@
                     </dxb:BarManager.Bars>
                     <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.DocCloseShiftMaterials}" SelectedItem="{Binding SelectedDocCloseShiftMaterial}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
+                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" AllowEditing="{Binding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">
                                 <dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding MaterialRowUpdatedCommand}"/>
                                     <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
