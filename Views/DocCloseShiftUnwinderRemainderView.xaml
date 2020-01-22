@@ -13,7 +13,7 @@
     <Grid>
         <dxlc:LayoutControl Header="Остатки на раскатах" Orientation="Vertical" UseLayoutRounding="True" View="GroupBox" Padding="12,4" >
             <ItemsControl ItemsSource="{Binding SpoolRemainders}"
-                          ItemTemplate="{StaticResource SpoolRemainderTemplate}"/>
+                          ItemTemplate="{StaticResource SpoolRemainderTemplate}" Margin="-9,-4,-9,-4"/>
         </dxlc:LayoutControl>
         <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior/>

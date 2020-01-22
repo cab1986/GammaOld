@@ -26,7 +26,7 @@
                         <dx:DXTabItem Header="Распределение"/>
                     </dx:DXTabControl>                    
                 </dx:DXTabItem.Header>
-                <dxlc:LayoutItem VerticalAlignment="Stretch">
+                <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
                     <ContentControl Content="{Binding WithdrawalMaterialsGrid}" />
                 </dxlc:LayoutItem>
             </dx:DXTabItem>

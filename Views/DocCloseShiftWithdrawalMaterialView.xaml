@@ -18,7 +18,7 @@
     <Grid>
         <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}">
             <dx:DXTabItem Height="0" Header="{Binding NameWithdrawalMaterialIn}" Visibility="{Binding IsWithdrawalMaterialIn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <dxb:BarManager>
+                <dxb:BarManager Margin="-9,-9,-9,-9">
                     <dxb:BarManager.Bars>
                         <dxb:Bar>
                             <dxb:BarButtonItem Content="Добавить материал" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddDocCloseShiftMaterialCommand}"/>

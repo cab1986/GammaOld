@@ -88,7 +88,7 @@
                     </dxlc:LayoutGroup>
                     <dx:DXTabControl Height="218">
                         <dx:DXTabItem Visibility="{Binding IsVisibilityUnwinderRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ContentControl Content="{Binding CurrentViewModelUnwinderRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                            <ContentControl Content="{Binding CurrentViewModelUnwinderRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,-9,0,-9" VerticalAlignment="Top"/>
                             <dx:DXTabItem.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
