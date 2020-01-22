@@ -28,6 +28,8 @@ namespace Gamma.ViewModels
             DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
             */
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
+            MaterialCommand = new DelegateCommand(ShowMaterialTab, SelectedProduct != null);
+            WithdrawalMaterialCommand = new DelegateCommand(ShowWithdrawalMaterialTab, SelectedProduct != null);
             PlaceID = WorkSession.PlaceID;
             ShiftID = WorkSession.ShiftID;
             CloseDate = DB.CurrentDateTime;
@@ -166,12 +168,25 @@ namespace Gamma.ViewModels
 
         public Pallet SelectedProduct { get; set; }
         public DelegateCommand ShowProductCommand { get; private set; }
+        public DelegateCommand MaterialCommand { get; private set; }
+        public DelegateCommand WithdrawalMaterialCommand { get; private set; }
 
         private void ShowProduct()
         {
             MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductId);
         }
 
+        private void ShowMaterialTab()
+        {
+            if (WithdrawalMaterialsGrid != null)
+                WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 0;
+        }
+
+        private void ShowWithdrawalMaterialTab()
+        {
+            if (WithdrawalMaterialsGrid != null)
+                WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 1;
+        }
 
         private DocCloseShiftWithdrawalMaterialViewModel _withdrawalMaterialsGrid;
         public DocCloseShiftWithdrawalMaterialViewModel WithdrawalMaterialsGrid
@@ -184,6 +199,34 @@ namespace Gamma.ViewModels
             {
                 _withdrawalMaterialsGrid = value;
                 //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
+            }
+        }
+
+        private int _selectedTabIndex;
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return _selectedTabIndex;
+            }
+            set
+            {
+                _selectedTabIndex = value;
+                RaisePropertiesChanged("SelectedTabIndex");
+            }
+        }
+
+        private int _selectedMaterialTabIndex;
+        public int SelectedMaterialTabIndex
+        {
+            get
+            {
+                return WithdrawalMaterialsGrid.SelectedMaterialTabIndex;
+            }
+            set
+            {
+                SelectedTabIndex = 0;
+                WithdrawalMaterialsGrid.SelectedMaterialTabIndex = value;
             }
         }
 

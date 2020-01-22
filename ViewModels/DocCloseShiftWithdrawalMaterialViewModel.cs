@@ -155,6 +155,7 @@ namespace Gamma.ViewModels
                         DocCloseShiftWithdrawalMaterials?.WithdrawalMaterials?.Add(item);
                     }
                 }
+                RaisePropertiesChanged("SelectedMaterialTabIndex");
             }
         }
 

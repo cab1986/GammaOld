@@ -15,8 +15,8 @@
              d:DesignHeight="200" d:DesignWidth="500"
              d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftWithdrawalMaterialViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex, Mode=OneWayToSource}">
-            <dx:DXTabItem Header="{Binding NameWithdrawalMaterialIn}" Visibility="{Binding IsWithdrawalMaterialIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}">
+            <dx:DXTabItem Height="0" Header="{Binding NameWithdrawalMaterialIn}" Visibility="{Binding IsWithdrawalMaterialIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
                     <dxb:BarManager.Bars>
                         <dxb:Bar>
@@ -116,7 +116,7 @@
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Использовано" Visibility="{Binding IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <dx:DXTabItem Height="0" Header="Использовано" Visibility="{Binding IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager>
                     <dxg:GridControl ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>

@@ -18,8 +18,14 @@
              d:DesignHeight="300" d:DesignWidth="800"
             d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftConvertingGridViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-        <dx:DXTabControl>
-            <dx:DXTabItem Header="Материалы" Height="22" Margin="0,0,0.164,-0.182" VerticalAlignment="Top" Visibility="{Binding Path=IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <dx:DXTabControl SelectedIndex="{Binding SelectedTabIndex}">
+            <dx:DXTabItem Height="25" Margin="0,0,0,0" VerticalAlignment="Top" Visibility="{Binding Path=IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <dx:DXTabItem.Header>
+                    <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}"  Margin="0,-3,0,0">
+                        <dx:DXTabItem Header="Материалы" />
+                        <dx:DXTabItem Header="Распределение"/>
+                    </dx:DXTabControl>                    
+                </dx:DXTabItem.Header>
                 <dxlc:LayoutItem VerticalAlignment="Stretch">
                     <ContentControl Content="{Binding WithdrawalMaterialsGrid}" />
                 </dxlc:LayoutItem>
