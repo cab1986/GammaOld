@@ -27,6 +27,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <dxg:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <conv:DefaultBooleanConverter x:Key="DefaultBooleanConverter" />
+        <conv:WithdrawByFactConverter x:Key="WithdrawByFactConverter" />
         <DataTemplate x:Key="SpoolRemainderTemplate">
             <dxlc:LayoutGroup Orientation="Horizontal">
                 <dxlc:LayoutItem Label="Вес остатка, кг" LabelPosition="Top" Width="80" >

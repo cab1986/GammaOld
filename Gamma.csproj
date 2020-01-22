@@ -239,6 +239,7 @@
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Converters\DefaultBooleanConverter.cs" />
+    <Compile Include="Converters\WithdrawByFactConverter.cs" />
     <Compile Include="Dialogs\AddNomenclatureToPalletDialog.xaml.cs">
       <DependentUpon>AddNomenclatureToPalletDialog.xaml</DependentUpon>
     </Compile>

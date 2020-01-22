@@ -4,6 +4,7 @@
              xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:conv="clr-namespace:Gamma.Converters"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:g="clr-namespace:Gamma"
@@ -39,7 +40,7 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
+                            <dxg:GridColumn Binding="{Binding WithdrawByFact, Converter={StaticResource WithdrawByFactConverter}}" Header="Списание" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending" />
                             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
@@ -132,9 +133,8 @@
                             </dxg:TableView>
                         </dxg:GridControl.View>
                         <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="WithdrawByFact" Header="Списание по факту" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending"/>
-                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="True" SortMode="DisplayText"  ColumnFilterMode="DisplayText"
-                                            >
+                            <dxg:GridColumn Binding="{Binding WithdrawByFact, Converter={StaticResource WithdrawByFactConverter}}" Header="Списание" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending" />
+                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="True" SortMode="DisplayText"  ColumnFilterMode="DisplayText">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:ComboBoxEdit x:Name="PART_Editor"   
