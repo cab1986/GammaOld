@@ -602,6 +602,8 @@
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
           <Property Name="1CMeasureUnitID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductNomenclatureID" Type="uniqueidentifier" />
+          <Property Name="ProductCharacteristicID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocCloseShiftWithdrawals">
           <Key>
@@ -1556,6 +1558,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
             <PropertyRef Name="DocMovementID" />
             <PropertyRef Name="ProductID" />
             <PropertyRef Name="ProductKindID" />
+            
             <PropertyRef Name="DocDate" />
             
           </Key>
@@ -1568,7 +1571,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="OutPlaceID" Type="int" />
           <Property Name="IsShipped" Type="bit" />
           <Property Name="IsAccepted" Type="bit" />
-          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="IsConfirmed" Type="bit" Nullable="false" />
           <Property Name="OutDate" Type="datetime" />
           <Property Name="InDate" Type="datetime" />
           <Property Name="OutPersonID" Type="uniqueidentifier" />
@@ -3050,6 +3053,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CCharacteristics_Product">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+          <End Role="DocCloseShiftWastes" Type="Self.DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="ProductCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocCloseShiftWastes_1CMeasureUnits">
           <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="1" />
           <End Role="DocCloseShiftWastes" Type="Self.DocCloseShiftWastes" Multiplicity="*" />
@@ -3071,6 +3086,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocCloseShiftWastes">
               <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CNomenclature_Product">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="0..1" />
+          <End Role="DocCloseShiftWastes" Type="Self.DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="ProductNomenclatureID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4743,6 +4770,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftConvertingWastesProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -5909,11 +5941,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
             <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CCharacteristics_Product" Association="Self.FK_DocCloseShiftWastes_1CCharacteristics_Product">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftWastes_1CMeasureUnits" Association="Self.FK_DocCloseShiftWastes_1CMeasureUnits">
             <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
             <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftWastes_1CNomenclature" Association="Self.FK_DocCloseShiftWastes_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CNomenclature_Product" Association="Self.FK_DocCloseShiftWastes_1CNomenclature_Product">
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
             <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
           </AssociationSet>
@@ -8479,6 +8519,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </FunctionImport>
           <EntitySet Name="CriticalLogs" EntityType="GammaModel.CriticalLogs" />
           <EntitySet Name="vDocCloseShiftMaterials" EntityType="GammaModel.vDocCloseShiftMaterials" />
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CCharacteristics_Product" Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftWastes_1CNomenclature_Product" Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocCloseShiftWastes" EntitySet="DocCloseShiftWastes" />
+          </AssociationSet>
+          <FunctionImport Name="FillDocCloseShiftConvertingWastesProduct" ReturnType="Collection(GammaModel.FillDocCloseShiftConvertingWastesProduct_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10240,7 +10293,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="OutPlaceID" Type="Int32" />
           <Property Name="IsShipped" Type="Boolean" />
           <Property Name="IsAccepted" Type="Boolean" />
-          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
           <Property Name="OutDate" Type="DateTime" Precision="3" />
           <Property Name="InDate" Type="DateTime" Precision="3" />
           <Property Name="OutPersonID" Type="Guid" />
@@ -10697,6 +10750,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="C1CDeleted" Type="Boolean" />
           <NavigationProperty Name="DocCloseShiftMaterials" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftMaterials" />
           <Property Name="MeasureUnitIndividualPackage" Type="Guid" />
+          <NavigationProperty Name="DocCloseShiftWastes1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product" FromRole="C1CCharacteristics" ToRole="DocCloseShiftWastes" />
           </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -11468,6 +11522,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_DocCloseShiftWastes_1CMeasureUnits" FromRole="DocCloseShiftWastes" ToRole="C1CMeasureUnits" />
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftWastes_Docs" FromRole="DocCloseShiftWastes" ToRole="Docs" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature" FromRole="DocCloseShiftWastes" ToRole="C1CNomenclature" />
+          <Property Name="ProductNomenclatureID" Type="Guid" />
+          <Property Name="ProductCharacteristicID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product" FromRole="DocCloseShiftWastes" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product" FromRole="DocCloseShiftWastes" ToRole="C1CNomenclature" />
         </EntityType>
         <Association Name="FK_DocCloseShiftWastes_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -11553,6 +11611,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CNomenclature" FromRole="C1CNomenclature" ToRole="C1CDocComplectationNomenclature" />
           <Property Name="C1CDeleted" Type="Boolean" />
           <NavigationProperty Name="DocCloseShiftMaterials" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftMaterials" />
+          <NavigationProperty Name="DocCloseShiftWastes1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product" FromRole="C1CNomenclature" ToRole="DocCloseShiftWastes" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -12974,6 +13033,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="DocID" Nullable="false" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="Guid" Name="BaseMeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="BaseMeasureUnit" Nullable="true" MaxLength="500" />
         </ComplexType>
         <Association Name="FK_Persons_Users">
           <End Type="GammaModel.Users" Role="Users" Multiplicity="0..1" />
@@ -13137,6 +13198,41 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="QuantityRePack" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="QuantityIsReadOnly" Type="Boolean" />
         </EntityType>
+        <Association Name="FK_DocCloseShiftWastes_1CCharacteristics_Product">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftWastes" Role="DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="ProductCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftWastes_1CNomenclature_Product">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftWastes" Role="DocCloseShiftWastes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftWastes">
+              <PropertyRef Name="ProductNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="FillDocCloseShiftConvertingWastesProduct_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="Guid" Name="ProductNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="ProductCharacteristicID" Nullable="true" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="511" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14896,6 +14992,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocCloseShiftWastes">
             <EntityTypeMapping TypeName="GammaModel.DocCloseShiftWastes">
               <MappingFragment StoreEntitySet="DocCloseShiftWastes">
+                <ScalarProperty Name="ProductCharacteristicID" ColumnName="ProductCharacteristicID" />
+                <ScalarProperty Name="ProductNomenclatureID" ColumnName="ProductNomenclatureID" />
                 <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
@@ -15446,6 +15544,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="BaseMeasureUnitID" ColumnName="BaseMeasureUnitID" />
+                <ScalarProperty Name="BaseMeasureUnit" ColumnName="BaseMeasureUnit" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -15557,6 +15657,21 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftConvertingWastesProduct" FunctionName="GammaDBModel.FillDocCloseShiftConvertingWastesProduct">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftConvertingWastesProduct_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductNomenclatureID" ColumnName="ProductNomenclatureID" />
+                <ScalarProperty Name="ProductCharacteristicID" ColumnName="ProductCharacteristicID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

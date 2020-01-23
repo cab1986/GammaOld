@@ -42,6 +42,7 @@ namespace Gamma.Entities
             this.DocCloseShiftSamples = new HashSet<DocCloseShiftSamples>();
             this.C1CDocComplectationNomenclature = new HashSet<C1CDocComplectationNomenclature>();
             this.DocCloseShiftMaterials = new HashSet<DocCloseShiftMaterials>();
+            this.DocCloseShiftWastes1 = new HashSet<DocCloseShiftWastes>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -114,5 +115,7 @@ namespace Gamma.Entities
         public virtual ICollection<C1CDocComplectationNomenclature> C1CDocComplectationNomenclature { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftMaterials> DocCloseShiftMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftWastes> DocCloseShiftWastes1 { get; set; }
     }
 }

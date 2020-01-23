@@ -1223,5 +1223,22 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CreateDocBrokeWithBrokeDecisionComment", docIDParameter, productIDParameter, brokeQuantityParameter, rejectionReasonIDParameter, commentParameter, printNameParameter, placeIDParameter);
         }
+    
+        public virtual ObjectResult<FillDocCloseShiftConvertingWastesProduct_Result> FillDocCloseShiftConvertingWastesProduct(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingWastesProduct_Result>("FillDocCloseShiftConvertingWastesProduct", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
     }
 }

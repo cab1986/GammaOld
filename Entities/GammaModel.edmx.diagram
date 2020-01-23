@@ -365,6 +365,8 @@
         <AssociationConnector Association="GammaModel.FK_DocShipmentOrderPersons_Person" />
         <EntityTypeShape EntityType="GammaModel.CriticalLogs" Width="1.5" PointX="15.375" PointY="16.75" />
         <EntityTypeShape EntityType="GammaModel.vDocCloseShiftMaterials" Width="1.5" PointX="3.375" PointY="17.75" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

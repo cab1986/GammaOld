@@ -60,7 +60,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Принято" FieldName="QuantityIn" Width="60" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
+                            <dxg:GridColumn Header="Принято" FieldName="QuantityIn" Width="60" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
@@ -68,7 +68,14 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Отдано" FieldName="QuantityOut" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
+                            <dxg:GridColumn Header="Расход" FieldName="QuantityWithdrawalMaterial" Width="60" FixedWidth="True" ReadOnly="True">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="Отдано" FieldName="QuantityOut" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
@@ -76,7 +83,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="В брак" FieldName="QuantityUtil" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
+                            <dxg:GridColumn Header="В брак" FieldName="QuantityUtil" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
@@ -84,7 +91,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="ОПВ" FieldName="QuantityExperimental" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
+                            <dxg:GridColumn Header="ОПВ" FieldName="QuantityExperimental" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"/>
@@ -98,18 +105,11 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="На конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
+                            <dxg:GridColumn Header="На конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
                                                       IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Использовано" FieldName="QuantityWithdrawalMaterial" Width="60" FixedWidth="True" ReadOnly="True" >
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>

@@ -473,6 +473,9 @@
     <Compile Include="Entities\FillDocCloseShiftConvertingPallets_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocCloseShiftConvertingWastesProduct_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FillDocCloseShiftConvertingWastes_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -834,6 +837,7 @@
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\DocCloseShiftMaterial.cs" />
+    <Compile Include="Models\DocCloseShiftWaste.cs" />
     <Compile Include="Models\DocCloseShiftWithdrawalMaterial.cs" />
     <Compile Include="Models\DocComplectationListItem.cs" />
     <Compile Include="Models\DocInventarisation.cs" />

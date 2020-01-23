@@ -23,7 +23,7 @@ namespace Gamma.Entities
         public Nullable<int> OutPlaceID { get; set; }
         public Nullable<bool> IsShipped { get; set; }
         public Nullable<bool> IsAccepted { get; set; }
-        public Nullable<bool> IsConfirmed { get; set; }
+        public bool IsConfirmed { get; set; }
         public Nullable<System.DateTime> OutDate { get; set; }
         public Nullable<System.DateTime> InDate { get; set; }
         public Nullable<System.Guid> OutPersonID { get; set; }

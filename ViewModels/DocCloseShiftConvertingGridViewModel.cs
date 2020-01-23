@@ -120,15 +120,18 @@ namespace Gamma.ViewModels
                         NomenclatureName = dr.C1CNomenclature.Name + " " + dr.C1CCharacteristics.Name
                     }));
                 // Получение отходов
-                Wastes = new ObservableCollection<Sample>(gammaBase.DocCloseShiftWastes.Where(dw => dw.DocID == docId)
-                    .Select(dw => new Sample
+                Wastes = new ObservableCollection<DocCloseShiftWaste>(gammaBase.DocCloseShiftWastes.Where(dw => dw.DocID == docId)
+                    .Select(dw => new DocCloseShiftWaste
                     {
                         NomenclatureID = dw.C1CNomenclatureID,
                         CharacteristicID = dw.C1CCharacteristicID,
                         Quantity = dw.Quantity,
                         NomenclatureName = dw.C1CNomenclature.Name + " " + dw.C1CCharacteristics.Name ?? "",
                         MeasureUnitId = dw.C1CMeasureUnitID,
-                        MeasureUnit = dw.C1CMeasureUnits.Name
+                        MeasureUnit = dw.C1CMeasureUnits.Name,
+                        ProductNomenclatureID = dw.ProductNomenclatureID,
+                        ProductCharacteristicID = dw.ProductCharacteristicID,
+                        ProductName = dw.C1CNomenclature1.Name + " " + dw.C1CCharacteristics1.Name ?? "",
                     }));
                 foreach (var waste in Wastes)
                 {
@@ -216,7 +219,6 @@ namespace Gamma.ViewModels
             }
         }
 
-        private int _selectedMaterialTabIndex;
         public int SelectedMaterialTabIndex
         {
             get
@@ -321,24 +323,28 @@ namespace Gamma.ViewModels
                 //                MeasureUnit = m.MeasureUnit,
                 //                MeasureUnitID = m.MeasureUnitID
                 //            }));
-                var wastes = new ItemsChangeObservableCollection<Sample>(
-                    gammaBase.FillDocCloseShiftConvertingWastes(PlaceID, ShiftID, CloseDate)
-                    .Select(w => new Sample
+                var wastes = new ItemsChangeObservableCollection<DocCloseShiftWaste>(
+                    gammaBase.FillDocCloseShiftConvertingWastesProduct(PlaceID, ShiftID, CloseDate)
+                    .Select(w => new DocCloseShiftWaste
                     {
                         NomenclatureID = (Guid)w.NomenclatureID,
                         CharacteristicID = w.CharacteristicID,
                         Quantity = w.Quantity ?? 0,
                         NomenclatureName = w.NomenclatureName,
                         MeasureUnitId = w.MeasureUnitID,
-                        MeasureUnit = w.MeasureUnit
+                        MeasureUnit = w.MeasureUnit,
+                        ProductNomenclatureID = w.ProductNomenclatureID,
+                        ProductCharacteristicID = w.ProductCharacteristicID,
+                        ProductName = w.ProductName
                     }));
                 if (Wastes == null)
-                    Wastes = new ObservableCollection<Sample>();
+                    Wastes = new ObservableCollection<DocCloseShiftWaste>();
                 foreach (var waste in wastes)
                 {
                     waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
                     waste.MeasureUnitId = waste.MeasureUnits.FirstOrDefault().Key;
-                    if (!Wastes.Any(s => s.NomenclatureID == waste.NomenclatureID && (s.CharacteristicID == waste.CharacteristicID || (s.CharacteristicID == null && waste.CharacteristicID == null))))
+                    if (!Wastes.Any(s => s.NomenclatureID == waste.NomenclatureID && (s.CharacteristicID == waste.CharacteristicID || (s.CharacteristicID == null && waste.CharacteristicID == null))
+                        && ((s.ProductNomenclatureID == waste.ProductNomenclatureID || (s.ProductNomenclatureID == null && waste.ProductNomenclatureID == null)) && (s.ProductCharacteristicID == waste.ProductCharacteristicID || (s.ProductCharacteristicID == null && waste.ProductCharacteristicID == null)))))
                     {
                         Wastes.Add(waste);
                     }
@@ -488,7 +494,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public ObservableCollection<Sample> Wastes
+        public ObservableCollection<DocCloseShiftWaste> Wastes
         {
             get { return _wastes; }
             set
@@ -512,7 +518,7 @@ namespace Gamma.ViewModels
 
 
         private ObservableCollection<Pallet> _pallets = new ObservableCollection<Pallet>();
-        private ObservableCollection<Sample> _wastes;
+        private ObservableCollection<DocCloseShiftWaste> _wastes;
 
         public ObservableCollection<Pallet> Pallets
         {
@@ -664,7 +670,9 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = waste.CharacteristicID,
                             DocCloseWhiftWasteID = SqlGuidUtil.NewSequentialid(),
                             C1CMeasureUnitID = (Guid)waste.MeasureUnitId,
-                            Quantity = waste.Quantity
+                            Quantity = waste.Quantity,
+                            ProductNomenclatureID = waste.ProductNomenclatureID,
+                            ProductCharacteristicID = waste.ProductCharacteristicID
                         });
                     }
                 gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);

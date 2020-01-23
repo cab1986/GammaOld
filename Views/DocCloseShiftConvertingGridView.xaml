@@ -83,13 +83,14 @@
             <dx:DXTabItem Header="Отходы">
                 <dxg:GridControl ItemsSource="{Binding Wastes}">
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Вид продукции"/>
-                        <dxg:GridColumn FieldName="Quantity" Width="120" FixedWidth="True" Header="Кол-во" ReadOnly="{Binding IsReadOnly}">
+                        <dxg:GridColumn FieldName="ProductName" AllowEditing="False" Header="Произведенная продукция" SortIndex="0"/>
+                        <dxg:GridColumn FieldName="NomenclatureName" Header="Вид отходов" AllowEditing="False" SortOrder="Ascending" SortIndex="1"/>
+                        <dxg:GridColumn FieldName="Quantity" Width="120" FixedWidth="True" Header="Кол-во" ReadOnly="{Binding IsReadOnly}" SortIndex="2">
                             <dxg:GridColumn.EditSettings>
                                 <dxe:SpinEditSettings MinValue="0" MaskUseAsDisplayFormat="True" IsFloatValue="True" Increment="0.01"/>
                             </dxg:GridColumn.EditSettings>
                         </dxg:GridColumn>
-                        <dxg:GridColumn Width="60" FixedWidth="True" Header="Ед. изм." FieldName="MeasureUnitId" ReadOnly="{Binding IsReadOnly}">
+                        <dxg:GridColumn FieldName="MeasureUnitId" Width="70" FixedWidth="True" Header="Ед. изм." ReadOnly="{Binding IsReadOnly}" SortIndex="3">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
                                     <dxe:ComboBoxEdit x:Name="PART_Editor" IsTextEditable="False"
