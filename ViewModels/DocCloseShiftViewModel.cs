@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
                     var convertingrUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel()
-                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID);
+                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, convertingrUnwinderRemainder.SpoolRemainders);
                     break;
                 case (short)PlaceGroup.Baler:
                     CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);
@@ -93,6 +93,7 @@ namespace Gamma.ViewModels
             {
                 FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed && CanEditable());
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed && CanEditable());
+                FillGridWithNoEndCommand = new DelegateCommand(grid.FillGridWithNoFillEnd, () => !IsConfirmed && CanEditable());
             }
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && !grid.IsChanged &&
                 (place?.PlaceGroupID == (int)PlaceGroup.PM || place?.PlaceGroupID == (int)PlaceGroup.Rw || place?.PlaceGroupID == (int)PlaceGroup.Convertings));
@@ -147,6 +148,7 @@ namespace Gamma.ViewModels
         public SaveImplementedViewModel CurrentViewModelUnwinderRemainder { get; set; }
         public SaveImplementedViewModel CurrentViewModelRemainder { get; set; }
         public DelegateCommand FillGridCommand { get; set; }
+        public DelegateCommand FillGridWithNoEndCommand { get; set; }
         public DelegateCommand ClearGridCommand { get; set; }
         public DelegateCommand FillUnwinderRemainderCommand { get; set; }
         public DelegateCommand ClearUnwinderRemainderCommand { get; set; }
@@ -170,7 +172,7 @@ namespace Gamma.ViewModels
                 };
                 GammaBase.Docs.Add(Doc);
             }
-            var utilizationProductsBeforeSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
+            //var utilizationProductsBeforeSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
             var isConfirmedPrev = Doc.IsConfirmed;
             Doc.IsConfirmed = IsConfirmed;
             GammaBase.SaveChanges();

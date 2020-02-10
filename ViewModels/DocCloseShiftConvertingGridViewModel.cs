@@ -35,10 +35,11 @@ namespace Gamma.ViewModels
             CloseDate = DB.CurrentDateTime;
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+            DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
             IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
 
-        public DocCloseShiftConvertingGridViewModel(Guid docId) : this()
+        public DocCloseShiftConvertingGridViewModel(Guid docId, List<SpoolRemainder> _spoolUnwinderRemainders) : this()
         {
             using (var gammaBase = DB.GammaDb)
             {
@@ -49,47 +50,25 @@ namespace Gamma.ViewModels
                 CloseDate = doc.Date;
                 IsConfirmed = doc.IsConfirmed;
                 DocId = docId;
+                spoolUnwinderRemainders = _spoolUnwinderRemainders;
                 IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+                DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(docId,IsConfirmed);
                 IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
                 Pallets = new ObservableCollection<Pallet>(gammaBase.GetDocCloseShiftConvertingPallets(docId).Select(d => new Pallet()
                 {
-                    DocId = d.DocID,
-                    ProductId = d.ProductID,
+                    DocID = d.DocID,
+                    ProductID = d.ProductID,
                     NomenclatureName = d.NomenclatureName,
                     Quantity = d.Quantity ?? 0,
                     NomenclatureID = d.NomenclatureID,
                     CharacteristicID = d.CharacteristicID,
                     Number = d.Number
                 }));
-                //Получение списка списанных материалов
-                //WithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(gammaBase.DocWithdrawalMaterials
-                //    .Where(dm => dm.DocWithdrawal.DocCloseShift.FirstOrDefault().DocID == docId)
-                //    .Select(d => new WithdrawalMaterial
-                //    {
-                //        CharacteristicID = d.C1CCharacteristicID,
-                //        NomenclatureID = d.C1CNomenclatureID,
-                //        NomenclatureName = d.C1CNomenclature.Name,
-                //        DocWithdrawalMaterialID = d.DocWithdrawalMaterialID,
-                //        Quantity = d.Quantity,
-                //        BaseQuantity = d.Quantity,
-                //        MeasureUnit = d.C1CNomenclature.C1CMeasureUnitStorage.Name,
-                //        MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                //    /*                AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>()
-                //                    {
-                //                        new WithdrawalMaterial.NomenclatureAnalog()
-                //                        {
-                //                            NomenclatureID = d.C1CNomenclatureID,
-                //                            IsMarked = d.C1CNomenclature.IsArchive ?? false
-                //                        }
-                //                    },
-                //    */
-                //        QuantityIsReadOnly = !d.WithdrawByFact ?? true
-                //    }));
                 IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
                 var pallets = new List<DocCloseShiftWithdrawalMaterial.Product>(Pallets.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
                 {
-                    ProductID = x.ProductId,
+                    ProductID = x.ProductID,
                     CharacteristicID = x.CharacteristicID
                 })).ToList();
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, pallets, IsConfirmed, productionProductCharacteristicIDs);
@@ -137,27 +116,7 @@ namespace Gamma.ViewModels
                 {
                     waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
                 }
-                //Получение остатков
-                BeginProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
-                   //.Include(dr => dr.DocCloseShifts)
-                   .Where(d => d.DocID == docId && (d.RemainderTypes.RemainderTypeID == 1 || d.RemainderTypes.RemainderTypeID == 3))
-                   .Select(d => new DocCloseShiftRemainder()
-                   {
-                       ProductID = (Guid)d.ProductID,
-                       StateID = d.StateID,
-                       Quantity = d.Quantity,
-                       RemainderTypeID = d.RemainderTypeID
-                   }));
-                EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
-                    //.Include(dr => dr.DocCloseShifts)
-                    .Where(d => d.DocID == docId && d.RemainderTypes.RemainderTypeID == 2)
-                    .Select(d => new DocCloseShiftRemainder()
-                    {
-                        ProductID = (Guid)d.ProductID,
-                        StateID = d.StateID,
-                        Quantity = d.Quantity,
-                        RemainderTypeID = d.RemainderTypeID
-                    }));
+                
             }
         }
 
@@ -176,7 +135,7 @@ namespace Gamma.ViewModels
 
         private void ShowProduct()
         {
-            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductId);
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProduct.ProductID);
         }
 
         private void ShowMaterialTab()
@@ -205,6 +164,20 @@ namespace Gamma.ViewModels
             }
         }
 
+        private DocCloseShiftProductViewModel _docCloseShiftProductsGrid;
+        public DocCloseShiftProductViewModel DocCloseShiftProductsGrid
+        {
+            get
+            {
+                return _docCloseShiftProductsGrid;
+            }
+            set
+            {
+                _docCloseShiftProductsGrid = value;
+                //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
+            }
+        }
+
         private int _selectedTabIndex;
         public int SelectedTabIndex
         {
@@ -215,6 +188,8 @@ namespace Gamma.ViewModels
             set
             {
                 _selectedTabIndex = value;
+                if (DocCloseShiftProductsGrid != null)
+                    DocCloseShiftProductsGrid.SelectedTabIndex = 2;//tab = Изготовлено
                 RaisePropertiesChanged("SelectedTabIndex");
             }
         }
@@ -228,11 +203,22 @@ namespace Gamma.ViewModels
             set
             {
                 SelectedTabIndex = 0;
-                WithdrawalMaterialsGrid.SelectedMaterialTabIndex = value;
+                if (WithdrawalMaterialsGrid != null)
+                    WithdrawalMaterialsGrid.SelectedMaterialTabIndex = value;
             }
         }
 
         public void FillGrid()
+        {
+            FillGridWithParameter(true);
+        }
+
+        public void FillGridWithNoFillEnd()
+        {
+            FillGridWithParameter(false);
+        }
+
+        public void FillGridWithParameter(bool IsFillEnd = true)
         {
             UIServices.SetBusyState();
             //при заполнении рапорта очищаем только паллеты и документы
@@ -252,8 +238,8 @@ namespace Gamma.ViewModels
                     NomenclatureID = p.NomenclatureID,
                     CharacteristicID = p.CharacteristicID,
                     Quantity = p.Quantity ?? 0,
-                    DocId = p.DocID,
-                    ProductId = p.ProductID,
+                    DocID = p.DocID,
+                    ProductID = p.ProductID,
                     NomenclatureName = p.NomenclatureName,
                     Number = p.Number
                 }));
@@ -298,31 +284,11 @@ namespace Gamma.ViewModels
 
                 var pallets = new List<DocCloseShiftWithdrawalMaterial.Product>(Pallets.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
                 {
-                    ProductID = x.ProductId,
+                    ProductID = x.ProductID,
                     CharacteristicID = x.CharacteristicID
                 })).ToList();
-                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs, pallets);
-                //WithdrawalMaterials =
-                //    new ItemsChangeObservableCollection<WithdrawalMaterial>(
-                //        gammaBase.FillDocCloseShiftConvertingMaterials(PlaceID, ShiftID, CloseDate)
-                //            .Select(m => new WithdrawalMaterial()
-                //            {
-                //                NomenclatureID = (Guid)m.NomenclatureID,
-                //                CharacteristicID = m.CharacteristicID,
-                //                QuantityIsReadOnly = !m.WithdrawByFact ?? true,
-                //                Quantity = m.Quantity ?? 0,
-                //                BaseQuantity = m.Quantity ?? 0,
-                //                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
-                //            /*                          AvailableNomenclatures = new List<WithdrawalMaterial.NomenclatureAnalog>
-                //                                      {
-                //                                          new WithdrawalMaterial.NomenclatureAnalog()
-                //                                          {
-                //                                              NomenclatureID = (Guid) m.NomenclatureID
-                //                                          }
-                //                                      },*/
-                //                MeasureUnit = m.MeasureUnit,
-                //                MeasureUnitID = m.MeasureUnitID
-                //            }));
+                WithdrawalMaterialsGrid.FillWithdrawalMaterials(productionProductCharacteristicIDs, pallets, spoolUnwinderRemainders, IsFillEnd);
+                DocCloseShiftProductsGrid.FillGrid(IsFillEnd);
                 var wastes = new ItemsChangeObservableCollection<DocCloseShiftWaste>(
                     gammaBase.FillDocCloseShiftConvertingWastesProduct(PlaceID, ShiftID, CloseDate)
                     .Select(w => new DocCloseShiftWaste
@@ -351,21 +317,7 @@ namespace Gamma.ViewModels
                 }
                 //Wastes = wastes;
 
-                var PreviousDocCloseShift = gammaBase.Docs
-                    .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
-                    .OrderByDescending(d => d.Date)
-                    .FirstOrDefault();
-                BeginProducts = new ObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
-                    .Where(d => (d.RemainderTypeID == 2 || (d.RemainderTypeID ?? 0) == 0) && d.DocCloseShifts.DocID == PreviousDocCloseShift.DocID)
-                    .Select(d => new DocCloseShiftRemainder
-                    {
-                        ProductID = (Guid)d.ProductID,
-                        StateID = d.StateID,
-                        Quantity = d.Quantity,
-                        RemainderTypeID = d.RemainderTypeID == 0 || d.RemainderTypeID == null ? 3 : 1
-                    }));
-
-                FillEndProducts();
+                
 
                 IsChanged = true;
             }
@@ -405,44 +357,7 @@ namespace Gamma.ViewModels
             return dict;
         }
 
-        private void FillEndProducts()
-        {
-            using (var gammaBase = DB.GammaDb)
-            {
-                EndProducts?.Clear();
 
-                EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                    .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsInfo, d => d.ProductID, p => p.ProductID
-                    , (d, p) => new DocCloseShiftRemainder
-                    {
-                        ProductID = (Guid)d.ProductID,
-                        StateID = (p.StateID == null ? 0 : p.StateID),
-                        Quantity = p.Quantity ?? 0 ,
-                        RemainderTypeID = 2,
-                        ProductKindID = p.ProductKindID
-                    }));
-
-                foreach (var endProduct in EndProducts)
-                {
-                    endProduct.Quantity = endProduct.ProductKindID == 0 ? endProduct.Quantity * 1000 :
-                            endProduct.ProductKindID == 2 ? endProduct.Quantity * 1000 :
-                            endProduct.Quantity;
-                }
-                //убираем из остатков переходящую следующей смене палету в процессе производства
-                var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
-                if (doc != null)
-                {
-                    var endProductsProductIDs = EndProducts.Select(d => (Guid?)d.ProductID).ToList();
-                    var ProductRemainders = gammaBase.DocCloseShiftRemainders.Where(r => (r.RemainderTypeID ?? 0) == 0 && r.DocID == doc.DocID && endProductsProductIDs.Contains(r.ProductID));
-                    foreach (var Product in ProductRemainders)
-                    {
-                        var removeProduct = EndProducts.FirstOrDefault(d => d.ProductID == Product.ProductID);
-                        if (removeProduct != null)
-                            EndProducts.Remove(removeProduct);
-                    }
-                }
-            }
-        }
 
         private Guid DocId { get; set; }
         private int PlaceID { get; set; }
@@ -453,7 +368,7 @@ namespace Gamma.ViewModels
         public bool IsEnabledSamples { get; set; }
 
         private List<Guid> productionProductCharacteristicIDs { get; set; }
-
+        private List<SpoolRemainder> spoolUnwinderRemainders { get; set; }
         public void ClearGrid()
         {
             Pallets?.Clear();
@@ -467,6 +382,7 @@ namespace Gamma.ViewModels
             Wastes?.Clear();
             NomenclatureRests?.Clear();
             WithdrawalMaterialsGrid.Clear();
+            DocCloseShiftProductsGrid.Clear();
             //            gammaBase.SaveChanges();           
         }
 
@@ -532,28 +448,6 @@ namespace Gamma.ViewModels
             }
         }
 
-        private ObservableCollection<DocCloseShiftRemainder> _beginProducts = new ObservableCollection<DocCloseShiftRemainder>();
-        public ObservableCollection<DocCloseShiftRemainder> BeginProducts
-        {
-            get { return _beginProducts; }
-            set
-            {
-                _beginProducts = value;
-                RaisePropertiesChanged("BeginProducts");
-            }
-        }
-
-        private ObservableCollection<DocCloseShiftRemainder> _endProducts = new ObservableCollection<DocCloseShiftRemainder>();
-        public ObservableCollection<DocCloseShiftRemainder> EndProducts
-        {
-            get { return _endProducts; }
-            set
-            {
-                _endProducts = value;
-                RaisePropertiesChanged("EndProducts");
-            }
-        }
-
         /// <summary>
         /// Сохранение в БД
         /// </summary>
@@ -563,10 +457,10 @@ namespace Gamma.ViewModels
             if (IsReadOnly) return true;
             using (var gammaBase = DB.GammaDb)
             {
-                var docCloseShift = gammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftWithdrawals)
+                var docCloseShift = gammaBase.Docs
                 .Include(d => d.DocCloseShiftSamples).Include(d => d.DocCloseShiftWastes).Include(d => d.DocCloseShiftNomenclatureRests)
                 .First(d => d.DocID == docId);
-                if (docCloseShift.DocCloseShiftDocs == null) docCloseShift.DocCloseShiftDocs = new List<Docs>();
+                //if (docCloseShift.DocCloseShiftDocs == null) docCloseShift.DocCloseShiftDocs = new List<Docs>();
                 //  Guid docWithdrawalId;
                 //if (docCloseShift.DocCloseShiftWithdrawals == null)
                 //    docCloseShift.DocCloseShiftWithdrawals = new List<DocWithdrawal>();
@@ -578,29 +472,11 @@ namespace Gamma.ViewModels
                     docCloseShift.DocCloseShiftRemainders = new List<DocCloseShiftRemainders>();
                 if (docCloseShift.DocCloseShiftNomenclatureRests == null)
                     docCloseShift.DocCloseShiftNomenclatureRests = new List<DocCloseShiftNomenclatureRests>();
-                /*if (docCloseShift.DocCloseShiftWithdrawals.Count == 0)
-                    {
-                        docWithdrawalId = SqlGuidUtil.NewSequentialid();
-                        docCloseShift.DocCloseShiftWithdrawals.Add
-                        (
-                            new DocWithdrawal
-                            {
-                                DocID = docWithdrawalId,
-                                DocWithdrawalMaterials = new List<DocWithdrawalMaterials>(),
-                                Docs = new Docs()
-                                {
-                                    DocID = docWithdrawalId,
-                                    Date = docCloseShift.Date,
-                                    DocTypeID = (byte)DocTypes.DocWithdrawal,
-                                    IsConfirmed = docCloseShift.IsConfirmed,
-                                    PlaceID = WorkSession.PlaceID,
-                                    ShiftID = WorkSession.ShiftID,
-                                    UserID = WorkSession.UserID,
-                                    PrintName = WorkSession.PrintName
-                                }
-                            }
-                        );
-                    }*/
+                if (docCloseShift.DocCloseShiftMovementProducts == null)
+                    docCloseShift.DocCloseShiftMovementProducts = new List<DocCloseShiftMovementProducts>();
+                if (docCloseShift.DocCloseShiftUtilizationProducts == null)
+                    docCloseShift.DocCloseShiftUtilizationProducts = new List<DocCloseShiftUtilizationProducts>();
+
                 gammaBase.DocCloseShiftSamples.RemoveRange(docCloseShift.DocCloseShiftSamples);
                 if (Samples != null)
                     foreach (var sample in Samples)
@@ -617,8 +493,8 @@ namespace Gamma.ViewModels
                     }
 
                 gammaBase.DocCloseShiftRemainders.RemoveRange(docCloseShift.DocCloseShiftRemainders.Where(p => p.RemainderTypeID != null));//(p => (p.RemainderTypeID ?? 0) != 0));
-                if (BeginProducts != null)
-                    foreach (var Product in BeginProducts)
+                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.BeginProducts != null)
+                    foreach (var Product in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.BeginProducts)
                     {
                         docCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
                         {
@@ -627,11 +503,26 @@ namespace Gamma.ViewModels
                             DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                             RemainderTypeID = Product.RemainderTypeID,
                             Quantity = Product.Quantity,
-                            StateID = Product.StateID
+                            StateID = Product.StateID,
+                            IsMaterial = true
                         });
                     }
-                if (EndProducts != null)
-                    foreach (var Product in EndProducts)
+                if (DocCloseShiftProductsGrid?.BeginProducts != null)
+                    foreach (var Product in DocCloseShiftProductsGrid?.BeginProducts)
+                    {
+                        docCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
+                        {
+                            DocID = docId,
+                            ProductID = Product.ProductID,
+                            DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
+                            RemainderTypeID = Product.RemainderTypeID,
+                            Quantity = Product.Quantity,
+                            StateID = Product.StateID,
+                            IsMaterial = false
+                        });
+                    }
+                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.EndProducts != null)
+                    foreach (var Product in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.EndProducts)
                     {
                         if (docCloseShift.DocCloseShiftRemainders.Where(p => (p.RemainderTypeID ?? 0) == 0 && p.ProductID == Product.ProductID).Count() == 0)
                             docCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
@@ -641,7 +532,23 @@ namespace Gamma.ViewModels
                                 DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                                 RemainderTypeID = Product.RemainderTypeID,
                                 Quantity = Product.Quantity,
-                                StateID = Product.StateID
+                                StateID = Product.StateID,
+                                IsMaterial = true
+                            });
+                    }
+                if (DocCloseShiftProductsGrid?.EndProducts != null)
+                    foreach (var Product in DocCloseShiftProductsGrid?.EndProducts)
+                    {
+                        if (docCloseShift.DocCloseShiftRemainders.Where(p => (p.RemainderTypeID ?? 0) == 0 && p.ProductID == Product.ProductID).Count() == 0)
+                            docCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
+                            {
+                                DocID = docId,
+                                ProductID = Product.ProductID,
+                                DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
+                                RemainderTypeID = Product.RemainderTypeID,
+                                Quantity = Product.Quantity,
+                                StateID = Product.StateID,
+                                IsMaterial = false
                             });
                     }
 
@@ -689,7 +596,25 @@ namespace Gamma.ViewModels
                             MovementPlaceName = spool.OutPlaceName,
                             MovementPlaceZoneName = spool.OutPlaceZoneName,
                             DateMovement = spool.OutDate,
-                            IsMovementIn = true
+                            IsMovementIn = true,
+                            IsMaterial = true
+                        });
+                    }
+                if (DocCloseShiftProductsGrid?.InProducts != null)
+                    foreach (var spool in DocCloseShiftProductsGrid?.InProducts)
+                    {
+                        docCloseShift.DocCloseShiftMovementProducts.Add(new DocCloseShiftMovementProducts
+                        {
+                            DocID = docId,
+                            DocCloseShiftMovementProductID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = spool.ProductId,
+                            DocMovementID = spool.DocMovementId,
+                            Quantity = spool.Quantity,
+                            MovementPlaceName = spool.OutPlaceName,
+                            MovementPlaceZoneName = spool.OutPlaceZoneName,
+                            DateMovement = spool.OutDate,
+                            IsMovementIn = true,
+                            IsMaterial = false
                         });
                     }
                 //gammaBase.DocCloseShiftMovementProducts.RemoveRange(docCloseShift.DocCloseShiftMovementProducts);
@@ -706,37 +631,63 @@ namespace Gamma.ViewModels
                             MovementPlaceName = spool.InPlaceName,
                             MovementPlaceZoneName = spool.InPlaceZoneName,
                             DateMovement = spool.InDate,
-                            IsMovementIn = false
+                            IsMovementIn = false,
+                            IsMaterial = true
+                        });
+                    }
+                if (DocCloseShiftProductsGrid?.OutProducts != null)
+                    foreach (var spool in DocCloseShiftProductsGrid?.OutProducts)
+                    {
+                        docCloseShift.DocCloseShiftMovementProducts.Add(new DocCloseShiftMovementProducts
+                        {
+                            DocID = docId,
+                            DocCloseShiftMovementProductID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = spool.ProductId,
+                            DocMovementID = spool.DocMovementId,
+                            Quantity = spool.Quantity,
+                            MovementPlaceName = spool.InPlaceName,
+                            MovementPlaceZoneName = spool.InPlaceZoneName,
+                            DateMovement = spool.InDate,
+                            IsMovementIn = false,
+                            IsMaterial = false
                         });
                     }
 
                 gammaBase.DocCloseShiftUtilizationProducts.RemoveRange(docCloseShift.DocCloseShiftUtilizationProducts);
-                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.UtilizationSpools != null)
-                    foreach (var utilizationSpool in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.UtilizationSpools)
+                if (WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.UtilizationProducts != null)
+                    foreach (var utilizationSpool in WithdrawalMaterialsGrid?.DocCloseShiftWithdrawalMaterials?.UtilizationProducts)
                     {
                         docCloseShift.DocCloseShiftUtilizationProducts.Add(new DocCloseShiftUtilizationProducts
                         {
                             DocID = docId,
                             DocCloseShiftUtilizationProductID = SqlGuidUtil.NewSequentialid(),
                             ProductID = utilizationSpool.ProductID,
-                            Quantity = utilizationSpool.Weight
+                            Quantity = utilizationSpool.Weight,
+                            IsMaterial = true
                         });
                     }
-
+                if (DocCloseShiftProductsGrid?.UtilizationProducts != null)
+                    foreach (var utilizationSpool in DocCloseShiftProductsGrid?.UtilizationProducts)
+                    {
+                        docCloseShift.DocCloseShiftUtilizationProducts.Add(new DocCloseShiftUtilizationProducts
+                        {
+                            DocID = docId,
+                            DocCloseShiftUtilizationProductID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = utilizationSpool.ProductID,
+                            Quantity = utilizationSpool.Quantity,
+                            IsMaterial = false
+                        });
+                    }
+                /*
                 if (IsChanged)
                 {
                     docCloseShift.DocCloseShiftDocs.Clear();
-                    /*               var docCloseShiftDocs = GammaBase.Docs.
-                                       Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
-                                           d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
-                                           d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
-                                           (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal));*/
                     foreach (var id in DocCloseDocIds)
                     {
                         docCloseShift.DocCloseShiftDocs.Add(gammaBase.Docs.First(d => d.DocID == id));
                     }
                 }
-
+            */
                 /*
                 gammaBase.DocWithdrawalMaterials.RemoveRange(
                     docCloseShift.DocCloseShiftWithdrawals.FirstOrDefault()?.DocWithdrawalMaterials);
@@ -754,6 +705,7 @@ namespace Gamma.ViewModels
                     });
                 }*/
                 WithdrawalMaterialsGrid?.SaveToModel(docId);
+                DocCloseShiftProductsGrid?.SaveToModel(docId);
 
                 gammaBase.SaveChanges();
 

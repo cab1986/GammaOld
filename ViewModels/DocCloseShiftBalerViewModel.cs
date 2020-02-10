@@ -49,6 +49,11 @@ namespace Gamma.ViewModels
                 () => SelectedBale != null);
         }
 
+        public void FillGridWithNoFillEnd()
+        {
+            throw new NotImplementedException();
+        }
+
         public void FillGrid()
         {
             UIServices.SetBusyState();

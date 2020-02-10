@@ -115,7 +115,8 @@ namespace Gamma.ViewModels
                             DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                             ProductID = remainder.ProductID,
                             IsSourceProduct = remainder.IsSourceProduct,
-                            DocWithdrawalID = remainder.DocWithdrawalId
+                            DocWithdrawalID = remainder.DocWithdrawalId,
+                            IsMaterial = true
                         };
                         gammaBase.DocCloseShiftRemainders.Add(docRemainder);
                     //}
@@ -195,14 +196,22 @@ namespace Gamma.ViewModels
 
         public void ClearGridWithIndex(byte index)
         {
+            var spool = SpoolRemainders.Where(s => s.Index == index).FirstOrDefault();
+            if (spool != null)
+                MessageManager.RecalcQuantityEndFromUnwinderReaminderEvent(spool.ProductID, spool.NomenclatureID, spool.CharacteristicID, -1, -spool.Weight);
             var newSpoolRemainders = new List<SpoolRemainder>();
             newSpoolRemainders.AddRange(SpoolRemainders.Where(s => s.Index != index));// не копируем предыдущий сохраненный тамбур на этом раскате
             SpoolRemainders = newSpoolRemainders;//SpoolRemainders?.Clear();
         }
+
+        public void FillGridWithNoFillEnd()
+        {
+            throw new NotImplementedException();
+        }
         
         /// <summary>
-        /// Перезаполнение тамбуров с раската
-        /// </summary>
+         /// Перезаполнение тамбуров с раската
+         /// </summary>
         public void FillGrid()
         {
             using (var gammaBase = DB.GammaDb)

@@ -203,7 +203,12 @@ namespace Gamma.ViewModels
                 //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
             }
         }
-        
+
+        public void FillGridWithNoFillEnd()
+        {
+            throw new NotImplementedException();
+        }
+
         public void FillGrid()
         {
             UIServices.SetBusyState();
@@ -287,7 +292,7 @@ namespace Gamma.ViewModels
                                 NomenclatureName = d.NomenclatureName,
                                 Number = d.Number,
                                 ProductId = d.ProductID,
-                                Quantity = (d.Quantity ?? 0) * 1000,
+                                Quantity = d.Quantity ?? 0,
                                 ProductKindName = d.ProductKindName,
                                 OrderTypeName = d.OrderTypeName,
                                 DocMovementId = d.DocMovementID,
@@ -302,7 +307,7 @@ namespace Gamma.ViewModels
                                 NomenclatureName = d.NomenclatureName,
                                 Number = d.Number,
                                 ProductId = d.ProductID,
-                                Quantity = (d.Quantity ?? 0) * 1000,
+                                Quantity = d.Quantity ?? 0,
                                 ProductKindName = d.ProductKindName,
                                 OrderTypeName = d.OrderTypeName,
                                 DocMovementId = d.DocMovementID,
@@ -739,7 +744,7 @@ namespace Gamma.ViewModels
                             Quantity = utilizationSpool.Weight
                         });
                         var decisionProduct = gammaBase.DocBrokeDecisionProducts.Where(d => d.ProductID == utilizationSpool.ProductID && d.Quantity * 1000 == utilizationSpool.Weight).OrderByDescending(d => d.DocBroke.Docs.Date).FirstOrDefault();
-                        if (!(decisionProduct?.DecisionApplied == true))
+                        if (decisionProduct != null && !(decisionProduct?.DecisionApplied == true))
                         {
                             decisionProduct.DecisionApplied = true;
                         }

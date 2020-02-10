@@ -68,6 +68,11 @@ namespace Gamma.ViewModels
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         private List<Guid> DocCloseDocIds { get; set; }
 
+        public void FillGridWithNoFillEnd()
+        {
+            throw new NotImplementedException();
+        }
+
         public void FillGrid()
         {
             UIServices.SetBusyState();

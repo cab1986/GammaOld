@@ -4,9 +4,9 @@ using System;
 
 namespace Gamma.Models
 {
-    public class Pallet
+    public class Pallet:Product
     {
-        public string NomenclatureName { get; set; }
+        /*public string NomenclatureName { get; set; }
         public int Quantity { get; set; }
         public Guid ProductId { get; set; }
         /// <summary>
@@ -15,6 +15,6 @@ namespace Gamma.Models
         public Guid DocId { get; set; }
         public Guid NomenclatureID { get; set; }
         public Guid CharacteristicID { get; set; }
-        public string Number { get; set; }
+        public string Number { get; set; }*/
     }
 }

@@ -22,6 +22,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> DocWithdrawalID { get; set; }
         public Nullable<int> RemainderTypeID { get; set; }
         public Nullable<int> StateID { get; set; }
+        public Nullable<bool> IsMaterial { get; set; }
     
         public virtual Docs DocWithdrawal { get; set; }
         public virtual Docs DocCloseShifts { get; set; }

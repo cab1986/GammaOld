@@ -51,6 +51,12 @@ namespace Gamma.ViewModels
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedGroupPack.ProductID),
                 () => SelectedGroupPack != null);
         }
+
+        public void FillGridWithNoFillEnd()
+        {
+            throw new NotImplementedException();
+        }
+
         public void FillGrid()
         {
             UIServices.SetBusyState();

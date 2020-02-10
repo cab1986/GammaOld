@@ -24,6 +24,7 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> DateMovement { get; set; }
         public Nullable<bool> IsMovementIn { get; set; }
         public Nullable<bool> IsRemainderOnPlace { get; set; }
+        public Nullable<bool> IsMaterial { get; set; }
     
         public virtual DocMovement DocMovement { get; set; }
         public virtual Docs Docs { get; set; }

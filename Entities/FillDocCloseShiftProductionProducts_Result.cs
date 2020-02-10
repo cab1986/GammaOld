@@ -11,16 +11,16 @@ namespace Gamma.Entities
 {
     using System;
     
-    public partial class FillDocCloseShiftUtilizationSpools_Result
+    public partial class FillDocCloseShiftProductionProducts_Result
     {
         public System.Guid NomenclatureID { get; set; }
-        public System.Guid CharacteristicID { get; set; }
+        public Nullable<System.Guid> CharacteristicID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public System.Guid ProductID { get; set; }
         public System.Guid DocID { get; set; }
         public string NomenclatureName { get; set; }
         public string Number { get; set; }
-        public Nullable<System.Guid> BaseMeasureUnitID { get; set; }
-        public string BaseMeasureUnit { get; set; }
+        public System.DateTime Date { get; set; }
+        public byte ProductKindID { get; set; }
     }
 }

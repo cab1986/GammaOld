@@ -155,6 +155,7 @@ namespace Gamma.Entities
         public virtual DbSet<DocShipmentOrderPersons> DocShipmentOrderPersons { get; set; }
         public virtual DbSet<CriticalLogs> CriticalLogs { get; set; }
         public virtual DbSet<vDocCloseShiftMaterials> vDocCloseShiftMaterials { get; set; }
+        public virtual DbSet<DocCloseShiftRepackProducts> DocCloseShiftRepackProducts { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1239,6 +1240,66 @@ namespace Gamma.Entities
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingWastesProduct_Result>("FillDocCloseShiftConvertingWastesProduct", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftProductionProducts_Result> FillDocCloseShiftProductionProducts(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftProductionProducts_Result>("FillDocCloseShiftProductionProducts", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<GetDocCloseShiftProductionProducts_Result> GetDocCloseShiftProductionProducts(Nullable<System.Guid> docID)
+        {
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocCloseShiftProductionProducts_Result>("GetDocCloseShiftProductionProducts", docIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftUtilizationProducts_Result> FillDocCloseShiftUtilizationProducts(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftUtilizationProducts_Result>("FillDocCloseShiftUtilizationProducts", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftRepackProducts_Result> FillDocCloseShiftRepackProducts(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftRepackProducts_Result>("FillDocCloseShiftRepackProducts", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }
 }

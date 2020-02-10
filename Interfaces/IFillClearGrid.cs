@@ -7,5 +7,6 @@ namespace Gamma.Interfaces
         void FillGrid();
         void ClearGrid();
         bool IsChanged { get; }
+        void FillGridWithNoFillEnd();
     }
 }

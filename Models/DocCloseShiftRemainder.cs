@@ -4,10 +4,11 @@ using System;
 using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Entities;
+using Gamma.Interfaces;
 
 namespace Gamma.Models
 {
-    public class DocCloseShiftRemainder : ViewModelBase
+    public class DocCloseShiftRemainder : ViewModelBase,IProduct
     {
         public DocCloseShiftRemainder()
         {
@@ -19,7 +20,9 @@ namespace Gamma.Models
         public string Number { get; set; }
         public string Nomenclature { get; set; }
         public decimal Quantity { get; set; }
-        public byte? ProductKindID { get; set; }
+        public ProductKind ProductKind { get; set; }
+        public Guid? NomenclatureID { get; set; }
+        public Guid? CharacteristicID { get; set; }
         private int? _remainderTypeID;
         public int? RemainderTypeID
         {
@@ -57,7 +60,7 @@ namespace Gamma.Models
 
         private void GetProductSpoolNomenclature(Guid? productId)
         {
-            var product = GammaBase.Products.Where(p => p.ProductID == productId).FirstOrDefault();
+            var product = GammaBase.vProductsInfo.Where(p => p.ProductID == productId).FirstOrDefault();
             if (product == null)
             {
                 Number = "";
@@ -66,7 +69,7 @@ namespace Gamma.Models
             else
             {
                 Number = product.Number;
-                Nomenclature = (product.ProductSpools?.C1CNomenclature?.Name ?? "" + " " + (product.ProductSpools?.C1CCharacteristics?.Name ?? ""));
+                Nomenclature = product.NomenclatureName;
             };
         }
 

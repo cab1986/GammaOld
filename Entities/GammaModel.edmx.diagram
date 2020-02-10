@@ -367,6 +367,11 @@
         <EntityTypeShape EntityType="GammaModel.vDocCloseShiftMaterials" Width="1.5" PointX="3.375" PointY="17.75" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftRepackProducts" Width="1.5" PointX="34.5" PointY="50.625" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_1CNomenclature" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

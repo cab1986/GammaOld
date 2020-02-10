@@ -12,15 +12,18 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocCloseShiftUtilizationProducts
+    public partial class DocCloseShiftRepackProducts
     {
-        public System.Guid DocCloseShiftUtilizationProductID { get; set; }
+        public System.Guid DocCloseShiftRepackProductID { get; set; }
         public System.Guid DocID { get; set; }
-        public System.Guid ProductID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
-        public Nullable<bool> IsMaterial { get; set; }
+        public decimal Quantity { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public System.Guid C1CCharacteristicID { get; set; }
+        public Nullable<System.Guid> C1CMeasureUnitID { get; set; }
     
         public virtual Docs Docs { get; set; }
-        public virtual Products Products { get; set; }
+        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
+        public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
+        public virtual C1CNomenclature C1CNomenclature { get; set; }
     }
 }

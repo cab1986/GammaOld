@@ -33,5 +33,8 @@ namespace Gamma.Entities
         public string MeasureUnit { get; set; }
         public Nullable<System.Guid> MeasureUnitID { get; set; }
         public Nullable<byte> NomenclatureKindID { get; set; }
+        public Nullable<bool> IsProductionProduct { get; set; }
+        public Nullable<bool> IsMaterial { get; set; }
+        public byte ProductKindID { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Gamma.Entities
 {
     using System;
     
-    public partial class FillDocCloseShiftUtilizationSpools_Result
+    public partial class FillDocCloseShiftUtilizationProducts_Result
     {
         public System.Guid NomenclatureID { get; set; }
         public System.Guid CharacteristicID { get; set; }
@@ -22,5 +22,8 @@ namespace Gamma.Entities
         public string Number { get; set; }
         public Nullable<System.Guid> BaseMeasureUnitID { get; set; }
         public string BaseMeasureUnit { get; set; }
+        public byte ProductKindID { get; set; }
+        public Nullable<bool> IsProductionProduct { get; set; }
+        public Nullable<bool> IsMaterial { get; set; }
     }
 }

@@ -337,6 +337,23 @@ namespace Gamma
         public Guid? ParentEventID { get; private set; }
     }
 
+    public class RecalcQuantityEndFromUnwinderReaminderMessage
+    {
+        public RecalcQuantityEndFromUnwinderReaminderMessage(Guid? productID, Guid? nomenclatureID, Guid? characteristicID, decimal quantity, decimal? delta)
+        {
+            ProductID = productID;
+            NomenclatureID = nomenclatureID;
+            CharacteristicID = characteristicID;
+            Quantity = quantity;
+            Delta = delta;
+        }
+        public Guid? ProductID { get; private set; }
+        public Guid? NomenclatureID { get; private set; }
+        public Guid? CharacteristicID { get; private set; }
+        public decimal Quantity { get; private set; }
+        public decimal? Delta { get; private set; }
+    }
+
     public static class MessageManager
     {
         public static void NomenclatureEdit(Guid nomenclatureId)
@@ -456,6 +473,9 @@ namespace Gamma
                     OpenDocProduct(DocProductKinds.DocProductGroupPack, productId);
                     break;
                 case ProductKind.ProductPallet:
+                    OpenDocProduct(DocProductKinds.DocProductPallet, productId);
+                    break;
+                case ProductKind.ProductPalletR:
                     OpenDocProduct(DocProductKinds.DocProductPallet, productId);
                     break;
             }
@@ -586,6 +606,11 @@ namespace Gamma
         public static void OpenLogEvent(Guid eventID, Guid? parentEventID)
         {
             Messenger.Default.Send(new OpenLogEventMessage(eventID, parentEventID));
+        }
+
+        public static void RecalcQuantityEndFromUnwinderReaminderEvent(Guid? productID, Guid? nomenclatureID, Guid? characteristicID, decimal quantity, decimal? delta)
+        {
+            Messenger.Default.Send(new RecalcQuantityEndFromUnwinderReaminderMessage (productID, nomenclatureID, characteristicID, quantity, delta));
         }
     }
 }

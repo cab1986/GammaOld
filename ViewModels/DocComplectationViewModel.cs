@@ -249,7 +249,7 @@ namespace Gamma.ViewModels
 			var complectedPallet = new ComplectationProduct
 			{
 				DocId = docProductionId,
-				ProductId = product.ProductId,
+				ProductId = product.ProductID,
 				Quantity = product.Quantity,
 				Barcode = product.Barcode,
 				Number = product.Number

@@ -14,6 +14,7 @@ using DevExpress.Mvvm;
 using Gamma.Common;
 using System.Collections;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Gamma.ViewModels
 {
@@ -25,26 +26,44 @@ namespace Gamma.ViewModels
     /// </summary>
     public class DocCloseShiftWithdrawalMaterialViewModel : /*DbEditItemWithNomenclatureViewModel*/SaveImplementedViewModel, ICheckedAccess
     {
-        
         /// <summary>
         /// Initializes a new instance of the DocCloseShiftWithdrawalMaterialViewModel class.
         /// </summary>
-        public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null)
+        public DocCloseShiftWithdrawalMaterialViewModel()
+        {
+            AddDocCloseShiftMaterialCommand = new DelegateCommand(AddDocCloseShiftMaterial, () => !IsReadOnly);
+            DeleteDocCloseShiftMaterialCommand = new DelegateCommand(DeleteDocCloseShiftMaterial, () => !IsReadOnly);
+            BackMaterialTabCommand = new DelegateCommand(() => SelectedMaterialTabIndex = 0);
+
+            MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
+            ProcessCellCommand = new DelegateCommand<List<object>>(ProcessCell);
+
+            ShowProductCommand = new DelegateCommand(() =>
+                    MessageManager.OpenDocProduct(SelectedProduct.ProductKind, SelectedProduct.ProductID),
+                    () => SelectedProduct != null);
+            ShowBeginProductCommand = new DelegateCommand(() =>
+                MessageManager.OpenDocProduct(SelectedBeginProduct.ProductKind, SelectedBeginProduct.ProductID),
+                () => SelectedBeginProduct != null);
+            ShowEndProductCommand = new DelegateCommand(() =>
+                MessageManager.OpenDocProduct(SelectedEndProduct.ProductKind, SelectedEndProduct.ProductID),
+                () => SelectedEndProduct != null);
+            ShowUtilizationProductCommand = new DelegateCommand(() =>
+                MessageManager.OpenDocProduct(SelectedUtilizationProduct.ProductKind, SelectedUtilizationProduct.ProductID),
+                () => SelectedUtilizationProduct != null);
+            MaterialTabActivateCommand = new DelegateCommand<byte>(MaterialTabActivate);
+        }
+        public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null):this()
         {
             GammaBase = gammaDb ?? DB.GammaDb;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
 
-            AddDocCloseShiftMaterialCommand = new DelegateCommand(AddDocCloseShiftMaterial, () => !IsReadOnly);
-            DeleteDocCloseShiftMaterialCommand = new DelegateCommand(DeleteDocCloseShiftMaterial, () => !IsReadOnly);
-            
-            MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
             PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
         }
 
-        public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null)
+        public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this()
         {
             GammaBase = gammaDb ?? DB.GammaDb;
             PlaceID = placeID;
@@ -54,11 +73,6 @@ namespace Gamma.ViewModels
             ProductionProducts = products;
             IsConfirmed = isConfirmed;
 
-            AddDocCloseShiftMaterialCommand = new DelegateCommand(AddDocCloseShiftMaterial, () => !IsReadOnly);
-            DeleteDocCloseShiftMaterialCommand = new DelegateCommand(DeleteDocCloseShiftMaterial, () => !IsReadOnly);
-            
-            MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
-            
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
             DocCloseShiftWithdrawalMaterials.LoadWithdrawalMaterials(docID, productionProductCharacteristicIDs);
             PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
@@ -90,9 +104,19 @@ namespace Gamma.ViewModels
         private bool IsConfirmed { get; }
         public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftMaterials") || WorkSession.DBAdmin) || IsConfirmed;
 
+        public DocCloseShiftRemainder SelectedBeginProduct { get; set; }
+        public DocCloseShiftRemainder SelectedEndProduct { get; set; }
+        public Product SelectedUtilizationProduct { get; set; }
+
         public DelegateCommand AddDocCloseShiftMaterialCommand { get; private set; }
         public DelegateCommand DeleteDocCloseShiftMaterialCommand { get; private set; }
-        
+        public DelegateCommand BackMaterialTabCommand { get; private set; }
+
+        public DelegateCommand ShowProductCommand { get; private set; }
+        public DelegateCommand ShowBeginProductCommand { get; private set; }
+        public DelegateCommand ShowEndProductCommand { get; private set; }
+        public DelegateCommand ShowUtilizationProductCommand { get; private set; }
+        public DelegateCommand<byte> MaterialTabActivateCommand { get; private set; }
 
         public ICommand<CellValue> MaterialRowUpdatedCommand { get; private set; }
         private void OnMaterialRowUpdated(CellValue value)
@@ -103,12 +127,19 @@ namespace Gamma.ViewModels
             //    Console.WriteLine("OnCellValueChanged");
         }
 
-        
+        private void MaterialTabActivate (byte activateTabIndex)
+        {
+            SelectedMaterialTabIndex = activateTabIndex;
+        }
+
         private List<DocCloseShiftWithdrawalMaterial.Product> ProductionProducts { get; set; }
 
         public bool IsWithdrawalMaterialIn { get; set; }
         public string NameWithdrawalMaterialIn { get; set; }
         public bool IsWithdrawalMaterial { get; set; }
+
+        public string HeaderQuantityField => @"Кол-во, кг/рул/пач";
+        public Product SelectedProduct { get; set; }
 
         private int _placeWithdrawalMaterialTypeID;
         public int PlaceWithdrawalMaterialTypeID
@@ -163,6 +194,51 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftMaterial SelectedDocCloseShiftMaterial { get; set; }
 
+        public ICommand<List<object>> ProcessCellCommand { get; private set; }
+        public void ProcessCell(List<object> cellInfo)
+        {
+            if (cellInfo != null && cellInfo.Count == 2)
+                switch (cellInfo[1].ToString())
+                {
+                    case "QuantityRemainderAtBegin":
+                        SelectedMaterialTabIndex = 2;
+                        break;
+                    case "QuantityIn":
+                        SelectedMaterialTabIndex = 3;
+                        break;
+                    case "QuantityOut":
+                        SelectedMaterialTabIndex = 4;
+                        break;
+                    case "QuantityUtil":
+                        SelectedMaterialTabIndex = 5;
+                        break;
+                    case "QuantityRemainderAtEnd":
+                        SelectedMaterialTabIndex = 6;
+                        break;
+                }
+                
+        }
+        /*
+        public class CellInfoMultiValueConverter : MarkupExtensionBase, IMultiValueConverter
+        {
+            public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                return values.ToList();
+            }
+            public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public abstract class MarkupExtensionBase : MarkupExtension
+        {
+            public override object ProvideValue(IServiceProvider serviceProvider)
+            {
+                return this;
+            }
+        }
+        */
         private void DeleteDocCloseShiftMaterial()
         {
             if (SelectedDocCloseShiftMaterial == null) return;
@@ -191,10 +267,10 @@ namespace Gamma.ViewModels
             }
         }
 
-        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, List<DocCloseShiftWithdrawalMaterial.Product> products)
+        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, List<DocCloseShiftWithdrawalMaterial.Product> products, List<SpoolRemainder> spoolUnwinderRemainders = null, bool IsFillEnd = true)
         {
             ProductionProducts = products;
-            DocCloseShiftWithdrawalMaterials.FillWithdrawalMaterials(productionProductCharacteristicIDs);
+            DocCloseShiftWithdrawalMaterials.FillWithdrawalMaterials(productionProductCharacteristicIDs, spoolUnwinderRemainders, IsFillEnd);
         }
 
         public void Clear()

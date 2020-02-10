@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" 
     xmlns:gc="clr-namespace:Gamma.Common"
+    xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
     xmlns:gamma="clr-namespace:Gamma"
     x:Class="Gamma.Views.DocCloseShiftView" 
@@ -48,6 +49,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftWithdrawalMaterialViewModel}">
             <v:DocCloseShiftWithdrawalMaterialView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftProductViewModel}">
+            <v:DocCloseShiftProductView />
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>
@@ -109,6 +113,7 @@
                     <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
                         <Button Content="Заполнить рапорт"  Height="30" Margin="10,15" Command="{Binding FillGridCommand}"/>
                         <Button Content="Очистить рапорт" Height="30" Margin="10" Command = "{Binding ClearGridCommand}"/>
+                        <Button Content="Заполнить без остатков"  Height="30" Margin="10,15" Command="{Binding FillGridWithNoEndCommand}"/>
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem VerticalAlignment="Stretch">

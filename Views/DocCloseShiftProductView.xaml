@@ -1,0 +1,266 @@
+﻿<UserControl xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:conv="clr-namespace:Gamma.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:g="clr-namespace:Gamma"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             x:Class="Gamma.Views.DocCloseShiftProductView" 
+             xmlns:gamma="clr-namespace:Gamma"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:DocCloseShiftProductViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <dx:DXTabControl SelectedIndex="{Binding SelectedTabIndex}">
+            <dx:DXTabItem Header="На начало смены">
+                <dxb:BarManager>
+                    <dxb:BarManager.Bars>
+                        <dxb:Bar Visible="False">
+                            <dxb:BarButtonItem Content="Добавить тамбур" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddBeginProductCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
+                            <dxb:BarButtonItem Content="Удалить тамбур" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteBeginProductCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
+                        </dxb:Bar>
+                    </dxb:BarManager.Bars>
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding BeginProducts}" SelectedItem="{Binding SelectedBeginProduct}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
+                            <dxg:GridColumn Header="Состояние" FieldName="StateName" Width="130" FixedWidth="True" />
+                            <dxg:GridColumn Header="Остаток" FieldName="RemainderTypeName" />
+                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+								ShowFixedTotalSummary="True"/>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowBeginProductCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
+                </dxb:BarManager>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Принято">
+                <dxb:BarManager>
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding InProducts}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName"  GroupIndex="0" ShowGroupedColumn="True" />
+                            <dxg:GridColumn Header="Вид" FieldName="ProductKindName"/>
+                            <dxg:GridColumn Header="Склад (откуда)" FieldName="OutPlaceName"/>
+                            <dxg:GridColumn Header="Зона (откуда)" FieldName="OutPlaceZoneName"/>
+                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+								ShowFixedTotalSummary="True"/>
+                        </dxg:GridControl.View>
+                    </dxg:GridControl>
+                </dxb:BarManager>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Изготовлено">
+                <dxb:BarManager>
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Дата" FieldName="Date" Width="130" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="dd.MM.yy HH:mm:ss" MaskType="DateTime" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" GroupIndex="0" ShowGroupedColumn="True" />
+                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Date" SummaryType="Min" DisplayFormat="С {0:dd.MM.yy HH:mm:ss}" />
+                            <dxg:GridSummaryItem FieldName="Date" SummaryType="Max" DisplayFormat="по {0:dd.MM.yy HH:mm:ss}" />
+                            <dxg:GridSummaryItem FieldName="NomenclatureName" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Left" FieldName="NomenclatureName" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+								ShowFixedTotalSummary="True"/>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
+                </dxb:BarManager>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Утилизация">
+                <dxb:BarManager>
+                    <dxb:BarManager.Bars>
+                        <dxb:Bar>
+                            <dxb:BarButtonItem Content="Добавить тамбур" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddUtilizationProductCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
+                            <dxb:BarButtonItem Content="Удалить тамбур" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteUtilizationProductCommand}" CommandParameter="{x:Static gamma:RemainderType.Begin}"/>
+                        </dxb:Bar>
+                    </dxb:BarManager.Bars>
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding UtilizationProducts}" SelectedItem="{Binding SelectedUtilizationProduct}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" GroupIndex="0" ShowGroupedColumn="True"/>
+                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" />
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="NomenclatureName" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Left" FieldName="NomenclatureName" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="True" AutoWidth="True"
+								ShowFixedTotalSummary="True">
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowUtilizationProductCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
+                </dxb:BarManager>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Переупаковано">
+                <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding RepackProducts}" VerticalAlignment="Stretch">
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn FieldName="NomenclatureName" AllowEditing="False" Header="Вид продукции"/>
+                        <dxg:GridColumn FieldName="Quantity" Width="120" FixedWidth="True" Header="{Binding HeaderQuantityField}" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:SpinEditSettings MinValue="0" Mask="f0" MaskUseAsDisplayFormat="True" IsFloatValue="False"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <!--<dxg:GridColumn Width="60" FixedWidth="True" Header="Ед. изм." FieldName="MeasureUnitId" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <dxe:ComboBoxEdit x:Name="PART_Editor" IsTextEditable="False"
+                                                      ItemsSource="{Binding RowData.Row.MeasureUnits}" DisplayMember="Value" ValueMember="Key" />
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>-->
+                    </dxg:GridControl.Columns>
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" AllowGrouping="False" ShowGroupPanel="False" EnableImmediatePosting="True">
+                            <dxg:TableView.ColumnHeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </dxg:TableView.ColumnHeaderTemplate>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                </dxg:GridControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Отдано">
+                <dxb:BarManager>
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding OutProducts}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" GroupIndex="0" ShowGroupedColumn="True" />
+                            <dxg:GridColumn Header="Вид" FieldName="ProductKindName"/>
+                            <dxg:GridColumn Header="Склад (куда)" FieldName="InPlaceName"/>
+                            <dxg:GridColumn Header="Зона (куда)" FieldName="InPlaceZoneName"/>
+                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+								ShowFixedTotalSummary="True"/>
+                        </dxg:GridControl.View>
+                    </dxg:GridControl>
+                </dxb:BarManager>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Остаток на конец смены">
+                <dxb:BarManager>
+                    <dxb:BarManager.Bars>
+                        <dxb:Bar Visible="False">
+                            <dxb:BarButtonItem Content="Добавить тамбур" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddEndProductCommand}" CommandParameter="{x:Static gamma:RemainderType.End}"/>
+                            <dxb:BarButtonItem Content="Удалить тамбур" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteEndProductCommand}" CommandParameter="{x:Static gamma:RemainderType.End}"/>
+                        </dxb:Bar>
+                    </dxb:BarManager.Bars>
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding EndProducts}" SelectedItem="{Binding SelectedEndProduct}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True" ReadOnly="True"/>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" ReadOnly="True"/>
+                            <dxg:GridColumn Header="Состояние" FieldName="StateName" Width="130" FixedWidth="True" ReadOnly="True"/>
+                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+								ShowFixedTotalSummary="True"/>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowEndProductCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
+
+                </dxb:BarManager>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
+    </Grid>
+    <dxmvvm:Interaction.Behaviors>
+        <g:UIAuthBehavior />
+    </dxmvvm:Interaction.Behaviors>
+</UserControl>

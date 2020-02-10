@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Gamma.Views"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
@@ -15,72 +16,93 @@
              d:DesignHeight="620" d:DesignWidth="850"
              d:DataContext="{d:DesignInstance Type=viewModels:ProductionTaskSGIViewModel, IsDesignTimeCreatable=False}">
     <Grid>
-
-        <dxlc:LayoutControl Orientation="Vertical">
-            <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
-                    <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}"/>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
-                    <dxe:ButtonEdit EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" AllowDefaultButton="False" IsReadOnly="True">
-                        <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
-                    </dxe:ButtonEdit>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Необходимое кол-во" LabelPosition="Top" Width="130">
-                    <dxe:SpinEdit EditValue="{Binding Quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" MinValue="0" />
-                </dxlc:LayoutItem>
-            </dxlc:LayoutGroup>
-            <dxlc:LayoutGroup Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="130">
-                    <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Параметры" LabelPosition="Top">
-                    <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
+        <dx:DXTabControl>
+            <dx:DXTabItem Header="Основная" >
+                <dxlc:LayoutControl Orientation="Vertical">
+                    <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Horizontal">
+                        <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
+                            <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+                            <dxe:ButtonEdit EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" AllowDefaultButton="False" IsReadOnly="True">
+                                <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                            </dxe:ButtonEdit>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Необходимое кол-во" LabelPosition="Top" Width="130">
+                            <dxe:SpinEdit EditValue="{Binding Quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" MinValue="0" />
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup Orientation="Horizontal">
+                        <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="130">
+                            <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Параметры" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
 						DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Сделано" LabelPosition="Top" Width="130">
-                    <dxe:SpinEdit EditValue="{Binding MadeQuantity}" IsReadOnly="True" AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}"/>
-                </dxlc:LayoutItem>
-            </dxlc:LayoutGroup>
-            <dxlc:LayoutGroup>
-                <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="100" HorizontalAlignment="Left">
-                    <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}"
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Сделано" LabelPosition="Top" Width="130">
+                            <dxe:SpinEdit EditValue="{Binding MadeQuantity}" IsReadOnly="True" AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="100" HorizontalAlignment="Left">
+                            <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}"
 					DisplayMember="PlaceName" ValueMember="PlaceID" SelectedItem="{Binding SelectedPlace, Mode=OneWayToSource}"/>
-                </dxlc:LayoutItem>
-                <Button Content="Печать образца" Height="22" VerticalAlignment="Bottom" Width="120" Command="{Binding PrintExampleCommand}">
-                    <Button.Style>
-                        <Style>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsReadOnly}"  Value="True">
-                                    <Setter Property="Button.Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <!--<dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
+                        </dxlc:LayoutItem>
+                        <Button Content="Печать образца" Height="22" VerticalAlignment="Bottom" Width="120" Command="{Binding PrintExampleCommand}">
+                            <Button.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsReadOnly}"  Value="True">
+                                            <Setter Property="Button.Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <!--<dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
                     <dxe:ComboBoxEdit IsTextEditable="False" 
                                                       ItemsSource="{Binding RobotNomenclatures}" EditValue="{Binding RobotProductNumber, UpdateSourceTrigger=PropertyChanged}"
                                                       DisplayMember="ProdName" ValueMember="ProdNumber"  AllowNullInput="True">
                     </dxe:ComboBoxEdit>
-                </dxlc:LayoutItem>-->                
-            </dxlc:LayoutGroup>
-            <dxlc:LayoutItem Label="Использованные тамбура" LabelPosition="Top">
-                <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>
-            </dxlc:LayoutItem>
-            <dxlc:LayoutGroup Orientation="Horizontal">
-                <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="400" Height="325" >
-                    <Border BorderThickness="1" BorderBrush="#FF000000">
-                        <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
-                    </Border>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="400" Height="325" >
-                    <Border BorderThickness="1" BorderBrush="#FF000000">
-                        <Image Source="{Binding TransportPackageLabelImage, Mode=OneWay}"/>
-                    </Border>
-                </dxlc:LayoutItem>
-            </dxlc:LayoutGroup>
-        </dxlc:LayoutControl>
+                </dxlc:LayoutItem>-->
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Использованные тамбура" LabelPosition="Top">
+                        <local:SpoolWithdrawByShiftView DataContext="{Binding UsedSpools}"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutGroup Orientation="Horizontal">
+                        <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="400" Height="265" >
+                            <Border BorderThickness="1" BorderBrush="#FF000000">
+                                <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
+                            </Border>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="400" Height="265" >
+                            <Border BorderThickness="1" BorderBrush="#FF000000">
+                                <Image Source="{Binding TransportPackageLabelImage, Mode=OneWay}"/>
+                            </Border>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Групповая этикетка" >
+                <dxlc:LayoutControl Orientation="Vertical">
+                    <dxlc:LayoutItem Label="Групповая этикетка" LabelPosition="Top" Width="700" Height="500" >
+                        <Border BorderThickness="1" BorderBrush="#FF000000">
+                            <Image Source="{Binding GroupPackageLabelImage, Mode=OneWay}"/>
+                        </Border>
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Транспортная этикетка" >
+                <dxlc:LayoutControl Orientation="Vertical">
+                    <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="700" Height="800" >
+                        <Border BorderThickness="1" BorderBrush="#FF000000">
+                            <Image Source="{Binding TransportPackageLabelImage, Mode=OneWay}"/>
+                        </Border>
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutControl>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
         <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior />
         </dxmvvm:Interaction.Behaviors>

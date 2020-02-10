@@ -118,7 +118,7 @@ namespace Gamma.ViewModels
                         .Select(p => p.ProductionTaskStateID)
                         .FirstOrDefault();
                 IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
-
+                
             }
         }
 
@@ -178,7 +178,7 @@ namespace Gamma.ViewModels
                     bi.BeginInit();
                     MemoryStream ms = new MemoryStream();
                     // Save to a memory stream...
-                    GroupPackageLabelPNG.Save(ms, ImageFormat.Bmp);
+                    GroupPackageLabelPNG.Save(ms, ImageFormat.Png);
                     // Rewind the stream... 
                     ms.Seek(0, SeekOrigin.Begin);
                     // Tell the WPF image to use this stream... 
@@ -206,7 +206,7 @@ namespace Gamma.ViewModels
                     bi.BeginInit();
                     MemoryStream ms = new MemoryStream();
                     // Save to a memory stream...
-                    TransportPackageLabelPNG.Save(ms, ImageFormat.Bmp);
+                    TransportPackageLabelPNG.Save(ms, ImageFormat.Png);
                     // Rewind the stream... 
                     ms.Seek(0, SeekOrigin.Begin);
                     // Tell the WPF image to use this stream... 

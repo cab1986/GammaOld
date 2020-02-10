@@ -30,7 +30,9 @@ namespace Gamma.Models
         private Guid? _productid;
         private decimal _weight;
         private decimal _length;
-
+        
+        public Guid? NomenclatureID { get; set; }
+        public Guid? CharacteristicID { get; set; }
         public Guid? ProductID
         {
             get { return _productid; }
@@ -50,6 +52,8 @@ namespace Gamma.Models
                     var productSpool =
                         gammaBase.ProductSpools.Include(ps => ps.Products.DocProductionProducts)
                             .FirstOrDefault(ps => ps.ProductID == value);
+                    NomenclatureID = productSpool?.C1CNomenclatureID;
+                    CharacteristicID = productSpool?.C1CCharacteristicID;
                     var quantity = productSpool?.Products.DocProductionProducts.First().Quantity * 1000 ?? 0;
                     if (quantity == 0) return;
                     MaxLength = (productSpool?.Length ?? 0) * MaxWeight / quantity;
@@ -66,7 +70,9 @@ namespace Gamma.Models
             set
             {
                 if (_weight == value) return;
+                var delta = value - _weight;
                 _weight = value;
+                MessageManager.RecalcQuantityEndFromUnwinderReaminderEvent(ProductID, NomenclatureID, CharacteristicID, value, delta);
                 if (MaxWeight == 0) return;
                 Length = Math.Round(Weight * MaxLength / MaxWeight, 2);
                 RaisePropertyChanged("Weight");

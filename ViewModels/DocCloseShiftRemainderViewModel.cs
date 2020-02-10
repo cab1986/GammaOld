@@ -192,15 +192,15 @@ namespace Gamma.ViewModels
                     }
                     var docID = SqlGuidUtil.NewSequentialid();
                     var docProductionProducts = new ObservableCollection<DocProductionProducts>
-                {
-                    new DocProductionProducts()
-                    {
-                        DocID = docID,
-                        ProductID = productId,
-                        C1CNomenclatureID = NomenclatureID,
-                        C1CCharacteristicID = CharacteristicID
-                    }
-                };
+                    { 
+                        new DocProductionProducts()
+                        {
+                            DocID = docID,
+                            ProductID = productId,
+                            C1CNomenclatureID = NomenclatureID,
+                            C1CCharacteristicID = CharacteristicID
+                        }
+                    };
                     var docProduction = new Docs()
                     {
                         DocID = docID,
@@ -222,7 +222,8 @@ namespace Gamma.ViewModels
                         ProductID = productId,
                         Quantity = Quantity * Coefficient,
                         IsSourceProduct = false,
-                        RemainderTypeID = 0
+                        RemainderTypeID = 0,
+                        IsMaterial = false
                     };
                     gammaBase.DocCloseShiftRemainders.Add(DocCloseShiftRemainder);
                     gammaBase.SaveChanges();

@@ -57,10 +57,11 @@ namespace Gamma.Controllers
 				return context.Products.Where(p => p.ProductID == productId)
 					.Select(p => new Product
 					{
-						ProductId = p.ProductID,
+						ProductID = p.ProductID,
 						Number = p.Number,
 						Barcode = p.BarCode,
-						Quantity = quantity
+						Quantity = quantity,
+                        ProductKind = (ProductKind)p.ProductKindID
 					})
 					.First();
 			}
