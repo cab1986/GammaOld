@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
                     var convertingrUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
                         ? new DocCloseShiftConvertingGridViewModel()
-                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, convertingrUnwinderRemainder.SpoolRemainders);
+                        : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, convertingrUnwinderRemainder);
                     break;
                 case (short)PlaceGroup.Baler:
                     CurrentViewModelGrid = new DocCloseShiftBalerViewModel(msg);

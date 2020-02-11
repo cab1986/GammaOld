@@ -267,7 +267,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, List<DocCloseShiftWithdrawalMaterial.Product> products, List<SpoolRemainder> spoolUnwinderRemainders = null, bool IsFillEnd = true)
+        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, List<DocCloseShiftWithdrawalMaterial.Product> products, DocCloseShiftUnwinderRemainderViewModel spoolUnwinderRemainders = null, bool IsFillEnd = true)
         {
             ProductionProducts = products;
             DocCloseShiftWithdrawalMaterials.FillWithdrawalMaterials(productionProductCharacteristicIDs, spoolUnwinderRemainders, IsFillEnd);

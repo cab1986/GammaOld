@@ -37,9 +37,11 @@ namespace Gamma.ViewModels
                 var newSpoolRemainders = new List<SpoolRemainder>();
                 newSpoolRemainders.AddRange(SpoolRemainders.Where(s => s.Index != index));// не копируем предыдущий сохраненный тамбур на этом раскате
                 var spoolRemainder = new SpoolRemainder(date, ShiftID, productId, isSourceProduct, docWithdrawalId);
+                MessageManager.RecalcQuantityEndFromUnwinderReaminderEvent(spoolRemainder.ProductID, spoolRemainder.NomenclatureID, spoolRemainder.CharacteristicID, -2, spoolRemainder.Weight);
+                //Вызвать обновление кол-ва в материалах обязательно до изменения кол-ва в тамбуре на раскате, так как в первом вызове это добавление нового тамбура на раскате в рапорт пока без веса.
                 spoolRemainder.Weight = spoolRemainder.MaxWeight;
                 spoolRemainder.Index = index;
-                
+
                 newSpoolRemainders.Add(spoolRemainder);
                 SpoolRemainders = newSpoolRemainders;
             }

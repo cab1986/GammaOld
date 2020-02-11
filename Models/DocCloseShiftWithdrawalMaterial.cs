@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Collections.ObjectModel;
+using Gamma.ViewModels;
 
 namespace Gamma.Models
 {
@@ -287,7 +288,7 @@ namespace Gamma.Models
                 }
         }
 
-        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, List<SpoolRemainder> spoolUnwinderRemainders, bool IsFillEnd = true)
+        public void FillWithdrawalMaterials(List<Guid> productionProductCharacteristicIDs, DocCloseShiftUnwinderRemainderViewModel spoolUnwinderRemainders, bool IsFillEnd = true)
         {
             ProductionProductCharacteristicIDs = productionProductCharacteristicIDs;
             {
@@ -519,9 +520,10 @@ namespace Gamma.Models
 
                     foreach (WithdrawalMaterial addedItem in withdrawalMaterialsRemainderAtEnd.Where(x => x.Quantity != 0))
                     {
-                        var spoolUnwinderRemainder = spoolUnwinderRemainders.Where(s => EndProducts.Where(p => p.CharacteristicID == addedItem.CharacteristicID ).Select(p => p.ProductID).ToList().Contains((Guid)s.ProductID)).FirstOrDefault();
-                        var endProductQuantity = spoolUnwinderRemainder == null ? 0 : EndProducts.FirstOrDefault(p => p.ProductID == spoolUnwinderRemainder?.ProductID).Quantity;
-                        var spoolUnwinderRemainderQuantity = spoolUnwinderRemainder?.Weight ?? 0;
+                        var endProducts = EndProducts.Where(p => p.CharacteristicID == addedItem.CharacteristicID).Select(p => p.ProductID).ToList();
+                        var spoolsUnwinderRemainder = endProducts == null || spoolUnwinderRemainders == null ? null : spoolUnwinderRemainders.SpoolRemainders.Where(s => endProducts.Contains((Guid)s.ProductID));
+                        var endProductsQuantity = spoolsUnwinderRemainder == null ? 0 : EndProducts.Where(p => spoolsUnwinderRemainder.Select(s => s.ProductID).ToList().Contains((Guid) p.ProductID)).Sum(p => p.Quantity);
+                        var spoolUnwinderRemainderQuantity = spoolsUnwinderRemainder?.Sum(s => s.Weight) ?? 0;
                         var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                         if (item == null)
                             DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
@@ -530,7 +532,7 @@ namespace Gamma.Models
                                 CharacteristicID = addedItem.CharacteristicID,
                                 NomenclatureName = addedItem.NomenclatureName,
                                 QuantityIsReadOnly = addedItem.QuantityIsReadOnly,
-                                QuantityRemainderAtEnd = addedItem.Quantity - endProductQuantity + spoolUnwinderRemainderQuantity,
+                                QuantityRemainderAtEnd = addedItem.Quantity - endProductsQuantity + spoolUnwinderRemainderQuantity,
                                 DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                                 MeasureUnit = addedItem.MeasureUnit,
                                 MeasureUnitID = addedItem.MeasureUnitID,
@@ -539,7 +541,7 @@ namespace Gamma.Models
                             });
                         else
                         {
-                            item.QuantityRemainderAtEnd = addedItem.Quantity - endProductQuantity + spoolUnwinderRemainderQuantity;
+                            item.QuantityRemainderAtEnd = addedItem.Quantity - endProductsQuantity + spoolUnwinderRemainderQuantity;
                             item.QuantityIsReadOnly = addedItem.QuantityIsReadOnly;
                         }
                     }
@@ -616,10 +618,14 @@ namespace Gamma.Models
             }
             else
             {
-                var quantityEnd = (msg.Quantity == -1) ?
+                /*var quantityEnd = (msg.Quantity == -1) ?
                          EndProducts.Where(p => p.NomenclatureID == msg.NomenclatureID && p.CharacteristicID == msg.CharacteristicID).Sum(p => p.Quantity) :
                          EndProducts.Where(p => p.ProductID != msg.ProductID && p.NomenclatureID == msg.NomenclatureID && p.CharacteristicID == msg.CharacteristicID).Sum(p => p.Quantity);
-                item.QuantityRemainderAtEnd = quantityEnd + (msg.Quantity == -1 ? 0 : msg.Quantity);
+            */
+                var quantityEndProduct = (msg.Quantity == -1 || msg.Quantity == -2) ? 
+                    EndProducts.Where(p => p.ProductID == msg.ProductID).Select(s => s.Quantity).FirstOrDefault()
+                    : 0 ;
+                item.QuantityRemainderAtEnd = (item.QuantityRemainderAtEnd ?? 0) + (msg.Delta ?? 0) + (msg.Quantity == -1 ? quantityEndProduct : msg.Quantity == -2 ? -quantityEndProduct : 0);
 
                 var n = new DocCloseShiftMaterial{ WithdrawByFact = false };
                 DocCloseShiftMaterials.Add(n);

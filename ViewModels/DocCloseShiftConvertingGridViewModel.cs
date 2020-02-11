@@ -39,7 +39,7 @@ namespace Gamma.ViewModels
             IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
 
-        public DocCloseShiftConvertingGridViewModel(Guid docId, List<SpoolRemainder> _spoolUnwinderRemainders) : this()
+        public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel _spoolUnwinderRemainders) : this()
         {
             using (var gammaBase = DB.GammaDb)
             {
@@ -368,7 +368,7 @@ namespace Gamma.ViewModels
         public bool IsEnabledSamples { get; set; }
 
         private List<Guid> productionProductCharacteristicIDs { get; set; }
-        private List<SpoolRemainder> spoolUnwinderRemainders { get; set; }
+        private DocCloseShiftUnwinderRemainderViewModel spoolUnwinderRemainders { get; set; }
         public void ClearGrid()
         {
             Pallets?.Clear();
