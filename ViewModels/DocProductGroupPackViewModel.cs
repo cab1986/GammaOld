@@ -286,6 +286,7 @@ namespace Gamma.ViewModels
                          select pinf).FirstOrDefault();
             if (p == null) return;
             if (!CheckAddedSpool(p.ProductID)) return;
+            var Quantity = p.Quantity;
             if (p.IsWrittenOff ?? false)
             {
                 if (GammaBase.vGroupPackSpools.Where(gs => gs.ProductID == p.ProductID)
@@ -296,7 +297,7 @@ namespace Gamma.ViewModels
                 ).Any(j => !j.IsWrittenOff) ) 
                 {
                     if (!UnpackGroupPack(p.ProductID)) return;
-                    p.Quantity = (from pinf in GammaBase.vProductsInfo
+                    Quantity = (from pinf in GammaBase.vProductsInfo
                                           where pinf.BarCode == barcode
                                           select pinf.Quantity).FirstOrDefault();
                 }
@@ -315,7 +316,7 @@ namespace Gamma.ViewModels
                                  ProductState = (ProductState)p.StateID,
                                  Nomenclature = p.NomenclatureName,
                                  ProductID = p.ProductID,
-                                 Weight = (int)(1000 * Decimal.Round(p.Quantity ?? 0, 3)),
+                                 Weight = (int)(1000 * Decimal.Round((Quantity ?? p.Quantity) ?? 0, 3)),
                                  Number = $"{p.Number} от {p.Date}"
                              };
             AddSpoolIfCorrect(spool);

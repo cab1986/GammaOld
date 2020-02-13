@@ -9,6 +9,7 @@ using DevExpress.Mvvm;
 using Gamma.Interfaces;
 using Gamma.Common;
 using Gamma.Entities;
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -216,6 +217,9 @@ namespace Gamma.ViewModels
          /// </summary>
         public void FillGrid()
         {
+            var dlgResult = MessageBox.Show("Последняя паллета(или тамбур) в вашу смену произведена и больше продукции выпускаться не будет?. Вы уверены?", "Обновить тамбура на раскате", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (dlgResult != MessageBoxResult.Yes)
+                return;
             using (var gammaBase = DB.GammaDb)
             {
                 var date = DB.CurrentDateTime;

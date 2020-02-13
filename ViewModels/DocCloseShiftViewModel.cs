@@ -93,7 +93,7 @@ namespace Gamma.ViewModels
             {
                 FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed && CanEditable());
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed && CanEditable());
-                FillGridWithNoEndCommand = new DelegateCommand(grid.FillGridWithNoFillEnd, () => !IsConfirmed && CanEditable());
+                FillGridWithNoEndCommand = new DelegateCommand(grid.FillGridWithNoFillEnd, () => !IsConfirmed && CanEditable() && ShiftID == 0);
             }
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && !grid.IsChanged &&
                 (place?.PlaceGroupID == (int)PlaceGroup.PM || place?.PlaceGroupID == (int)PlaceGroup.Rw || place?.PlaceGroupID == (int)PlaceGroup.Convertings));
