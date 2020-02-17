@@ -386,7 +386,7 @@ namespace Gamma.Models
                         StateID = d.StateID,
                         Quantity = d.Quantity,
                         RemainderTypeID = d.RemainderTypeID == 0 || d.RemainderTypeID == null ? 3 : 1,
-                        ProductKind = (ProductKind)d.Products.ProductKindID
+                        ProductKind = d.Products == null ? new ProductKind() : (ProductKind)d.Products.ProductKindID
                     }));
 
                 FillEndProducts(IsFillEnd);

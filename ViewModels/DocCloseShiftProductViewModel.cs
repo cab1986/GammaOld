@@ -346,7 +346,7 @@ namespace Gamma.ViewModels
                             StateID = d.StateID,
                             Quantity = d.Quantity,
                             RemainderTypeID = d.RemainderTypeID == 0 || d.RemainderTypeID == null ? 3 : 1,
-                            ProductKind = (ProductKind)d.Products.ProductKindID
+                            ProductKind = d.Products == null ? new ProductKind() :(ProductKind)d.Products.ProductKindID
                         }));
                 }
 
@@ -467,7 +467,7 @@ namespace Gamma.ViewModels
                             StateID = p.StateID,
                             Quantity = (p.Quantity ?? 0) * (p.ProductKindID == (byte)ProductKind.ProductSpool || p.ProductKindID == (byte)ProductKind.ProductGroupPack ? 1000 : 1),
                             RemainderTypeID = 2,
-                            ProductKind = (ProductKind)d.Products.ProductKindID
+                            ProductKind = d.Products == null ? new ProductKind() : (ProductKind)d.Products.ProductKindID
                         }));
 
                     //убираем из остатков тамбур, который утилизирован в этой смене
