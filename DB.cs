@@ -317,15 +317,18 @@ namespace Gamma
             });
             return permit == 2;
         }
-        [DbFunction("GammaDBModel", "GetShiftBeginTime")]
+        //[DbFunction("GammaDBModel", "GetShiftBeginTime")]
         public static DateTime? GetShiftBeginTime(DateTime date)
         {
-            throw new NotSupportedException("Direct calls are not supported");
+            //throw new NotSupportedException("Direct calls are not supported");
+            return GammaDb.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftBeginTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
         }
-        [DbFunction("GammaDBModel", "GetShiftEndTime")]
+        //[DbFunction("GammaDBModel", "GetShiftEndTime")]
         public static DateTime? GetShiftEndTime(DateTime date)
         {
-            throw new NotSupportedException("Direct calls are not supported");
+            // throw new NotSupportedException("Direct calls are not supported");
+            return GammaDb.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftEndTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
+
         }
 
     }

@@ -131,7 +131,7 @@ namespace Gamma.ViewModels
 #if DEBUG
             return DB.HaveWriteAccess("DocCloseShiftDocs");
 #else
-            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID)) && (DB.CurrentDateTime > SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, Date))));
+            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID)) && (DB.CurrentDateTime < ((DateTime)DB.GetShiftEndTime(Date.AddHours(-1))).AddHours(1));
 #endif
         }
 
