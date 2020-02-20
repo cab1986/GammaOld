@@ -93,7 +93,7 @@ namespace Gamma.ViewModels
             {
                 FillGridCommand = new DelegateCommand(grid.FillGrid, () => !IsConfirmed && CanEditable());
                 ClearGridCommand = new DelegateCommand(grid.ClearGrid, () => !IsConfirmed && CanEditable());
-                FillGridWithNoEndCommand = new DelegateCommand(grid.FillGridWithNoFillEnd, () => !IsConfirmed && CanEditable() && ShiftID == 0);
+                FillGridWithNoEndCommand = new DelegateCommand(grid.FillGridWithNoFillEnd, () => !IsConfirmed && FillGridWithNoEndCanEnable());
             }
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => Doc != null && CurrentViewModelGrid != null && !grid.IsChanged &&
                 (place?.PlaceGroupID == (int)PlaceGroup.PM || place?.PlaceGroupID == (int)PlaceGroup.Rw || place?.PlaceGroupID == (int)PlaceGroup.Convertings));
@@ -128,7 +128,16 @@ namespace Gamma.ViewModels
         }
         public bool CanEditable ()
         {
-            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID));
+#if DEBUG
+            return DB.HaveWriteAccess("DocCloseShiftDocs");
+#else
+            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID)) && (DB.CurrentDateTime > SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, Date))));
+#endif
+        }
+
+        public bool FillGridWithNoEndCanEnable()
+        {
+            return DB.HaveWriteAccess("DocCloseShiftDocs") && WorkSession.ShiftID == 0;
         }
 
         private SaveImplementedViewModel _currentViewModelGrid;
