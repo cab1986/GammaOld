@@ -28,6 +28,28 @@ namespace Gamma.Models
             PlaceID = (int)productionProducts[1];
         }
 
+
+        private decimal? _standardQuantity { get; set; }
+        /// <summary>
+        /// рассчитанное по норме количество материала на всю произведенную продукцию
+        /// </summary>
+        public decimal? StandardQuantity
+        {
+            get { return _standardQuantity; }
+            set
+            {
+                if (_standardQuantity != value)
+                {
+                    _standardQuantity = value;
+                    RefreshQuntity();
+                }
+                Border = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "Red" : "White";
+
+            }
+        }
+
+        public string Border { get; set; } = "White";
+
         private decimal? _quantityIn { get; set; }
         public decimal? QuantityIn
         {
@@ -137,6 +159,8 @@ namespace Gamma.Models
                     _quantityWithdrawalMaterial = value;
                     RefreshQuntity();
                 }
+                Border = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "Red" : "White";
+
             }
         }
 

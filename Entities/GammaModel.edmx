@@ -1543,6 +1543,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not hav
           <Property Name="QuantityRePack" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityRemainderAtEnd" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityWithdrawalMaterial" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -5410,7 +5411,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vDocCloseShiftMaterials].[QuantityExperimental] AS [QuantityExperimental], 
     [vDocCloseShiftMaterials].[QuantityRePack] AS [QuantityRePack], 
     [vDocCloseShiftMaterials].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
-    [vDocCloseShiftMaterials].[QuantityWithdrawalMaterial] AS [QuantityWithdrawalMaterial]
+    [vDocCloseShiftMaterials].[QuantityWithdrawalMaterial] AS [QuantityWithdrawalMaterial], 
+    [vDocCloseShiftMaterials].[StandardQuantity] AS [StandardQuantity]
     FROM [dbo].[vDocCloseShiftMaterials] AS [vDocCloseShiftMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
@@ -13340,6 +13342,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="QuantityExperimental" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="QuantityRePack" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="QuantityIsReadOnly" Type="Boolean" />
+          <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
         </EntityType>
         <Association Name="FK_DocCloseShiftWastes_1CCharacteristics_Product">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -15898,6 +15901,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vDocCloseShiftMaterials">
             <EntityTypeMapping TypeName="GammaModel.vDocCloseShiftMaterials">
               <MappingFragment StoreEntitySet="vDocCloseShiftMaterials">
+                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
                 <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
                 <ScalarProperty Name="QuantityRePack" ColumnName="QuantityRePack" />
                 <ScalarProperty Name="QuantityExperimental" ColumnName="QuantityExperimental" />

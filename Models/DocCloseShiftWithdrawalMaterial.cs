@@ -138,7 +138,8 @@ namespace Gamma.Models
                         MeasureUnit = d.MeasureUnitName,
                         MeasureUnitID = d.C1CMeasureUnitID,
                         WithdrawByFact = d.WithdrawByFact,
-                        QuantityIsReadOnly = d.QuantityIsReadOnly ?? false
+                        QuantityIsReadOnly = d.QuantityIsReadOnly ?? false,
+                        StandardQuantity = d.StandardQuantity
                     }).OrderBy(d => d.NomenclatureName));
             
             InProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.DocCloseShiftMovementProducts
@@ -294,6 +295,13 @@ namespace Gamma.Models
             {
                 Clear(IsFillEnd);
 
+                var docCloseShiftMaterials = new ItemsChangeObservableCollection<DocCloseShiftMaterial>(DocCloseShiftMaterials);
+                DocCloseShiftMaterials.Clear();
+                foreach (var item in docCloseShiftMaterials)
+                {
+                    DocCloseShiftMaterials.Add(item);
+                }
+
                 InProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
                                 .Where(d => (bool)d.IsMovementIn && (bool)d.IsMaterial).Select(d => new MovementProduct
                                 {
@@ -317,6 +325,8 @@ namespace Gamma.Models
                 {
                     var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
                     if (item == null)
+                    {
+                        var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == addedItem.NomenclatureId && (n.CharacteristicID == addedItem.CharacteristicId || (n.CharacteristicID == null && addedItem.CharacteristicId == null)))).FirstOrDefault();
                         DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
                         {
                             NomenclatureID = (Guid)addedItem.NomenclatureId,
@@ -328,8 +338,10 @@ namespace Gamma.Models
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
                             WithdrawByFact = true,
-                            NomenclatureKindID = addedItem.NomenclatureKindID
+                            NomenclatureKindID = addedItem.NomenclatureKindID,
+                            StandardQuantity = standardQuantity?.StandardQuantity
                         });
+                    }
                     else
                         item.QuantityIn = (item.QuantityIn ?? 0) + addedItem.Quantity;
                 }
@@ -357,6 +369,8 @@ namespace Gamma.Models
                 {
                     var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureId && (d.CharacteristicID == addedItem.CharacteristicId || (d.CharacteristicID == null && addedItem.CharacteristicId == null)));
                     if (item == null)
+                    {
+                        var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == addedItem.NomenclatureId && (n.CharacteristicID == addedItem.CharacteristicId || (n.CharacteristicID == null && addedItem.CharacteristicId == null)))).FirstOrDefault();
                         DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
                         {
                             NomenclatureID = (Guid)addedItem.NomenclatureId,
@@ -368,8 +382,10 @@ namespace Gamma.Models
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
                             WithdrawByFact = true,
-                            NomenclatureKindID = addedItem.NomenclatureKindID
+                            NomenclatureKindID = addedItem.NomenclatureKindID,
+                            StandardQuantity = standardQuantity?.StandardQuantity
                         });
+                    }
                     else
                         item.QuantityOut = (item.QuantityOut ?? 0) + addedItem.Quantity;
                 }
@@ -408,6 +424,8 @@ namespace Gamma.Models
                 {
                     var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                     if (item == null)
+                    {
+                        var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == addedItem.NomenclatureID && (n.CharacteristicID == addedItem.CharacteristicID || (n.CharacteristicID == null && addedItem.CharacteristicID == null)))).FirstOrDefault();
                         DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
                         {
                             NomenclatureID = (Guid)addedItem.NomenclatureID,
@@ -418,8 +436,10 @@ namespace Gamma.Models
                             DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                             MeasureUnit = addedItem.BaseMeasureUnit,
                             MeasureUnitID = addedItem.BaseMeasureUnitID,
-                            WithdrawByFact = true
+                            WithdrawByFact = true,
+                            StandardQuantity = standardQuantity?.StandardQuantity
                         });
+                    }
                     else
                         item.QuantityUtil = (item.QuantityUtil ?? 0) + addedItem.Weight;
                 }
@@ -445,7 +465,9 @@ namespace Gamma.Models
 
                 foreach (WithdrawalMaterial addedItem in WithdrawalMaterialsLoad)
                 {
-                    if (DocCloseShiftMaterials.Count(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null))) == 0)
+                    var materialItem = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
+                    if (materialItem == null)
+                    {
                         DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
                         {
                             NomenclatureID = addedItem.NomenclatureID,
@@ -455,8 +477,14 @@ namespace Gamma.Models
                             DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
-                            WithdrawByFact = addedItem.WithdrawByFact
+                            WithdrawByFact = addedItem.WithdrawByFact,
+                            StandardQuantity = addedItem.Quantity
                         });
+                    }
+                    else
+                    {
+                        materialItem.StandardQuantity = addedItem.Quantity;
+                    };
                 }
 
                 var withdrawalMaterialsRemainderAtBegin =
@@ -481,6 +509,8 @@ namespace Gamma.Models
                 {
                     var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                     if (item == null)
+                    {
+                        var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == addedItem.NomenclatureID && (n.CharacteristicID == addedItem.CharacteristicID || (n.CharacteristicID == null && addedItem.CharacteristicID == null)))).FirstOrDefault();
                         DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
                         {
                             NomenclatureID = (Guid)addedItem.NomenclatureID,
@@ -492,8 +522,10 @@ namespace Gamma.Models
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
                             WithdrawByFact = addedItem.WithdrawByFact,
-                            NomenclatureKindID = addedItem.NomenclatureKindID
+                            NomenclatureKindID = addedItem.NomenclatureKindID,
+                            StandardQuantity = standardQuantity?.StandardQuantity
                         });
+                    }
                     else
                         item.QuantityRemainderAtBegin = addedItem.Quantity;
                 }
@@ -526,6 +558,8 @@ namespace Gamma.Models
                         var spoolUnwinderRemainderQuantity = spoolsUnwinderRemainder?.Sum(s => s.Weight) ?? 0;
                         var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                         if (item == null)
+                        {
+                            var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == addedItem.NomenclatureID && (n.CharacteristicID == addedItem.CharacteristicID || (n.CharacteristicID == null && addedItem.CharacteristicID == null)))).FirstOrDefault();
                             DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
                             {
                                 NomenclatureID = (Guid)addedItem.NomenclatureID,
@@ -537,14 +571,23 @@ namespace Gamma.Models
                                 MeasureUnit = addedItem.MeasureUnit,
                                 MeasureUnitID = addedItem.MeasureUnitID,
                                 WithdrawByFact = addedItem.WithdrawByFact,
-                                NomenclatureKindID = addedItem.NomenclatureKindID
+                                NomenclatureKindID = addedItem.NomenclatureKindID,
+                                StandardQuantity = standardQuantity?.StandardQuantity
                             });
+                        }
                         else
                         {
                             item.QuantityRemainderAtEnd = addedItem.Quantity - endProductsQuantity + spoolUnwinderRemainderQuantity;
                             item.QuantityIsReadOnly = addedItem.QuantityIsReadOnly;
                         }
                     }
+                }
+
+                foreach (DocCloseShiftMaterial addedItem in DocCloseShiftMaterials.Where(x => x.StandardQuantity == null || x.StandardQuantity == 0 ))
+                {
+                    var standardQuantity = DocCloseShiftMaterials.Where(d => d.StandardQuantity > 0 && d.AvailableNomenclatures.Any(n => n.NomenclatureID == addedItem.NomenclatureID && (n.CharacteristicID == addedItem.CharacteristicID || (n.CharacteristicID == null && addedItem.CharacteristicID == null)))).FirstOrDefault();
+                    if (standardQuantity != null)
+                        addedItem.StandardQuantity = standardQuantity.StandardQuantity;
                 }
 
                 foreach (DocCloseShiftMaterial addedItem in DocCloseShiftMaterials.Where(x => x.QuantityWithdrawalMaterial != 0))
@@ -564,15 +607,14 @@ namespace Gamma.Models
                             WithdrawByFact = addedItem.WithdrawByFact
                         });
                 }
-
-
+                
             }
         }
 
         public void Clear(bool IsFillEnd = true)
         {
             WithdrawalMaterials?.Clear();
-            foreach (var item in DocCloseShiftMaterials.Where(ps => ps.QuantityIsReadOnly))
+            foreach (var item in DocCloseShiftMaterials?.Where(ps => ps.QuantityIsReadOnly))
             {
                 item.QuantityIn = null;
                 item.QuantityOut = null;

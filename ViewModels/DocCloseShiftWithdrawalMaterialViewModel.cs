@@ -479,6 +479,31 @@ namespace Gamma.ViewModels
                         if (materialInDB.Any(d => d.DocCloseShiftMaterialTypeID == 7))
                             gammaBase.DocCloseShiftMaterials.RemoveRange(materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == 7));
                     }
+                    if (material.StandardQuantity != null)
+                    {
+                        var item = materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == 8).FirstOrDefault();
+                        if (item == null)
+                            docCloseShift.DocCloseShiftMaterials.Add(new DocCloseShiftMaterials
+                            {
+                                DocID = docId,
+                                C1CNomenclatureID = material.NomenclatureID,
+                                C1CCharacteristicID = material.CharacteristicID,
+                                DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
+                                DocCloseShiftMaterialTypeID = 8,
+                                Quantity = material.StandardQuantity ?? 0,
+                                C1CMeasureUnitID = material.MeasureUnitID,
+                                WithdrawByFact = material.WithdrawByFact
+                            });
+                        else
+                        {
+                            item.Quantity = material.StandardQuantity ?? 0;
+                        }
+                    }
+                    else
+                    {
+                        if (materialInDB.Any(d => d.DocCloseShiftMaterialTypeID == 8))
+                            gammaBase.DocCloseShiftMaterials.RemoveRange(materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == 8));
+                    }
                     if (material.QuantityWithdrawalMaterial != null)
                     {
                         var item = materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == 0).FirstOrDefault();

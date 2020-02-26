@@ -280,11 +280,19 @@ namespace Gamma.Models
         public Guid? DocMovementID { get; set; }
         public int? NomenclatureKindID { get; set; }
 
+        private bool _quantityIsReadOnly { get; set; }
         /// <summary>
         /// Можно ли менять количество
         /// </summary>
-        public bool QuantityIsReadOnly { get; set; }
-
+        public bool QuantityIsReadOnly
+        {
+            get { return _quantityIsReadOnly; }
+            set
+            {
+                _quantityIsReadOnly = value;
+            }
+        }
+        
         /// <summary>
         /// Списание по факту (или по нормативам)
         /// </summary>
