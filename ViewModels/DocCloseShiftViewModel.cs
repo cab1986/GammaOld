@@ -114,7 +114,24 @@ namespace Gamma.ViewModels
         private bool IsNewDoc { get; set; }
         private int PlaceID { get; set; }
         public string Number { get; set; }
-        public DateTime Date { get; set; }
+        /// <summary>
+        /// Окончание смены
+        /// </summary>
+        private DateTime ShiftEndTime { get; set; }
+        private DateTime _date;
+        public DateTime Date
+        {
+            get
+            {
+                return _date;
+            }
+            set
+            {
+                _date = value;
+                ShiftEndTime = DB.GetShiftEndTimeFromDate(Date.AddHours(-1));
+            }
+        }
+
         public bool IsConfirmed { get; set; }
         private byte? ShiftID { get; set; }
         public bool IsVisibilityUnwinderRemainder { get; set; }
@@ -123,7 +140,7 @@ namespace Gamma.ViewModels
         {
             get
             {
-                return base.IsValid && CanEditable();
+                return base.IsValid && (CanEditable() || FillGridWithNoEndCanEnable());
             }
         }
         public bool CanEditable ()
@@ -131,7 +148,7 @@ namespace Gamma.ViewModels
 #if DEBUG
             return DB.HaveWriteAccess("DocCloseShiftDocs");
 #else
-            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID)) && (DB.CurrentDateTime < ((DateTime)DB.GetShiftEndTimeFromDate(Date.AddHours(-1))).AddHours(1));
+            return DB.HaveWriteAccess("DocCloseShiftDocs") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID)) && (DB.CurrentDateTime < ShiftEndTime.AddHours(1));
 #endif
         }
 
