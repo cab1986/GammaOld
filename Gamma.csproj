@@ -516,6 +516,9 @@
     <Compile Include="Entities\FillDocCloseShiftUtilizationSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetBatchSamples_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetDocCloseShiftProductionProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -526,6 +529,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\PlaceWithdrawalMaterialTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ProductionTaskConvertingSamples.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\RemainderTypes.cs">

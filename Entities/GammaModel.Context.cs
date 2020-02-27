@@ -156,6 +156,7 @@ namespace Gamma.Entities
         public virtual DbSet<CriticalLogs> CriticalLogs { get; set; }
         public virtual DbSet<vDocCloseShiftMaterials> vDocCloseShiftMaterials { get; set; }
         public virtual DbSet<DocCloseShiftRepackProducts> DocCloseShiftRepackProducts { get; set; }
+        public virtual DbSet<ProductionTaskConvertingSamples> ProductionTaskConvertingSamples { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1300,6 +1301,28 @@ namespace Gamma.Entities
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftRepackProducts_Result>("FillDocCloseShiftRepackProducts", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<GetBatchSamples_Result> GetBatchSamples(Nullable<System.Guid> productionTaskID, Nullable<int> intervalID)
+        {
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            var intervalIDParameter = intervalID.HasValue ?
+                new ObjectParameter("IntervalID", intervalID) :
+                new ObjectParameter("IntervalID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchSamples_Result>("GetBatchSamples", productionTaskIDParameter, intervalIDParameter);
+        }
+    
+        public virtual ObjectResult<string> DeleteSample(Nullable<System.Guid> productionTaskConvertingSampleID)
+        {
+            var productionTaskConvertingSampleIDParameter = productionTaskConvertingSampleID.HasValue ?
+                new ObjectParameter("ProductionTaskConvertingSampleID", productionTaskConvertingSampleID) :
+                new ObjectParameter("ProductionTaskConvertingSampleID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteSample", productionTaskConvertingSampleIDParameter);
         }
     }
 }

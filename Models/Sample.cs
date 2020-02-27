@@ -6,12 +6,15 @@ namespace Gamma.Models
 {
     public class Sample : ViewModelBase
         {
+            public Guid? ProductionTaskConvertingSampleID { get; set; }
             public Guid NomenclatureID { get; set; }
             public Guid? CharacteristicID { get; set; }
             public string NomenclatureName { get; set; }
             public Guid? MeasureUnitId { get; set; }
             public string MeasureUnit { get; set; }
             public decimal Quantity { get; set; }
+            public DateTime? Date { get; set; }
+            public int? ShiftID { get; set; }
             public Dictionary<Guid, string> MeasureUnits { get; set; }
 
             protected bool Equals(Sample other)

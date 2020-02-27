@@ -21,6 +21,7 @@ namespace Gamma.Entities
             this.ProductionTaskBatches = new HashSet<ProductionTaskBatches>();
             this.DocProduction = new HashSet<DocProduction>();
             this.ActiveProductionTasks = new HashSet<ActiveProductionTasks>();
+            this.ProductionTaskConvertingSamples = new HashSet<ProductionTaskConvertingSamples>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
@@ -46,5 +47,7 @@ namespace Gamma.Entities
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CNomenclature C1CNomenclature { get; set; }
         public virtual ProductionTaskConverting ProductionTaskConverting { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionTaskConvertingSamples> ProductionTaskConvertingSamples { get; set; }
     }
 }

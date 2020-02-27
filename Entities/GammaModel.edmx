@@ -1140,6 +1140,19 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="TransportPackLabelMD5" Type="varchar" MaxLength="32" />
           <Property Name="TransportPackLabelZPL" Type="varchar(max)" />
         </EntityType>
+        <EntityType Name="ProductionTaskConvertingSamples">
+          <Key>
+            <PropertyRef Name="ProductionTaskConvertingSampleID" />
+          </Key>
+          <Property Name="ProductionTaskConvertingSampleID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ShiftID" Type="int" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="ProductionTaskRWCutting">
           <Key>
             <PropertyRef Name="ProductionTaskRWCuttingID" />
@@ -4269,6 +4282,54 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="1" />
+          <End Role="ProductionTaskConvertingSamples" Type="Self.ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="ProductionTaskConvertingSamples" Type="Self.ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="ProductionTaskConvertingSamples" Type="Self.ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_ProductionTasks">
+          <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+          <End Role="ProductionTaskConvertingSamples" Type="Self.ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
           <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
@@ -4808,6 +4869,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="DeleteProductionTaskBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="DeleteSample" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskConvertingSampleID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="DeleteSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -4931,6 +4995,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         </Function>
         <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetBatchSamples" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="IntervalID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetCharacteristicNameForProductionTaskSGB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
@@ -5262,6 +5330,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="ProductGroupPacks" EntityType="Self.ProductGroupPacks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskConverting" EntityType="Self.ProductionTaskConverting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionTaskConvertingSamples" EntityType="Self.ProductionTaskConvertingSamples" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" Schema="dbo" store:Type="Tables" />
@@ -6419,6 +6488,22 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskConverting" EntitySet="ProductionTaskConverting" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_1CCharacteristics" Association="Self.FK_ProductionTaskConvertingSamples_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_1CMeasureUnits" Association="Self.FK_ProductionTaskConvertingSamples_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_1CNomenclature" Association="Self.FK_ProductionTaskConvertingSamples_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_ProductionTasks" Association="Self.FK_ProductionTaskConvertingSamples_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="Self.FK_ProductionTaskRWCutting_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
             <End Role="ProductionTaskRWCutting" EntitySet="ProductionTaskRWCutting" />
@@ -6635,6 +6720,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CDocComplectationNomenclature" Relationship="GammaModel.FK_1CDocComplectationNomenclature_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CDocComplectationNomenclature" />
           <NavigationProperty Name="DocCloseShiftMaterials" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftMaterials" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftRepackProducts" />
+          <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="ProductionTaskConvertingSamples" />
         </EntityType>
         <EntityType Name="C1CNomenclatureGroups">
           <Key>
@@ -8666,6 +8752,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="ProductionTaskConvertingSamples" EntityType="GammaModel.ProductionTaskConvertingSamples" />
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_1CCharacteristics" Association="GammaModel.FK_ProductionTaskConvertingSamples_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_1CMeasureUnits" Association="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits">
+            <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_1CNomenclature" Association="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskConvertingSamples_ProductionTasks" Association="GammaModel.FK_ProductionTaskConvertingSamples_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <FunctionImport Name="GetBatchSamples" ReturnType="Collection(GammaModel.GetBatchSamples_Result)">
+            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+            <Parameter Name="IntervalID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteSample" ReturnType="Collection(String)">
+            <Parameter Name="ProductionTaskConvertingSampleID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -9056,6 +9166,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTasks_1CCharacteristics" FromRole="ProductionTasks" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductionTasks_1CNomenclature" FromRole="ProductionTasks" ToRole="C1CNomenclature" />
           <NavigationProperty Name="ProductionTaskConverting" Relationship="GammaModel.FK_ProductionTaskConverting_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskConverting" />
+          <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskConvertingSamples" />
         </EntityType>
         <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
@@ -10887,6 +10998,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="MeasureUnitIndividualPackage" Type="Guid" />
           <NavigationProperty Name="DocCloseShiftWastes1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product" FromRole="C1CCharacteristics" ToRole="DocCloseShiftWastes" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftRepackProducts" />
+          <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskConvertingSamples" />
           </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -11750,6 +11862,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftMaterials" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftMaterials" />
           <NavigationProperty Name="DocCloseShiftWastes1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product" FromRole="C1CNomenclature" ToRole="DocCloseShiftWastes" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftRepackProducts" />
+          <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskConvertingSamples" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -13487,6 +13600,83 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="Guid" Name="BaseMeasureUnitID" Nullable="true" />
           <Property Type="String" Name="BaseMeasureUnit" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <EntityType Name="ProductionTaskConvertingSamples">
+          <Key>
+            <PropertyRef Name="ProductionTaskConvertingSampleID" />
+          </Key>
+          <Property Name="ProductionTaskConvertingSampleID" Type="Guid" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ShiftID" Type="Int32" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CCharacteristics" FromRole="ProductionTaskConvertingSamples" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" FromRole="ProductionTaskConvertingSamples" ToRole="C1CMeasureUnits" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature" FromRole="ProductionTaskConvertingSamples" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_ProductionTasks" FromRole="ProductionTaskConvertingSamples" ToRole="ProductionTasks" />
+        </EntityType>
+        <Association Name="FK_ProductionTaskConvertingSamples_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskConvertingSamples" Role="ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_1CMeasureUnits">
+          <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+          <End Type="GammaModel.ProductionTaskConvertingSamples" Role="ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CMeasureUnits">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskConvertingSamples" Role="ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskConvertingSamples_ProductionTasks">
+          <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskConvertingSamples" Role="ProductionTaskConvertingSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskConvertingSamples">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetBatchSamples_Result">
+          <Property Type="Guid" Name="ProductionTaskConvertingSampleID" Nullable="false" />
+          <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="ShiftID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="15" Scale="5" />
+          <Property Type="Guid" Name="C1CMeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -16010,6 +16200,37 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="ProductionTaskConvertingSamples">
+            <EntityTypeMapping TypeName="GammaModel.ProductionTaskConvertingSamples">
+              <MappingFragment StoreEntitySet="ProductionTaskConvertingSamples">
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="ProductionTaskConvertingSampleID" ColumnName="ProductionTaskConvertingSampleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetBatchSamples" FunctionName="GammaDBModel.GetBatchSamples">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetBatchSamples_Result">
+                <ScalarProperty Name="ProductionTaskConvertingSampleID" ColumnName="ProductionTaskConvertingSampleID" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteSample" FunctionName="GammaDBModel.DeleteSample" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

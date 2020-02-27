@@ -372,6 +372,11 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftRepackProducts_1CNomenclature" />
+        <EntityTypeShape EntityType="GammaModel.ProductionTaskConvertingSamples" Width="1.5" PointX="22.75" PointY="36.25" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_ProductionTasks" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

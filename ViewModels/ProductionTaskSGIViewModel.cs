@@ -16,6 +16,9 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Collections.Generic;
+using Gamma.DialogViewModels;
+using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -58,6 +61,11 @@ namespace Gamma.ViewModels
             }*/
             PrintExampleCommand = new DelegateCommand(PrintExample);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
+            AddSampleCommand = new DelegateCommand(AddSample);
+            ShowSampleCommand = new DelegateCommand(ShowSample, () => SelectedSample != null);
+            DeleteSampleCommand = new DelegateCommand(DeleteSample, () => SelectedSample != null);
+            Intervals = new List<string> { "Все", "За мою смену", "За последние сутки" };
+
         }
         /// <summary>
         /// Открытие задания для редактирования
@@ -70,6 +78,7 @@ namespace Gamma.ViewModels
                 var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Convertings).FirstOrDefault();
                 if (productionTask != null)
                 {
+                    ProductionTaskID = productionTask.ProductionTaskID;
                     NomenclatureID = productionTask.C1CNomenclatureID;
                     CharacteristicID = productionTask.C1CCharacteristicID;
                     PlaceID = productionTask.PlaceID;
@@ -125,6 +134,37 @@ namespace Gamma.ViewModels
         public event Func<bool> PrintExampleEvent;
 
         public DelegateCommand PrintExampleCommand { get; private set; }
+        public DelegateCommand AddSampleCommand { get; private set; }
+        public DelegateCommand ShowSampleCommand { get; private set; }
+        public DelegateCommand DeleteSampleCommand { get; private set; }
+
+        public List<string> Intervals { get; set; }
+        private int _intervalid;
+
+        public int Intervalid
+        {
+            get { return _intervalid; }
+            set
+            {
+                if (_intervalid == value) return;
+                _intervalid = value < 0 ? 0 : value;
+                if (_intervalid < 3) RefreshSample();
+            }
+        }
+
+        private ItemsChangeObservableCollection<Sample> _samples = new ItemsChangeObservableCollection<Sample>();
+        public ItemsChangeObservableCollection<Sample> Samples
+        {
+            get
+            {
+                return _samples;
+            }
+            set
+            {
+                _samples = value;
+                RaisePropertyChanged("Samples");
+            }
+        }
 
         public SpoolWithdrawByShiftViewModel UsedSpools { get; private set; }
 
@@ -261,6 +301,8 @@ namespace Gamma.ViewModels
             }
         }
 
+        public Guid ProductionTaskID { get; private set; }
+
         private int? _placeID;
         /// <summary>
         /// id выбранного передела
@@ -386,6 +428,244 @@ namespace Gamma.ViewModels
             MessageBox.Show(
                 "Не найдено ни одной основной спецификации для данной номенклатуры!\r\nВозможно вы выбрали номенклатуру другого филиала",
                 "Нет спецификаций", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+        }
+
+        private Sample _selectedSample;
+        public Sample SelectedSample
+        {
+            get
+            {
+                return _selectedSample;
+            }
+            set
+            {
+                _selectedSample = value;
+                RaisePropertyChanged("SelectedSample");
+            }
+        }
+
+        private void RefreshSample()
+        {
+            Samples = new ItemsChangeObservableCollection<Sample>(from sample in
+                                                                               GammaBase.GetBatchSamples(ProductionTaskID, Intervalid)
+                                                                  select new Sample
+                                                                  {
+                                                                      ProductionTaskConvertingSampleID = sample.ProductionTaskConvertingSampleID,
+                                                                      NomenclatureID = sample.C1CNomenclatureID,
+                                                                      CharacteristicID = sample.C1CCharacteristicID,
+                                                                      Date = sample.Date,
+                                                                      ShiftID = sample.ShiftID,
+                                                                      NomenclatureName = sample.NomenclatureName,
+                                                                      Quantity = sample.Quantity,
+                                                                      MeasureUnitId = sample.C1CMeasureUnitID,
+                                                                      MeasureUnit = sample.MeasureUnitName
+                                                                  });
+            /*
+            switch (Intervalid)
+            {
+                case 0:
+                    Samples = new ItemsChangeObservableCollection<Sample>(from sample in
+                                                                               GammaBase.GetBatchSamples(ProductionTaskID, Intervalid)
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID,
+                                                                                                  CurrentPlace = taskProducts.CurrentPlace
+                                                                                              });
+                    break;
+                case 1:
+                    Samples = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
+                                                                               GammaBase.GetBatchProducts(ProductionTaskBatchID)
+                                                                                              where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-10)//SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID,
+                                                                                                  CurrentPlace = taskProducts.CurrentPlace
+                                                                                              });
+                    break;
+                case 2:
+                    Samples = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
+                                                                               GammaBase.GetBatchProducts(ProductionTaskBatchID)
+                                                                                              where taskProducts.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-24)//DateTime.Now.AddHours(-24)
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID,
+                                                                                                  CurrentPlace = taskProducts.CurrentPlace
+                                                                                              });
+                    break;
+                default:
+                    Samples = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
+                                                                              GammaBase.GetBatchProducts(ProductionTaskBatchID)
+                                                                                              select new ProductInfo
+                                                                                              {
+                                                                                                  DocID = taskProducts.DocID,
+                                                                                                  ProductKind = (ProductKind)taskProducts.ProductKindID,
+                                                                                                  CharacteristicID = taskProducts.CharacteristicID,
+                                                                                                  NomenclatureID = taskProducts.NomenclatureID,
+                                                                                                  Date = taskProducts.Date,
+                                                                                                  NomenclatureName = taskProducts.NomenclatureName,
+                                                                                                  Number = taskProducts.Number,
+                                                                                                  Quantity = taskProducts.Quantity,
+                                                                                                  ProductID = taskProducts.ProductID,
+                                                                                                  Place = taskProducts.Place,
+                                                                                                  IsConfirmed = taskProducts.IsConfirmed,
+                                                                                                  PlaceID = taskProducts.PlaceID,
+                                                                                                  ShiftID = taskProducts.ShiftID,
+                                                                                                  CurrentPlace = taskProducts.CurrentPlace
+                                                                                              });
+                    break;
+            }*/
+        }
+        private void ShowSample()
+        {
+          /*  switch (SelectedSample.ProductKind)
+            {
+                case ProductKind.ProductSpool:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSample.ProductID);
+                    break;
+                case ProductKind.ProductGroupPack:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedSample.ProductID);
+                    break;
+                case ProductKind.ProductPallet:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedSample.ProductID);
+                    break;
+                case ProductKind.ProductPalletR:
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedSample.ProductID);
+                    break;
+                default:
+                    MessageBox.Show("Ошибка программы, действие не предусмотрено");
+                    return;
+            }*/
+        }
+
+        private void AddSample ()
+        {
+            var model = new SetQuantityDialogModel("Укажите кол-во в рулончиках (или пачках для салфеток)", "Отобранные образцы", 1, 1000);
+            var okCommand = new UICommand()
+            {
+                Caption = "OK",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
+            x => DebugFunc(),
+            x => model.Quantity > 0 && model.Quantity < 1000),
+            };
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                title: "Отобранные образцы",
+                viewModel: model);
+            if (result == okCommand)
+            {
+                using (var gammaBase = DB.GammaDb)
+                {
+                    var currentDateTime = DB.CurrentDateTime;
+                    var sample = new ProductionTaskConvertingSamples
+                    {
+                        ProductionTaskConvertingSampleID = SqlGuidUtil.NewSequentialid(),
+                        ProductionTaskID = ProductionTaskID,
+                        Date = currentDateTime,
+                        ShiftID = WorkSession.ShiftID,
+                        C1CNomenclatureID = (Guid)NomenclatureID,
+                        C1CCharacteristicID = (Guid)CharacteristicID,
+                        Quantity = model.Quantity
+                    };
+                    gammaBase.ProductionTaskConvertingSamples.Add(sample);
+                    gammaBase.SaveChanges();
+                    Samples.Add(new Sample 
+                        {
+                        ProductionTaskConvertingSampleID = sample.ProductionTaskConvertingSampleID,
+                        NomenclatureID = sample.C1CNomenclatureID,
+                        CharacteristicID = sample.C1CCharacteristicID,
+                        Date = sample.Date,
+                        ShiftID = sample.ShiftID,
+                        NomenclatureName = sample.C1CNomenclature.Name + ' ' + sample.C1CCharacteristics?.Name,
+                        Quantity = sample.Quantity,
+                        MeasureUnitId = sample.C1CMeasureUnitID,
+                        MeasureUnit = sample.C1CMeasureUnits?.Name
+                    });
+                }
+            }
+        }
+
+        private void DebugFunc()
+        {
+            System.Diagnostics.Debug.Print("Кол-во задано");
+        }
+
+        private void DeleteSample()
+        {
+            if (SelectedSample == null) return;
+            if (WorkSession.ShiftID != 0 && (SelectedSample.ShiftID != WorkSession.ShiftID))
+            {
+                MessageBox.Show("Вы не можете удалить отобранные образцы другой смены");
+                return;
+            }
+            if (MessageBox.Show(
+                "Вы уверены, что хотите удалить отобранные образцы от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "?",
+                "Удаление отобранных образцов", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+            {
+                return;
+            };
+            string delResult = "";
+            if (DB.HaveWriteAccess("ProductionTaskConvertingSamples"))
+            {
+                delResult = GammaBase.DeleteSample(SelectedSample.ProductionTaskConvertingSampleID).FirstOrDefault();
+            }
+            else
+            {
+                MessageBox.Show("Не достаточно прав для удаления!");
+            }
+            
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+                Samples.Remove(SelectedSample);
         }
 
         //public override bool CanSaveExecute()
