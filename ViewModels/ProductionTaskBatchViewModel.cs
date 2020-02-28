@@ -60,6 +60,7 @@ namespace Gamma.ViewModels
             {
                 GetProductionTaskInfo(ProductionTaskBatchID);
                 RefreshProduction();
+                RefreshSample();
                 Title = "Задание на производство № " + Number;
             }
 
@@ -88,6 +89,7 @@ namespace Gamma.ViewModels
                     GetStatusApplicator();
                     //ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить принтер" : "Включить принтер" : "Не нажимать";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
+                    IsEnabledSamples = true;
                     break;
 
             }
@@ -100,6 +102,9 @@ namespace Gamma.ViewModels
             PrintGroupPackLabelCommand = new DelegateCommand(PrintGroupPackLabel, CanPrintGroupPack);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
+            AddSampleCommand = new DelegateCommand(AddSample);
+            ShowSampleCommand = new DelegateCommand(ShowSample, () => SelectedSample != null);
+            DeleteSampleCommand = new DelegateCommand(DeleteSample, () => SelectedSample != null);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             Messenger.Default.Register<ProductChangedMessage>(this, ProductChanged);
 
@@ -1477,6 +1482,152 @@ namespace Gamma.ViewModels
                     MessageBoxImage.Warning);
             }
         }
+
+        public DelegateCommand AddSampleCommand { get; private set; }
+        public DelegateCommand ShowSampleCommand { get; private set; }
+        public DelegateCommand DeleteSampleCommand { get; private set; }
+
+        private int _sampleIntervalid;
+
+        public int SampleIntervalid
+        {
+            get { return _sampleIntervalid; }
+            set
+            {
+                if (_sampleIntervalid == value) return;
+                _sampleIntervalid = value < 0 ? 0 : value;
+                if (_sampleIntervalid < 3) RefreshSample();
+            }
+        }
+        public bool IsEnabledSamples { get; set; } = false;
+
+        private ItemsChangeObservableCollection<Sample> _samples = new ItemsChangeObservableCollection<Sample>();
+        public ItemsChangeObservableCollection<Sample> Samples
+        {
+            get
+            {
+                return _samples;
+            }
+            set
+            {
+                _samples = value;
+                RaisePropertyChanged("Samples");
+            }
+        }
+
+        private Sample _selectedSample;
+        public Sample SelectedSample
+        {
+            get
+            {
+                return _selectedSample;
+            }
+            set
+            {
+                _selectedSample = value;
+                RaisePropertyChanged("SelectedSample");
+            }
+        }
+
+        private void RefreshSample()
+        {
+            Samples = new ItemsChangeObservableCollection<Sample>
+                (from sample in GammaBase.GetBatchSamples(ProductionTaskBatchID, SampleIntervalid)
+                    select new Sample
+                    {
+                        ProductionTaskConvertingSampleID = sample.ProductionTaskConvertingSampleID,
+                        NomenclatureID = sample.C1CNomenclatureID,
+                        CharacteristicID = sample.C1CCharacteristicID,
+                        Date = sample.Date,
+                        ShiftID = sample.ShiftID,
+                        NomenclatureName = sample.NomenclatureName,
+                        Quantity = sample.Quantity,
+                        MeasureUnitId = sample.C1CMeasureUnitID,
+                        MeasureUnit = sample.MeasureUnitName
+                    });
+        }
+        private void ShowSample()
+        {
+            MessageBox.Show(SelectedSample?.Date.ToString());
+        }
+
+        private void AddSample()
+        {
+            var model = new SetQuantityDialogModel("Укажите кол-во в рулончиках (или пачках для салфеток)", "Отобранные образцы", 1, 1000);
+            var okCommand = new UICommand()
+            {
+                Caption = "OK",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
+            x => DebugFunc(),
+            x => model.Quantity > 0 && model.Quantity < 1000),
+            };
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                title: "Отобранные образцы",
+                viewModel: model);
+            if (result == okCommand)
+            {
+                string addResult = "";
+                if (DB.HaveWriteAccess("ProductionTaskConvertingSamples"))
+                {
+                    addResult = GammaBase.CreateSample(ProductionTaskBatchID, model.Quantity).FirstOrDefault();
+                }
+                else
+                {
+                    MessageBox.Show("Недостаточно прав для добавления!");
+                }
+
+                if (addResult != "")
+                {
+                    MessageBox.Show(addResult, "Добавить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
+                else
+                    RefreshSample();
+            }
+        }
+
+        private void DeleteSample()
+        {
+            if (SelectedSample == null) return;
+            if (WorkSession.ShiftID != 0 && (SelectedSample.ShiftID != WorkSession.ShiftID))
+            {
+                MessageBox.Show("Вы не можете удалить отобранные образцы другой смены");
+                return;
+            }
+            if (MessageBox.Show(
+                "Вы уверены, что хотите удалить отобранные образцы от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "?",
+                "Удаление отобранных образцов", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+            {
+                return;
+            };
+            string delResult = "";
+            if (DB.HaveWriteAccess("ProductionTaskConvertingSamples"))
+            {
+                delResult = GammaBase.DeleteSample(SelectedSample.ProductionTaskConvertingSampleID).FirstOrDefault();
+            }
+            else
+            {
+                MessageBox.Show("Недостаточно прав для удаления!");
+            }
+
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            RefreshSample();
+        }
+
 
     }
 

@@ -245,7 +245,15 @@ namespace Gamma.ViewModels
                 }));
                 if (IsEnabledSamples)
                 {
-                    var samples = new ObservableCollection<Sample>(Pallets
+                    var samples = new ObservableCollection<Sample>(gammaBase.FillDocCloseShiftConvertingSamples(PlaceID, ShiftID, CloseDate)
+                        .Select(p => new Sample
+                        {
+                            NomenclatureID = p.NomenclatureID,
+                            CharacteristicID = p.CharacteristicID,
+                            Quantity = p.Quantity,
+                            NomenclatureName = p.NomenclatureName,
+                        }));
+                    /*var productionNomenclatures = new ObservableCollection<Sample>(Pallets
                         .Select(p => new Sample
                         {
                             NomenclatureID = p.NomenclatureID,
@@ -253,6 +261,14 @@ namespace Gamma.ViewModels
                             Quantity = 0,
                             NomenclatureName = p.NomenclatureName,
                         }).Distinct());
+                    foreach (var item in productionNomenclatures)
+                    {
+                        if (!samples.Any(s => s.NomenclatureID == item.NomenclatureID && s.CharacteristicID == item.CharacteristicID))
+                        {
+                            samples.Add(item);
+                        }
+                    }*/
+                    Samples.Clear();
                     foreach (var sample in samples)
                     {
                         sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
@@ -339,20 +355,20 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var unit =
-                    gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)?
-                        .C1CMeasureUnitsPackage;
-                if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
-                    dict.Add(unit.C1CMeasureUnitID, unit.Name);
-                unit =
+                //    gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)?
+                //        .C1CMeasureUnitsPackage;
+                //if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
+                //    dict.Add(unit.C1CMeasureUnitID, unit.Name);
+                //unit = //оставляем только единицу хранения остатков
                     gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId)?
                         .C1CMeasureUnitStorage;
                 if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
                     dict.Add(unit.C1CMeasureUnitID, unit.Name);
-                unit =
-                    gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId)?
-                        .C1CMeasureUnitSets;
-                if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
-                    dict.Add(unit.C1CMeasureUnitID, unit.Name);
+                //unit =
+                //    gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId)?
+                //        .C1CMeasureUnitSets;
+                //if (unit != null && !dict.ContainsKey(unit.C1CMeasureUnitID))
+                //    dict.Add(unit.C1CMeasureUnitID, unit.Name);
             }
             return dict;
         }

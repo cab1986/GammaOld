@@ -43,12 +43,12 @@ namespace Gamma.Models
                     _standardQuantity = value;
                     RefreshQuntity();
                 }
-                Border = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "Red" : "White";
-
+                RefreshStandardQuantityVsQuantityWithdrawalMaterialPercent();
             }
         }
 
         public string Border { get; set; } = "White";
+        public string StandardQuantityVsQuantityWithdrawalMaterialPercent { get; set; }
 
         private decimal? _quantityIn { get; set; }
         public decimal? QuantityIn
@@ -159,14 +159,19 @@ namespace Gamma.Models
                     _quantityWithdrawalMaterial = value;
                     RefreshQuntity();
                 }
-                Border = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "Red" : "White";
-
+                RefreshStandardQuantityVsQuantityWithdrawalMaterialPercent();
             }
         }
 
         private void RefreshQuntity()
         {
             QuantityWithdrawalMaterial = (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityOut ?? 0) - (QuantityUtil ?? 0) - (QuantityExperimental ?? 0) - (QuantityRePack ?? 0) - (QuantityRemainderAtEnd ?? 0);
+        }
+
+        private void RefreshStandardQuantityVsQuantityWithdrawalMaterialPercent()
+        {
+            Border = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "Red" : "White";
+            StandardQuantityVsQuantityWithdrawalMaterialPercent = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "!!! >5%" : "";
         }
     }
 }

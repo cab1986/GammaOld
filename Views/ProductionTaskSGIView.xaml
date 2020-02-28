@@ -10,7 +10,6 @@
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:dialogs="clr-namespace:Gamma.Dialogs"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:g="clr-namespace:Gamma"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
@@ -105,74 +104,8 @@
                     </dxlc:LayoutItem>
                 </dxlc:LayoutControl>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Отобранные образцы">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <dxb:BarManager>
-                        <dxb:BarManager.Bars>
-                            <dxb:Bar>
-                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding AddSampleCommand}"/>
-                                <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteSampleCommand}"
-                                                   LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" GlyphSize="Small"/>
-                            </dxb:Bar>
-                        </dxb:BarManager.Bars>
-                    </dxb:BarManager>
-                    <dxlc:LayoutControl Grid.Row="1">
-                        <dxlc:LayoutItem Label="Диапазон:">
-                            <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding Intervalid}" x:Name="SamplesIntervalList" IsTextEditable="False"/>
-                        </dxlc:LayoutItem>
-                    </dxlc:LayoutControl>
-                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="2" ItemsSource="{Binding Samples}"
-                                     SelectionMode="Row" SelectedItem="{Binding SelectedSample}">
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn FieldName="Date" Header="Дата" ReadOnly="True" VisibleIndex="1" Width="120" FixedWidth="True">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="3"  Header="Номенклатура"/>
-                            <dxg:GridColumn FieldName="ShiftID" Header="Смена" VisibleIndex="2" Width="13" />
-                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Количество" VisibleIndex="4" Width="120" FixedWidth="True">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings Mask="f" MaskType="Numeric"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                        </dxg:GridControl.Columns>
-                        <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
-                        </dxg:GridControl.GroupSummary>
-                        <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
-                        </dxg:GridControl.TotalSummary>
-                        <dxg:GridControl.View>
-                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
-                        </dxg:GridControl.View>
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowSampleCommand}"/>
-                        </dxmvvm:Interaction.Behaviors>
-                    </dxg:GridControl>
-
-                </Grid>
-            </dx:DXTabItem>
         </dx:DXTabControl>
         <dxmvvm:Interaction.Behaviors>
-            <dx:DialogService DialogWindowStartupLocation="CenterOwner">
-                <dx:DialogService.ViewTemplate>
-                    <DataTemplate>
-                        <dialogs:SetQuantityDialog/>
-                    </DataTemplate>
-                </dx:DialogService.ViewTemplate>
-                <dx:DialogService.DialogStyle>
-                    <Style TargetType="dx:DXDialogWindow">
-                        <Setter Property="Width" Value="300"/>
-                        <Setter Property="Height" Value="160"/>
-                    </Style>
-                </dx:DialogService.DialogStyle>
-            </dx:DialogService>
             <g:UIAuthBehavior />
         </dxmvvm:Interaction.Behaviors>
     </Grid>

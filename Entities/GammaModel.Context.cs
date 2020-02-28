@@ -1303,17 +1303,17 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftRepackProducts_Result>("FillDocCloseShiftRepackProducts", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     
-        public virtual ObjectResult<GetBatchSamples_Result> GetBatchSamples(Nullable<System.Guid> productionTaskID, Nullable<int> intervalID)
+        public virtual ObjectResult<GetBatchSamples_Result> GetBatchSamples(Nullable<System.Guid> productionTaskBatchID, Nullable<int> intervalID)
         {
-            var productionTaskIDParameter = productionTaskID.HasValue ?
-                new ObjectParameter("ProductionTaskID", productionTaskID) :
-                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
     
             var intervalIDParameter = intervalID.HasValue ?
                 new ObjectParameter("IntervalID", intervalID) :
                 new ObjectParameter("IntervalID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchSamples_Result>("GetBatchSamples", productionTaskIDParameter, intervalIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchSamples_Result>("GetBatchSamples", productionTaskBatchIDParameter, intervalIDParameter);
         }
     
         public virtual ObjectResult<string> DeleteSample(Nullable<System.Guid> productionTaskConvertingSampleID)
@@ -1323,6 +1323,36 @@ namespace Gamma.Entities
                 new ObjectParameter("ProductionTaskConvertingSampleID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteSample", productionTaskConvertingSampleIDParameter);
+        }
+    
+        public virtual ObjectResult<string> CreateSample(Nullable<System.Guid> productionTaskBatchID, Nullable<int> quantity)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            var quantityParameter = quantity.HasValue ?
+                new ObjectParameter("Quantity", quantity) :
+                new ObjectParameter("Quantity", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CreateSample", productionTaskBatchIDParameter, quantityParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftConvertingSamples_Result> FillDocCloseShiftConvertingSamples(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingSamples_Result>("FillDocCloseShiftConvertingSamples", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }
 }

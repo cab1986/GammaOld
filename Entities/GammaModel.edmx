@@ -4849,6 +4849,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="CreateSample" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Quantity" Type="int" Mode="In" />
+        </Function>
         <Function Name="CreateUnloadSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
@@ -4887,6 +4891,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
         <Function Name="FillDocCloseShiftConvertingPallets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="FillDocCloseShiftConvertingSamples" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
@@ -4997,7 +5006,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="GetBatchSamples" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="IntervalID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetCharacteristicNameForProductionTaskSGB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
@@ -8770,11 +8779,20 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
           </AssociationSet>
           <FunctionImport Name="GetBatchSamples" ReturnType="Collection(GammaModel.GetBatchSamples_Result)">
-            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
             <Parameter Name="IntervalID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="DeleteSample" ReturnType="Collection(String)">
-            <Parameter Name="ProductionTaskConvertingSampleID" Mode="In" Type="Guid" />
+          <Parameter Name="ProductionTaskConvertingSampleID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="CreateSample" ReturnType="Collection(String)">
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+            <Parameter Name="Quantity" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FillDocCloseShiftConvertingSamples" ReturnType="Collection(GammaModel.FillDocCloseShiftConvertingSamples_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -13678,6 +13696,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <ComplexType Name="FillDocCloseShiftConvertingSamples_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="false" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="15" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Guid" Name="C1CMeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -16231,6 +16257,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="DeleteSample" FunctionName="GammaDBModel.DeleteSample" />
+          <FunctionImportMapping FunctionImportName="CreateSample" FunctionName="GammaDBModel.CreateSample" />
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftConvertingSamples" FunctionName="GammaDBModel.FillDocCloseShiftConvertingSamples">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftConvertingSamples_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

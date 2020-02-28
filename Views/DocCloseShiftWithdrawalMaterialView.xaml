@@ -94,11 +94,18 @@
                             <dxg:GridColumn Header="Расход" FieldName="QuantityWithdrawalMaterial" Width="60" FixedWidth="True" ReadOnly="True"> <!--CellTemplate="{StaticResource optimizedCellTemplate}">-->
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Border BorderThickness="0" Background="{Binding Path=RowData.Row.Border, Mode=OneWay}" >
+                                        <!--<Border BorderThickness="0" Background="{Binding Path=RowData.Row.Border, Mode=OneWay}" >-->
                                             <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
-                                        </Border>
+                                        <!--</Border>-->
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="50" FixedWidth="True" ReadOnly="True" >
+                                <!--<dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:TextEdit x:Name="PART_Editor" ShowNullText="False" DisplayFormatString="0.##" HorizontalContentAlignment="Center"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>-->
                             </dxg:GridColumn>
                             <dxg:GridColumn Header="По норме" FieldName="StandardQuantity" Width="60" FixedWidth="True" ReadOnly="True">
                                 <dxg:GridColumn.CellTemplate>
