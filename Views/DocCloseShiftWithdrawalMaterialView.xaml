@@ -100,12 +100,13 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="50" FixedWidth="True" ReadOnly="True" >
-                                <!--<dxg:GridColumn.CellTemplate>
+                            <dxg:GridColumn Header="5%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="30" FixedWidth="True" ReadOnly="True" >
+                                <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:TextEdit x:Name="PART_Editor" ShowNullText="False" DisplayFormatString="0.##" HorizontalContentAlignment="Center"/>
+                                        <!--<dxe:TextEdit x:Name="PART_Editor" ShowNullText="False" DisplayFormatString="0.##" HorizontalContentAlignment="Center"/>-->
+                                        <dxe:TextEdit x:Name="PART_Editor" FontSize="18" FontFamily="Wingdings 3" FontWeight="Bold" Foreground="Red" HorizontalContentAlignment="Center"/>
                                     </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>-->
+                                </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
                             <dxg:GridColumn Header="По норме" FieldName="StandardQuantity" Width="60" FixedWidth="True" ReadOnly="True">
                                 <dxg:GridColumn.CellTemplate>

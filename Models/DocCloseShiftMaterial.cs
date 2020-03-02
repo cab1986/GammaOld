@@ -171,7 +171,7 @@ namespace Gamma.Models
         private void RefreshStandardQuantityVsQuantityWithdrawalMaterialPercent()
         {
             Border = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "Red" : "White";
-            StandardQuantityVsQuantityWithdrawalMaterialPercent = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "!!! >5%" : "";
+            StandardQuantityVsQuantityWithdrawalMaterialPercent = (WithdrawByFact ?? false) && (StandardQuantity ?? 0) != 0 && (QuantityWithdrawalMaterial ?? 0) != 0 && (((StandardQuantity > QuantityWithdrawalMaterial ? StandardQuantity - QuantityWithdrawalMaterial : QuantityWithdrawalMaterial - StandardQuantity) / StandardQuantity) > (decimal)0.05) ? "`" : "";
         }
     }
 }
