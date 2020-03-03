@@ -89,7 +89,6 @@ namespace Gamma.ViewModels
                     GetStatusApplicator();
                     //ChangeStatusApplicatorText = WorkSession.IsRemotePrinting ? true ? "Отключить принтер" : "Включить принтер" : "Не нажимать";
                     ExpandProductionTaskProducts = WorkSession.PlaceGroup != PlaceGroup.Other;
-                    IsEnabledSamples = true;
                     break;
 
             }
@@ -574,6 +573,8 @@ namespace Gamma.ViewModels
             ContractorId = productionTaskBatch?.C1CContractorID;
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
+            if (productionTaskBatch?.ProductionTasks.FirstOrDefault().Places.IsEnabledSamplesInDocCloseShift != null)
+                IsEnabledSamples = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places.IsEnabledSamplesInDocCloseShift ?? true;
         }
 
         private void ChangeCurrentView(BatchKinds batchKind)
