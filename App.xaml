@@ -141,5 +141,6 @@
         <Style TargetType="{x:Type v:QualityReportPMView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:DocInventarisationView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
         <Style TargetType="{x:Type v:LogEventView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
+        <Style TargetType="{x:Type v:DocWithdrawalView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
     </Application.Resources>
 </Application>
