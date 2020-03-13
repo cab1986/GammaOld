@@ -51,7 +51,7 @@ namespace Gamma.ViewModels
             GammaBase = gammaDb ?? DB.GammaDb;
             using (var gammaBase = DB.GammaDb)
             {
-                DocCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Include(dr => dr.DocCloseShifts).Where(d => d.DocID == docID && (d.RemainderTypeID ?? 0) == 0 && (!d.IsSourceProduct ?? true)).
+                DocCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Include(dr => dr.DocCloseShifts).Where(d => d.DocID == docID && (d.RemainderTypeID ?? 0) == 0 && (!(d.IsSourceProduct ?? true))).
                 Select(d => d).FirstOrDefault();
                 if (DocCloseShiftRemainder == null)
                 {
@@ -85,7 +85,7 @@ namespace Gamma.ViewModels
                     using (var gammaBase = DB.GammaDb)
                     {
                         coefficient =
-                        gammaBase.C1CCharacteristics.First(c => c.C1CCharacteristicID == characteristicId)
+                        gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)
                             .C1CMeasureUnitsPackage.Coefficient ?? 1;
                         break;
                     }

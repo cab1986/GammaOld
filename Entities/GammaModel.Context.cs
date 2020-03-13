@@ -157,6 +157,7 @@ namespace Gamma.Entities
         public virtual DbSet<vDocCloseShiftMaterials> vDocCloseShiftMaterials { get; set; }
         public virtual DbSet<DocCloseShiftRepackProducts> DocCloseShiftRepackProducts { get; set; }
         public virtual DbSet<ProductionTaskConvertingSamples> ProductionTaskConvertingSamples { get; set; }
+        public virtual DbSet<DocUnwinderRemainders> DocUnwinderRemainders { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {

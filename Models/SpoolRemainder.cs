@@ -72,7 +72,7 @@ namespace Gamma.Models
                 if (_weight == value) return;
                 var delta = value - _weight;
                 _weight = value;
-                MessageManager.RecalcQuantityEndFromUnwinderReaminderEvent(ProductID, NomenclatureID, CharacteristicID, value, delta);
+                //MessageManager.RecalcQuantityEndFromUnwinderReaminderEvent(ProductID, NomenclatureID, CharacteristicID, value, delta);
                 if (MaxWeight == 0) return;
                 Length = Math.Round(Weight * MaxLength / MaxWeight, 2);
                 RaisePropertyChanged("Weight");

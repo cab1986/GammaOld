@@ -19,6 +19,7 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenManageUsersMessage>(this, OpenManageUsers);
             Messenger.Default.Register<OpenDocCloseShiftMessage>(this, OpenDocCloseShift);
             Messenger.Default.Register<OpenDocCloseShiftsMessage>(this, OpenDocCloseShifts);
+            Messenger.Default.Register<OpenDocUnwinderRemaindersMessage>(this, OpenDocUnwinderRemainders);
             Messenger.Default.Register<ConfigureComPortMessage>(this, ConfigureComPort);
             Messenger.Default.Register<PermitEditMessage>(this, PermitEdit);
             Messenger.Default.Register<RoleEditMessage>(this, RoleEdit);
@@ -39,12 +40,22 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenDocInventarisationMessage>(this, OpenDocInventarisation);
             Messenger.Default.Register<OpenDocWithdrawalMessage>(this, OpenDocWithdrawal);
             Messenger.Default.Register<OpenLogEventMessage>(this, OpenLogEvent);
+            Messenger.Default.Register<OpenDocUnwinderRemainderMessage>(this, OpenDocUnwinderRemainder);
+
+        }
+
+        private void OpenDocUnwinderRemainder(OpenDocUnwinderRemainderMessage msg)
+        {
+            UIServices.SetBusyState();
+            var view = new DocUnwinderRemainderView(msg);
+            view.Show();
         }
 
         private void OpenDocWithdrawal(OpenDocWithdrawalMessage msg)
         {
             UIServices.SetBusyState();
-            new DocWithdrawalView(msg.DocId).Show();
+            var view = new DocWithdrawalView(msg.DocId);
+            view.Show();
         }
 
         private void OpenDocInventarisation(OpenDocInventarisationMessage msg)
@@ -134,8 +145,11 @@ namespace Gamma.Common
         private void OpenDocProduct(OpenDocProductMessage msg)
         {
             var view = new DocProductView(msg);
+#if DEBUG
+            view.Show();
+#else
             view.ShowDialog();
-
+#endif
         }
         private void ConfigureComPort(ConfigureComPortMessage obj)
         {
@@ -151,7 +165,20 @@ namespace Gamma.Common
         private void OpenDocCloseShift(OpenDocCloseShiftMessage msg)
         {
             var view = new DocCloseShiftView(msg);
+#if DEBUG
+            view.Show();
+#else
             view.ShowDialog();
+#endif
+        }
+        private void OpenDocUnwinderRemainders(OpenDocUnwinderRemaindersMessage msg)
+        {
+            var view = msg.PlaceGroup == null ? new DocUnwinderRemaindersView() : new DocUnwinderRemaindersView((PlaceGroup)msg.PlaceGroup);
+#if DEBUG
+            view.Show();
+#else
+            view.ShowDialog();
+#endif
         }
         private void OpenManageUsers(OpenManageUsersMessage obj)
         {

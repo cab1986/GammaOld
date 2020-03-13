@@ -368,6 +368,7 @@
                             <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True" ReadOnly="True"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" ReadOnly="True"/>
                             <dxg:GridColumn Header="Состояние" FieldName="StateName" Width="130" FixedWidth="True" ReadOnly="True"/>
+                            <dxg:GridColumn Header="Остаток" FieldName="RemainderTypeName" />
                             <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>

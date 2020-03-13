@@ -839,6 +839,17 @@
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DocWithdrawalID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
+        <EntityType Name="DocUnwinderRemainders">
+          <Key>
+            <PropertyRef Name="DocUnwinderRemainderID" />
+          </Key>
+          <Property Name="DocUnwinderRemainderID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" />
+          <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
+          <Property Name="DocWithdrawalID" Type="uniqueidentifier" />
+          <Property Name="StateID" Type="int" />
+        </EntityType>
         <EntityType Name="DocWithdrawal">
           <Key>
             <PropertyRef Name="DocID" />
@@ -3750,6 +3761,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocUnwinderRemainders_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="0..1" />
+          <End Role="DocUnwinderRemainders" Type="Self.DocUnwinderRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocUnwinderRemainders">
+              <PropertyRef Name="DocWithdrawalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocUnwinderRemainders_Docs1">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocUnwinderRemainders" Type="Self.DocUnwinderRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocUnwinderRemainders">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocWithdrawal_Docs">
           <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
           <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="0..1" />
@@ -5311,6 +5346,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="DocShipmentOrders" EntityType="Self.DocShipmentOrders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocTypes" EntityType="Self.DocTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocUnpackWithdrawals" EntityType="Self.DocUnpackWithdrawals" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocUnwinderRemainders" EntityType="Self.DocUnwinderRemainders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocWithdrawal" EntityType="Self.DocWithdrawal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocWithdrawalMaterials" EntityType="Self.DocWithdrawalMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocWithdrawalProducts" EntityType="Self.DocWithdrawalProducts" Schema="dbo" store:Type="Tables" />
@@ -6320,6 +6356,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="FK_DocUnpackWithdrawals_DocWithdrawal" Association="Self.FK_DocUnpackWithdrawals_DocWithdrawal">
             <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
             <End Role="DocUnpackWithdrawals" EntitySet="DocUnpackWithdrawals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocUnwinderRemainders_Docs" Association="Self.FK_DocUnwinderRemainders_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocUnwinderRemainders" EntitySet="DocUnwinderRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocUnwinderRemainders_Docs1" Association="Self.FK_DocUnwinderRemainders_Docs1">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocUnwinderRemainders" EntitySet="DocUnwinderRemainders" />
           </AssociationSet>
           <AssociationSet Name="FK_DocWithdrawal_Docs" Association="Self.FK_DocWithdrawal_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -8794,6 +8838,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="DocUnwinderRemainders" EntityType="GammaModel.DocUnwinderRemainders" />
+          <AssociationSet Name="FK_DocUnwinderRemainders_Docs" Association="GammaModel.FK_DocUnwinderRemainders_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocUnwinderRemainders" EntitySet="DocUnwinderRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocUnwinderRemainders_Docs1" Association="GammaModel.FK_DocUnwinderRemainders_Docs1">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocUnwinderRemainders" EntitySet="DocUnwinderRemainders" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10017,6 +10070,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftMovementProducts" Relationship="GammaModel.FK_DocCloseShiftMovementProducts_Docs" FromRole="Docs" ToRole="DocCloseShiftMovementProducts" />
           <NavigationProperty Name="DocCloseShiftUtilizationProducts" Relationship="GammaModel.FK_DocCloseShiftUtilizationProducts_Docs" FromRole="Docs" ToRole="DocCloseShiftUtilizationProducts" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_Docs" FromRole="Docs" ToRole="DocCloseShiftRepackProducts" />
+          <NavigationProperty Name="DocUnwinderRemainders" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs" FromRole="Docs" ToRole="DocUnwinderRemainders" />
+          <NavigationProperty Name="DocUnwinderRemainders1" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs1" FromRole="Docs" ToRole="DocUnwinderRemainders" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -13704,6 +13759,43 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="C1CMeasureUnitID" Nullable="true" />
           <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="DocUnwinderRemainders">
+          <Key>
+            <PropertyRef Name="DocUnwinderRemainderID" />
+          </Key>
+          <Property Name="DocUnwinderRemainderID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
+          <Property Name="DocWithdrawalID" Type="Guid" />
+          <Property Name="StateID" Type="Int32" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs" FromRole="DocUnwinderRemainders" ToRole="Docs" />
+          <NavigationProperty Name="Docs1" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs1" FromRole="DocUnwinderRemainders" ToRole="Docs" />
+        </EntityType>
+        <Association Name="FK_DocUnwinderRemainders_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="0..1" />
+          <End Type="GammaModel.DocUnwinderRemainders" Role="DocUnwinderRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocUnwinderRemainders">
+              <PropertyRef Name="DocWithdrawalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocUnwinderRemainders_Docs1">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocUnwinderRemainders" Role="DocUnwinderRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocUnwinderRemainders">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -16270,6 +16362,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="DocUnwinderRemainders">
+            <EntityTypeMapping TypeName="GammaModel.DocUnwinderRemainders">
+              <MappingFragment StoreEntitySet="DocUnwinderRemainders">
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="DocWithdrawalID" ColumnName="DocWithdrawalID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocUnwinderRemainderID" ColumnName="DocUnwinderRemainderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

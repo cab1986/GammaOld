@@ -23,6 +23,7 @@ namespace Gamma.Models
         public ProductKind ProductKind { get; set; }
         public Guid? NomenclatureID { get; set; }
         public Guid? CharacteristicID { get; set; }
+        public bool? IsSourceProduct { get; set; }
         private int? _remainderTypeID;
         public int? RemainderTypeID
         {

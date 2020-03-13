@@ -96,6 +96,7 @@ namespace Gamma.ViewModels
                     PreviousView = null;
                 }, () => PreviousView != null);
                 OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroup>(MessageManager.OpenDocCloseShifts);
+                OpenDocUnwinderRemaindersCommand = new DelegateCommand<PlaceGroup>(MessageManager.OpenDocUnwinderRemainders);
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
                 FindProductionTaskCommand = new DelegateCommand(FindProductionTask, () => DB.HaveWriteAccess("ProductionTasks"));
                 OpenPlaceProductsCommand = new DelegateCommand<int>(OpenPlaceProducts);
@@ -121,6 +122,7 @@ namespace Gamma.ViewModels
 				OpenDocComplectationsCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel());
                 OpenLogEventsCommand = new DelegateCommand(() => CurrentView = new LogEventsViewModel());
                 CreateNewDocBrokeCommand = new DelegateCommand(() => MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid()));
+                UnwinderRemainderCommand = new DelegateCommand(UnwinderRemainder);
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -319,6 +321,32 @@ namespace Gamma.ViewModels
             MessageManager.OpenDocCloseShift(WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID, WorkSession.PersonID);
         }
 
+        private void UnwinderRemainder()
+        {
+            if (WorkSession.ShiftID == 0) return;
+            using (var gammaBase = DB.GammaDb)
+            {
+                var lastDoc =
+                    gammaBase.Docs.Where(
+                        d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int)DocTypes.DocUnwinderRemainder && d.PlaceID == WorkSession.PlaceID &&
+                        d.Date >= SqlFunctions.DateAdd("hh", 1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))) &&
+                        d.Date <= SqlFunctions.DateAdd("hh", -1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate())))
+                        && (WorkSession.PersonID == null || WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" || (WorkSession.PersonID != null && d.PersonGuid == WorkSession.PersonID))
+                        )
+                        .OrderByDescending(d => d.Date)
+                        .Select(d => d.DocID)
+                        .FirstOrDefault();
+                if (lastDoc != null && lastDoc != Guid.Empty)
+                {
+                    MessageBox.Show("Есть документ передачи остатков на раскатах за смену, он будет открыт для редактирования",
+                        "Остатки на раскатах за смену", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageManager.OpenDocUnwinderRemainder(lastDoc);
+                    return;
+                }
+            }
+            MessageManager.OpenDocUnwinderRemainder(WorkSession.PlaceID, DB.CurrentDateTime, WorkSession.ShiftID, WorkSession.PersonID);
+        }
+
         private void CurrentViewChanged()
         {
             if ((CurrentView as IItemManager)!= null)
@@ -453,6 +481,7 @@ namespace Gamma.ViewModels
         public DelegateCommand ConfigureComPortCommand { get; set; }
         public DelegateCommand CloseShiftCommand { get; set; }
         public DelegateCommand<PlaceGroup> OpenDocCloseShiftsCommand { get; private set; }
+        public DelegateCommand<PlaceGroup> OpenDocUnwinderRemaindersCommand { get; private set; }
         public DelegateCommand FindProductionTaskCommand { get; private set; }
         public DelegateCommand<int> OpenPlaceProductsCommand { get; private set; }
         public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
@@ -470,6 +499,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenInventarisationsCommand { get; set; }
         public DelegateCommand OpenHelpCommand { get; set; }
         public DelegateCommand OpenDocWithdrawalsCommand { get; set; }
+        public DelegateCommand UnwinderRemainderCommand { get; set; }
 
         public List<ReportItem> Reports { get; set; }
 

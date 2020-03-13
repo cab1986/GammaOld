@@ -520,7 +520,8 @@ namespace Gamma.ViewModels
                             RemainderTypeID = Product.RemainderTypeID,
                             Quantity = Product.Quantity,
                             StateID = Product.StateID,
-                            IsMaterial = true
+                            IsMaterial = true,
+                            IsSourceProduct = Product.IsSourceProduct
                         });
                     }
                 if (DocCloseShiftProductsGrid?.BeginProducts != null)
@@ -549,7 +550,8 @@ namespace Gamma.ViewModels
                                 RemainderTypeID = Product.RemainderTypeID,
                                 Quantity = Product.Quantity,
                                 StateID = Product.StateID,
-                                IsMaterial = true
+                                IsMaterial = true,
+                                IsSourceProduct = Product.IsSourceProduct
                             });
                     }
                 if (DocCloseShiftProductsGrid?.EndProducts != null)

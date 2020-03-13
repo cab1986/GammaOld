@@ -10,6 +10,7 @@ using Gamma.Interfaces;
 using Gamma.Common;
 using Gamma.Entities;
 using System.Windows;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
@@ -30,6 +31,7 @@ namespace Gamma.ViewModels
         private int PlaceID { get; set; }
         private byte? ShiftID { get; set; }
         private DateTime DocDate { get; set; }
+        private Guid DocID { get; set; }
 
         private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct, Guid? docWithdrawalId, int index)
         {
@@ -55,13 +57,14 @@ namespace Gamma.ViewModels
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
-            var doc = gammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docID);
+            var doc = gammaBase.Docs.Where(d => d.DocID == docID).Select(d => new { d.IsConfirmed, d.PlaceID, d.ShiftID, d.Date, d.DocID }).First();
             IsConfirmed = doc.IsConfirmed;
             PlaceID = (int) doc.PlaceID;
             ShiftID = doc.ShiftID;
             DocDate = doc.Date;
-            var remainders = doc.DocCloseShiftRemainders.Where(dr => dr.IsSourceProduct ?? false).ToList();
-            foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, doc.ShiftID, remainder.ProductID, remainder.IsSourceProduct ?? false, remainder.DocWithdrawalID)
+            DocID = doc.DocID;
+            var remainders = gammaBase.DocUnwinderRemainders.Where(r => r.DocID == DocID).ToList();
+            foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, doc.ShiftID, remainder.ProductID, false, remainder.DocWithdrawalID)
             {
                 Weight = (int)remainder.Quantity,
                 IsReadOnly = IsConfirmed || (remainder.DocWithdrawalID != null && !DB.AllowEditDoc((Guid)remainder.DocWithdrawalID)),
@@ -74,17 +77,125 @@ namespace Gamma.ViewModels
                 SpoolRemainders = newSpoolRemainders;
                 
             }
+            foreach (var spool in SpoolRemainders)
+            {
+                SpoolRemaindersPrev.Add(new remainderPrev() { ProductID = spool.ProductID, Weight = spool.Weight, WithdrawalID = spool.DocWithdrawalId });
+            }
         }
         /// <summary>
         /// Сохранение остатков в БД
         /// </summary>
         /// <param name="itemID">ID документа закрытия смены</param>
-        public override bool SaveToModel(Guid itemID)
+        public override bool SaveToModel(Guid docID)
         {
             if (IsReadOnly) return true;
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {
+                var doc = gammaBase.Docs.Where(d => d.DocID == docID).Select(d => new { d.IsConfirmed, d.PlaceID, d.ShiftID, d.Date, d.DocID }).First();
+                PlaceID = (int)doc.PlaceID;
+                ShiftID = doc.ShiftID;
+                DocDate = doc.Date;
+                DocID = doc.DocID;
+
+                foreach (var item in SpoolRemaindersPrev.Where(s => !SpoolRemainders.Any(r => r.ProductID == s.ProductID)))
+                {
+                    var removeDocWithdrawalProducts = gammaBase.DocWithdrawalProducts.FirstOrDefault(r => r.DocID == item.WithdrawalID && r.ProductID == item.ProductID);
+                    if (removeDocWithdrawalProducts != null)
+                    {
+                        //если есть привязанная произведенная продукция, то обнуляем, чтобы не потерять привязку.
+                        if (gammaBase.DocProductionProducts.Any(p => p.DocProduction.DocWithdrawal.Any(w => w.DocID == removeDocWithdrawalProducts.DocID)))
+                        {
+                            removeDocWithdrawalProducts.Quantity = null;
+                            removeDocWithdrawalProducts.CompleteWithdrawal = null;
+                        }
+                        else
+                            gammaBase.DocWithdrawalProducts.Remove(removeDocWithdrawalProducts);
+                    }
+                    gammaBase.DocUnwinderRemainders.RemoveRange(gammaBase.DocUnwinderRemainders.Where(r => r.DocID == docID && r.ProductID == item.ProductID));
+                }
+
+                foreach (var item in SpoolRemainders)
+                {
+                    var itemPrev = SpoolRemaindersPrev.FirstOrDefault(r => r.ProductID == item.ProductID);
+                    if (itemPrev == null)
+                    {
+                        var docRemainder = new DocUnwinderRemainders()
+                        {
+                            DocID = docID,
+                            DocUnwinderRemainderID = SqlGuidUtil.NewSequentialid(),
+                            ProductID = item.ProductID,
+                            DocWithdrawalID = item.DocWithdrawalId,
+                            Quantity = item.Weight
+                        };
+                        gammaBase.DocUnwinderRemainders.Add(docRemainder);
+                        DocWithdrawalProducts docWithdrawalProduct;
+                        {
+                            docWithdrawalProduct =
+                                gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
+                                .FirstOrDefault(d => d.ProductID == item.ProductID);
+                            if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
+                            {
+                                var docId = SqlGuidUtil.NewSequentialid();
+                                docWithdrawalProduct = new DocWithdrawalProducts
+                                {
+                                    DocID = docId,
+                                    // ReSharper disable once PossibleInvalidOperationException
+                                    // Проверка на null есть при выборке из SpoolRemainders
+                                    ProductID = (Guid)item.ProductID,
+                                    DocWithdrawal = new DocWithdrawal
+                                    {
+                                        DocID = docId,
+                                        OutPlaceID = WorkSession.PlaceID,
+                                        Docs = new Docs
+                                        {
+                                            DocID = docId,
+                                            IsConfirmed = true,
+                                            Date = DB.CurrentDateTime,
+                                            DocTypeID = (int)DocTypes.DocWithdrawal,
+                                            PlaceID = WorkSession.PlaceID,
+                                            PrintName = WorkSession.PrintName,
+                                            ShiftID = WorkSession.ShiftID,
+                                            UserID = WorkSession.UserID
+                                        }
+                                    }
+                                };
+                                gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+                            }
+                        };
+                        if (DB.AllowEditDoc(docWithdrawalProduct.DocID))
+                        {
+                            docWithdrawalProduct.Quantity = (item.MaxWeight - item.Weight) / 1000;
+                            docWithdrawalProduct.CompleteWithdrawal = false;
+                            docWithdrawalProduct.DocWithdrawal.Docs.IsConfirmed = true;
+                        }
+                        item.DocWithdrawalId = docWithdrawalProduct.DocID;
+                        docRemainder.DocWithdrawalID = docWithdrawalProduct.DocID;
+                    }
+                    else if (item.Weight != itemPrev.Weight)
+                    {
+                        var docUnwinderRemainder = gammaBase.DocUnwinderRemainders.FirstOrDefault(r => r.DocID == docID && r.ProductID == item.ProductID);
+                        if (docUnwinderRemainder != null)
+                            docUnwinderRemainder.Quantity = item.Weight;
+                        var docWithdrawalProduct =
+                                gammaBase.DocWithdrawalProducts.FirstOrDefault(d => d.ProductID == item.ProductID && d.DocID == item.DocWithdrawalId);
+                        docWithdrawalProduct.Quantity = (item.MaxWeight - item.Weight) / 1000;
+                    }
+                }
+                var spoolRemainders = SpoolRemainders.Where(s => s.ProductID != null).Select(s => (Guid)s.ProductID).ToList();
+                var spoolRemaindersPrev = SpoolRemaindersPrev.Where(s => s.ProductID != null).Select(s => (Guid)s.ProductID).ToList();
+                var docDatePrev = gammaBase.DocCloseShiftRemainders.Where(d => d.ProductID != null && d.DocCloseShifts.PlaceID == PlaceID && d.DocCloseShifts.ShiftID == ShiftID &&
+                        d.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", 1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DocDate))) &&
+                        d.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", -1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DocDate)))
+                        && spoolRemaindersPrev.Contains((Guid)d.ProductID)).OrderByDescending(d => d.DocCloseShifts.Date).Select(d => new { d.DocCloseShifts.DocID, d.DocCloseShifts.Date }).FirstOrDefault();
+                var docDate = gammaBase.DocCloseShiftRemainders.Where(d => d.ProductID != null && d.DocCloseShifts.PlaceID == PlaceID && d.DocCloseShifts.ShiftID == ShiftID &&
+                        d.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", 1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DocDate))) &&
+                        d.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", -1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DocDate)))
+                        && spoolRemainders.Contains((Guid)d.ProductID)).OrderByDescending(d => d.DocCloseShifts.Date).Select(d => new { d.DocCloseShifts.DocID, d.DocCloseShifts.Date }).FirstOrDefault();
+                if (docDate != null || docDatePrev != null)
+                    MessageBox.Show("Остатки на раскатах сохранены в Рапорте закрытия смены от "+(docDate?.Date ?? docDatePrev?.Date).ToString()+"! Не забудьте перезаполнить Рапорт закрытия смены!", "Остатки на раскатах", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+                /*
                 //d.Products.ProductKindID == 0 - мне надо удалить остатки на раскате, по другому никак не определить именно тамбура на раскате, так как для конвертингов остатки на раскате - это полуфабрикат переходящий, а для БДМ - это выработка переходящая.Поэтому ни IsSourceProduct, ни RemainderTypeID не подходит
                 //удаляем списание, так как удаляем запись в остатках
                 //gammaBase.DocWithdrawalProducts.RemoveRange(gammaBase.DocWithdrawalProducts.Where(d => gammaBase.DocCloseShiftRemainders.Any(r => r.DocWithdrawalID == d.DocID && r.ProductID == d.ProductID && r.DocID == itemID && (r.Products.ProductKindID == 0))));
@@ -179,6 +290,7 @@ namespace Gamma.ViewModels
                         remainder.DocWithdrawalId = docWithdrawalProduct.DocID;
                     }
                 }
+    */
                 gammaBase.SaveChanges();
             }
             return true;
@@ -274,6 +386,13 @@ namespace Gamma.ViewModels
 
         //public List<SpoolRemainder> SpoolRemainders { get; set; } = new List<SpoolRemainder>(); // = {new SpoolRemainder() {Index = 1}, new SpoolRemainder() {Index = 2}, new SpoolRemainder() {Index = 3} };
 
+        public class remainderPrev
+        {
+            public Guid? ProductID { get; set; }
+            public decimal Weight { get; set; }
+            public Guid? WithdrawalID { get; set; }
+        }
+        private List<remainderPrev> SpoolRemaindersPrev = new List<remainderPrev>();
         private List<SpoolRemainder> _spoolRemainders = new List<SpoolRemainder>();
 
         public List<SpoolRemainder> SpoolRemainders
@@ -296,5 +415,17 @@ namespace Gamma.ViewModels
 
         private bool IsConfirmed { get; set; }
         public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftRemainders"));// && !IsConfirmed);
+
+        public void UpdateIsConfirmed (bool isConfirmed)
+        {
+            IsConfirmed = isConfirmed;
+            var newSpoolRemainders = new List<SpoolRemainder>();
+            foreach (var spoolRemainder in SpoolRemainders)
+            {
+                spoolRemainder.IsReadOnly = IsConfirmed || (spoolRemainder.DocWithdrawalId != null && !DB.AllowEditDoc((Guid)spoolRemainder.DocWithdrawalId));
+                newSpoolRemainders.Add(spoolRemainder);
+            }
+            SpoolRemainders = newSpoolRemainders;
+        }
     }
 }

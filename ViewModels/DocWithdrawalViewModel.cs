@@ -61,8 +61,9 @@ namespace Gamma.ViewModels
                         MeasureUnitID = wm.C1CNomenclature.C1CMeaureUnitStorage,
                         DocWithdrawalMaterialID = wm.DocWithdrawalMaterialID
                     }));
-                var docProductionIDs = gammaBase.DocWithdrawal.FirstOrDefault(dw => dw.DocID == docId).DocProduction.Select(x => x.DocID).ToList();
-                ProductWithdrawals = new ObservableCollection<Products>(
+                var dW = gammaBase.DocWithdrawal.FirstOrDefault(dw => dw.DocID == DocId);
+                var docProductionIDs = dW?.DocProduction?.Select(x => x.DocID).ToList();
+                ProductWithdrawals = docProductionIDs == null ? new ObservableCollection<Products>() : new ObservableCollection<Products>(
                     gammaBase.Products.Where(x => x.DocProductionProducts.Any(dpp => docProductionIDs.Contains(dpp.DocID))));
             }
             AllowEditDoc = DB.AllowEditDoc(DocId);

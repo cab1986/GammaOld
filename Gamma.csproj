@@ -453,6 +453,9 @@
     <Compile Include="Entities\DocTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DocUnwinderRemainders.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DocWithdrawal.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -962,6 +965,7 @@
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftProductViewModel.cs" />
+    <Compile Include="ViewModels\DocUnwinderRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWithdrawalMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWarehouseGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftBalerViewModel.cs" />
@@ -983,6 +987,7 @@
     <Compile Include="ViewModels\DocShipmentOrderViewModel.cs" />
     <Compile Include="Models\EditBrokeDecisionItem.cs" />
     <Compile Include="ViewModels\DocWithdrawalsViewModel.cs" />
+    <Compile Include="ViewModels\DocUnwinderRemainderViewModel.cs" />
     <Compile Include="ViewModels\DocWithdrawalViewModel.cs" />
     <Compile Include="ViewModels\DocWithdrawalMaterialsViewModel.cs" />
     <Compile Include="ViewModels\EditRejectionReasonsViewModel.cs" />
@@ -1047,6 +1052,9 @@
     </Compile>
     <Compile Include="Views\DocCloseShiftProductView.xaml.cs">
       <DependentUpon>DocCloseShiftProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocUnwinderRemaindersView.xaml.cs">
+      <DependentUpon>DocUnwinderRemaindersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftWithdrawalMaterialView.xaml.cs">
       <DependentUpon>DocCloseShiftWithdrawalMaterialView.xaml</DependentUpon>
@@ -1125,6 +1133,9 @@
     </Compile>
     <Compile Include="Views\DocWithdrawalsView.xaml.cs">
       <DependentUpon>DocWithdrawalsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocUnwinderRemainderView.xaml.cs">
+      <DependentUpon>DocUnwinderRemainderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocWithdrawalView.xaml.cs">
       <DependentUpon>DocWithdrawalView.xaml</DependentUpon>
@@ -1285,6 +1296,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\DocUnwinderRemaindersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DocCloseShiftWithdrawalMaterialView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1388,6 +1403,10 @@
     <Page Include="Views\DocWithdrawalsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocUnwinderRemainderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocWithdrawalView.xaml">
       <SubType>Designer</SubType>

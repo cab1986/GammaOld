@@ -326,10 +326,10 @@ namespace Gamma.ViewModels
 
         private bool CheckSpoolInDocCloseShift(Guid productId)
         {
-            var ret = !GammaBase.DocCloseShiftRemainders.Any(r => r.ProductID == productId && (r.IsSourceProduct ?? false) && r.DocWithdrawalID != null && r.DocCloseShifts.PlaceID == WorkSession.PlaceID && r.DocCloseShifts.ShiftID == WorkSession.ShiftID &&
-                    r.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))) &&
-                    r.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))));
-            if (!ret) MessageBox.Show("Нельзя снять тамбур с раската, так как он в текущем рапорте закрытия смены. Сначала очистите раскаты в текущем рапорте закрытия смены, затем повторите.", "Ошибка", MessageBoxButton.OK,
+            var ret = !GammaBase.DocUnwinderRemainders.Any(r => r.ProductID == productId && r.DocWithdrawalID != null && r.Docs1.PlaceID == WorkSession.PlaceID && r.Docs1.ShiftID == WorkSession.ShiftID &&
+                    r.Docs1.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))) &&
+                    r.Docs1.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))));
+            if (!ret) MessageBox.Show("Нельзя снять тамбур с раската, так как он в документе Остатки на раскате. Сначала очистите документ Остатки на раскате, затем повторите.", "Ошибка", MessageBoxButton.OK,
                         MessageBoxImage.Asterisk);
             return ret;
         }

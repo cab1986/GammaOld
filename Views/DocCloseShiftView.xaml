@@ -78,11 +78,11 @@
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}">
             <dxlc:LayoutControl Orientation="Vertical">
                 <dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="170" Height="218">
-                        <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
+                    <dxlc:LayoutGroup Header="Общие сведения" View="GroupBox" Orientation="Vertical" Width="220" Height="170">
+                        <dxlc:LayoutItem Label="Номер" LabelPosition="Left">
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
                         </dxlc:LayoutItem>
-                        <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
+                        <dxlc:LayoutItem Label="Дата" LabelPosition="Left">
                             <dxe:DateEdit IsReadOnly="True" EditValue="{Binding Date}" Mask="g" MaskUseAsDisplayFormat="True" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Подтвержден">
@@ -90,8 +90,8 @@
                         </dxlc:LayoutItem>
                         <Button Command="{Binding UploadTo1CCommand}" Content="Выгрузить в 1С" Height="25"/>
                     </dxlc:LayoutGroup>
-                    <dx:DXTabControl Height="218">
-                        <dx:DXTabItem Visibility="{Binding IsVisibilityUnwinderRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dx:DXTabControl Height="170">
+                        <!--<dx:DXTabItem Visibility="{Binding IsVisibilityUnwinderRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ContentControl Content="{Binding CurrentViewModelUnwinderRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,-9,0,-9" VerticalAlignment="Top"/>
                             <dx:DXTabItem.Header>
                                 <Grid>
@@ -105,15 +105,15 @@
                                     <Button Content="Очистить" Grid.Column="2" Margin="5,0,0,0" Command="{Binding ClearUnwinderRemainderCommand}"/>
                                 </Grid>
                             </dx:DXTabItem.Header>
-                        </dx:DXTabItem>
+                        </dx:DXTabItem>-->
                         <dx:DXTabItem Header="Передано следующей смене" Visibility="{Binding IsVisibilityRemainder, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ContentControl Content="{Binding CurrentViewModelRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,0,0,0" VerticalAlignment="Top"/>
+                            <ContentControl Content="{Binding CurrentViewModelRemainder}" dxlc:DockLayoutControl.Dock="Client" Margin="0,-10,0,0" VerticalAlignment="Top"/>
                         </dx:DXTabItem>
                     </dx:DXTabControl>
                     <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
-                        <Button Content="Заполнить рапорт"  Height="30" Margin="10,15" Command="{Binding FillGridCommand}"/>
-                        <Button Content="Очистить рапорт" Height="30" Margin="10" Command = "{Binding ClearGridCommand}"/>
-                        <Button Content="Заполнить без остатков"  Height="30" Margin="10,15" Command="{Binding FillGridWithNoEndCommand}"/>
+                        <Button Content="Заполнить рапорт"  Height="30" Margin="10,30,10,5" Command="{Binding FillGridCommand}"/>
+                        <Button Content="Очистить рапорт" Height="30" Margin="10,5" Command = "{Binding ClearGridCommand}"/>
+                        <Button Content="Заполнить без остатков"  Height="30" Margin="10,5" Command="{Binding FillGridWithNoEndCommand}"/>
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem VerticalAlignment="Stretch">

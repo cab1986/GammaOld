@@ -92,6 +92,10 @@
                             <dxb:BarButtonItem Content="Закрытия смен киповщика" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Baler}" />
                             <dxb:BarButtonItem Content="Закрытия смен грузчиков" Command="{Binding OpenDocCloseShiftsCommand}" CommandParameter="{x:Static g:PlaceGroup.Warehouses}" />
                         </dxb:BarSubItem>
+                        <dxb:BarSubItem Content="Остатки на раскатах">
+                            <dxb:BarButtonItem Content="Остатки на раскатах ПРС" Command="{Binding OpenDocUnwinderRemaindersCommand}" CommandParameter="{x:Static g:PlaceGroup.Rw}" />
+                            <dxb:BarButtonItem Content="Остатки на раскатах конвертингов" Command="{Binding OpenDocUnwinderRemaindersCommand}" CommandParameter="{x:Static g:PlaceGroup.Convertings}" />
+                        </dxb:BarSubItem>
                         <dxb:BarSubItem Content="Отчеты" ItemLinksSource="{Binding Reports}">
                             <dxb:BarSubItem.ItemTemplate>
                                 <DataTemplate>
@@ -153,6 +157,9 @@
                     <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_32x32.png}" LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" Command="{Binding DeleteItemCommand}"/>
                     <dxb:BarButtonItem Content="Обновить" LargeGlyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshCommand}" />
                     <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" BarItemDisplayMode="ContentAndGlyph" />
+                    <dxb:BarItemLinkSeparator />
+                    <dxb:BarButtonItem Content="Остатки на раскате" BarItemDisplayMode="ContentAndGlyph"  
+                                       Command="{Binding UnwinderRemainderCommand}"/>
                     <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" 
                                        Command="{Binding CloseShiftCommand}"/>
                     <dxb:BarItemLinkSeparator />

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Collections.ObjectModel;
 using Gamma.ViewModels;
+using System.Data.Entity.SqlServer;
 
 namespace Gamma.Models
 {
@@ -196,11 +197,12 @@ namespace Gamma.Models
                    StateID = d.StateID,
                    Quantity = d.Quantity,
                    RemainderTypeID = d.RemainderTypeID,
-                   ProductKind = (ProductKind)d.Products.ProductKindID
+                   ProductKind = (ProductKind)d.Products.ProductKindID,
+                   IsSourceProduct = d.IsSourceProduct
                }));
             EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(GammaBase.DocCloseShiftRemainders
                 //.Include(dr => dr.DocCloseShifts)
-                .Where(d => d.DocID == docId && (d.IsMaterial ?? false) && d.RemainderTypes.RemainderTypeID == 2)
+                .Where(d => d.DocID == docId && (d.IsMaterial ?? false) && (d.RemainderTypes.RemainderTypeID == 2 || d.RemainderTypes.RemainderTypeID == 0))
                 .Select(d => new DocCloseShiftRemainder()
                 {
                     ProductID = (Guid)d.ProductID,
@@ -209,7 +211,8 @@ namespace Gamma.Models
                     RemainderTypeID = d.RemainderTypeID,
                     ProductKind = (ProductKind)d.Products.ProductKindID,
                     NomenclatureID = d.Products.ProductSpools.C1CNomenclatureID,
-                    CharacteristicID = d.Products.ProductSpools.C1CCharacteristicID
+                    CharacteristicID = d.Products.ProductSpools.C1CCharacteristicID,
+                    IsSourceProduct = d.IsSourceProduct
                 }));
 
             //Получение списка утилизированных тамбуров
@@ -271,7 +274,17 @@ namespace Gamma.Models
                             NomenclatureID = p.C1CNomenclatureID,
                             CharacteristicID = p.C1CCharacteristicID
                         }));
-
+                    var docUnwinderRemainders = GammaBase.DocUnwinderRemainders.Where(r => r.DocWithdrawalID != null && r.Docs1.PlaceID == PlaceID && r.Docs1.ShiftID == ShiftID &&
+                            r.Docs1.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                            r.Docs1.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate)))).Select(r => r.ProductID).ToList();
+                    if (docUnwinderRemainders?.Count() > 0)
+                    {
+                        foreach (var item in EndProducts.Where(p => docUnwinderRemainders.Contains(p.ProductID)))
+                        {
+                            item.RemainderTypeID = 0;
+                            item.IsSourceProduct = true;
+                        }
+                    }
                     /*
                     //убираем из остатков переходящую следующей смене палету в процессе производства
                     var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
@@ -393,9 +406,10 @@ namespace Gamma.Models
                 var PreviousDocCloseShift = GammaBase.Docs
                     .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
                     .OrderByDescending(d => d.Date)
+                    .Select(d => d.DocID)
                     .FirstOrDefault();
                 BeginProducts = new ObservableCollection<DocCloseShiftRemainder>(GammaBase.DocCloseShiftRemainders
-                    .Where(d => (d.RemainderTypeID == 2 || (d.RemainderTypeID ?? 0) == 0) && d.DocCloseShifts.DocID == PreviousDocCloseShift.DocID && (d.IsMaterial ?? false))
+                    .Where(d => (d.RemainderTypeID == 2 || (d.RemainderTypeID ?? 0) == 0) && d.DocCloseShifts.DocID == PreviousDocCloseShift && (d.IsMaterial ?? false))
                     .Select(d => new DocCloseShiftRemainder
                     {
                         ProductID = (Guid)d.ProductID,
@@ -550,12 +564,17 @@ namespace Gamma.Models
                                     WithdrawByFact = m.WithdrawByFact ?? true
                                 }).OrderBy(m => m.NomenclatureName));
 
+                    var docUnwinderRemainders = GammaBase.DocUnwinderRemainders.Where(r => r.DocWithdrawalID != null && r.Docs1.PlaceID == PlaceID && r.Docs1.ShiftID == ShiftID &&
+                            r.Docs1.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
+                            r.Docs1.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))));
+
                     foreach (WithdrawalMaterial addedItem in withdrawalMaterialsRemainderAtEnd.Where(x => x.Quantity != 0))
                     {
                         var endProducts = EndProducts.Where(p => p.CharacteristicID == addedItem.CharacteristicID).Select(p => p.ProductID).ToList();
-                        var spoolsUnwinderRemainder = endProducts == null || spoolUnwinderRemainders == null ? null : spoolUnwinderRemainders.SpoolRemainders.Where(s => endProducts.Contains((Guid)s.ProductID));
+                        //var spoolsUnwinderRemainder = endProducts == null || spoolUnwinderRemainders == null ? null : spoolUnwinderRemainders.SpoolRemainders.Where(s => endProducts.Contains((Guid)s.ProductID));
+                        var spoolsUnwinderRemainder = docUnwinderRemainders.Where(r => endProducts.Contains((Guid)r.ProductID));
                         var endProductsQuantity = spoolsUnwinderRemainder == null ? 0 : EndProducts.Where(p => spoolsUnwinderRemainder.Select(s => s.ProductID).ToList().Contains((Guid) p.ProductID)).Sum(p => p.Quantity);
-                        var spoolUnwinderRemainderQuantity = spoolsUnwinderRemainder?.Sum(s => s.Weight) ?? 0;
+                        var spoolUnwinderRemainderQuantity = spoolsUnwinderRemainder?.Count() == 0 ? 0 : spoolsUnwinderRemainder?.Sum(s => s.Quantity) ?? 0;
                         var item = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                         if (item == null)
                         {

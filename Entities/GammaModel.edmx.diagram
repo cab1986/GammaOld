@@ -377,6 +377,9 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskConvertingSamples_ProductionTasks" />
+        <EntityTypeShape EntityType="GammaModel.DocUnwinderRemainders" Width="1.5" PointX="14.25" PointY="84.75" />
+        <AssociationConnector Association="GammaModel.FK_DocUnwinderRemainders_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocUnwinderRemainders_Docs1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

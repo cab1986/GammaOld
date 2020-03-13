@@ -313,6 +313,15 @@ namespace Gamma
         public Guid? PersonID;
     }
 
+    public class OpenDocUnwinderRemainderMessage
+    {
+        public Guid? DocID;
+        public int? PlaceID;
+        public DateTime? CloseDate;
+        public byte? ShiftID;
+        public Guid? PersonID;
+    }
+
     public class OpenPlaceGroupsNomenclatureMessage  { }
     public class OpenMaterialTypesNomenclatureMessage { }
     public class OpenWarehousePersonsMessage { }
@@ -321,6 +330,12 @@ namespace Gamma
     {
         public PlaceGroup? PlaceGroup;
     }
+
+    public class OpenDocUnwinderRemaindersMessage
+    {
+        public PlaceGroup? PlaceGroup;
+    }
+
     public class FindProductionTaskBatchMessage
     {
         public BatchKinds BatchKind;
@@ -557,6 +572,22 @@ namespace Gamma
             UIServices.SetBusyState();
             Messenger.Default.Send(new OpenDocCloseShiftsMessage { PlaceGroup = placeGroup });
         }
+
+        public static void OpenDocUnwinderRemainders(PlaceGroup placeGroup)
+        {
+            UIServices.SetBusyState();
+            Messenger.Default.Send(new OpenDocUnwinderRemaindersMessage { PlaceGroup = placeGroup });
+        }
+
+        public static void OpenDocUnwinderRemainder(Guid docID)
+        {
+            Messenger.Default.Send(new OpenDocUnwinderRemainderMessage { DocID = docID });
+        }
+        public static void OpenDocUnwinderRemainder(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
+        {
+            Messenger.Default.Send(new OpenDocUnwinderRemainderMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+        }
+        
         public static void ConfigureComPort()
         {
             Messenger.Default.Send(new ConfigureComPortMessage());
