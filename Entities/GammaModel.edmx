@@ -4995,6 +4995,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftRwUnwinderSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftUtilizationProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -8847,6 +8852,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocUnwinderRemainders" EntitySet="DocUnwinderRemainders" />
           </AssociationSet>
+          <FunctionImport Name="FillDocCloseShiftRwUnwinderSpools" ReturnType="Collection(GammaModel.FillDocCloseShiftRwUnwinderSpools_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10055,7 +10065,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_Docs_Places" FromRole="Docs" ToRole="Places" />
           <NavigationProperty Name="DocMovementOrder" Relationship="GammaModel.FK_DocMovementOrder_Docs" FromRole="Docs" ToRole="DocMovementOrder" />
           <NavigationProperty Name="Users" Relationship="GammaModel.FK_Docs_Users" FromRole="Docs" ToRole="Users" />
-          <NavigationProperty Name="DocCloseShiftRemainders2" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
+          <NavigationProperty Name="DocCloseShiftRemaindersWithdrawal" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocCloseShiftRemainders" Relationship="GammaModel.FK_DocCloseShiftRemainders_Docs1" FromRole="Docs" ToRole="DocCloseShiftRemainders" />
           <NavigationProperty Name="DocCloseShiftProducts" Relationship="GammaModel.DocCloseShiftProducts" FromRole="Docs" ToRole="Products" />
           <Property Name="PersonGuid" Type="Guid" />
@@ -13796,6 +13806,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="FillDocCloseShiftRwUnwinderSpools_Result">
+          <Property Type="Guid" Name="ProductID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Weight" Nullable="false" Precision="20" Scale="5" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
+          <Property Type="Guid" Name="DocID" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -16374,6 +16393,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftRwUnwinderSpools" FunctionName="GammaDBModel.FillDocCloseShiftRwUnwinderSpools">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftRwUnwinderSpools_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

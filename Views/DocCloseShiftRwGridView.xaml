@@ -8,6 +8,35 @@
         >
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <dx:DXTabControl>
+            <dx:DXTabItem Header="На раскате">
+                <Grid Background="Transparent" Margin="-12,-12,-12,-12" MaxHeight="1000">
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding UnwinderSpools}" SelectedItem="{Binding SelectedUnwinderSpool}" VerticalAlignment="Stretch">
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
+                            <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
+                            <dxg:GridColumn Header="Вес, т" FieldName="Weight" Width="80" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
+                            <dxg:GridSummaryItem FieldName="Weight" SummaryType="Sum" DisplayFormat="Итого: {0:d} т" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Weight" DisplayFormat="Итого: {0:d} т"/>
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
+								ShowFixedTotalSummary="True"/>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowUnwinderSpoolCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
+                </Grid>
+            </dx:DXTabItem>
             <dx:DXTabItem Header="Изготовленные рулоны">
                 <Grid Background="Transparent" Margin="-12,-12,-12,-12" MaxHeight="1000">
                     <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding Spools}" SelectedItem="{Binding SelectedSpool}" VerticalAlignment="Stretch">
