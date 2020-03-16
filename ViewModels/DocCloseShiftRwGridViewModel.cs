@@ -98,7 +98,7 @@ namespace Gamma.ViewModels
                     d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, CloseDate))) &&
                     (d.DocTypeID == (int)DocTypes.DocProduction || d.DocTypeID == (int)DocTypes.DocWithdrawal)
-                    && !d.DocCloseShift.Any() && d.IsConfirmed)
+                    && d.IsConfirmed)
                     .Select(d => d.DocID).ToList();
             Spools = new ObservableCollection<PaperBase>(GammaBase.FillDocCloseShiftRwSpools(PlaceID, ShiftID, CloseDate)
                 .Select(s => new PaperBase
