@@ -48,7 +48,11 @@ namespace Gamma.Common
         {
             UIServices.SetBusyState();
             var view = new DocUnwinderRemainderView(msg);
+#if DEBUG
             view.Show();
+#else
+            view.ShowDialog();
+#endif
         }
 
         private void OpenDocWithdrawal(OpenDocWithdrawalMessage msg)
@@ -174,11 +178,7 @@ namespace Gamma.Common
         private void OpenDocUnwinderRemainders(OpenDocUnwinderRemaindersMessage msg)
         {
             var view = msg.PlaceGroup == null ? new DocUnwinderRemaindersView() : new DocUnwinderRemaindersView((PlaceGroup)msg.PlaceGroup);
-#if DEBUG
             view.Show();
-#else
-            view.ShowDialog();
-#endif
         }
         private void OpenManageUsers(OpenManageUsersMessage obj)
         {
