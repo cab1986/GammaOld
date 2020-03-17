@@ -159,9 +159,9 @@
                     <dxb:BarButtonItem Content="Найти продукт" LargeGlyph="{dx:DXImage Image=Find_32x32.png}" Command="{Binding FindProductCommand}" BarItemDisplayMode="ContentAndGlyph" />
                     <dxb:BarItemLinkSeparator />
                     <dxb:BarButtonItem Content="Остатки на раскате" BarItemDisplayMode="ContentAndGlyph"  
-                                       Command="{Binding UnwinderRemainderCommand}"/>
+                                       Command="{Binding UnwinderRemainderCommand}" IsVisible="{Binding IsVisibleUnwinderRemainderButton}"/>
                     <dxb:BarButtonItem Content="Закрыть смену" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=CheckBox2_32x32.png}" 
-                                       Command="{Binding CloseShiftCommand}"/>
+                                       Command="{Binding CloseShiftCommand}" IsVisible="{Binding IsVisibleCloseShiftButton}"/>
                     <dxb:BarItemLinkSeparator />
                     <dxb:BarButtonItem Content="Журнал заявок" BarItemDisplayMode="ContentAndGlyph" LargeGlyph="{dx:DXImage Image=Reading_32x32.png}" 
                                        Command="{Binding OpenLogEventsCommand}"/>

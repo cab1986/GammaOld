@@ -35,7 +35,8 @@ namespace Gamma
                                      u.Name,
                                      u.Places.FirstOrDefault().IsShipmentWarehouse,
                                      u.Places.FirstOrDefault().IsTransitWarehouse,
-                                     RoleName = u.Roles.Name
+                                     RoleName = u.Roles.Name,
+                                     u.Places.FirstOrDefault().UnwindersCount
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -75,6 +76,7 @@ namespace Gamma
                 LabelPath = (from u in DB.GammaDb.LocalSettings
                                    select u.LabelPath).FirstOrDefault();
                 RoleName = userInfo.RoleName;
+                UnwindersCount = userInfo.UnwindersCount ?? 0;
             }
         }
         public static bool DBAdmin
@@ -142,5 +144,11 @@ namespace Gamma
         /// Путь до этикеток (групповых, транспортных)
         /// </summary>
         public static string LabelPath { get; private set; }
+
+        /// <summary>
+        /// Кол-во раскатов на переделе
+        /// </summary>
+        public static int UnwindersCount { get; private set; }
+
     }
 }

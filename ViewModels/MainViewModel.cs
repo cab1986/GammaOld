@@ -177,6 +177,10 @@ namespace Gamma.ViewModels
                                            }));
         }
 
+        public bool IsVisibleUnwinderRemainderButton => (WorkSession.UnwindersCount > 0);
+
+        public bool IsVisibleCloseShiftButton => WorkSession.IsProductionPlace;
+
         public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 
         public DelegateCommand OpenLogEventsCommand { get; private set; }
