@@ -174,7 +174,7 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 if (NomenclatureID == null && SelectedCharacteristic?.CharacteristicID == null && 
-                    DateBegin == null && DateEnd == null && (SelectedPlaces == null || SelectedPlaces?.Count == 0) && SelectedStateIndex == States.Count - 1)
+                    DateBegin == null && DateEnd == null && (SelectedPlaces == null || SelectedPlaces?.Count == 0) && (SelectedCurrentPlaces == null || SelectedCurrentPlaces?.Count == 0) && SelectedStateIndex == States.Count - 1)
                 {
                     FoundProducts = new ObservableCollection<ProductInfo>
                        (
@@ -240,6 +240,7 @@ namespace Gamma.ViewModels
                                     Place = pinfo.Place,
                                     PlaceGroup = (PlaceGroup)pinfo.PlaceGroupID,
                                     IsWrittenOff = pinfo.IsWrittenOff ?? false,
+                                    CurrentPlace = pinfo.CurrentPlace,
                                     InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
                                         .Join(gammaBase.vProductsInfo,
                                             gs => gs.ProductGroupPackID,
@@ -256,6 +257,9 @@ namespace Gamma.ViewModels
                     var selectedPlaces = new List<string>();
                     if (SelectedPlaces != null)
                         selectedPlaces = SelectedPlaces.Cast<string>().ToList();
+                    var selectedCurrentPlaces = new List<string>();
+                    if (SelectedCurrentPlaces != null)
+                        selectedCurrentPlaces = SelectedCurrentPlaces.Cast<string>().ToList();
 
                     FoundProducts = new ObservableCollection<ProductInfo>(
                         gammaBase.vProductsInfo.Where(pinfo =>
@@ -275,6 +279,7 @@ namespace Gamma.ViewModels
                                      (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
                                  ).Any(j => !j.IsWrittenOff)) &&
                             (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
+                            (selectedCurrentPlaces.Count == 0 || selectedCurrentPlaces.Contains(pinfo.CurrentPlace)) &&
                             (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
                             ).Select(pinfo => new ProductInfo
                             {
@@ -292,6 +297,7 @@ namespace Gamma.ViewModels
                                 Place = pinfo.Place,
                                 PlaceGroup = (PlaceGroup)pinfo.PlaceGroupID,
                                 IsWrittenOff = pinfo.IsWrittenOff ?? false,
+                                CurrentPlace = pinfo.CurrentPlace,
                                 InGroupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
                                     .Join(gammaBase.vProductsInfo,
                                         gs => gs.ProductGroupPackID,
@@ -313,6 +319,7 @@ namespace Gamma.ViewModels
             DateBegin = null;
             DateEnd = null;
             if (SelectedPlaces != null) SelectedPlaces = null;
+            if (SelectedCurrentPlaces != null) SelectedCurrentPlaces = null;
             SelectedStateIndex = States.Count - 1;
         }      
         private int _selectedProductKindIndex;
@@ -355,6 +362,19 @@ namespace Gamma.ViewModels
             {
                 _selectedPlaces= value;
                 RaisePropertyChanged("SelectedPlaces");
+            }
+        }
+        private List<object> _selectedCurrentPlaces = new List<object>();
+        public List<object> SelectedCurrentPlaces // Object требует визуальный компонент
+        {
+            get
+            {
+                return _selectedCurrentPlaces;
+            }
+            set
+            {
+                _selectedCurrentPlaces = value;
+                RaisePropertyChanged("SelectedCurrentPlaces");
             }
         }
         public Characteristic SelectedCharacteristic { get; set; }

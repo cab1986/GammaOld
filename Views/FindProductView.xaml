@@ -24,9 +24,12 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,0,-12,0" Orientation="Horizontal">
-                <dxlc:LayoutGroup>
-                    <dxlc:LayoutItem Label="Переделы" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
+                <dxlc:LayoutGroup  Orientation="Vertical">
+                    <dxlc:LayoutItem Label="Произведено" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
                         <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceName"/>
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Текущий передел" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
+                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedCurrentPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceName"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup Orientation="Vertical">
@@ -86,9 +89,10 @@
                             <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
-                    <dxg:GridColumn FieldName="Place" Header="Передел" Width="70" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="Place" Header="Произведено" Width="70" FixedWidth="True"/>
                     <dxg:GridColumn FieldName="ShiftID" Header="Смена" Width="50" FixedWidth="True"/>
                     <dxg:GridColumn FieldName="State" Header="Статус" Width="100" FixedWidth="True"/>
+                    <dxg:GridColumn FieldName="CurrentPlace" Header="Текущий передел" Width="70" FixedWidth="True"/>
                 </dxg:GridControl.Columns>
                 <dxg:GridControl.View>
                     <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True" />
