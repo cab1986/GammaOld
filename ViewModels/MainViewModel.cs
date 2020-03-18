@@ -333,8 +333,8 @@ namespace Gamma.ViewModels
                 var lastDoc =
                     gammaBase.Docs.Where(
                         d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int)DocTypes.DocUnwinderRemainder && d.PlaceID == WorkSession.PlaceID &&
-                        d.Date >= SqlFunctions.DateAdd("hh", 1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))) &&
-                        d.Date <= SqlFunctions.DateAdd("hh", -1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate())))
+                        d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate()))) &&
+                        d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, SqlFunctions.GetDate())))
                         && (WorkSession.PersonID == null || WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" || (WorkSession.PersonID != null && d.PersonGuid == WorkSession.PersonID))
                         )
                         .OrderByDescending(d => d.Date)
