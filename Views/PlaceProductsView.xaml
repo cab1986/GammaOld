@@ -61,7 +61,7 @@
             </dxg:GridControl.TotalSummary>
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True" VisibleIndex="0" />
-                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" VisibleIndex="1" >
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="120" VisibleIndex="1" >
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                     </dxg:GridColumn.EditSettings>

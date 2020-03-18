@@ -181,14 +181,15 @@
                                     </dxg:GridControl.View>
                                     <dxg:GridControl.Columns>
                                         <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" VisibleIndex="0"/>
-                                        <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" SortOrder="Ascending" SortIndex="0"/>
+                                        <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" SortOrder="Ascending" SortIndex="0" Width="120" FixedWidth="True"/>
                                         <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="80" FixedWidth="True" VisibleIndex="2">
                                             <dxg:GridColumn.EditSettings>
                                                 <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
                                             </dxg:GridColumn.EditSettings>
                                         </dxg:GridColumn>
                                         <dxg:GridColumn FieldName="MeasureUnit" Width="60" Header="ед. изм." VisibleIndex="3" FixedWidth="True"/>
-                                        <dxg:GridColumn FieldName="Decision" Header="Решение" VisibleIndex="4"/>
+                                        <dxg:GridColumn FieldName="Decision" Header="Решение" VisibleIndex="4" Width="120" FixedWidth="True"/>
+                                        <dxg:GridColumn FieldName="DecisionApplied" Header="Исполнено решение" VisibleIndex="5" Width="60"  FixedWidth="True"/>
                                     </dxg:GridControl.Columns>
                                 </dxg:GridControl>
                             </dxlc:LayoutItem>
