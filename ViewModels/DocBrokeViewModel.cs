@@ -101,6 +101,7 @@ namespace Gamma.ViewModels
                 }
 
                 RefreshRejectionReasonsList();
+                RefreshProductStateList();
 
                 AddProductCommand = new DelegateCommand(ChooseProductToAdd, () => !IsReadOnly);
                 DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
@@ -118,6 +119,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
             SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && SelectedTabIndex != 1 && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
+            SetDecisionForAllProductCommand = new DelegateCommand(SetDecisionForAllProduct, () => !IsReadOnly && SelectedTabIndex != 0 && !BrokeDecisionProducts.Any(p => p.ProductState != ProductState.NeedsDecision));
         }
 
         private void BarcodeReceived(BarcodeMessage msg)
@@ -342,8 +344,27 @@ namespace Gamma.ViewModels
             return IsValid && DB.HaveWriteAccess("DocBroke") && IsEditable;
         }
 
-        public int SelectedTabIndex { get; set; }
+        private int _selectedTabIndex { get; set; }
+        public int SelectedTabIndex
+        {
+            get { return _selectedTabIndex; }
+            set
+            {
+                _selectedTabIndex = value;
+                IsVisibleSetRejectionReasonForAllProduct = (value == 0);
+                IsVisibleSetDecisionForAllProduct = (value == 1);
+                RaisePropertyChanged("RejectionReasonsList");
+                
+                //Это неправильно, но меняется только здесь
+                RaisePropertyChanged("IsVisibleSetRejectionReasonForAllProduct");
+                RaisePropertyChanged("IsVisibleSetDecisionForAllProduct");
+                //
+            }
+        }
 
+        public bool IsVisibleSetRejectionReasonForAllProduct { get; private set; }
+        public bool IsVisibleSetDecisionForAllProduct { get; private set; }
+        
         public DelegateCommand SetRejectionReasonForAllProductCommand { get; private set; }
 
         public string ForAllProductRejectionReasonComment { get; set; }
@@ -405,6 +426,76 @@ namespace Gamma.ViewModels
                         Comment = ForAllProductRejectionReasonComment
                     });
                 }
+            }
+        }
+
+        public DelegateCommand SetDecisionForAllProductCommand { get; private set; }
+        public string ForAllProductDecisionComment { get; set; }
+        public KeyValuePair<int, string> ForAllProductStateID { get; set; }
+        private List<KeyValuePair<int,string>> _productStateList { get; set; }
+        public List<KeyValuePair<int, string>> ProductStateList
+        {
+            get { return _productStateList; }
+            set
+            {
+                _productStateList = value;
+                RaisePropertyChanged("ProductStateList");
+            }
+        }
+
+        private void RefreshProductStateList()
+        {
+            if (ProductStateList == null)
+                ProductStateList = new List<KeyValuePair<int, string>>();
+            if (BrokeDecisionProducts?.Count > 0)
+            {
+                //if (BrokeDecisionProducts.Select(p => p.ProductKind).Distinct().Count() == 1 ||
+                //    (BrokeDecisionProducts.Select(p => p.ProductKind).Distinct().Count() == 2 && BrokeDecisionProducts.Any(p => p.ProductKind == ProductKind.ProductPallet) && BrokeDecisionProducts.Any(p => p.ProductKind == ProductKind.ProductPalletR)))
+                {
+                    if (ProductStateList?.Count == 0)
+                    {
+                        var productStateList = GammaBase.ProductStates
+                            .Where(r => r.StateID != (int)ProductState.NeedsDecision && r.StateID != (int)ProductState.Repack && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.StateID != (int)ProductState.InternalUsage && r.StateID != (int)ProductState.Limited && r.StateID != (int)ProductState.Repack)))
+                            .OrderBy(r => r.StateID);
+                        foreach (var item in productStateList)
+                        {
+                            ProductStateList.Add(new KeyValuePair<int, string> ( item.StateID, item.Name ));
+                        }
+                    }
+                }
+                //    else
+                //    {
+                //        ProductStateList = new List<KeyValuePair<int, string>>();
+                //    }
+            }
+            //else
+            //{
+            //    ProductStateList = new List<KeyValuePair<int, string>>();
+            //}
+        }
+
+        private void SetDecisionForAllProduct()
+        {
+            if (BrokeDecisionProducts != null)
+            {
+                var selectedBrokeDecisionProduct = SelectedBrokeDecisionProduct;
+                foreach (var brokeDecisionProduct in BrokeDecisionProducts)
+                {
+
+                    brokeDecisionProduct.ProductState = (ProductState)ForAllProductStateID.Key;
+                    brokeDecisionProduct.Comment = ForAllProductDecisionComment;
+                    brokeDecisionProduct.Quantity = BrokeProducts.Where(p => p.ProductId == brokeDecisionProduct.ProductId).Select(p => p.Quantity).First();
+                    /*
+                    brokeDecisionProduct.Decision.Clear();
+                    brokeDecisionProduct.RejectionReasons.Add(new RejectionReason()
+                    {
+                        RejectionReasonID = ForAllProductRejectionReasonID.RejectionReasonID,
+                        Comment = ForAllProductRejectionReasonComment
+                    });
+                    */
+                }
+                SelectedBrokeDecisionProduct = null;
+                SelectedBrokeDecisionProduct = BrokeDecisionProducts.Where(p => p.ProductId == selectedBrokeDecisionProduct?.ProductId).FirstOrDefault();
             }
         }
 

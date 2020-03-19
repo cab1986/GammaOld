@@ -98,7 +98,7 @@
                         <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
-                <dxlc:LayoutGroup Header="Дефект и причина" Orientation="Vertical" Width="230" VerticalAlignment="Bottom">
+                    <dxlc:LayoutGroup Header="Дефект и причина" Orientation="Vertical" Width="230" VerticalAlignment="Bottom"  Visibility="{Binding IsVisibleSetRejectionReasonForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxlc:LayoutItem Label="Дефект" LabelPosition="Top">
                             <dxe:ComboBoxEdit SelectedItem="{Binding ForAllProductRejectionReasonID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding RejectionReasonsList}" DisplayMember="Description" ValueMember="RejectionReasonID"/>
                         </dxlc:LayoutItem>
@@ -106,6 +106,18 @@
                             <dxe:TextEdit EditValue="{Binding ForAllProductRejectionReasonComment, UpdateSourceTrigger=PropertyChanged}" />
                         </dxlc:LayoutItem>
                         <Button Content="Изменить для всех" Grid.Row="1" Command="{Binding SetRejectionReasonForAllProductCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,0,0"/>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup Header="Решение" Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding IsVisibleSetDecisionForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <dxlc:LayoutItem Label="Решение" LabelPosition="Top">
+                            <dxe:ComboBoxEdit SelectedItem="{Binding ForAllProductStateID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ProductStateList}" DisplayMember="Value" ValueMember="Key"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Кол-во">
+                            <dxe:TextEdit EditValue="Полностью" IsEnabled="False" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Примечание">
+                            <dxe:TextEdit EditValue="{Binding ForAllProductDecisionComment, UpdateSourceTrigger=PropertyChanged}" />
+                        </dxlc:LayoutItem>
+                        <Button Content="Изменить для всех" Grid.Row="1" Command="{Binding SetDecisionForAllProductCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,0,0"/>
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutControl>
                 <dx:DXTabControl SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}">
