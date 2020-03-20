@@ -274,6 +274,7 @@ namespace Gamma.ViewModels
                 }
                 #endregion AddBrokeDecisionProduct
                 RefreshRejectionReasonsList();
+                RefreshProductStateList();
             }
         }
 
@@ -689,8 +690,8 @@ namespace Gamma.ViewModels
                     product.CharacteristicOldId
                 )
             {
-                CharacteristicId = product.CharacteristicId,
                 NomenclatureId = product.NomenclatureId,
+                CharacteristicId = product.CharacteristicId,
             };
             return decisionProduct;
         }

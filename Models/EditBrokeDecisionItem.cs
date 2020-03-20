@@ -31,6 +31,15 @@ namespace Gamma.Models
             {
                 if (BrokeDecisionProduct != null)
                 {
+                    if (IsChecked && ProductState == ProductState.Broke && BrokeDecisionProducts.Any(bp => bp.ProductState == ProductState.Repack && bp.ProductId == BrokeDecisionProduct.ProductId && IsChecked))
+                    {
+                        var productRepackDecision = BrokeDecisionProducts.FirstOrDefault(bp => bp.ProductState == ProductState.Repack && bp.ProductId == BrokeDecisionProduct.ProductId && IsChecked);
+                        if (productRepackDecision != null)
+                        {
+                            productRepackDecision.Quantity = productRepackDecision.Quantity - (value - _quantity);
+                        }
+                    }
+
                     var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(bp => bp.ProductState == ProductState.NeedsDecision && bp.ProductId == BrokeDecisionProduct.ProductId);
                     var sumQuantity = 
                         BrokeDecisionProducts
@@ -81,7 +90,8 @@ namespace Gamma.Models
                 base.NomenclatureID = value;
                 if (BrokeDecisionProduct != null)
                 {
-                    BrokeDecisionProduct.NomenclatureId = NomenclatureID;
+                    if (BrokeDecisionProduct.NomenclatureId != NomenclatureID)
+                        BrokeDecisionProduct.NomenclatureId = NomenclatureID;
                 }
                 RaisePropertyChanged("NomenclatureID");
             }
@@ -100,7 +110,8 @@ namespace Gamma.Models
                 base.CharacteristicID = value;
                 if (BrokeDecisionProduct != null)
                 {
-                    BrokeDecisionProduct.CharacteristicId = CharacteristicID;
+                    if (BrokeDecisionProduct.CharacteristicId != CharacteristicID)
+                        BrokeDecisionProduct.CharacteristicId = CharacteristicID;
                 }
                 RaisePropertyChanged("CharacteristicID");
             }
@@ -230,6 +241,8 @@ namespace Gamma.Models
                         {
                             productNeedsDecision.Quantity += BrokeDecisionProduct.Quantity;
                             Quantity = 0;
+                            NomenclatureID = null;
+                            CharacteristicID = null;
                         }
                         BrokeDecisionProducts.Remove(BrokeDecisionProduct);
                     }
@@ -258,6 +271,8 @@ namespace Gamma.Models
                         }
                         BrokeDecisionProducts.Remove(BrokeDecisionProduct);
                         Quantity = 0;
+                        NomenclatureID = null;
+                        CharacteristicID = null;
                     }
                 }
             }
@@ -287,8 +302,12 @@ namespace Gamma.Models
                 _brokeDecisionProduct = value;
                 if (_brokeDecisionProduct != null)
                 {
-                    NomenclatureID = _brokeDecisionProduct.NomenclatureId;
-                    CharacteristicID = _brokeDecisionProduct.CharacteristicId;
+                    if (_brokeDecisionProduct.ProductState == ProductState.Repack)
+                    {
+                        var characteristicID = _brokeDecisionProduct.CharacteristicId;
+                        NomenclatureID = _brokeDecisionProduct.NomenclatureId;
+                        CharacteristicID = characteristicID;
+                    }
                 }
                 RaisePropertyChanged("BrokeDecisionProduct");
             }
