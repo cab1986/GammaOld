@@ -431,49 +431,56 @@ namespace Gamma.ViewModels
         }
 
         public DelegateCommand SetDecisionForAllProductCommand { get; private set; }
-        public string ForAllProductDecisionComment { get; set; }
-        public KeyValuePair<int, string> ForAllProductStateID { get; set; }
-        private List<KeyValuePair<int,string>> _productStateList { get; set; }
-        public List<KeyValuePair<int, string>> ProductStateList
-        {
-            get { return _productStateList; }
-            set
-            {
-                _productStateList = value;
-                RaisePropertyChanged("ProductStateList");
-            }
-        }
+        //public string ForAllProductDecisionComment { get; set; }
+        //public KeyValuePair<int, string> ForAllProductStateID { get; set; }
+        //private List<KeyValuePair<int,string>> _productStateList { get; set; }
+        //public List<KeyValuePair<int, string>> ProductStateList
+        //{
+        //    get { return _productStateList; }
+        //    set
+        //    {
+        //        _productStateList = value;
+        //        RaisePropertyChanged("ProductStateList");
+        //    }
+        //}
+
+        public BrokeDecisionForAllProducts ForAllProductsProkeDecision { get; private set; } = new BrokeDecisionForAllProducts();
 
         private void RefreshProductStateList()
         {
-            if (ProductStateList == null)
-                ProductStateList = new List<KeyValuePair<int, string>>();
             if (BrokeDecisionProducts?.Count > 0)
             {
-                //if (BrokeDecisionProducts.Select(p => p.ProductKind).Distinct().Count() == 1 ||
-                //    (BrokeDecisionProducts.Select(p => p.ProductKind).Distinct().Count() == 2 && BrokeDecisionProducts.Any(p => p.ProductKind == ProductKind.ProductPallet) && BrokeDecisionProducts.Any(p => p.ProductKind == ProductKind.ProductPalletR)))
+                ForAllProductsProkeDecision.RefreshProductStateList();
+            }
+
+                /*if (ProductStateList == null)
+                    ProductStateList = new List<KeyValuePair<int, string>>();
+                if (BrokeDecisionProducts?.Count > 0)
                 {
-                    if (ProductStateList?.Count == 0)
+                    //if (BrokeDecisionProducts.Select(p => p.ProductKind).Distinct().Count() == 1 ||
+                    //    (BrokeDecisionProducts.Select(p => p.ProductKind).Distinct().Count() == 2 && BrokeDecisionProducts.Any(p => p.ProductKind == ProductKind.ProductPallet) && BrokeDecisionProducts.Any(p => p.ProductKind == ProductKind.ProductPalletR)))
                     {
-                        var productStateList = GammaBase.ProductStates
-                            .Where(r => r.StateID != (int)ProductState.NeedsDecision && r.StateID != (int)ProductState.Repack && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.StateID != (int)ProductState.InternalUsage && r.StateID != (int)ProductState.Limited && r.StateID != (int)ProductState.Repack)))
-                            .OrderBy(r => r.StateID);
-                        foreach (var item in productStateList)
+                        if (ProductStateList?.Count == 0)
                         {
-                            ProductStateList.Add(new KeyValuePair<int, string> ( item.StateID, item.Name ));
+                            var productStateList = GammaBase.ProductStates
+                                .Where(r => r.StateID != (int)ProductState.NeedsDecision && r.StateID != (int)ProductState.Repack && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.StateID != (int)ProductState.InternalUsage && r.StateID != (int)ProductState.Limited && r.StateID != (int)ProductState.Repack)))
+                                .OrderBy(r => r.StateID);
+                            foreach (var item in productStateList)
+                            {
+                                ProductStateList.Add(new KeyValuePair<int, string> ( item.StateID, item.Name ));
+                            }
                         }
                     }
+                    //    else
+                    //    {
+                    //        ProductStateList = new List<KeyValuePair<int, string>>();
+                    //    }
                 }
-                //    else
-                //    {
-                //        ProductStateList = new List<KeyValuePair<int, string>>();
-                //    }
+                //else
+                //{
+                //    ProductStateList = new List<KeyValuePair<int, string>>();
+                //}*/
             }
-            //else
-            //{
-            //    ProductStateList = new List<KeyValuePair<int, string>>();
-            //}
-        }
 
         private void SetDecisionForAllProduct()
         {
@@ -483,9 +490,14 @@ namespace Gamma.ViewModels
                 foreach (var brokeDecisionProduct in BrokeDecisionProducts)
                 {
 
-                    brokeDecisionProduct.ProductState = (ProductState)ForAllProductStateID.Key;
-                    brokeDecisionProduct.Comment = ForAllProductDecisionComment;
+                    brokeDecisionProduct.ProductState = (ProductState)ForAllProductsProkeDecision.ProductStateID.Key;
+                    brokeDecisionProduct.Comment = ForAllProductsProkeDecision.Comment;
                     brokeDecisionProduct.Quantity = BrokeProducts.Where(p => p.ProductId == brokeDecisionProduct.ProductId).Select(p => p.Quantity).First();
+                    if (ForAllProductsProkeDecision.ProductStateID.Key == (int)ProductState.Repack)
+                    {
+                        brokeDecisionProduct.NomenclatureId = ForAllProductsProkeDecision.NomenclatureID;
+                        brokeDecisionProduct.CharacteristicId = ForAllProductsProkeDecision.CharacteristicID;
+                    }
                     /*
                     brokeDecisionProduct.Decision.Clear();
                     brokeDecisionProduct.RejectionReasons.Add(new RejectionReason()
