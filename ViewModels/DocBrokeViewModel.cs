@@ -33,14 +33,51 @@ namespace Gamma.ViewModels
                     PlaceID = p.PlaceID,
                     PlaceName = p.Name
                 }).ToList();
-                BrokePlaces = DiscoverPlaces;
-                StorePlaces = gammaBase.Places.Where(p => p.IsWarehouse ?? false)
+
+                BrokePlaces = gammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
+                .Select(p => new Place
+                {
+                    PlaceGuid = p.PlaceGuid,
+                    PlaceID = p.PlaceID,
+                    PlaceName = p.Name
+                })
+                .ToList();
+
+                var brokePlaces = gammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && !WorkSession.BranchIds.Contains(p.BranchID))
+                .Join(gammaBase.Branches, p => p.BranchID, b => b.BranchID, (p, b)
+                 => new Place
+                 {
+                     PlaceGuid = p.PlaceGuid,
+                     PlaceID = p.PlaceID,
+                     PlaceName = (WorkSession.BranchIds.Contains(p.BranchID) ? p.Name : b.Name + "#" + p.Name)
+                 })
+                .ToList();
+                foreach (var place in brokePlaces)
+                {
+                    BrokePlaces.Add(place);
+                }
+
+                StorePlaces = gammaBase.Places.Where(p => (p.IsWarehouse ?? false) && WorkSession.BranchIds.Contains(p.BranchID))
                     .Select(p => new Place
                     {
                         PlaceGuid = p.PlaceGuid,
                         PlaceID = p.PlaceID,
                         PlaceName = p.Name
                     }).ToList();
+                var storePlaces = gammaBase.Places.Where(p => (p.IsWarehouse ?? false) && !WorkSession.BranchIds.Contains(p.BranchID))
+                .Join(gammaBase.Branches, p => p.BranchID, b => b.BranchID, (p, b)
+                 => new Place
+                 {
+                     PlaceGuid = p.PlaceGuid,
+                     PlaceID = p.PlaceID,
+                     PlaceName = (WorkSession.BranchIds.Contains(p.BranchID) ? p.Name : b.Name + "#" + p.Name)
+                 })
+                .ToList();
+                foreach (var place in storePlaces)
+                {
+                    StorePlaces.Add(place);
+                }
+
                 var doc = gammaBase.Docs.Include(d => d.DocBroke)
                     .Include(d => d.DocBroke.DocBrokeProducts)
                     .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons))
