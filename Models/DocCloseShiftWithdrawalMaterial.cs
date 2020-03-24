@@ -633,12 +633,16 @@ namespace Gamma.Models
         public void Clear(bool IsFillEnd = true)
         {
             WithdrawalMaterials?.Clear();
-            foreach (var item in DocCloseShiftMaterials?.Where(ps => ps.QuantityIsReadOnly))
+            foreach (var item in DocCloseShiftMaterials)
             {
-                item.QuantityIn = null;
-                item.QuantityOut = null;
-                if (IsFillEnd) item.QuantityRemainderAtEnd = null;
-                item.QuantityUtil = null;
+                if (item.QuantityIsReadOnly)
+                {
+                    item.QuantityIn = null;
+                    item.QuantityOut = null;
+                    item.QuantityUtil = null;
+                    if (IsFillEnd) item.QuantityRemainderAtEnd = null;
+                }
+                item.StandardQuantity = null;
             }
             var items = DocCloseShiftMaterials?.Where(d => !(d.QuantityIn > 0 || d.QuantityOut > 0 || d.QuantityRePack > 0 || d.QuantityUtil > 0 || d.QuantityExperimental > 0 || d.QuantityRemainderAtEnd > 0)).ToArray();
             foreach (var item in items)
