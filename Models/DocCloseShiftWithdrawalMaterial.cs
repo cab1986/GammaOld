@@ -609,7 +609,7 @@ namespace Gamma.Models
                         addedItem.StandardQuantity = standardQuantity.StandardQuantity;
                 }
 
-                foreach (DocCloseShiftMaterial addedItem in DocCloseShiftMaterials.Where(x => x.QuantityWithdrawalMaterial != 0))
+                foreach (DocCloseShiftMaterial addedItem in DocCloseShiftMaterials.Where(x => ((x.WithdrawByFact ?? true) ? x.QuantityWithdrawalMaterial : x.StandardQuantity) != 0))
                 {
                     if (WithdrawalMaterials.Count(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null))) == 0)
                         WithdrawalMaterials.Add(new WithdrawalMaterial(new ArrayList() { productionProductCharacteristicIDs, PlaceID })
@@ -618,8 +618,8 @@ namespace Gamma.Models
                             CharacteristicID = addedItem.CharacteristicID,
                             NomenclatureName = addedItem.NomenclatureName,
                             QuantityIsReadOnly = addedItem.QuantityIsReadOnly,
-                            Quantity = addedItem.QuantityWithdrawalMaterial ?? 0,
-                            BaseQuantity = addedItem.QuantityWithdrawalMaterial ?? 0,
+                            Quantity = ((addedItem.WithdrawByFact ?? true) ? addedItem.QuantityWithdrawalMaterial : addedItem.StandardQuantity) ?? 0,
+                            BaseQuantity = ((addedItem.WithdrawByFact ?? true) ? addedItem.QuantityWithdrawalMaterial : addedItem.StandardQuantity) ?? 0,
                             DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
@@ -734,7 +734,7 @@ namespace Gamma.Models
 
         public void MaterialChanged(int selectedMaterialTabIndex, WithdrawalMaterial selectedMaterial)//, List<Guid> productionProductCharacteristicIDs)
         {
-            var docCloseShiftMaterial = DocCloseShiftMaterials.Where(d => d.NomenclatureID == selectedMaterial?.NomenclatureID && (d.CharacteristicID == selectedMaterial?.CharacteristicID || (d.CharacteristicID == null && selectedMaterial?.CharacteristicID == null))).Sum(d => d.QuantityWithdrawalMaterial) ?? 0;
+            var docCloseShiftMaterial = DocCloseShiftMaterials.Where(d => d.NomenclatureID == selectedMaterial?.NomenclatureID && (d.CharacteristicID == selectedMaterial?.CharacteristicID || (d.CharacteristicID == null && selectedMaterial?.CharacteristicID == null))).Sum(d => ((d.WithdrawByFact ?? true) ? d.QuantityWithdrawalMaterial : d.StandardQuantity)) ?? 0;
             var withdrawalMaterial = WithdrawalMaterials.FirstOrDefault(d => d.NomenclatureID == selectedMaterial?.NomenclatureID && (d.CharacteristicID == selectedMaterial?.CharacteristicID || (d.CharacteristicID == null && selectedMaterial?.CharacteristicID == null)));
             //productionProductCharacteristicIDs = new List<Guid>(Spools
             //        .Select(p => p.CharacteristicID).Distinct().ToList());
