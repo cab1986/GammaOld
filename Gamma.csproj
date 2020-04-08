@@ -417,6 +417,12 @@
     <Compile Include="Entities\DocInventarisationProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DocMaterialProductions.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocMaterialProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DocMovement.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -525,6 +531,9 @@
     <Compile Include="Entities\FillDocCloseShiftUtilizationSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocMaterialProductions_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetBatchSamples_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -547,6 +556,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\vDocCloseShiftMaterials.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vDocMaterialProductions.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\vProductionMaterials.cs">
@@ -868,6 +880,9 @@
     <Compile Include="Common\ItemsChangeObservableCollection.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\DocMaterialProductionItem.cs" />
+    <Compile Include="Models\DocMaterialProduction.cs" />
+    <Compile Include="Models\Doc.cs" />
     <Compile Include="Models\DocCloseShiftMaterial.cs" />
     <Compile Include="Models\DocCloseShiftWaste.cs" />
     <Compile Include="Models\DocCloseShiftWithdrawalMaterial.cs" />
@@ -968,7 +983,10 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocMaterialProductionGridViewModel.cs" />
+    <Compile Include="ViewModels\DocMaterialProduction1GridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftProductViewModel.cs" />
+    <Compile Include="ViewModels\DocMaterialProductionViewModel.cs" />
     <Compile Include="ViewModels\DocUnwinderRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWithdrawalMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftWarehouseGridViewModel.cs" />
@@ -997,6 +1015,7 @@
     <Compile Include="ViewModels\EditRejectionReasonsViewModel.cs" />
     <Compile Include="ViewModels\FindProductionTaskBatchViewModel.cs" />
     <Compile Include="ViewModels\ImportOldProductsViewModel.cs" />
+    <Compile Include="ViewModels\DocMaterialProductionsViewModel.cs" />
     <Compile Include="ViewModels\LogEventsViewModel.cs" />
     <Compile Include="ViewModels\LogEventViewModel.cs" />
     <Compile Include="ViewModels\MaterialTypesNomenclatureViewModel.cs" />
@@ -1054,8 +1073,17 @@
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DocMaterialProductionGridView.xaml.cs">
+      <DependentUpon>DocMaterialProductionGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMaterialProduction1GridView.xaml.cs">
+      <DependentUpon>DocMaterialProduction1GridView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DocCloseShiftProductView.xaml.cs">
       <DependentUpon>DocCloseShiftProductView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMaterialProductionView.xaml.cs">
+      <DependentUpon>DocMaterialProductionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocUnwinderRemaindersView.xaml.cs">
       <DependentUpon>DocUnwinderRemaindersView.xaml</DependentUpon>
@@ -1158,6 +1186,9 @@
     </Compile>
     <Compile Include="Views\ImportOldProductsView.xaml.cs">
       <DependentUpon>ImportOldProductsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMaterialProductionsView.xaml.cs">
+      <DependentUpon>DocMaterialProductionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LogEventsView.xaml.cs">
       <DependentUpon>LogEventsView.xaml</DependentUpon>
@@ -1296,7 +1327,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DocMaterialProductionGridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DocMaterialProduction1GridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DocCloseShiftProductView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DocMaterialProductionView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1435,6 +1478,10 @@
     <Page Include="Views\ImportOldProductsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocMaterialProductionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LogEventsView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1674,7 +1721,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

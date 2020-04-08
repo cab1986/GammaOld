@@ -10,22 +10,17 @@
 namespace Gamma.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class vProductionMaterials
+    public partial class FillDocMaterialProductions_Result
     {
         public Nullable<System.Guid> NomenclatureID { get; set; }
         public Nullable<System.Guid> CharacteristicID { get; set; }
-        public Nullable<bool> WithdrawByFact { get; set; }
         public Nullable<System.Guid> MeasureUnitID { get; set; }
         public string MeasureUnit { get; set; }
         public Nullable<decimal> Quantity { get; set; }
-        public System.Guid ProductNomenclatureID { get; set; }
-        public Nullable<System.Guid> ProductCharacteristicID { get; set; }
-        public int ProductPlaceID { get; set; }
-        public string ProductNomenclatureName { get; set; }
         public string NomenclatureName { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
         public string ParentName { get; set; }
+        public Nullable<bool> WithdrawByFact { get; set; }
     }
 }

@@ -369,6 +369,15 @@ namespace Gamma
         public decimal? Delta { get; private set; }
     }
 
+    public class OpenDocMaterialProductionMessage
+    {
+        public Guid? DocID;
+    /*    public int? PlaceID;
+        public DateTime? CloseDate;
+        public byte? ShiftID;
+        public Guid? PersonID;*/
+    }
+
     public static class MessageManager
     {
         public static void NomenclatureEdit(Guid nomenclatureId)
@@ -643,5 +652,15 @@ namespace Gamma
         {
             Messenger.Default.Send(new RecalcQuantityEndFromUnwinderReaminderMessage (productID, nomenclatureID, characteristicID, quantity, delta));
         }
+
+        public static void OpenDocMaterialProduction(Guid docID)
+        {
+            Messenger.Default.Send(new OpenDocMaterialProductionMessage { DocID = docID });
+        }
+/*        public static void OpenDocMaterialProduction(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
+        {
+            Messenger.Default.Send(new OpenDocMaterialProductionMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+        }
+*/
     }
 }

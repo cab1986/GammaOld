@@ -158,6 +158,9 @@ namespace Gamma.Entities
         public virtual DbSet<DocCloseShiftRepackProducts> DocCloseShiftRepackProducts { get; set; }
         public virtual DbSet<ProductionTaskConvertingSamples> ProductionTaskConvertingSamples { get; set; }
         public virtual DbSet<DocUnwinderRemainders> DocUnwinderRemainders { get; set; }
+        public virtual DbSet<vDocMaterialProductions> vDocMaterialProductions { get; set; }
+        public virtual DbSet<DocMaterialProducts> DocMaterialProducts { get; set; }
+        public virtual DbSet<DocMaterialProductions> DocMaterialProductions { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1371,6 +1374,27 @@ namespace Gamma.Entities
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftRwUnwinderSpools_Result>("FillDocCloseShiftRwUnwinderSpools", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocMaterialProductions_Result> FillDocMaterialProductions(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate, string productionCharacteristicIDs)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            var productionCharacteristicIDsParameter = productionCharacteristicIDs != null ?
+                new ObjectParameter("ProductionCharacteristicIDs", productionCharacteristicIDs) :
+                new ObjectParameter("ProductionCharacteristicIDs", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductions_Result>("FillDocMaterialProductions", placeIDParameter, shiftIDParameter, closeDateParameter, productionCharacteristicIDsParameter);
         }
     }
 }

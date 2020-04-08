@@ -37,6 +37,8 @@ namespace Gamma.Entities
             this.DocCloseShiftRepackProducts = new HashSet<DocCloseShiftRepackProducts>();
             this.DocUnwinderRemainders = new HashSet<DocUnwinderRemainders>();
             this.DocUnwinderRemainders1 = new HashSet<DocUnwinderRemainders>();
+            this.DocMaterialProducts = new HashSet<DocMaterialProducts>();
+            this.DocMaterialProductions = new HashSet<DocMaterialProductions>();
         }
     
         public System.Guid DocID { get; set; }
@@ -105,5 +107,9 @@ namespace Gamma.Entities
         public virtual ICollection<DocUnwinderRemainders> DocUnwinderRemainders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocUnwinderRemainders> DocUnwinderRemainders1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMaterialProducts> DocMaterialProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMaterialProductions> DocMaterialProductions { get; set; }
     }
 }

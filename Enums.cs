@@ -131,7 +131,8 @@ namespace Gamma
         DocComplectation,
         DocUtilization,
         DocSpecificstionQuantity,
-        DocUnwinderRemainder
+        DocUnwinderRemainder,
+        DocMaterialProduction
     }
     public enum PermissionMark
     {
@@ -189,4 +190,17 @@ namespace Gamma
         Byte = 0,
         String = 1
     }
+
+    public enum DocMaterialProductionTypes
+    {
+        NotUsed,
+        RemainderAtBegin,
+        RemainderAtEnd,
+        Dismiss,
+        In,
+        Send,
+        RemainderInGRVAtEnd,
+        Standard
+    }
+
 }

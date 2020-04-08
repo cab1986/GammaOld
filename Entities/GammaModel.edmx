@@ -681,6 +681,29 @@
           <Property Name="NomenclatureName" Type="varchar" MaxLength="1000" StoreGeneratedPattern="Computed" />
           <Property Name="Date" Type="datetime" />
         </EntityType>
+        <EntityType Name="DocMaterialProductions">
+          <Key>
+            <PropertyRef Name="DocMaterialProductionID" />
+          </Key>
+          <Property Name="DocMaterialProductionID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="DocMaterialProductionTypeID" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="500" />
+          <Property Name="WithdrawByFact" Type="bit" />
+        </EntityType>
+        <EntityType Name="DocMaterialProducts">
+          <Key>
+            <PropertyRef Name="DocMaterialProductID" />
+          </Key>
+          <Property Name="DocMaterialProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="DocMovement">
           <Key>
             <PropertyRef Name="DocID" />
@@ -915,7 +938,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="LocalSettings">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -1424,7 +1447,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="DepartmentID" Type="smallint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1438,7 +1461,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does no
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1464,7 +1487,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primar
           <Property Name="CoefficientPallet" Type="decimal" Precision="10" Scale="3" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1510,7 +1533,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary ke
           <Property Name="OutActivePersons" Type="varchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="Period" />
@@ -1525,7 +1548,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not ha
           <Property Name="ValidTill" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1545,7 +1568,7 @@ warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does no
           <Property Name="TypeTransition" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1570,7 +1593,31 @@ warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not hav
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vDocMaterialProductions">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="1CNomenclatureID" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="NomenclatureName" Type="varchar" MaxLength="512" />
+          <Property Name="MeasureUnitName" Type="varchar" MaxLength="50" />
+          <Property Name="QuantityIsReadOnly" Type="bit" />
+          <Property Name="WithdrawByFact" Type="bit" />
+          <Property Name="ParentName" Type="varchar" MaxLength="255" />
+          <Property Name="QuantityRemainderAtBegin" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityIn" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityDismiss" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderAtEnd" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderInGRAVAtEnd" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySend" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1591,7 +1638,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a pr
           <Property Name="CountProductSpoolsWithBreak" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1641,7 +1688,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="StateName" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -1653,7 +1700,7 @@ warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a pri
           <Property Name="BreakNumber" Type="tinyint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -1664,7 +1711,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have
           <Property Name="CoreDiameter" Type="decimal" Precision="20" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1685,7 +1732,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionMaterials">
           <Key>
             <PropertyRef Name="ProductNomenclatureID" />
@@ -1702,9 +1749,11 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a
           <Property Name="ProductNomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+          <Property Name="ParentName" Type="varchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -1714,7 +1763,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1738,7 +1787,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
           <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsCurrentStateInfo">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1753,7 +1802,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not h
           <Property Name="State" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1802,7 +1851,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="CurrentPlace" Type="varchar" MaxLength="1066" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vRobotNomenclatures">
           <Key>
             <PropertyRef Name="ProdNumber" />
@@ -3340,6 +3389,90 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="DocInventarisationProducts">
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+          <End Role="DocMaterialProductions" Type="Self.DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="DocMaterialProductions" Type="Self.DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="DocMaterialProductions" Type="Self.DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocMaterialProductions" Type="Self.DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProducts_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+          <End Role="DocMaterialProducts" Type="Self.DocMaterialProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocMaterialProducts">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProducts_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="DocMaterialProducts" Type="Self.DocMaterialProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocMaterialProducts">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProducts_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocMaterialProducts" Type="Self.DocMaterialProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialProducts">
+              <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5022,6 +5155,12 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
           <Parameter Name="PersonID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="FillDocMaterialProductions" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+          <Parameter Name="ProductionCharacteristicIDs" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SearchString" Type="varchar" Mode="In" />
           <Parameter Name="Id" Type="int" Mode="In" />
@@ -5337,6 +5476,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="DocComplectationWithdrawals" EntityType="Self.DocComplectationWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInProducts" EntityType="Self.DocInProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInventarisationProducts" EntityType="Self.DocInventarisationProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialProductions" EntityType="Self.DocMaterialProductions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialProducts" EntityType="Self.DocMaterialProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovementOrder" EntityType="Self.DocMovementOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovementOrderDocs" EntityType="Self.DocMovementOrderDocs" Schema="dbo" store:Type="Tables" />
@@ -5534,6 +5675,26 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vDocCloseShiftMaterials].[StandardQuantity] AS [StandardQuantity]
     FROM [dbo].[vDocCloseShiftMaterials] AS [vDocCloseShiftMaterials]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vDocMaterialProductions" EntityType="Self.vDocMaterialProductions" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vDocMaterialProductions].[DocID] AS [DocID], 
+    [vDocMaterialProductions].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vDocMaterialProductions].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vDocMaterialProductions].[1CMeasureUnitID] AS [1CMeasureUnitID], 
+    [vDocMaterialProductions].[NomenclatureName] AS [NomenclatureName], 
+    [vDocMaterialProductions].[MeasureUnitName] AS [MeasureUnitName], 
+    [vDocMaterialProductions].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
+    [vDocMaterialProductions].[WithdrawByFact] AS [WithdrawByFact], 
+    [vDocMaterialProductions].[ParentName] AS [ParentName], 
+    [vDocMaterialProductions].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
+    [vDocMaterialProductions].[QuantityIn] AS [QuantityIn], 
+    [vDocMaterialProductions].[QuantityDismiss] AS [QuantityDismiss], 
+    [vDocMaterialProductions].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
+    [vDocMaterialProductions].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd], 
+    [vDocMaterialProductions].[QuantitySend] AS [QuantitySend], 
+    [vDocMaterialProductions].[StandardQuantity] AS [StandardQuantity]
+    FROM [dbo].[vDocMaterialProductions] AS [vDocMaterialProductions]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vDocMovementGoods].[DocMovementID] AS [DocMovementID], 
@@ -5637,7 +5798,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductionMaterials].[ProductPlaceID] AS [ProductPlaceID], 
     [vProductionMaterials].[ProductNomenclatureName] AS [ProductNomenclatureName], 
     [vProductionMaterials].[NomenclatureName] AS [NomenclatureName], 
-    [vProductionMaterials].[Quantity] AS [Quantity]
+    [vProductionMaterials].[Quantity] AS [Quantity], 
+    [vProductionMaterials].[ParentID] AS [ParentID], 
+    [vProductionMaterials].[ParentName] AS [ParentName]
     FROM [dbo].[vProductionMaterials] AS [vProductionMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -6226,6 +6389,34 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Products" EntitySet="Products" />
             <End Role="DocInventarisationProducts" EntitySet="DocInventarisationProducts" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_1CCharacteristics" Association="Self.FK_DocMaterialProductions_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_1CMeasureUnits" Association="Self.FK_DocMaterialProductions_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_1CNomenclature" Association="Self.FK_DocMaterialProductions_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_Docs" Association="Self.FK_DocMaterialProductions_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProducts_1CCharacteristics" Association="Self.FK_DocMaterialProducts_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProducts_1CNomenclature" Association="Self.FK_DocMaterialProducts_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProducts_Docs" Association="Self.FK_DocMaterialProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocMovement" EntitySet="DocMovement" />
@@ -6779,6 +6970,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftMaterials" Relationship="GammaModel.FK_DocCloseShiftMaterials_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftMaterials" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftRepackProducts" />
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="ProductionTaskConvertingSamples" />
+          <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocMaterialProductions" />
         </EntityType>
         <EntityType Name="C1CNomenclatureGroups">
           <Key>
@@ -8857,6 +9049,43 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="FillDocMaterialProductions" ReturnType="Collection(GammaModel.FillDocMaterialProductions_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ProductionCharacteristicIDs" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="vDocMaterialProductions" EntityType="GammaModel.vDocMaterialProductions" />
+          <EntitySet Name="DocMaterialProducts" EntityType="GammaModel.DocMaterialProducts" />
+          <AssociationSet Name="FK_DocMaterialProducts_1CCharacteristics" Association="GammaModel.FK_DocMaterialProducts_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProducts_1CNomenclature" Association="GammaModel.FK_DocMaterialProducts_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProducts_Docs" Association="GammaModel.FK_DocMaterialProducts_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
+          <EntitySet Name="DocMaterialProductions" EntityType="GammaModel.DocMaterialProductions" />
+          <AssociationSet Name="FK_DocMaterialProductions_1CCharacteristics" Association="GammaModel.FK_DocMaterialProductions_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_1CMeasureUnits" Association="GammaModel.FK_DocMaterialProductions_1CMeasureUnits">
+            <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_1CNomenclature" Association="GammaModel.FK_DocMaterialProductions_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialProductions_Docs" Association="GammaModel.FK_DocMaterialProductions_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10082,6 +10311,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_Docs" FromRole="Docs" ToRole="DocCloseShiftRepackProducts" />
           <NavigationProperty Name="DocUnwinderRemainders" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs" FromRole="Docs" ToRole="DocUnwinderRemainders" />
           <NavigationProperty Name="DocUnwinderRemainders1" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs1" FromRole="Docs" ToRole="DocUnwinderRemainders" />
+          <NavigationProperty Name="DocMaterialProducts" Relationship="GammaModel.FK_DocMaterialProducts_Docs" FromRole="Docs" ToRole="DocMaterialProducts" />
+          <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_Docs" FromRole="Docs" ToRole="DocMaterialProductions" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -11082,6 +11313,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftWastes1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CCharacteristics_Product" FromRole="C1CCharacteristics" ToRole="DocCloseShiftWastes" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftRepackProducts" />
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="ProductionTaskConvertingSamples" />
+          <NavigationProperty Name="DocMaterialProducts" Relationship="GammaModel.FK_DocMaterialProducts_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocMaterialProducts" />
+          <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocMaterialProductions" />
           </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -11946,6 +12179,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftWastes1" Relationship="GammaModel.FK_DocCloseShiftWastes_1CNomenclature_Product" FromRole="C1CNomenclature" ToRole="DocCloseShiftWastes" />
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftRepackProducts" />
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskConvertingSamples" />
+          <NavigationProperty Name="DocMaterialProducts" Relationship="GammaModel.FK_DocMaterialProducts_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocMaterialProducts" />
+          <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocMaterialProductions" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -13423,6 +13658,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductPlaceID" Type="Int32" Nullable="false" />
           <Property Name="ProductNomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
           <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="ParentID" Type="Guid" />
+          <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="FillDocCloseShiftMaterials_Result">
           <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
@@ -13815,6 +14052,153 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="Number" Nullable="true" MaxLength="20" />
           <Property Type="Guid" Name="DocID" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="FillDocMaterialProductions_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="38" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+          <Property Type="String" Name="ParentName" Nullable="true" MaxLength="255" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="vDocMaterialProductions">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="C1CNomenclatureID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="MeasureUnitName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QuantityIsReadOnly" Type="Boolean" />
+          <Property Name="QuantityRemainderAtBegin" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityIn" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityDismiss" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderAtEnd" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderInGRAVAtEnd" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySend" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="WithdrawByFact" Type="Boolean" />
+          <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DocMaterialProducts">
+          <Key>
+            <PropertyRef Name="DocMaterialProductID" />
+          </Key>
+          <Property Name="DocMaterialProductID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocMaterialProducts_1CCharacteristics" FromRole="DocMaterialProducts" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocMaterialProducts_1CNomenclature" FromRole="DocMaterialProducts" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocMaterialProducts_Docs" FromRole="DocMaterialProducts" ToRole="Docs" />
+        </EntityType>
+        <Association Name="FK_DocMaterialProducts_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.DocMaterialProducts" Role="DocMaterialProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocMaterialProducts">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProducts_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialProducts" Role="DocMaterialProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocMaterialProducts">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProducts_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialProducts" Role="DocMaterialProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocMaterialProductions">
+          <Key>
+            <PropertyRef Name="DocMaterialProductionID" />
+          </Key>
+          <Property Name="DocMaterialProductionID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="DocMaterialProductionTypeID" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
+          <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="WithdrawByFact" Type="Boolean" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocMaterialProductions_1CCharacteristics" FromRole="DocMaterialProductions" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_DocMaterialProductions_1CMeasureUnits" FromRole="DocMaterialProductions" ToRole="C1CMeasureUnits" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocMaterialProductions_1CNomenclature" FromRole="DocMaterialProductions" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocMaterialProductions_Docs" FromRole="DocMaterialProductions" ToRole="Docs" />
+        </EntityType>
+        <Association Name="FK_DocMaterialProductions_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.DocMaterialProductions" Role="DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_1CMeasureUnits">
+          <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+          <End Type="GammaModel.DocMaterialProductions" Role="DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CMeasureUnits">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialProductions" Role="DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialProductions_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialProductions" Role="DocMaterialProductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialProductions">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -16140,6 +16524,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductionMaterials">
             <EntityTypeMapping TypeName="GammaModel.vProductionMaterials">
               <MappingFragment StoreEntitySet="vProductionMaterials">
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="ProductNomenclatureName" ColumnName="ProductNomenclatureName" />
                 <ScalarProperty Name="ProductPlaceID" ColumnName="ProductPlaceID" />
@@ -16406,6 +16792,68 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FillDocMaterialProductions" FunctionName="GammaDBModel.FillDocMaterialProductions">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocMaterialProductions_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="vDocMaterialProductions">
+            <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductions">
+              <MappingFragment StoreEntitySet="vDocMaterialProductions">
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
+                <ScalarProperty Name="QuantitySend" ColumnName="QuantitySend" />
+                <ScalarProperty Name="QuantityRemainderInGRAVAtEnd" ColumnName="QuantityRemainderInGRAVAtEnd" />
+                <ScalarProperty Name="QuantityRemainderAtEnd" ColumnName="QuantityRemainderAtEnd" />
+                <ScalarProperty Name="QuantityDismiss" ColumnName="QuantityDismiss" />
+                <ScalarProperty Name="QuantityIn" ColumnName="QuantityIn" />
+                <ScalarProperty Name="QuantityRemainderAtBegin" ColumnName="QuantityRemainderAtBegin" />
+                <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocMaterialProducts">
+            <EntityTypeMapping TypeName="GammaModel.DocMaterialProducts">
+              <MappingFragment StoreEntitySet="DocMaterialProducts">
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocMaterialProductID" ColumnName="DocMaterialProductID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocMaterialProductions">
+            <EntityTypeMapping TypeName="GammaModel.DocMaterialProductions">
+              <MappingFragment StoreEntitySet="DocMaterialProductions">
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="DocMaterialProductionTypeID" ColumnName="DocMaterialProductionTypeID" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocMaterialProductionID" ColumnName="DocMaterialProductionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

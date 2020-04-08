@@ -41,7 +41,7 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenDocWithdrawalMessage>(this, OpenDocWithdrawal);
             Messenger.Default.Register<OpenLogEventMessage>(this, OpenLogEvent);
             Messenger.Default.Register<OpenDocUnwinderRemainderMessage>(this, OpenDocUnwinderRemainder);
-
+            Messenger.Default.Register<OpenDocMaterialProductionMessage>(this, OpenDocMaterialProduction);
         }
 
         private void OpenDocUnwinderRemainder(OpenDocUnwinderRemainderMessage msg)
@@ -222,7 +222,15 @@ namespace Gamma.Common
             var view = new LogEventView(msg.EventID, msg.ParentEventID);
             view.Show();
         }
-
+        private void OpenDocMaterialProduction(OpenDocMaterialProductionMessage msg)
+        {
+            var view = new DocMaterialProductionView(msg);
+#if DEBUG
+            view.Show();
+#else
+            view.ShowDialog();
+#endif
+        }
     }
-    
+
 }
