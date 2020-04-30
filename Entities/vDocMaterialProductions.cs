@@ -30,5 +30,6 @@ namespace Gamma.Entities
         public Nullable<decimal> StandardQuantity { get; set; }
         public Nullable<bool> WithdrawByFact { get; set; }
         public string ParentName { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
     }
 }

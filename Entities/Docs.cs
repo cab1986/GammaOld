@@ -39,6 +39,9 @@ namespace Gamma.Entities
             this.DocUnwinderRemainders1 = new HashSet<DocUnwinderRemainders>();
             this.DocMaterialProducts = new HashSet<DocMaterialProducts>();
             this.DocMaterialProductions = new HashSet<DocMaterialProductions>();
+            this.DocMaterialTankRemainders = new HashSet<DocMaterialTankRemainders>();
+            this.DocMaterialProductDocs = new HashSet<Docs>();
+            this.DocMaterialProduct = new HashSet<Docs>();
         }
     
         public System.Guid DocID { get; set; }
@@ -111,5 +114,11 @@ namespace Gamma.Entities
         public virtual ICollection<DocMaterialProducts> DocMaterialProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMaterialProductions> DocMaterialProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMaterialTankRemainders> DocMaterialTankRemainders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Docs> DocMaterialProductDocs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Docs> DocMaterialProduct { get; set; }
     }
 }

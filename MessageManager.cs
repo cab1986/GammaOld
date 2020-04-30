@@ -369,6 +369,53 @@ namespace Gamma
         public decimal? Delta { get; private set; }
     }
 
+    public class RecalcQuantityFromTankReaminderMessage
+    {
+        public RecalcQuantityFromTankReaminderMessage(int docMaterialTankGroupID, int? docMaterialProductionTypeID, decimal quantity, List<Guid> nomenclatureID, List<Guid> exceptNomenclatureID)
+        {
+            DocMaterialTankGroupID = docMaterialTankGroupID;
+            DocMaterialProductionTypeID = docMaterialProductionTypeID;
+            Quantity = quantity;
+            NomenclatureID = nomenclatureID;
+            ExceptNomenclatureID = exceptNomenclatureID;
+        }
+        public int? DocMaterialProductionTypeID { get; private set; }
+        public int DocMaterialTankGroupID { get; private set; }
+        public decimal Quantity { get; private set; }
+        public List<Guid> NomenclatureID { get; private set; }
+        public List<Guid> ExceptNomenclatureID { get; private set; }
+    }
+
+    public class RecalcMaterialProductionQuantityEndFromTankReaminderMessage
+    {
+        public RecalcMaterialProductionQuantityEndFromTankReaminderMessage(Guid nomenclatureID, decimal quantity )
+        {
+            Quantity = quantity;
+            NomenclatureID = nomenclatureID;
+        }
+        public decimal Quantity { get; private set; }
+        public Guid NomenclatureID { get; private set; }
+        
+    }
+
+    public class RecalcQuantityFromTankGroupReaminderMessage
+    {
+        public RecalcQuantityFromTankGroupReaminderMessage(int docMaterialTankGroupID)
+        {
+            DocMaterialTankGroupID = docMaterialTankGroupID;
+        }
+        public int DocMaterialTankGroupID { get; private set; }
+    }
+        
+    public class DeleteNomenclatureInCompositionFromTankGroupMessage
+    {
+        public DeleteNomenclatureInCompositionFromTankGroupMessage(Guid nomenclatureID)
+        {
+            NomenclatureID = nomenclatureID;
+        }
+        public Guid NomenclatureID { get; private set; }
+    }
+
     public class OpenDocMaterialProductionMessage
     {
         public Guid? DocID;
@@ -651,6 +698,26 @@ namespace Gamma
         public static void RecalcQuantityEndFromUnwinderReaminderEvent(Guid? productID, Guid? nomenclatureID, Guid? characteristicID, decimal quantity, decimal? delta)
         {
             Messenger.Default.Send(new RecalcQuantityEndFromUnwinderReaminderMessage (productID, nomenclatureID, characteristicID, quantity, delta));
+        }
+
+        public static void RecalcQuantityFromTankReaminderEvent(int docMaterialTankGroupID, int? docMaterialTankProductionTypeID, decimal quantity, List<Guid> nomenclatureID, List<Guid> exceptNomenclatureID)
+        {
+            Messenger.Default.Send(new RecalcQuantityFromTankReaminderMessage(docMaterialTankGroupID, docMaterialTankProductionTypeID, quantity, nomenclatureID, exceptNomenclatureID));
+        }
+
+        public static void RecalcMaterialProductionQuantityEndFromTankReaminderEvent(Guid nomenclatureID, decimal quantity)
+        {
+            Messenger.Default.Send(new RecalcMaterialProductionQuantityEndFromTankReaminderMessage(nomenclatureID, quantity));
+        }
+
+        public static void RecalcQuantityFromTankGroupReaminderEvent(int docMaterialTankGroupID)
+        {
+            Messenger.Default.Send(new RecalcQuantityFromTankGroupReaminderMessage(docMaterialTankGroupID));
+        }
+                
+        public static void DeleteNomenclatureInCompositionFromTankGroupEvent(Guid nomenclatureID)
+        {
+            Messenger.Default.Send(new DeleteNomenclatureInCompositionFromTankGroupMessage(nomenclatureID));
         }
 
         public static void OpenDocMaterialProduction(Guid docID)

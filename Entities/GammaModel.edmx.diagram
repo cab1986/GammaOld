@@ -390,6 +390,16 @@
         <AssociationConnector Association="GammaModel.FK_DocMaterialProductions_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_DocMaterialProductions_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocMaterialProductions_Docs" />
+        <EntityTypeShape EntityType="GammaModel.DocMaterialTankGroups" Width="1.5" PointX="9.75" PointY="81.375" />
+        <EntityTypeShape EntityType="GammaModel.DocMaterialTankRemainders" Width="1.5" PointX="17.25" PointY="76.125" />
+        <EntityTypeShape EntityType="GammaModel.DocMaterialTanks" Width="1.5" PointX="12" PointY="81.625" />
+        <AssociationConnector Association="GammaModel.FK_DocMaterialTankGroups_NextTankGroups" />
+        <AssociationConnector Association="GammaModel.FK_DocMaterialTankGroups_Places" />
+        <AssociationConnector Association="GammaModel.FK_DocMaterialTanks_DocMaterialTankGroups" />
+        <AssociationConnector Association="GammaModel.FK_DocMaterialTankRemainders_DocMaterialTanks" />
+        <AssociationConnector Association="GammaModel.FK_DocMaterialTankRemainders_Docs" />
+        <AssociationConnector Association="GammaModel.DocMaterialTankGroupNomenclatureGroups" />
+        <AssociationConnector Association="GammaModel.DocMaterialDocs" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

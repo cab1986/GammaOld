@@ -161,6 +161,9 @@ namespace Gamma.Entities
         public virtual DbSet<vDocMaterialProductions> vDocMaterialProductions { get; set; }
         public virtual DbSet<DocMaterialProducts> DocMaterialProducts { get; set; }
         public virtual DbSet<DocMaterialProductions> DocMaterialProductions { get; set; }
+        public virtual DbSet<DocMaterialTankGroups> DocMaterialTankGroups { get; set; }
+        public virtual DbSet<DocMaterialTankRemainders> DocMaterialTankRemainders { get; set; }
+        public virtual DbSet<DocMaterialTanks> DocMaterialTanks { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1395,6 +1398,44 @@ namespace Gamma.Entities
                 new ObjectParameter("ProductionCharacteristicIDs", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductions_Result>("FillDocMaterialProductions", placeIDParameter, shiftIDParameter, closeDateParameter, productionCharacteristicIDsParameter);
+        }
+    
+        public virtual ObjectResult<FillDocMaterialProductionsAtBegin_Result> FillDocMaterialProductionsAtBegin(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> date)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductionsAtBegin_Result>("FillDocMaterialProductionsAtBegin", placeIDParameter, shiftIDParameter, dateParameter);
+        }
+    
+        public virtual ObjectResult<FillDocMaterialProductionsIn_Result> FillDocMaterialProductionsIn(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> date, Nullable<System.Guid> fromDocID)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            var fromDocIDParameter = fromDocID.HasValue ?
+                new ObjectParameter("FromDocID", fromDocID) :
+                new ObjectParameter("FromDocID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductionsIn_Result>("FillDocMaterialProductionsIn", placeIDParameter, shiftIDParameter, dateParameter, fromDocIDParameter);
         }
     }
 }

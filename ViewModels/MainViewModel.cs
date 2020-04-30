@@ -123,11 +123,17 @@ namespace Gamma.ViewModels
                 OpenLogEventsCommand = new DelegateCommand(() => CurrentView = new LogEventsViewModel());
                 CreateNewDocBrokeCommand = new DelegateCommand(() => MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid()));
                 UnwinderRemainderCommand = new DelegateCommand(UnwinderRemainder);
+                OpenDocMaterialProductionsCommand = new DelegateCommand(() => CurrentView = new DocMaterialProductionsViewModel());
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroup.PM:
+                    if (WorkSession.RoleName == "QualityInspector")
+                        CurrentView = new DocMaterialProductionsViewModel();
+                    else
+                        CurrentView = new ProductionTasksSGBViewModel();
+                    break;
                 case PlaceGroup.Rw:
                     CurrentView = new ProductionTasksSGBViewModel();
                     break;
@@ -504,6 +510,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenHelpCommand { get; set; }
         public DelegateCommand OpenDocWithdrawalsCommand { get; set; }
         public DelegateCommand UnwinderRemainderCommand { get; set; }
+        public DelegateCommand OpenDocMaterialProductionsCommand { get; private set; }
 
         public List<ReportItem> Reports { get; set; }
 

@@ -47,6 +47,7 @@ namespace Gamma.Entities
             this.ProductionTaskConvertingSamples = new HashSet<ProductionTaskConvertingSamples>();
             this.DocMaterialProducts = new HashSet<DocMaterialProducts>();
             this.DocMaterialProductions = new HashSet<DocMaterialProductions>();
+            this.DocMaterialTankGroups = new HashSet<DocMaterialTankGroups>();
         }
     
         public System.Guid C1CNomenclatureID { get; set; }
@@ -129,5 +130,7 @@ namespace Gamma.Entities
         public virtual ICollection<DocMaterialProducts> DocMaterialProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMaterialProductions> DocMaterialProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMaterialTankGroups> DocMaterialTankGroups { get; set; }
     }
 }

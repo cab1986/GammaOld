@@ -6,6 +6,21 @@ namespace Gamma
 {
     public class Doc
     {
+        /*public Doc()
+        { }
+
+        public Doc(Guid docID, string number, DateTime date, byte shiftID, string place, string user, string person, bool isConfirmed, int? docTypeID)
+        {
+            DocID = docID;
+            Number = number;
+            Date = date;
+            ShiftID = shiftID;
+            Place = place;
+            User = user;
+            Person = person;
+            IsConfirmed = isConfirmed;
+            DocTypeID = docTypeID;
+        }*/
         public Guid DocID { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
@@ -14,5 +29,6 @@ namespace Gamma
         public string User { get; set; }
         public string Person { get; set; }
         public bool IsConfirmed { get; set; }
+        public int? DocTypeID { get; set; }
     }
 }

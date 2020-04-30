@@ -681,6 +681,14 @@
           <Property Name="NomenclatureName" Type="varchar" MaxLength="1000" StoreGeneratedPattern="Computed" />
           <Property Name="Date" Type="datetime" />
         </EntityType>
+        <EntityType Name="DocMaterialDocs">
+          <Key>
+            <PropertyRef Name="DocMaterialDocID" />
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocMaterialDocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="DocMaterialProductions">
           <Key>
             <PropertyRef Name="DocMaterialProductionID" />
@@ -703,6 +711,44 @@
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="DocMaterialTankGroupNomenclatureGroups">
+          <Key>
+            <PropertyRef Name="DocMaterialTankGroupID" />
+            <PropertyRef Name="1CNomenclatureID" />
+          </Key>
+          <Property Name="DocMaterialTankGroupID" Type="int" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocMaterialTankGroups">
+          <Key>
+            <PropertyRef Name="DocMaterialTankGroupID" />
+          </Key>
+          <Property Name="DocMaterialTankGroupID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="NextDocMaterialTankGroupID" Type="int" />
+          <Property Name="DocMaterialProductionTypeID" Type="int" />
+        </EntityType>
+        <EntityType Name="DocMaterialTankRemainders">
+          <Key>
+            <PropertyRef Name="DocMaterialTankRemainderID" />
+          </Key>
+          <Property Name="DocMaterialTankRemainderID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocMaterialTankID" Type="int" Nullable="false" />
+          <Property Name="Concentration" Type="decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Level" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="DocMaterialTanks">
+          <Key>
+            <PropertyRef Name="DocMaterialTankID" />
+          </Key>
+          <Property Name="DocMaterialTankID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="DocMaterialTankGroupID" Type="int" Nullable="false" />
+          <Property Name="Volume" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DocMovement">
           <Key>
@@ -1607,6 +1653,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductions' does not
           <Property Name="MeasureUnitName" Type="varchar" MaxLength="50" />
           <Property Name="QuantityIsReadOnly" Type="bit" />
           <Property Name="WithdrawByFact" Type="bit" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
           <Property Name="ParentName" Type="varchar" MaxLength="255" />
           <Property Name="QuantityRemainderAtBegin" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityIn" Type="decimal" Precision="38" Scale="5" />
@@ -2321,6 +2368,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Principal>
             <Dependent Role="1CNomenclatureAnalogs">
               <PropertyRef Name="1CSpecificationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CNomenclatureGroupID_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="DocMaterialTankGroupNomenclatureGroups" Type="Self.DocMaterialTankGroupNomenclatureGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankGroupNomenclatureGroups">
+              <PropertyRef Name="1CNomenclatureID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3392,6 +3451,30 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocMaterialDocs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocMaterialDocs" Type="Self.DocMaterialDocs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialDocs">
+              <PropertyRef Name="DocMaterialDocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialDocs_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocMaterialDocs" Type="Self.DocMaterialDocs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialDocs">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DocMaterialProductions_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
           <End Role="DocMaterialProductions" Type="Self.DocMaterialProductions" Multiplicity="*" />
@@ -3473,6 +3556,78 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Principal>
             <Dependent Role="DocMaterialProducts">
               <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankGroupID_DocMaterialTankGroups">
+          <End Role="DocMaterialTankGroups" Type="Self.DocMaterialTankGroups" Multiplicity="1" />
+          <End Role="DocMaterialTankGroupNomenclatureGroups" Type="Self.DocMaterialTankGroupNomenclatureGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTankGroups">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankGroupNomenclatureGroups">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankGroups_NextTankGroups">
+          <End Role="DocMaterialTankGroups" Type="Self.DocMaterialTankGroups" Multiplicity="0..1" />
+          <End Role="DocMaterialTankGroups1" Type="Self.DocMaterialTankGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTankGroups">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankGroups1">
+              <PropertyRef Name="NextDocMaterialTankGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankGroups_Places">
+          <End Role="Places" Type="Self.Places" Multiplicity="1" />
+          <End Role="DocMaterialTankGroups" Type="Self.DocMaterialTankGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankGroups">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankRemainders_DocMaterialTanks">
+          <End Role="DocMaterialTanks" Type="Self.DocMaterialTanks" Multiplicity="1" />
+          <End Role="DocMaterialTankRemainders" Type="Self.DocMaterialTankRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTanks">
+              <PropertyRef Name="DocMaterialTankID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankRemainders">
+              <PropertyRef Name="DocMaterialTankID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankRemainders_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocMaterialTankRemainders" Type="Self.DocMaterialTankRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankRemainders">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTanks_DocMaterialTankGroups">
+          <End Role="DocMaterialTankGroups" Type="Self.DocMaterialTankGroups" Multiplicity="1" />
+          <End Role="DocMaterialTanks" Type="Self.DocMaterialTanks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTankGroups">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Principal>
+            <Dependent Role="DocMaterialTanks">
+              <PropertyRef Name="DocMaterialTankGroupID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5161,6 +5316,17 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
           <Parameter Name="ProductionCharacteristicIDs" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="FillDocMaterialProductionsAtBegin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="Date" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="FillDocMaterialProductionsIn" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="Date" Type="datetime" Mode="In" />
+          <Parameter Name="FromDocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SearchString" Type="varchar" Mode="In" />
           <Parameter Name="Id" Type="int" Mode="In" />
@@ -5277,6 +5443,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
         </Function>
         <Function Name="GetDocCloseShiftWRGroupPacks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetDocMaterialInFromDocID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="Date" Type="datetime2" Mode="In" />
         </Function>
         <Function Name="GetDocRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
@@ -5476,8 +5647,13 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="DocComplectationWithdrawals" EntityType="Self.DocComplectationWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInProducts" EntityType="Self.DocInProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocInventarisationProducts" EntityType="Self.DocInventarisationProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialDocs" EntityType="Self.DocMaterialDocs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMaterialProductions" EntityType="Self.DocMaterialProductions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMaterialProducts" EntityType="Self.DocMaterialProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialTankGroupNomenclatureGroups" EntityType="Self.DocMaterialTankGroupNomenclatureGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialTankGroups" EntityType="Self.DocMaterialTankGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialTankRemainders" EntityType="Self.DocMaterialTankRemainders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocMaterialTanks" EntityType="Self.DocMaterialTanks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovement" EntityType="Self.DocMovement" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovementOrder" EntityType="Self.DocMovementOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocMovementOrderDocs" EntityType="Self.DocMovementOrderDocs" Schema="dbo" store:Type="Tables" />
@@ -5685,6 +5861,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     [vDocMaterialProductions].[MeasureUnitName] AS [MeasureUnitName], 
     [vDocMaterialProductions].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
     [vDocMaterialProductions].[WithdrawByFact] AS [WithdrawByFact], 
+    [vDocMaterialProductions].[ParentID] AS [ParentID], 
     [vDocMaterialProductions].[ParentName] AS [ParentName], 
     [vDocMaterialProductions].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
     [vDocMaterialProductions].[QuantityIn] AS [QuantityIn], 
@@ -6036,6 +6213,10 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_1CNomenclatureAnalogs_1CSpecifications" Association="Self.FK_1CNomenclatureAnalogs_1CSpecifications">
             <End Role="1CSpecifications" EntitySet="1CSpecifications" />
             <End Role="1CNomenclatureAnalogs" EntitySet="1CNomenclatureAnalogs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CNomenclatureGroupID_1CNomenclature" Association="Self.FK_1CNomenclatureGroupID_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocMaterialTankGroupNomenclatureGroups" EntitySet="DocMaterialTankGroupNomenclatureGroups" />
           </AssociationSet>
           <AssociationSet Name="FK_1CNomenclatureGroupNomenclature_1CNomenclature" Association="Self.FK_1CNomenclatureGroupNomenclature_1CNomenclature">
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
@@ -6389,6 +6570,14 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="Products" EntitySet="Products" />
             <End Role="DocInventarisationProducts" EntitySet="DocInventarisationProducts" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialDocs" Association="Self.FK_DocMaterialDocs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialDocs" EntitySet="DocMaterialDocs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialDocs_Docs" Association="Self.FK_DocMaterialDocs_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialDocs" EntitySet="DocMaterialDocs" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocMaterialProductions_1CCharacteristics" Association="Self.FK_DocMaterialProductions_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
             <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
@@ -6416,6 +6605,30 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_DocMaterialProducts_Docs" Association="Self.FK_DocMaterialProducts_Docs">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocMaterialProducts" EntitySet="DocMaterialProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankGroupID_DocMaterialTankGroups" Association="Self.FK_DocMaterialTankGroupID_DocMaterialTankGroups">
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+            <End Role="DocMaterialTankGroupNomenclatureGroups" EntitySet="DocMaterialTankGroupNomenclatureGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankGroups_NextTankGroups" Association="Self.FK_DocMaterialTankGroups_NextTankGroups">
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+            <End Role="DocMaterialTankGroups1" EntitySet="DocMaterialTankGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankGroups_Places" Association="Self.FK_DocMaterialTankGroups_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankRemainders_DocMaterialTanks" Association="Self.FK_DocMaterialTankRemainders_DocMaterialTanks">
+            <End Role="DocMaterialTanks" EntitySet="DocMaterialTanks" />
+            <End Role="DocMaterialTankRemainders" EntitySet="DocMaterialTankRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankRemainders_Docs" Association="Self.FK_DocMaterialTankRemainders_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialTankRemainders" EntitySet="DocMaterialTankRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTanks_DocMaterialTankGroups" Association="Self.FK_DocMaterialTanks_DocMaterialTankGroups">
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+            <End Role="DocMaterialTanks" EntitySet="DocMaterialTanks" />
           </AssociationSet>
           <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -9086,6 +9299,48 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocMaterialProductions" EntitySet="DocMaterialProductions" />
           </AssociationSet>
+          <EntitySet Name="DocMaterialTankGroups" EntityType="GammaModel.DocMaterialTankGroups" />
+          <EntitySet Name="DocMaterialTankRemainders" EntityType="GammaModel.DocMaterialTankRemainders" />
+          <EntitySet Name="DocMaterialTanks" EntityType="GammaModel.DocMaterialTanks" />
+          <AssociationSet Name="FK_DocMaterialTankGroups_NextTankGroups" Association="GammaModel.FK_DocMaterialTankGroups_NextTankGroups">
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+            <End Role="DocMaterialTankGroups1" EntitySet="DocMaterialTankGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankGroups_Places" Association="GammaModel.FK_DocMaterialTankGroups_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTanks_DocMaterialTankGroups" Association="GammaModel.FK_DocMaterialTanks_DocMaterialTankGroups">
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+            <End Role="DocMaterialTanks" EntitySet="DocMaterialTanks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankRemainders_DocMaterialTanks" Association="GammaModel.FK_DocMaterialTankRemainders_DocMaterialTanks">
+            <End Role="DocMaterialTanks" EntitySet="DocMaterialTanks" />
+            <End Role="DocMaterialTankRemainders" EntitySet="DocMaterialTankRemainders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMaterialTankRemainders_Docs" Association="GammaModel.FK_DocMaterialTankRemainders_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocMaterialTankRemainders" EntitySet="DocMaterialTankRemainders" />
+          </AssociationSet>
+          <FunctionImport Name="FillDocMaterialProductionsAtBegin" ReturnType="Collection(GammaModel.FillDocMaterialProductionsAtBegin_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <AssociationSet Name="DocMaterialTankGroupNomenclatureGroups" Association="GammaModel.DocMaterialTankGroupNomenclatureGroups">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
+          </AssociationSet>
+          <AssociationSet Name="DocMaterialDocs" Association="GammaModel.DocMaterialDocs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="Docs1" EntitySet="Docs" />
+          </AssociationSet>
+          <FunctionImport Name="FillDocMaterialProductionsIn" ReturnType="Collection(GammaModel.FillDocMaterialProductionsIn_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
+            <Parameter Name="FromDocID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10313,6 +10568,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocUnwinderRemainders1" Relationship="GammaModel.FK_DocUnwinderRemainders_Docs1" FromRole="Docs" ToRole="DocUnwinderRemainders" />
           <NavigationProperty Name="DocMaterialProducts" Relationship="GammaModel.FK_DocMaterialProducts_Docs" FromRole="Docs" ToRole="DocMaterialProducts" />
           <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_Docs" FromRole="Docs" ToRole="DocMaterialProductions" />
+          <NavigationProperty Name="DocMaterialTankRemainders" Relationship="GammaModel.FK_DocMaterialTankRemainders_Docs" FromRole="Docs" ToRole="DocMaterialTankRemainders" />
+          <NavigationProperty Name="DocMaterialProductDocs" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs" ToRole="Docs1" />
+          <NavigationProperty Name="DocMaterialProduct" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs1" ToRole="Docs" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -11013,6 +11271,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="PlaceWithdrawalMaterialTypes" Relationship="GammaModel.FK_Places_PlaceWithdrawalMaterialTypes" FromRole="Places" ToRole="PlaceWithdrawalMaterialTypes" />
           <Property Name="IsEnabledRemainderInDocCloseShift" Type="Boolean" />
           <Property Name="IsEnabledSamplesInDocCloseShift" Type="Boolean" />
+          <NavigationProperty Name="DocMaterialTankGroups" Relationship="GammaModel.FK_DocMaterialTankGroups_Places" FromRole="Places" ToRole="DocMaterialTankGroups" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -12181,6 +12440,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CNomenclature" FromRole="C1CNomenclature" ToRole="ProductionTaskConvertingSamples" />
           <NavigationProperty Name="DocMaterialProducts" Relationship="GammaModel.FK_DocMaterialProducts_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocMaterialProducts" />
           <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocMaterialProductions" />
+          <NavigationProperty Name="DocMaterialTankGroups" Relationship="GammaModel.DocMaterialTankGroupNomenclatureGroups" FromRole="C1CNomenclature" ToRole="DocMaterialTankGroups" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -14084,6 +14344,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="WithdrawByFact" Type="Boolean" />
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ParentID" Type="Guid" />
         </EntityType>
         <EntityType Name="DocMaterialProducts">
           <Key>
@@ -14199,6 +14460,133 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DocMaterialTankGroups">
+          <Key>
+            <PropertyRef Name="DocMaterialTankGroupID" />
+          </Key>
+          <Property Name="DocMaterialTankGroupID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PlaceID" Type="Int32" Nullable="false" />
+          <Property Name="NextDocMaterialTankGroupID" Type="Int32" />
+          <Property Name="DocMaterialProductionTypeID" Type="Int32" />
+          <NavigationProperty Name="DocMaterialTankGroups1" Relationship="GammaModel.FK_DocMaterialTankGroups_NextTankGroups" FromRole="DocMaterialTankGroups" ToRole="DocMaterialTankGroups1" />
+          <NavigationProperty Name="DocMaterialTankGroups2" Relationship="GammaModel.FK_DocMaterialTankGroups_NextTankGroups" FromRole="DocMaterialTankGroups1" ToRole="DocMaterialTankGroups" />
+          <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocMaterialTankGroups_Places" FromRole="DocMaterialTankGroups" ToRole="Places" />
+          <NavigationProperty Name="DocMaterialTanks" Relationship="GammaModel.FK_DocMaterialTanks_DocMaterialTankGroups" FromRole="DocMaterialTankGroups" ToRole="DocMaterialTanks" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.DocMaterialTankGroupNomenclatureGroups" FromRole="DocMaterialTankGroups" ToRole="C1CNomenclature" />
+        </EntityType>
+        <EntityType Name="DocMaterialTankRemainders">
+          <Key>
+            <PropertyRef Name="DocMaterialTankRemainderID" />
+          </Key>
+          <Property Name="DocMaterialTankRemainderID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="DocMaterialTankID" Type="Int32" Nullable="false" />
+          <Property Name="Concentration" Type="Decimal" Nullable="false" Precision="5" Scale="2" />
+          <Property Name="Level" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DocMaterialTanks" Relationship="GammaModel.FK_DocMaterialTankRemainders_DocMaterialTanks" FromRole="DocMaterialTankRemainders" ToRole="DocMaterialTanks" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocMaterialTankRemainders_Docs" FromRole="DocMaterialTankRemainders" ToRole="Docs" />
+        </EntityType>
+        <EntityType Name="DocMaterialTanks">
+          <Key>
+            <PropertyRef Name="DocMaterialTankID" />
+          </Key>
+          <Property Name="DocMaterialTankID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DocMaterialTankGroupID" Type="Int32" Nullable="false" />
+          <Property Name="Volume" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DocMaterialTankGroups" Relationship="GammaModel.FK_DocMaterialTanks_DocMaterialTankGroups" FromRole="DocMaterialTanks" ToRole="DocMaterialTankGroups" />
+          <NavigationProperty Name="DocMaterialTankRemainders" Relationship="GammaModel.FK_DocMaterialTankRemainders_DocMaterialTanks" FromRole="DocMaterialTanks" ToRole="DocMaterialTankRemainders" />
+        </EntityType>
+        <Association Name="FK_DocMaterialTankGroups_NextTankGroups">
+          <End Type="GammaModel.DocMaterialTankGroups" Role="DocMaterialTankGroups" Multiplicity="0..1" />
+          <End Type="GammaModel.DocMaterialTankGroups" Role="DocMaterialTankGroups1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTankGroups">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankGroups1">
+              <PropertyRef Name="NextDocMaterialTankGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankGroups_Places">
+          <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialTankGroups" Role="DocMaterialTankGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankGroups">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTanks_DocMaterialTankGroups">
+          <End Type="GammaModel.DocMaterialTankGroups" Role="DocMaterialTankGroups" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialTanks" Role="DocMaterialTanks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTankGroups">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Principal>
+            <Dependent Role="DocMaterialTanks">
+              <PropertyRef Name="DocMaterialTankGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankRemainders_DocMaterialTanks">
+          <End Type="GammaModel.DocMaterialTanks" Role="DocMaterialTanks" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialTankRemainders" Role="DocMaterialTankRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocMaterialTanks">
+              <PropertyRef Name="DocMaterialTankID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankRemainders">
+              <PropertyRef Name="DocMaterialTankID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMaterialTankRemainders_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocMaterialTankRemainders" Role="DocMaterialTankRemainders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocMaterialTankRemainders">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="FillDocMaterialProductionsAtBegin_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="false" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="20" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Int32" Name="QuantityIsReadOnly" Nullable="false" />
+        </ComplexType>
+        <Association Name="DocMaterialTankGroupNomenclatureGroups">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
+          <End Type="GammaModel.DocMaterialTankGroups" Role="DocMaterialTankGroups" Multiplicity="*" />
+        </Association>
+        <Association Name="DocMaterialDocs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="*" />
+          <End Type="GammaModel.Docs" Role="Docs1" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="FillDocMaterialProductionsIn_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="false" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="20" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Int32" Name="QuantityIsReadOnly" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -16810,6 +17198,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="vDocMaterialProductions">
             <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductions">
               <MappingFragment StoreEntitySet="vDocMaterialProductions">
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
                 <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
@@ -16854,6 +17243,83 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="DocMaterialTankGroups">
+            <EntityTypeMapping TypeName="GammaModel.DocMaterialTankGroups">
+              <MappingFragment StoreEntitySet="DocMaterialTankGroups">
+                <ScalarProperty Name="DocMaterialProductionTypeID" ColumnName="DocMaterialProductionTypeID" />
+                <ScalarProperty Name="NextDocMaterialTankGroupID" ColumnName="NextDocMaterialTankGroupID" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DocMaterialTankGroupID" ColumnName="DocMaterialTankGroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocMaterialTankRemainders">
+            <EntityTypeMapping TypeName="GammaModel.DocMaterialTankRemainders">
+              <MappingFragment StoreEntitySet="DocMaterialTankRemainders">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Concentration" ColumnName="Concentration" />
+                <ScalarProperty Name="DocMaterialTankID" ColumnName="DocMaterialTankID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocMaterialTankRemainderID" ColumnName="DocMaterialTankRemainderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocMaterialTanks">
+            <EntityTypeMapping TypeName="GammaModel.DocMaterialTanks">
+              <MappingFragment StoreEntitySet="DocMaterialTanks">
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="DocMaterialTankGroupID" ColumnName="DocMaterialTankGroupID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DocMaterialTankID" ColumnName="DocMaterialTankID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocMaterialProductionsAtBegin" FunctionName="GammaDBModel.FillDocMaterialProductionsAtBegin">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocMaterialProductionsAtBegin_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <AssociationSetMapping Name="DocMaterialTankGroupNomenclatureGroups" TypeName="GammaModel.DocMaterialTankGroupNomenclatureGroups" StoreEntitySet="DocMaterialTankGroupNomenclatureGroups">
+            <EndProperty Name="DocMaterialTankGroups">
+              <ScalarProperty Name="DocMaterialTankGroupID" ColumnName="DocMaterialTankGroupID" />
+            </EndProperty>
+            <EndProperty Name="C1CNomenclature">
+              <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="DocMaterialDocs" TypeName="GammaModel.DocMaterialDocs" StoreEntitySet="DocMaterialDocs">
+            <EndProperty Name="Docs1">
+              <ScalarProperty Name="DocID" ColumnName="DocID" />
+            </EndProperty>
+            <EndProperty Name="Docs">
+              <ScalarProperty Name="DocID" ColumnName="DocMaterialDocID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocMaterialProductionsIn" FunctionName="GammaDBModel.FillDocMaterialProductionsIn">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocMaterialProductionsIn_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

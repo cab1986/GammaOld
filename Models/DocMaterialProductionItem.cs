@@ -90,7 +90,7 @@ namespace Gamma.Models
             {
                 var nomenclatureInfo =
                     gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == _nomenclatureID);
-                var characteristicInfo =
+/*                var characteristicInfo =
                     gammaBase.C1CCharacteristics.Where(n => n.C1CNomenclatureID == _nomenclatureID && (n.C1CCharacteristicID == CharacteristicID || CharacteristicID == null));
                 if (characteristicInfo?.Count() > 0)
                 {
@@ -110,7 +110,7 @@ namespace Gamma.Models
                     }
                 }
                 else
-                {
+*/              {
                     AvailableNomenclatures.Add(new NomenclatureAnalog()
                     {
                         NomenclatureID = _nomenclatureID,
@@ -204,6 +204,7 @@ namespace Gamma.Models
             set
             {
                 /*_nomenclatureIDDiezCharacteristicID = value;*/
+                var isDeletedNomenclatureInComposition = (NomenclatureID != null && NomenclatureID != Guid.Empty && NomenclatureIDDiezCharacteristicID != value);
                 try
                 {
                     NomenclatureID = Guid.Parse(value.Substring(0, value.IndexOf("#")));
@@ -222,6 +223,8 @@ namespace Gamma.Models
                 {
                     CharacteristicID = null;
                 }
+                if (isDeletedNomenclatureInComposition)
+                    MessageManager.DeleteNomenclatureInCompositionFromTankGroupEvent(NomenclatureID);
             }
         }
 
@@ -272,7 +275,7 @@ namespace Gamma.Models
                 else
                     _characteristicID = value;
                 
-                var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == _nomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
+                var choosenNomenclature = AvailableNomenclatures?.FirstOrDefault(an => an.NomenclatureID == _nomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
                 if (choosenNomenclature == null)
                 {
                     //Quantity = 0;
@@ -295,6 +298,7 @@ namespace Gamma.Models
         public int? NomenclatureKindID { get; set; }
 
         public string ParentName { get; set; }
+        public Guid? ParentID { get; set; }
 
         /// <summary>
         /// Списание по факту (или по нормативам)

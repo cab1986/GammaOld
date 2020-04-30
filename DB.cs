@@ -336,5 +336,10 @@ namespace Gamma
         {
             return GammaDb.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftEndTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
         }
+
+        public static Guid? GetDocMaterialInFromDocID(int placeID,int shiftID, DateTime date)
+        {
+            return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
+        }
     }
 }

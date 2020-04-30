@@ -52,6 +52,23 @@
                 </dxmvvm:Interaction.Behaviors>
             </dxlc:LayoutGroup>
         </DataTemplate>
+        <DataTemplate x:Key="MaterialProductionTankRemainderTemplate">
+            <dxlc:LayoutGroup Header="{Binding Name}" Orientation="Horizontal" View="GroupBox" Height="90" Width="220" Margin="0,0,5,0">
+                <dxlc:LayoutItem Label="Концентрация,%" LabelPosition="Top" Width="100" >
+                    <dxe:SpinEdit EditValue="{Binding Concentration, UpdateSourceTrigger=PropertyChanged}" MaxValue="100"
+                                     EditValueType="{x:Type system:Decimal}" IsFloatValue="True" MinValue="0" Increment="0.01" Mask="f2" MaskUseAsDisplayFormat="True"
+                                  />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Уровень,%" LabelPosition="Top" Width="80" Margin="7,0,0,0" >
+                    <dxe:SpinEdit EditValue="{Binding Level, UpdateSourceTrigger=PropertyChanged}" MaxValue="100"
+                                     EditValueType="{x:Type system:Decimal}" IsFloatValue="False" MinValue="0" Mask="d" MaskUseAsDisplayFormat="True"
+                                  />
+                </dxlc:LayoutItem>
+                <dxmvvm:Interaction.Behaviors>
+                    <g:UIAuthBehavior/>
+                </dxmvvm:Interaction.Behaviors>
+            </dxlc:LayoutGroup>
+        </DataTemplate>
         <DataTemplate x:Key="BarTemplate" DataType="g:BarViewModel">
             <ContentControl>
                 <dxb:Bar Caption="{Binding Name}" ItemLinksSource="{Binding Commands}" ItemTemplate="{DynamicResource ResourceKey=ItemTemplate}"/>

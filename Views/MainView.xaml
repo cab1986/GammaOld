@@ -63,6 +63,9 @@
         <DataTemplate DataType="{x:Type vm:LogEventsViewModel}">
             <views:LogEventsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocMaterialProductionsViewModel}">
+            <views:DocMaterialProductionsView />
+        </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
@@ -105,6 +108,7 @@
                                 </DataTemplate>
                             </dxb:BarSubItem.ItemTemplate>
                         </dxb:BarSubItem>
+                        <dxb:BarButtonItem Content="Расход сырья и материалов" Command="{Binding OpenDocMaterialProductionsCommand}" CommandParameter="{x:Static g:PlaceGroup.PM}"/>
                         <dxb:BarButtonItem Content="Акты о браке" Command="{Binding OpenDocBrokeListCommand}"/>
                         <dxb:BarButtonItem Content="Браковка партии БДМ" Command="{Binding OpenQualityReportPMCommand}"/>
                         <dxb:BarButtonItem Content="Списания" Command="{Binding OpenDocWithdrawalsCommand}" />

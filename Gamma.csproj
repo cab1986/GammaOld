@@ -423,6 +423,15 @@
     <Compile Include="Entities\DocMaterialProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DocMaterialTankGroups.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocMaterialTankRemainders.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocMaterialTanks.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\DocMovement.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -529,6 +538,12 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocCloseShiftUtilizationSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocMaterialProductionsAtBegin_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocMaterialProductionsIn_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocMaterialProductions_Result.cs">
@@ -868,6 +883,8 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
+    <Compile Include="Models\DocMaterialTankGroupContainer.cs" />
+    <Compile Include="Models\DocMaterialTankGroup.cs" />
     <Compile Include="Models\Bale.cs" />
     <Compile Include="Models\Characteristic.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
@@ -912,6 +929,7 @@
     <Compile Include="Models\RobotNomenclature.cs" />
     <Compile Include="Models\Sample.cs" />
     <Compile Include="Models\SpoolPathPM.cs" />
+    <Compile Include="Models\MaterialProductionTankRemainder.cs" />
     <Compile Include="Models\SpoolRemainder.cs" />
     <Compile Include="Common\UIServices.cs" />
     <Compile Include="Common\ViewsManager.cs" />
@@ -983,6 +1001,7 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocMaterialTankRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionGridViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProduction1GridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftProductViewModel.cs" />
@@ -1072,6 +1091,9 @@
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMaterialTankRemaindersView.xaml.cs">
+      <DependentUpon>DocMaterialTankRemaindersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocMaterialProductionGridView.xaml.cs">
       <DependentUpon>DocMaterialProductionGridView.xaml</DependentUpon>
@@ -1326,6 +1348,10 @@
     <Page Include="Views\DocBrokeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocMaterialTankRemaindersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocMaterialProductionGridView.xaml">
       <Generator>MSBuild:Compile</Generator>

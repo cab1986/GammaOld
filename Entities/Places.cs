@@ -33,6 +33,7 @@ namespace Gamma.Entities
             this.LogEvents = new HashSet<LogEvents>();
             this.PlaceRemotePrinters = new HashSet<PlaceRemotePrinters>();
             this.Persons = new HashSet<Persons>();
+            this.DocMaterialTankGroups = new HashSet<DocMaterialTankGroups>();
         }
     
         public int PlaceID { get; set; }
@@ -98,5 +99,7 @@ namespace Gamma.Entities
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Persons> Persons { get; set; }
         public virtual PlaceWithdrawalMaterialTypes PlaceWithdrawalMaterialTypes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMaterialTankGroups> DocMaterialTankGroups { get; set; }
     }
 }
