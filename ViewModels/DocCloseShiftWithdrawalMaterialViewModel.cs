@@ -87,11 +87,17 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
-                var placeGroupID =  GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
-                    if (placeGroupID == 0)
-                        CurrentMaterialType = MaterialType.MaterialsSGB;
-                    else if (placeGroupID == 2)
-                        CurrentMaterialType = MaterialType.MaterialsSGI;
+                var placeGroupID =  GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First();
+                if (placeGroupID == 0)
+                {
+                    CurrentMaterialType = MaterialType.MaterialsSGB;
+                    IsVisibleQuantityDismiss = true;
+                }
+                else if (placeGroupID == 2)
+                {
+                    CurrentMaterialType = MaterialType.MaterialsSGI;
+                    IsVisibleQuantityDismiss = false;
+                }
                 
             }
         }
@@ -137,6 +143,11 @@ namespace Gamma.ViewModels
         public bool IsWithdrawalMaterialIn { get; set; }
         public string NameWithdrawalMaterialIn { get; set; }
         public bool IsWithdrawalMaterial { get; set; }
+
+        /// <summary>
+        /// Показывать колонку Распущено только для БДМ
+        /// </summary>
+        public bool IsVisibleQuantityDismiss { get; set; }
 
         public string HeaderQuantityField => @"Кол-во, кг/рул/пач";
         public Product SelectedProduct { get; set; }
@@ -309,6 +320,70 @@ namespace Gamma.ViewModels
                 foreach (var material in DocCloseShiftWithdrawalMaterials.DocCloseShiftMaterials)
                     {
                     var materialInDB = materialsInDB.Where(d => d.C1CNomenclatureID == material.NomenclatureID && (d.C1CCharacteristicID == material.CharacteristicID || (d.C1CCharacteristicID == null && material.CharacteristicID == null)));
+
+                    foreach (DocCloseShiftMaterialTypes docCloseShiftMaterialType in Enum.GetValues(typeof(DocCloseShiftMaterialTypes)))
+                    {
+                        decimal? quantity = null;
+                        switch (docCloseShiftMaterialType)
+                        {
+                            case DocCloseShiftMaterialTypes.Withdrawal:
+                                quantity = material.QuantityWithdrawalMaterial;
+                                break;
+                            case DocCloseShiftMaterialTypes.In:
+                                quantity = material.QuantityIn;
+                                break;
+                            case DocCloseShiftMaterialTypes.Out:
+                                quantity = material.QuantityOut;
+                                break;
+                            case DocCloseShiftMaterialTypes.RemainderAtEnd:
+                                quantity = material.QuantityRemainderAtEnd;
+                                break;
+                            case DocCloseShiftMaterialTypes.RemainderAtBegin:
+                                quantity = material.QuantityRemainderAtBegin;
+                                break;
+                            case DocCloseShiftMaterialTypes.Utilization:
+                                quantity = material.QuantityUtil;
+                                break;
+                            case DocCloseShiftMaterialTypes.Experimental:
+                                quantity = material.QuantityExperimental;
+                                break;
+                            case DocCloseShiftMaterialTypes.RePack:
+                                quantity = material.QuantityRePack;
+                                break;
+                            case DocCloseShiftMaterialTypes.Standard:
+                                quantity = material.StandardQuantity;
+                                break;
+                            case DocCloseShiftMaterialTypes.Dismiss:
+                                quantity = material.QuantityDismiss;
+                                break;
+                        }
+                        if (quantity != null || docCloseShiftMaterialType == DocCloseShiftMaterialTypes.RemainderAtBegin)
+                        {
+                            var item = materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == (int)docCloseShiftMaterialType).FirstOrDefault();
+                            if (item == null)
+                                docCloseShift.DocCloseShiftMaterials.Add(new DocCloseShiftMaterials
+                                {
+                                    DocID = docId,
+                                    C1CNomenclatureID = material.NomenclatureID,
+                                    C1CCharacteristicID = material.CharacteristicID,
+                                    DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
+                                    DocCloseShiftMaterialTypeID = (int)docCloseShiftMaterialType,
+                                    Quantity = quantity ?? 0,
+                                    C1CMeasureUnitID = material.MeasureUnitID,
+                                    WithdrawByFact = material.WithdrawByFact
+                                });
+                            else
+                            {
+                                item.Quantity = quantity ?? 0;
+                            }
+                        }
+                        else
+                        {
+                            if (materialInDB.Any(d => d.DocCloseShiftMaterialTypeID == (int)docCloseShiftMaterialType))
+                                gammaBase.DocCloseShiftMaterials.RemoveRange(materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == (int)docCloseShiftMaterialType));
+                        }
+                    }
+                    /*
                     if (material.QuantityIn != null)
                     {
                         var item = materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == 1).FirstOrDefault();
@@ -528,7 +603,7 @@ namespace Gamma.ViewModels
                     {
                         if (materialInDB.Any(d => d.DocCloseShiftMaterialTypeID == 0))
                             gammaBase.DocCloseShiftMaterials.RemoveRange(materialInDB.Where(d => d.DocCloseShiftMaterialTypeID == 0));
-                    }
+                    }*/
                 }
                 var docWithdrawalIDs = docCloseShift.DocCloseShiftWithdrawals.Select(d => d.DocID).ToList();
                 gammaBase.DocWithdrawalMaterials.RemoveRange(

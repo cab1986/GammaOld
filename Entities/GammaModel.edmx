@@ -1637,6 +1637,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not
           <Property Name="QuantityRePack" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityRemainderAtEnd" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityWithdrawalMaterial" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityDismiss" Type="decimal" Precision="38" Scale="5" />
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -5275,6 +5276,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftMaterialsDismiss" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftMovementProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -5878,6 +5884,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     [vDocCloseShiftMaterials].[QuantityRePack] AS [QuantityRePack], 
     [vDocCloseShiftMaterials].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
     [vDocCloseShiftMaterials].[QuantityWithdrawalMaterial] AS [QuantityWithdrawalMaterial], 
+    [vDocCloseShiftMaterials].[QuantityDismiss] AS [QuantityDismiss], 
     [vDocCloseShiftMaterials].[StandardQuantity] AS [StandardQuantity]
     FROM [dbo].[vDocCloseShiftMaterials] AS [vDocCloseShiftMaterials]</DefiningQuery>
           </EntitySet>
@@ -9397,6 +9404,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <Parameter Name="FromDocID" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="vDocMaterialProductionDirectCalculations" EntityType="GammaModel.vDocMaterialProductionDirectCalculations" />
+          <FunctionImport Name="FillDocCloseShiftMaterialsDismiss" ReturnType="Collection(GammaModel.FillDocCloseShiftMaterialsDismiss_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -14091,6 +14103,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="QuantityExperimental" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="QuantityRePack" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="QuantityIsReadOnly" Type="Boolean" />
+          <Property Name="QuantityDismiss" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
         </EntityType>
         <Association Name="FK_DocCloseShiftWastes_1CCharacteristics_Product">
@@ -14670,6 +14683,16 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="ParentID" Type="Guid" />
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="FillDocCloseShiftMaterialsDismiss_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Boolean" Name="WithdrawByFact" Nullable="false" />
+          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="20" Scale="5" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Boolean" Name="QuantityIsReadOnly" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17085,6 +17108,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="vDocCloseShiftMaterials">
             <EntityTypeMapping TypeName="GammaModel.vDocCloseShiftMaterials">
               <MappingFragment StoreEntitySet="vDocCloseShiftMaterials">
+                <ScalarProperty Name="QuantityDismiss" ColumnName="QuantityDismiss" />
                 <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
                 <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
                 <ScalarProperty Name="QuantityRePack" ColumnName="QuantityRePack" />
@@ -17430,6 +17454,20 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterialsDismiss" FunctionName="GammaDBModel.FillDocCloseShiftMaterialsDismiss">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterialsDismiss_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
+                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

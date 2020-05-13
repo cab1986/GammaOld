@@ -30,6 +30,7 @@ namespace Gamma.Entities
         public Nullable<decimal> QuantityExperimental { get; set; }
         public Nullable<decimal> QuantityRePack { get; set; }
         public Nullable<bool> QuantityIsReadOnly { get; set; }
+        public Nullable<decimal> QuantityDismiss { get; set; }
         public Nullable<decimal> StandardQuantity { get; set; }
     }
 }

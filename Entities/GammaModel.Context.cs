@@ -1393,11 +1393,11 @@ namespace Gamma.Entities
             var closeDateParameter = closeDate.HasValue ?
                 new ObjectParameter("CloseDate", closeDate) :
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
-
+    
             var isCompositionCalculationParameter = isCompositionCalculation.HasValue ?
                 new ObjectParameter("IsCompositionCalculation", isCompositionCalculation) :
                 new ObjectParameter("IsCompositionCalculation", typeof(bool));
-
+    
             var productionCharacteristicIDsParameter = productionCharacteristicIDs != null ?
                 new ObjectParameter("ProductionCharacteristicIDs", productionCharacteristicIDs) :
                 new ObjectParameter("ProductionCharacteristicIDs", typeof(string));
@@ -1418,11 +1418,11 @@ namespace Gamma.Entities
             var dateParameter = date.HasValue ?
                 new ObjectParameter("Date", date) :
                 new ObjectParameter("Date", typeof(System.DateTime));
-
+    
             var isCompositionCalculationParameter = isCompositionCalculation.HasValue ?
                 new ObjectParameter("IsCompositionCalculation", isCompositionCalculation) :
                 new ObjectParameter("IsCompositionCalculation", typeof(bool));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductionsAtBegin_Result>("FillDocMaterialProductionsAtBegin", placeIDParameter, shiftIDParameter, dateParameter, isCompositionCalculationParameter);
         }
     
@@ -1439,16 +1439,33 @@ namespace Gamma.Entities
             var dateParameter = date.HasValue ?
                 new ObjectParameter("Date", date) :
                 new ObjectParameter("Date", typeof(System.DateTime));
-
+    
             var isCompositionCalculationParameter = isCompositionCalculation.HasValue ?
                 new ObjectParameter("IsCompositionCalculation", isCompositionCalculation) :
                 new ObjectParameter("IsCompositionCalculation", typeof(bool));
-
+    
             var fromDocIDParameter = fromDocID.HasValue ?
                 new ObjectParameter("FromDocID", fromDocID) :
                 new ObjectParameter("FromDocID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductionsIn_Result>("FillDocMaterialProductionsIn", placeIDParameter, shiftIDParameter, dateParameter, isCompositionCalculationParameter, fromDocIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftMaterialsDismiss_Result> FillDocCloseShiftMaterialsDismiss(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterialsDismiss_Result>("FillDocCloseShiftMaterialsDismiss", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }
 }

@@ -206,4 +206,17 @@ namespace Gamma
         Out
     }
 
+    public enum DocCloseShiftMaterialTypes
+    {
+        Withdrawal,
+        In,
+        Out,
+        RemainderAtEnd,
+        RemainderAtBegin,
+        Utilization,
+        Experimental,
+        RePack,
+        Standard,
+        Dismiss
+    }
 }

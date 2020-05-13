@@ -91,6 +91,13 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
+                            <dxg:GridColumn Header="Распущено" FieldName="QuantityDismiss" Width="60" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleQuantityDismiss}">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
                             <dxg:GridColumn Header="Расход" FieldName="QuantityWithdrawalMaterial" Width="60" FixedWidth="True" ReadOnly="True"> <!--CellTemplate="{StaticResource optimizedCellTemplate}">-->
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
