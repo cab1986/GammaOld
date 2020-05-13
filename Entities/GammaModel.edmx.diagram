@@ -380,7 +380,7 @@
         <EntityTypeShape EntityType="GammaModel.DocUnwinderRemainders" Width="1.5" PointX="14.25" PointY="84.75" />
         <AssociationConnector Association="GammaModel.FK_DocUnwinderRemainders_Docs" />
         <AssociationConnector Association="GammaModel.FK_DocUnwinderRemainders_Docs1" />
-        <EntityTypeShape EntityType="GammaModel.vDocMaterialProductions" Width="1.5" PointX="17.375" PointY="5.75" />
+        <EntityTypeShape EntityType="GammaModel.vDocMaterialProductionCompositionCalculations" Width="1.5" PointX="17.375" PointY="5.75" />
         <EntityTypeShape EntityType="GammaModel.DocMaterialProducts" Width="1.5" PointX="25.75" PointY="36.75" />
         <AssociationConnector Association="GammaModel.FK_DocMaterialProducts_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_DocMaterialProducts_1CNomenclature" />
@@ -400,6 +400,7 @@
         <AssociationConnector Association="GammaModel.FK_DocMaterialTankRemainders_Docs" />
         <AssociationConnector Association="GammaModel.DocMaterialTankGroupNomenclatureGroups" />
         <AssociationConnector Association="GammaModel.DocMaterialDocs" />
+        <EntityTypeShape EntityType="GammaModel.vDocMaterialProductionDirectCalculations" Width="1.5" PointX="17.375" PointY="11.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

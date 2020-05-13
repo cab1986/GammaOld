@@ -702,6 +702,7 @@
           <Property Name="Quantity" Type="decimal" Precision="20" Scale="5" Nullable="false" />
           <Property Name="Comment" Type="varchar" MaxLength="500" />
           <Property Name="WithdrawByFact" Type="bit" />
+          <Property Name="IsCompositionCalculation" Type="bit" />
         </EntityType>
         <EntityType Name="DocMaterialProducts">
           <Key>
@@ -1639,8 +1640,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="vDocMaterialProductions">
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vDocMaterialProductionCompositionCalculations">
           <Key>
             <PropertyRef Name="DocID" />
             <PropertyRef Name="1CNomenclatureID" />
@@ -1660,6 +1661,32 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductions' does not
           <Property Name="QuantityDismiss" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityRemainderAtEnd" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantityRemainderInGRAVAtEnd" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySend" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vDocMaterialProductionDirectCalculations">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="1CNomenclatureID" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="NomenclatureName" Type="varchar" MaxLength="512" />
+          <Property Name="MeasureUnitName" Type="varchar" MaxLength="50" />
+          <Property Name="QuantityIsReadOnly" Type="bit" />
+          <Property Name="WithdrawByFact" Type="bit" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+          <Property Name="ParentName" Type="varchar" MaxLength="255" />
+          <Property Name="QuantityRemainderAtBegin" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityIn" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityOut" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityUtil" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityExperimental" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderAtEnd" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantitySend" Type="decimal" Precision="38" Scale="5" />
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
@@ -5314,17 +5341,20 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+          <Parameter Name="IsCompositionCalculation" Type="bit" Mode="In" />
           <Parameter Name="ProductionCharacteristicIDs" Type="varchar" Mode="In" />
         </Function>
         <Function Name="FillDocMaterialProductionsAtBegin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="Date" Type="datetime" Mode="In" />
+          <Parameter Name="IsCompositionCalculation" Type="bit" Mode="In" />
         </Function>
         <Function Name="FillDocMaterialProductionsIn" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="Date" Type="datetime" Mode="In" />
+          <Parameter Name="IsCompositionCalculation" Type="bit" Mode="In" />
           <Parameter Name="FromDocID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="FindNomenclatureByStringWithFilter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -5851,26 +5881,48 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     [vDocCloseShiftMaterials].[StandardQuantity] AS [StandardQuantity]
     FROM [dbo].[vDocCloseShiftMaterials] AS [vDocCloseShiftMaterials]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="vDocMaterialProductions" EntityType="Self.vDocMaterialProductions" store:Type="Views" store:Schema="dbo">
+          <EntitySet Name="vDocMaterialProductionCompositionCalculations" EntityType="Self.vDocMaterialProductionCompositionCalculations" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [vDocMaterialProductions].[DocID] AS [DocID], 
-    [vDocMaterialProductions].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [vDocMaterialProductions].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [vDocMaterialProductions].[1CMeasureUnitID] AS [1CMeasureUnitID], 
-    [vDocMaterialProductions].[NomenclatureName] AS [NomenclatureName], 
-    [vDocMaterialProductions].[MeasureUnitName] AS [MeasureUnitName], 
-    [vDocMaterialProductions].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
-    [vDocMaterialProductions].[WithdrawByFact] AS [WithdrawByFact], 
-    [vDocMaterialProductions].[ParentID] AS [ParentID], 
-    [vDocMaterialProductions].[ParentName] AS [ParentName], 
-    [vDocMaterialProductions].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
-    [vDocMaterialProductions].[QuantityIn] AS [QuantityIn], 
-    [vDocMaterialProductions].[QuantityDismiss] AS [QuantityDismiss], 
-    [vDocMaterialProductions].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
-    [vDocMaterialProductions].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd], 
-    [vDocMaterialProductions].[QuantitySend] AS [QuantitySend], 
-    [vDocMaterialProductions].[StandardQuantity] AS [StandardQuantity]
-    FROM [dbo].[vDocMaterialProductions] AS [vDocMaterialProductions]</DefiningQuery>
+    [vDocMaterialProductionCompositionCalculations].[DocID] AS [DocID], 
+    [vDocMaterialProductionCompositionCalculations].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vDocMaterialProductionCompositionCalculations].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vDocMaterialProductionCompositionCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID], 
+    [vDocMaterialProductionCompositionCalculations].[NomenclatureName] AS [NomenclatureName], 
+    [vDocMaterialProductionCompositionCalculations].[MeasureUnitName] AS [MeasureUnitName], 
+    [vDocMaterialProductionCompositionCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
+    [vDocMaterialProductionCompositionCalculations].[WithdrawByFact] AS [WithdrawByFact], 
+    [vDocMaterialProductionCompositionCalculations].[ParentID] AS [ParentID], 
+    [vDocMaterialProductionCompositionCalculations].[ParentName] AS [ParentName], 
+    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
+    [vDocMaterialProductionCompositionCalculations].[QuantityIn] AS [QuantityIn], 
+    [vDocMaterialProductionCompositionCalculations].[QuantityDismiss] AS [QuantityDismiss], 
+    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
+    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd], 
+    [vDocMaterialProductionCompositionCalculations].[QuantitySend] AS [QuantitySend], 
+    [vDocMaterialProductionCompositionCalculations].[StandardQuantity] AS [StandardQuantity]
+    FROM [dbo].[vDocMaterialProductionCompositionCalculations] AS [vDocMaterialProductionCompositionCalculations]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vDocMaterialProductionDirectCalculations" EntityType="Self.vDocMaterialProductionDirectCalculations" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vDocMaterialProductionDirectCalculations].[DocID] AS [DocID], 
+    [vDocMaterialProductionDirectCalculations].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vDocMaterialProductionDirectCalculations].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vDocMaterialProductionDirectCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID], 
+    [vDocMaterialProductionDirectCalculations].[NomenclatureName] AS [NomenclatureName], 
+    [vDocMaterialProductionDirectCalculations].[MeasureUnitName] AS [MeasureUnitName], 
+    [vDocMaterialProductionDirectCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
+    [vDocMaterialProductionDirectCalculations].[WithdrawByFact] AS [WithdrawByFact], 
+    [vDocMaterialProductionDirectCalculations].[ParentID] AS [ParentID], 
+    [vDocMaterialProductionDirectCalculations].[ParentName] AS [ParentName], 
+    [vDocMaterialProductionDirectCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
+    [vDocMaterialProductionDirectCalculations].[QuantityIn] AS [QuantityIn], 
+    [vDocMaterialProductionDirectCalculations].[QuantityOut] AS [QuantityOut], 
+    [vDocMaterialProductionDirectCalculations].[QuantityUtil] AS [QuantityUtil], 
+    [vDocMaterialProductionDirectCalculations].[QuantityExperimental] AS [QuantityExperimental], 
+    [vDocMaterialProductionDirectCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
+    [vDocMaterialProductionDirectCalculations].[QuantitySend] AS [QuantitySend], 
+    [vDocMaterialProductionDirectCalculations].[StandardQuantity] AS [StandardQuantity]
+    FROM [dbo].[vDocMaterialProductionDirectCalculations] AS [vDocMaterialProductionDirectCalculations]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -9266,9 +9318,10 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+            <Parameter Name="IsCompositionCalculation" Mode="In" Type="Boolean" />
             <Parameter Name="ProductionCharacteristicIDs" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="vDocMaterialProductions" EntityType="GammaModel.vDocMaterialProductions" />
+          <EntitySet Name="vDocMaterialProductionCompositionCalculations" EntityType="GammaModel.vDocMaterialProductionCompositionCalculations" />
           <EntitySet Name="DocMaterialProducts" EntityType="GammaModel.DocMaterialProducts" />
           <AssociationSet Name="FK_DocMaterialProducts_1CCharacteristics" Association="GammaModel.FK_DocMaterialProducts_1CCharacteristics">
             <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
@@ -9326,6 +9379,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="Date" Mode="In" Type="DateTime" />
+            <Parameter Name="IsCompositionCalculation" Mode="In" Type="Boolean" />
           </FunctionImport>
           <AssociationSet Name="DocMaterialTankGroupNomenclatureGroups" Association="GammaModel.DocMaterialTankGroupNomenclatureGroups">
             <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
@@ -9339,8 +9393,10 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <Parameter Name="PlaceID" Mode="In" Type="Int32" />
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="Date" Mode="In" Type="DateTime" />
+            <Parameter Name="IsCompositionCalculation" Mode="In" Type="Boolean" />
             <Parameter Name="FromDocID" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="vDocMaterialProductionDirectCalculations" EntityType="GammaModel.vDocMaterialProductionDirectCalculations" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -14322,8 +14378,10 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="Guid" Name="ParentID" Nullable="true" />
           <Property Type="String" Name="ParentName" Nullable="true" MaxLength="255" />
           <Property Type="Boolean" Name="WithdrawByFact" Nullable="true" />
+          <Property Type="Boolean" Name="IsCompositionCalculation" Nullable="true" />
+          <Property Type="Boolean" Name="IsDirectCalculation" Nullable="true" />
         </ComplexType>
-        <EntityType Name="vDocMaterialProductions">
+        <EntityType Name="vDocMaterialProductionCompositionCalculations">
           <Key>
             <PropertyRef Name="DocID" />
             <PropertyRef Name="C1CNomenclatureID" />
@@ -14407,6 +14465,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="20" Scale="5" />
           <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="WithdrawByFact" Type="Boolean" />
+          <Property Name="IsCompositionCalculation" Type="Boolean" />
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocMaterialProductions_1CCharacteristics" FromRole="DocMaterialProductions" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_DocMaterialProductions_1CMeasureUnits" FromRole="DocMaterialProductions" ToRole="C1CMeasureUnits" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocMaterialProductions_1CNomenclature" FromRole="DocMaterialProductions" ToRole="C1CNomenclature" />
@@ -14587,6 +14646,30 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="Int32" Name="QuantityIsReadOnly" Nullable="false" />
         </ComplexType>
+        <EntityType Name="vDocMaterialProductionDirectCalculations">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="C1CNomenclatureID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="WithdrawByFact" Type="Boolean" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="MeasureUnitName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QuantityIsReadOnly" Type="Boolean" />
+          <Property Name="QuantityRemainderAtBegin" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityIn" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityOut" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityUtil" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityExperimental" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderAtEnd" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySend" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="ParentID" Type="Guid" />
+          <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17192,12 +17275,14 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="IsCompositionCalculation" ColumnName="IsCompositionCalculation" />
+                <ScalarProperty Name="IsDirectCalculation" ColumnName="IsDirectCalculation" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="vDocMaterialProductions">
-            <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductions">
-              <MappingFragment StoreEntitySet="vDocMaterialProductions">
+          <EntitySetMapping Name="vDocMaterialProductionCompositionCalculations">
+            <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductionCompositionCalculations">
+              <MappingFragment StoreEntitySet="vDocMaterialProductionCompositionCalculations">
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
@@ -17231,6 +17316,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="DocMaterialProductions">
             <EntityTypeMapping TypeName="GammaModel.DocMaterialProductions">
               <MappingFragment StoreEntitySet="DocMaterialProductions">
+                <ScalarProperty Name="IsCompositionCalculation" ColumnName="IsCompositionCalculation" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
@@ -17320,6 +17406,30 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="vDocMaterialProductionDirectCalculations">
+            <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductionDirectCalculations">
+              <MappingFragment StoreEntitySet="vDocMaterialProductionDirectCalculations">
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
+                <ScalarProperty Name="QuantitySend" ColumnName="QuantitySend" />
+                <ScalarProperty Name="QuantityRemainderAtEnd" ColumnName="QuantityRemainderAtEnd" />
+                <ScalarProperty Name="QuantityExperimental" ColumnName="QuantityExperimental" />
+                <ScalarProperty Name="QuantityUtil" ColumnName="QuantityUtil" />
+                <ScalarProperty Name="QuantityOut" ColumnName="QuantityOut" />
+                <ScalarProperty Name="QuantityIn" ColumnName="QuantityIn" />
+                <ScalarProperty Name="QuantityRemainderAtBegin" ColumnName="QuantityRemainderAtBegin" />
+                <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -22,5 +22,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> ParentID { get; set; }
         public string ParentName { get; set; }
         public Nullable<bool> WithdrawByFact { get; set; }
+        public Nullable<bool> IsCompositionCalculation { get; set; }
+        public Nullable<bool> IsDirectCalculation { get; set; }
     }
 }

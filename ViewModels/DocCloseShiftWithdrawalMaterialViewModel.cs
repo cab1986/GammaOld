@@ -167,7 +167,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        private int _selectedMaterialTabIndex;
+        private int _selectedMaterialTabIndex = 0;
         public int SelectedMaterialTabIndex
         {
             get

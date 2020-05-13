@@ -573,7 +573,10 @@
     <Compile Include="Entities\vDocCloseShiftMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\vDocMaterialProductions.cs">
+    <Compile Include="Entities\vDocMaterialProductionCompositionCalculations.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vDocMaterialProductionDirectCalculations.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\vProductionMaterials.cs">
@@ -883,6 +886,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
+    <Compile Include="Models\DocMaterialProductionDirectCalculationItem.cs" />
+    <Compile Include="Models\DocMaterialProductionDirectCalculationMaterial.cs" />
+    <Compile Include="Models\DocMaterialProductionCompositionCalculationItem.cs" />
     <Compile Include="Models\DocMaterialTankGroupContainer.cs" />
     <Compile Include="Models\DocMaterialTankGroup.cs" />
     <Compile Include="Models\Bale.cs" />
@@ -1001,6 +1007,7 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocMaterialProductionDirectCalculationMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialTankRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionGridViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProduction1GridViewModel.cs" />
@@ -1091,6 +1098,9 @@
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml.cs">
+      <DependentUpon>DocMaterialProductionDirectCalculationMaterialView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocMaterialTankRemaindersView.xaml.cs">
       <DependentUpon>DocMaterialTankRemaindersView.xaml</DependentUpon>
@@ -1348,6 +1358,10 @@
     <Page Include="Views\DocBrokeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocMaterialTankRemaindersView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1747,7 +1761,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

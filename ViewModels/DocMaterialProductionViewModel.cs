@@ -150,7 +150,8 @@ namespace Gamma.ViewModels
                     var activeProductionProductCharacteristicIDs = new List<Guid>();
                     foreach (object item in ((List<object>)value))
                         activeProductionProductCharacteristicIDs.Add(((Characteristic)item).CharacteristicID);
-                    grid.DocMaterialProductions.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
+                    grid.DocMaterialCompositionCalculations.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
+                    grid.DocMaterialProductionDirectCalculationsGrid?.DirectCalculationMaterials?.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
                 }
                 RaisePropertyChanged("ActiveProductionProduct");
             }

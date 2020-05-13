@@ -200,7 +200,10 @@ namespace Gamma
         In,
         Send,
         RemainderInGRVAtEnd,
-        Standard
+        Standard,
+        Utilization,
+        Experimental,
+        Out
     }
 
 }

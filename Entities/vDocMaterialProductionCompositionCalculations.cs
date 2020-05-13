@@ -12,7 +12,7 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class vDocMaterialProductions
+    public partial class vDocMaterialProductionCompositionCalculations
     {
         public System.Guid DocID { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }

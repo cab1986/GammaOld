@@ -21,6 +21,9 @@
         <DataTemplate DataType="{x:Type viewModels:DocMaterialTankRemaindersViewModel}">
             <v:DocMaterialTankRemaindersView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DocMaterialProductionDirectCalculationMaterialViewModel}">
+            <v:DocMaterialProductionDirectCalculationMaterialView />
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}">
@@ -35,7 +38,7 @@
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDocMaterialProductionCommand}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
-                    <dxg:GridControl ItemsSource="{Binding DocMaterialProductions.DocMaterialProductions}" SelectedItem="{Binding SelectedDocMaterialProduction}" AutoExpandAllGroups="True">
+                    <dxg:GridControl ItemsSource="{Binding DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations}" SelectedItem="{Binding SelectedDocMaterialProduction}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" AllowEditing="{Binding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">
                                 <dxmvvm:Interaction.Behaviors>
@@ -83,7 +86,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Принято" FieldName="QuantityIn" Width="60" FixedWidth="True" ReadOnly="True" Visible="{Binding DocMaterialProductions.IsVisibleColumnQunatityIn}">
+                            <dxg:GridColumn Header="Принято" FieldName="QuantityIn" Width="60" FixedWidth="True" ReadOnly="True" Visible="{Binding DocMaterialCompositionCalculations.IsVisibleColumnQunatityIn}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"/>
@@ -133,7 +136,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="ГРВ на конец" FieldName="QuantityRemainderInGRVAtEnd" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="{Binding DocMaterialProductions.IsVisibleColumnQuantityGRVAtEnd}">
+                            <dxg:GridColumn Header="ГРВ на конец" FieldName="QuantityRemainderInGRVAtEnd" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="{Binding DocMaterialCompositionCalculations.IsVisibleColumnQuantityGRVAtEnd}">
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -155,9 +158,21 @@
                     <ContentControl Content="{Binding CurrentTankRemaindersView}" />
                 </dxlc:LayoutItem>
             </dx:DXTabItem>
+            <dx:DXTabItem Header="Материалы" >
+                <!--Height="25" Margin="0,0,0,0" VerticalAlignment="Top" Visibility="{Binding Path=IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}"-->
+                <!--<dx:DXTabItem.Header>
+                    <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}"  Margin="0,-3,0,0">
+                        <dx:DXTabItem Header="Материалы" />
+                        <dx:DXTabItem Header="Распределение"/>
+                    </dx:DXTabControl>
+                </dx:DXTabItem.Header>-->
+                <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
+                    <ContentControl Content="{Binding DocMaterialProductionDirectCalculationsGrid}" />
+                </dxlc:LayoutItem>
+            </dx:DXTabItem>
             <!--<dx:DXTabItem Header="Использовано">
                 <dxb:BarManager>
-                    <dxg:GridControl ItemsSource="{Binding DocMaterialProductions.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True" AutoExpandAllGroups="True">
+                    <dxg:GridControl ItemsSource="{Binding DocMaterialCompositionCalculations.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
                             <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
                                 <dxmvvm:Interaction.Behaviors>
@@ -212,7 +227,7 @@
                                        BarItemDisplayMode="ContentAndGlyph" Command="{Binding BackMaterialTabCommand}" />
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
-                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding DocCloseShiftWithdrawalMaterials.BeginProducts}" SelectedItem="{Binding SelectedBeginProduct}" VerticalAlignment="Stretch">
+                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding DocMaterialProductionDirectCalculationMaterials.BeginProducts}" SelectedItem="{Binding SelectedBeginProduct}" VerticalAlignment="Stretch">
                         <dxg:GridControl.Columns>
                             <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
                             <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />

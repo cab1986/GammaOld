@@ -23,6 +23,7 @@ namespace Gamma.Entities
         public decimal Quantity { get; set; }
         public string Comment { get; set; }
         public Nullable<bool> WithdrawByFact { get; set; }
+        public Nullable<bool> IsCompositionCalculation { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
