@@ -133,7 +133,7 @@ namespace Gamma.ViewModels
         }
 
         public bool IsConfirmed { get; set; }
-        private byte? ShiftID { get; set; }
+        public byte? ShiftID { get; set; }
         public bool IsVisibilityUnwinderRemainder { get; set; }
         public bool IsVisibilityRemainder { get; set; }
         public override bool IsValid
@@ -143,6 +143,14 @@ namespace Gamma.ViewModels
                 return base.IsValid && (CanEditable() || FillGridWithNoEndCanEnable());
             }
         }
+
+        public bool IsDateReadOnly
+        {
+            get
+            { return !(!IsNewDoc && !IsConfirmed && DB.HaveWriteAccess("DocCloseShiftDocs") && WorkSession.ShiftID == 0); }
+        }
+
+
         public bool CanEditable ()
         {
 #if DEBUG
@@ -201,6 +209,10 @@ namespace Gamma.ViewModels
             //var utilizationProductsBeforeSave = GammaBase.DocCloseShiftUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
             var isConfirmedPrev = Doc.IsConfirmed;
             Doc.IsConfirmed = IsConfirmed;
+
+            if (Doc.Date != Date)
+                Doc.Date = Date;
+
             GammaBase.SaveChanges();
             if (IsNewDoc || !isConfirmedPrev || !IsConfirmed)
             {

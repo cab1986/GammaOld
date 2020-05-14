@@ -83,7 +83,10 @@
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding Number}"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Дата" LabelPosition="Left">
-                            <dxe:DateEdit IsReadOnly="True" EditValue="{Binding Date}" Mask="g" MaskUseAsDisplayFormat="True" />
+                            <dxe:DateEdit IsReadOnly="{Binding IsDateReadOnly}" EditValue="{Binding Date}" Mask="g" MaskUseAsDisplayFormat="True" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Смена" LabelPosition="Left">
+                            <dxe:TextEdit IsReadOnly="True" EditValue="{Binding ShiftID}"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Подтвержден">
                             <dxe:CheckEdit EditValue="{Binding IsConfirmed}" />

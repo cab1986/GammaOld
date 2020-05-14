@@ -135,7 +135,7 @@ namespace Gamma.ViewModels
         }
 
         public bool IsConfirmed { get; set; }
-        private byte? ShiftID { get; set; }
+        public byte? ShiftID { get; set; }
 
         private List<Object> _activeProductionProduct { get; set; }
         public List<Object> ActiveProductionProduct
@@ -168,6 +168,13 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionProductsList");
             }
         }
+
+        public bool IsDateReadOnly
+        {
+            get
+            { return !(!IsNewDoc && !IsConfirmed && DB.HaveWriteAccess("DocMaterialProductions") && WorkSession.ShiftID == 0); }
+        }
+
 
         public bool CanEditable ()
         {
@@ -223,7 +230,10 @@ namespace Gamma.ViewModels
             //var utilizationProductsBeforeSave = GammaBase.DocMaterialProductionUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
             var isConfirmedPrev = Doc.IsConfirmed;
             Doc.IsConfirmed = IsConfirmed;
-            
+
+            if (Doc.Date != Date)
+                Doc.Date = Date;
+
             List<Guid> activeProductionProductCharacteristicIds = new List<Guid>();
             if (ActiveProductionProduct != null)
                 foreach (object item in ((List<object>)ActiveProductionProduct))
