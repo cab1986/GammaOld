@@ -36,8 +36,8 @@ namespace Gamma.Models
                         {
                             tank.Concentration = tankRemainder.Concentration;
                             tank.Level = tankRemainder.Level;
-                        }
-                    }
+                        }          
+                    };
                 };
         }
 
@@ -55,7 +55,7 @@ namespace Gamma.Models
         public void AddComposition(Guid nomenclatureID, decimal? quantityDismiss, decimal? quantityIn)
         {
             //сначала для дочерних хранилищ
-            foreach (var tankGroup in TankGroups.Where(p => p.NextDocMaterialTankGroupID != null && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(nomenclatureID))) && !p.ExceptNomenclatureID.Contains(nomenclatureID)))
+            foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(nomenclatureID))) && !p.ExceptNomenclatureID.Contains(nomenclatureID)))
             {
                 if (tankGroup.DocMaterialProductionTypeID != null)
                 {
@@ -72,7 +72,7 @@ namespace Gamma.Models
             }
             //затем для хранилищ с итоговой композицией
             decimal quantity = 0;
-            foreach (var tankGroup in TankGroups.Where(p => p.NextDocMaterialTankGroupID == null))
+            foreach (var tankGroup in TankGroups.Where(p => p.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.Send))
             {
                 var tankChildCompositions = TankGroups.Where(p => p.NextDocMaterialTankGroupID == tankGroup.DocMaterialTankGroupID).Select(p => p.Composition);
                 foreach (var childComposition in tankChildCompositions)
@@ -99,7 +99,7 @@ namespace Gamma.Models
         public void RefreshComposition(Guid nomenclatureID, decimal? quantityDismiss, decimal? quantityIn)
         {
             //сначала для дочерних хранилищ
-            foreach (var tankGroup in TankGroups.Where(p => p.NextDocMaterialTankGroupID != null && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(nomenclatureID))) && !p.ExceptNomenclatureID.Contains(nomenclatureID)))
+            foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(nomenclatureID))) && !p.ExceptNomenclatureID.Contains(nomenclatureID)))
             {
                 var composition = tankGroup.Composition.Where(c => c.Key == nomenclatureID).Count();
                 if (composition == 0)
@@ -120,7 +120,7 @@ namespace Gamma.Models
             }
             //затем для хранилищ с итоговой композицией
             decimal quantity = 0;
-            foreach (var tankGroup in TankGroups.Where(p => p.NextDocMaterialTankGroupID == null))
+            foreach (var tankGroup in TankGroups.Where(p => p.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.Send))
             {
                 var tankChildCompositions = TankGroups.Where(p => p.NextDocMaterialTankGroupID == tankGroup.DocMaterialTankGroupID).Select(p => p.Composition);
                 foreach (var childComposition in tankChildCompositions)
@@ -205,7 +205,7 @@ namespace Gamma.Models
             }
             TankGroups.Clear();*/
             var tankGroups = new List<DocMaterialTankGroup>();
-            for (int i = TankGroups.Count(); i < 4; i++)
+            for (int i = tankGroups.Count(); i < 4; i++)
             {
                 tankGroups.Add(new DocMaterialTankGroup(0));
             }
@@ -228,6 +228,7 @@ namespace Gamma.Models
                     {
                         tankGroup.Tanks.Add(tank);
                     };
+                    tankGroup.Name = tankGroup.Name + " V=" + tankGroup.Tanks.Sum(t => t.Volume) + "м3";
                     TankGroups.Add(tankGroup);
                     groupNumber += 1;
                 }

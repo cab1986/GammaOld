@@ -60,7 +60,7 @@ namespace Gamma.ViewModels
             PlaceID = (int)doc.PlaceID;
             ShiftID = doc.ShiftID;
             DocDate = doc.Date;
-            var remainders = doc.DocCloseShiftRemainders.Where(dr => dr.IsSourceProduct ?? false).ToList();
+            //var remainders = doc.DocCloseShiftRemainders.Where(dr => dr.IsSourceProduct ?? false).ToList();
            /* foreach (var spoolRemainder in remainders.Select(remainder => new SpoolRemainder(doc.Date, doc.ShiftID, remainder.ProductID, remainder.IsSourceProduct ?? false, remainder.DocWithdrawalID)
             {
                 Weight = (int)remainder.Quantity,
@@ -81,17 +81,21 @@ namespace Gamma.ViewModels
         /// <param name="itemID">ID документа закрытия смены</param>
         public override bool SaveToModel(Guid itemID)
         {
+#if DEBUG
+            Console.WriteLine(IsReadOnly.ToString());
+#endif
             if (IsReadOnly) return true;
             UIServices.SetBusyState();
             
             using (var gammaBase = DB.GammaDb)
             {
-                gammaBase.DocMaterialTankRemainders.RemoveRange(gammaBase.DocMaterialTankRemainders.Where(r => r.DocID == itemID));
+                //gammaBase.DocMaterialTankRemainders.RemoveRange(gammaBase.DocMaterialTankRemainders.Where(r => r.DocID == itemID));
+                var tankIds = new List<int>();
                 foreach (var tankGroup in TankGroupContainer.TankGroups)
                 {
                     foreach (var tank in tankGroup.Tanks)
                     {
-                        var tankRemainder = gammaBase.DocMaterialTankRemainders.Where(t => t.DocMaterialTankID == tank.DocMaterialTankID).FirstOrDefault();
+                        var tankRemainder = gammaBase.DocMaterialTankRemainders.Where(t => t.DocID == itemID && t.DocMaterialTankID == tank.DocMaterialTankID).FirstOrDefault();
                         if (tankRemainder == null)
                         {
                             gammaBase.DocMaterialTankRemainders.Add(new DocMaterialTankRemainders()
@@ -108,11 +112,12 @@ namespace Gamma.ViewModels
                             tankRemainder.Concentration = tank.Concentration;
                             tankRemainder.Level = (int)tank.Level;
                         }
-                        
+                        tankIds.Add(tank.DocMaterialTankID);
                     }
                 }
+                gammaBase.DocMaterialTankRemainders.RemoveRange(gammaBase.DocMaterialTankRemainders.Where(r => r.DocID == itemID && !tankIds.Contains(r.DocMaterialTankID)));
 
-                
+
                 //d.Products.ProductKindID == 0 - мне надо удалить остатки на раскате, по другому никак не определить именно тамбура на раскате, так как для конвертингов остатки на раскате - это полуфабрикат переходящий, а для БДМ - это выработка переходящая.Поэтому ни IsSourceProduct, ни RemainderTypeID не подходит
                 //удаляем списание, так как удаляем запись в остатках
                 //gammaBase.DocWithdrawalProducts.RemoveRange(gammaBase.DocWithdrawalProducts.Where(d => gammaBase.DocCloseShiftRemainders.Any(r => r.DocWithdrawalID == d.DocID && r.ProductID == d.ProductID && r.DocID == itemID && (r.Products.ProductKindID == 0))));
@@ -223,12 +228,13 @@ namespace Gamma.ViewModels
             {
                 items.Composition.Clear();
             }*/
-            var tankGroups = new List<DocMaterialTankGroup>();
+            /*var tankGroups = new List<DocMaterialTankGroup>();
             for (int i = tankGroups.Count(); i < 4; i++)
             {
                 tankGroups.Add(new DocMaterialTankGroup(0));
             }
-            TankGroupContainer.TankGroups = tankGroups;
+            TankGroupContainer.TankGroups = tankGroups;*/
+            TankGroupContainer.Clear();
         }
 
         public void ClearGridWithIndex(byte index)
@@ -263,7 +269,7 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
-                    var tankGroups = new List<DocMaterialTankGroup>();
+                    /*var tankGroups = new List<DocMaterialTankGroup>();
                     var tanks = gammaBase.DocMaterialTanks.Where(dr => dr.DocMaterialTankGroups.PlaceID == PlaceID).ToList();
                     var groupNumber = 0;
                     foreach (var groupID in tanks.Select(r => r.DocMaterialTankGroupID).Distinct())
@@ -274,6 +280,7 @@ namespace Gamma.ViewModels
                         {
                             tankGroup.Tanks.Add(tank);
                         };
+                        tankGroup.Name = tankGroup.Name + " V=" + tankGroup.Tanks.Sum(t => t.Volume) + "м3";
                         tankGroups.Add(tankGroup);
                         groupNumber += 1;
                     }
@@ -281,7 +288,8 @@ namespace Gamma.ViewModels
                     {
                         tankGroups.Add(new DocMaterialTankGroup(0));
                     }
-                    TankGroupContainer.TankGroups = tankGroups;
+                    TankGroupContainer.TankGroups = tankGroups;*/
+                    TankGroupContainer.TankGroups = new DocMaterialTankGroupContainer(PlaceID).TankGroups;
                 }
                 //var date = DB.CurrentDateTime;
                 //ClearGrid();
@@ -391,6 +399,6 @@ namespace Gamma.ViewModels
 
 
         private bool IsConfirmed { get; set; }
-        public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftRemainders"));// && !IsConfirmed);
+        public bool IsReadOnly => !(DB.HaveWriteAccess("DocMaterialTankRemainders"));// && !IsConfirmed);
     }
 }

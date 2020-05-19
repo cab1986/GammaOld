@@ -1,8 +1,10 @@
 ﻿<UserControl xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
              xmlns:local="clr-namespace:Gamma.Views"
              xmlns:g="clr-namespace:Gamma"
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol" 
@@ -14,51 +16,129 @@
     <Grid>
         <dxlc:LayoutControl Header="Остатки в бассейнах" UseLayoutRounding="True" View="GroupBox" Padding="12,4">
             <dxlc:LayoutGroup Orientation="Vertical">
-                <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[0].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[0].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ItemsControl x:Name="TankGroup0"
+                
+                        <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[0].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[0].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <dx:DXTabControl >
+                                <dx:DXTabItem Header="Остатки в бассейнах">
+                                    <ItemsControl x:Name="TankGroup0"
                                   BorderBrush="Black" BorderThickness="1" ItemsSource="{Binding TankGroupContainer.TankGroups[0].Tanks}" 
                                   ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-2,-9,0">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel  Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[1].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[1].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ItemsControl x:Name="TankGroup1"
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                    </dx:DXTabItem>
+                                <dx:DXTabItem Header="Композиция в бассейнах" >
+                                    <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[0].Composition}" VerticalAlignment="Stretch">
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView ShowGroupPanel="False"/>
+                                        </dxg:GridControl.View>
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn Header="Номенклатура" FieldName="Key" ReadOnly="True" />
+                                            <dxg:GridColumn Header="Кол-во" FieldName="Value" Width="120" FixedWidth="True"  ReadOnly="True">
+                                                <dxg:GridColumn.EditSettings>
+                                                    <dxe:TextEditSettings Mask="f" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                                </dxg:GridColumn.EditSettings>
+                                            </dxg:GridColumn>
+                                        </dxg:GridControl.Columns>
+                                    </dxg:GridControl>
+                                </dx:DXTabItem>
+                            </dx:DXTabControl>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[1].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[1].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dx:DXTabControl >
+                        <dx:DXTabItem Header="Остатки в бассейнах">
+                            <ItemsControl x:Name="TankGroup1"
                                       BorderBrush="Black" BorderThickness="1" ItemsSource="{Binding TankGroupContainer.TankGroups[1].Tanks}" 
                                       ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-2,-9,4">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel  Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </dx:DXTabItem>
+                        <dx:DXTabItem Header="Композиция в бассейнах" >
+                            <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[1].Composition}" VerticalAlignment="Stretch">
+                                <dxg:GridControl.View>
+                                    <dxg:TableView ShowGroupPanel="False"/>
+                                </dxg:GridControl.View>
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn Header="Номенклатура" FieldName="Key" ReadOnly="True"/>
+                                    <dxg:GridColumn Header="Кол-во" FieldName="Value" Width="120" FixedWidth="True" ReadOnly="True">
+                                        <dxg:GridColumn.EditSettings>
+                                            <dxe:TextEditSettings Mask="f" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                        </dxg:GridColumn.EditSettings>
+                                    </dxg:GridColumn>
+                                </dxg:GridControl.Columns>
+                            </dxg:GridControl>
+                        </dx:DXTabItem>
+                    </dx:DXTabControl>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[2].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[2].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ItemsControl x:Name="TankGroup2"
+                        <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[2].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[2].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dx:DXTabControl >
+                        <dx:DXTabItem Header="Остатки в бассейнах">
+                            <ItemsControl x:Name="TankGroup2"
                                   BorderBrush="Black" BorderThickness="1" ItemsSource="{Binding TankGroupContainer.TankGroups[2].Tanks}" 
                                   ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-2,-9,-4">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel  Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
                     </ItemsControl>
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="Композиция в бассейнах" >
+                        <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[2].Composition}" VerticalAlignment="Stretch">
+                                <dxg:GridControl.View>
+                                    <dxg:TableView ShowGroupPanel="False"/>
+                                </dxg:GridControl.View>
+                                <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Номенклатура" FieldName="Key" ReadOnly="True"/>
+                                <dxg:GridColumn Header="Кол-во" FieldName="Value" Width="120" FixedWidth="True" ReadOnly="True">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings Mask="f" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                            </dxg:GridControl.Columns>
+                        </dxg:GridControl>
+                    </dx:DXTabItem>
+                    </dx:DXTabControl>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[3].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[3].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ItemsControl x:Name="TankGroup3"
+                        <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[3].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[3].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dx:DXTabControl >
+                        <dx:DXTabItem Header="Остатки в бассейнах">
+                            <ItemsControl x:Name="TankGroup3"
                                   BorderBrush="Black" BorderThickness="1" ItemsSource="{Binding TankGroupContainer.TankGroups[3].Tanks}" 
                                   ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-2,-9,-4">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel  Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel  Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
                     </ItemsControl>
+                    </dx:DXTabItem>
+                    <dx:DXTabItem Header="Композиция в бассейнах" >
+                        <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[3].Composition}" VerticalAlignment="Stretch">
+                                <dxg:GridControl.View>
+                                    <dxg:TableView ShowGroupPanel="False"/>
+                                </dxg:GridControl.View>
+                                <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Номенклатура" FieldName="Key" ReadOnly="True" />
+                                <dxg:GridColumn Header="Кол-во" FieldName="Value" Width="120" FixedWidth="True" ReadOnly="True">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:TextEditSettings Mask="f" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                            </dxg:GridControl.Columns>
+                        </dxg:GridControl>
+                    </dx:DXTabItem>
+                    </dx:DXTabControl>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
+            
             <!--<Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -67,13 +147,17 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0">
                     <TextBlock Text="fgghjd" />
-                    --><!--<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">--><!--
+                    -->
+            <!--<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">-->
+            <!--
                     <ItemsControl x:Name="TankGroup0"
                                   BorderBrush="Black" BorderThickness="5" ItemsSource="{Binding TankRemainders}" 
                                   ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-4,-9,-4">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                --><!--<StackPanel Orientation="Horizontal"/>--><!--
+                                -->
+            <!--<StackPanel Orientation="Horizontal"/>-->
+            <!--
                                 <WrapPanel  Orientation="Horizontal"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
@@ -87,7 +171,9 @@
                           ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-4,-9,-4">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            --><!--<StackPanel Orientation="Horizontal"/>--><!--
+                            -->
+            <!--<StackPanel Orientation="Horizontal"/>-->
+            <!--
                             <WrapPanel  Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
@@ -103,7 +189,9 @@
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>
-                            --><!--<WrapPanel  Orientation="Horizontal"/>--><!--
+                            -->
+            <!--<WrapPanel  Orientation="Horizontal"/>-->
+            <!--
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>

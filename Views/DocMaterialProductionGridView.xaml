@@ -44,7 +44,7 @@
                                 <dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding MaterialRowUpdatedCommand}"/>
                                     <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
-                                               EventName="RowUpdated">
+                                               EventName="CellValueChanged">
                                         <dxmvvm:EventToCommand.EventArgsConverter>
                                             <dx:EventArgsToDataCellConverter/>
                                         </dxmvvm:EventToCommand.EventArgsConverter>

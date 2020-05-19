@@ -42,7 +42,7 @@ namespace Gamma.Models
                     _nomenclatureID = value;
                 
                 {
-                    var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == _nomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
+                    var choosenNomenclature = AvailableNomenclatures?.FirstOrDefault(an => an.NomenclatureID == _nomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
                     if (choosenNomenclature == null)
                     {
                         //Quantity = 0;

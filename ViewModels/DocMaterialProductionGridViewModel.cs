@@ -361,11 +361,15 @@ namespace Gamma.ViewModels
                     }
                 }
 
-                foreach (var docDelete in doc.DocMaterialProductDocs)
+                /*foreach (var docDelete in doc.DocMaterialProductDocs)
                 {
                     if (DocMaterialCompositionCalculations.Docs == null || !DocMaterialCompositionCalculations.Docs.Any(d => d.DocID == docDelete.DocID))
                         doc.DocMaterialProductDocs.Remove(gammaBase.Docs.First(d => d.DocID == docDelete.DocID));
-                }
+                }*/
+
+                //if (DocMaterialCompositionCalculations.Docs == null)
+                    doc.DocMaterialProductDocs.Clear();// .Remove(doc.DocMaterialProductDocs.Where(d => d.DocID != null));
+
 
                 if (DocMaterialCompositionCalculations.Docs != null)
                     foreach (var docAdd in DocMaterialCompositionCalculations.Docs)
@@ -373,11 +377,7 @@ namespace Gamma.ViewModels
                         doc.DocMaterialProductDocs.Add(gammaBase.Docs.First(d => d.DocID == docAdd.DocID));
                     }
 
-                if (CurrentTankRemaindersView != null)
-                {
-                    CurrentTankRemaindersView.SaveToModel(docId);
-                }
-
+                
                 isCompositionCalculationParameter = false;
                 if (DocMaterialProductionDirectCalculationsGrid?.DirectCalculationMaterials?.Materials != null)
                 {
@@ -447,6 +447,10 @@ namespace Gamma.ViewModels
                     }
                 }
                 gammaBase.SaveChanges();
+            }
+            if (CurrentTankRemaindersView != null)
+            {
+                CurrentTankRemaindersView.SaveToModel(docId);
             }
             return true;
         }

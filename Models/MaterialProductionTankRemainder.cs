@@ -18,7 +18,7 @@ namespace Gamma.Models
         {
             GammaBase = DB.GammaDb;
             DocMaterialTankID = docMaterialTankID;
-            Name = name;
+            Name = name + " V="+volume+"м3";
             Volume = volume;
             var docMaterialTank = GammaBase.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
             if (docMaterialTank != null)

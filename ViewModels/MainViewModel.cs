@@ -129,7 +129,7 @@ namespace Gamma.ViewModels
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroup.PM:
-                    if (WorkSession.RoleName == "QualityInspector")
+                    if (WorkSession.RoleName == "OperatorWaste" || WorkSession.RoleName == "OperatorGRV")
                         CurrentView = new DocMaterialProductionsViewModel();
                     else
                         CurrentView = new ProductionTasksSGBViewModel();

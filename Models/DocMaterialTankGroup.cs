@@ -35,7 +35,7 @@ namespace Gamma.Models
         }
         public List<MaterialProductionTankRemainder> Tanks { get; set; } = new List<MaterialProductionTankRemainder>();
         public int DocMaterialTankGroupID { get; private set; }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public bool IsVisible { get; set; } = false;
         public decimal Quantity { get; set; }
         public int? DocMaterialProductionTypeID { get; private set; }
