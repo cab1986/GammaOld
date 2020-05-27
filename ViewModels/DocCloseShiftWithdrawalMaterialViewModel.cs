@@ -295,6 +295,7 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel(Guid docId)
         {
+            var ir = IsReadOnly;
             if (IsReadOnly) return true;
             using (var gammaBase = DB.GammaDb)
             {
@@ -353,9 +354,9 @@ namespace Gamma.ViewModels
                             case DocCloseShiftMaterialTypes.Standard:
                                 quantity = material.StandardQuantity;
                                 break;
-                            case DocCloseShiftMaterialTypes.Dismiss:
+                            /*case DocCloseShiftMaterialTypes.Dismiss:
                                 quantity = material.QuantityDismiss;
-                                break;
+                                break;*/
                         }
                         if (quantity != null || docCloseShiftMaterialType == DocCloseShiftMaterialTypes.RemainderAtBegin)
                         {
@@ -611,6 +612,11 @@ namespace Gamma.ViewModels
                 gammaBase.DocWithdrawal.RemoveRange(
                     gammaBase.DocWithdrawal.Where(d => docWithdrawalIDs.Contains(d.DocID)));
 
+                if (DocCloseShiftWithdrawalMaterials != null && DocCloseShiftWithdrawalMaterials.MaterialsDismiss != null)
+                    foreach (var id in DocCloseShiftWithdrawalMaterials.MaterialsDismiss.Select(m => m.DocID))
+                    {
+                        docCloseShift.DocCloseShiftDocs.Add(gammaBase.Docs.First(d => d.DocID == id));
+                    }
 
                 docCloseShift.DocCloseShiftWithdrawals.Clear();
                 foreach (var productionProductCharacteristicID in DocCloseShiftWithdrawalMaterials.WithdrawalMaterials.Where(x => x.Quantity != 0).Select(x => x.ProductionProductCharacteristicID).Distinct())
@@ -658,7 +664,8 @@ namespace Gamma.ViewModels
                             WithdrawByFact = material.WithdrawByFact //!material.QuantityIsReadOnly
                         });
                     }
-                }
+
+                 }
 
                 gammaBase.SaveChanges();
             }

@@ -82,18 +82,21 @@ namespace Gamma.Models
                         StandardQuantity = d.StandardQuantity,
                         WithdrawByFact = d.WithdrawByFact,
                         ParentID = d.ParentID,
-                        ParentName = d.ParentName
+                        ParentName = d.ParentName,
+                        IsNotSendMaterialIntoNextPlace = ((d.QuantitySend ?? 0) == 0) && ((d.QuantityRemainderAtEnd ?? 0) != 0)
                     }).OrderBy(d => d.NomenclatureName));
 
+            IsNotSendMaterialIntoNextPlace = DocMaterialProductionCompositionCalculations.Count != 0 && DocMaterialProductionCompositionCalculations.Max(m => m.IsNotSendMaterialIntoNextPlace);
 
             foreach (var item in DocMaterialProductionCompositionCalculations)
             {
                 TankGroupContainer.AddComposition(item.NomenclatureID, item.QuantityDismiss, item.QuantityIn);
+                item.IsNotSendMaterialIntoNextPlace = IsNotSendMaterialIntoNextPlace;
             }
 
             var doc = GammaBase.Docs.First(d => d.DocID == docId);
             Docs = doc.DocMaterialProductDocs.Select(dc => new Doc() { DocID = dc.DocID, Date = dc.Date, DocTypeID = dc.DocTypeID, Number = dc.Number, Person = dc.Persons?.Name, Place = dc.Places?.Name, ShiftID = dc.ShiftID ?? 0, User = dc.Users?.Name, IsConfirmed = dc.IsConfirmed }).ToList();
-            IsVisibleColumnQunatityIn = Docs.Any(d => d.DocTypeID == (int)DocTypes.DocMaterialProduction);
+            //IsVisibleColumnQunatityIn = Docs.Any(d => d.DocTypeID == (int)DocTypes.DocMaterialProduction);
 
 
             ////Получение списка списанных материалов
@@ -206,10 +209,10 @@ namespace Gamma.Models
                     //TankGroupContainer.RecalcAllNomenclatureInComposition();
 
                 var materialsRemainderAtBegin =
-                        new ItemsChangeObservableCollection<WithdrawalMaterial>(
+                        new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
                             GammaBase.FillDocMaterialProductionsAtBegin(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter)
                             //.Take(0)    
-                            .Select(m => new WithdrawalMaterial()
+                            .Select(m => new WithdrawalMaterialBaseItem()
                             {
                                 NomenclatureID = (Guid)m.NomenclatureID,
                                 CharacteristicID = m.CharacteristicID,
@@ -217,13 +220,14 @@ namespace Gamma.Models
                                 QuantityIsReadOnly = (m.QuantityIsReadOnly == 1),
                                 Quantity = m.Quantity,
                                 BaseQuantity = m.Quantity,
-                                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                                 MeasureUnit = m.MeasureUnit,
                                 MeasureUnitID = m.MeasureUnitID,
-                                WithdrawByFact = m.WithdrawByFact
+                                WithdrawByFact = m.WithdrawByFact,
+                                ParentID = m.ParentID,
+                                ParentName = m.ParentName
                             }).OrderBy(m => m.NomenclatureName));
 
-                foreach (WithdrawalMaterial addedItem in materialsRemainderAtBegin.Where(x => x.Quantity != 0))
+                foreach (WithdrawalMaterialBaseItem addedItem in materialsRemainderAtBegin.Where(x => x.Quantity != 0))
                 {
                     var item = DocMaterialProductionCompositionCalculations.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                     if (item == null)
@@ -241,7 +245,9 @@ namespace Gamma.Models
                             MeasureUnitID = addedItem.MeasureUnitID,
                             WithdrawByFact = addedItem.WithdrawByFact,
                             NomenclatureKindID = addedItem.NomenclatureKindID,
-                            StandardQuantity = standardQuantity?.StandardQuantity
+                            StandardQuantity = standardQuantity?.StandardQuantity,
+                            ParentID = addedItem.ParentID,
+                            ParentName = addedItem.ParentName
                         });
                     }
                     else
@@ -285,10 +291,10 @@ namespace Gamma.Models
                 { 
                     IsVisibleColumnQunatityIn = true;
                     var materialsIn =
-                            new ItemsChangeObservableCollection<WithdrawalMaterial>(
+                            new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
                                 GammaBase.FillDocMaterialProductionsIn(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter, fromDocID)
                                 //.Take(0)    
-                                .Select(m => new WithdrawalMaterial()
+                                .Select(m => new WithdrawalMaterialBaseItem()
                                 {
                                     NomenclatureID = (Guid)m.NomenclatureID,
                                     CharacteristicID = m.CharacteristicID,
@@ -296,13 +302,14 @@ namespace Gamma.Models
                                     QuantityIsReadOnly = (m.QuantityIsReadOnly == 1),
                                     Quantity = m.Quantity,
                                     BaseQuantity = m.Quantity,
-                                    DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                                     MeasureUnit = m.MeasureUnit,
                                     MeasureUnitID = m.MeasureUnitID,
-                                    WithdrawByFact = m.WithdrawByFact
+                                    WithdrawByFact = m.WithdrawByFact,
+                                    ParentID = m.ParentID,
+                                    ParentName = m.ParentName
                                 }).OrderBy(m => m.NomenclatureName));
 
-                    foreach (WithdrawalMaterial addedItem in materialsIn.Where(x => x.Quantity != 0))
+                    foreach (WithdrawalMaterialBaseItem addedItem in materialsIn.Where(x => x.Quantity != 0))
                     {
                         var item = DocMaterialProductionCompositionCalculations.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                         if (item == null)
@@ -320,16 +327,18 @@ namespace Gamma.Models
                                 MeasureUnitID = addedItem.MeasureUnitID,
                                 WithdrawByFact = addedItem.WithdrawByFact,
                                 NomenclatureKindID = addedItem.NomenclatureKindID,
-                                StandardQuantity = standardQuantity?.StandardQuantity
+                                StandardQuantity = standardQuantity?.StandardQuantity,
+                                ParentID = addedItem.ParentID,
+                                ParentName = addedItem.ParentName
                             });
-                            
+                            TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, null, addedItem.Quantity);
                         }
                         else
                         {
                             item.QuantityIn = addedItem.Quantity;
-                            
+                            TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, item.QuantityDismiss, item.QuantityIn);
                         }
-                        TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, item.QuantityDismiss, item.QuantityIn);
+                        
                     }
                     //TankGroupContainer.RecalcAllNomenclatureInComposition();
                 }
@@ -447,8 +456,15 @@ namespace Gamma.Models
                 item.StandardQuantity = null;
             }
             var items = DocMaterialProductionCompositionCalculations?.Where(d => !(d.QuantityDismiss > 0 || d.QuantityRemainderInGRVAtEnd > 0)).ToArray();
-            foreach (var item in items)
+            if (items?.Count() > 0)
+                foreach (var item in items)
+                {
+                    DocMaterialProductionCompositionCalculations.Remove(item);
+                }
+            else
             {
+                var item = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
+                DocMaterialProductionCompositionCalculations.Add(item);
                 DocMaterialProductionCompositionCalculations.Remove(item);
             }
             
@@ -502,8 +518,9 @@ namespace Gamma.Models
 
         public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo)//, List<Guid> productionProductCharacteristicIDs)
         {
-            var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
-            var nomenclatureName = nomenclatureInfo.Name + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
+            //В сырье не учитываем хараеткристики
+            //var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
+            var nomenclatureName = nomenclatureInfo.Name;// + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
             var parentID = nomenclatureInfo.C1CParentID;
             var parentName = parentID == null ? "" : GammaBase.C1CNomenclature.Where(n => n.C1CNomenclatureID == nomenclatureInfo.C1CParentID).FirstOrDefault().Name;
 
@@ -511,7 +528,7 @@ namespace Gamma.Models
                 DocMaterialProductionCompositionCalculations.Add(new DocMaterialProductionCompositionCalculationItem
                 {
                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
-                    CharacteristicID = characteristicID,
+                    //CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
                     MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
@@ -603,6 +620,38 @@ namespace Gamma.Models
             //RaisePropertiesChanged("DocCloseShiftWithdrawalMaterials.WithdrawalMaterials");
         }
 
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                foreach (var item in DocMaterialProductionCompositionCalculations)
+                {
+                    item.IsNotSendMaterialIntoNextPlace = _isNotSendMaterialIntoNextPlace;
+                }
+                TankGroupContainer.RecalcAllNomenclatureInComposition();
+                {
+                    var item = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
+                    DocMaterialProductionCompositionCalculations.Add(item);
+                    DocMaterialProductionCompositionCalculations.Remove(item);
+                }
+            }
+        }
 
+        /*public void ChangeIsSendIntoNextPlaceDocMaterialProduction()
+        {
+            foreach (var item in DocMaterialProductionCompositionCalculations)
+            {
+                item.IsNotSendMaterialIntoNextPlace = !item.IsNotSendMaterialIntoNextPlace;
+            }
+            TankGroupContainer.RecalcAllNomenclatureInComposition();
+            {
+                var item = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
+                DocMaterialProductionCompositionCalculations.Add(item);
+                DocMaterialProductionCompositionCalculations.Remove(item);
+            }
+        }*/
     }
 }

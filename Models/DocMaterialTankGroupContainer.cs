@@ -145,7 +145,8 @@ namespace Gamma.Models
                     if (tankG.Composition.Sum(c => c.Value) > 0)
                         quantity = quantity + ((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * tankG.Tanks.Sum(t => t.Quantity);
                 }
-                MessageManager.RecalcMaterialProductionQuantityEndFromTankReaminderEvent(nomenclatureID, quantity);
+            //quantity = Math.Round(quantity, 0);
+            MessageManager.RecalcMaterialProductionQuantityEndFromTankReaminderEvent(nomenclatureID, quantity);
             
         }
 

@@ -14,7 +14,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <dxlc:LayoutControl Header="Остатки в бассейнах" UseLayoutRounding="True" View="GroupBox" Padding="12,4">
+        <dxlc:LayoutControl Header="Остатки в бассейнах" UseLayoutRounding="True" View="GroupBox" Padding="12,4" IsEnabled="{Binding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">
             <dxlc:LayoutGroup Orientation="Vertical">
                 
                         <dxlc:LayoutItem Label="{Binding TankGroupContainer.TankGroups[0].Name}" LabelPosition="Top" Visibility="{Binding TankGroupContainer.TankGroups[0].IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">

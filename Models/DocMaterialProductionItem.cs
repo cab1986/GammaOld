@@ -20,11 +20,29 @@ namespace Gamma.Models
 
         public Guid DocMaterialProductionItemID { get; set; } = SqlGuidUtil.NewSequentialid();
 
+        public string PlaceName { get; private set; }
+
         private int _placeID { get; set; }
         public int PlaceID
         {
             get { return _placeID; }
-            set { _placeID = value; }
+            set
+            {
+                if (_placeID != value)
+                    using (var gammaBase = DB.GammaDb)
+                    {
+                        PlaceName = gammaBase.Places.FirstOrDefault(p => p.PlaceID == value).Name;
+                    }
+                _placeID = value;
+            }
+        }
+
+        public string DocNumberDate { get; set; }
+        private Guid _docID { get; set; }
+        public Guid DocID
+        {
+            get { return _docID; }
+            set { _docID = value; }
         }
 
         private Guid _nomenclatureID;

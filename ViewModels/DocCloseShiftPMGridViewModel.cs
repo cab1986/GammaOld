@@ -51,6 +51,7 @@ namespace Gamma.ViewModels
 
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+            WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 7;
         }
 
         public DocCloseShiftPMGridViewModel(Guid docId) : this()
@@ -83,7 +84,8 @@ namespace Gamma.ViewModels
                     CharacteristicID = x.CharacteristicID
                 })).ToList();
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, spools, IsConfirmed, productionProductCharacteristicIDs);
-                
+                WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 7;
+
                 BeginSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
                     //.Include(dr => dr.DocCloseShifts)
                     .Where(d => d.DocID == docId && (d.RemainderTypes.RemainderTypeID == 1 || d.RemainderTypes.RemainderTypeID == 3))
@@ -437,7 +439,7 @@ namespace Gamma.ViewModels
             Spools?.Clear();
             DocCloseDocIds?.Clear();
 
-            //WithdrawalMaterialsGrid?.Clear();
+            WithdrawalMaterialsGrid?.Clear();
             BeginSpools?.Clear();
             EndSpools?.Clear();
             InSpools?.Clear();
@@ -789,11 +791,13 @@ namespace Gamma.ViewModels
                     foreach (var id in DocCloseDocIds)
                     {
                         docCloseShift.DocCloseShiftDocs.Add(gammaBase.Docs.First(d => d.DocID == id));
-                    }
+                    }                
+
                 }
 
-                WithdrawalMaterialsGrid?.SaveToModel(docId);
                 gammaBase.SaveChanges();
+                WithdrawalMaterialsGrid?.SaveToModel(docId);
+
             }
             return true;
         }

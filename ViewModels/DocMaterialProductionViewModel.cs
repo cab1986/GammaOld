@@ -11,6 +11,7 @@ using Gamma.Models;
 using System.Data.Entity.SqlServer;
 using System.Windows;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -20,11 +21,13 @@ namespace Gamma.ViewModels
     {
         public DocMaterialProductionViewModel(OpenDocMaterialProductionMessage msg)
         {
+            isInitialize = true;
             //gammaBase = gammaBase ?? DB.GammaDb;
             Doc = (from d in GammaBase.Docs where d.DocID == msg.DocID select d).FirstOrDefault();
                           
             if (Doc == null)
             {
+                DocID = SqlGuidUtil.NewSequentialid();
                 Date = DB.CurrentDateTime;
                 IsConfirmed = false;
                 PlaceID = WorkSession.PlaceID;
@@ -34,6 +37,7 @@ namespace Gamma.ViewModels
             }
             else
             {
+                DocID = Doc.DocID;
                 Date = Doc.Date;
                 Number = Doc.Number;
                 IsConfirmed = Doc.IsConfirmed;
@@ -100,6 +104,7 @@ namespace Gamma.ViewModels
                 FillGridWithNoEndCommand = new DelegateCommand(grid.FillGridWithNoFillEnd, () => !IsConfirmed && FillGridWithNoEndCanEnable() && ActiveProductionProduct?.Count > 0);
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
+            isInitialize = false;
         }
 
 
@@ -113,6 +118,7 @@ namespace Gamma.ViewModels
             ReportManager.PrintReport(msg.ReportID, Doc.DocID);
         }
         private Docs Doc { get; set; }
+        private Guid DocID { get; set; }
         private bool IsNewDoc { get; set; }
         private int PlaceID { get; set; }
         public string Number { get; set; }
@@ -134,7 +140,66 @@ namespace Gamma.ViewModels
             }
         }
 
-        public bool IsConfirmed { get; set; }
+        private bool isInitialize { get; set; }
+        public bool _isConfirmed { get; set; }
+        public bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                if (_isConfirmed != value)
+                {
+                    if (_isConfirmed && !value && Doc?.DocID != null)
+                    {
+                        if (isDocUsedNextPlace)
+                        {
+                            MessageBox.Show("Внимание! Документ уже использован следующим переделом! Требуется Очистить документ следующего передела");
+                            return;
+                        }
+                    }
+                    _isConfirmed = value;
+                    if (!isInitialize)
+                    {
+                        if (value)
+                        {
+                            if (SaveToModel(false))
+                                MessageBox.Show("Документ сохранен.");
+                            else
+                            {
+                                MessageBox.Show("Ошибка! Документ не сохранен.");
+                                _isConfirmed = !value;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            using (var gammaBase = DB.GammaDb)
+                            {
+                                var doc = gammaBase.Docs.Where(d => d.DocID == DocID).FirstOrDefault();
+                                if (doc != null)
+                                    doc.IsConfirmed = IsConfirmed;
+                                gammaBase.SaveChanges();
+                            }
+                        }
+                        (CurrentViewModelGrid as DocMaterialProductionGridViewModel)?.ChangeConfirmed(value);
+                    }
+                    RaisePropertyChanged("IsConfirmed");
+                    RaisePropertyChanged("IsDateReadOnly");
+                }
+            }
+        }
+
+        public bool isDocUsedNextPlace
+        {
+            get
+            {
+                using (var gammaBase = DB.GammaDb)
+                {
+                    return (gammaBase.Docs.Any(d => d.DocID == DocID && d.DocCloseShift.Any()) || gammaBase.Docs.Any(d => d.DocID == DocID && d.DocMaterialProduct.Any()));
+                }
+            }
+        }
+
         public byte? ShiftID { get; set; }
 
         private List<Object> _activeProductionProduct { get; set; }
@@ -168,6 +233,8 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("ProductionProductsList");
             }
         }
+
+        //public bool IsReadOnly => !(!IsConfirmed && DB.HaveWriteAccess("DocMaterialProductions"));
 
         public bool IsDateReadOnly
         {
@@ -210,12 +277,22 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel()
         {
-            if (!CanSaveExecute()) return false;
+            return SaveToModel(true);
+        }
+
+        public bool SaveToModel(bool isCheckCanSaveExecute)
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
+            if ((isCheckCanSaveExecute && !CanSaveExecute()) || DocIsUsedNextPlace())
+            {
+                Mouse.OverrideCursor = null;
+                return false;
+            }
             if (IsNewDoc)
             {
                 Doc = new Docs()
                 {
-                    DocID = SqlGuidUtil.NewSequentialid(),
+                    DocID = DocID,
                     DocTypeID = (byte)DocTypes.DocMaterialProduction,
                     Date = Date,
                     UserID = WorkSession.UserID,
@@ -228,7 +305,8 @@ namespace Gamma.ViewModels
                 GammaBase.Docs.Add(Doc);
             }
             //var utilizationProductsBeforeSave = GammaBase.DocMaterialProductionUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
-            var isConfirmedPrev = Doc.IsConfirmed;
+            //var isConfirmedPrev = Doc.IsConfirmed;
+            //if (Doc.IsConfirmed != IsConfirmed)
             Doc.IsConfirmed = IsConfirmed;
 
             if (Doc.Date != Date)
@@ -254,13 +332,14 @@ namespace Gamma.ViewModels
 
             GammaBase.SaveChanges();
 
-            if (IsNewDoc || !isConfirmedPrev || !IsConfirmed)
-            {
+            //if (IsNewDoc || !isConfirmedPrev || !IsConfirmed)
+            //{
                 CurrentViewModelGrid?.SaveToModel(Doc.DocID);
-            }
+            //}
             IsNewDoc = false;
 
             Messenger.Default.Send(new RefreshMessage { });
+            Mouse.OverrideCursor = null;
             return true;
         }
 
@@ -281,10 +360,23 @@ namespace Gamma.ViewModels
         public string Title { get; set; }
         public override bool CanSaveExecute()
         {
-            return base.CanSaveExecute() && DB.HaveWriteAccess("DocMaterialProductions");
+
+            return base.CanSaveExecute() && DB.HaveWriteAccess("DocMaterialProductions") && !isDocUsedNextPlace && !IsConfirmed;
+        }
+        private bool DocIsUsedNextPlace()
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                if (isDocUsedNextPlace)
+                {
+                    MessageBox.Show("Внимание! Документ уже использован следующим переделом! Требуется Очистить документ следующего передела");
+                    return true;
+                }
+            }
+            return false;
         }
 
-        protected override void SaveToModelAndClose()
+    protected override void SaveToModelAndClose()
         {
             base.SaveToModelAndClose();
             Messenger.Default.Send(new CloseMessage());

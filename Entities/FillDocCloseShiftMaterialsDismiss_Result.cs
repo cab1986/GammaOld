@@ -13,13 +13,25 @@ namespace Gamma.Entities
     
     public partial class FillDocCloseShiftMaterialsDismiss_Result
     {
-        public System.Guid NomenclatureID { get; set; }
-        public Nullable<System.Guid> CharacteristicID { get; set; }
-        public bool WithdrawByFact { get; set; }
-        public Nullable<System.Guid> MeasureUnitID { get; set; }
-        public string MeasureUnit { get; set; }
-        public decimal Quantity { get; set; }
+        public Nullable<int> PlaceID { get; set; }
+        public System.Guid C1CNomenclatureID { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public Nullable<System.Guid> C1CMeasureUnitID { get; set; }
+        public Nullable<bool> WithdrawByFact { get; set; }
         public string NomenclatureName { get; set; }
+        public string MeasureUnitName { get; set; }
         public Nullable<bool> QuantityIsReadOnly { get; set; }
+        public Nullable<decimal> QuantityRemainderAtBegin { get; set; }
+        public Nullable<decimal> QuantityIn { get; set; }
+        public Nullable<decimal> QuantityOut { get; set; }
+        public Nullable<decimal> QuantityUtil { get; set; }
+        public Nullable<decimal> QuantityExperimental { get; set; }
+        public Nullable<decimal> QuantityRemainderAtEnd { get; set; }
+        public Nullable<decimal> QuantitySend { get; set; }
+        public Nullable<decimal> StandardQuantity { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
+        public string ParentName { get; set; }
+        public System.Guid DocID { get; set; }
+        public string DocNumberDate { get; set; }
     }
 }

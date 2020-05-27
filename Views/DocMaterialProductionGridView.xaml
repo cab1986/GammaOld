@@ -25,7 +25,7 @@
             <v:DocMaterialProductionDirectCalculationMaterialView />
         </DataTemplate>
     </UserControl.Resources>
-    <Grid>
+    <Grid >
         <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}">
             <dx:DXTabControl.View>
                 <dx:TabControlMultiLineView HeaderLocation="Top"/>
@@ -36,11 +36,13 @@
                         <dxb:Bar>
                             <dxb:BarButtonItem Content="Добавить материал" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddDocMaterialProductionCommand}"/>
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDocMaterialProductionCommand}"/>
+                            <dxb:BarItemLinkSeparator />
+                            <dxb:BarCheckItem Content="Была подача сырья на следующий передел" IsChecked="{Binding DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace, Converter={StaticResource InverseBooleanConverter}}" />
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
                     <dxg:GridControl ItemsSource="{Binding DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations}" SelectedItem="{Binding SelectedDocMaterialProduction}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" AllowEditing="{Binding IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">
+                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" AllowEditing="{Binding IsAllowEditingDocMaterialCompositionCalculations}"> <!--IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">-->
                                 <dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding MaterialRowUpdatedCommand}"/>
                                     <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
@@ -73,7 +75,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.HeaderTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Распущено" FieldName="QuantityDismiss" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn Header="Распущено" FieldName="QuantityDismiss" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="{Binding IsVisibleTankRemainders}">
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -81,7 +83,7 @@
                                 </dxg:GridColumn.HeaderTemplate>
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
+                                        <dxe:SpinEdit x:Name="PART_Editor" Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True" MinValue="0" AllowDefaultButton="False" ShowNullText="False" 
                                                       IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
@@ -93,14 +95,27 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="На начало" FieldName="QuantityRemainderAtBegin" Width="70" FixedWidth="True" ReadOnly="True">
+                            <dxg:GridColumn Header="Остаток на начало" FieldName="QuantityRemainderAtBegin" Width="70" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}">
+                                <dxg:GridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </dxg:GridColumn.HeaderTemplate>
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Подано" FieldName="QuantitySend" Width="60" FixedWidth="True" ReadOnly="True"> <!--CellTemplate="{StaticResource optimizedCellTemplate}">-->
+                            <dxg:GridColumn FieldName="QuantitySend" Width="60" FixedWidth="True" ReadOnly="True" > <!--CellTemplate="{StaticResource optimizedCellTemplate}">-->
+                                <dxg:GridColumn.HeaderTemplate>
+                                    <DataTemplate>
+                                        <!--<CheckBox IsChecked="{Binding IsNotSendMaterialIntoNextPlace, UpdateSourceTrigger=PropertyChanged, 
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >-->
+                                            <TextBlock Text="Подано" TextWrapping="Wrap"/>
+                                        <!--</CheckBox>-->
+                                    </DataTemplate>
+                                </dxg:GridColumn.HeaderTemplate>
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <!--<Border BorderThickness="0" Background="{Binding Path=RowData.Row.Border, Mode=OneWay}" >-->
@@ -109,22 +124,21 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="5%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="30" FixedWidth="True" ReadOnly="True" >
+                            <!--<dxg:GridColumn Header="5%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="30" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}" >
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
-                                        <!--<dxe:TextEdit x:Name="PART_Editor" ShowNullText="False" DisplayFormatString="0.##" HorizontalContentAlignment="Center"/>-->
                                         <dxe:TextEdit x:Name="PART_Editor" FontFamily="Wingdings 3" FontWeight="Bold" Foreground="Red" HorizontalContentAlignment="Center"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="По норме" FieldName="StandardQuantity" Width="60" FixedWidth="True" ReadOnly="True">
+                            <dxg:GridColumn Header="По норме" FieldName="StandardQuantity" Width="60" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}">
                                 <dxg:GridColumn.CellTemplate>
                                     <DataTemplate>
                                         <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Бассейнах на конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True" ReadOnly="True">
+                            </dxg:GridColumn>-->
+                            <dxg:GridColumn Header="Остаток на конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}">
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -153,7 +167,7 @@
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Бассейны">
+            <dx:DXTabItem Header="Бассейны" Visibility="{Binding IsVisibleTankRemainders, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxlc:LayoutItem VerticalAlignment="Stretch">
                     <ContentControl Content="{Binding CurrentTankRemaindersView}" />
                 </dxlc:LayoutItem>

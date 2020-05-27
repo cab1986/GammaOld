@@ -15,7 +15,7 @@ namespace Gamma.Models
     /// <summary>
     /// Класс для грида материалов на списание
     /// </summary>
-    public class WithdrawalMaterial : ViewModelBase
+    public class WithdrawalMaterial : WithdrawalMaterialBaseItem
     {
         public WithdrawalMaterial()
         {
@@ -25,46 +25,46 @@ namespace Gamma.Models
         public WithdrawalMaterial(ArrayList productionProducts)
         {
             SetAvailableProductionProducts = (List<Guid>)productionProducts[0];
-            _placeID = (int)productionProducts[1];
+            PlaceID = (int)productionProducts[1];
         }
 
         private List<Guid> _productionProducts { get; set; }
-        private int _placeID  { get; set; }
-        public int PlaceID
-        {
-            get { return _placeID; }
-            set { _placeID = value; }
-        }
+        //private int _placeID  { get; set; }
+        //public int PlaceID
+        //{
+        //    get { return _placeID; }
+        //    set { _placeID = value; }
+        //}
 
-        private string _nomenclatureIDDiezCharacteristicID { get; set; }
-        public string NomenclatureIDDiezCharacteristicID
-        {
-            get { return NomenclatureID.ToString() + "#" + CharacteristicID?.ToString(); /*return _nomenclatureIDDiezCharacteristicID; */}
-            set
-            {
-                /*_nomenclatureIDDiezCharacteristicID = value;*/
-                try
-                {
-                    NomenclatureID = Guid.Parse(value.Substring(0, value.IndexOf("#")));
-                }
-                catch 
-                {
-                    NomenclatureID = Guid.Empty;
-                }
+        //private string _nomenclatureIDDiezCharacteristicID { get; set; }
+        //public string NomenclatureIDDiezCharacteristicID
+        //{
+        //    get { return NomenclatureID.ToString() + "#" + CharacteristicID?.ToString(); /*return _nomenclatureIDDiezCharacteristicID; */}
+        //    set
+        //    {
+        //        /*_nomenclatureIDDiezCharacteristicID = value;*/
+        //        try
+        //        {
+        //            NomenclatureID = Guid.Parse(value.Substring(0, value.IndexOf("#")));
+        //        }
+        //        catch 
+        //        {
+        //            NomenclatureID = Guid.Empty;
+        //        }
 
-                try
-                {
-                    var ch = value.Substring(value.IndexOf("#") + 1);
-                    CharacteristicID = Guid.Parse(value.Substring(value.IndexOf("#") + 1));
-                }
-                catch
-                {
-                    CharacteristicID = null;
-                }
-            }
-        }
+        //        try
+        //        {
+        //            var ch = value.Substring(value.IndexOf("#") + 1);
+        //            CharacteristicID = Guid.Parse(value.Substring(value.IndexOf("#") + 1));
+        //        }
+        //        catch
+        //        {
+        //            CharacteristicID = null;
+        //        }
+        //    }
+        //}
 
-        public Guid DocWithdrawalMaterialID { get; set; } = SqlGuidUtil.NewSequentialid();
+        //public Guid DocWithdrawalMaterialID { get; set; } = SqlGuidUtil.NewSequentialid();
 
         private void RefreshAvilableNomenclatures()
         {
@@ -72,14 +72,14 @@ namespace Gamma.Models
             using (var gammaBase = DB.GammaDb)
             {
                 var nomenclatureInfo =
-                    gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == _nomenclatureID);
+                    gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == NomenclatureID);
                 var characteristicInfo =
-                    gammaBase.C1CCharacteristics.Where(n => n.C1CNomenclatureID == _nomenclatureID && (n.C1CCharacteristicID == CharacteristicID || CharacteristicID == null));
+                    gammaBase.C1CCharacteristics.Where(n => n.C1CNomenclatureID == NomenclatureID && (n.C1CCharacteristicID == CharacteristicID || CharacteristicID == null));
                 if (characteristicInfo?.Count() > 0)
                 {
                     foreach (var item in characteristicInfo)
                     {
-                        if (AvailableNomenclatures.Where(n => n.NomenclatureID == _nomenclatureID && n.CharacteristicID == CharacteristicID).Count() == 0)
+                        if (AvailableNomenclatures.Where(n => n.NomenclatureID == NomenclatureID && n.CharacteristicID == CharacteristicID).Count() == 0)
                             AvailableNomenclatures.Add(new NomenclatureAnalog()
                             {
                                 NomenclatureID = item.C1CNomenclatureID,
@@ -96,7 +96,7 @@ namespace Gamma.Models
                 {
                     AvailableNomenclatures.Add(new NomenclatureAnalog()
                     {
-                        NomenclatureID = _nomenclatureID,
+                        NomenclatureID = NomenclatureID,
                         Coefficient = 1,
                         NomenclatureName = nomenclatureInfo.Name,
                         MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
@@ -106,7 +106,7 @@ namespace Gamma.Models
                 }
 
                 var analogs =
-                gammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == _nomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
+                gammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == NomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
                     .Select(a => new
                     {
                         NomenclatureId = a.C1CNomenclatureAnalogID,
@@ -180,27 +180,27 @@ namespace Gamma.Models
             }
         }
 
-        private Guid _nomenclatureID;
+        //private Guid _nomenclatureID;
 
-        public Guid NomenclatureID
+        public override Guid NomenclatureID
         {
-            get { return _nomenclatureID; }
+            get { return base.NomenclatureID; }
             set
             {
-                if ((_nomenclatureID == null || _nomenclatureID == Guid.Empty) && value != null && value != Guid.Empty)
+                if ((base.NomenclatureID == null || base.NomenclatureID == Guid.Empty) && value != null && value != Guid.Empty)
                 {
-                    _nomenclatureID = value;
+                    base.NomenclatureID = value;
                     RefreshAvilableNomenclatures();
                 }
                 else
-                    _nomenclatureID = value;
+                    base.NomenclatureID = value;
 
                 //NomenclatureName = value != new Guid() ? DB.GammaDb.C1CNomenclature.First(n => n.C1CNomenclatureID == value).Name : string.Empty;
                 //if (AvailableNomenclatures == null)
 
                 //else
                 {
-                    var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == _nomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
+                    var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == base.NomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
                     if (choosenNomenclature == null)
                     {
                         Quantity = 0;
@@ -241,22 +241,22 @@ namespace Gamma.Models
             }
         }
 
-        private Guid? _characteristicID;
+        //private Guid? _characteristicID;
 
-        public Guid? CharacteristicID
+        public override Guid? CharacteristicID
         {
-            get { return _characteristicID; }
+            get { return base.CharacteristicID; }
             set
             {
-                if ((NomenclatureID != null && NomenclatureID != Guid.Empty) && (_characteristicID == null || _characteristicID == Guid.Empty) && value != null && value != Guid.Empty)
+                if ((NomenclatureID != null && NomenclatureID != Guid.Empty) && (base.CharacteristicID == null || base.CharacteristicID == Guid.Empty) && value != null && value != Guid.Empty)
                 {
-                    _characteristicID = value;
+                    base.CharacteristicID = value;
                     RefreshAvilableNomenclatures();
                 }
                 else
-                    _characteristicID = value;
+                    base.CharacteristicID = value;
 
-                var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == _nomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
+                var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == base.NomenclatureID && (an.CharacteristicID == base.CharacteristicID || base.CharacteristicID == null || base.CharacteristicID == Guid.Empty));
                 if (choosenNomenclature == null)
                 {
                     Quantity = 0;
@@ -272,35 +272,35 @@ namespace Gamma.Models
             }
         }
 
-        public Guid? ProductID { get; set; }
-        public string NomenclatureName { get; set; }
-        public decimal BaseQuantity { get; set; }
-        public decimal Quantity { get; set; }
-        public bool IsFloatValue { get; set; }
-        public Guid? DocMovementID { get; set; }
-        public int? NomenclatureKindID { get; set; }
+        //public Guid? ProductID { get; set; }
+        //public string NomenclatureName { get; set; }
+        //public decimal BaseQuantity { get; set; }
+        //public decimal Quantity { get; set; }
+        //public bool IsFloatValue { get; set; }
+        //public Guid? DocMovementID { get; set; }
+        //public int? NomenclatureKindID { get; set; }
 
-        private bool _quantityIsReadOnly { get; set; }
-        /// <summary>
-        /// Можно ли менять количество
-        /// </summary>
-        public bool QuantityIsReadOnly
-        {
-            get { return _quantityIsReadOnly; }
-            set
-            {
-                _quantityIsReadOnly = value;
-            }
-        }
+        //private bool _quantityIsReadOnly { get; set; }
+        ///// <summary>
+        ///// Можно ли менять количество
+        ///// </summary>
+        //public bool QuantityIsReadOnly
+        //{
+        //    get { return _quantityIsReadOnly; }
+        //    set
+        //    {
+        //        _quantityIsReadOnly = value;
+        //    }
+        //}
         
-        /// <summary>
-        /// Списание по факту (или по нормативам)
-        /// </summary>
-        public bool? WithdrawByFact { get; set; }
+        ///// <summary>
+        ///// Списание по факту (или по нормативам)
+        ///// </summary>
+        //public bool? WithdrawByFact { get; set; }
 
-        public string MeasureUnit { get; set; }
+        //public string MeasureUnit { get; set; }
 
-        public Guid? MeasureUnitID { get; set; }
+        //public Guid? MeasureUnitID { get; set; }
 
         public List<ProductionProducts> AvailableProductionProducts { get; set; }
 
@@ -379,7 +379,7 @@ namespace Gamma.Models
                 var n = AvailableNomenclatures?.Select(x => x.NomenclatureID).ToList();
                 if (n != null)
                 {
-                    AvailableProductionProducts = DB.GammaDb.vProductionMaterials.Where(x => _productionProducts.Contains((Guid)x.ProductCharacteristicID) && x.ProductPlaceID == _placeID && n.Contains((Guid)x.NomenclatureID)).Select(x => new ProductionProducts()
+                    AvailableProductionProducts = DB.GammaDb.vProductionMaterials.Where(x => _productionProducts.Contains((Guid)x.ProductCharacteristicID) && x.ProductPlaceID == PlaceID && n.Contains((Guid)x.NomenclatureID)).Select(x => new ProductionProducts()
                     {
                         NomenclatureID = x.ProductNomenclatureID,
                         CharacteristicID = (Guid)x.ProductCharacteristicID,

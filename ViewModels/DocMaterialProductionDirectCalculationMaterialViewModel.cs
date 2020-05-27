@@ -87,7 +87,12 @@ namespace Gamma.ViewModels
         public DocMaterialProductionDirectCalculationMaterial DirectCalculationMaterials { get; set; }
         //private List<Guid> ProductionProductCharacteristicIDs { get; set; }
 
-        private bool IsConfirmed { get; }
+        private bool IsConfirmed { get; set; } = false;
+        public void ChangeConfirmed(bool isConfirmed)
+        {
+            IsConfirmed = isConfirmed;
+            RaisePropertyChanged("IsReadOnly");
+        }
         public bool IsReadOnly => !(DB.HaveWriteAccess("DocMaterialProductions") || WorkSession.DBAdmin) || IsConfirmed;
 
         public DelegateCommand AddDirectCalculationMaterialCommand { get; private set; }

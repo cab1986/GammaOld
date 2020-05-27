@@ -19,10 +19,11 @@ namespace Gamma.ViewModels
         /// </summary>
         /// <param name="placeID">ID передела</param>
         /// <param name="gammaBase">Контекст базы данных</param>
-        public DocMaterialTankRemaindersViewModel(int placeID, DocMaterialTankGroupContainer tankGroupContainer, GammaEntities gammaBase = null)
+        public DocMaterialTankRemaindersViewModel(int placeID, bool isConfirmed, DocMaterialTankGroupContainer tankGroupContainer, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             PlaceID = placeID;
+            IsConfirmed = isConfirmed;
             //FillGrid();
             TankGroupContainer = tankGroupContainer;
         }
@@ -52,7 +53,7 @@ namespace Gamma.ViewModels
         //<Summary>
         //Конструктор для существующего закрытия смены
         //</Summary>7
-        public DocMaterialTankRemaindersViewModel(Guid docID, GammaEntities gammaBase = null)
+        /*public DocMaterialTankRemaindersViewModel(Guid docID, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? DB.GammaDb;
             var doc = gammaBase.Docs.Include(d => d.DocCloseShiftRemainders).First(d => d.DocID == docID);
@@ -74,7 +75,7 @@ namespace Gamma.ViewModels
                 SpoolRemainders = newSpoolRemainders;
 
             }*/
-        }
+        //}
         /// <summary>
         /// Сохранение остатков в БД
         /// </summary>
@@ -398,7 +399,12 @@ namespace Gamma.ViewModels
         public DelegateCommand<int> ShowProductCommand { get; set; }
 
 
-        private bool IsConfirmed { get; set; }
-        public bool IsReadOnly => !(DB.HaveWriteAccess("DocMaterialTankRemainders"));// && !IsConfirmed);
+        private bool IsConfirmed { get; set; } = false;
+        public void ChangeConfirmed(bool isConfirmed)
+        {
+            IsConfirmed = isConfirmed;
+            RaisePropertyChanged("IsReadOnly");
+        }
+        public bool IsReadOnly => !DB.HaveWriteAccess("DocMaterialTankRemainders") || IsConfirmed;
     }
 }

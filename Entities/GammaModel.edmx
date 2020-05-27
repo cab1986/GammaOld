@@ -14640,6 +14640,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="20" Scale="5" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="Int32" Name="QuantityIsReadOnly" Nullable="false" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+          <Property Type="String" Name="ParentName" Nullable="true" MaxLength="255" />
         </ComplexType>
         <Association Name="DocMaterialTankGroupNomenclatureGroups">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
@@ -14658,6 +14660,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="20" Scale="5" />
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="Int32" Name="QuantityIsReadOnly" Nullable="false" />
+          <Property Type="Guid" Name="ParentID" Nullable="true" />
+          <Property Type="String" Name="ParentName" Nullable="true" MaxLength="255" />
         </ComplexType>
         <EntityType Name="vDocMaterialProductionDirectCalculations">
           <Key>
@@ -14684,14 +14688,26 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="FillDocCloseShiftMaterialsDismiss_Result">
-          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
-          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
-          <Property Type="Boolean" Name="WithdrawByFact" Nullable="false" />
-          <Property Type="Guid" Name="MeasureUnitID" Nullable="true" />
-          <Property Type="String" Name="MeasureUnit" Nullable="true" MaxLength="50" />
-          <Property Type="Decimal" Name="Quantity" Nullable="false" Precision="20" Scale="5" />
-          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
-          <Property Type="Boolean" Name="QuantityIsReadOnly" Nullable="true" />
+          <Property Name="DocNumberDate" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="PlaceID" Type="Int32" Nullable="true" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="WithdrawByFact" Type="Boolean" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="MeasureUnitName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QuantityIsReadOnly" Type="Boolean" />
+          <Property Name="QuantityRemainderAtBegin" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityIn" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityOut" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityUtil" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityExperimental" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantityRemainderAtEnd" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySend" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="ParentID" Type="Guid" />
+          <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -17397,6 +17413,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -17427,6 +17445,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -17457,14 +17477,26 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <FunctionImportMapping FunctionImportName="FillDocCloseShiftMaterialsDismiss" FunctionName="GammaDBModel.FillDocCloseShiftMaterialsDismiss">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftMaterialsDismiss_Result">
-                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
-                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
-                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
-                <ScalarProperty Name="MeasureUnitID" ColumnName="MeasureUnitID" />
-                <ScalarProperty Name="MeasureUnit" ColumnName="MeasureUnit" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />
+                <ScalarProperty Name="QuantitySend" ColumnName="QuantitySend" />
+                <ScalarProperty Name="QuantityRemainderAtEnd" ColumnName="QuantityRemainderAtEnd" />
+                <ScalarProperty Name="QuantityExperimental" ColumnName="QuantityExperimental" />
+                <ScalarProperty Name="QuantityUtil" ColumnName="QuantityUtil" />
+                <ScalarProperty Name="QuantityOut" ColumnName="QuantityOut" />
+                <ScalarProperty Name="QuantityIn" ColumnName="QuantityIn" />
+                <ScalarProperty Name="QuantityRemainderAtBegin" ColumnName="QuantityRemainderAtBegin" />
                 <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocNumberDate" ColumnName="DocNumberDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

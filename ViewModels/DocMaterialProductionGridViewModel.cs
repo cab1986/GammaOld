@@ -31,44 +31,48 @@ namespace Gamma.ViewModels
         /// </summary>
         public DocMaterialProductionGridViewModel()
         {
-            AddDocMaterialProductionCommand = new DelegateCommand(AddDocMaterialProduction, () => !IsReadOnly);
-            DeleteDocMaterialProductionCommand = new DelegateCommand(DeleteDocMaterialProduction, () => !IsReadOnly);
-
+            AddDocMaterialProductionCommand = new DelegateCommand(AddDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
+            DeleteDocMaterialProductionCommand = new DelegateCommand(DeleteDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
+            //ChangeIsSendIntoNextPlaceDocMaterialProductionCommand = new DelegateCommand(ChangeIsSendIntoNextPlaceDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
             
             //MaterialTabActivateCommand = new DelegateCommand<byte>(MaterialTabActivate);
             //MaterialTabActivate(0);
         }
-        public DocMaterialProductionGridViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null):this()
+
+        public DocMaterialProductionGridViewModel(int placeID, GammaEntities gammaDb = null) :this()
         {
             GammaBase = gammaDb ?? DB.GammaDb;
             PlaceID = placeID;
+            IsVisibleTankRemainders = !GammaBase.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && t.DocMaterialProductionTypeID == null && t.NextDocMaterialTankGroupID == null);
+            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
+
+        }
+
+        public DocMaterialProductionGridViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null):this(placeID, gammaDb)
+        {
             ShiftID = shiftID;
             CloseDate = closeDate;
 
             TankGroupContainer = new DocMaterialTankGroupContainer(PlaceID);
-            CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, TankGroupContainer);
+            CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
-            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
         }
 
-        public DocMaterialProductionGridViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this()
+        public DocMaterialProductionGridViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this(placeID, gammaDb)
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
-            PlaceID = placeID;
+
             ShiftID = shiftID;
             CloseDate = closeDate;
 
            IsConfirmed = isConfirmed;
 
-                
             TankGroupContainer = new DocMaterialTankGroupContainer(docID, PlaceID);
-            CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, TankGroupContainer);
+            CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
             DocMaterialCompositionCalculations.LoadProductionMaterials(docID, productionProductCharacteristicIDs);
-            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate, docID, isConfirmed, productionProductCharacteristicIDs);
             //WithdrawalMaterialsGrid.LoadProductionMaterials(docID, productionProductCharacteristicIDs);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
@@ -91,6 +95,28 @@ namespace Gamma.ViewModels
                 
             }
         }
+
+        /*public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                foreach (var item in DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations)
+                {
+                    item.IsNotSendMaterialIntoNextPlace = _isNotSendMaterialIntoNextPlace;
+                }
+                TankGroupContainer.RecalcAllNomenclatureInComposition();
+                {
+                    var item = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
+                    DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations.Add(item);
+                    DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations.Remove(item);
+                }
+            }
+        }
+        */
+
         private int ShiftID;
         DateTime CloseDate;
 
@@ -98,8 +124,34 @@ namespace Gamma.ViewModels
         //private List<Guid> ProductionProductCharacteristicIDs { get; set; }
         public DocMaterialTankGroupContainer TankGroupContainer { get; set; }
 
-        private bool IsConfirmed { get; }
-        public bool IsReadOnly => !(DB.HaveWriteAccess("DocMaterialProductions") || WorkSession.DBAdmin) || IsConfirmed;
+        public bool IsVisibleTankRemainders { get; set; }
+        //public bool IsAllowEditingDocMaterialCompositionCalculations => !IsReadOnly && IsVisibleTankRemainders;
+        //private bool _isAllowEditingDocMaterialCompositionCalculations { get; set; } = true;
+        public bool IsAllowEditingDocMaterialCompositionCalculations
+        //{
+        //    get
+        //    {
+        //        return _isAllowEditingDocMaterialCompositionCalculations;
+        //    }
+        //    set
+        //    {
+        //        _isAllowEditingDocMaterialCompositionCalculations = value;
+        //        RaisePropertyChanged("IsAllowEditingDocMaterialCompositionCalculations");
+        //    }
+        //}
+            => !IsReadOnly && IsVisibleTankRemainders;
+
+        private bool IsConfirmed { get; set; }
+        public void ChangeConfirmed ( bool isConfirmed)
+        {
+            IsConfirmed = isConfirmed;
+            (CurrentTankRemaindersView as DocMaterialTankRemaindersViewModel)?.ChangeConfirmed(isConfirmed);
+            (DocMaterialProductionDirectCalculationsGrid as DocMaterialProductionDirectCalculationMaterialViewModel)?.ChangeConfirmed(isConfirmed);
+            RaisePropertyChanged("IsReadOnly");
+            RaisePropertyChanged("IsAllowEditingDocMaterialCompositionCalculations");
+        }
+
+        public bool IsReadOnly => !DB.HaveWriteAccess("DocMaterialProductions") || IsConfirmed;
 
         private SaveImplementedViewModel _currentTankRemaindersView;
         public SaveImplementedViewModel CurrentTankRemaindersView
@@ -131,6 +183,7 @@ namespace Gamma.ViewModels
 
         public DelegateCommand AddDocMaterialProductionCommand { get; private set; }
         public DelegateCommand DeleteDocMaterialProductionCommand { get; private set; }
+        public DelegateCommand ChangeIsSendIntoNextPlaceDocMaterialProductionCommand { get; private set; }
         public DelegateCommand BackMaterialTabCommand { get; private set; }
 
         //public DelegateCommand<byte> MaterialTabActivateCommand { get; private set; }
@@ -223,6 +276,12 @@ namespace Gamma.ViewModels
                 DocMaterialCompositionCalculations.MaterialNomenclatureChanged(nomenclatureInfo);
             }
         }
+
+        /*private void ChangeIsSendIntoNextPlaceDocMaterialProduction()
+        {
+            DocMaterialCompositionCalculations.ChangeIsSendIntoNextPlaceDocMaterialProduction();
+        }
+        */
 
         public void FillGrid()
         {

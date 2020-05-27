@@ -21,5 +21,7 @@ namespace Gamma.Entities
         public decimal Quantity { get; set; }
         public string NomenclatureName { get; set; }
         public int QuantityIsReadOnly { get; set; }
+        public Nullable<System.Guid> ParentID { get; set; }
+        public string ParentName { get; set; }
     }
 }

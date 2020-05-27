@@ -24,7 +24,24 @@ namespace Gamma.Models
 
         protected override void RefreshQuntity()
         {
-            QuantitySend = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderAtEnd ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0);
+            if (!IsNotSendMaterialIntoNextPlace)
+                QuantitySend = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderAtEnd ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0);
+            else
+            {
+                QuantityRemainderAtEnd = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0);
+                QuantitySend = 0;
+            }
+        }
+
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                RefreshQuntity();
+            }
         }
     }
 }

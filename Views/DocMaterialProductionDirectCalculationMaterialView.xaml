@@ -26,7 +26,7 @@
                     </dxb:BarManager.Bars>
                     <dxg:GridControl ItemsSource="{Binding DirectCalculationMaterials.Materials}" SelectedItem="{Binding SelectedDirectCalculationMaterial}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
+                    <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" AllowEditing="{Binding IsReadOnly,Converter={StaticResource InverseBooleanConverter}}">
                                 <!--<dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding MaterialRowUpdatedCommand}"/>
                                     <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
@@ -41,7 +41,7 @@
                 <dxg:GridControl.Columns>
                     <dxg:GridColumn Binding="{Binding WithdrawByFact, Converter={StaticResource WithdrawByFactConverter}}" Header="Списание" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending" />
                     <dxg:GridColumn Binding="{Binding ParentName}" Header="Группа" GroupIndex="1" ShowGroupedColumn="False" SortOrder="Ascending" />
-                    <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="{Binding IsReadOnly}">
+                    <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" >
                         <dxg:GridColumn.CellTemplate>
                             <DataTemplate>
                                 <dxe:ComboBoxEdit x:Name="PART_Editor"   
@@ -84,7 +84,7 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>-->
-                    <dxg:GridColumn Header="Принято со склада" FieldName="QuantityIn" Width="63" FixedWidth="True"  ReadOnly="{Binding IsReadOnly}" >
+                    <dxg:GridColumn Header="Принято со склада" FieldName="QuantityIn" Width="63" FixedWidth="True" >
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -126,7 +126,7 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
-                    <dxg:GridColumn Header="Отдано на склад" FieldName="QuantityOut" Width="58" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
+                    <dxg:GridColumn Header="Отдано на склад" FieldName="QuantityOut" Width="58" FixedWidth="True">
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -139,7 +139,7 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
-                    <dxg:GridColumn Header="В брак" FieldName="QuantityUtil" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
+                    <dxg:GridColumn Header="В брак" FieldName="QuantityUtil" Width="55" FixedWidth="True">
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -152,7 +152,7 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
-                    <dxg:GridColumn Header="ОПВ" FieldName="QuantityExperimental" Width="55" FixedWidth="True" ReadOnly="{Binding IsReadOnly}">
+                    <dxg:GridColumn Header="ОПВ" FieldName="QuantityExperimental" Width="55" FixedWidth="True">
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -165,7 +165,7 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
-                    <dxg:GridColumn Header="Остаток на конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True"  ReadOnly="{Binding IsReadOnly}">
+                    <dxg:GridColumn Header="Остаток на конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True" >
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}" TextWrapping="Wrap"/>

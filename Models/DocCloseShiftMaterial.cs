@@ -148,7 +148,7 @@ namespace Gamma.Models
             }
         }
 
-        private decimal? _quantityDismiss { get; set; }
+        /*private decimal? _quantityDismiss { get; set; }
         public decimal? QuantityDismiss
         {
             get { return _quantityDismiss; }
@@ -160,7 +160,7 @@ namespace Gamma.Models
                     RefreshQuntity();
                 }
             }
-        }
+        }*/
 
         private decimal? _quantityWithdrawalMaterial { get; set; }
         public decimal? QuantityWithdrawalMaterial
@@ -179,7 +179,7 @@ namespace Gamma.Models
 
         private void RefreshQuntity()
         {
-            QuantityWithdrawalMaterial = (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) + (QuantityDismiss ?? 0) - (QuantityOut ?? 0) - (QuantityUtil ?? 0) - (QuantityExperimental ?? 0) - (QuantityRePack ?? 0) - (QuantityRemainderAtEnd ?? 0);
+            QuantityWithdrawalMaterial = (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) /*+ (QuantityDismiss ?? 0)*/ - (QuantityOut ?? 0) - (QuantityUtil ?? 0) - (QuantityExperimental ?? 0) - (QuantityRePack ?? 0) - (QuantityRemainderAtEnd ?? 0);
         }
 
         private void RefreshStandardQuantityVsQuantityWithdrawalMaterialPercent()

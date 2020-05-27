@@ -67,7 +67,7 @@
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Orientation="Vertical" Height="170">
                         <dxlc:LayoutItem Label="Продукция" LabelPosition="Top">
-                            <dxe:ComboBoxEdit EditValue="{Binding ActiveProductionProduct, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ProductionProductsList}" DisplayMember="CharacteristicName" >
+                            <dxe:ComboBoxEdit EditValue="{Binding ActiveProductionProduct, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ProductionProductsList}" DisplayMember="CharacteristicName" IsReadOnly="{Binding IsConfirmed}">
                                 <dxe:ComboBoxEdit.StyleSettings>
                                     <dxe:CheckedComboBoxStyleSettings/>
                                 </dxe:ComboBoxEdit.StyleSettings>
