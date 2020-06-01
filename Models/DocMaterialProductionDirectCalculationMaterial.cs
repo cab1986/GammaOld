@@ -278,10 +278,10 @@ namespace Gamma.Models
                 }
                 
                 var materialsRemainderAtBegin =
-                        new ItemsChangeObservableCollection<WithdrawalMaterial>(
+                        new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
                             GammaBase.FillDocMaterialProductionsAtBegin(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter)
                             //.Take(0)    
-                            .Select(m => new WithdrawalMaterial()
+                            .Select(m => new WithdrawalMaterialBaseItem()
                             {
                                 NomenclatureID = (Guid)m.NomenclatureID,
                                 CharacteristicID = m.CharacteristicID,
@@ -289,13 +289,13 @@ namespace Gamma.Models
                                 QuantityIsReadOnly = (m.QuantityIsReadOnly == 1),
                                 Quantity = m.Quantity,
                                 BaseQuantity = m.Quantity,
-                                DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                                //DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                                 MeasureUnit = m.MeasureUnit,
                                 MeasureUnitID = m.MeasureUnitID,
                                 WithdrawByFact = m.WithdrawByFact
                             }).OrderBy(m => m.NomenclatureName));
 
-                foreach (WithdrawalMaterial addedItem in materialsRemainderAtBegin.Where(x => x.Quantity != 0))
+                foreach (WithdrawalMaterialBaseItem addedItem in materialsRemainderAtBegin.Where(x => x.Quantity != 0))
                 {
                     var item = Materials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                     if (item == null)

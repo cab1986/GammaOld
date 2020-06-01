@@ -45,10 +45,10 @@ namespace Gamma.Models
         {
             GammaBase = DB.GammaDb;
             DocMaterialTankID = docMaterialTankID;
+            Volume = volume;
             Concentration = concentration;
             Level = level;
             Name = name;
-            Volume = volume;
             var docMaterialTank = GammaBase.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
             if (docMaterialTank != null)
             {
@@ -95,7 +95,7 @@ namespace Gamma.Models
             {
                 if (_concentration == value) return;
                 _concentration = value;
-                Quantity = Volume * (value / 100) * (Level / 100);
+                Quantity = Volume * 1000 * (value / 100) * (Level / 100);
                 RaisePropertyChanged("Concentration");
             }
         }
@@ -109,7 +109,7 @@ namespace Gamma.Models
             {
                 if (_level == value) return;
                 _level = value;
-                Quantity = Volume * (Concentration/100) * (value/100);
+                Quantity = Volume * 1000 * (Concentration/100) * (value/100);
                 RaisePropertyChanged("Level");
             }
         }

@@ -1140,6 +1140,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="PlaceWithdrawalMaterialTypeID" Type="int" Nullable="false" />
           <Property Name="IsEnabledRemainderInDocCloseShift" Type="bit" />
           <Property Name="IsEnabledSamplesInDocCloseShift" Type="bit" />
+          <Property Name="IsMaterialProductionPlace" Type="bit" />
         </EntityType>
         <EntityType Name="PlaceWithdrawalMaterialTypes">
           <Key>
@@ -11340,6 +11341,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="IsEnabledRemainderInDocCloseShift" Type="Boolean" />
           <Property Name="IsEnabledSamplesInDocCloseShift" Type="Boolean" />
           <NavigationProperty Name="DocMaterialTankGroups" Relationship="GammaModel.FK_DocMaterialTankGroups_Places" FromRole="Places" ToRole="DocMaterialTankGroups" />
+          <Property Name="IsMaterialProductionPlace" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -16227,6 +16229,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsMaterialProductionPlace" ColumnName="IsMaterialProductionPlace" />
                 <ScalarProperty Name="IsEnabledSamplesInDocCloseShift" ColumnName="IsEnabledSamplesInDocCloseShift" />
                 <ScalarProperty Name="IsEnabledRemainderInDocCloseShift" ColumnName="IsEnabledRemainderInDocCloseShift" />
                 <ScalarProperty Name="PlaceWithdrawalMaterialTypeID" ColumnName="PlaceWithdrawalMaterialTypeID" />

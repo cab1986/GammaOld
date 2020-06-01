@@ -33,7 +33,7 @@ namespace Gamma.ViewModels
             }
             Places.Insert(0, new Place() { PlaceName = "Все" });
             PlaceId = 0;
-            IntervalId = 1;
+            IntervalId = WorkSession.ShiftID == 0 ? 1 : 0;
             Find();
         }
 

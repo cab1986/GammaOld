@@ -33,6 +33,8 @@ namespace Gamma.ViewModels
         private byte? ShiftID { get; set; }
         private DateTime DocDate { get; set; }
 
+        public bool IsVisibledCompozitionTab => WorkSession.ShiftID == 0;
+
         /*private void AddSpoolRemainder(Guid productId, DateTime date, bool isSourceProduct, Guid? docWithdrawalId, int index)
         {
             if (!SpoolRemainders.Any(s => s.ProductID == productId && s.Index == index))

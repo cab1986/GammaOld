@@ -162,7 +162,11 @@ namespace Gamma.ViewModels
 
         public bool FillGridWithNoEndCanEnable()
         {
+#if DEBUG
+            return DB.HaveWriteAccess("DocCloseShiftDocs");
+#else
             return DB.HaveWriteAccess("DocCloseShiftDocs") && WorkSession.ShiftID == 0;
+#endif
         }
 
         private SaveImplementedViewModel _currentViewModelGrid;

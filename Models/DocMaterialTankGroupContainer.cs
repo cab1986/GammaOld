@@ -143,7 +143,7 @@ namespace Gamma.Models
                 foreach (var tankG in TankGroups)
                 {
                     if (tankG.Composition.Sum(c => c.Value) > 0)
-                        quantity = quantity + ((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * tankG.Tanks.Sum(t => t.Quantity);
+                        quantity = quantity + Math.Round(((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * tankG.Tanks.Sum(t => t.Quantity),0);
                 }
             //quantity = Math.Round(quantity, 0);
             MessageManager.RecalcMaterialProductionQuantityEndFromTankReaminderEvent(nomenclatureID, quantity);

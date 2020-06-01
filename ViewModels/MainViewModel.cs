@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<EditDocComplectationMessage>(this, OpenDocComplectation);
             ViewsManager.Initialize();
             var settings = GammaSettings.Get();
-            if (WorkSession.ShiftID != 0 && (WorkSession.IsProductionPlace || WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse)) // Если производственный передел
+            if (WorkSession.ShiftID != 0 && (WorkSession.IsProductionPlace || WorkSession.IsMaterialProductionPlace || WorkSession.IsShipmentWarehouse || WorkSession.IsTransitWarehouse)) // Если производственный передел
             {
                 var dialog = new ChoosePrintNameDialog();
                 dialog.ShowDialog();
@@ -89,7 +89,7 @@ namespace Gamma.ViewModels
                     DB.HaveReadAccess("ProductionTasks"));
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
-                CloseShiftCommand = new DelegateCommand(CloseShift);
+                CloseShiftCommand = new DelegateCommand(CloseShift, IsVisibleCloseShiftButton);
                 BackCommand = new DelegateCommand(() =>
                 {
                     CurrentView = PreviousView;
@@ -129,7 +129,7 @@ namespace Gamma.ViewModels
             switch (WorkSession.PlaceGroup)
             {
                 case PlaceGroup.PM:
-                    if (WorkSession.RoleName == "OperatorWaste" || WorkSession.RoleName == "OperatorGRV")
+                    if (WorkSession.IsMaterialProductionPlace && !WorkSession.IsProductionPlace)
                         CurrentView = new DocMaterialProductionsViewModel();
                     else
                         CurrentView = new ProductionTasksSGBViewModel();
@@ -185,7 +185,7 @@ namespace Gamma.ViewModels
 
         public bool IsVisibleUnwinderRemainderButton => (WorkSession.UnwindersCount > 0);
 
-        public bool IsVisibleCloseShiftButton => WorkSession.IsProductionPlace;
+        public bool IsVisibleCloseShiftButton => WorkSession.IsProductionPlace && WorkSession.ShiftID != 0;
 
         public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 

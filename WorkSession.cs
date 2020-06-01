@@ -30,6 +30,7 @@ namespace Gamma
                                      programAdmin = u.ProgramAdmin,
                                      u.Places.FirstOrDefault().BranchID,
                                      u.Places.FirstOrDefault().IsProductionPlace,
+                                     u.Places.FirstOrDefault().IsMaterialProductionPlace,
                                      u.Places,
                                      u.DepartmentID,
                                      u.Name,
@@ -55,6 +56,7 @@ namespace Gamma
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
+                IsMaterialProductionPlace = userInfo.IsMaterialProductionPlace ?? false;
                 IsShipmentWarehouse = userInfo.IsShipmentWarehouse ?? false;
                 IsTransitWarehouse = userInfo.IsTransitWarehouse ?? false;
                 PlaceIds = userInfo.Places.Select(p => p.PlaceID).ToList();
@@ -116,6 +118,7 @@ namespace Gamma
         public static List<int> BranchIds { get; private set; }
 
         public static bool IsProductionPlace { get; private set; }
+        public static bool IsMaterialProductionPlace { get; private set; }
         public static bool IsShipmentWarehouse { get; private set; }
         public static bool IsTransitWarehouse { get; private set; }
         public static PlaceGroup PlaceGroup { get; private set; }

@@ -23,14 +23,14 @@
                                     <ItemsControl x:Name="TankGroup0"
                                   BorderBrush="Black" BorderThickness="1" ItemsSource="{Binding TankGroupContainer.TankGroups[0].Tanks}" 
                                   ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-2,-9,0">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel  Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                    </dx:DXTabItem>
-                                <dx:DXTabItem Header="Композиция в бассейнах" >
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel  Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </dx:DXTabItem>
+                                <dx:DXTabItem Header="Композиция в бассейнах" Visibility="{Binding IsVisibledCompozitionTab, Converter={StaticResource BooleanToVisibilityConverter}}" >
                                     <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[0].Composition}" VerticalAlignment="Stretch">
                                         <dxg:GridControl.View>
                                             <dxg:TableView ShowGroupPanel="False"/>
@@ -60,7 +60,7 @@
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
                         </dx:DXTabItem>
-                        <dx:DXTabItem Header="Композиция в бассейнах" >
+                        <dx:DXTabItem Header="Композиция в бассейнах"  Visibility="{Binding IsVisibledCompozitionTab, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[1].Composition}" VerticalAlignment="Stretch">
                                 <dxg:GridControl.View>
                                     <dxg:TableView ShowGroupPanel="False"/>
@@ -90,7 +90,7 @@
                                 </ItemsControl.ItemsPanel>
                     </ItemsControl>
                     </dx:DXTabItem>
-                    <dx:DXTabItem Header="Композиция в бассейнах" >
+                        <dx:DXTabItem Header="Композиция в бассейнах"  Visibility="{Binding IsVisibledCompozitionTab, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[2].Composition}" VerticalAlignment="Stretch">
                                 <dxg:GridControl.View>
                                     <dxg:TableView ShowGroupPanel="False"/>
@@ -120,7 +120,7 @@
                                 </ItemsControl.ItemsPanel>
                     </ItemsControl>
                     </dx:DXTabItem>
-                    <dx:DXTabItem Header="Композиция в бассейнах" >
+                        <dx:DXTabItem Header="Композиция в бассейнах"  Visibility="{Binding IsVisibledCompozitionTab, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxg:GridControl  EnableSmartColumnsGeneration="False" MaxHeight="500" ItemsSource="{Binding TankGroupContainer.TankGroups[3].Composition}" VerticalAlignment="Stretch">
                                 <dxg:GridControl.View>
                                     <dxg:TableView ShowGroupPanel="False"/>

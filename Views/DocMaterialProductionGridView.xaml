@@ -37,7 +37,7 @@
                             <dxb:BarButtonItem Content="Добавить материал" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddDocMaterialProductionCommand}"/>
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDocMaterialProductionCommand}"/>
                             <dxb:BarItemLinkSeparator />
-                            <dxb:BarCheckItem Content="Была подача сырья на следующий передел" IsChecked="{Binding DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace, Converter={StaticResource InverseBooleanConverter}}" />
+                            <dxb:BarCheckItem Content="Была подача сырья на следующий передел" IsChecked="{Binding DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding IsAllowEditingDocMaterialCompositionCalculations}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
                     <dxg:GridControl ItemsSource="{Binding DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations}" SelectedItem="{Binding SelectedDocMaterialProduction}" AutoExpandAllGroups="True">
