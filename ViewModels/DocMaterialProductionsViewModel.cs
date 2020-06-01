@@ -33,7 +33,7 @@ namespace Gamma.ViewModels
             }
             Places.Insert(0, new Place() { PlaceName = "Все" });
             PlaceId = 0;
-            IntervalId = WorkSession.ShiftID == 0 ? 1 : 0;
+            IntervalId = 1;
             Find();
         }
 
@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
                     case 0:
                         DocMaterialProductionsList = gammaBase.Docs
                         .Where( d =>  d.DocTypeID == (byte)DocTypes.DocMaterialProduction &&
-                        (d.PlaceID == WorkSession.PlaceID) &&
+                        //(d.PlaceID == WorkSession.PlaceID) &&
                         (d.ShiftID == WorkSession.ShiftID) &&
                         (d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))) &&
                         (d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(DB.CurrentDateTime))))
@@ -81,8 +81,9 @@ namespace Gamma.ViewModels
                         break;
                     case 1:
                         DocMaterialProductionsList = gammaBase.Docs
-                            .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction &&
-                            (PlaceId == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceId == d.PlaceID))
+                            .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction
+                            // && (PlaceId == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceId == d.PlaceID)
+                            )
                             .OrderByDescending(d => d.Date)
                             .Take(500)
                             .Select(d => new Doc

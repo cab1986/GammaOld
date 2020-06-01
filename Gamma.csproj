@@ -1014,7 +1014,6 @@
     <Compile Include="ViewModels\DocMaterialProductionDirectCalculationMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialTankRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionGridViewModel.cs" />
-    <Compile Include="ViewModels\DocMaterialProduction1GridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftProductViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionViewModel.cs" />
     <Compile Include="ViewModels\DocUnwinderRemaindersViewModel.cs" />
@@ -1111,9 +1110,6 @@
     </Compile>
     <Compile Include="Views\DocMaterialProductionGridView.xaml.cs">
       <DependentUpon>DocMaterialProductionGridView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DocMaterialProduction1GridView.xaml.cs">
-      <DependentUpon>DocMaterialProduction1GridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocCloseShiftProductView.xaml.cs">
       <DependentUpon>DocCloseShiftProductView.xaml</DependentUpon>
@@ -1372,10 +1368,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocMaterialProductionGridView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\DocMaterialProduction1GridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1765,7 +1757,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
