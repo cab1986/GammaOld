@@ -21,6 +21,7 @@ namespace Gamma.ViewModels
     {
         public DocMaterialProductionViewModel(OpenDocMaterialProductionMessage msg)
         {
+            Bars.Add(ReportManager.GetReportBar("DocMaterialProduction", VMID));
             isInitialize = true;
             //gammaBase = gammaBase ?? DB.GammaDb;
             Doc = (from d in GammaBase.Docs where d.DocID == msg.DocID select d).FirstOrDefault();
@@ -101,7 +102,8 @@ namespace Gamma.ViewModels
 
         private void PrintReport(PrintReportMessage msg)
         {
-            if (msg.VMID != (CurrentViewModelGrid as IBarImplemented)?.VMID) return;
+            if (msg.VMID != VMID) return;
+            //if (msg.VMID != (CurrentViewModelGrid as IBarImplemented)?.VMID) return;
             //if (!IsValid) return;
             if (CanSaveExecute())
                 SaveToModel();
@@ -327,7 +329,10 @@ namespace Gamma.ViewModels
             return true;
         }
 
-        private ObservableCollection<BarViewModel> _bars;
+        private Guid VMID { get; } = Guid.NewGuid();
+
+        public List<BarViewModel> Bars { get; set; } = new List<BarViewModel>();
+        /*private ObservableCollection<BarViewModel> _bars;
         public ObservableCollection<BarViewModel> Bars
         {
             get
@@ -339,7 +344,7 @@ namespace Gamma.ViewModels
                 _bars = value;
                 RaisePropertyChanged("Bars");
             }
-        }
+        }*/
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Title { get; set; }
         public override bool CanSaveExecute()
