@@ -124,20 +124,6 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <!--<dxg:GridColumn Header="5%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="30" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}" >
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:TextEdit x:Name="PART_Editor" FontFamily="Wingdings 3" FontWeight="Bold" Foreground="Red" HorizontalContentAlignment="Center"/>
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="По норме" FieldName="StandardQuantity" Width="60" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}">
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>-->
                             <dxg:GridColumn Header="Остаток на конец" FieldName="QuantityRemainderAtEnd" Width="70" FixedWidth="True" ReadOnly="True" Visible="{Binding IsVisibleTankRemainders}">
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
@@ -173,104 +159,10 @@
                 </dxlc:LayoutItem>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Материалы" >
-                <!--Height="25" Margin="0,0,0,0" VerticalAlignment="Top" Visibility="{Binding Path=IsWithdrawalMaterial, Converter={StaticResource BooleanToVisibilityConverter}}"-->
-                <!--<dx:DXTabItem.Header>
-                    <dx:DXTabControl SelectedIndex="{Binding SelectedMaterialTabIndex}"  Margin="0,-3,0,0">
-                        <dx:DXTabItem Header="Материалы" />
-                        <dx:DXTabItem Header="Распределение"/>
-                    </dx:DXTabControl>
-                </dx:DXTabItem.Header>-->
                 <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
                     <ContentControl Content="{Binding DocMaterialProductionDirectCalculationsGrid}" />
                 </dxlc:LayoutItem>
             </dx:DXTabItem>
-            <!--<dx:DXTabItem Header="Использовано">
-                <dxb:BarManager>
-                    <dxg:GridControl ItemsSource="{Binding DocMaterialCompositionCalculations.WithdrawalMaterials}" SelectedItem="{Binding SelectedWithdrawalMaterial}" AllowLiveDataShaping="True" AutoExpandAllGroups="True">
-                        <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False">
-                                <dxmvvm:Interaction.Behaviors>
-                                    <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
-                                               EventName="RowUpdated">
-                                        <dxmvvm:EventToCommand.EventArgsConverter>
-                                            <dx:EventArgsToDataCellConverter/>
-                                        </dxmvvm:EventToCommand.EventArgsConverter>
-                                    </dxmvvm:EventToCommand>
-                                </dxmvvm:Interaction.Behaviors>
-                            </dxg:TableView>
-                        </dxg:GridControl.View>
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn Binding="{Binding WithdrawByFact, Converter={StaticResource WithdrawByFactConverter}}" Header="Списание" GroupIndex="0" ShowGroupedColumn="False" SortOrder="Descending" />
-                            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureIDDiezCharacteristicID" ReadOnly="True" SortMode="DisplayText"  ColumnFilterMode="DisplayText">
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:ComboBoxEdit x:Name="PART_Editor"   
-                                                      DisplayMember="NomenclatureName" 
-                                                      ValueMember="NomenclatureIDDiezCharacteristicID" 
-                                                          ItemsSource="{Binding RowData.Row.AvailableNomenclatures}" 
-                                                          AllowSpinOnMouseWheel="False"/>
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="На производство" FieldName="ProductionProductCharacteristicID" ReadOnly="{Binding IsReadOnly}">
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:ComboBoxEdit x:Name="PART_Editor"   
-                                                      DisplayMember="NomenclatureName" 
-                                                      ValueMember="CharacteristicID" ItemsSource="{Binding RowData.Row.AvailableProductionProducts}" />
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Кол-во" FieldName="Quantity" Width="100" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" >
-                                <dxg:GridColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"/>
-                                    </DataTemplate>
-                                </dxg:GridColumn.CellTemplate>
-                            </dxg:GridColumn>
-                            <dxg:GridColumn Header="Ед. изм." FieldName="MeasureUnit" Width="70" FixedWidth="True" ReadOnly="True"/>
-                        </dxg:GridControl.Columns>
-                    </dxg:GridControl>
-                </dxb:BarManager>
-            </dx:DXTabItem>-->
-            <!--<dx:DXTabItem Height="0" Header="На начало смены">
-                <dxb:BarManager>
-                    <dxb:BarManager.Bars>
-                        <dxb:Bar>
-                            <dxb:BarButtonItem Content="Назад" Glyph="{dx:DXImage Image=Backward_16x16.png}"  
-                                       BarItemDisplayMode="ContentAndGlyph" Command="{Binding BackMaterialTabCommand}" />
-                        </dxb:Bar>
-                    </dxb:BarManager.Bars>
-                    <dxg:GridControl  EnableSmartColumnsGeneration="True" ItemsSource="{Binding DocMaterialProductionDirectCalculationMaterials.BeginProducts}" SelectedItem="{Binding SelectedBeginProduct}" VerticalAlignment="Stretch">
-                        <dxg:GridControl.Columns>
-                            <dxg:GridColumn Header="Номер" FieldName="Number" Width="130" FixedWidth="True"/>
-                            <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" />
-                            <dxg:GridColumn Header="Состояние" FieldName="StateName" Width="130" FixedWidth="True" />
-                            <dxg:GridColumn Header="Остаток" FieldName="RemainderTypeName" />
-                            <dxg:GridColumn Header="{Binding HeaderQuantityField}" FieldName="Quantity" Width="120" FixedWidth="True">
-                                <dxg:GridColumn.EditSettings>
-                                    <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
-                                </dxg:GridColumn.EditSettings>
-                            </dxg:GridColumn>
-                        </dxg:GridControl.Columns>
-                        <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} кг/рул/пачек" />
-                        </dxg:GridControl.GroupSummary>
-                        <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem Alignment="Left" FieldName="Nomenclature" SummaryType="Count" DisplayFormat=" {0:N0} шт" />
-                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} кг/рул/пачек"/>
-                        </dxg:GridControl.TotalSummary>
-                        <dxg:GridControl.View>
-                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="false" AllowEditing="False" AutoWidth="True"
-								ShowFixedTotalSummary="True"/>
-                        </dxg:GridControl.View>
-                        <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowBeginProductCommand}"/>
-                        </dxmvvm:Interaction.Behaviors>
-                    </dxg:GridControl>
-                </dxb:BarManager>
-            </dx:DXTabItem>-->
 
         </dx:DXTabControl>
     </Grid>

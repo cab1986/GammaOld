@@ -114,23 +114,6 @@
                 <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
                     <ContentControl Content="{Binding DocCloseShiftProductsGrid}" />
                 </dxlc:LayoutItem>
-                <!--<dxg:GridControl ItemsSource="{Binding Pallets}" DesignTimeDataObjectType="{x:Type models:Pallet}" SelectedItem="{Binding SelectedProduct}">
-                    <dxg:GridControl.TotalSummary>
-                        <dxg:GridSummaryItem FieldName="Quantity" ShowInColumn="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}"/>
-                        <dxg:GridSummaryItem FieldName="Number" ShowInColumn="Number" SummaryType="Count"/>
-                    </dxg:GridControl.TotalSummary>
-                    <dxg:GridControl.Columns>
-                        <dxg:GridColumn Header="Номер" FieldName="Number" Width="150" FixedWidth="True"/>
-                        <dxg:GridColumn Header="Наименование" FieldName="NomenclatureName"/>
-                        <dxg:GridColumn Header="Кол-во, рул" FieldName="Quantity" Width="150" FixedWidth="True"/>
-                    </dxg:GridControl.Columns>
-                    <dxg:GridControl.View>
-                        <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False" ShowTotalSummary="True"/>
-                    </dxg:GridControl.View>
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"/>
-                    </dxmvvm:Interaction.Behaviors>
-                </dxg:GridControl>-->
             </dx:DXTabItem>
         </dx:DXTabControl>
     </Grid>

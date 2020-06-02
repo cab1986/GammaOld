@@ -177,20 +177,6 @@ namespace Gamma.Models
                 }
                 //MessageManager.RecalcQuantityFromTankReaminderEvent(msg.DocMaterialTankGroupID, tankGroup.DocMaterialProductionTypeID, tankGroup.Tanks.Sum(t => t.Quantity), tankGroup.NomenclatureID, tankGroup.ExceptNomenclatureID);
             }
-            /*
-            var quantityInMaterial = DocMaterialProductions.Where(p => (msg.NomenclatureID.Count == 0 || (msg.NomenclatureID.Count > 0 && msg.NomenclatureID.Contains((Guid)p.ParentID))) && !msg.ExceptNomenclatureID.Contains((Guid)p.ParentID)).Sum(p => p.QuantityIn);
-            foreach (var item in DocMaterialProductions.Where(p => (msg.NomenclatureID.Count == 0 || (msg.NomenclatureID.Count > 0 && msg.NomenclatureID.Contains((Guid)p.ParentID))) && !msg.ExceptNomenclatureID.Contains((Guid)p.ParentID)))
-            {
-                //var item = DocMaterialProductions.FirstOrDefault(d => d.NomenclatureID == msg.NomenclatureID && (d.CharacteristicID == msg.CharacteristicID || (d.CharacteristicID == null && msg.CharacteristicID == null)));
-                if ((quantityInMaterial ?? 0) != 0 && (item.QuantityIn ?? 0) != 0)
-                    item.QuantityRemainderAtEnd = Math.Round((decimal)(item.QuantityIn / quantityInMaterial * msg.Quantity), 3);
-                else
-                    item.QuantityRemainderAtEnd = 0;
-            }
-            var n = new DocMaterialProductionItem { WithdrawByFact = false };
-            DocMaterialProductions.Add(n);
-            DocMaterialProductions.Remove(n);
-            */
         }
 
         public void DeleteNomenclatureInCompositionFromTankGroup(DeleteNomenclatureInCompositionFromTankGroupMessage msg)

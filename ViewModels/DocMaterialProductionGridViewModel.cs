@@ -33,11 +33,7 @@ namespace Gamma.ViewModels
         {
             AddDocMaterialProductionCommand = new DelegateCommand(AddDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             DeleteDocMaterialProductionCommand = new DelegateCommand(DeleteDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
-            //ChangeIsSendIntoNextPlaceDocMaterialProductionCommand = new DelegateCommand(ChangeIsSendIntoNextPlaceDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
-            
-            //MaterialTabActivateCommand = new DelegateCommand<byte>(MaterialTabActivate);
-            //MaterialTabActivate(0);
         }
 
         public DocMaterialProductionGridViewModel(int placeID, GammaEntities gammaDb = null) :this()
@@ -74,7 +70,6 @@ namespace Gamma.ViewModels
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
             DocMaterialCompositionCalculations.LoadProductionMaterials(docID, productionProductCharacteristicIDs);
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate, docID, isConfirmed, productionProductCharacteristicIDs);
-            //WithdrawalMaterialsGrid.LoadProductionMaterials(docID, productionProductCharacteristicIDs);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
         }
 
@@ -96,50 +91,14 @@ namespace Gamma.ViewModels
             }
         }
 
-        /*public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
-        public bool IsNotSendMaterialIntoNextPlace
-        {
-            get { return _isNotSendMaterialIntoNextPlace; }
-            set
-            {
-                _isNotSendMaterialIntoNextPlace = value;
-                foreach (var item in DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations)
-                {
-                    item.IsNotSendMaterialIntoNextPlace = _isNotSendMaterialIntoNextPlace;
-                }
-                TankGroupContainer.RecalcAllNomenclatureInComposition();
-                {
-                    var item = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
-                    DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations.Add(item);
-                    DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations.Remove(item);
-                }
-            }
-        }
-        */
-
         private int ShiftID;
         DateTime CloseDate;
 
         public DocMaterialProduction DocMaterialCompositionCalculations { get; set; }
-        //private List<Guid> ProductionProductCharacteristicIDs { get; set; }
         public DocMaterialTankGroupContainer TankGroupContainer { get; set; }
 
         public bool IsVisibleTankRemainders { get; set; }
-        //public bool IsAllowEditingDocMaterialCompositionCalculations => !IsReadOnly && IsVisibleTankRemainders;
-        //private bool _isAllowEditingDocMaterialCompositionCalculations { get; set; } = true;
-        public bool IsAllowEditingDocMaterialCompositionCalculations
-        //{
-        //    get
-        //    {
-        //        return _isAllowEditingDocMaterialCompositionCalculations;
-        //    }
-        //    set
-        //    {
-        //        _isAllowEditingDocMaterialCompositionCalculations = value;
-        //        RaisePropertyChanged("IsAllowEditingDocMaterialCompositionCalculations");
-        //    }
-        //}
-            => !IsReadOnly && IsVisibleTankRemainders;
+        public bool IsAllowEditingDocMaterialCompositionCalculations => !IsReadOnly && IsVisibleTankRemainders;
 
         private bool IsConfirmed { get; set; }
         public void ChangeConfirmed ( bool isConfirmed)
@@ -186,23 +145,13 @@ namespace Gamma.ViewModels
         public DelegateCommand ChangeIsSendIntoNextPlaceDocMaterialProductionCommand { get; private set; }
         public DelegateCommand BackMaterialTabCommand { get; private set; }
 
-        //public DelegateCommand<byte> MaterialTabActivateCommand { get; private set; }
-
         public ICommand<CellValue> MaterialRowUpdatedCommand { get; private set; }
         private void OnMaterialRowUpdated(CellValue value)
         {
-            //var selectedMaterial = SelectedMaterialTabIndex == 0 ? SelectedDocMaterialProduction : SelectedMaterialTabIndex == 1 ? SelectedWithdrawalMaterial : null;
             DocMaterialCompositionCalculations.MaterialChanged(SelectedMaterialTabIndex, SelectedDocMaterialProduction);
             
         }
 
-        //private void MaterialTabActivate (byte activateTabIndex)
-        //{
-        //    SelectedMaterialTabIndex = activateTabIndex;
-        //}
-
-        
-      
         private int _placeWithdrawalMaterialTypeID;
         public int PlaceWithdrawalMaterialTypeID
         {
@@ -224,16 +173,7 @@ namespace Gamma.ViewModels
             set
             {
                 _selectedMaterialTabIndex = value;
-               /* if (value == 1)
-                {
-                    var currentWithdrawalMaterials = new ItemsChangeObservableCollection<WithdrawalMaterial>(DocMaterialProductionDirectCalculationMaterials.WithdrawalMaterials);
-                    DocMaterialProductionDirectCalculationMaterials?.WithdrawalMaterials?.Clear();
-                    foreach (var item in currentWithdrawalMaterials)
-                    {
-                        DocMaterialProductionDirectCalculationMaterials?.WithdrawalMaterials?.Add(item);
-                    }
-                }*/
-                RaisePropertiesChanged("SelectedMaterialTabIndex");
+               RaisePropertiesChanged("SelectedMaterialTabIndex");
             }
         }
 
@@ -252,9 +192,6 @@ namespace Gamma.ViewModels
         private void DeleteDocMaterialProduction()
         {
             if (SelectedDocMaterialProduction == null) return;
-            //var removeItems = DocMaterialProductionDirectCalculationMaterials.WithdrawalMaterials.Where(d => d.NomenclatureID == SelectedDocMaterialProduction.NomenclatureID && (d.CharacteristicID == SelectedDocMaterialProduction.CharacteristicID || (d.CharacteristicID == null && SelectedDocMaterialProduction.CharacteristicID == null))).ToArray();
-            //foreach (var item in removeItems)
-            //    DocMaterialProductionDirectCalculationMaterials.WithdrawalMaterials.Remove(item);
             TankGroupContainer?.DeleteComposition(SelectedDocMaterialProduction.NomenclatureID);
             DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations.Remove(SelectedDocMaterialProduction);
         }
@@ -277,12 +214,6 @@ namespace Gamma.ViewModels
             }
         }
 
-        /*private void ChangeIsSendIntoNextPlaceDocMaterialProduction()
-        {
-            DocMaterialCompositionCalculations.ChangeIsSendIntoNextPlaceDocMaterialProduction();
-        }
-        */
-
         public void FillGrid()
         {
             FillProductionMaterials(true);
@@ -298,8 +229,6 @@ namespace Gamma.ViewModels
             {
                 DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials?.FillProductionMaterials(IsFillEnd);
             }
-            //DirectCalculation
-            //CompositionCalculation
         }
 
         public void FillGridWithNoFillEnd()
@@ -317,9 +246,6 @@ namespace Gamma.ViewModels
             {
                 DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials?.ClearFromButton();
             }
-            //WithdrawalMaterialsIn?.Clear();
-            //WithdrawalMaterialsOut?.Clear();
-            //WithdrawalMaterialsRemainder?.Clear();
         }
 
         public override bool SaveToModel(Guid docId)
@@ -327,12 +253,6 @@ namespace Gamma.ViewModels
             if (IsReadOnly) return true;
             using (var gammaBase = DB.GammaDb)
             {
-                /*if (gammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First() == 0 && PlaceWithdrawalMaterialTypeID == 2 && DocMaterialProductionDirectCalculationMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
-                {
-                    MessageBox.Show("Внимание! Есть использованные материалы, которые не распределены на произведенную за смену продукцию!", "Ошибка сохранения",
-                            MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                }
-                */
                 var doc = gammaBase.Docs
                .First(d => d.DocID == docId);
                 if (doc.DocMaterialProductions == null)
@@ -420,14 +340,7 @@ namespace Gamma.ViewModels
                     }
                 }
 
-                /*foreach (var docDelete in doc.DocMaterialProductDocs)
-                {
-                    if (DocMaterialCompositionCalculations.Docs == null || !DocMaterialCompositionCalculations.Docs.Any(d => d.DocID == docDelete.DocID))
-                        doc.DocMaterialProductDocs.Remove(gammaBase.Docs.First(d => d.DocID == docDelete.DocID));
-                }*/
-
-                //if (DocMaterialCompositionCalculations.Docs == null)
-                    doc.DocMaterialProductDocs.Clear();// .Remove(doc.DocMaterialProductDocs.Where(d => d.DocID != null));
+                doc.DocMaterialProductDocs.Clear();
 
 
                 if (DocMaterialCompositionCalculations.Docs != null)
@@ -513,11 +426,6 @@ namespace Gamma.ViewModels
             }
             return true;
         }
-                
-        //public void SetProductionProductCharacteristics(List<Guid> productionProductCharacteristicIDs)
-        //{
-        //    DocMaterialCompositionCalculations?.SetProductionProductCharacteristics(productionProductCharacteristicIDs);
-        //}
 
     }
 }

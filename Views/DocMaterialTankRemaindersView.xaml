@@ -139,64 +139,6 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             
-            <!--<Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0">
-                    <TextBlock Text="fgghjd" />
-                    -->
-            <!--<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">-->
-            <!--
-                    <ItemsControl x:Name="TankGroup0"
-                                  BorderBrush="Black" BorderThickness="5" ItemsSource="{Binding TankRemainders}" 
-                                  ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-4,-9,-4">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                -->
-            <!--<StackPanel Orientation="Horizontal"/>-->
-            <!--
-                                <WrapPanel  Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled"
-            HorizontalScrollBarVisibility="Visible">
-                <ItemsControl x:Name="TankGroup1" 
-                
-                BorderBrush="Black" BorderThickness="5" ItemsSource="{Binding TankRemainders}" 
-                          ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-4,-9,-4">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            -->
-            <!--<StackPanel Orientation="Horizontal"/>-->
-            <!--
-                            <WrapPanel  Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
-                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Disabled"
-            HorizontalScrollBarVisibility="Auto">
-
-                    <ItemsControl x:Name="TankGrid2" 
-                
-                BorderBrush="Black" BorderThickness="5" ItemsSource="{Binding TankRemainders}" 
-                          ItemTemplate="{StaticResource MaterialProductionTankRemainderTemplate}" Margin="-9,-4,-9,-4">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                            -->
-            <!--<WrapPanel  Orientation="Horizontal"/>-->
-            <!--
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-                </ScrollViewer>
-            </Grid>-->
         </dxlc:LayoutControl>
         <dxmvvm:Interaction.Behaviors>
             <g:UIAuthBehavior/>

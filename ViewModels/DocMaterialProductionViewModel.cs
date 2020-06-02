@@ -46,8 +46,7 @@ namespace Gamma.ViewModels
                 Title = "Остатки сырья и материалов №" + Doc.Number;
                 ShiftID = Doc.ShiftID;
             }
-            //IsVisibilityRemainder = false;
-
+            
             var place = GammaBase.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
 
             ProductionProductsList = new List<Characteristic>(GammaBase.ProductionTaskBatches
@@ -79,14 +78,6 @@ namespace Gamma.ViewModels
                                 CharacteristicName = r.C1CNomenclature.Name + " " + r.C1CCharacteristics.Name
                             }))
                 ProductionProductsList.Add(item);
-            /*ActiveProductionProduct = new List<object>();
-            foreach (var item in ProductionProductsList)
-                ActiveProductionProduct.Add(item);
-                */
-
-            /*var productionProductCharacteristicIDs = ProductionProductsList.Count() > 0 ?
-                ProductionProductsList.Select(r => r.CharacteristicID).ToList() : new List<Guid>() ;
-                */
             var activeProductionProductCharacteristicIDs =  new List<Guid>();
             if (!IsNewDoc)
                 foreach (object item in ((List<object>)ActiveProductionProduct))
@@ -304,9 +295,6 @@ namespace Gamma.ViewModels
                 };
                 GammaBase.Docs.Add(Doc);
             }
-            //var utilizationProductsBeforeSave = GammaBase.DocMaterialProductionUtilizationProducts.Where(d => d.DocID == Doc.DocID && d.Docs.IsConfirmed).ToList();
-            //var isConfirmedPrev = Doc.IsConfirmed;
-            //if (Doc.IsConfirmed != IsConfirmed)
             Doc.IsConfirmed = IsConfirmed;
 
             if (Doc.Date != Date)
@@ -316,7 +304,6 @@ namespace Gamma.ViewModels
             if (ActiveProductionProduct != null)
                 foreach (object item in ((List<object>)ActiveProductionProduct))
                     activeProductionProductCharacteristicIds.Add(((Characteristic)item).CharacteristicID);
-            //gammaBase.DocShipmentOrderPersons.RemoveRange(gammaBase.DocShipmentOrderPersons.Where(p => !p.IsInActive && p.Persons.PlaceID != OutPlaceId && p.DocOrderID == DocShipmentOrderID && !outActivePersonIds.Contains(p.PersonID)));
             GammaBase.DocMaterialProducts.RemoveRange(GammaBase.DocMaterialProducts.Where(p => p.DocID == Doc.DocID));
             foreach (var productCharacteristicItem in GammaBase.C1CCharacteristics.Where(p => activeProductionProductCharacteristicIds.Contains(p.C1CCharacteristicID)))
             {
@@ -332,10 +319,7 @@ namespace Gamma.ViewModels
 
             GammaBase.SaveChanges();
 
-            //if (IsNewDoc || !isConfirmedPrev || !IsConfirmed)
-            //{
-                CurrentViewModelGrid?.SaveToModel(Doc.DocID);
-            //}
+            CurrentViewModelGrid?.SaveToModel(Doc.DocID);
             IsNewDoc = false;
 
             Messenger.Default.Send(new RefreshMessage { });

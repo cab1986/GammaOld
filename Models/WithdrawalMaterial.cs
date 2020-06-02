@@ -29,43 +29,7 @@ namespace Gamma.Models
         }
 
         private List<Guid> _productionProducts { get; set; }
-        //private int _placeID  { get; set; }
-        //public int PlaceID
-        //{
-        //    get { return _placeID; }
-        //    set { _placeID = value; }
-        //}
-
-        //private string _nomenclatureIDDiezCharacteristicID { get; set; }
-        //public string NomenclatureIDDiezCharacteristicID
-        //{
-        //    get { return NomenclatureID.ToString() + "#" + CharacteristicID?.ToString(); /*return _nomenclatureIDDiezCharacteristicID; */}
-        //    set
-        //    {
-        //        /*_nomenclatureIDDiezCharacteristicID = value;*/
-        //        try
-        //        {
-        //            NomenclatureID = Guid.Parse(value.Substring(0, value.IndexOf("#")));
-        //        }
-        //        catch 
-        //        {
-        //            NomenclatureID = Guid.Empty;
-        //        }
-
-        //        try
-        //        {
-        //            var ch = value.Substring(value.IndexOf("#") + 1);
-        //            CharacteristicID = Guid.Parse(value.Substring(value.IndexOf("#") + 1));
-        //        }
-        //        catch
-        //        {
-        //            CharacteristicID = null;
-        //        }
-        //    }
-        //}
-
-        //public Guid DocWithdrawalMaterialID { get; set; } = SqlGuidUtil.NewSequentialid();
-
+        
         private void RefreshAvilableNomenclatures()
         {
             AvailableNomenclatures = new List<NomenclatureAnalog>();
@@ -131,43 +95,7 @@ namespace Gamma.Models
                             MeasureUnit = analog.MeasureUnit,
                             MeasureUnitID = (Guid)analog.MeasureUnitID,
                             Coefficient = analog.Coefficient
-                        });
-
-                    //var avilableCharacteristicID = AvailableNomenclatures.Select(x => x.CharacteristicID).Distinct().ToList();
-                    //var analogCharacteristicInfo =
-                    //gammaBase.C1CCharacteristics.Where(n => n.C1CNomenclatureID == _nomenclatureID && !avilableCharacteristicID.Contains(n.C1CCharacteristicID));
-                    /*var analogCharacteristicInfo =
-                    gammaBase.C1CCharacteristics.Where(n => n.C1CNomenclatureID == analog.NomenclatureId);
-                    if (analogCharacteristicInfo?.Count() > 0)
-                    {
-                        foreach (var item in analogCharacteristicInfo)
-                        {
-                            if (AvailableNomenclatures.Where(n => n.NomenclatureID == analog.NomenclatureId && n.CharacteristicID == item.C1CCharacteristicID).Count() == 0)
-                                AvailableNomenclatures.Add(new NomenclatureAnalog()
-                                {
-                                    NomenclatureID = (Guid)analog.NomenclatureId,
-                                    CharacteristicID = item.C1CCharacteristicID,
-                                    NomenclatureName = analog.NomenclatureName + " " + item.Name,
-                                    IsMarked = analog.IsMarked,
-                                    MeasureUnit = analog.MeasureUnit,
-                                    MeasureUnitID = (Guid)analog.MeasureUnitID,
-                                    Coefficient = analog.Coefficient
-                                });
-                        }
-                    }
-                    else
-                    {
-                        if (AvailableNomenclatures.Where(n => n.NomenclatureID == analog.NomenclatureId && n.CharacteristicID == null).Count() == 0)
-                            AvailableNomenclatures.Add(new NomenclatureAnalog()
-                            {
-                                NomenclatureID = (Guid)analog.NomenclatureId,
-                                NomenclatureName = analog.NomenclatureName,
-                                IsMarked = analog.IsMarked,
-                                MeasureUnit = analog.MeasureUnit,
-                                MeasureUnitID = (Guid)analog.MeasureUnitID,
-                                Coefficient = analog.Coefficient
-                            });
-                    }*/
+                        });                
 
                 }
                 if (nomenclatureInfo.IsArchive ?? false)
@@ -271,36 +199,6 @@ namespace Gamma.Models
 
             }
         }
-
-        //public Guid? ProductID { get; set; }
-        //public string NomenclatureName { get; set; }
-        //public decimal BaseQuantity { get; set; }
-        //public decimal Quantity { get; set; }
-        //public bool IsFloatValue { get; set; }
-        //public Guid? DocMovementID { get; set; }
-        //public int? NomenclatureKindID { get; set; }
-
-        //private bool _quantityIsReadOnly { get; set; }
-        ///// <summary>
-        ///// Можно ли менять количество
-        ///// </summary>
-        //public bool QuantityIsReadOnly
-        //{
-        //    get { return _quantityIsReadOnly; }
-        //    set
-        //    {
-        //        _quantityIsReadOnly = value;
-        //    }
-        //}
-        
-        ///// <summary>
-        ///// Списание по факту (или по нормативам)
-        ///// </summary>
-        //public bool? WithdrawByFact { get; set; }
-
-        //public string MeasureUnit { get; set; }
-
-        //public Guid? MeasureUnitID { get; set; }
 
         public List<ProductionProducts> AvailableProductionProducts { get; set; }
 

@@ -148,20 +148,6 @@ namespace Gamma.Models
             }
         }
 
-        /*private decimal? _quantityDismiss { get; set; }
-        public decimal? QuantityDismiss
-        {
-            get { return _quantityDismiss; }
-            set
-            {
-                if (_quantityDismiss != value)
-                {
-                    _quantityDismiss = value;
-                    RefreshQuntity();
-                }
-            }
-        }*/
-
         private decimal? _quantityWithdrawalMaterial { get; set; }
         public decimal? QuantityWithdrawalMaterial
         {

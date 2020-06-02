@@ -80,7 +80,7 @@
                     <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
                         <Button Content="Заполнить рапорт"  Height="30" Margin="10,30,10,5" Command="{Binding FillGridCommand}"/>
                         <Button Content="Очистить рапорт" Height="30" Margin="10,5" Command = "{Binding ClearGridCommand}"/>
-                        <Button Content="Заполнить без остатков"  Height="30" Margin="10,5" Command="{Binding FillGridWithNoEndCommand}"/>
+                        <!--<Button Content="Заполнить без остатков"  Height="30" Margin="10,5" Command="{Binding FillGridWithNoEndCommand}"/>-->
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem VerticalAlignment="Stretch">
