@@ -235,6 +235,7 @@ namespace Gamma.ViewModels
             { return !(!IsNewDoc && !IsConfirmed && DB.HaveWriteAccess("DocMaterialProductions") && WorkSession.ShiftID == 0); }
         }
 
+        public bool ConfirmedIsReadOnly => !CanEditable();
 
         public bool CanEditable ()
         {
@@ -350,7 +351,7 @@ namespace Gamma.ViewModels
         public override bool CanSaveExecute()
         {
 
-            return base.CanSaveExecute() && DB.HaveWriteAccess("DocMaterialProductions") && !isDocUsedNextPlace && !IsConfirmed;
+            return base.CanSaveExecute() && CanEditable() && !isDocUsedNextPlace && !IsConfirmed;
         }
         private bool DocIsUsedNextPlace()
         {

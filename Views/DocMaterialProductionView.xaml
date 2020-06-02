@@ -62,7 +62,7 @@
                             <dxe:TextEdit IsReadOnly="True" EditValue="{Binding ShiftID}"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Подтвержден">
-                            <dxe:CheckEdit EditValue="{Binding IsConfirmed}" />
+                            <dxe:CheckEdit EditValue="{Binding IsConfirmed}" IsReadOnly="{Binding ConfirmedIsReadOnly}" />
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Orientation="Vertical" Height="170">
