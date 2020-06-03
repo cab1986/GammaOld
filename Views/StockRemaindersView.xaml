@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="Gamma.Views.StockRemaindersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Views"
+             xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:StockRemaindersViewModel, IsDesignTimeCreatable = False}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Grid.Row="0" Orientation="Vertical">
+            <dxlc:LayoutGroup View="Group">
+                <dxlc:LayoutItem Label="Передел:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Places}" ValueMember="PlaceID" DisplayMember="PlaceName" EditValue="{Binding PlaceId}" NullText="Все"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Зона:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding PlaceZones}" ValueMember="PlaceZoneId" DisplayMember="Name" EditValue="{Binding PlaceZoneId}" NullText="Все"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Состояние:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding States}" SelectedIndex="{Binding SelectedStateIndex}" IsTextEditable="False"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Сгруппировать:" Width="200">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" IsTextEditable="False"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup View="Group">
+                <dxlc:LayoutItem Label="Вид:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" IsTextEditable="False"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Наименование:">
+                    <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дата с:" Width="140">
+                    <dxe:DateEdit EditValue="{Binding DateBegin}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="по:" Width="140">
+                    <dxe:DateEdit EditValue="{Binding DateEnd}" />
+                </dxlc:LayoutItem>
+                <Button Content="Поиск" Command="{Binding RefreshCommand}" Width="60"/>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding StockRemaindersList}" SelectedItem="{Binding SelectedStockRemainder}">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}" />
+            </dxmvvm:Interaction.Behaviors>
+            <dxg:GridControl.View>
+                <dxg:TableView AutoWidth="True" AllowEditing="False" />
+            </dxg:GridControl.View>
+            <dxg:GridColumn Header="Наименование" FieldName="NomenclatureName" VisibleIndex="0" GroupIndex="0" />
+            <dxg:GridColumn Header="Номер" FieldName="Number" VisibleIndex="1" Width="70" Visible="{Binding IsVisibleWithGroup}" MaxWidth="90"/>
+            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending" Width="50" MaxWidth="70" Visible="{Binding IsVisibleWithGroup}">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Смена" FieldName="ShiftID" VisibleIndex="3" Width="25" MaxWidth="30" Visible="{Binding IsVisibleWithGroup}"/>
+            <dxg:GridColumn Header="Передел" FieldName="CurrentPlace" VisibleIndex="4" MaxWidth="120"/>
+            <dxg:GridColumn Header="Кол-во единиц" FieldName="Count" VisibleIndex="5" Width="40" MaxWidth="40" Visible="{Binding IsVisibleWithGroup, Converter={StaticResource InverseBooleanConverter} }"/>
+            <dxg:GridColumn Header="Кол-во, т/рул/пач" FieldName="Quantity" VisibleIndex="6" Width="40" MaxWidth="50"/>
+            <dxg:GridColumn Header="Статус" FieldName="State" VisibleIndex="7" Width="80" MaxWidth="140"/>
+            <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" VisibleIndex="8" Width="30" MaxWidth="30"/>
+            <dxg:GridControl.GroupSummary>
+                <dxg:GridSummaryItem FieldName="Count" SummaryType="Sum" DisplayFormat=" {0:N0} шт" />
+                <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:0.###} т/рул/пачек" />
+            </dxg:GridControl.GroupSummary>
+            <dxg:GridControl.TotalSummary>
+                <dxg:GridSummaryItem Alignment="Left" FieldName="Count" SummaryType="Sum" DisplayFormat=" {0:N0} шт" />
+                <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="Quantity" DisplayFormat="Итого: {0:0.###} т/рул/пачек"/>
+            </dxg:GridControl.TotalSummary>
+        </dxg:GridControl>
+    </Grid>
+</UserControl>

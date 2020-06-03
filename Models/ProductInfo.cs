@@ -37,5 +37,6 @@ namespace Gamma.Models
         public bool InGroupPack { get; set; }
         public string MeasureUnit { get; set; }
         public string CurrentPlace { get; set; }
+        public int Count { get; set; }
     }
 }

@@ -37,7 +37,7 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>2.1.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -1012,6 +1012,7 @@
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionDirectCalculationMaterialViewModel.cs" />
+    <Compile Include="ViewModels\StockRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialTankRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionGridViewModel.cs" />
     <Compile Include="ViewModels\DocCloseShiftProductViewModel.cs" />
@@ -1104,6 +1105,9 @@
     </Compile>
     <Compile Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml.cs">
       <DependentUpon>DocMaterialProductionDirectCalculationMaterialView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StockRemaindersView.xaml.cs">
+      <DependentUpon>StockRemaindersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocMaterialTankRemaindersView.xaml.cs">
       <DependentUpon>DocMaterialTankRemaindersView.xaml</DependentUpon>
@@ -1360,6 +1364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\StockRemaindersView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

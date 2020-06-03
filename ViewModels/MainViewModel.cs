@@ -124,6 +124,7 @@ namespace Gamma.ViewModels
                 CreateNewDocBrokeCommand = new DelegateCommand(() => MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid()));
                 UnwinderRemainderCommand = new DelegateCommand(UnwinderRemainder);
                 OpenDocMaterialProductionsCommand = new DelegateCommand(() => CurrentView = new DocMaterialProductionsViewModel());
+                OpenStockRemaindersCommand = new DelegateCommand(() => CurrentView = new StockRemaindersViewModel(), WorkSession.ShiftID == 0);
                 //                OpenDocMovementOrdersCommand = new DelegateCommand(OpenDocMovementOrders);
             }
             switch (WorkSession.PlaceGroup)
@@ -186,6 +187,8 @@ namespace Gamma.ViewModels
         public bool IsVisibleUnwinderRemainderButton => (WorkSession.UnwindersCount > 0);
 
         public bool IsVisibleCloseShiftButton => WorkSession.IsProductionPlace && WorkSession.ShiftID != 0;
+
+        public bool IsVisibleStockRemaindersButton => WorkSession.PlaceGroup == PlaceGroup.Warehouses ;
 
         public DelegateCommand OpenComplectedPalletsCommand { get; set; }
 
@@ -511,6 +514,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenDocWithdrawalsCommand { get; set; }
         public DelegateCommand UnwinderRemainderCommand { get; set; }
         public DelegateCommand OpenDocMaterialProductionsCommand { get; private set; }
+        public DelegateCommand OpenStockRemaindersCommand { get; private set; }
 
         public List<ReportItem> Reports { get; set; }
 
