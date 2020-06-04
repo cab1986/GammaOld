@@ -11,7 +11,7 @@ using System.Data.Entity.SqlServer;
 
 namespace Gamma.ViewModels
 {
-    public class StockRemaindersViewModel : SaveImplementedViewModel, IItemManager
+    public class StockRemaindersViewModel : SaveImplementedViewModel
     {
         public StockRemaindersViewModel()
         {
@@ -23,9 +23,9 @@ namespace Gamma.ViewModels
             States.Add("Любое");
             SelectedStateIndex = States.Count - 1;
             RefreshCommand = new DelegateCommand(Find);
-            NewItemCommand = new DelegateCommand(() => OpenStockRemainder());
-            EditItemCommand = new DelegateCommand(() => OpenStockRemainder(SelectedStockRemainder.DocID), SelectedStockRemainder != null);
-            DeleteItemCommand = new DelegateCommand(DeleteItem);
+            ShowProductCommand = new DelegateCommand(() =>
+                    MessageManager.OpenDocProduct(SelectedStockRemainder.ProductKind, SelectedStockRemainder.ProductID),
+                    () => SelectedStockRemainder.ProductID != null && SelectedStockRemainder.ProductID != Guid.Empty);
             using (var gammaBase = DB.GammaDb)
             {
                 Places = gammaBase.Places.Where(
@@ -94,6 +94,7 @@ namespace Gamma.ViewModels
                             .Select(d => new ProductInfo
                             {
                                 DocID = d.DocID,
+                                ProductID = d.ProductID,
                                 Number = d.Number,
                                 Date = d.Date,
                                 ShiftID = d.ShiftID ?? 0,
@@ -123,6 +124,7 @@ namespace Gamma.ViewModels
                         .Select(d => new ProductInfo
                         {
                             DocID = Guid.Empty,
+                            ProductID = Guid.Empty,
                             Number = null,
                             Date = null,
                             ShiftID = null,
@@ -253,9 +255,8 @@ namespace Gamma.ViewModels
         public Guid? PlaceZoneId { get; set; }
 
         public DelegateCommand DeleteItemCommand { get; }
-        public DelegateCommand<object> EditItemCommand { get; private set; }
-        public DelegateCommand NewItemCommand { get; }
         public DelegateCommand RefreshCommand { get; private set; }
+        public DelegateCommand ShowProductCommand { get; private set; }
 
         private void OpenStockRemainder(Guid? docID = null)
         {

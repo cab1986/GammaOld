@@ -51,7 +51,7 @@
         </dxlc:LayoutControl>
         <dxg:GridControl Grid.Row="1" ItemsSource="{Binding StockRemaindersList}" SelectedItem="{Binding SelectedStockRemainder}">
             <dxmvvm:Interaction.Behaviors>
-                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding EditItemCommand}" />
+                <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}" />
             </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True" AllowEditing="False" />
