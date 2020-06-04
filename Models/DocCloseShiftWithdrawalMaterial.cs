@@ -210,7 +210,7 @@ namespace Gamma.Models
                    StateID = d.StateID,
                    Quantity = d.Quantity,
                    RemainderTypeID = d.RemainderTypeID,
-                   ProductKind = (ProductKind)d.Products.ProductKindID,
+                   ProductKind = d.Products == null ? new ProductKind() : (ProductKind)d.Products.ProductKindID,
                    IsSourceProduct = d.IsSourceProduct
                }));
             EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(GammaBase.DocCloseShiftRemainders
@@ -222,7 +222,7 @@ namespace Gamma.Models
                     StateID = d.StateID,
                     Quantity = d.Quantity,
                     RemainderTypeID = d.RemainderTypeID,
-                    ProductKind = (ProductKind)d.Products.ProductKindID,
+                    ProductKind = d.Products == null ? new ProductKind() : (ProductKind)d.Products.ProductKindID,
                     NomenclatureID = d.Products.ProductSpools.C1CNomenclatureID,
                     CharacteristicID = d.Products.ProductSpools.C1CCharacteristicID,
                     IsSourceProduct = d.IsSourceProduct

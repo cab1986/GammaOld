@@ -98,7 +98,7 @@ namespace Gamma.ViewModels
                         StateID = d.StateID,
                         Quantity = d.Quantity,
                         RemainderTypeID = d.RemainderTypeID,
-                        ProductKind = (ProductKind)d.Products.ProductKindID
+                        ProductKind = d.Products == null ? new ProductKind() : (ProductKind)d.Products.ProductKindID
                     }));
                 EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
                     //.Include(dr => dr.DocCloseShifts)
