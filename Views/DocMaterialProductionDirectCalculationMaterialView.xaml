@@ -93,10 +93,9 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
-                    <dxg:GridColumn Header="5%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="30" FixedWidth="True" ReadOnly="True" >
+                    <!--<dxg:GridColumn Header="5%" FieldName="StandardQuantityVsQuantityWithdrawalMaterialPercent" Width="30" FixedWidth="True" ReadOnly="True" >
                         <dxg:GridColumn.CellTemplate>
                             <DataTemplate>
-                                <!--<dxe:TextEdit x:Name="PART_Editor" ShowNullText="False" DisplayFormatString="0.##" HorizontalContentAlignment="Center"/>-->
                                 <dxe:TextEdit x:Name="PART_Editor" FontFamily="Wingdings 3" FontWeight="Bold" Foreground="Red" HorizontalContentAlignment="Center"/>
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
@@ -112,7 +111,7 @@
                                 <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
-                    </dxg:GridColumn>
+                    </dxg:GridColumn>-->
                     <dxg:GridColumn Header="Отдано на склад" FieldName="QuantityOut" Width="58" FixedWidth="True">
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
@@ -160,7 +159,8 @@
                         </dxg:GridColumn.HeaderTemplate>
                         <dxg:GridColumn.CellTemplate>
                             <DataTemplate>
-                                <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"/>
+                                <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
+                                                      IsReadOnly="{Binding Path=RowData.Row.WithdrawByFact, Converter={StaticResource InverseBooleanConverter} }"/>
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>

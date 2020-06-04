@@ -206,15 +206,20 @@ namespace Gamma.ViewModels
             }
         }
 
-        public void FillGridWithNoFillEnd()
-        {
-            throw new NotImplementedException();
-        }
-
         public void FillGrid()
         {
+            FillGridWithParameter(true);
+        }
+
+        public void FillGridWithNoFillEnd()
+        {
+            FillGridWithParameter(false);
+        }
+
+        public void FillGridWithParameter(bool IsFillEnd = true)
+        {
             UIServices.SetBusyState();
-            ClearGrid();
+            Clear(IsFillEnd);
             using (var gammaBase = DB.GammaDb)
             {
                 DocCloseDocIds = gammaBase.Docs.
@@ -286,7 +291,7 @@ namespace Gamma.ViewModels
                         }));
                 }
 
-                FillEndSpools();
+                FillEndSpools(IsFillEnd);
 
                 InSpools = new ObservableCollection<MovementProduct>(gammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
                             .Where(d => (bool)d.IsMovementIn).Select(d => new MovementProduct
@@ -359,44 +364,47 @@ namespace Gamma.ViewModels
             }
         }
 
-        private void FillEndSpools()
+        private void FillEndSpools(bool IsFillEnd = true)
         {
-            using (var gammaBase = DB.GammaDb)
+            if (IsFillEnd)
             {
-                EndSpools?.Clear();
-                
-                EndSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                    .Where(d => d.PlaceID == PlaceID && WorkSession.BranchID != 2).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
-                    , (d, p) => new DocCloseShiftRemainder
-                    {
-                        ProductID = (Guid)d.ProductID,
-                        StateID = (p.StateID == null ? 0 : p.StateID),
-                        Quantity = (d.Products.ProductSpools.DecimalWeight == null ? 0 : d.Products.ProductSpools.DecimalWeight) * 1000,
-                        RemainderTypeID = 2
-                    }));
-
-                //убираем из остатков тамбур, который утилизирован в этой смене
-                if (UtilizationSpools != null)
+                using (var gammaBase = DB.GammaDb)
                 {
-                    foreach (var spool in UtilizationSpools)
+                    EndSpools?.Clear();
+
+                    EndSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
+                        .Where(d => d.PlaceID == PlaceID && WorkSession.BranchID != 2).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
+                        , (d, p) => new DocCloseShiftRemainder
+                        {
+                            ProductID = (Guid)d.ProductID,
+                            StateID = (p.StateID == null ? 0 : p.StateID),
+                            Quantity = (d.Products.ProductSpools.DecimalWeight == null ? 0 : d.Products.ProductSpools.DecimalWeight) * 1000,
+                            RemainderTypeID = 2
+                        }));
+
+                    //убираем из остатков тамбур, который утилизирован в этой смене
+                    if (UtilizationSpools != null)
                     {
-                        var removeSpool = EndSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
-                        if (removeSpool != null)
-                            EndSpools.Remove(removeSpool);
+                        foreach (var spool in UtilizationSpools)
+                        {
+                            var removeSpool = EndSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
+                            if (removeSpool != null)
+                                EndSpools.Remove(removeSpool);
+                        }
                     }
-                }
 
-                //убираем из остатков переходящий следующей смене тамбур в процессе производства
-                var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
-                if (doc != null)
-                {
-                    var endSpoolsProductIDs = EndSpools.Select(d => (Guid?)d.ProductID).ToList();
-                    var spoolRemainders = gammaBase.DocCloseShiftRemainders.Where(r => (r.RemainderTypeID ?? 0) == 0 && r.DocID == doc.DocID && endSpoolsProductIDs.Contains(r.ProductID));
-                    foreach (var spool in spoolRemainders)
+                    //убираем из остатков переходящий следующей смене тамбур в процессе производства
+                    var doc = gammaBase.Docs.Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.Date == CloseDate).FirstOrDefault();
+                    if (doc != null)
                     {
-                        var removeSpool = EndSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
-                        if (removeSpool != null)
-                            EndSpools.Remove(removeSpool);
+                        var endSpoolsProductIDs = EndSpools.Select(d => (Guid?)d.ProductID).ToList();
+                        var spoolRemainders = gammaBase.DocCloseShiftRemainders.Where(r => (r.RemainderTypeID ?? 0) == 0 && r.DocID == doc.DocID && endSpoolsProductIDs.Contains(r.ProductID));
+                        foreach (var spool in spoolRemainders)
+                        {
+                            var removeSpool = EndSpools.FirstOrDefault(d => d.ProductID == spool.ProductID);
+                            if (removeSpool != null)
+                                EndSpools.Remove(removeSpool);
+                        }
                     }
                 }
             }
@@ -434,14 +442,17 @@ namespace Gamma.ViewModels
 
         public bool IsWithdrawalMaterial { get; set; }
 
-        public void ClearGrid()
+        public void ClearGrid() => Clear(true);
+        
+
+        public void Clear(bool IsFillEnd = true)
         {
             Spools?.Clear();
             DocCloseDocIds?.Clear();
 
             WithdrawalMaterialsGrid?.Clear();
             BeginSpools?.Clear();
-            EndSpools?.Clear();
+            if (IsFillEnd) EndSpools?.Clear();
             InSpools?.Clear();
             OutSpools?.Clear();
             IsChanged = true;

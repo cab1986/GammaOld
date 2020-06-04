@@ -176,13 +176,19 @@ namespace Gamma.ViewModels
             if (deleteItem != null)
             {
                 var delResult = GammaBase.Docs.Remove(deleteItem);
-                GammaBase.SaveChanges();
+                try
+                {
+                    GammaBase.SaveChanges();
+                }
+                catch
+                {
+                    MessageBox.Show("Ошибка при удалении документа "+ delResult.Number + delResult.Date.ToString() + ". откройте документ и нажмите Очистить, затем попробуйте повторно.", "Не удалось удалить", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 if (delResult != null)
                 {
                     Find();
-                    return;
                 }
-                MessageBox.Show(delResult.Number + delResult.Date.ToString(), "Не удалось удалить", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {

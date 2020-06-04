@@ -228,9 +228,13 @@ namespace Gamma.Models
 
         public void ClearFromButton(bool IsFillEnd = true)
         {
-            
-
-            Clear(IsFillEnd);
+            if (Materials != null)
+            {
+                Materials?.Clear();
+                var item = new DocMaterialProductionDirectCalculationItem { WithdrawByFact = false };
+                Materials.Add(item);
+                Materials.Remove(item);
+            }
         }
 
         public void Clear(bool IsFillEnd = true)

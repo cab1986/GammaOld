@@ -321,12 +321,10 @@ namespace Gamma.Models
         public void ClearFromButton(bool IsFillEnd = true)
         {
             Docs?.Clear();
-            foreach (var item in DocMaterialProductionCompositionCalculations)
-            {
-                item.QuantityIn = null;
-            }
-
-                Clear(IsFillEnd);
+            DocMaterialProductionCompositionCalculations?.Clear();
+            var item = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
+            DocMaterialProductionCompositionCalculations.Add(item);
+            DocMaterialProductionCompositionCalculations.Remove(item);
         }
 
 
