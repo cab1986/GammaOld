@@ -71,6 +71,18 @@
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>
+                    <dxg:GridColumn Header="Расход на начало" FieldName="QuantitySendAtBegin" Width="70" FixedWidth="True" ReadOnly="True">
+                        <dxg:GridColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </dxg:GridColumn.HeaderTemplate>
+                        <dxg:GridColumn.CellTemplate>
+                            <DataTemplate>
+                                <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
+                            </DataTemplate>
+                        </dxg:GridColumn.CellTemplate>
+                    </dxg:GridColumn>
                     <dxg:GridColumn Header="Принято со склада" FieldName="QuantityIn" Width="63" FixedWidth="True" >
                         <dxg:GridColumn.HeaderTemplate>
                             <DataTemplate>
@@ -148,6 +160,18 @@
                             <DataTemplate>
                                 <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False"  DisplayFormatString="0.###"
                                                       IsReadOnly="{Binding Path=RowData.Row.QuantityIsReadOnly}"/>
+                            </DataTemplate>
+                        </dxg:GridColumn.CellTemplate>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn Header="Расход на конец" FieldName="QuantitySendAtEnd" Width="70" FixedWidth="True" ReadOnly="True">
+                        <dxg:GridColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </dxg:GridColumn.HeaderTemplate>
+                        <dxg:GridColumn.CellTemplate>
+                            <DataTemplate>
+                                <dxe:SpinEdit x:Name="PART_Editor" MinValue="0" AllowDefaultButton="False" ShowNullText="False" DisplayFormatString="0.###"/>
                             </DataTemplate>
                         </dxg:GridColumn.CellTemplate>
                     </dxg:GridColumn>

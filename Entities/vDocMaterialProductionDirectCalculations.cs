@@ -32,5 +32,7 @@ namespace Gamma.Entities
         public Nullable<decimal> StandardQuantity { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
         public string ParentName { get; set; }
+        public Nullable<decimal> QuantitySendAtBegin { get; set; }
+        public Nullable<decimal> QuantitySendAtEnd { get; set; }
     }
 }

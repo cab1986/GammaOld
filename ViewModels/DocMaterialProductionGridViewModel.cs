@@ -214,6 +214,22 @@ namespace Gamma.ViewModels
             }
         }
 
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace = value;
+                if (DocMaterialProductionDirectCalculationsGrid != null && DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials != null)
+                {
+                    DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials.IsNotSendMaterialIntoNextPlace = value;
+                }
+                RaisePropertiesChanged("IsNotSendMaterialIntoNextPlace");
+            }
+        }
+
         public void FillGrid()
         {
             FillProductionMaterials(true);
@@ -387,6 +403,12 @@ namespace Gamma.ViewModels
                                     break;
                                 case DocMaterialProductionTypes.Out:
                                     quantity = material.QuantityOut;
+                                    break;
+                                case DocMaterialProductionTypes.SendAtBegin:
+                                    quantity = material.QuantitySendAtBegin;
+                                    break;
+                                case DocMaterialProductionTypes.SendAtEnd:
+                                    quantity = material.QuantitySendAtEnd;
                                     break;
                             }
                             if (quantity != null || docMaterialProductionType == DocMaterialProductionTypes.RemainderAtBegin)

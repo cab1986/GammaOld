@@ -23,5 +23,6 @@ namespace Gamma.Entities
         public int QuantityIsReadOnly { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
         public string ParentName { get; set; }
+        public decimal QuantitySend { get; set; }
     }
 }

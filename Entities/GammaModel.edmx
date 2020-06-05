@@ -1691,6 +1691,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionDirectCalcu
           <Property Name="QuantityRemainderAtEnd" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantitySend" Type="decimal" Precision="38" Scale="5" />
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySendAtBegin" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySendAtEnd" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -5890,47 +5892,51 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     FROM [dbo].[vDocCloseShiftMaterials] AS [vDocCloseShiftMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMaterialProductionCompositionCalculations" EntityType="Self.vDocMaterialProductionCompositionCalculations" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [vDocMaterialProductionCompositionCalculations].[DocID] AS [DocID], 
-    [vDocMaterialProductionCompositionCalculations].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [vDocMaterialProductionCompositionCalculations].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [vDocMaterialProductionCompositionCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID], 
-    [vDocMaterialProductionCompositionCalculations].[NomenclatureName] AS [NomenclatureName], 
-    [vDocMaterialProductionCompositionCalculations].[MeasureUnitName] AS [MeasureUnitName], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
-    [vDocMaterialProductionCompositionCalculations].[WithdrawByFact] AS [WithdrawByFact], 
-    [vDocMaterialProductionCompositionCalculations].[ParentID] AS [ParentID], 
-    [vDocMaterialProductionCompositionCalculations].[ParentName] AS [ParentName], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityIn] AS [QuantityIn], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityDismiss] AS [QuantityDismiss], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd], 
-    [vDocMaterialProductionCompositionCalculations].[QuantitySend] AS [QuantitySend], 
-    [vDocMaterialProductionCompositionCalculations].[StandardQuantity] AS [StandardQuantity]
-    FROM [dbo].[vDocMaterialProductionCompositionCalculations] AS [vDocMaterialProductionCompositionCalculations]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [vDocMaterialProductionCompositionCalculations].[DocID] AS [DocID],
+              [vDocMaterialProductionCompositionCalculations].[1CNomenclatureID] AS [1CNomenclatureID],
+              [vDocMaterialProductionCompositionCalculations].[1CCharacteristicID] AS [1CCharacteristicID],
+              [vDocMaterialProductionCompositionCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID],
+              [vDocMaterialProductionCompositionCalculations].[NomenclatureName] AS [NomenclatureName],
+              [vDocMaterialProductionCompositionCalculations].[MeasureUnitName] AS [MeasureUnitName],
+              [vDocMaterialProductionCompositionCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly],
+              [vDocMaterialProductionCompositionCalculations].[WithdrawByFact] AS [WithdrawByFact],
+              [vDocMaterialProductionCompositionCalculations].[ParentID] AS [ParentID],
+              [vDocMaterialProductionCompositionCalculations].[ParentName] AS [ParentName],
+              [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin],
+              [vDocMaterialProductionCompositionCalculations].[QuantityIn] AS [QuantityIn],
+              [vDocMaterialProductionCompositionCalculations].[QuantityDismiss] AS [QuantityDismiss],
+              [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd],
+              [vDocMaterialProductionCompositionCalculations].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd],
+              [vDocMaterialProductionCompositionCalculations].[QuantitySend] AS [QuantitySend],
+              [vDocMaterialProductionCompositionCalculations].[StandardQuantity] AS [StandardQuantity]
+              FROM [dbo].[vDocMaterialProductionCompositionCalculations] AS [vDocMaterialProductionCompositionCalculations]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMaterialProductionDirectCalculations" EntityType="Self.vDocMaterialProductionDirectCalculations" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [vDocMaterialProductionDirectCalculations].[DocID] AS [DocID], 
-    [vDocMaterialProductionDirectCalculations].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [vDocMaterialProductionDirectCalculations].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [vDocMaterialProductionDirectCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID], 
-    [vDocMaterialProductionDirectCalculations].[NomenclatureName] AS [NomenclatureName], 
-    [vDocMaterialProductionDirectCalculations].[MeasureUnitName] AS [MeasureUnitName], 
-    [vDocMaterialProductionDirectCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
-    [vDocMaterialProductionDirectCalculations].[WithdrawByFact] AS [WithdrawByFact], 
-    [vDocMaterialProductionDirectCalculations].[ParentID] AS [ParentID], 
-    [vDocMaterialProductionDirectCalculations].[ParentName] AS [ParentName], 
-    [vDocMaterialProductionDirectCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
-    [vDocMaterialProductionDirectCalculations].[QuantityIn] AS [QuantityIn], 
-    [vDocMaterialProductionDirectCalculations].[QuantityOut] AS [QuantityOut], 
-    [vDocMaterialProductionDirectCalculations].[QuantityUtil] AS [QuantityUtil], 
-    [vDocMaterialProductionDirectCalculations].[QuantityExperimental] AS [QuantityExperimental], 
-    [vDocMaterialProductionDirectCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
-    [vDocMaterialProductionDirectCalculations].[QuantitySend] AS [QuantitySend], 
-    [vDocMaterialProductionDirectCalculations].[StandardQuantity] AS [StandardQuantity]
-    FROM [dbo].[vDocMaterialProductionDirectCalculations] AS [vDocMaterialProductionDirectCalculations]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [vDocMaterialProductionDirectCalculations].[DocID] AS [DocID],
+              [vDocMaterialProductionDirectCalculations].[1CNomenclatureID] AS [1CNomenclatureID],
+              [vDocMaterialProductionDirectCalculations].[1CCharacteristicID] AS [1CCharacteristicID],
+              [vDocMaterialProductionDirectCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID],
+              [vDocMaterialProductionDirectCalculations].[NomenclatureName] AS [NomenclatureName],
+              [vDocMaterialProductionDirectCalculations].[MeasureUnitName] AS [MeasureUnitName],
+              [vDocMaterialProductionDirectCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly],
+              [vDocMaterialProductionDirectCalculations].[WithdrawByFact] AS [WithdrawByFact],
+              [vDocMaterialProductionDirectCalculations].[ParentID] AS [ParentID],
+              [vDocMaterialProductionDirectCalculations].[ParentName] AS [ParentName],
+              [vDocMaterialProductionDirectCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin],
+              [vDocMaterialProductionDirectCalculations].[QuantityIn] AS [QuantityIn],
+              [vDocMaterialProductionDirectCalculations].[QuantityOut] AS [QuantityOut],
+              [vDocMaterialProductionDirectCalculations].[QuantityUtil] AS [QuantityUtil],
+              [vDocMaterialProductionDirectCalculations].[QuantityExperimental] AS [QuantityExperimental],
+              [vDocMaterialProductionDirectCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd],
+              [vDocMaterialProductionDirectCalculations].[QuantitySend] AS [QuantitySend],
+              [vDocMaterialProductionDirectCalculations].[StandardQuantity] AS [StandardQuantity],
+              [vDocMaterialProductionDirectCalculations].[QuantitySendAtBegin] AS [QuantitySendAtBegin],
+              [vDocMaterialProductionDirectCalculations].[QuantitySendAtEnd] AS [QuantitySendAtEnd]
+              FROM [dbo].[vDocMaterialProductionDirectCalculations] AS [vDocMaterialProductionDirectCalculations]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMovementGoods" EntityType="Self.vDocMovementGoods" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -14644,6 +14650,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="Int32" Name="QuantityIsReadOnly" Nullable="false" />
           <Property Type="Guid" Name="ParentID" Nullable="true" />
           <Property Type="String" Name="ParentName" Nullable="true" MaxLength="255" />
+          <Property Type="Decimal" Name="QuantitySend" Nullable="false" Precision="20" Scale="5" />
         </ComplexType>
         <Association Name="DocMaterialTankGroupNomenclatureGroups">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
@@ -14688,6 +14695,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="StandardQuantity" Type="Decimal" Precision="38" Scale="5" />
           <Property Name="ParentID" Type="Guid" />
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="QuantitySendAtBegin" Type="Decimal" Precision="38" Scale="5" />
+          <Property Name="QuantitySendAtEnd" Type="Decimal" Precision="38" Scale="5" />
         </EntityType>
         <ComplexType Name="FillDocCloseShiftMaterialsDismiss_Result">
           <Property Name="DocNumberDate" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
@@ -17418,6 +17427,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="QuantityIsReadOnly" ColumnName="QuantityIsReadOnly" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="QuantitySend" ColumnName="QuantitySend" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -17456,6 +17466,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="vDocMaterialProductionDirectCalculations">
             <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductionDirectCalculations">
               <MappingFragment StoreEntitySet="vDocMaterialProductionDirectCalculations">
+                <ScalarProperty Name="QuantitySendAtBegin" ColumnName="QuantitySendAtBegin" />
+                <ScalarProperty Name="QuantitySendAtEnd" ColumnName="QuantitySendAtEnd" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="StandardQuantity" ColumnName="StandardQuantity" />

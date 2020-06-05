@@ -103,9 +103,19 @@ namespace Gamma.Models
                         WithdrawByFact = d.WithdrawByFact,
                         QuantityIsReadOnly = d.QuantityIsReadOnly ?? false,
                         ParentID = d.ParentID,
-                        ParentName = d.ParentName
+                        ParentName = d.ParentName,
+                        QuantitySendAtBegin = d.QuantitySendAtBegin,
+                        QuantitySendAtEnd = d.QuantitySendAtEnd,
+                        IsNotSendMaterialIntoNextPlace = (d.QuantitySendAtEnd ?? 0) != 0
                     }).OrderBy(d => d.NomenclatureName));
-            
+
+            IsNotSendMaterialIntoNextPlace = Materials.Count != 0 && Materials.Max(m => m.IsNotSendMaterialIntoNextPlace);
+
+            foreach (var item in Materials.Where(m => m.IsNotSendMaterialIntoNextPlace != IsNotSendMaterialIntoNextPlace))
+            {
+                item.IsNotSendMaterialIntoNextPlace = IsNotSendMaterialIntoNextPlace;
+            }
+
         }
 
 
@@ -191,14 +201,14 @@ namespace Gamma.Models
                                 NomenclatureName = m.NomenclatureName,
                                 QuantityIsReadOnly = (m.QuantityIsReadOnly == 1),
                                 Quantity = m.Quantity,
-                                BaseQuantity = m.Quantity,
+                                BaseQuantity = m.QuantitySend, //не используем базовое кол-во, поэтому пока сохраняем туда Расход на начало
                                 //DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                                 MeasureUnit = m.MeasureUnit,
                                 MeasureUnitID = m.MeasureUnitID,
                                 WithdrawByFact = m.WithdrawByFact
                             }).OrderBy(m => m.NomenclatureName));
 
-                foreach (WithdrawalMaterialBaseItem addedItem in materialsRemainderAtBegin.Where(x => x.Quantity != 0))
+                foreach (WithdrawalMaterialBaseItem addedItem in materialsRemainderAtBegin.Where(x => x.Quantity != 0 || x.BaseQuantity != 0))
                 {
                     var item = Materials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
                     if (item == null)
@@ -211,6 +221,7 @@ namespace Gamma.Models
                             NomenclatureName = addedItem.NomenclatureName,
                             QuantityIsReadOnly = addedItem.QuantityIsReadOnly,
                             QuantityRemainderAtBegin = addedItem.Quantity,
+                            QuantitySendAtBegin = addedItem.BaseQuantity,
                             DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
@@ -220,7 +231,10 @@ namespace Gamma.Models
                         });
                     }
                     else
+                    {
                         item.QuantityRemainderAtBegin = addedItem.Quantity;
+                        item.QuantitySendAtBegin = addedItem.BaseQuantity;
+                    }
                 }
 
             }
@@ -244,7 +258,7 @@ namespace Gamma.Models
                 
                 item.StandardQuantity = null;
             }
-            var items = Materials?.Where(d => !(d.QuantityIn > 0 || d.QuantityOut > 0 || d.QuantityUtil > 0 || d.QuantityExperimental > 0 || d.QuantityRemainderAtEnd > 0)).ToArray();
+            var items = Materials?.Where(d => !(d.QuantityIn > 0 || d.QuantityOut > 0 || d.QuantityUtil > 0 || d.QuantityExperimental > 0 || d.QuantityRemainderAtEnd > 0 || d.QuantitySendAtEnd > 0)).ToArray();
             if (items?.Count() > 0)
                 foreach (var item in items)
                 {
@@ -280,6 +294,25 @@ namespace Gamma.Models
                     ParentID = parentID,
                     ParentName = parentName
                 });
+        }
+
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                foreach (var item in Materials)
+                {
+                    item.IsNotSendMaterialIntoNextPlace = _isNotSendMaterialIntoNextPlace;
+                }
+                {
+                    var item = new DocMaterialProductionDirectCalculationItem { WithdrawByFact = false };
+                    Materials.Add(item);
+                    Materials.Remove(item);
+                }
+            }
         }
     }
 }

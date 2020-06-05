@@ -203,7 +203,9 @@ namespace Gamma
         Standard,
         Utilization,
         Experimental,
-        Out
+        Out,
+        SendAtBegin,
+        SendAtEnd
     }
 
     public enum DocCloseShiftMaterialTypes

@@ -37,12 +37,12 @@
                             <dxb:BarButtonItem Content="Добавить материал" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddDocMaterialProductionCommand}"/>
                             <dxb:BarButtonItem Content="Удалить материал" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDocMaterialProductionCommand}"/>
                             <dxb:BarItemLinkSeparator />
-                            <dxb:BarCheckItem Content="Была подача сырья на следующий передел" IsChecked="{Binding DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding IsAllowEditingDocMaterialCompositionCalculations}"/>
+                            <dxb:BarCheckItem Content="Была подача сырья на следующий передел" IsChecked="{Binding IsNotSendMaterialIntoNextPlace, Converter={StaticResource InverseBooleanConverter}}" IsEnabled="{Binding IsAllowEditingDocMaterialCompositionCalculations}"/>
                         </dxb:Bar>
                     </dxb:BarManager.Bars>
                     <dxg:GridControl ItemsSource="{Binding DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations}" SelectedItem="{Binding SelectedDocMaterialProduction}" AutoExpandAllGroups="True">
                         <dxg:GridControl.View>
-                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" AllowEditing="{Binding IsAllowEditingDocMaterialCompositionCalculations}"> <!--IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">-->
+                            <dxg:TableView AutoWidth="True" EnableImmediatePosting="True" ShowGroupPanel="False" ShowTotalSummary="True" ShowFixedTotalSummary="True" AllowEditing="{Binding IsAllowEditingDocMaterialCompositionCalculations}"> <!--IsReadOnly, Converter={StaticResource InverseBooleanConverter}}">-->
                                 <dxmvvm:Interaction.Behaviors>
                                     <dxmvvm:KeyToCommand KeyGesture="Enter" Command="{Binding MaterialRowUpdatedCommand}"/>
                                     <dxmvvm:EventToCommand Command="{Binding MaterialRowUpdatedCommand}"
@@ -107,7 +107,7 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="QuantitySend" Width="60" FixedWidth="True" ReadOnly="True" > <!--CellTemplate="{StaticResource optimizedCellTemplate}">-->
+                            <dxg:GridColumn FieldName="QuantitySend" Width="60" FixedWidth="True" ReadOnly="True"> <!--CellTemplate="{StaticResource optimizedCellTemplate}">-->
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <!--<CheckBox IsChecked="{Binding IsNotSendMaterialIntoNextPlace, UpdateSourceTrigger=PropertyChanged, 
@@ -150,6 +150,10 @@
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
                         </dxg:GridControl.Columns>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="QuantitySend" DisplayFormat="Итого: Подано - {0:0.###} кг"/>
+                            <dxg:GridSummaryItem Alignment="Right" SummaryType="Sum" FieldName="QuantityRemainderAtEnd" DisplayFormat="Остаток на конец - {0:0.###} кг"/>
+                        </dxg:GridControl.TotalSummary>
                     </dxg:GridControl>
                 </dxb:BarManager>
             </dx:DXTabItem>

@@ -49,9 +49,58 @@ namespace Gamma.Models
             }
         }
 
+        private decimal? _quantitySendAtBegin { get; set; }
+        public decimal? QuantitySendAtBegin
+        {
+            get { return _quantitySendAtBegin; }
+            set
+            {
+                if (_quantitySendAtBegin != value)
+                {
+                    _quantitySendAtBegin = value;
+                    RefreshQuntity();
+                }
+            }
+        }
+
+        private decimal? _quantitySendAtEnd { get; set; }
+        public decimal? QuantitySendAtEnd
+        {
+            get { return _quantitySendAtEnd; }
+            set
+            {
+                if (_quantitySendAtEnd != value)
+                {
+                    _quantitySendAtEnd = value;
+                    RefreshQuntity();
+                }
+            }
+        }
+
         protected override void RefreshQuntity()
         {
-            QuantitySend = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderAtEnd ?? 0) - (QuantityOut ?? 0) - (QuantityUtil ?? 0) - (QuantityExperimental ?? 0);
+            if (!IsNotSendMaterialIntoNextPlace)
+            {
+                QuantitySendAtEnd = null;
+                QuantitySend = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) + (QuantitySendAtBegin ?? 0) - (QuantityRemainderAtEnd ?? 0) - (QuantityOut ?? 0) - (QuantityUtil ?? 0) - (QuantityExperimental ?? 0) - (QuantitySendAtEnd ?? 0);
+            }
+            else
+            {
+                QuantitySendAtEnd = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) + (QuantitySendAtBegin ?? 0) - (QuantityRemainderAtEnd ?? 0) - (QuantityOut ?? 0) - (QuantityUtil ?? 0) - (QuantityExperimental ?? 0);
+                QuantitySend = 0;
+            }
+        }
+
+
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                RefreshQuntity();
+            }
         }
     }
 }
