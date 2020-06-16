@@ -39,6 +39,7 @@ namespace Gamma.ViewModels
                         .FirstOrDefault()?.DocProduction.DocProductionProducts.FirstOrDefault();
                 if (lastProductionProduct == null) return;
                 var pinfo = gammaBase.vProductsInfo.First(p => p.ProductID == lastProductionProduct.ProductID);
+                if (pinfo == null) return;
                 NomenclatureID = pinfo.C1CNomenclatureID;
                 CharacteristicID = pinfo.C1CCharacteristicID;
                 PlaceGroup = (PlaceGroup)gammaBase.Places.First(p => p.PlaceID == WorkSession.PlaceID).PlaceGroupID;
