@@ -165,6 +165,7 @@ namespace Gamma.Entities
         public virtual DbSet<DocMaterialTankRemainders> DocMaterialTankRemainders { get; set; }
         public virtual DbSet<DocMaterialTanks> DocMaterialTanks { get; set; }
         public virtual DbSet<vDocMaterialProductionDirectCalculations> vDocMaterialProductionDirectCalculations { get; set; }
+        public virtual DbSet<vPlaceZones> vPlaceZones { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {

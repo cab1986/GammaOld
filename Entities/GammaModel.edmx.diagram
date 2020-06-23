@@ -401,6 +401,7 @@
         <AssociationConnector Association="GammaModel.DocMaterialTankGroupNomenclatureGroups" />
         <AssociationConnector Association="GammaModel.DocMaterialDocs" />
         <EntityTypeShape EntityType="GammaModel.vDocMaterialProductionDirectCalculations" Width="1.5" PointX="17.375" PointY="11.75" />
+        <EntityTypeShape EntityType="GammaModel.vPlaceZones" Width="1.5" PointX="17.375" PointY="17.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

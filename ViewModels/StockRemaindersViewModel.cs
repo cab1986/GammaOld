@@ -41,8 +41,8 @@ namespace Gamma.ViewModels
             var places = Places.Select(pl => pl.PlaceID).ToList();
             using (var gammaBase = DB.GammaDb)
             {
-                placeZones = gammaBase.PlaceZones.Where(
-                    p => places.Contains(p.PlaceID))
+                placeZones = gammaBase.vPlaceZones.Where(
+                    p => places.Contains(p.PlaceID) && (p.MayBeProductsHere ?? true) && (p.v ?? true) )
                     .Select(p => new PlaceZone()
                     {
                         PlaceId = p.PlaceID,

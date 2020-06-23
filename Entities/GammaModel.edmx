@@ -1793,6 +1793,23 @@ warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have
           <Property Name="CoreDiameter" Type="decimal" Precision="20" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vPlaceZones">
+          <Key>
+            <PropertyRef Name="PlaceZoneID" />
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="PlaceZoneID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="2000" />
+          <Property Name="PlaceZoneParentID" Type="uniqueidentifier" />
+          <Property Name="Barcode" Type="nvarchar" MaxLength="20" />
+          <Property Name="SortOrder" Type="nvarchar" MaxLength="20" />
+          <Property Name="v" Type="bit" />
+          <Property Name="MayBeProductsHere" Type="bit" />
+          <Property Name="PlaceZoneRootID" Type="uniqueidentifier" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
@@ -6020,6 +6037,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vPlacePropertiesValues].[CoreDiameter] AS [CoreDiameter]
     FROM [dbo].[vPlacePropertiesValues] AS [vPlacePropertiesValues]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vPlaceZones" EntityType="Self.vPlaceZones" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vPlaceZones].[PlaceZoneID] AS [PlaceZoneID], 
+    [vPlaceZones].[PlaceID] AS [PlaceID], 
+    [vPlaceZones].[Name] AS [Name], 
+    [vPlaceZones].[PlaceZoneParentID] AS [PlaceZoneParentID], 
+    [vPlaceZones].[Barcode] AS [Barcode], 
+    [vPlaceZones].[SortOrder] AS [SortOrder], 
+    [vPlaceZones].[v] AS [v], 
+    [vPlaceZones].[MayBeProductsHere] AS [MayBeProductsHere], 
+    [vPlaceZones].[PlaceZoneRootID] AS [PlaceZoneRootID]
+    FROM [dbo].[vPlaceZones] AS [vPlaceZones]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vPMSpoolsToGroupPack" EntityType="Self.vPMSpoolsToGroupPack" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vPMSpoolsToGroupPack].[ProductID] AS [ProductID], 
@@ -9422,6 +9452,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="vPlaceZones" EntityType="GammaModel.vPlaceZones" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -14730,6 +14761,21 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ParentID" Type="Guid" />
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </ComplexType>
+        <EntityType Name="vPlaceZones">
+          <Key>
+            <PropertyRef Name="PlaceZoneID" />
+            <PropertyRef Name="PlaceID" />
+          </Key>
+          <Property Name="PlaceZoneID" Type="Guid" Nullable="false" />
+          <Property Name="PlaceID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="PlaceZoneParentID" Type="Guid" />
+          <Property Name="Barcode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SortOrder" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="v" Type="Boolean" />
+          <Property Name="MayBeProductsHere" Type="Boolean" />
+          <Property Name="PlaceZoneRootID" Type="Guid" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17529,6 +17575,21 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="vPlaceZones">
+            <EntityTypeMapping TypeName="GammaModel.vPlaceZones">
+              <MappingFragment StoreEntitySet="vPlaceZones">
+                <ScalarProperty Name="PlaceZoneRootID" ColumnName="PlaceZoneRootID" />
+                <ScalarProperty Name="MayBeProductsHere" ColumnName="MayBeProductsHere" />
+                <ScalarProperty Name="v" ColumnName="v" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="PlaceZoneParentID" ColumnName="PlaceZoneParentID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="PlaceZoneID" ColumnName="PlaceZoneID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

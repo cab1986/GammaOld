@@ -23,6 +23,7 @@ namespace Gamma.Models
 
         public Guid? PlaceZoneParentId { get; set; }
         public int PlaceId { get; set; }
+        public Guid? PlaceZoneRootId { get; set; }
 
         public event Action PlaceZoneChanged;
     }
