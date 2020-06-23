@@ -16,11 +16,11 @@ namespace Gamma.Models
             if (tankGroup != null)
             {
                 Name = tankGroup.Name;
-                IsVisible = true;
+                IsVisible = tankGroup.IsVisible ?? true;
                 DocMaterialProductionTypeID = tankGroup.DocMaterialProductionTypeID;
                 NextDocMaterialTankGroupID = tankGroup.NextDocMaterialTankGroupID;
                 NomenclatureID = tankGroup.C1CNomenclature.Select(t => t.C1CNomenclatureID).ToList();
-                if (NomenclatureID != null && NomenclatureID?.Count > 0)
+                /*if (NomenclatureID != null && NomenclatureID?.Count > 0)
                 {
                     var exceptTankGroupIDs = GammaBase.DocMaterialTankGroups.Where(t => t.PlaceID == tankGroup.PlaceID && t.DocMaterialProductionTypeID == tankGroup.DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
                     if (exceptTankGroupIDs != null && exceptTankGroupIDs?.Count > 0)
@@ -30,7 +30,7 @@ namespace Gamma.Models
                             ExceptNomenclatureID.AddRange(item.Select(i => i.C1CNomenclatureID).ToList());
                         }
                     }
-                }
+                }*/
             }
         }
         public List<MaterialProductionTankRemainder> Tanks { get; set; } = new List<MaterialProductionTankRemainder>();
@@ -45,5 +45,24 @@ namespace Gamma.Models
         private GammaEntities GammaBase { get; }
         public Dictionary<Guid, decimal> Composition { get; set; } = new Dictionary<Guid, decimal>();
 
+        /// <summary>
+        /// Заполняем исключение групп номенклатур из композиции. 
+        /// </summary>
+        /// <param name="placeID"></param>
+        public void FillExpectNomenclatureID(int placeID)
+        {
+            //Если в какой то из групп бассейнов есть заполненная разрешенная группа номенклатур (C1CNomenclature), то во всех остальных группах бассейнов данная группа номенклатур должна быть исключена из композиции
+            if (DocMaterialProductionTypeID != null)
+            {
+                var exceptTankGroupIDs = GammaBase.DocMaterialTankGroups.Where(t => t.PlaceID == placeID && t.DocMaterialProductionTypeID == DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
+                if (exceptTankGroupIDs != null && exceptTankGroupIDs?.Count > 0)
+                {
+                    foreach (var item in exceptTankGroupIDs)
+                    {
+                        ExceptNomenclatureID.AddRange(item.Select(i => i.C1CNomenclatureID).ToList());
+                    }
+                }
+            }
+        }
     }
 }

@@ -27,6 +27,8 @@ namespace Gamma.Entities
         public int PlaceID { get; set; }
         public string Name { get; set; }
         public Nullable<System.Guid> PlaceZoneParentID { get; set; }
+        public string Barcode { get; set; }
+        public Nullable<bool> v { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceZones> PlaceZones1 { get; set; }

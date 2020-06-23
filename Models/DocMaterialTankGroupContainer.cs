@@ -52,10 +52,10 @@ namespace Gamma.Models
             }
         }
 
-        public void AddComposition(Guid nomenclatureID, decimal? quantityDismiss, decimal? quantityIn)
+        public void AddComposition(Guid nomenclatureID, Guid? parentID, decimal? quantityDismiss, decimal? quantityIn)
         {
             //сначала для дочерних хранилищ
-            foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(nomenclatureID))) && !p.ExceptNomenclatureID.Contains(nomenclatureID)))
+            foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(parentID ?? Guid.Empty))) && !p.ExceptNomenclatureID.Contains(parentID ?? Guid.Empty)))
             {
                 if (tankGroup.DocMaterialProductionTypeID != null)
                 {
@@ -96,14 +96,16 @@ namespace Gamma.Models
             RecalcAllNomenclatureInComposition();
         }
 
-        public void RefreshComposition(Guid nomenclatureID, decimal? quantityDismiss, decimal? quantityIn)
+        public void RefreshComposition(Guid nomenclatureID, Guid? parentID, decimal? quantityDismiss, decimal? quantityIn)
         {
             //сначала для дочерних хранилищ
-            foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(nomenclatureID))) && !p.ExceptNomenclatureID.Contains(nomenclatureID)))
+            foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(parentID ?? Guid.Empty)))
+                && !p.ExceptNomenclatureID.Contains(parentID ?? Guid.Empty)))
+                
             {
                 var composition = tankGroup.Composition.Where(c => c.Key == nomenclatureID).Count();
                 if (composition == 0)
-                    AddComposition(nomenclatureID, quantityDismiss, quantityIn);
+                    AddComposition(nomenclatureID, parentID, quantityDismiss, quantityIn);
                 else
                     if (tankGroup.DocMaterialProductionTypeID != null)
                     {
@@ -218,6 +220,10 @@ namespace Gamma.Models
                     tankGroup.Name = tankGroup.Name + " V=" + tankGroup.Tanks.Sum(t => t.Volume) + "м3";
                     TankGroups.Add(tankGroup);
                     groupNumber += 1;
+                }
+                foreach (var tankGroup in TankGroups)
+                {
+                    tankGroup.FillExpectNomenclatureID(placeID);
                 }
                 for (int i = TankGroups.Count(); i < 4; i++)
                 {

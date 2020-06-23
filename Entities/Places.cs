@@ -59,7 +59,7 @@ namespace Gamma.Entities
         public Nullable<bool> IsEnabledRemainderInDocCloseShift { get; set; }
         public Nullable<bool> IsEnabledSamplesInDocCloseShift { get; set; }
         public Nullable<bool> IsMaterialProductionPlace { get; set; }
-
+    
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }
         public virtual Branches Branches { get; set; }

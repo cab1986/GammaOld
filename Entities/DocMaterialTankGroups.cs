@@ -27,6 +27,8 @@ namespace Gamma.Entities
         public int PlaceID { get; set; }
         public Nullable<int> NextDocMaterialTankGroupID { get; set; }
         public Nullable<int> DocMaterialProductionTypeID { get; set; }
+        public Nullable<bool> IsVisible { get; set; }
+        public Nullable<System.DateTime> ExpiredDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMaterialTankGroups> DocMaterialTankGroups1 { get; set; }

@@ -88,7 +88,7 @@ namespace Gamma.Models
 
             foreach (var item in DocMaterialProductionCompositionCalculations)
             {
-                TankGroupContainer.AddComposition(item.NomenclatureID, item.QuantityDismiss, item.QuantityIn);
+                TankGroupContainer.AddComposition(item.NomenclatureID, item.ParentID, item.QuantityDismiss ?? 0 + item.QuantityRemainderAtBegin ?? 0, item.QuantityIn);
                 item.IsNotSendMaterialIntoNextPlace = IsNotSendMaterialIntoNextPlace;
             }
 
@@ -176,7 +176,7 @@ namespace Gamma.Models
                         materialItem.StandardQuantity = addedItem.StandardQuantity;
                     };
 
-                    TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, materialItem?.QuantityDismiss, materialItem?.QuantityIn);
+                    TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, (materialItem?.QuantityDismiss ?? 0) + (materialItem?.QuantityRemainderAtBegin ?? 0), materialItem?.QuantityIn);
                 }
                     //TankGroupContainer.RecalcAllNomenclatureInComposition();
 
@@ -221,9 +221,11 @@ namespace Gamma.Models
                             ParentID = addedItem.ParentID,
                             ParentName = addedItem.ParentName
                         });
+                        TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, addedItem.Quantity, null);
                     }
                     else
                         item.QuantityRemainderAtBegin = addedItem.Quantity;
+                        TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, (item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0), item.QuantityIn);
                 }
 
                 Guid? fromDocID = null;
@@ -303,12 +305,12 @@ namespace Gamma.Models
                                 ParentID = addedItem.ParentID,
                                 ParentName = addedItem.ParentName
                             });
-                            TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, null, addedItem.Quantity);
+                            TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, null, addedItem.Quantity);
                         }
                         else
                         {
                             item.QuantityIn = addedItem.Quantity;
-                            TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, item.QuantityDismiss, item.QuantityIn);
+                            TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, (item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0), item.QuantityIn);
                         }
                         
                     }
@@ -396,7 +398,7 @@ namespace Gamma.Models
         public void MaterialChanged(int selectedMaterialTabIndex, DocMaterialProductionItem selectedMaterial)//, List<Guid> productionProductCharacteristicIDs)
         {
 
-            TankGroupContainer.RefreshComposition(selectedMaterial.NomenclatureID, selectedMaterial.QuantityDismiss, selectedMaterial.QuantityIn);
+            TankGroupContainer.RefreshComposition(selectedMaterial.NomenclatureID, selectedMaterial.ParentID, (selectedMaterial.QuantityDismiss ?? 0) + (selectedMaterial.QuantityRemainderAtBegin ?? 0), selectedMaterial.QuantityIn);
 
         }
 
