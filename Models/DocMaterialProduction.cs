@@ -224,8 +224,10 @@ namespace Gamma.Models
                         TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, addedItem.Quantity, null);
                     }
                     else
+                    {
                         item.QuantityRemainderAtBegin = addedItem.Quantity;
                         TankGroupContainer.RefreshComposition(addedItem.NomenclatureID, addedItem.ParentID, (item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0), item.QuantityIn);
+                    }
                 }
 
                 Guid? fromDocID = null;
