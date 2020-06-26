@@ -868,6 +868,7 @@ namespace Gamma.ViewModels
                 #endregion
                 gammaBase.SaveChanges();
             }
+            Messenger.Default.Send(new RefreshBrokeListMessage { });
             return true;
         }
     }

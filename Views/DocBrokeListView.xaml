@@ -46,6 +46,7 @@
                          AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False" SelectedItem="{Binding SelectedDocBroke}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
+                <dxg:GridColumn Header="Номер в 1С" FieldName="Comment" FixedWidth="True"/>
                 <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="110" SortIndex="0" SortOrder="Descending">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
@@ -53,6 +54,7 @@
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Место обнаружения" FieldName="PlaceDiscover"/>
                 <dxg:GridColumn Header="Место хранения" FieldName="PlaceStore"/>
+                <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" FixedWidth="True" Width="100"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>

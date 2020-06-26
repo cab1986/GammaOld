@@ -20,6 +20,9 @@ namespace Gamma
     }
 
     public class RefreshMessage { }
+
+    public class RefreshBrokeListMessage { }
+
     public class BaseReconnectedMessage { }
     public class OpenFilterDateMessage { }
 

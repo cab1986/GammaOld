@@ -10,5 +10,7 @@ namespace Gamma.ViewModels
         public DateTime Date { get; set; }
         public string PlaceDiscover { get; set; }
         public string PlaceStore { get; set; }
+        public string Comment { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

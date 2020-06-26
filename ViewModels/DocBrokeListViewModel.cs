@@ -30,6 +30,7 @@ namespace Gamma.ViewModels
             }
             Find();
             RefreshCommand = FindCommand;
+            NewItemCommand = CreateNewDocBrokeCommand;
             EditItemCommand = OpenDocBrokeCommand;
         }
 
@@ -125,12 +126,19 @@ namespace Gamma.ViewModels
 
         private void OpenDocBroke(Guid? docId = null)
         {
+            Messenger.Default.Register<RefreshBrokeListMessage>(this, Find);
             if (docId == null)
                 MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid());
             else
             {
                 MessageManager.OpenDocBroke((Guid)docId);
             }
+        }
+
+        private void Find(RefreshBrokeListMessage msg)
+        {
+            Find();
+            Messenger.Default.Unregister<RefreshBrokeListMessage>(this, Find);
         }
 
         private void Find()
@@ -155,7 +163,9 @@ namespace Gamma.ViewModels
                         DocId = d.DocID,
                         Date = d.Date,
                         PlaceStore = db.Name,
-                        PlaceDiscover = x.Name
+                        PlaceDiscover = x.Name,
+                        Comment = d.Comment,
+                        IsConfirmed = d.IsConfirmed
                     });
             }
                 
