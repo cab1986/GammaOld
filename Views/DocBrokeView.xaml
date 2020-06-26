@@ -75,29 +75,32 @@
             </dxmvvm:Interaction.Behaviors>
             <dxlc:LayoutControl Header="Header" Orientation="Horizontal">
                 <dxlc:LayoutControl Orientation="Vertical" Width="255">
-                <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" Width="230">
-                    <dxlc:LayoutItem Label="Номер">
-                        <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" />
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Дата">
-                        <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" Mask="g" MaskUseAsDisplayFormat="True" />
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Место обнаружения" LabelPosition="Top">
-                        <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId, ValidatesOnDataErrors=True}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Место хранения" LabelPosition="Top">
-                        <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId, ValidatesOnDataErrors=True}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
-                    </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Акт" LabelPosition="Left">
-                        <dxe:ComboBoxEdit ItemsSource="{Binding InFuturePeriodList}" EditValue="{Binding IsInFuturePeriod, UpdateSourceTrigger=PropertyChanged}" DisplayMember="Value" ValueMember="Key"/>
-                    </dxlc:LayoutItem>
-                    <!--<dxlc:LayoutItem Label="Акт 10к" >
+                    <dxlc:LayoutGroup Header="Документ" Orientation="Vertical" Width="230">
+                        <dxlc:LayoutItem Label="Номер">
+                            <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"  />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Номер в 1С">
+                            <dxe:TextEdit EditValue="{Binding DocComment, UpdateSourceTrigger=PropertyChanged}" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Дата">
+                            <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" Mask="g" MaskUseAsDisplayFormat="True" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Место обнаружения" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding PlaceDiscoverId, ValidatesOnDataErrors=True}" ItemsSource="{Binding DiscoverPlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Место хранения" LabelPosition="Top">
+                            <dxe:ComboBoxEdit EditValue="{Binding PlaceStoreId, ValidatesOnDataErrors=True}" ItemsSource="{Binding StorePlaces}" DisplayMember="PlaceName" ValueMember="PlaceGuid"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Акт" LabelPosition="Left">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding InFuturePeriodList}" EditValue="{Binding IsInFuturePeriod, UpdateSourceTrigger=PropertyChanged}" DisplayMember="Value" ValueMember="Key"/>
+                        </dxlc:LayoutItem>
+                        <!--<dxlc:LayoutItem Label="Акт 10к" >
                         <dxe:CheckEdit EditValue="{Binding IsInFuturePeriod}" />
                     </dxlc:LayoutItem>-->
-                    <dxlc:LayoutItem Label="Подтвержден">
-                        <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
-                    </dxlc:LayoutItem>
-                </dxlc:LayoutGroup>
+                        <dxlc:LayoutItem Label="Подтвержден">
+                            <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Header="Дефект и причина" Orientation="Vertical" Width="230" VerticalAlignment="Bottom"  Visibility="{Binding IsVisibleSetRejectionReasonForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxlc:LayoutItem Label="Дефект" LabelPosition="Top">
                             <dxe:ComboBoxEdit SelectedItem="{Binding ForAllProductRejectionReasonID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding RejectionReasonsList}" DisplayMember="Description" ValueMember="RejectionReasonID"/>
