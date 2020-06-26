@@ -49,14 +49,38 @@ namespace Gamma.ViewModels
             }
             
             var place = GammaBase.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
+            var lastCharPlaceName = place.Name.Substring(place.Name.Length-1, 1);
+            var paperMachinePlace = GammaBase.Places.FirstOrDefault(p => p.PlaceGroupID == 0 && p.IsProductionPlace == true && p.Name.EndsWith(lastCharPlaceName));
 
-            ProductionProductsList = new List<Characteristic>(GammaBase.ProductionTaskBatches
-                            .Where(r => r.ProductionTaskStateID == (int)ProductionTaskStates.InProduction && r.ProductionTasks.Where(p => p.PlaceGroupID == 0 && p.C1CCharacteristicID != null).FirstOrDefault() != null)
+            var productionProductsListFromMadeProducts = new List<Characteristic>(GammaBase.vProductsInfo
+                                .Where(r => r.PlaceID == paperMachinePlace.PlaceID && r.ShiftID == ShiftID 
+                                    && r.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(Date)) && r.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(Date))
+                                    )
+                                .Select(r => new Characteristic
+                                {
+                                    CharacteristicID = (Guid)r.C1CCharacteristicID,
+                                    CharacteristicName = r.NomenclatureName
+                                }).Distinct());
+
+            var productionProductsListFromProductionTask = new List<Characteristic>(GammaBase.ProductionTaskBatches
+                            .Where(r => r.ProductionTaskStateID == (int)ProductionTaskStates.InProduction && r.ProductionTasks.Where(p => p.PlaceID == paperMachinePlace.PlaceID && p.C1CCharacteristicID != null).FirstOrDefault() != null)
                             .Select(r => new Characteristic
                             {
                                 CharacteristicID = (Guid)r.ProductionTasks.Where(p => p.PlaceGroupID == 0 && p.C1CCharacteristicID != null).FirstOrDefault().C1CCharacteristicID,
                                 CharacteristicName = r.ProductionTasks.Where(p => p.PlaceGroupID == 0 && p.C1CCharacteristicID != null).FirstOrDefault().C1CNomenclature.Name + " " + r.ProductionTasks.Where(p => p.PlaceGroupID == 0 && p.C1CCharacteristicID != null).FirstOrDefault().C1CCharacteristics.Name
-                            }));
+                            }).Distinct());
+
+            ProductionProductsList = new List<Characteristic>();
+            if (productionProductsListFromMadeProducts != null)
+            {
+                ProductionProductsList.AddRange(productionProductsListFromMadeProducts);
+            }
+            if (productionProductsListFromProductionTask != null)
+            {
+                ProductionProductsList.AddRange(productionProductsListFromProductionTask.Where(p => !ProductionProductsList.Select(r => r.CharacteristicID).Contains(p.CharacteristicID)));
+            }
+            
+
 
             if (!IsNewDoc)
                 ActiveProductionProduct = new List<Object>(GammaBase.DocMaterialProducts
