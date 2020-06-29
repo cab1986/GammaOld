@@ -34,6 +34,10 @@ namespace Gamma.ViewModels
             AddDocMaterialProductionCommand = new DelegateCommand(AddDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             DeleteDocMaterialProductionCommand = new DelegateCommand(DeleteDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
+            if (WorkSession.DBAdmin || (WorkSession.UserName == "ЗаменинЕ"))
+                IsAllowEditingReadOnlyQuantityRemainderAtEnd = true;
+            else
+                IsAllowEditingReadOnlyQuantityRemainderAtEnd = false;
         }
 
         public DocMaterialProductionGridViewModel(int placeID, GammaEntities gammaDb = null) :this()
@@ -100,6 +104,23 @@ namespace Gamma.ViewModels
         public bool IsVisibleTankRemainders { get; set; }
         public bool IsAllowEditingDocMaterialCompositionCalculations => !IsReadOnly && IsVisibleTankRemainders;
 
+        public bool _isReadOnlyQuantityRemainderAtEnd { get; set; } = true;
+        public bool IsReadOnlyQuantityRemainderAtEnd
+        {
+            get
+            {
+                return _isReadOnlyQuantityRemainderAtEnd;
+            }
+            set
+            {
+                _isReadOnlyQuantityRemainderAtEnd = value;
+                RaisePropertyChanged("IsReadOnlyQuantityRemainderAtEnd");
+            }
+        }
+
+        public bool IsAllowEditingReadOnlyQuantityRemainderAtEnd { get; set; }
+
+
         private bool IsConfirmed { get; set; }
         public void ChangeConfirmed ( bool isConfirmed)
         {
@@ -148,7 +169,8 @@ namespace Gamma.ViewModels
         public ICommand<CellValue> MaterialRowUpdatedCommand { get; private set; }
         private void OnMaterialRowUpdated(CellValue value)
         {
-            DocMaterialCompositionCalculations.MaterialChanged(SelectedMaterialTabIndex, SelectedDocMaterialProduction);
+            if (IsReadOnlyQuantityRemainderAtEnd)
+                DocMaterialCompositionCalculations.MaterialChanged(SelectedMaterialTabIndex, SelectedDocMaterialProduction);
             
         }
 
