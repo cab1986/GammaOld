@@ -50,6 +50,9 @@ namespace Gamma.ViewModels
             
             var place = GammaBase.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
             var lastCharPlaceName = place.Name.Substring(place.Name.Length-1, 1);
+            int n;
+            if (!int.TryParse(lastCharPlaceName, out n))
+                lastCharPlaceName = "1";
             var paperMachinePlace = GammaBase.Places.FirstOrDefault(p => p.PlaceGroupID == 0 && p.IsProductionPlace == true && p.Name.EndsWith(lastCharPlaceName));
 
             var productionProductsListFromMadeProducts = new List<Characteristic>(GammaBase.vProductsInfo
