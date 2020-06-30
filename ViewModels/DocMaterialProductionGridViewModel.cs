@@ -34,7 +34,7 @@ namespace Gamma.ViewModels
             AddDocMaterialProductionCommand = new DelegateCommand(AddDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             DeleteDocMaterialProductionCommand = new DelegateCommand(DeleteDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
-            if (WorkSession.DBAdmin || (WorkSession.UserName == "ЗаменинЕ"))
+            if (WorkSession.DBAdmin || (WorkSession.RoleName == "Dispetcher"))
                 IsAllowEditingReadOnlyQuantityRemainderAtEnd = true;
             else
                 IsAllowEditingReadOnlyQuantityRemainderAtEnd = false;

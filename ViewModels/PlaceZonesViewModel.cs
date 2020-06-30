@@ -8,6 +8,7 @@ using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Entities;
 using Gamma.Models;
+using System;
 
 namespace Gamma.ViewModels
 {
@@ -15,6 +16,8 @@ namespace Gamma.ViewModels
     {
         public PlaceZonesViewModel()
         {
+            Bars.Add(ReportManager.GetReportBar("PlaceZones", VMID));
+
             Places = GammaBase.Places.Where(p => WorkSession.BranchIds.Contains(p.BranchID) && (p.IsWarehouse ?? false))
                 .Select(p => new Place()
                 {
@@ -25,9 +28,20 @@ namespace Gamma.ViewModels
             IsReadOnly = !DB.HaveWriteAccess("PlaceZones");
             AddPlaceZoneCommand = new DelegateCommand(AddPlaceZone, () => !IsReadOnly && SelectedPlace != null);
             DeletePlaceZoneCommand = new DelegateCommand(DeletePlaceZone, () => !IsReadOnly && SelectedPlaceZone != null);
+            Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
+        }
+
+        private void PrintReport(PrintReportMessage msg)
+        {
+            if (msg.VMID != VMID) return;
+            ReportManager.PrintReport(msg.ReportID);
         }
 
         public bool IsReadOnly { get; set; }
+
+        private Guid VMID { get; } = Guid.NewGuid();
+        public List<BarViewModel> Bars { get; set; } = new List<BarViewModel>();
+
 
         private void PlaceZonesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
