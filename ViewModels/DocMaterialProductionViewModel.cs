@@ -48,15 +48,9 @@ namespace Gamma.ViewModels
                 ShiftID = Doc.ShiftID;
             }
             
-            var place = GammaBase.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
-            var lastCharPlaceName = place.Name.Substring(place.Name.Length-1, 1);
-            int n;
-            if (!int.TryParse(lastCharPlaceName, out n))
-                lastCharPlaceName = "1";
-            var paperMachinePlace = GammaBase.Places.FirstOrDefault(p => p.PlaceGroupID == 0 && p.IsProductionPlace == true && p.Name.EndsWith(lastCharPlaceName));
-
+            var paperMachinePlace = DB.GetPaperMachinePlace(PlaceID) ?? 0;
             var productionProductsListFromMadeProducts = new List<Characteristic>(GammaBase.vProductsInfo
-                                .Where(r => r.PlaceID == paperMachinePlace.PlaceID && r.ShiftID == ShiftID 
+                                .Where(r => r.PlaceID == paperMachinePlace && r.ShiftID == ShiftID 
                                     && r.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(Date)) && r.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(Date))
                                     )
                                 .Select(r => new Characteristic
@@ -66,7 +60,7 @@ namespace Gamma.ViewModels
                                 }).Distinct());
 
             var productionProductsListFromProductionTask = new List<Characteristic>(GammaBase.ProductionTaskBatches
-                            .Where(r => r.ProductionTaskStateID == (int)ProductionTaskStates.InProduction && r.ProductionTasks.Where(p => p.PlaceID == paperMachinePlace.PlaceID && p.C1CCharacteristicID != null).FirstOrDefault() != null)
+                            .Where(r => r.ProductionTaskStateID == (int)ProductionTaskStates.InProduction && r.ProductionTasks.Where(p => p.PlaceID == paperMachinePlace && p.C1CCharacteristicID != null).FirstOrDefault() != null)
                             .Select(r => new Characteristic
                             {
                                 CharacteristicID = (Guid)r.ProductionTasks.Where(p => p.PlaceGroupID == 0 && p.C1CCharacteristicID != null).FirstOrDefault().C1CCharacteristicID,
@@ -269,7 +263,7 @@ namespace Gamma.ViewModels
 #if DEBUG
             return DB.HaveWriteAccess("DocMaterialProductions");
 #else
-            return DB.HaveWriteAccess("DocMaterialProductions") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID)) && (DB.CurrentDateTime < ShiftEndTime.AddHours(1));
+            return DB.HaveWriteAccess("DocMaterialProductions") && (WorkSession.ShiftID == 0 || (WorkSession.ShiftID == ShiftID && WorkSession.PlaceID == PlaceID) && (DB.CurrentDateTime < ShiftEndTime.AddHours(1)));
 #endif
         }
 

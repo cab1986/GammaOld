@@ -341,5 +341,11 @@ namespace Gamma
         {
             return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
         }
+
+        public static short? GetPaperMachinePlace(int placeid, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetPaperMachinePlace('{placeid}')").AsEnumerable().First();
+        }
+
     }
 }
