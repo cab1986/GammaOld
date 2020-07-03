@@ -46,7 +46,10 @@
                                               />
                         </dxg:GridControl.View>
                         <dxg:GridColumn FieldName="Name" Header="Зона склада" ReadOnly="{Binding IsReadOnly}"/>
-                    </dxg:GridControl>
+                            <dxg:GridColumn FieldName="Barcode" Header="Штрих-код" ReadOnly="True"/>
+                            <dxg:GridColumn FieldName="Sleeps" Header="Вместимость" ReadOnly="{Binding IsReadOnly}"/>
+                            <dxg:GridColumn FieldName="IsValid" Header="Доступность" ReadOnly="{Binding IsReadOnly}"/>
+                        </dxg:GridControl>
                 </dxb:BarManager>
             </dxlc:LayoutItem>
             </dxlc:LayoutControl>

@@ -24,6 +24,29 @@ namespace Gamma.Models
         public Guid? PlaceZoneParentId { get; set; }
         public int PlaceId { get; set; }
         public Guid? PlaceZoneRootId { get; set; }
+        public string Barcode { get; set; }
+        private bool _isValid { get; set; }
+        public bool IsValid
+        {
+            get { return _isValid; }
+            set
+            {
+                _isValid = value;
+                PlaceZoneChanged?.Invoke();
+                RaisePropertyChanged("IsValid");
+            }
+        }
+        private int? _sleeps { get; set; }
+        public int? Sleeps
+        {
+            get { return _sleeps; }
+            set
+            {
+                _sleeps = value;
+                PlaceZoneChanged?.Invoke();
+                RaisePropertyChanged("Sleeps");
+            }
+        }
 
         public event Action PlaceZoneChanged;
     }

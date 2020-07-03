@@ -34,7 +34,8 @@ namespace Gamma.ViewModels
         private void PrintReport(PrintReportMessage msg)
         {
             if (msg.VMID != VMID) return;
-            ReportManager.PrintReport(msg.ReportID);
+            if (SelectedPlaceZone.PlaceZoneId != null)
+                ReportManager.PrintReport(msg.ReportID, SelectedPlaceZone.PlaceZoneId);
         }
 
         public bool IsReadOnly { get; set; }
@@ -54,7 +55,9 @@ namespace Gamma.ViewModels
                     PlaceID = SelectedPlace.PlaceID,
                     PlaceZoneID = placeZone.PlaceZoneId,
                     PlaceZoneParentID = placeZone.PlaceZoneParentId,
-                    Name = placeZone.Name
+                    Name = placeZone.Name,
+                    v = placeZone.IsValid,
+                    Sleeps = placeZone.Sleeps
                 });
             }
             GammaBase.SaveChanges();
@@ -104,7 +107,10 @@ namespace Gamma.ViewModels
                         {
                             PlaceZoneId = pz.PlaceZoneID,
                             PlaceZoneParentId = pz.PlaceZoneParentID,
-                            Name = pz.Name
+                            Name = pz.Name,
+                            IsValid = pz.v ?? false,
+                            Sleeps = pz.Sleeps,
+                            Barcode = pz.Barcode
                         }));
                 }
                 RaisePropertyChanged("SelectedPlace");
@@ -132,11 +138,14 @@ namespace Gamma.ViewModels
 
         private void SelectedPlaceZoneOnPlaceZoneChanged()
         {
+
             var gammaPlaceZone =
                        GammaBase.PlaceZones.FirstOrDefault(pz => pz.PlaceZoneID == SelectedPlaceZone.PlaceZoneId);
             if (gammaPlaceZone == null) return;
             gammaPlaceZone.Name = SelectedPlaceZone.Name;
             gammaPlaceZone.PlaceZoneParentID = SelectedPlaceZone.PlaceZoneParentId;
+            gammaPlaceZone.v = SelectedPlaceZone.IsValid;
+            gammaPlaceZone.Sleeps = SelectedPlaceZone.Sleeps;
             GammaBase.SaveChanges();
         }
 

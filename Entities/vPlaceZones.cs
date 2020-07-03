@@ -23,5 +23,6 @@ namespace Gamma.Entities
         public Nullable<bool> v { get; set; }
         public Nullable<bool> MayBeProductsHere { get; set; }
         public Nullable<System.Guid> PlaceZoneRootID { get; set; }
+        public Nullable<int> Sleeps { get; set; }
     }
 }
