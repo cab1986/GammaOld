@@ -231,7 +231,17 @@ namespace Gamma.ViewModels
 		private void CreateNewPallet(ComplectationItem item)
 		{
 			UIServices.SetBusyState();
-			var docProductionId = SqlGuidUtil.NewSequentialid();
+            var unpackedProducts = item.UnpackedPallets.Sum(p => p.Quantity);
+            var packedProducts = item.PackedPallets.Sum(p => p.Quantity);
+
+            if (unpackedProducts == 0 || unpackedProducts < (packedProducts == 0 ? 0 : packedProducts + item.PackedPallets.FirstOrDefault().Quantity))
+            {
+                MessageBox.Show("Ошибка! Создать новую паллету невозможно, недостаточно распакованных паллет."+ "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
+                        MessageBoxImage.Error); ;
+                return;
+            }
+
+            var docProductionId = SqlGuidUtil.NewSequentialid();
 			var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
 			docProduction.DocProduction = new DocProduction
 			{

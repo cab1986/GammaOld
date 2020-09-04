@@ -6,11 +6,12 @@ using Gamma.Common;
 using Gamma.Controllers;
 using Gamma.Entities;
 using Gamma.Models;
+using Gamma.Interfaces;
 
 namespace Gamma.ViewModels
 {
-	public class DocComplectationsListViewModel : RootViewModel
-	{
+	public class DocComplectationsListViewModel : RootViewModel, IItemManager
+    {
 		#region Fields
 
 		private DocumentController documentController = new DocumentController();
