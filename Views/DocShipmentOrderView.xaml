@@ -145,7 +145,7 @@
                                     <dxg:GridColumn Header="Принято" FieldName="InQuantity" Width="60" Visible="{Binding InVisibible}">
                                         <dxg:GridColumn.HeaderCustomizationAreaTemplate>
                                             <DataTemplate>
-                                                <dxe:CheckEdit EditValue="{Binding Path=CheckAll}"
+                                                    <dxe:CheckEdit EditValue="{Binding Path=CheckAll}" IsReadOnly="{Binding DenyEditIn}"
                                                        DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext}"/>
                                             </DataTemplate>
                                         </dxg:GridColumn.HeaderCustomizationAreaTemplate>
