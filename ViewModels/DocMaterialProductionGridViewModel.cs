@@ -15,6 +15,7 @@ using Gamma.Common;
 using System.Collections;
 using System.Windows.Data;
 using System.Windows.Markup;
+using DevExpress.Xpf.Grid;
 
 namespace Gamma.ViewModels
 {
@@ -34,6 +35,7 @@ namespace Gamma.ViewModels
             AddDocMaterialProductionCommand = new DelegateCommand(AddDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             DeleteDocMaterialProductionCommand = new DelegateCommand(DeleteDocMaterialProduction, () => IsAllowEditingDocMaterialCompositionCalculations);
             MaterialRowUpdatedCommand = new DelegateCommand<CellValue>(OnMaterialRowUpdated);
+            ValidateCellCommand = new DelegateCommand<GridCellValidationEventArgs>(OnValidateCell);
             if (WorkSession.DBAdmin || (WorkSession.RoleName == "Dispetcher"))
                 IsAllowEditingReadOnlyQuantityRemainderAtEnd = true;
             else
@@ -57,6 +59,7 @@ namespace Gamma.ViewModels
             TankGroupContainer = new DocMaterialTankGroupContainer(PlaceID);
             CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
+            IsReadOnlyQuantityRemainderAtEnd = !DocMaterialCompositionCalculations.IsNotCalculatedQuantityRemainderAtEnd;
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
         }
@@ -73,6 +76,7 @@ namespace Gamma.ViewModels
             CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
             DocMaterialCompositionCalculations.LoadProductionMaterials(docID, productionProductCharacteristicIDs);
+            IsReadOnlyQuantityRemainderAtEnd = !DocMaterialCompositionCalculations.IsNotCalculatedQuantityRemainderAtEnd;
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate, docID, isConfirmed, productionProductCharacteristicIDs);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
         }
@@ -114,6 +118,7 @@ namespace Gamma.ViewModels
             set
             {
                 _isReadOnlyQuantityRemainderAtEnd = value;
+                DocMaterialCompositionCalculations.IsNotCalculatedQuantityRemainderAtEnd = !value;
                 RaisePropertyChanged("IsReadOnlyQuantityRemainderAtEnd");
             }
         }
@@ -166,12 +171,49 @@ namespace Gamma.ViewModels
         public DelegateCommand ChangeIsSendIntoNextPlaceDocMaterialProductionCommand { get; private set; }
         public DelegateCommand BackMaterialTabCommand { get; private set; }
 
+        public ICommand<GridCellValidationEventArgs> ValidateCellCommand { get; private set; }
         public ICommand<CellValue> MaterialRowUpdatedCommand { get; private set; }
         private void OnMaterialRowUpdated(CellValue value)
         {
-            if (IsReadOnlyQuantityRemainderAtEnd)
-                DocMaterialCompositionCalculations.MaterialChanged(SelectedMaterialTabIndex, SelectedDocMaterialProduction);
+            //if (!SelectedDocMaterialProduction.IsNotCalculatedQuantityRemainderAtEnd) если для отдельной строки, то непонятно как считать композицию.
+            if (SelectedDocMaterialProduction.IsNotSendMaterialIntoNextPlace && SelectedDocMaterialProduction.IsFullSendMaterialIntoNextPlace)
+                MessageBox.Show("Ошибка! Нельзя выбрать одновременно Подано полностью и Не подано!");
+            else
+                if (IsReadOnlyQuantityRemainderAtEnd)
+                    DocMaterialCompositionCalculations.MaterialChanged(SelectedMaterialTabIndex, SelectedDocMaterialProduction);
             
+        }
+        
+        public void OnValidateCell(GridCellValidationEventArgs e)
+        {
+            if ((e.Cell.Property == "IsNotSendMaterialIntoNextPlace" && (bool)e.Value && ((DocMaterialProductionCompositionCalculationItem)e.Row).IsFullSendMaterialIntoNextPlace) || (e.Cell.Property == "IsFullSendMaterialIntoNextPlace" && (bool)e.Value && ((DocMaterialProductionCompositionCalculationItem)e.Row).IsNotSendMaterialIntoNextPlace))
+            {
+                bool IsNotSendMaterialIntoNextPlace = ((DocMaterialProductionCompositionCalculationItem)e.Row).IsNotSendMaterialIntoNextPlace;
+                bool IsFullSendMaterialIntoNextPlace = ((DocMaterialProductionCompositionCalculationItem)e.Row).IsFullSendMaterialIntoNextPlace;
+                bool IsNotSendMaterialIntoNextPlaceChange = (e.Cell.Property == "IsNotSendMaterialIntoNextPlace");
+                bool IsFullSendMaterialIntoNextPlaceChange = (e.Cell.Property == "IsFullSendMaterialIntoNextPlace");
+                if ((IsNotSendMaterialIntoNextPlaceChange && (bool)e.Value && IsFullSendMaterialIntoNextPlace) || (IsFullSendMaterialIntoNextPlaceChange && (bool)e.Value && IsNotSendMaterialIntoNextPlace))
+                {
+                    e.IsValid = false;
+                    e.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Critical;
+                    e.ErrorContent = "Ошибка! Нельзя выбрать одновременно 'Подано полностью' и 'Не подано'!";
+                }
+            }
+            else
+            {
+                if ((e.Cell.Property == "IsNotSendMaterialIntoNextPlace") && (bool)e.Value)
+                {
+                    decimal SumQuantityRemainderAtEnd = ((DocMaterialProductionCompositionCalculationItem)e.Row).SumQuantityRemainderAtEnd;
+                    decimal SumQuantityIn = (((DocMaterialProductionCompositionCalculationItem)e.Row).QuantityRemainderAtBegin ?? 0) + (((DocMaterialProductionCompositionCalculationItem)e.Row).QuantityIn ?? 0) + (((DocMaterialProductionCompositionCalculationItem)e.Row).QuantityDismiss ?? 0);
+
+                    if (SumQuantityIn > SumQuantityRemainderAtEnd)
+                    {
+                        e.IsValid = false;
+                        e.ErrorType = DevExpress.XtraEditors.DXErrorProvider.ErrorType.Critical;
+                        e.ErrorContent = "Ошибка! Нельзя выбрать 'Не подано', так как остаток на конец становится больше общего остатка в бассейнах!";
+                    }
+                }
+            }
         }
 
         private int _placeWithdrawalMaterialTypeID;
@@ -233,22 +275,6 @@ namespace Gamma.ViewModels
                 gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
                     .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
                 DocMaterialCompositionCalculations.MaterialNomenclatureChanged(nomenclatureInfo);
-            }
-        }
-
-        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
-        public bool IsNotSendMaterialIntoNextPlace
-        {
-            get { return _isNotSendMaterialIntoNextPlace; }
-            set
-            {
-                _isNotSendMaterialIntoNextPlace = value;
-                DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace = value;
-                if (DocMaterialProductionDirectCalculationsGrid != null && DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials != null)
-                {
-                    DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials.IsNotSendMaterialIntoNextPlace = value;
-                }
-                RaisePropertiesChanged("IsNotSendMaterialIntoNextPlace");
             }
         }
 
@@ -347,6 +373,15 @@ namespace Gamma.ViewModels
                                 break;
                             case DocMaterialProductionTypes.Standard:
                                 quantity = material.StandardQuantity;
+                                break;
+                            case DocMaterialProductionTypes.IsNotSend:
+                                quantity = material.IsNotSendMaterialIntoNextPlace ? 1 : 0;
+                                break;
+                            case DocMaterialProductionTypes.IsFullSend:
+                                quantity = material.IsFullSendMaterialIntoNextPlace ? 1 : 0;
+                                break;
+                            case DocMaterialProductionTypes.IsNotCalculatedRemainderAtEnd:
+                                quantity = material.IsNotCalculatedQuantityRemainderAtEnd ? 1 : 0;
                                 break;
                         }
                         if (quantity != null || docMaterialProductionType == DocMaterialProductionTypes.RemainderAtBegin)

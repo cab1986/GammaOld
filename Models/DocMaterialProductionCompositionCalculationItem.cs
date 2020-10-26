@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace Gamma.Models
 {
@@ -24,12 +25,23 @@ namespace Gamma.Models
 
         protected override void RefreshQuntity()
         {
-            if (!IsNotSendMaterialIntoNextPlace)
+            if (!IsNotSendMaterialIntoNextPlace && !IsFullSendMaterialIntoNextPlace)
                 QuantitySend = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderAtEnd ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0);
             else
             {
-                QuantityRemainderAtEnd = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0);
-                QuantitySend = 0;
+                if (IsNotSendMaterialIntoNextPlace)
+                {
+                    if (!IsNotCalculatedQuantityRemainderAtEnd)
+                        QuantityRemainderAtEnd = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0);
+                    QuantitySend = 0;
+                } 
+                else
+                    if (IsFullSendMaterialIntoNextPlace)
+                {
+                    QuantityRemainderAtEnd = 0;
+                    QuantitySend = (QuantityDismiss ?? 0) + (QuantityRemainderAtBegin ?? 0) + (QuantityIn ?? 0) - (QuantityRemainderInGRVAtEnd ?? 0); ;
+
+                }
             }
         }
 
@@ -41,6 +53,41 @@ namespace Gamma.Models
             {
                 _isNotSendMaterialIntoNextPlace = value;
                 RefreshQuntity();
+            }
+        }
+
+        public bool _isFullSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsFullSendMaterialIntoNextPlace
+        {
+            get { return _isFullSendMaterialIntoNextPlace; }
+            set
+            {
+                _isFullSendMaterialIntoNextPlace = value;
+                RefreshQuntity();
+            }
+        }
+
+        public bool _isNotCalculatedQuantityRemainderAtEnd { get; set; } = false;
+        public bool IsNotCalculatedQuantityRemainderAtEnd
+        {
+            get { return _isNotCalculatedQuantityRemainderAtEnd; }
+            set
+            {
+                _isNotCalculatedQuantityRemainderAtEnd = value;
+                RefreshQuntity();
+            }
+        }
+
+        private decimal _sumQuantityRemainderAtEnd { get; set; }
+        public decimal SumQuantityRemainderAtEnd
+        {
+            get { return _sumQuantityRemainderAtEnd; }
+            set
+            {
+                if (_sumQuantityRemainderAtEnd != value)
+                {
+                    _sumQuantityRemainderAtEnd = value;
+                }
             }
         }
     }

@@ -1670,6 +1670,9 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalc
           <Property Name="QuantityRemainderInGRAVAtEnd" Type="decimal" Precision="38" Scale="5" />
           <Property Name="QuantitySend" Type="decimal" Precision="38" Scale="5" />
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
+          <Property Name="IsNotSendMaterialIntoNextPlace" Type="bit" />
+          <Property Name="IsFullSendMaterialIntoNextPlace" Type="bit" />
+          <Property Name="IsNotCalculatedQuantityRemainderAtEnd" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -5919,25 +5922,29 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     FROM [dbo].[vDocCloseShiftMaterials] AS [vDocCloseShiftMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMaterialProductionCompositionCalculations" EntityType="Self.vDocMaterialProductionCompositionCalculations" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [vDocMaterialProductionCompositionCalculations].[DocID] AS [DocID], 
-    [vDocMaterialProductionCompositionCalculations].[1CNomenclatureID] AS [1CNomenclatureID], 
-    [vDocMaterialProductionCompositionCalculations].[1CCharacteristicID] AS [1CCharacteristicID], 
-    [vDocMaterialProductionCompositionCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID], 
-    [vDocMaterialProductionCompositionCalculations].[NomenclatureName] AS [NomenclatureName], 
-    [vDocMaterialProductionCompositionCalculations].[MeasureUnitName] AS [MeasureUnitName], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly], 
-    [vDocMaterialProductionCompositionCalculations].[WithdrawByFact] AS [WithdrawByFact], 
-    [vDocMaterialProductionCompositionCalculations].[ParentID] AS [ParentID], 
-    [vDocMaterialProductionCompositionCalculations].[ParentName] AS [ParentName], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityIn] AS [QuantityIn], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityDismiss] AS [QuantityDismiss], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd], 
-    [vDocMaterialProductionCompositionCalculations].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd], 
-    [vDocMaterialProductionCompositionCalculations].[QuantitySend] AS [QuantitySend], 
-    [vDocMaterialProductionCompositionCalculations].[StandardQuantity] AS [StandardQuantity]
-    FROM [dbo].[vDocMaterialProductionCompositionCalculations] AS [vDocMaterialProductionCompositionCalculations]</DefiningQuery>
+            <DefiningQuery>
+              SELECT
+              [vDocMaterialProductionCompositionCalculations].[DocID] AS [DocID],
+              [vDocMaterialProductionCompositionCalculations].[1CNomenclatureID] AS [1CNomenclatureID],
+              [vDocMaterialProductionCompositionCalculations].[1CCharacteristicID] AS [1CCharacteristicID],
+              [vDocMaterialProductionCompositionCalculations].[1CMeasureUnitID] AS [1CMeasureUnitID],
+              [vDocMaterialProductionCompositionCalculations].[NomenclatureName] AS [NomenclatureName],
+              [vDocMaterialProductionCompositionCalculations].[MeasureUnitName] AS [MeasureUnitName],
+              [vDocMaterialProductionCompositionCalculations].[QuantityIsReadOnly] AS [QuantityIsReadOnly],
+              [vDocMaterialProductionCompositionCalculations].[WithdrawByFact] AS [WithdrawByFact],
+              [vDocMaterialProductionCompositionCalculations].[ParentID] AS [ParentID],
+              [vDocMaterialProductionCompositionCalculations].[ParentName] AS [ParentName],
+              [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtBegin] AS [QuantityRemainderAtBegin],
+              [vDocMaterialProductionCompositionCalculations].[QuantityIn] AS [QuantityIn],
+              [vDocMaterialProductionCompositionCalculations].[QuantityDismiss] AS [QuantityDismiss],
+              [vDocMaterialProductionCompositionCalculations].[QuantityRemainderAtEnd] AS [QuantityRemainderAtEnd],
+              [vDocMaterialProductionCompositionCalculations].[QuantityRemainderInGRAVAtEnd] AS [QuantityRemainderInGRAVAtEnd],
+              [vDocMaterialProductionCompositionCalculations].[QuantitySend] AS [QuantitySend],
+              [vDocMaterialProductionCompositionCalculations].[StandardQuantity] AS [StandardQuantity],
+              [vDocMaterialProductionCompositionCalculations].[IsNotSendMaterialIntoNextPlace] AS [IsNotSendMaterialIntoNextPlace],
+              [vDocMaterialProductionCompositionCalculations].[IsFullSendMaterialIntoNextPlace] AS [IsFullSendMaterialIntoNextPlace],
+              [vDocMaterialProductionCompositionCalculations].[IsNotCalculatedQuantityRemainderAtEnd] AS [IsNotCalculatedQuantityRemainderAtEnd]
+              FROM [dbo].[vDocMaterialProductionCompositionCalculations] AS [vDocMaterialProductionCompositionCalculations]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vDocMaterialProductionDirectCalculations" EntityType="Self.vDocMaterialProductionDirectCalculations" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -14468,6 +14475,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="WithdrawByFact" Type="Boolean" />
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="ParentID" Type="Guid" />
+          <Property Name="IsNotSendMaterialIntoNextPlace" Type="Boolean" />
+          <Property Name="IsFullSendMaterialIntoNextPlace" Type="Boolean" />
+          <Property Name="IsNotCalculatedQuantityRemainderAtEnd" Type="Boolean" />          
         </EntityType>
         <EntityType Name="DocMaterialProducts">
           <Key>
@@ -17399,7 +17409,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </FunctionImportMapping>
           <EntitySetMapping Name="vDocMaterialProductionCompositionCalculations">
             <EntityTypeMapping TypeName="GammaModel.vDocMaterialProductionCompositionCalculations">
-              <MappingFragment StoreEntitySet="vDocMaterialProductionCompositionCalculations">
+              <MappingFragment StoreEntitySet="vDocMaterialProductionCompositionCalculations">                
+                <ScalarProperty Name="IsNotCalculatedQuantityRemainderAtEnd" ColumnName="IsNotCalculatedQuantityRemainderAtEnd" />
+                <ScalarProperty Name="IsFullSendMaterialIntoNextPlace" ColumnName="IsFullSendMaterialIntoNextPlace" />
+                <ScalarProperty Name="IsNotSendMaterialIntoNextPlace" ColumnName="IsNotSendMaterialIntoNextPlace" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
                 <ScalarProperty Name="WithdrawByFact" ColumnName="WithdrawByFact" />

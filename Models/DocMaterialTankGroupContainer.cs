@@ -93,16 +93,30 @@ namespace Gamma.Models
             {
                 tankG.Composition.Remove(nomenclatureID);
             }
-            RecalcAllNomenclatureInComposition();
+            RecalcAllNomenclatureInComposition(true);
         }
 
-        public void RefreshComposition(Guid nomenclatureID, Guid? parentID, decimal? quantityDismiss, decimal? quantityIn)
+        public void RefreshComposition(Guid nomenclatureID, Guid? parentID, decimal? quantityDismiss, decimal? quantityIn, bool? isNotSendNomenclature, bool isRecalcMaterialProduction)
         {
+            decimal sumQuantityTanksWhereExistNomenclatureInComposition = 0;
+            decimal quantityNotSendNomenclature = quantityDismiss ?? 0 + quantityIn ?? 0;
+            List<DocMaterialTankGroup> TanksWhereExistNomenclatureInComposition = new List<DocMaterialTankGroup>();
             //сначала для дочерних хранилищ
             foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(parentID ?? Guid.Empty)))
                 && !p.ExceptNomenclatureID.Contains(parentID ?? Guid.Empty)))
                 
             {
+                if (isNotSendNomenclature == true)
+                {
+                    TanksWhereExistNomenclatureInComposition.Add(tankGroup);
+                    quantityDismiss = 0;
+                    quantityIn = 0;
+                }
+                else
+                    tankGroup.NotSendNomenclature.Remove(nomenclatureID);
+
+                sumQuantityTanksWhereExistNomenclatureInComposition = sumQuantityTanksWhereExistNomenclatureInComposition + tankGroup.Tanks.Sum(t => t.Quantity);
+
                 var composition = tankGroup.Composition.Where(c => c.Key == nomenclatureID).Count();
                 if (composition == 0)
                     AddComposition(nomenclatureID, parentID, quantityDismiss, quantityIn);
@@ -134,25 +148,50 @@ namespace Gamma.Models
                     }
                 }
                 tankGroup.Composition[nomenclatureID] = quantity;
+                if (isNotSendNomenclature == true)
+                    TanksWhereExistNomenclatureInComposition.Add(tankGroup);
+                else
+                    tankGroup.NotSendNomenclature.Remove(nomenclatureID);
+
+                sumQuantityTanksWhereExistNomenclatureInComposition = sumQuantityTanksWhereExistNomenclatureInComposition + tankGroup.Tanks.Sum(t => t.Quantity);
+            }
+
+
+            foreach (var tankGroup in TanksWhereExistNomenclatureInComposition)
+            {
+                var quantityNotSendNomenclatureInTankGroup = Math.Round(tankGroup.Tanks.Sum(t => t.Quantity) / sumQuantityTanksWhereExistNomenclatureInComposition * quantityNotSendNomenclature, 2);
+                var notSendNomenclature = tankGroup.NotSendNomenclature.Where(c => c.Key == nomenclatureID).Count();
+                if (notSendNomenclature == 0)
+                {
+                    if (isNotSendNomenclature == true)
+                        tankGroup.NotSendNomenclature.Add(nomenclatureID, quantityNotSendNomenclatureInTankGroup);
+                }
+                else
+                {
+                    if (isNotSendNomenclature == true)
+                        tankGroup.NotSendNomenclature[nomenclatureID] = quantityNotSendNomenclatureInTankGroup;
+                }
+                //tankGroup.NotSendNomenclature[nomenclatureID] = Math.Round(tankGroup.Tanks.Sum(t => t.Quantity) / sumQuantityTanksWhereExistNomenclatureInComposition * quantityNotSendNomenclature, 2);
             }
             //RecalcNomenclatureInComposition(nomenclatureID);
-            RecalcAllNomenclatureInComposition();
+            RecalcAllNomenclatureInComposition(isRecalcMaterialProduction);
         }
 
-        public void RecalcNomenclatureInComposition(Guid nomenclatureID)
+        public void RecalcNomenclatureInComposition(Guid nomenclatureID, bool isRecalcMaterialProduction)
         {
                 decimal quantity = 0;
                 foreach (var tankG in TankGroups)
                 {
                     if (tankG.Composition.Sum(c => c.Value) > 0)
-                        quantity = quantity + Math.Round(((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * tankG.Tanks.Sum(t => t.Quantity),0);
+                        quantity = quantity + Math.Round(((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * (tankG.Tanks.Sum(t => t.Quantity) - tankG.NotSendNomenclature.Sum(n => n.Value)),0);
                 }
             //quantity = Math.Round(quantity, 0);
-            MessageManager.RecalcMaterialProductionQuantityEndFromTankReaminderEvent(nomenclatureID, quantity);
+            if (isRecalcMaterialProduction)
+                MessageManager.RecalcMaterialProductionQuantityEndFromTankReaminderEvent(nomenclatureID, quantity);
             
         }
 
-        public void RecalcAllNomenclatureInComposition()
+        public void RecalcAllNomenclatureInComposition(bool isRecalcMaterialProduction)
         {
             var nomenclatureRecalced = new List<Guid>();
             foreach (var tankG in TankGroups)
@@ -161,7 +200,7 @@ namespace Gamma.Models
                 {
                     if (!nomenclatureRecalced.Contains(nomenclature.Key))
                     {
-                        RecalcNomenclatureInComposition(nomenclature.Key);
+                        RecalcNomenclatureInComposition(nomenclature.Key, isRecalcMaterialProduction);
                         nomenclatureRecalced.Add(nomenclature.Key);
                     }
                 }
@@ -175,7 +214,7 @@ namespace Gamma.Models
             {
                 foreach (var composition in tankGroup.Composition)
                 {
-                    RecalcNomenclatureInComposition(composition.Key);
+                    RecalcNomenclatureInComposition(composition.Key, true);
                 }
                 //MessageManager.RecalcQuantityFromTankReaminderEvent(msg.DocMaterialTankGroupID, tankGroup.DocMaterialProductionTypeID, tankGroup.Tanks.Sum(t => t.Quantity), tankGroup.NomenclatureID, tankGroup.ExceptNomenclatureID);
             }

@@ -372,7 +372,7 @@ namespace Gamma.ViewModels
         public override bool CanSaveExecute()
         {
 
-            return base.CanSaveExecute() && CanEditable() && !isDocUsedNextPlace && !IsConfirmed;
+            return base.CanSaveExecute() && CanEditable() && !isDocUsedNextPlace && !IsConfirmed && CurrentViewModelGrid.IsValid;
         }
         private bool DocIsUsedNextPlace()
         {

@@ -44,6 +44,7 @@ namespace Gamma.Models
         public List<Guid> ExceptNomenclatureID { get; private set; } = new List<Guid>();
         private GammaEntities GammaBase { get; }
         public Dictionary<Guid, decimal> Composition { get; set; } = new Dictionary<Guid, decimal>();
+        public Dictionary<Guid, decimal> NotSendNomenclature { get; set; } = new Dictionary<Guid, decimal>();
 
         /// <summary>
         /// Заполняем исключение групп номенклатур из композиции. 

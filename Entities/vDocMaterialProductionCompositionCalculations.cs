@@ -31,5 +31,8 @@ namespace Gamma.Entities
         public Nullable<bool> WithdrawByFact { get; set; }
         public string ParentName { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
+        public Nullable<bool> IsNotSendMaterialIntoNextPlace { get; set; }
+        public Nullable<bool> IsFullSendMaterialIntoNextPlace { get; set; }
+        public Nullable<bool> IsNotCalculatedQuantityRemainderAtEnd { get; set; }
     }
 }

@@ -205,7 +205,10 @@ namespace Gamma
         Experimental,
         Out,
         SendAtBegin,
-        SendAtEnd
+        SendAtEnd,
+        IsNotSend,
+        IsFullSend,
+        IsNotCalculatedRemainderAtEnd
     }
 
     public enum DocCloseShiftMaterialTypes
