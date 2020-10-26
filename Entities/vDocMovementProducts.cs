@@ -53,5 +53,6 @@ namespace Gamma.Entities
         public string NumberDocMovement { get; set; }
         public Nullable<byte> StateID { get; set; }
         public string StateName { get; set; }
+        public Nullable<System.Guid> MovementID { get; set; }
     }
 }

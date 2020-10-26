@@ -27,5 +27,7 @@ namespace Gamma.Entities
         public Nullable<int> CountProduct { get; set; }
         public Nullable<long> CountProductSpools { get; set; }
         public Nullable<int> CountProductSpoolsWithBreak { get; set; }
+        public Nullable<int> OutQuantityUnits { get; set; }
+        public Nullable<int> InQuantityUnits { get; set; }
     }
 }

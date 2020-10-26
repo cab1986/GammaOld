@@ -26,6 +26,8 @@ namespace Gamma.Entities
         public string Phones { get; set; }
         public string WebInfo { get; set; }
         public string QualityContacts { get; set; }
+        public string AddressEng { get; set; }
+        public string PhonesEng { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Branches> Branches { get; set; }

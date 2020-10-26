@@ -1468,5 +1468,22 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftMaterialsDismiss_Result>("FillDocCloseShiftMaterialsDismiss", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
+    
+        public virtual ObjectResult<GetDocMaterialProductionsOnShift_Result> GetDocMaterialProductionsOnShift(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMaterialProductionsOnShift_Result>("GetDocMaterialProductionsOnShift", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
     }
 }

@@ -20,5 +20,6 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CPlaceID { get; set; }
         public System.Guid C1CSpecificationID { get; set; }
         public Nullable<System.DateTime> ValidTill { get; set; }
+        public string C1CCode { get; set; }
     }
 }

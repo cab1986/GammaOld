@@ -47,5 +47,7 @@ namespace Gamma.Entities
         public Nullable<int> CurrentPlaceID { get; set; }
         public Nullable<System.Guid> CurrentPlaceZoneID { get; set; }
         public string CurrentPlace { get; set; }
+        public int GroupNumberByTimeProductionDate { get; set; }
+        public string SCU { get; set; }
     }
 }

@@ -314,6 +314,16 @@ namespace Gamma.ViewModels
             if (WorkSession.ShiftID == 0) return;
             using (var gammaBase = DB.GammaDb)
             {
+                var existNonConfirmedDocMaterialProductions = GammaBase.GetDocMaterialProductionsOnShift(WorkSession.PlaceID, WorkSession.ShiftID, SqlFunctions.GetDate())
+                    .Where(m=> !m.IsConfirmed)
+                    .Count();
+
+                if (existNonConfirmedDocMaterialProductions > 0)
+                {
+                    gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Создание Рапорта закрытия смены @PlaceID " + WorkSession.PlaceID.ToString() + ", @ShiftID " + WorkSession.ShiftID.ToString() + ", @Date " + SqlFunctions.GetDate().ToString() + " Есть Неподтвержденный документ Расхода сырья и материалов за смену.Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!" });
+                    MessageBox.Show("Есть Неподтвержденный документ Расхода сырья и материалов за смену." + Environment.NewLine + "Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!",
+                        "Рапорт за смену", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 var lastReport =
                     gammaBase.Docs.Where(
                         d => d.ShiftID == WorkSession.ShiftID && d.DocTypeID == (int) DocTypes.DocCloseShift && d.PlaceID == WorkSession.PlaceID &&

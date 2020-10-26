@@ -22,6 +22,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> PlaceZoneCellID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public Nullable<byte> StateID { get; set; }
+        public Nullable<System.Guid> MovementID { get; set; }
     
         public virtual DocMovement DocMovement { get; set; }
         public virtual Persons Persons { get; set; }
