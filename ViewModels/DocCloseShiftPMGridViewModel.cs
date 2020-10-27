@@ -28,7 +28,7 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDocPM", VMID));
             PlaceID = WorkSession.PlaceID;
             ShiftID = WorkSession.ShiftID;
-            CloseDate = DB.CurrentDateTime;
+
             AddBeginSpoolCommand = new DelegateCommand<RemainderType>(AddSpool, !IsReadOnly);
             DeleteBeginSpoolCommand = new DelegateCommand<RemainderType>(DeleteSpool, !IsReadOnly);
             AddEndSpoolCommand = new DelegateCommand<RemainderType>(AddSpool, !IsReadOnly);
@@ -52,6 +52,11 @@ namespace Gamma.ViewModels
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 7;
+        }
+
+        public DocCloseShiftPMGridViewModel(DateTime closeDate)
+        {
+            CloseDate = closeDate;
         }
 
         public DocCloseShiftPMGridViewModel(Guid docId) : this()

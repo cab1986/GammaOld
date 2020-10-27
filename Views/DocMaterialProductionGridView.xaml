@@ -111,14 +111,14 @@
                                     </DataTemplate>
                                 </dxg:GridColumn.CellTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Не подано" FieldName="IsNotSendMaterialIntoNextPlace" Width="50" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="{Binding IsVisibleTankRemainders}">
+                            <dxg:GridColumn Header="Не подано" FieldName="IsNotSendMaterialIntoNextPlace" Width="50" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="False">
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
                                     </DataTemplate>
                                 </dxg:GridColumn.HeaderTemplate>
                             </dxg:GridColumn>
-                            <dxg:GridColumn Header="Подано полностью" FieldName="IsFullSendMaterialIntoNextPlace" Width="60" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="{Binding IsVisibleTankRemainders}">
+                            <dxg:GridColumn Header="Подано полностью" FieldName="IsFullSendMaterialIntoNextPlace" Width="60" FixedWidth="True" ReadOnly="{Binding IsReadOnly}" Visible="False">
                                 <dxg:GridColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding}" TextWrapping="Wrap"/>

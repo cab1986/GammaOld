@@ -32,13 +32,17 @@ namespace Gamma.ViewModels
             WithdrawalMaterialCommand = new DelegateCommand(ShowWithdrawalMaterialTab, SelectedProduct != null);
             PlaceID = WorkSession.PlaceID;
             ShiftID = WorkSession.ShiftID;
-            CloseDate = DB.CurrentDateTime;
+            
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
             IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
 
+        public DocCloseShiftConvertingGridViewModel(DateTime closeDate) : this()
+        {
+            CloseDate = closeDate;
+        }
         public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel _spoolUnwinderRemainders) : this()
         {
             using (var gammaBase = DB.GammaDb)

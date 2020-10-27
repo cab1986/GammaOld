@@ -50,7 +50,7 @@ namespace Gamma.ViewModels
                 case (short)PlaceGroup.PM:
                     //CurrentViewModelGrid = new DocCloseShiftPMGridViewModel(msg);
                     CurrentViewModelGrid = msg.DocID == null
-                        ? new DocCloseShiftPMGridViewModel()
+                        ? new DocCloseShiftPMGridViewModel(Date)
                         : new DocCloseShiftPMGridViewModel((Guid)msg.DocID);
                     CurrentViewModelRemainder = msg.DocID == null ? new DocCloseShiftRemainderViewModel() : new DocCloseShiftRemainderViewModel((Guid)msg.DocID);
                     //IsVisibilityRemainder = true;
@@ -71,7 +71,7 @@ namespace Gamma.ViewModels
                     //IsVisibilityRemainder = true;
                     var convertingrUnwinderRemainder = CurrentViewModelUnwinderRemainder as DocCloseShiftUnwinderRemainderViewModel;
                     CurrentViewModelGrid = msg.DocID == null
-                        ? new DocCloseShiftConvertingGridViewModel()
+                        ? new DocCloseShiftConvertingGridViewModel(Date)
                         : new DocCloseShiftConvertingGridViewModel((Guid) msg.DocID, convertingrUnwinderRemainder);
                     break;
                 case (short)PlaceGroup.Baler:
