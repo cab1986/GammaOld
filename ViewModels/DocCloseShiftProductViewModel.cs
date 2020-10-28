@@ -335,7 +335,7 @@ namespace Gamma.ViewModels
                 //if (BeginProducts == null || BeginProducts?.Count() == 0)
                 {
                     var PreviousDocCloseShift = gammaBase.Docs
-                        .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
+                        .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < SqlFunctions.DateAdd("mi", -1, CloseDate))
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
                     BeginProducts = new ObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders

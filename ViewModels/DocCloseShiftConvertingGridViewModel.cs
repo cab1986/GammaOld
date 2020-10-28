@@ -30,18 +30,19 @@ namespace Gamma.ViewModels
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
             MaterialCommand = new DelegateCommand(ShowMaterialTab, SelectedProduct != null);
             WithdrawalMaterialCommand = new DelegateCommand(ShowWithdrawalMaterialTab, SelectedProduct != null);
-            PlaceID = WorkSession.PlaceID;
-            ShiftID = WorkSession.ShiftID;
             
-            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
-            WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
-            DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
-            IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
 
         public DocCloseShiftConvertingGridViewModel(DateTime closeDate) : this()
         {
+            PlaceID = WorkSession.PlaceID;
+            ShiftID = WorkSession.ShiftID;
             CloseDate = closeDate;
+
+            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+            WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
+            DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
+            IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
         }
         public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel _spoolUnwinderRemainders) : this()
         {

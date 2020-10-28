@@ -49,14 +49,17 @@ namespace Gamma.ViewModels
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedUtilizationSpool != null);
 
+        }
+
+        public DocCloseShiftPMGridViewModel(DateTime closeDate):this()
+        {
+            PlaceID = WorkSession.PlaceID;
+            ShiftID = WorkSession.ShiftID;
+            CloseDate = closeDate;
+
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 7;
-        }
-
-        public DocCloseShiftPMGridViewModel(DateTime closeDate)
-        {
-            CloseDate = closeDate;
         }
 
         public DocCloseShiftPMGridViewModel(Guid docId) : this()
@@ -293,7 +296,7 @@ namespace Gamma.ViewModels
                 if (BeginSpools == null || BeginSpools?.Count() == 0)
                 {
                     var PreviousDocCloseShift = gammaBase.Docs
-                        .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
+                        .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < SqlFunctions.DateAdd("mi", -1, CloseDate))
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault();
                     BeginSpools = new ObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders

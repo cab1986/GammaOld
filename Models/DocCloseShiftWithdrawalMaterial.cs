@@ -448,7 +448,7 @@ namespace Gamma.Models
                 }
 
                 var PreviousDocCloseShift = GammaBase.Docs
-                    .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < CloseDate)
+                    .Where(d => d.DocTypeID == 3 && d.PlaceID == PlaceID && d.Date < SqlFunctions.DateAdd("mi", -1, CloseDate))
                     .OrderByDescending(d => d.Date)
                     .Select(d => d.DocID)
                     .FirstOrDefault();
