@@ -6,6 +6,7 @@ using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.IO;
 using System.IO.Ports;
+using System.Net;
 using System.Xml.Serialization;
 
 namespace Gamma
@@ -73,6 +74,37 @@ namespace Gamma
             return _gammaSettings;
         }
 
+        private static string _version { get; set; }
+        public static string Version
+        {
+            get
+            {
+                if (_version == null)
+                {
+                    try
+                    {
+                        _version = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                    }
+                    catch
+                    {
+                        _version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    }
+                }
+                return _version;
+            }
+        }
+
+        private static string _localHostName { get; set; }
+        public static string LocalHostName
+        {
+            get
+            {
+                if (_localHostName == null)
+                    _localHostName = Dns.GetHostName();
+                return _localHostName;
+            }
+        }
+
         public static void SetConnectionString(string dataSource, string dbName, string user = "", string password = "")
         {
             var appSettings = Get();
@@ -88,17 +120,7 @@ namespace Gamma
             sqlBuilder.UserID = user;
             sqlBuilder.Password = password;
 
-            string version;
-            try
-            {
-                version = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
-            }
-            catch
-            {
-                version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-
-            sqlBuilder.ApplicationName = "Gamma v" + version;
+            sqlBuilder.ApplicationName = "Gamma v" + Version;
             sqlBuilder.PersistSecurityInfo = true;
             sqlBuilder.MultipleActiveResultSets = true;
             sqlBuilder.ConnectTimeout = 300;

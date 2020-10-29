@@ -224,4 +224,14 @@ namespace Gamma
         Standard,
         Dismiss
     }
+
+    public enum CriticalLogTypes
+    {
+        [Description("Запуск программы")]
+        StartProgramInformation,
+        [Description("Информационное сообщение в процессе работы")]
+        Information,
+        [Description("Сообщение об ошибке")]
+        Error
+    }
 }

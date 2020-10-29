@@ -404,6 +404,8 @@
           <Property Name="Log" Type="varchar" MaxLength="500" />
           <Property Name="LogDate" Type="datetime" />
           <Property Name="LogUserID" Type="varchar" MaxLength="150" />
+          <Property Name="HostName" Type="varchar" MaxLength="150" />
+          <Property Name="LogTypeID" Type="int" />
         </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
@@ -14196,6 +14198,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Log" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="LogDate" Type="DateTime" Precision="3" />
           <Property Name="LogUserID" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="HostName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="LogTypeID" Type="Int32" />
         </EntityType>
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
@@ -17282,6 +17286,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="CriticalLogs">
             <EntityTypeMapping TypeName="GammaModel.CriticalLogs">
               <MappingFragment StoreEntitySet="CriticalLogs">
+                <ScalarProperty Name="LogTypeID" ColumnName="LogTypeID" />
+                <ScalarProperty Name="HostName" ColumnName="HostName" />
                 <ScalarProperty Name="LogUserID" ColumnName="LogUserID" />
                 <ScalarProperty Name="LogDate" ColumnName="LogDate" />
                 <ScalarProperty Name="Log" ColumnName="Log" />

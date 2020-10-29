@@ -78,27 +78,40 @@ namespace Gamma
                 return false;
             }
         }
-/*
-        public static void RollBack()
+        /*
+                public static void RollBack()
+                {
+                    if (!HaveChanges()) return;
+                    GammaBase.Database.Connection.Close();
+                    GammaBase.Dispose();
+                    GammaBase = new GammaEntities(GammaSettings.ConnectionString);
+                    GammaBase.Database.Connection.Open();
+                    Messenger.Default.Send(new BaseReconnectedMessage());
+                }
+        */
+        /*
+                public static bool HaveChanges()
+                {
+                    if (GammaBase == null) return false;
+                    return GammaBase.
+                           ChangeTracker.Entries().Any(e => e.State == EntityState.Added
+                                                      || e.State == EntityState.Modified
+                                                      || e.State == EntityState.Deleted);
+                }
+        */
+        public static void AddLogMessageInformation(string log) => AddLogMessage(log, CriticalLogTypes.Information);
+        public static void AddLogMessageError(string log) => AddLogMessage(log, CriticalLogTypes.Error);
+        public static void AddLogMessageStartProgramInformation(string log) => AddLogMessage(log, CriticalLogTypes.StartProgramInformation);
+
+        public static void AddLogMessage(string log, CriticalLogTypes logTypeID)
         {
-            if (!HaveChanges()) return;
-            GammaBase.Database.Connection.Close();
-            GammaBase.Dispose();
-            GammaBase = new GammaEntities(GammaSettings.ConnectionString);
-            GammaBase.Database.Connection.Open();
-            Messenger.Default.Send(new BaseReconnectedMessage());
+
+            using (var gammaBase = DB.GammaDb)
+            {
+                gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = log });
+                gammaBase.SaveChanges();
+            }
         }
-*/
-/*
-        public static bool HaveChanges()
-        {
-            if (GammaBase == null) return false;
-            return GammaBase.
-                   ChangeTracker.Entries().Any(e => e.State == EntityState.Added
-                                              || e.State == EntityState.Modified
-                                              || e.State == EntityState.Deleted);
-        }
-*/
 
         public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid, GammaEntities gammaBase = null)
         {

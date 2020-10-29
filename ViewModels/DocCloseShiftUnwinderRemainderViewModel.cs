@@ -340,7 +340,7 @@ namespace Gamma.ViewModels
                 if (sourceSpools == null)
                 {
                     //ClearGrid();
-                    gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Загрузка раскатов в рапорте закрытия смены @PlaceID " + PlaceID.ToString() + ", @ShiftID " + ShiftID?.ToString() + ", @Date " + DocDate.ToString() +" Нет тамбуров на раскатах!"});
+                    DB.AddLogMessageInformation("Загрузка раскатов в рапорте закрытия смены @PlaceID " + PlaceID.ToString() + ", @ShiftID " + ShiftID?.ToString() + ", @Date " + DocDate.ToString() +" Нет тамбуров на раскатах!");
                 }
                 else
                 {
@@ -378,7 +378,7 @@ namespace Gamma.ViewModels
                         ClearGridWithIndex(4);
                     }
                     IsChanged = true;
-                    gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Загрузка раскатов в рапорте закрытия смены @PlaceID " + PlaceID.ToString() + ", @ShiftID " + ShiftID?.ToString() + ", @Date " + DocDate.ToString() });
+                    DB.AddLogMessageInformation("Загрузка раскатов в рапорте закрытия смены @PlaceID " + PlaceID.ToString() + ", @ShiftID " + ShiftID?.ToString() + ", @Date " + DocDate.ToString() );
                 }
                 gammaBase.SaveChanges();
             }

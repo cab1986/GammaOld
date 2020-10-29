@@ -236,7 +236,7 @@ namespace Gamma.ViewModels
 
                 if (existNonConfirmedDocMaterialProductions > 0)
                 {
-                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Заполнение Рапорта закрытия смены @PlaceID " + PlaceID.ToString() + ", @ShiftID " + ShiftID.ToString() + ", @Date " + CloseDate.ToString() + " Есть Неподтвержденный документ Расхода сырья и материалов за смену.Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!" });
+                    DB.AddLogMessageInformation("Заполнение Рапорта закрытия смены @PlaceID " + PlaceID.ToString() + ", @ShiftID " + ShiftID.ToString() + ", @Date " + CloseDate.ToString() + " Есть Неподтвержденный документ Расхода сырья и материалов за смену.Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!" );
                     MessageBox.Show("Есть Неподтвержденный документ Расхода сырья и материалов за смену."+Environment.NewLine+"Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!",
                         "Рапорт за смену", MessageBoxButton.OK, MessageBoxImage.Information);
                 }

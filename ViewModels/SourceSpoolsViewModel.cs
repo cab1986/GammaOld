@@ -255,15 +255,15 @@ namespace Gamma.ViewModels
                             CompleteWithdraw((Guid)productID);
                             break;
                     }
-                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка ОК, выбор " + dialog.ChangeState.ToString() + " (" + dialog.Weight.ToString() + ")" });
+                    DB.AddLogMessageInformation("Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка ОК, выбор " + dialog.ChangeState.ToString() + " (" + dialog.Weight.ToString() + ")" );
                     ret = true;
                 }
                 else
-                    GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка Отмена, тамбур не снят." });
+                    DB.AddLogMessageInformation("Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка Отмена, тамбур не снят." );
             }
             else
             {
-                GammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName, Log = "Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Продукция не была произведена, снят без списания." });
+                DB.AddLogMessageInformation("Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Продукция не была произведена, снят без списания." );
                 ret = true;
             }
             return ret;

@@ -18,5 +18,7 @@ namespace Gamma.Entities
         public string Log { get; set; }
         public Nullable<System.DateTime> LogDate { get; set; }
         public string LogUserID { get; set; }
+        public string HostName { get; set; }
+        public Nullable<int> LogTypeID { get; set; }
     }
 }

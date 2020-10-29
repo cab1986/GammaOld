@@ -14,6 +14,7 @@ using System.Deployment.Application;
 using System.Diagnostics;
 using Gamma.Entities;
 using System.Data.Entity.SqlServer;
+using System.Net;
 
 namespace Gamma.ViewModels
 {
@@ -67,6 +68,18 @@ namespace Gamma.ViewModels
             }
             StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Логин: {2}, Имя для печати: {3}, ID пользователя: {5}", settings.HostName, settings.DbName, 
                 settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл", WorkSession.PersonID);
+            try
+            {
+                string myIP = Dns.GetHostByName(GammaSettings.LocalHostName).AddressList[0].ToString();
+                DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version);
+                DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version + ", Device " + Environment.MachineName + ", CurrentDate " + DateTime.Now.ToString() + ", IP " + myIP);
+                DB.AddLogMessageStartProgramInformation(StatusText);
+            }
+            catch
+            {
+                DB.AddLogMessageError("Ошибка добавления в лог информации о запуске программы");
+            }
+            
             if (IsInDesignMode)
             {
                 ShowReportListCommand = new DelegateCommand(MessageManager.OpenReportList);
@@ -323,7 +336,7 @@ namespace Gamma.ViewModels
 
                     if (existNonConfirmedDocMaterialProductions > 0)
                     {
-                        gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = currentDateTime, LogUserID = WorkSession.UserName, Log = "Создание Рапорта закрытия смены @PlaceID " + WorkSession.PlaceID.ToString() + ", @ShiftID " + WorkSession.ShiftID.ToString() + ", @Date " + currentDateTime.ToString() + " Есть Неподтвержденный документ Расхода сырья и материалов за смену.Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!" });
+                        DB.AddLogMessageInformation("Создание Рапорта закрытия смены @PlaceID " + WorkSession.PlaceID.ToString() + ", @ShiftID " + WorkSession.ShiftID.ToString() + ", @Date " + currentDateTime.ToString() + " Есть Неподтвержденный документ Расхода сырья и материалов за смену.Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!" );
                         MessageBox.Show("Есть Неподтвержденный документ Расхода сырья и материалов за смену." + Environment.NewLine + "Требуется подтвердить или удалить, иначе материалы будут рассчитаны неправильно!",
                             "Рапорт за смену", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
