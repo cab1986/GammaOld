@@ -383,6 +383,36 @@ namespace Gamma.ViewModels
             var docID = SqlGuidUtil.NewSequentialid();
             using (var gammaBase = DB.GammaDb)
             {
+                var docWithdrawalProduct =
+                gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
+                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
+                if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
+                {
+                    var docId = SqlGuidUtil.NewSequentialid();
+                    docWithdrawalProduct = new DocWithdrawalProducts
+                    {
+                        DocID = docId,
+                        ProductID = productId,
+                        DocWithdrawal = new DocWithdrawal
+                        {
+                            DocID = docId,
+                            OutPlaceID = WorkSession.PlaceID,
+                            Docs = new Docs
+                            {
+                                DocID = docId,
+                                IsConfirmed = true,
+                                Date = DB.CurrentDateTime,
+                                DocTypeID = (int)DocTypes.DocWithdrawal,
+                                PlaceID = WorkSession.PlaceID,
+                                PrintName = WorkSession.PrintName,
+                                ShiftID = WorkSession.ShiftID,
+                                UserID = WorkSession.UserID
+                            }
+                        }
+                    };
+                    gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
+                };
+                gammaBase.SaveChanges();
                 gammaBase.CreateDocBrokeWithBrokeDecisionComment(docID, productId, weight / 1000, rejectionReasonId,rejectionReasonComment,
                 WorkSession.PrintName, WorkSession.PlaceID);
             }
