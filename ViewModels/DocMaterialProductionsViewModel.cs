@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 Places = gammaBase.Places.Where(
-                    p => WorkSession.BranchIds.Contains(p.BranchID) && (p.IsProductionPlace ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false))
+                    p => WorkSession.BranchIds.Contains(p.BranchID) && ((p.IsMaterialProductionPlace ?? false) || (p.PlaceGroupID == (int)PlaceGroup.PM)))
                     .Select(p => new Place()
                     {
                         PlaceID = p.PlaceID,
