@@ -254,12 +254,12 @@ namespace Gamma.ViewModels
                 else
                 {
                     var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
-                    var selectedPlaces = new List<string>();
+                    var selectedPlaces = new List<int>();
                     if (SelectedPlaces != null)
-                        selectedPlaces = SelectedPlaces.Cast<string>().ToList();
-                    var selectedCurrentPlaces = new List<string>();
+                        selectedPlaces = SelectedPlaces.Cast<int>().ToList();
+                    var selectedCurrentPlaces = new List<int>();
                     if (SelectedCurrentPlaces != null)
-                        selectedCurrentPlaces = SelectedCurrentPlaces.Cast<string>().ToList();
+                        selectedCurrentPlaces = SelectedCurrentPlaces.Cast<int>().ToList();
 
                     FoundProducts = new ObservableCollection<ProductInfo>(
                         gammaBase.vProductsInfo.Where(pinfo =>
@@ -278,8 +278,8 @@ namespace Gamma.ViewModels
                                      pi => pi.ProductID,
                                      (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
                                  ).Any(j => !j.IsWrittenOff)) &&
-                            (selectedPlaces.Count == 0 || selectedPlaces.Contains(pinfo.Place)) &&
-                            (selectedCurrentPlaces.Count == 0 || selectedCurrentPlaces.Contains(pinfo.CurrentPlace)) &&
+                            (selectedPlaces.Count == 0 || selectedPlaces.Contains((int)pinfo.PlaceID)) &&
+                            (selectedCurrentPlaces.Count == 0 || selectedCurrentPlaces.Contains((int)pinfo.CurrentPlaceID)) &&
                             (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
                             ).Select(pinfo => new ProductInfo
                             {

@@ -24,12 +24,12 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <dxlc:LayoutControl UseLayoutRounding="True" Margin="-12,0,-12,0" Orientation="Horizontal">
-                <dxlc:LayoutGroup  Orientation="Vertical">
-                    <dxlc:LayoutItem Label="Произведено" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
-                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceName"/>
+                <dxlc:LayoutGroup  Orientation="Horizontal">
+                    <dxlc:LayoutItem Label="Произведено" LabelPosition="Top" Width="150" VerticalAlignment="Stretch">
+                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"/>
                     </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Текущий передел" LabelPosition="Top" Width="200" VerticalAlignment="Stretch">
-                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedCurrentPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceName"/>
+                    <dxlc:LayoutItem Label="Текущий передел" LabelPosition="Top" Width="160" VerticalAlignment="Stretch">
+                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedCurrentPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup Orientation="Vertical">
