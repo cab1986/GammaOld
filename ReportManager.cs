@@ -67,6 +67,7 @@ namespace Gamma
         public static void PrintReport(Guid reportid, ReportParameters reportParams, bool showPreview = true, int numCopies = 1)
         {
             UIServices.SetBusyState();
+            DB.AddLogMessageInformation("PrintReport: " + reportid.ToString() + " ReportParams: " + reportParams.ToString());
             using (var report = new Report())
             {
                 var reportTemplate = (from rep in GammaBase.Templates where rep.ReportID == reportid select rep.Template)

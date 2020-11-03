@@ -17,5 +17,20 @@ namespace Gamma.Models
         public Guid? NomenclatureID { get; set; }
         public Guid? CharacteristicID { get; set; }
         public bool? IsVisibleDetailBand { get; set; }
+
+        public override string ToString()
+        {
+            var retString = (ID != null ? "ID=" + ID + "; " : "") +
+                (BeginDate != null ? "BeginDate=" + BeginDate + "; " : "") +
+                (EndDate != null ? "EndDate=" + EndDate + "; " : "") +
+                (PlaceID != null ? "PlaceID=" + PlaceID + "; " : "") +
+                (PlaceZoneID != null ? "PlaceZoneID=" + PlaceZoneID + "; " : "") +
+                (ProductKindID != null ? "ProductKindID=" + ProductKindID + "; " : "") +
+                (StateID != null ? "StateID=" + StateID + "; " : "") +
+                (NomenclatureID != null ? "NomenclatureID=" + NomenclatureID + "; " : "") +
+                (CharacteristicID != null ? "CharacteristicID=" + CharacteristicID + "; " : "") +
+                (IsVisibleDetailBand != null ? "IsVisibleDetailBand=" + IsVisibleDetailBand + "; " : "");
+            return retString;// base.ToString();
+        }
     }
 }
