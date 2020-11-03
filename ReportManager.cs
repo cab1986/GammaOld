@@ -13,6 +13,8 @@ using FastReport.Design;
 using Gamma.Common;
 using Gamma.Dialogs;
 using Gamma.Entities;
+using System.Collections.Generic;
+using Gamma.Models;
 
 namespace Gamma
 {
@@ -28,7 +30,7 @@ namespace Gamma
 
 		private static GammaEntities GammaBase { get; }
 
-		public static BarViewModel GetReportBar(string reportObject, Guid? vmid = null)
+        public static BarViewModel GetReportBar(string reportObject, Guid? vmid = null)
 		{
 			if (!GammaBase.Reports.Any(rep => rep.Name == reportObject) && DB.HaveWriteAccess("Reports"))
 			{
@@ -62,7 +64,88 @@ namespace Gamma
 			return bar;
 		}
 
-		public static void PrintReport(Guid reportid, Guid? paramId = null, bool showPreview = true, int numCopies = 1)
+        public static void PrintReport(Guid reportid, ReportParameters reportParams, bool showPreview = true, int numCopies = 1)
+        {
+            UIServices.SetBusyState();
+            using (var report = new Report())
+            {
+                var reportTemplate = (from rep in GammaBase.Templates where rep.ReportID == reportid select rep.Template)
+                    .FirstOrDefault();
+                if (reportTemplate == null) return;
+                var stream = new MemoryStream(reportTemplate);
+                report.Load(stream);
+                report.ConvertNulls = false;
+                if (reportParams.BeginDate == null)
+                    report.SetParameterValue("ParamBeginDate", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamBeginDate", reportParams.BeginDate);
+                if (reportParams.EndDate == null)
+                    report.SetParameterValue("ParamEndDate", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamEndDate", reportParams.EndDate);
+                if (reportParams.PlaceID == null)
+                    report.SetParameterValue("ParamPlaceID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamPlaceID", reportParams.PlaceID);
+                if (reportParams.PlaceZoneID == null)
+                    report.SetParameterValue("ParamPlaceZoneID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamPlaceZoneID", reportParams.PlaceZoneID);
+                if (reportParams.ProductKindID == null)
+                    report.SetParameterValue("ParamProductKindID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamProductKindID", reportParams.ProductKindID);
+                if (reportParams.StateID == null)
+                    report.SetParameterValue("ParamStateID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamStateID", reportParams.StateID);
+                if (reportParams.NomenclatureID == null)
+                    report.SetParameterValue("ParamNomenclatureID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamNomenclatureID", reportParams.NomenclatureID);
+                if (reportParams.CharacteristicID == null)
+                    report.SetParameterValue("ParamCharacteristicID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamCharacteristicID", reportParams.CharacteristicID);
+                //if (reportParams.IsVisibleDetailBand == null)
+                //    report.SetParameterValue("ParamIsVisibleDetailBand", System.DBNull.Value);
+                //else
+                    report.SetParameterValue("ParamIsVisibleDetailBand", reportParams.IsVisibleDetailBand ?? false);
+
+                if (reportParams.ID == null)
+                    report.SetParameterValue("ParamID", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamID", reportParams.ID);
+                if (string.IsNullOrEmpty(report.Dictionary.Connections[0].ConnectionString))
+                {
+                    report.Dictionary.Connections[0].ConnectionString = GammaSettings.SqlConnectionString;
+                }
+                else
+                {
+                    var reportConnectionBuilder = new SqlConnectionStringBuilder(report.Dictionary.Connections[0].ConnectionString);
+                    var settingsConnectionBuilder = new SqlConnectionStringBuilder(GammaSettings.SqlConnectionString);
+                    reportConnectionBuilder.UserID = settingsConnectionBuilder.UserID;
+                    reportConnectionBuilder.Password = settingsConnectionBuilder.Password;
+                    reportConnectionBuilder.DataSource = settingsConnectionBuilder.DataSource;
+                    reportConnectionBuilder.InitialCatalog = settingsConnectionBuilder.InitialCatalog;
+                    reportConnectionBuilder.ApplicationName = settingsConnectionBuilder.ApplicationName.Replace("Gamma", "Gamma (report)");
+                    report.Dictionary.Connections[0].ConnectionString = reportConnectionBuilder.ToString();
+                }
+
+                if (showPreview)
+                {
+                    report.Show();
+                }
+                else
+                {
+                    report.PrintSettings.ShowDialog = false;
+                    report.PrintSettings.Copies = numCopies;
+                    report.Print();
+                }
+            }
+        }
+
+        public static void PrintReport(Guid reportid, Guid? paramId = null, bool showPreview = true, int numCopies = 1)
 		{
 			UIServices.SetBusyState();
 			using (var report = new Report())
@@ -75,6 +158,9 @@ namespace Gamma
 				var paramBeginDate = report.Parameters.FindByName("ParamBeginDate"); // new Parameter("ParamBeginDate");
 				var paramEndDate = report.Parameters.FindByName("ParamEndDate");
                 var paramPlaceID = report.Parameters.FindByName("ParamPlaceID");
+                DateTime? paramBeginDateValue = null;
+                DateTime? paramEndDateValue = null;
+                int? paramPlaceIDValue = null;
                 if (paramBeginDate != null | paramEndDate != null | paramPlaceID != null)
 				{
 					var dialog = new FilterDateReportDialog();
@@ -83,43 +169,17 @@ namespace Gamma
                     dialog.ShowDialog();
 					if (dialog.DialogResult == true)
 					{
-                        if (paramBeginDate!= null) paramBeginDate.Value = dialog.DateBegin;
-                        if (paramEndDate != null) paramEndDate.Value = dialog.DateEnd;
-                        if (paramPlaceID != null) paramPlaceID.Value = dialog.PlaceID;
+                        if (paramBeginDate!= null) paramBeginDateValue = dialog.DateBegin;
+                        if (paramEndDate != null) paramEndDateValue = dialog.DateEnd;
+                        if (paramPlaceID != null) paramPlaceIDValue = dialog.PlaceID;
                     }
 					else
 					{
 						return;
 					}
 				}
-				if (paramId != null) report.SetParameterValue("ParamID", paramId);
-				if (string.IsNullOrEmpty(report.Dictionary.Connections[0].ConnectionString))
-				{
-					report.Dictionary.Connections[0].ConnectionString = GammaSettings.SqlConnectionString;
-				}
-				else
-				{
-					var reportConnectionBuilder = new SqlConnectionStringBuilder(report.Dictionary.Connections[0].ConnectionString);
-					var settingsConnectionBuilder = new SqlConnectionStringBuilder(GammaSettings.SqlConnectionString);
-					reportConnectionBuilder.UserID = settingsConnectionBuilder.UserID;
-					reportConnectionBuilder.Password = settingsConnectionBuilder.Password;
-					reportConnectionBuilder.DataSource = settingsConnectionBuilder.DataSource;
-					reportConnectionBuilder.InitialCatalog = settingsConnectionBuilder.InitialCatalog;
-                    reportConnectionBuilder.ApplicationName = settingsConnectionBuilder.ApplicationName.Replace("Gamma","Gamma (report)");
-                    report.Dictionary.Connections[0].ConnectionString = reportConnectionBuilder.ToString();
-				}
-
-				if (showPreview)
-				{
-					report.Show();
-				}
-				else
-				{
-					report.PrintSettings.ShowDialog = false;
-					report.PrintSettings.Copies = numCopies;
-					report.Print();
-				}
-			}
+                PrintReport(reportid, new ReportParameters() { ID = paramId, BeginDate = paramBeginDateValue, EndDate = paramEndDateValue, PlaceID = paramPlaceIDValue }, showPreview, numCopies);
+            }
 		}
 
 		public static void PrintReport(string reportName, string reportFolder = null, Guid? paramID = null,
@@ -133,7 +193,18 @@ namespace Gamma
 				PrintReport(reports[0], paramID, showPreview, numCopies);
 		}
 
-		public static void DesignReport(Guid reportid)
+        public static void PrintReport(string reportName, string reportFolder, ReportParameters reportParameters,
+            bool showPreview = true, int numCopies = 1)
+        {
+            var parentId = reportFolder == null || reportFolder == "" || reportFolder == String.Empty ? (Guid?)null : GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
+            var reports = GammaBase.Reports.Where(r => r.Name == reportName && (parentId == null || r.ParentID == parentId))
+                .Select(r => r.ReportID)
+                .ToList();
+            if (reports.Count == 1)
+                PrintReport(reports[0], reportParameters, showPreview, numCopies);
+        }
+
+        public static void DesignReport(Guid reportid)
 		{
 			CurrentReportID = reportid;
 			var repTemplate =

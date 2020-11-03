@@ -30,6 +30,7 @@ namespace Gamma.ViewModels
         protected DbEditItemWithNomenclatureViewModel()
         {
             ChooseNomenclatureCommand = new DelegateCommand(ChooseNomenclature,CanChooseNomenclature);
+            ClearNomenclatureCommand = new DelegateCommand(ClearNomenclature, CanChooseNomenclature);
         }
         private Guid? _nomenclatureid;
 
@@ -79,11 +80,17 @@ namespace Gamma.ViewModels
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DelegateCommand ChooseNomenclatureCommand { get; private set; }
+        public DelegateCommand ClearNomenclatureCommand { get; private set; }
 
         private void ChooseNomenclature()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, NomenclatureChanged);
             MessageManager.FindNomenclature(PlaceGroupID);
+        }
+
+        private void ClearNomenclature()
+        {
+            NomenclatureID = null;
         }
 
         protected virtual void NomenclatureChanged(Nomenclature1CMessage msg)

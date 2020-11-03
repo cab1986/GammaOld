@@ -11,11 +11,12 @@
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="800"
+             Name="win"
              d:DataContext="{d:DesignInstance Type=viewModels:StockRemaindersViewModel, IsDesignTimeCreatable = False}">
-
+            
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75" />
+            <RowDefinition Height="105" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <dxlc:LayoutControl Grid.Row="0" Orientation="Vertical">
@@ -34,27 +35,47 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup View="Group">
+                <dxlc:LayoutItem Label="Номенклатура">
+                    <dxe:ButtonEdit EditValue="{Binding NomenclatureName}" AllowDefaultButton="False">
+                    <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
+                    <dxe:ButtonInfo Content="x" Command="{Binding ClearNomenclatureCommand}"/>
+                    </dxe:ButtonEdit>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Характеристика">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" SelectedItem="{Binding SelectedCharacteristic}" DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup View="Group">
                 <dxlc:LayoutItem Label="Вид:">
                     <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" IsTextEditable="False"/>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Наименование:">
+                <!--<dxlc:LayoutItem Label="Наименование:">
                     <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" />
-                </dxlc:LayoutItem>
+                </dxlc:LayoutItem>-->
                 <dxlc:LayoutItem Label="Дата с:" Width="140">
                     <dxe:DateEdit EditValue="{Binding DateBegin}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="по:" Width="140">
                     <dxe:DateEdit EditValue="{Binding DateEnd}" />
                 </dxlc:LayoutItem>
-                <Button Content="Поиск" Command="{Binding RefreshCommand}" Width="60"/>
+                <Button Content="Поиск" Command="{Binding RefreshCommand}" Width="60" Height="25"/>
+                <Button Content="Печать" Command="{Binding PrintCommand}" Width="80" Height="25" />
+                <!--<Button Content="Export" Command="{Binding ShowPrintPreviewCommand}" Width="80" Height="25" >
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MarkupMultivalueConverter}">
+                            <Binding ElementName="view"/>
+                            <Binding ElementName="win"/>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>-->
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
-        <dxg:GridControl Grid.Row="1" ItemsSource="{Binding StockRemaindersList}" SelectedItem="{Binding SelectedStockRemainder}">
+        <dxg:GridControl x:Name="grid" Grid.Row="1" ItemsSource="{Binding StockRemaindersList}" SelectedItem="{Binding SelectedStockRemainder}">
             <dxmvvm:Interaction.Behaviors>
                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}" />
             </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.View>
-                <dxg:TableView AutoWidth="True" AllowEditing="False" />
+                <dxg:TableView x:Name="view" AutoWidth="True" AllowEditing="False" />
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Наименование" FieldName="NomenclatureName" VisibleIndex="0" GroupIndex="0" />
             <dxg:GridColumn Header="Номер" FieldName="Number" VisibleIndex="1" Width="70" Visible="{Binding IsVisibleWithGroup}" MaxWidth="90"/>

@@ -29,6 +29,7 @@
         <conv:DefaultBooleanConverter x:Key="DefaultBooleanConverter" />
         <conv:WithdrawByFactConverter x:Key="WithdrawByFactConverter" />
         <conv:CellInfoMultiValueConverter x:Key="CellInfoMultiValueConverter" />
+        <conv:MarkupMultivalueConverter x:Key="MarkupMultivalueConverter" />
         <DataTemplate x:Key="SpoolRemainderTemplate">
             <dxlc:LayoutGroup Orientation="Horizontal">
                 <dxlc:LayoutItem Label="Вес остатка, кг" LabelPosition="Top" Width="80" >

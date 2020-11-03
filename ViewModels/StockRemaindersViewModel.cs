@@ -7,11 +7,15 @@ using Gamma.Common;
 using Gamma.Interfaces;
 using Gamma.Models;
 using System.Windows;
-using System.Data.Entity.SqlServer;
+
+
+using System.Windows.Input;
+using DevExpress.Xpf.Grid;
+using DevExpress.Xpf.Printing;
 
 namespace Gamma.ViewModels
 {
-    public class StockRemaindersViewModel : SaveImplementedViewModel
+    public class StockRemaindersViewModel : DbEditItemWithNomenclatureViewModel
     {
         public StockRemaindersViewModel()
         {
@@ -23,9 +27,10 @@ namespace Gamma.ViewModels
             States.Add("Любое");
             SelectedStateIndex = States.Count - 1;
             RefreshCommand = new DelegateCommand(Find);
+            PrintCommand = new DelegateCommand(Print, () => StockRemaindersList?.Count > 0);
             ShowProductCommand = new DelegateCommand(() =>
                     MessageManager.OpenDocProduct(SelectedStockRemainder.ProductKind, SelectedStockRemainder.ProductID),
-                    () => SelectedStockRemainder.ProductID != null && SelectedStockRemainder.ProductID != Guid.Empty);
+                    () => SelectedStockRemainder?.ProductID != null && SelectedStockRemainder?.ProductID != Guid.Empty);
             using (var gammaBase = DB.GammaDb)
             {
                 Places = gammaBase.Places.Where(
@@ -69,10 +74,13 @@ namespace Gamma.ViewModels
             }
         }
 
+        public Characteristic SelectedCharacteristic { get; set; }
+
         public void Find()
         {
             UIServices.SetBusyState();
             SelectedStockRemainder = null;
+            var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
             using (var gammaBase = DB.GammaDb)
             {
                 var placeIDs = Places?.Select(p => p.PlaceID).ToList();
@@ -88,7 +96,10 @@ namespace Gamma.ViewModels
                              SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                              (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == d.StateID) &&
                              ((DateBegin == null || d.Date >= DateBegin) &&
-                             (DateEnd == null || d.Date <= DateEnd))
+                             (DateEnd == null || d.Date <= DateEnd)) &&
+                             (NomenclatureID == null || d.C1CNomenclatureID == NomenclatureID) &&
+                             (charId == new Guid() || d.C1CCharacteristicID == charId)
+                             //d.NomenclatureName.Contains(Number)
                             )
                             .OrderByDescending(d => d.Date)
                             .Select(d => new ProductInfo
@@ -117,7 +128,10 @@ namespace Gamma.ViewModels
                             SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                             (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == d.StateID) &&
                             ((DateBegin == null || d.Date >= DateBegin) &&
-                            (DateEnd == null || d.Date <= DateEnd))
+                            (DateEnd == null || d.Date <= DateEnd)) &&
+                             (NomenclatureID == null || d.C1CNomenclatureID == NomenclatureID) &&
+                             (charId == new Guid() || d.C1CCharacteristicID == charId)
+                             //d.NomenclatureName.Contains(Number)
                              )
                         .GroupBy(d => new { d.CurrentPlace, d.NomenclatureName, d.State, d.IsConfirmed })
                         .OrderByDescending(d => d.Key.NomenclatureName)
@@ -257,6 +271,7 @@ namespace Gamma.ViewModels
         public DelegateCommand DeleteItemCommand { get; }
         public DelegateCommand RefreshCommand { get; private set; }
         public DelegateCommand ShowProductCommand { get; private set; }
+        public DelegateCommand PrintCommand { get; private set; }
 
         private void OpenStockRemainder(Guid? docID = null)
         {
@@ -296,6 +311,31 @@ namespace Gamma.ViewModels
                 MessageBox.Show("Удаление","Не выбрана запись. Удалить не удалось.", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             
+        }
+
+        //public static class ExportHelper
+        //{
+        //public static DelegateCommand<List<object>> showPrintPreviewCommand = new DelegateCommand<List<object>>(ShowPrintPreview);
+        //public static ICommand ShowPrintPreviewCommand { get { return showPrintPreviewCommand; } }
+        //public static void ShowPrintPreview(List<object> objs)
+        //{
+        //    TableView tableView = (TableView)objs[0];
+        //Window window = new Window(); //(Window)objs[1];
+        //window.Show();
+        //PrintableControlLink pcl = new PrintableControlLink(tableView);
+        //    pcl.Landscape = true;
+        //    pcl.CreateDocument(false);
+        //    pcl.ShowPrintPreviewDialog(window);
+        //}
+        //}
+        //private Guid VMID { get; } = Guid.NewGuid();
+
+        public void Print()
+        {
+            var reportId = GammaBase.Reports.Where(r => r.Name == "Остатки на переделе" && r.ParentID == GammaBase.Reports.Where(p => p.Name == "StockRemainders").Select(p => p.ReportID).FirstOrDefault()).Select(r => r.ReportID).FirstOrDefault();
+            //ReportManager.GetReportBar("StockRemainders", VMID);
+            //Guid VMID = new Guid("533C8625-981D-EB11-8A10-28565A070C02");
+            ReportManager.PrintReport("Остатки на переделе","StockRemainders", new ReportParameters() { BeginDate = DateBegin, EndDate = DateEnd, PlaceID = PlaceId, PlaceZoneID = PlaceZoneId, ProductKindID = SelectedProductKindIndex == ProductKindsList.Count - 1 ? (int?)null : SelectedProductKindIndex, StateID = SelectedStateIndex == States.Count - 1 ? (int?)null : SelectedStateIndex, NomenclatureID = NomenclatureID, CharacteristicID = SelectedCharacteristic?.CharacteristicID, IsVisibleDetailBand = false });
         }
     }
 }
