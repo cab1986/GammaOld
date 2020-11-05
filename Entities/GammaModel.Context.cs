@@ -1485,5 +1485,10 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocMaterialProductionsOnShift_Result>("GetDocMaterialProductionsOnShift", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
+    
+        public virtual ObjectResult<CheckCurrentVersion_Result> CheckCurrentVersion()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckCurrentVersion_Result>("CheckCurrentVersion");
+        }
     }
 }

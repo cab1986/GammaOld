@@ -75,7 +75,7 @@ namespace Gamma
                 if (reportTemplate == null) return;
                 var stream = new MemoryStream(reportTemplate);
                 report.Load(stream);
-                report.ConvertNulls = false;
+                //report.ConvertNulls = false;
                 if (reportParams.BeginDate == null)
                     report.SetParameterValue("ParamBeginDate", System.DBNull.Value);
                 else

@@ -78,6 +78,22 @@ namespace Gamma
                 return false;
             }
         }
+
+        public static CheckCurrentVersion_Result CheckCurrentVersion()
+        {
+            
+            try
+            {
+                return GammaDb == null ? null : GammaDb.CheckCurrentVersion().FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                //var ee = e.GetType();
+                //MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException}");
+                return null;
+            }
+        }
+
         /*
                 public static void RollBack()
                 {

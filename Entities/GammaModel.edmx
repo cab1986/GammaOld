@@ -5213,6 +5213,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="BaseProductId" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="CheckConnection" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="CheckCurrentVersion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="CheckInstallProductionTaskSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -9504,6 +9505,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="CheckCurrentVersion" ReturnType="Collection(GammaModel.CheckCurrentVersion_Result)" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -14858,6 +14860,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Int32" Name="PlaceID" Nullable="true" />
           <Property Type="Boolean" Name="IsConfirmed" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="CheckCurrentVersion_Result">
+          <Property Type="String" Name="ResultMessage" Nullable="false" MaxLength="255" />
+          <Property Type="Boolean" Name="BlockCreation" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17705,6 +17711,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="DocNumberDate" ColumnName="DocNumberDate" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CheckCurrentVersion" FunctionName="GammaDBModel.CheckCurrentVersion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.CheckCurrentVersion_Result">
+                <ScalarProperty Name="ResultMessage" ColumnName="ResultMessage" />
+                <ScalarProperty Name="BlockCreation" ColumnName="BlockCreation" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
