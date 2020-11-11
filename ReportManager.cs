@@ -112,6 +112,10 @@ namespace Gamma
                 //    report.SetParameterValue("ParamIsVisibleDetailBand", System.DBNull.Value);
                 //else
                     report.SetParameterValue("ParamIsVisibleDetailBand", reportParams.IsVisibleDetailBand ?? false);
+                if (reportParams.NomenclatureKindValue == null)
+                    report.SetParameterValue("ParamNomenclatureKindValue", System.DBNull.Value);
+                else
+                    report.SetParameterValue("ParamNomenclatureKindValue", reportParams.NomenclatureKindValue);
 
                 if (reportParams.ID == null)
                     report.SetParameterValue("ParamID", System.DBNull.Value);

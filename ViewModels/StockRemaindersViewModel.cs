@@ -58,6 +58,19 @@ namespace Gamma.ViewModels
             placeZones.Insert(0, new PlaceZone() { Name = "Все" });
 
             PlaceId = 0;
+
+            using (var gammaBase = DB.GammaDb)
+            {
+                NomenclatureKindsList = gammaBase.C1CNomenclatureProperties.Where(
+                    p => p.C1CPropertyID == new Guid("E677C238-CAB1-11E3-AA54-002590304E93") && (p.C1CNomenclature.NomenclatureKindID == 3 || p.C1CNomenclature.NomenclatureKindID == 1))
+                    .OrderBy(p => p.C1CPropertyValues.Description)
+                    .Select(p => p.C1CPropertyValues.Description)
+                    .Distinct()
+                    .ToList();
+            }
+            NomenclatureKindsList.Insert(0, "Все" );
+                        
+
             IntervalId = 1;
             //Find();
         }
@@ -81,6 +94,7 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             SelectedStockRemainder = null;
             var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
+            var kindValue = NomenclatureKindsList[SelectedNomenclatureKindIndex];
             using (var gammaBase = DB.GammaDb)
             {
                 var placeIDs = Places?.Select(p => p.PlaceID).ToList();
@@ -98,7 +112,9 @@ namespace Gamma.ViewModels
                              ((DateBegin == null || d.Date >= DateBegin) &&
                              (DateEnd == null || d.Date <= DateEnd)) &&
                              (NomenclatureID == null || d.C1CNomenclatureID == NomenclatureID) &&
-                             (charId == new Guid() || d.C1CCharacteristicID == charId)
+                             (charId == new Guid() || d.C1CCharacteristicID == charId) &&
+                             ((SelectedNomenclatureKindIndex != 0 && d.KindValue == kindValue) ||
+                             SelectedNomenclatureKindIndex == 0)
                              //d.NomenclatureName.Contains(Number)
                             )
                             .OrderByDescending(d => d.Date)
@@ -130,7 +146,9 @@ namespace Gamma.ViewModels
                             ((DateBegin == null || d.Date >= DateBegin) &&
                             (DateEnd == null || d.Date <= DateEnd)) &&
                              (NomenclatureID == null || d.C1CNomenclatureID == NomenclatureID) &&
-                             (charId == new Guid() || d.C1CCharacteristicID == charId)
+                             (charId == new Guid() || d.C1CCharacteristicID == charId) &&
+                             ((SelectedNomenclatureKindIndex != 0 && d.KindValue == kindValue) ||
+                             SelectedNomenclatureKindIndex == 0)
                              //d.NomenclatureName.Contains(Number)
                              )
                         .GroupBy(d => new { d.CurrentPlace, d.NomenclatureName, d.State, d.IsConfirmed })
@@ -219,6 +237,22 @@ namespace Gamma.ViewModels
             }
         }
         public List<string> ProductKindsList { get; set; }
+
+        private int _selectedNomenclatureKindIndex;
+        public int SelectedNomenclatureKindIndex
+        {
+            get
+            {
+                return _selectedNomenclatureKindIndex;
+            }
+            set
+            {
+                _selectedNomenclatureKindIndex = value;
+                RaisePropertyChanged("SelectedNomenclatureKindIndex");
+            }
+        }
+        public List<string> NomenclatureKindsList { get; set; }
+
         public List<string> States { get; set; }
         private int _selectedStateIndex;
         public int SelectedStateIndex
@@ -335,7 +369,7 @@ namespace Gamma.ViewModels
             var reportId = GammaBase.Reports.Where(r => r.Name == "Остатки на переделе" && r.ParentID == GammaBase.Reports.Where(p => p.Name == "StockRemainders").Select(p => p.ReportID).FirstOrDefault()).Select(r => r.ReportID).FirstOrDefault();
             //ReportManager.GetReportBar("StockRemainders", VMID);
             //Guid VMID = new Guid("533C8625-981D-EB11-8A10-28565A070C02");
-            ReportManager.PrintReport("Остатки на переделе","StockRemainders", new ReportParameters() { BeginDate = DateBegin, EndDate = DateEnd, PlaceID = PlaceId, PlaceZoneID = PlaceZoneId, ProductKindID = SelectedProductKindIndex == ProductKindsList.Count - 1 ? (int?)null : SelectedProductKindIndex, StateID = SelectedStateIndex == States.Count - 1 ? (int?)null : SelectedStateIndex, NomenclatureID = NomenclatureID, CharacteristicID = SelectedCharacteristic?.CharacteristicID, IsVisibleDetailBand = false });
+            ReportManager.PrintReport("Остатки на переделе","StockRemainders", new ReportParameters() { BeginDate = DateBegin, EndDate = DateEnd, PlaceID = PlaceId, PlaceZoneID = PlaceZoneId, ProductKindID = SelectedProductKindIndex == ProductKindsList.Count - 1 ? (int?)null : SelectedProductKindIndex, StateID = SelectedStateIndex == States.Count - 1 ? (int?)null : SelectedStateIndex, NomenclatureID = NomenclatureID, CharacteristicID = SelectedCharacteristic?.CharacteristicID, IsVisibleDetailBand = false, NomenclatureKindValue = SelectedNomenclatureKindIndex == 0 ? String.Empty : NomenclatureKindsList[SelectedNomenclatureKindIndex] });
         }
     }
 }

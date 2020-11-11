@@ -1975,6 +1975,8 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="CurrentPlace" Type="varchar" MaxLength="2077" Nullable="false" />
           <Property Name="GroupNumberByTimeProductionDate" Type="int" Nullable="false" />
           <Property Name="SCU" Type="varchar" MaxLength="201" />
+          <Property Name="KindValueID" Type="uniqueidentifier" />
+          <Property Name="KindValue" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -6195,7 +6197,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductsInfo].[CurrentPlaceZoneID] AS [CurrentPlaceZoneID], 
     [vProductsInfo].[CurrentPlace] AS [CurrentPlace], 
     [vProductsInfo].[GroupNumberByTimeProductionDate] AS [GroupNumberByTimeProductionDate], 
-    [vProductsInfo].[SCU] AS [SCU]
+    [vProductsInfo].[SCU] AS [SCU], 
+    [vProductsInfo].[KindValueID] AS [KindValueID], 
+    [vProductsInfo].[KindValue] AS [KindValue]
     FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vRobotNomenclatures" EntityType="Self.vRobotNomenclatures" store:Type="Views" store:Schema="dbo">
@@ -11208,6 +11212,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="CurrentPlace" Type="String" Nullable="false" MaxLength="2077" FixedLength="false" Unicode="false" />
           <Property Name="GroupNumberByTimeProductionDate" Type="Int32" Nullable="false" />
           <Property Name="SCU" Type="String" MaxLength="201" FixedLength="false" Unicode="false" />
+          <Property Name="KindValueID" Type="Guid" />
+          <Property Name="KindValue" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DocShipmentOrders">
           <Key>
@@ -16239,6 +16245,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductsInfo">
             <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
               <MappingFragment StoreEntitySet="vProductsInfo">
+                <ScalarProperty Name="KindValue" ColumnName="KindValue" />
+                <ScalarProperty Name="KindValueID" ColumnName="KindValueID" />
                 <ScalarProperty Name="SCU" ColumnName="SCU" />
                 <ScalarProperty Name="GroupNumberByTimeProductionDate" ColumnName="GroupNumberByTimeProductionDate" />
                 <ScalarProperty Name="CurrentPlace" ColumnName="CurrentPlace" />

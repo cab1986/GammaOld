@@ -49,6 +49,9 @@
                 <dxlc:LayoutItem Label="Вид:">
                     <dxe:ComboBoxEdit ItemsSource="{Binding ProductKindsList}" SelectedIndex="{Binding SelectedProductKindIndex}" IsTextEditable="False"/>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Подвид:">
+                    <dxe:ComboBoxEdit ItemsSource="{Binding NomenclatureKindsList}" SelectedIndex="{Binding SelectedNomenclatureKindIndex}" IsTextEditable="False" />
+                </dxlc:LayoutItem>
                 <!--<dxlc:LayoutItem Label="Наименование:">
                     <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=LostFocus}" />
                 </dxlc:LayoutItem>-->

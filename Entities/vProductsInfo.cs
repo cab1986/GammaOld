@@ -49,5 +49,7 @@ namespace Gamma.Entities
         public string CurrentPlace { get; set; }
         public int GroupNumberByTimeProductionDate { get; set; }
         public string SCU { get; set; }
+        public Nullable<System.Guid> KindValueID { get; set; }
+        public string KindValue { get; set; }
     }
 }
