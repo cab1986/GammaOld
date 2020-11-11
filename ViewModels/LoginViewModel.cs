@@ -95,7 +95,7 @@ namespace Gamma.ViewModels
             var resultMessage = checkResult?.ResultMessage;
             if (checkResult == null || !(string.IsNullOrWhiteSpace(resultMessage) && !checkResult.BlockCreation))
             {
-                if (checkResult.BlockCreation)
+                if (checkResult == null && checkResult.BlockCreation)
                 {
                     MessageBox.Show(resultMessage, "Проверка версии программы", MessageBoxButton.OK,
                         MessageBoxImage.Error);
