@@ -16,8 +16,6 @@ namespace Gamma.Models
 
 		private readonly decimal newGroupPackCoefficient = 1;
 
-		private readonly decimal newPalletCoefficient = 1;
-
 		#endregion
 
 		#region Constructor
@@ -55,7 +53,7 @@ namespace Gamma.Models
 					{
 						NewNomenclature = info.Nomenclature;
 						newGroupPackCoefficient = info.GroupPacksCoefficient == 0 ? 1 : info.GroupPacksCoefficient;
-						newPalletCoefficient = info.PalletCoefficient == 0 ? 1 : info.PalletCoefficient;
+						NewPalletCoefficient = info.PalletCoefficient == 0 ? 1 : info.PalletCoefficient;
 					}
 				}
 			}
@@ -77,9 +75,11 @@ namespace Gamma.Models
 			RaisePropertyChanged(() => NumUnpackedPallets);
 		}
 
-		#endregion
+        #endregion
 
-		public Guid NomenclatureID { get; private set; }
+        public decimal NewPalletCoefficient { get; private set; }
+
+        public Guid NomenclatureID { get; private set; }
 
 		public Guid OldCharacteristicId { get; private set; }
 
@@ -114,11 +114,11 @@ namespace Gamma.Models
 
 		public decimal OldPalletQuantity => Quantity / oldPalletCoefficient;
 
-		public decimal NewPalletQuantity => Quantity / newPalletCoefficient;
+		public decimal NewPalletQuantity => Quantity / NewPalletCoefficient;
 
 		public decimal OldGroupPacksInPallet => oldPalletCoefficient / oldGroupPackCoefficient;
 
-		public decimal NewGroupPacksInPallet => newPalletCoefficient / newGroupPackCoefficient;
+		public decimal NewGroupPacksInPallet => NewPalletCoefficient / newGroupPackCoefficient;
 
 		public decimal NumUnpackedPallets
 		{
@@ -127,7 +127,9 @@ namespace Gamma.Models
 
 		public decimal NumPackedPallets
 		{
-			get { return NewPalletQuantity > 0 ? PackedQuantity / newPalletCoefficient : 0; }
+			get { return NewPalletQuantity > 0 ? PackedQuantity / NewPalletCoefficient : 0; }
 		}
+
+        public bool IsEnabledCreateNewPallet => (OldPalletQuantity > 0);
 	}
 }

@@ -1199,7 +1199,11 @@ namespace Gamma.Entities
     
         public virtual int CheckConnection()
         {
+            int ret = 0;
+#if (!DEBUG)
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CheckConnection");
+#endif
+            return ret;
         }
     
         public virtual int CreateDocBrokeWithBrokeDecisionComment(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> brokeQuantity, Nullable<System.Guid> rejectionReasonID, string comment, string printName, Nullable<int> placeID)

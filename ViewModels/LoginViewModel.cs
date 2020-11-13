@@ -90,7 +90,7 @@ namespace Gamma.ViewModels
                 GammaSettings.Get().UseScanner = false;
             }
             else GammaSettings.Get().UseScanner = UseScanner;
-
+#if (!DEBUG)
             var checkResult = DB.CheckCurrentVersion();
             var resultMessage = checkResult?.ResultMessage;
             if (checkResult == null || !(string.IsNullOrWhiteSpace(resultMessage) && !checkResult.BlockCreation))
@@ -113,6 +113,7 @@ namespace Gamma.ViewModels
 
                 }
             }
+#endif
             MessageManager.OpenMain();
             CloseWindow();
         }

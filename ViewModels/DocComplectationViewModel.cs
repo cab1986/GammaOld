@@ -10,6 +10,7 @@ using System.Data.Entity;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Entities;
+using DevExpress.Xpf.Grid;
 
 namespace Gamma.ViewModels
 {
@@ -29,7 +30,7 @@ namespace Gamma.ViewModels
 
 		#region Constructor
 
-		public DocComplectationViewModel(Guid docId)
+        public DocComplectationViewModel(Guid docId)
 		{
 			DocId = docId;
 			using (var context = DB.GammaDb)
@@ -86,13 +87,38 @@ namespace Gamma.ViewModels
 							});
 						}
 					ComplectationItems.Add(item);
-				}
+                    var palletRs = docComplectation
+                        .DocProduction
+                        .SelectMany(dp => dp.DocProductionProducts)
+                        .Where(dp => dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
+                            && dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID);
+                    if (palletRs?.Count()>0)
+                    {
+                        var itemPalletR = new ComplectationItem(nomenclaturePosition.C1CNomenclatureID,
+                        nomenclaturePosition.C1COldCharacteristicID, nomenclaturePosition.C1COldCharacteristicID,
+                        nomenclaturePosition.C1CQualityID, 0);
+                        foreach (var product in palletRs)
+                        {
+                            itemPalletR.PackedPallets.Add(new ComplectationProduct
+                            {
+                                DocId = product.DocID,
+                                ProductId = product.ProductID,
+                                Quantity = product.Quantity ?? 0,
+                                Number = product.Products.Number,
+                                Barcode = product.Products.BarCode
+                            });
+                        }
+                        ComplectationItems.Add(itemPalletR);
+                    }
+                }
 			}
-			Bars.Add(ReportManager.GetReportBar("DocComplectation", VMID));
-			Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
-			UnpackCommand = new DelegateCommand(Unpack, () => !string.IsNullOrEmpty(Barcode));
-			CreatePalletCommand = new DelegateCommand<ComplectationItem>(CreateNewPallet);
-            OpenPackedPalletItemCommand = new DelegateCommand(OpenProduct, () => SelectedPackedPalletItem != null);
+            Bars.Add(ReportManager.GetReportBar("DocComplectation", VMID));
+            Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
+            UnpackCommand = new DelegateCommand(Unpack, () => !string.IsNullOrEmpty(Barcode));
+            CreatePalletCommand = new DelegateCommand<ComplectationItem>(CreateNewPallet);
+            CreatePalletRCommand = new DelegateCommand<ComplectationItem>(CreateNewPalletR);
+            OpenPackedPalletItemCommand = new DelegateCommand(() => OpenProduct(SelectedPackedPalletItem), () => SelectedPackedPalletItem != null);
+            OpenUnpackedPalletItemCommand = new DelegateCommand(() => OpenProduct(SelectedUnpackedPalletItem), () => SelectedUnpackedPalletItem != null);
         }
 
         #endregion
@@ -269,18 +295,89 @@ namespace Gamma.ViewModels
 			ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 1);
 		}
 
-		#endregion
+        private void CreateNewPalletR(ComplectationItem item)
+        {
+            UIServices.SetBusyState();
+            var unpackedProducts = item.UnpackedPallets.Sum(p => p.Quantity);
+            var itemPalletR = ComplectationItems.Where(c => c.NewCharacteristicId == item.OldCharacteristicId).FirstOrDefault();
+            var packedProducts = item.PackedPallets.Sum(p => p.Quantity) + (itemPalletR == null ? 0 : itemPalletR.PackedPallets.Sum(p => p.Quantity));
 
-		#region Properties
+            if (unpackedProducts == 0)
+            {
+                MessageBox.Show("Ошибка! Создать неполную паллету невозможно, нет распакованных паллет" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
+                        MessageBoxImage.Error); ;
+                return;
+            }
+            else 
+                if (item.OldPalletQuantity > item.NumUnpackedPallets)
+            {
+                MessageBox.Show("Ошибка! Создать неполную паллету невозможно, мало распакованных паллет" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
+                        MessageBoxImage.Error); ;
+                return;
+            }
+            else
+                if (unpackedProducts - packedProducts <= 0)
+            {
+                MessageBox.Show("Ошибка! Создать неполную паллету невозможно, все распакованные паллету уже запакованы в новые!" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
+                        MessageBoxImage.Error); ;
+                return;
+            }
+            else
+                if (unpackedProducts - packedProducts >= item.NewPalletCoefficient)
+            {
+                MessageBox.Show("Ошибка! Создать неполную паллету невозможно, распакованных паллет достаточно для полной паллеты." + "\n" + "Сначала создайте целую паллету, а затем из остатка неполную!", "Ошибка документа", MessageBoxButton.OK,
+                        MessageBoxImage.Error); ;
+                return;
+            }
 
-		public DelegateCommand UnpackCommand { get; private set; }
+            var docProductionId = SqlGuidUtil.NewSequentialid();
+            var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
+            docProduction.DocProduction = new DocProduction
+            {
+                DocID = docProductionId,
+                InPlaceID = placeId
+            };
+            using (var context = DB.GammaDb)
+            {
+                context.Docs.Add(docProduction);
+                context.DocComplectation.First(d => d.DocComplectationID == DocId).DocProduction.Add(docProduction.DocProduction);
+                context.SaveChanges();
+            }
+            var product = productController.AddNewPalletToDocProduction(docProductionId, item.NomenclatureID,
+                item.OldCharacteristicId, unpackedProducts - packedProducts);
+            var complectedPallet = new ComplectationProduct
+            {
+                DocId = docProductionId,
+                ProductId = product.ProductID,
+                Quantity = unpackedProducts - packedProducts,
+                Barcode = product.Barcode,
+                Number = product.Number
+            };
+            //item.PackedPallets.Add(complectedPallet);
+            var itemAdd = new ComplectationItem(item.NomenclatureID,
+                        item.OldCharacteristicId, item.OldCharacteristicId,
+                        item.QualityId, 0);
+            itemAdd.PackedPallets.Add(complectedPallet);
+            ComplectationItems.Add(itemAdd);
+            LastCreatedPalletNumber = product.Number;
+            ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 1);
+        }
+
+        #endregion
+
+        #region Properties
+
+        
+        public DelegateCommand UnpackCommand { get; private set; }
 
 		public DelegateCommand<ComplectationItem> CreatePalletCommand { get; private set; }
 
-		/// <summary>
-		/// 1C Document Number
-		/// </summary>
-		public string Number { get; set; }
+        public DelegateCommand<ComplectationItem> CreatePalletRCommand { get; private set; }
+
+        /// <summary>
+        /// 1C Document Number
+        /// </summary>
+        public string Number { get; set; }
 
 		/// <summary>
 		/// 1C Date
@@ -336,9 +433,11 @@ namespace Gamma.ViewModels
 
         public ComplectationProduct SelectedPackedPalletItem { get; set; }
         public DelegateCommand OpenPackedPalletItemCommand { get; private set; }
-        private void OpenProduct()
+        public ComplectationProduct SelectedUnpackedPalletItem { get; set; }
+        public DelegateCommand OpenUnpackedPalletItemCommand { get; private set; }
+        private void OpenProduct(ComplectationProduct selectedPalletItem)
         {
-            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedPackedPalletItem.ProductId);
+            MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, selectedPalletItem.ProductId);
         }
 
         #endregion

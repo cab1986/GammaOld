@@ -40,8 +40,8 @@
             </dxlc:LayoutControl>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.5*" />
-                    <ColumnDefinition Width="0.5*" />
+                    <ColumnDefinition Width="0.4*" />
+                    <ColumnDefinition Width="0.6*" />
                 </Grid.ColumnDefinitions>
                 <DockPanel Grid.Column="0" LastChildFill="True">
                     <TextBlock DockPanel.Dock="Top" Text="РАСПАКОВАТЬ ПАЛЛЕТУ" FontSize="20"
@@ -57,13 +57,13 @@
                         <TextBox Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                                  Text="{Binding Barcode, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
-                    <dxg:GridControl ItemsSource="{Binding ComplectationItems}">
+                    <dxg:GridControl ItemsSource="{Binding ComplectationItems}" Name="GridControlUnpacked" CustomRowFilter="GridControlUnpacked_CustomRowFilter">
                         <dxg:GridControl.View>
                             <dxg:TableView AllowEditing="False" Width="Auto" AutoWidth="True" RowMinHeight="60" AllowGrouping="False" AllowDateTimeGroupIntervalMenu="False" IsGroupPanelMenuEnabled="False" IsGroupFooterMenuEnabled="False" IsGroupRowMenuEnabled="False" ShowGroupPanel="False" />
                         </dxg:GridControl.View>
                         <dxg:GridControl.DetailDescriptor>
                             <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding UnpackedPallets}">
-                                <dxg:GridControl>
+                                <dxg:GridControl SelectedItem="{Binding SelectedUnpackedPalletItem}">
                                     <dxg:GridControl.View>
                                         <dxg:TableView AutoWidth="True" AllowEditing="False" ShowGroupPanel="False"/>
                                     </dxg:GridControl.View>
@@ -106,6 +106,9 @@
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
                         </dxg:GridColumn>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenUnpackedPalletItemCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
                     </dxg:GridControl>
                 </DockPanel>
                 <DockPanel Grid.Column="1" LastChildFill="True">
@@ -173,8 +176,18 @@
                         <dxg:GridColumn Width="100" FixedWidth="True">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Command="{Binding Path=DataContext.CreatePalletCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowData.Row}" Width="100">
+                                    <Button Visibility="{Binding Path=RowData.Row.IsEnabledCreateNewPallet, NotifyOnSourceUpdated=True, Mode=Default, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding Path=DataContext.CreatePalletCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowData.Row}" Width="100">
                                         <TextBlock Text="Создать паллету" TextWrapping="WrapWithOverflow" HorizontalAlignment="Stretch" 
+                                                   FontSize="16" FontWeight="Bold" TextAlignment="Center"/>
+                                    </Button>
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn Width="100" FixedWidth="True">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Visibility="{Binding Path=RowData.Row.IsEnabledCreateNewPallet, NotifyOnSourceUpdated=True, Mode=Default, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding Path=DataContext.CreatePalletRCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="{Binding Path=RowData.Row}" Width="100">
+                                        <TextBlock Text="Неполная паллета" TextWrapping="WrapWithOverflow" HorizontalAlignment="Stretch" 
                                                    FontSize="16" FontWeight="Bold" TextAlignment="Center"/>
                                     </Button>
                                 </DataTemplate>

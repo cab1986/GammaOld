@@ -23,5 +23,12 @@ namespace Gamma.Views
 		{
 			InitializeComponent();
 		}
-	}
+
+        private void GridControlUnpacked_CustomRowFilter(object sender, DevExpress.Xpf.Grid.RowFilterEventArgs e)
+        {
+            e.Visible = ((Models.ComplectationItem)GridControlUnpacked.GetRow(GridControlUnpacked.GetRowHandleByListIndex(e.ListSourceRowIndex))).OldPalletQuantity > 0;
+            e.Handled = !e.Visible ? true : false;
+        }
+
+    }
 }
