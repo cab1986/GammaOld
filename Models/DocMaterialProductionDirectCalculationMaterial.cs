@@ -192,7 +192,7 @@ namespace Gamma.Models
                 
                 var materialsRemainderAtBegin =
                         new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
-                            GammaBase.FillDocMaterialProductionsAtBegin(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter)
+                            GammaBase.FillDocMaterialProductionsAtBegin(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter, ids)
                             //.Take(0)    
                             .Select(m => new WithdrawalMaterialBaseItem()
                             {

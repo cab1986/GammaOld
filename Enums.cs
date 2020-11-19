@@ -208,7 +208,8 @@ namespace Gamma
         SendAtEnd,
         IsNotSend,
         IsFullSend,
-        IsNotCalculatedRemainderAtEnd
+        IsNotCalculatedRemainderAtEnd,
+        InToCompositionTank
     }
 
     public enum DocCloseShiftMaterialTypes

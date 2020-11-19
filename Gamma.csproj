@@ -508,16 +508,16 @@
     <Compile Include="Entities\FillDocCloseShiftConvertingWastes_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\FillDocCloseShiftMaterialsDismiss_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\FillDocCloseShiftMaterials_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Entities\FillDocCloseShiftMaterialsAtBegin_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocCloseShiftMaterialsAtEnd_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftMaterialsDismiss_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftMaterials_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FillDocCloseShiftMovementProducts_Result.cs">
@@ -538,69 +538,6 @@
     <Compile Include="Entities\FillDocCloseShiftRepackProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\FillDocCloseShiftRwUnwinderSpools_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\FillDocCloseShiftUtilizationProducts_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\FillDocCloseShiftUtilizationSpools_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\FillDocMaterialProductionsAtBegin_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\FillDocMaterialProductionsIn_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\FillDocMaterialProductions_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetBatchSamples_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetDocCloseShiftProductionProducts_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetDocCloseShiftWarehouseMovement_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetDocMaterialProductionsOnShift_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\GetProductMaterials_Result.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\PlaceWithdrawalMaterialTypes.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\ProductionTaskConvertingSamples.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\RemainderTypes.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vDocCloseShiftMaterials.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vDocMaterialProductionCompositionCalculations.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vDocMaterialProductionDirectCalculations.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vPlaceZones.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vProductionMaterials.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vProductsCurrentStateInfo.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Entities\vRobotNomenclatures.cs">
-      <DependentUpon>GammaModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Entities\FillDocCloseShiftRwSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -613,7 +550,25 @@
     <Compile Include="Entities\FillDocCloseShiftRwSpools_Result3.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocCloseShiftRwUnwinderSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftUtilizationProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocCloseShiftUtilizationSpools_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FillDocCloseShiftWarehouseMovements_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocMaterialProductionsAtBegin_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocMaterialProductionsIn_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\FillDocMaterialProductions_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\FindNomenclatureByStringWithFilter_Result.cs">
@@ -634,6 +589,9 @@
     <Compile Include="Entities\GetBatchProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetBatchSamples_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetCharacteristicsForPM_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -652,10 +610,19 @@
     <Compile Include="Entities\GetDocCloseShiftPMSpools_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetDocCloseShiftProductionProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetDocCloseShiftWarehouseMovements_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetDocCloseShiftWarehouseMovement_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetDocCloseShiftWRGroupPacks_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetDocMaterialProductionsOnShift_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetDocRelations_Result.cs">
@@ -706,10 +673,13 @@
     <Compile Include="Entities\GetProductionTaskProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\GetProductionTasksOnState_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\GetProductionTasks_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\GetProductionTasksOnState_Result.cs">
+    <Compile Include="Entities\GetProductMaterials_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetProductRelations_Result.cs">
@@ -769,6 +739,9 @@
     <Compile Include="Entities\Places.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\PlaceWithdrawalMaterialTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\PlaceZones.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -790,6 +763,9 @@
     <Compile Include="Entities\ProductionTaskConverting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ProductionTaskConvertingSamples.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -805,10 +781,10 @@
     <Compile Include="Entities\ProductionTaskWR.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ProductKinds.cs">
+    <Compile Include="Entities\ProductItems.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Entities\ProductItems.cs">
+    <Compile Include="Entities\ProductKinds.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\ProductPallets.cs">
@@ -824,6 +800,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\ProductStates.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\RemainderTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\RemotePrinters.cs">
@@ -874,6 +853,15 @@
     <Compile Include="Entities\vCharacteristicSGBProperties.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\vDocCloseShiftMaterials.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vDocMaterialProductionCompositionCalculations.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vDocMaterialProductionDirectCalculations.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\vDocMovementGoods.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -886,7 +874,13 @@
     <Compile Include="Entities\vPlacePropertiesValues.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\vPlaceZones.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\vPMSpoolsToGroupPack.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vProductionMaterials.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\vProductionTaskBatches.cs">
@@ -895,7 +889,13 @@
     <Compile Include="Entities\vProductionTaskProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\vProductsCurrentStateInfo.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\vProductsInfo.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vRobotNomenclatures.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
@@ -1777,7 +1777,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

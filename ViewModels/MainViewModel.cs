@@ -132,7 +132,8 @@ namespace Gamma.ViewModels
                 OpenHelpCommand = new DelegateCommand(() => Process.Start("http://stgwiki.sgbi.local/index.php/Gamma"));
                 OpenDocWithdrawalsCommand = new DelegateCommand(() => CurrentView = new DocWithdrawalsViewModel());
                 OpenComplectedPalletsCommand = new DelegateCommand(() => CurrentView = new ComplectedPalletsViewModel());
-				OpenDocComplectationsCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel());
+                OpenDocComplectationsSource1CCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel(true));
+                OpenDocComplectationsSourceGammaCommand = new DelegateCommand(() => CurrentView = new DocComplectationsListViewModel(false));
                 OpenLogEventsCommand = new DelegateCommand(() => CurrentView = new LogEventsViewModel());
                 CreateNewDocBrokeCommand = new DelegateCommand(() => MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid()));
                 UnwinderRemainderCommand = new DelegateCommand(UnwinderRemainder);
@@ -162,7 +163,7 @@ namespace Gamma.ViewModels
                     break;
                 case PlaceGroup.Warehouses:
                     if (WorkSession.RoleName == "PalletRepacker")
-                        CurrentView = new DocComplectationsListViewModel();
+                        CurrentView = new DocComplectationsListViewModel(true);
                     else
                         CurrentView = new DocShipmentOrdersViewModel(); 
                     break;
@@ -209,7 +210,8 @@ namespace Gamma.ViewModels
 
         public DelegateCommand CreateNewDocBrokeCommand { get; private set; }
 
-        public DelegateCommand OpenDocComplectationsCommand { get; private set; }
+        public DelegateCommand OpenDocComplectationsSource1CCommand { get; private set; }
+        public DelegateCommand OpenDocComplectationsSourceGammaCommand { get; private set; }
 
         private void OpenInventarisations()
         {

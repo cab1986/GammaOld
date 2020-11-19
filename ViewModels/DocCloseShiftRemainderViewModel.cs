@@ -38,7 +38,7 @@ namespace Gamma.ViewModels
                         .OrderByDescending(d => d.Date)
                         .FirstOrDefault()?.DocProduction.DocProductionProducts.FirstOrDefault();
                 if (lastProductionProduct == null) return;
-                var pinfo = gammaBase.vProductsInfo.First(p => p.ProductID == lastProductionProduct.ProductID);
+                var pinfo = gammaBase.vProductsInfo.FirstOrDefault(p => p.ProductID == lastProductionProduct.ProductID);
                 if (pinfo == null) return;
                 NomenclatureID = pinfo.C1CNomenclatureID;
                 CharacteristicID = pinfo.C1CCharacteristicID;

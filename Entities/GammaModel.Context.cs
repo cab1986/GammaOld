@@ -1199,11 +1199,7 @@ namespace Gamma.Entities
     
         public virtual int CheckConnection()
         {
-            int ret = 0;
-#if (!DEBUG)
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CheckConnection");
-#endif
-            return ret;
         }
     
         public virtual int CreateDocBrokeWithBrokeDecisionComment(Nullable<System.Guid> docID, Nullable<System.Guid> productID, Nullable<decimal> brokeQuantity, Nullable<System.Guid> rejectionReasonID, string comment, string printName, Nullable<int> placeID)
@@ -1410,7 +1406,7 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductions_Result>("FillDocMaterialProductions", placeIDParameter, shiftIDParameter, closeDateParameter, isCompositionCalculationParameter, productionCharacteristicIDsParameter);
         }
     
-        public virtual ObjectResult<FillDocMaterialProductionsAtBegin_Result> FillDocMaterialProductionsAtBegin(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> date, Nullable<bool> isCompositionCalculation)
+        public virtual ObjectResult<FillDocMaterialProductionsAtBegin_Result> FillDocMaterialProductionsAtBegin(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> date, Nullable<bool> isCompositionCalculation, string productionCharacteristicIDs)
         {
             var placeIDParameter = placeID.HasValue ?
                 new ObjectParameter("PlaceID", placeID) :
@@ -1428,7 +1424,11 @@ namespace Gamma.Entities
                 new ObjectParameter("IsCompositionCalculation", isCompositionCalculation) :
                 new ObjectParameter("IsCompositionCalculation", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductionsAtBegin_Result>("FillDocMaterialProductionsAtBegin", placeIDParameter, shiftIDParameter, dateParameter, isCompositionCalculationParameter);
+            var productionCharacteristicIDsParameter = productionCharacteristicIDs != null ?
+                new ObjectParameter("ProductionCharacteristicIDs", productionCharacteristicIDs) :
+                new ObjectParameter("ProductionCharacteristicIDs", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocMaterialProductionsAtBegin_Result>("FillDocMaterialProductionsAtBegin", placeIDParameter, shiftIDParameter, dateParameter, isCompositionCalculationParameter, productionCharacteristicIDsParameter);
         }
     
         public virtual ObjectResult<FillDocMaterialProductionsIn_Result> FillDocMaterialProductionsIn(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> date, Nullable<bool> isCompositionCalculation, Nullable<System.Guid> fromDocID)

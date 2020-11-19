@@ -366,9 +366,9 @@ namespace Gamma
             return GammaDb.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftEndTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
         }
 
-        public static Guid? GetDocMaterialInFromDocID(int placeID,int shiftID, DateTime date)
+        public static Guid? GetDocMaterialInFromDocID(int placeID,int shiftID, DateTime date, string productionCharacteristicIDs)
         {
-            return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
+            return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}','{productionCharacteristicIDs}')").AsEnumerable().First();
         }
 
         public static short? GetPaperMachinePlace(int placeid, GammaEntities gammaBase = null)

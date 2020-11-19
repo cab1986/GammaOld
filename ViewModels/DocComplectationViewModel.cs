@@ -48,7 +48,7 @@ namespace Gamma.ViewModels
 				}
 				placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID 
 					?? WorkSession.PlaceID;
-				DocDate = (DateTime)docComplectation.C1CDocComplectation.Date;
+				DocDate = (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
 				Number = docComplectation.C1CDocComplectation.C1CCode;
 				foreach (var nomenclaturePosition in context.C1CDocComplectationNomenclature
 					.Where(d => d.C1CDocComplectationID == docComplectation.C1CDocComplectationID))
@@ -171,12 +171,12 @@ namespace Gamma.ViewModels
 				DeleteFromUnpack(products.First());
 				return;
 			}
-			using (var context = DB.GammaDb)
+            using (var context = DB.GammaDb)
 			{
 				vProductsInfo pallet;
 				try
 				{
-					pallet = context.vProductsInfo.SingleOrDefault(p => p.BarCode.Contains(Barcode) || p.Number.Contains(Barcode) && p.ProductKindID == (int)ProductKind.ProductPallet);
+					pallet = context.vProductsInfo.SingleOrDefault(p => (p.BarCode.Contains(Barcode) || p.Number.Contains(Barcode)) && (p.ProductKindID == (int)ProductKind.ProductPallet || p.ProductKindID == (int)ProductKind.ProductPalletR));
 				}
 				catch
 				{
@@ -193,7 +193,19 @@ namespace Gamma.ViewModels
 					MessageBox.Show("Паллета уже списана");
 					return;
 				}
-				var item = ComplectationItems.FirstOrDefault(i => i.NomenclatureID.Equals(pallet.C1CNomenclatureID) &&
+
+
+                if (!(ComplectationItems?.Count() > 0))
+                {
+                    var complectationItems = new List<ComplectationItem>(ComplectationItems);
+                    var itemAdd = new ComplectationItem(pallet.C1CNomenclatureID,
+                        (Guid)pallet.C1CCharacteristicID, (Guid)pallet.C1CCharacteristicID,
+                        pallet.C1CQualityID, pallet.Quantity ?? 0);
+                    complectationItems.Add(itemAdd);
+                    ComplectationItems = complectationItems;
+                }
+
+                var item = ComplectationItems.FirstOrDefault(i => i.NomenclatureID.Equals(pallet.C1CNomenclatureID) &&
 																i.OldCharacteristicId.Equals(pallet.C1CCharacteristicID));
 				if (item == null)
 				{
@@ -401,9 +413,23 @@ namespace Gamma.ViewModels
 			}
 		}
 
-		public List<ComplectationItem> ComplectationItems { get; set; } = new List<ComplectationItem>();
+        private List<ComplectationItem> _complectationItems { get; set; } = new List<ComplectationItem>();
 
-		public string LastCreatedPalletNumber
+        public List<ComplectationItem> ComplectationItems
+        {
+            get { return _complectationItems; }
+            set
+            {
+                if (_complectationItems == value)
+                {
+                    return;
+                }
+                _complectationItems = value;
+                RaisePropertyChanged(() => ComplectationItems);
+            }
+        }
+
+        public string LastCreatedPalletNumber
 		{
 			get { return _lastCreatedPalletNumber; }
 			set

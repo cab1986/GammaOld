@@ -59,6 +59,7 @@ namespace Gamma.ViewModels
             TankGroupContainer = new DocMaterialTankGroupContainer(PlaceID);
             CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
+            IsNotSendMaterialIntoNextPlace = DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace;
             IsReadOnlyQuantityRemainderAtEnd = !DocMaterialCompositionCalculations.IsNotCalculatedQuantityRemainderAtEnd;
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
@@ -76,6 +77,7 @@ namespace Gamma.ViewModels
             CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
             DocMaterialCompositionCalculations.LoadProductionMaterials(docID, productionProductCharacteristicIDs);
+            IsNotSendMaterialIntoNextPlace = DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace;
             IsReadOnlyQuantityRemainderAtEnd = !DocMaterialCompositionCalculations.IsNotCalculatedQuantityRemainderAtEnd;
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate, docID, isConfirmed, productionProductCharacteristicIDs);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
@@ -108,6 +110,20 @@ namespace Gamma.ViewModels
         public bool IsVisibleTankRemainders { get; set; }
         public bool IsAllowEditingDocMaterialCompositionCalculations => !IsReadOnly && IsVisibleTankRemainders;
 
+        private bool _isReadOnlyColumnIsNotSendMaterialIntoNextPlace { get; set; }
+        public bool IsReadOnlyColumnIsNotSendMaterialIntoNextPlace
+        { 
+            get
+            {
+                return _isReadOnlyColumnIsNotSendMaterialIntoNextPlace;
+            }
+            set
+            {
+                _isReadOnlyColumnIsNotSendMaterialIntoNextPlace = value;                 
+                RaisePropertyChanged("IsReadOnlyColumnIsNotSendMaterialIntoNextPlace");
+            }
+        }
+
         public bool _isReadOnlyQuantityRemainderAtEnd { get; set; } = true;
         public bool IsReadOnlyQuantityRemainderAtEnd
         {
@@ -134,6 +150,7 @@ namespace Gamma.ViewModels
             (DocMaterialProductionDirectCalculationsGrid as DocMaterialProductionDirectCalculationMaterialViewModel)?.ChangeConfirmed(isConfirmed);
             RaisePropertyChanged("IsReadOnly");
             RaisePropertyChanged("IsAllowEditingDocMaterialCompositionCalculations");
+            RaisePropertyChanged("IsReadOnlyColumnIsNotSendMaterialIntoNextPlace");
         }
 
         public bool IsReadOnly => !DB.HaveWriteAccess("DocMaterialProductions") || IsConfirmed;
@@ -278,6 +295,27 @@ namespace Gamma.ViewModels
             }
         }
 
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                //if (DocMaterialCompositionCalculations.CheckSetNotSendMaterialIntoNextPlace(value))
+                {
+                    _isNotSendMaterialIntoNextPlace = value;
+
+                    IsReadOnlyColumnIsNotSendMaterialIntoNextPlace = IsReadOnly || IsNotSendMaterialIntoNextPlace;
+                    DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace = value;
+                    if (DocMaterialProductionDirectCalculationsGrid != null && DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials != null)
+                    {
+                        DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials.IsNotSendMaterialIntoNextPlace = value;
+                    }
+                    RaisePropertiesChanged("IsNotSendMaterialIntoNextPlace");
+                }
+            }
+        }
+
         public void FillGrid()
         {
             FillProductionMaterials(true);
@@ -293,6 +331,7 @@ namespace Gamma.ViewModels
             {
                 DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials?.FillProductionMaterials(IsFillEnd);
             }
+            IsNotSendMaterialIntoNextPlace = false;
         }
 
         public void FillGridWithNoFillEnd()
@@ -310,6 +349,7 @@ namespace Gamma.ViewModels
             {
                 DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials?.ClearFromButton();
             }
+            IsNotSendMaterialIntoNextPlace = false;
         }
 
         public override bool SaveToModel(Guid docId)

@@ -25,7 +25,7 @@ namespace Gamma.Models
             TankGroupContainer = tankGroupContainer;
             //Messenger.Default.Register<RecalcQuantityFromTankReaminderMessage>(this, RecalcQuantityFromTankReaminder);
             Messenger.Default.Register<RecalcMaterialProductionQuantityEndFromTankReaminderMessage>(this, RecalcQuantityEndFromTankReaminder);
-            IsVisibleColumnQunatityIn = GammaBase.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.In);
+            IsVisibleColumnQunatityIn = GammaBase.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && (t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.In || t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.InToCompositionTank));
             IsVisibleColumnQuantityGRVAtEnd = GammaBase.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && t.Name.Contains("ГРВ"));
         }
 
@@ -58,6 +58,54 @@ namespace Gamma.Models
 
         public List<Doc> Docs { get; private set; }
 
+        public bool CheckSetNotSendMaterialIntoNextPlace (bool value)
+        {
+            if (DocMaterialProductionCompositionCalculations == null)
+                return false;
+            else
+            {
+                var s1 = DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityRemainderAtBegin);
+                var s2 = DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityIn);
+                var s3 = DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityDismiss);
+                var s4 = DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityRemainderAtEnd);
+                var s5 = TankGroupContainer.Quantity;
+                var b1 = s1 + s2 + s3 <= s5;
+                return !value || (value && DocMaterialProductionCompositionCalculations.Count != 0 && (DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityRemainderAtBegin) + DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityIn) + DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityDismiss) <= DocMaterialProductionCompositionCalculations.Sum(m => m.QuantityRemainderAtEnd)));
+            }
+
+        }
+
+        public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
+        public bool IsNotSendMaterialIntoNextPlace
+        {
+            get { return _isNotSendMaterialIntoNextPlace; }
+            set
+            {
+                _isNotSendMaterialIntoNextPlace = value;
+                //if (value)
+                {
+                    
+                    foreach (var item in DocMaterialProductionCompositionCalculations)
+                    {
+                        item.IsNotSendMaterialIntoNextPlace = value;
+                    }
+                    if (!value)
+                    {
+                        foreach (var item in DocMaterialProductionCompositionCalculations)
+                        {
+                            TankGroupContainer.RefreshComposition(item.NomenclatureID, item.ParentID, ((item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0)), item.QuantityIn, item.IsNotSendMaterialIntoNextPlace, false);
+                        }
+                        TankGroupContainer.RecalcAllNomenclatureInComposition(true);
+                        //RecalcQuantityEndFromTankReaminder(DocMaterialProductionCompositionCalculations.FirstOrDefault().NomenclatureID, DocMaterialProductionCompositionCalculations.FirstOrDefault().QuantityRemainderAtEnd ?? 0);
+                    }
+                    var ritem = new DocMaterialProductionCompositionCalculationItem { WithdrawByFact = false };
+                    DocMaterialProductionCompositionCalculations.Add(ritem);
+                    DocMaterialProductionCompositionCalculations.Remove(ritem);
+                }
+                RaisePropertiesChanged("DocMaterialProductionCompositionCalculations");
+            }
+        }
+
         public void LoadProductionMaterials(Guid docId, List<Guid> productionProductCharacteristicIDs)
         {
             ProductionProductCharacteristicIDs = productionProductCharacteristicIDs;
@@ -88,16 +136,21 @@ namespace Gamma.Models
 
             //IsNotSendMaterialIntoNextPlace = DocMaterialProductionCompositionCalculations.Count != 0 && DocMaterialProductionCompositionCalculations.Max(m => m.IsNotSendMaterialIntoNextPlace);
             IsNotCalculatedQuantityRemainderAtEnd = DocMaterialProductionCompositionCalculations.Count != 0 && DocMaterialProductionCompositionCalculations.Max(m => m.IsNotCalculatedQuantityRemainderAtEnd);
-
+            IsNotSendMaterialIntoNextPlace = DocMaterialProductionCompositionCalculations.Count != 0 && DocMaterialProductionCompositionCalculations.Min(m => m.IsNotSendMaterialIntoNextPlace);
             //foreach (var item in DocMaterialProductionCompositionCalculations)
             //{
             //    TankGroupContainer.AddComposition(item.NomenclatureID, item.ParentID, item.IsFullSendMaterialIntoNextPlace ? 0 : ((item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0)), item.IsFullSendMaterialIntoNextPlace ? 0 : item.QuantityIn);                
             //}
-
+            //var isNotSend = true;
             foreach (var item in DocMaterialProductionCompositionCalculations)
             {
+                //    if (!item.IsNotSendMaterialIntoNextPlace)
+                //        isNotSend = false;
                 TankGroupContainer.RefreshComposition(item.NomenclatureID, item.ParentID, item.IsFullSendMaterialIntoNextPlace ? 0 : ((item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0)), item.IsFullSendMaterialIntoNextPlace ? 0 : item.QuantityIn, item.IsNotSendMaterialIntoNextPlace, false);
             }
+
+            //if (isNotSend)
+            //    IsNotSendMaterialIntoNextPlace = isNotSend;
 
             var doc = GammaBase.Docs.First(d => d.DocID == docId);
             Docs = doc.DocMaterialProductDocs.Select(dc => new Doc() { DocID = dc.DocID, Date = dc.Date, DocTypeID = dc.DocTypeID, Number = dc.Number, Person = dc.Persons?.Name, Place = dc.Places?.Name, ShiftID = dc.ShiftID ?? 0, User = dc.Users?.Name, IsConfirmed = dc.IsConfirmed }).ToList();
@@ -189,7 +242,7 @@ namespace Gamma.Models
 
                 var materialsRemainderAtBegin =
                         new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
-                            GammaBase.FillDocMaterialProductionsAtBegin(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter)
+                            GammaBase.FillDocMaterialProductionsAtBegin(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter, ids)
                             //.Take(0)    
                             .Select(m => new WithdrawalMaterialBaseItem()
                             {
@@ -245,7 +298,7 @@ namespace Gamma.Models
                 }
                 else
                 {
-                    fromDocID = DB.GetDocMaterialInFromDocID(PlaceID, ShiftID, CloseDate);
+                    fromDocID = DB.GetDocMaterialInFromDocID(PlaceID, ShiftID, CloseDate, ids);
                     if (fromDocID != null)
                     {
                         var doc = GammaBase.Docs.Where(d => d.DocID == fromDocID).FirstOrDefault();
@@ -337,8 +390,7 @@ namespace Gamma.Models
             DocMaterialProductionCompositionCalculations.Add(item);
             DocMaterialProductionCompositionCalculations.Remove(item);
         }
-
-
+        
         public void Clear(bool IsFillEnd = true)
         {
             foreach (var item in DocMaterialProductionCompositionCalculations)
@@ -369,9 +421,14 @@ namespace Gamma.Models
 
         public void RecalcQuantityEndFromTankReaminder(RecalcMaterialProductionQuantityEndFromTankReaminderMessage msg)
         {
-            var docMaterialProduction = DocMaterialProductionCompositionCalculations.Where(p => p.NomenclatureID == msg.NomenclatureID).FirstOrDefault();
+            RecalcQuantityEndFromTankReaminder(msg.NomenclatureID, msg.Quantity);
+        }
+
+        public void RecalcQuantityEndFromTankReaminder(Guid nomenclatureID, decimal quantity)
+        {
+            var docMaterialProduction = DocMaterialProductionCompositionCalculations.Where(p => p.NomenclatureID == nomenclatureID).FirstOrDefault();
             if (docMaterialProduction != null)
-                docMaterialProduction.QuantityRemainderAtEnd = Math.Round(msg.Quantity,3);
+                docMaterialProduction.QuantityRemainderAtEnd = Math.Round(quantity,3);
             var sumQuantityRemainderAtEnd = DocMaterialProductionCompositionCalculations.Sum(p => p.QuantityRemainderAtEnd);
             foreach (var item in DocMaterialProductionCompositionCalculations)
                 item.SumQuantityRemainderAtEnd = sumQuantityRemainderAtEnd ?? 0;

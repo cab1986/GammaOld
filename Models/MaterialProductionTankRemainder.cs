@@ -14,12 +14,18 @@ namespace Gamma.Models
 {
     public class MaterialProductionTankRemainder : ViewModelBase, ICheckedAccess
     {
-        public MaterialProductionTankRemainder(int docMaterialTankID, string name, int volume)
+        public MaterialProductionTankRemainder(int docMaterialTankID, string name, int volume, int? docMaterialProductionTypeID)
         {
             GammaBase = DB.GammaDb;
             DocMaterialTankID = docMaterialTankID;
-            Name = name + " V="+volume+"м3";
             Volume = volume;
+            Name = name + " V="+Volume+"м3";
+            if (docMaterialProductionTypeID == (int)DocMaterialProductionTypes.InToCompositionTank)
+            {
+                IsNotRemainderAtEnd = true;
+                Concentration = 100;
+                Level = 100;
+            };
             var docMaterialTank = GammaBase.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
             if (docMaterialTank != null)
             {
@@ -40,8 +46,8 @@ namespace Gamma.Models
             //NomenclatureID = GammaBase.DocMaterialTankGroups.Where(t => t.DocMaterialTankGroupID == msg.DocMaterialTankGroupID);
             //ExceptNomenclatureID { get; private set; }
         }
-
-        public MaterialProductionTankRemainder(int docMaterialTankID, string name, int volume, decimal concentration, decimal level)
+        /*
+        public MaterialProductionTankRemainder(int docMaterialTankID, string name, int volume, decimal concentration, decimal level, int? docMaterialProductionTypeID)
         {
             GammaBase = DB.GammaDb;
             DocMaterialTankID = docMaterialTankID;
@@ -49,6 +55,7 @@ namespace Gamma.Models
             Concentration = concentration;
             Level = level;
             Name = name;
+            IsNotRemainderAtEnd = docMaterialProductionTypeID == (int)DocMaterialProductionTypes.InToCompositionTank;
             var docMaterialTank = GammaBase.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
             if (docMaterialTank != null)
             {
@@ -66,7 +73,7 @@ namespace Gamma.Models
                     }
                 }
             }
-        }
+        }*/
 
         private int _docMaterialTankID { get; set; }
         public int DocMaterialTankID
@@ -85,6 +92,8 @@ namespace Gamma.Models
 
         public List<Guid> NomenclatureID { get; private set; } = new List<Guid>();
         public List<Guid> ExceptNomenclatureID { get; private set; } = new List<Guid>();
+
+        public bool IsNotRemainderAtEnd { get; set; }
 
         private decimal _concentration;
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -123,7 +132,7 @@ namespace Gamma.Models
             set
             {
                 if (_quantity == value) return;
-                _quantity = value;
+                _quantity = IsNotRemainderAtEnd ? 0 : value;
                 //MessageManager.RecalcQuantityFromTankReaminderEvent(DocMaterialTankID, DocMaterialTankGroupID, value, NomenclatureID, ExceptNomenclatureID);
                 MessageManager.RecalcQuantityFromTankGroupReaminderEvent(DocMaterialTankGroupID);
                 RaisePropertyChanged("Quantity");

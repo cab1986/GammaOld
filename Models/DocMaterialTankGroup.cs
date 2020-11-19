@@ -37,7 +37,7 @@ namespace Gamma.Models
         public int DocMaterialTankGroupID { get; private set; }
         public string Name { get; set; }
         public bool IsVisible { get; set; } = false;
-        public decimal Quantity { get; set; }
+        //public decimal Quantity { get; set; }
         public int? DocMaterialProductionTypeID { get; private set; }
         public int? NextDocMaterialTankGroupID { get; private set; }
         public List<Guid> NomenclatureID { get; private set; } = new List<Guid>();
@@ -63,6 +63,19 @@ namespace Gamma.Models
                         ExceptNomenclatureID.AddRange(item.Select(i => i.C1CNomenclatureID).ToList());
                     }
                 }
+            }
+        }
+
+        public decimal Quantity
+        {
+            get
+            {
+                decimal quantity = 0;
+                foreach (var tank in Tanks)
+                {
+                    quantity = quantity + tank.Quantity;
+                }
+                return quantity;
             }
         }
     }
