@@ -81,7 +81,7 @@ namespace Gamma.Models
                             tankGroup.Composition.Add(nomenclatureID, quantityIn ?? 0);
                             break;
                         case ((int)DocMaterialProductionTypes.InToCompositionTank):
-                            tankGroup.Composition.Add(nomenclatureID, 0);
+                            tankGroup.Composition.Add(nomenclatureID, quantityIn ?? 0);
                             break;
                     }
                 }
@@ -148,7 +148,7 @@ namespace Gamma.Models
                             tankGroup.Composition[nomenclatureID] = quantityIn ?? 0;
                             break;
                         case ((int)DocMaterialProductionTypes.InToCompositionTank):
-                            tankGroup.Composition[nomenclatureID] = 0;
+                            tankGroup.Composition[nomenclatureID] = quantityIn ?? 0;
                                 break;
                         }
                     }
