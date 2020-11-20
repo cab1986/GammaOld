@@ -59,8 +59,8 @@ namespace Gamma.ViewModels
 					foreach (var product in docComplectation
 						.DocProduction
 						.SelectMany(dp => dp.DocProductionProducts)
-						.Where(dp => dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-							&& dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1CNewCharacteristicID))
+						.Where(dp => dp.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
+							&& dp.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1CNewCharacteristicID))
 						{
 							item.PackedPallets.Add(new ComplectationProduct
 							{
@@ -74,8 +74,8 @@ namespace Gamma.ViewModels
 					foreach (var product in docComplectation
 						.DocWithdrawal
 						.SelectMany(dw => dw.DocWithdrawalProducts)
-						.Where(dw => dw.Products.ProductPallets.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-									&& dw.Products.ProductPallets.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID))
+						.Where(dw => dw.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
+									&& dw.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID))
 						{
 						item.UnpackedPallets.Add(new ComplectationProduct
 							{
