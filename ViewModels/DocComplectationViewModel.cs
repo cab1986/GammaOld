@@ -11,10 +11,21 @@ using DevExpress.Mvvm;
 using Gamma.Common;
 using Gamma.Entities;
 using DevExpress.Xpf.Grid;
+using Gamma.DialogViewModels;
+using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
-	public class DocComplectationViewModel : SaveImplementedViewModel, IBarImplemented
+    public class Complectation_Item
+    {
+        public Guid NomenclatureID { get; set; }
+        public Guid OldCharacteristicId { get; set; }
+        public Guid NewCharacteristicId { get; set; }
+        public Guid? QualityId { get; set; }
+        public decimal Quantity { get; set; }
+    }
+
+    public class DocComplectationViewModel : SaveImplementedViewModel, IBarImplemented
 	{
 		#region Fields
 
@@ -33,73 +44,48 @@ namespace Gamma.ViewModels
         public DocComplectationViewModel(Guid docId)
 		{
 			DocId = docId;
-			using (var context = DB.GammaDb)
-			{
-				var docComplectation = context.DocComplectation.Include(d => d.C1CDocComplectation)
-					.Include(d => d.DocProduction.Select(dp => dp.DocProductionProducts))
-					.Include(d => d.DocWithdrawal.Select(dw => dw.DocWithdrawalProducts))
-					.FirstOrDefault(d => d.DocComplectationID == docId);
-				if (docComplectation == null)
-				{
-					MessageBox.Show("Произошла ошибка, документа нет в базе", "Ошибка документа", MessageBoxButton.OK,
-						MessageBoxImage.Error);
-					CloseWindow();
-					return;
-				}
-				placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID 
-					?? WorkSession.PlaceID;
-				DocDate = (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
-				Number = docComplectation.C1CDocComplectation.C1CCode;
-				foreach (var nomenclaturePosition in context.C1CDocComplectationNomenclature
-					.Where(d => d.C1CDocComplectationID == docComplectation.C1CDocComplectationID))
-				{
-					var item = new ComplectationItem(nomenclaturePosition.C1CNomenclatureID,
-						nomenclaturePosition.C1COldCharacteristicID, nomenclaturePosition.C1CNewCharacteristicID,
-						nomenclaturePosition.C1CQualityID, nomenclaturePosition.Quantity ?? 0);
-					foreach (var product in docComplectation
-						.DocProduction
-						.SelectMany(dp => dp.DocProductionProducts)
-						.Where(dp => dp.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-							&& dp.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1CNewCharacteristicID))
-						{
-							item.PackedPallets.Add(new ComplectationProduct
-							{
-								DocId = product.DocID,
-								ProductId = product.ProductID,
-								Quantity = product.Quantity ?? 0,
-								Number = product.Products.Number,
-								Barcode = product.Products.BarCode
-							});
-						}
-					foreach (var product in docComplectation
-						.DocWithdrawal
-						.SelectMany(dw => dw.DocWithdrawalProducts)
-						.Where(dw => dw.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-									&& dw.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID))
-						{
-						item.UnpackedPallets.Add(new ComplectationProduct
-							{
-								DocId = product.DocID,
-								ProductId = product.ProductID,
-								Quantity = product.Quantity ?? 0,
-								Number = product.Products.Number,
-								Barcode = product.Products.BarCode
-							});
-						}
-					ComplectationItems.Add(item);
-                    var palletRs = docComplectation
-                        .DocProduction
-                        .SelectMany(dp => dp.DocProductionProducts)
-                        .Where(dp => dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CNomenclatureID == nomenclaturePosition.C1CNomenclatureID
-                            && dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CCharacteristicID == nomenclaturePosition.C1COldCharacteristicID);
-                    if (palletRs?.Count()>0)
+            using (var context = DB.GammaDb)
+            {
+                var docComplectation = context.DocComplectation.Include(d => d.C1CDocComplectation)
+                    .Include(d => d.DocProduction.Select(dp => dp.DocProductionProducts))
+                    .Include(d => d.DocWithdrawal.Select(dw => dw.DocWithdrawalProducts))
+                    .FirstOrDefault(d => d.DocComplectationID == docId);
+                if (docComplectation == null)
+                {
+                    MessageBox.Show("Произошла ошибка, документа нет в базе", "Ошибка документа", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    CloseWindow();
+                    return;
+                }
+                placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID
+                    ?? WorkSession.PlaceID;
+                DocDate = (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
+                Number = docComplectation.C1CDocComplectation.C1CCode;
+                var complectation_Items = context.C1CDocComplectationNomenclature
+                    .Where(d => d.C1CDocComplectationID == docComplectation.C1CDocComplectationID)
+                    .Select(d => new Complectation_Item()
                     {
-                        var itemPalletR = new ComplectationItem(nomenclaturePosition.C1CNomenclatureID,
-                        nomenclaturePosition.C1COldCharacteristicID, nomenclaturePosition.C1COldCharacteristicID,
-                        nomenclaturePosition.C1CQualityID, 0);
-                        foreach (var product in palletRs)
+                        NomenclatureID = d.C1CNomenclatureID,
+                        OldCharacteristicId = d.C1COldCharacteristicID,
+                        NewCharacteristicId = d.C1CNewCharacteristicID,
+                        QualityId = d.C1CQualityID,
+                        Quantity = d.Quantity ?? 0
+                    })
+                    .ToList();
+                if (!(complectation_Items == null || complectation_Items.Count == 0))
+                {
+                    foreach (var citem in complectation_Items)
+                    {
+                        var item = new ComplectationItem(citem.NomenclatureID,
+                                                citem.OldCharacteristicId, citem.NewCharacteristicId,
+                                                citem.QualityId, citem.Quantity);
+                        foreach (var product in docComplectation
+                            .DocProduction
+                            .SelectMany(dp => dp.DocProductionProducts)
+                            .Where(dp => dp.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == item.NomenclatureID
+                                && dp.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == item.NewCharacteristicId))
                         {
-                            itemPalletR.PackedPallets.Add(new ComplectationProduct
+                            item.PackedPallets.Add(new ComplectationProduct
                             {
                                 DocId = product.DocID,
                                 ProductId = product.ProductID,
@@ -108,10 +94,98 @@ namespace Gamma.ViewModels
                                 Barcode = product.Products.BarCode
                             });
                         }
-                        ComplectationItems.Add(itemPalletR);
+                        foreach (var product in docComplectation
+                            .DocWithdrawal
+                            .SelectMany(dw => dw.DocWithdrawalProducts)
+                            .Where(dw => dw.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == item.NomenclatureID
+                                        && dw.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == item.OldCharacteristicId))
+                        {
+                            item.UnpackedPallets.Add(new ComplectationProduct
+                            {
+                                DocId = product.DocID,
+                                ProductId = product.ProductID,
+                                Quantity = product.Quantity ?? 0,
+                                Number = product.Products.Number,
+                                Barcode = product.Products.BarCode
+                            });
+                        }
+                        ComplectationItems.Add(item);
+
+                        var palletRs = docComplectation
+                            .DocProduction
+                            .SelectMany(dp => dp.DocProductionProducts)
+                            .Where(dp => dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CNomenclatureID == item.NomenclatureID
+                                && dp.Products.ProductPallets.ProductItems.FirstOrDefault().C1CCharacteristicID == item.OldCharacteristicId);
+                        if (palletRs?.Count() > 0)
+                        {
+                            var itemPalletR = new ComplectationItem(citem.NomenclatureID,
+                                                citem.OldCharacteristicId, citem.OldCharacteristicId,
+                                                citem.QualityId, 0);
+                            foreach (var product in palletRs)
+                            {
+                                itemPalletR.PackedPallets.Add(new ComplectationProduct
+                                {
+                                    DocId = product.DocID,
+                                    ProductId = product.ProductID,
+                                    Quantity = product.Quantity ?? 0,
+                                    Number = product.Products.Number,
+                                    Barcode = product.Products.BarCode
+                                });
+                            }
+                            ComplectationItems.Add(itemPalletR);
+                        }
+
                     }
                 }
-			}
+                else
+                {
+                    var docWithdrawalProduct = docComplectation.DocWithdrawal.SelectMany(d => d.DocWithdrawalProducts).FirstOrDefault();
+                    if (docWithdrawalProduct != null)
+                    {
+                        var productItem = docWithdrawalProduct.Products.ProductItems.FirstOrDefault();
+                        if (productItem != null)
+                            complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productItem.C1CCharacteristicID, QualityId = new Guid("D05404A0-6BCE-449B-A798-41EBE5E5B977"), Quantity = 1 });
+
+                        foreach (var citem in complectation_Items)
+                        {
+                            var item = new ComplectationItem(citem.NomenclatureID,
+                                                    citem.OldCharacteristicId, citem.NewCharacteristicId,
+                                                    citem.QualityId, citem.Quantity);
+                            foreach (var product in docComplectation
+                                .DocProduction
+                                .SelectMany(dp => dp.DocProductionProducts)
+                                .Where(dp => dp.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == item.NomenclatureID
+                                    && dp.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == item.NewCharacteristicId))
+                            {
+                                item.PackedPallets.Add(new ComplectationProduct
+                                {
+                                    DocId = product.DocID,
+                                    ProductId = product.ProductID,
+                                    Quantity = product.Quantity ?? 0,
+                                    Number = product.Products.Number,
+                                    Barcode = product.Products.BarCode
+                                });
+                            }
+                            foreach (var product in docComplectation
+                                .DocWithdrawal
+                                .SelectMany(dw => dw.DocWithdrawalProducts)
+                                .Where(dw => dw.Products.ProductItems.FirstOrDefault().C1CNomenclatureID == item.NomenclatureID
+                                            && dw.Products.ProductItems.FirstOrDefault().C1CCharacteristicID == item.OldCharacteristicId))
+                            {
+                                item.UnpackedPallets.Add(new ComplectationProduct
+                                {
+                                    DocId = product.DocID,
+                                    ProductId = product.ProductID,
+                                    Quantity = product.Quantity ?? 0,
+                                    Number = product.Products.Number,
+                                    Barcode = product.Products.BarCode
+                                });
+                            }
+                            ComplectationItems.Add(item);
+                        }
+                    }
+                }
+            }
             Bars.Add(ReportManager.GetReportBar("DocComplectation", VMID));
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             UnpackCommand = new DelegateCommand(Unpack, () => !string.IsNullOrEmpty(Barcode));
@@ -272,7 +346,7 @@ namespace Gamma.ViewModels
             var unpackedProducts = item.UnpackedPallets.Sum(p => p.Quantity);
             var packedProducts = item.PackedPallets.Sum(p => p.Quantity);
 
-            if (unpackedProducts == 0 || unpackedProducts < (packedProducts == 0 ? 0 : packedProducts + item.PackedPallets.FirstOrDefault().Quantity))
+            if (unpackedProducts == 0 || unpackedProducts < packedProducts + item.NewPalletCoefficient) //(packedProducts == 0 ? 0 : packedProducts + item.PackedPallets.FirstOrDefault().Quantity))
             {
                 MessageBox.Show("Ошибка! Создать новую паллету невозможно, недостаточно распакованных паллет."+ "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
                         MessageBoxImage.Error); ;
@@ -311,7 +385,7 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             var unpackedProducts = item.UnpackedPallets.Sum(p => p.Quantity);
-            var itemPalletR = ComplectationItems.Where(c => c.NewCharacteristicId == item.OldCharacteristicId).FirstOrDefault();
+            var itemPalletR = (item.OldCharacteristicId != item.NewCharacteristicId) ? ComplectationItems.Where(c => c.NewCharacteristicId == item.OldCharacteristicId).FirstOrDefault() : null;
             var packedProducts = item.PackedPallets.Sum(p => p.Quantity) + (itemPalletR == null ? 0 : itemPalletR.PackedPallets.Sum(p => p.Quantity));
 
             if (unpackedProducts == 0)
@@ -334,52 +408,93 @@ namespace Gamma.ViewModels
                         MessageBoxImage.Error); ;
                 return;
             }
+            int quantity;
+            bool dialogResult;
+            if (item.OldCharacteristicId != item.NewCharacteristicId)
+            {
+                quantity = (int)(unpackedProducts - packedProducts);
+                dialogResult = true;
+            }
             else
-                if (unpackedProducts - packedProducts >= item.NewPalletCoefficient)
             {
-                MessageBox.Show("Ошибка! Создать неполную паллету невозможно, распакованных паллет достаточно для полной паллеты." + "\n" + "Сначала создайте целую паллету, а затем из остатка неполную!", "Ошибка документа", MessageBoxButton.OK,
-                        MessageBoxImage.Error); ;
-                return;
-            }
+                var baseQuantity = (int)item.NewPalletCoefficient;
 
-            var docProductionId = SqlGuidUtil.NewSequentialid();
-            var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
-            docProduction.DocProduction = new DocProduction
-            {
-                DocID = docProductionId,
-                InPlaceID = placeId
-            };
-            using (var context = DB.GammaDb)
-            {
-                context.Docs.Add(docProduction);
-                context.DocComplectation.First(d => d.DocComplectationID == DocId).DocProduction.Add(docProduction.DocProduction);
-                context.SaveChanges();
+                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете", "Кол-во, рул/пачка", 1, Math.Min(baseQuantity, (int)(unpackedProducts - packedProducts)));
+                var okCommand = new UICommand()
+                {
+                    Caption = "OK",
+                    IsCancel = false,
+                    IsDefault = true,
+                    Command = new DelegateCommand<CancelEventArgs>(
+                x => DebugFunc(),
+                x => model.Quantity >= 1 && model.Quantity < baseQuantity),
+                };
+                var cancelCommand = new UICommand()
+                {
+                    Id = MessageBoxResult.Cancel,
+                    Caption = "Отмена",
+                    IsCancel = true,
+                    IsDefault = false,
+                };
+                var dialogService = GetService<IDialogService>("");
+                var result = dialogService.ShowDialog(
+                    dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                    title: "Кол-во рулончиков/пачек",
+                    viewModel: model);
+                quantity = model.Quantity;
+                dialogResult = (result == okCommand);
             }
-            var product = productController.AddNewPalletToDocProduction(docProductionId, item.NomenclatureID,
-                item.OldCharacteristicId, unpackedProducts - packedProducts);
-            var complectedPallet = new ComplectationProduct
+            if (dialogResult)
             {
-                DocId = docProductionId,
-                ProductId = product.ProductID,
-                Quantity = unpackedProducts - packedProducts,
-                Barcode = product.Barcode,
-                Number = product.Number
-            };
-            //item.PackedPallets.Add(complectedPallet);
-            var itemAdd = new ComplectationItem(item.NomenclatureID,
-                        item.OldCharacteristicId, item.OldCharacteristicId,
-                        item.QualityId, 0);
-            itemAdd.PackedPallets.Add(complectedPallet);
-            ComplectationItems.Add(itemAdd);
-            LastCreatedPalletNumber = product.Number;
-            ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 1);
+
+                var docProductionId = SqlGuidUtil.NewSequentialid();
+                var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
+                docProduction.DocProduction = new DocProduction
+                {
+                    DocID = docProductionId,
+                    InPlaceID = placeId
+                };
+                using (var context = DB.GammaDb)
+                {
+                    context.Docs.Add(docProduction);
+                    context.DocComplectation.First(d => d.DocComplectationID == DocId).DocProduction.Add(docProduction.DocProduction);
+                    context.SaveChanges();
+                }
+                var product = productController.AddNewPalletToDocProduction(docProductionId, item.NomenclatureID,
+                    item.OldCharacteristicId, quantity);
+                var complectedPallet = new ComplectationProduct
+                {
+                    DocId = docProductionId,
+                    ProductId = product.ProductID,
+                    Quantity = quantity,
+                    Barcode = product.Barcode,
+                    Number = product.Number
+                };
+                if (item.OldCharacteristicId == item.NewCharacteristicId)
+                    item.PackedPallets.Add(complectedPallet);
+                else
+                {
+                    var itemAdd = new ComplectationItem(item.NomenclatureID,
+                                item.OldCharacteristicId, item.OldCharacteristicId,
+                                item.QualityId, 0);
+                    itemAdd.PackedPallets.Add(complectedPallet);
+                    ComplectationItems.Add(itemAdd);
+                }
+                LastCreatedPalletNumber = product.Number;
+                ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 1);
+            }
+        }
+
+        private void DebugFunc()
+        {
+            System.Diagnostics.Debug.Print("Кол-во задано");
         }
 
         #endregion
 
         #region Properties
 
-        
+
         public DelegateCommand UnpackCommand { get; private set; }
 
 		public DelegateCommand<ComplectationItem> CreatePalletCommand { get; private set; }
