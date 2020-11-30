@@ -135,10 +135,14 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="190" />
                         </Grid.ColumnDefinitions>
                         <Label Content="Номер последней паллеты:" Margin="2"/>
                         <TextBox Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                                      Text="{Binding LastCreatedPalletNumber, Mode=OneWay}" IsReadOnly="True"/>
+                        <Button Grid.Column="2" Command="{Binding DeleteProductCommand}" Width="190">
+                            <TextBlock Text="Удалить ошибочную  паллету" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" />
+                        </Button>
                     </Grid>
                     <dxg:GridControl ItemsSource="{Binding ComplectationItems}">
                         <dxg:GridControl.View>

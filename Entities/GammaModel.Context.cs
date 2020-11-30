@@ -1494,5 +1494,14 @@ namespace Gamma.Entities
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CheckCurrentVersion_Result>("CheckCurrentVersion");
         }
+    
+        public virtual ObjectResult<string> DeleteNewPalletInDocComplectation(Nullable<System.Guid> productID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteNewPalletInDocComplectation", productIDParameter);
+        }
     }
 }

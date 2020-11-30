@@ -199,6 +199,7 @@ namespace Gamma.ViewModels
             CreatePalletRCommand = new DelegateCommand<ComplectationItem>(CreateNewPalletR);
             OpenPackedPalletItemCommand = new DelegateCommand(() => OpenProduct(SelectedPackedPalletItem), () => SelectedPackedPalletItem != null);
             OpenUnpackedPalletItemCommand = new DelegateCommand(() => OpenProduct(SelectedUnpackedPalletItem), () => SelectedUnpackedPalletItem != null);
+            DeleteProductCommand = new DelegateCommand(DeleteProduct, CanDeleteExecute);
         }
 
         #endregion
@@ -404,13 +405,6 @@ namespace Gamma.ViewModels
                         MessageBoxImage.Error); ;
                 return;
             }
-            //else 
-            //    if (item.OldPalletQuantity > item.NumUnpackedPallets)
-            //{
-            //    MessageBox.Show("Ошибка! Создать неполную паллету невозможно, мало распакованных паллет" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
-            //            MessageBoxImage.Error); ;
-            //    return;
-            //}
             else
             if (unpackedProducts - packedProducts <= 0)
             {
@@ -490,16 +484,18 @@ namespace Gamma.ViewModels
                     item.PackedPallets.Add(complectedPallet);
                 else
                 {
+                    List<ComplectationItem> complectationItems = new List<ComplectationItem>(ComplectationItems);
                     var itemAdd = new ComplectationItem(item.NomenclatureID,
                                 item.OldCharacteristicId, item.OldCharacteristicId,
                                 item.QualityId, 0);
                     itemAdd.PackedPallets.Add(complectedPallet);
-                    ComplectationItems.Add(itemAdd);
+                    complectationItems.Add(itemAdd);
+                    ComplectationItems = complectationItems;
                 }
                 LastCreatedPalletNumber = product.Number;
                 ReportManager.PrintReport("Неполная паллета", "Pallet", docProductionId, false, 1);
 
-                RaisePropertyChanged(() => ComplectationItems);
+                
             }
         }
 
@@ -508,10 +504,42 @@ namespace Gamma.ViewModels
             System.Diagnostics.Debug.Print("Кол-во задано");
         }
 
+        private bool CanDeleteExecute()
+        {
+            if (SelectedPackedPalletItem == null) return false;
+            return DB.HaveWriteAccess("ProductPallets");
+        }
+
+        private void DeleteProduct()
+        {
+            if (SelectedPackedPalletItem == null) return;
+            var dlgResult = MessageBox.Show("Вы уверены, что хотите удалить паллету № " + SelectedPackedPalletItem.Number + " ?", "Удаление паллеты",
+               MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (dlgResult == MessageBoxResult.No) return;
+            
+            using (var context = DB.GammaDb)
+            {
+                var delResult = context.DeleteNewPalletInDocComplectation(SelectedPackedPalletItem.ProductId).FirstOrDefault();
+                if (delResult != "")
+                {
+                    MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
+                else
+                {
+                    context.SaveChanges();
+                    var complectationItem = ComplectationItems.FirstOrDefault(i => i.PackedPallets.Contains(SelectedPackedPalletItem));
+                    if (complectationItem != null)
+                        complectationItem.PackedPallets.Remove(SelectedPackedPalletItem);
+                }
+            }
+
+        }
         #endregion
 
         #region Properties
 
+        
+        public DelegateCommand DeleteProductCommand { get; private set; }
 
         public DelegateCommand UnpackCommand { get; private set; }
 

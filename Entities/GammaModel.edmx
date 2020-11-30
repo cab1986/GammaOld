@@ -5278,6 +5278,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="DeleteNewPalletInDocComplectation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="DeletePallet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -9516,6 +9519,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="CheckCurrentVersion" ReturnType="Collection(GammaModel.CheckCurrentVersion_Result)" />
+          <FunctionImport Name="DeleteNewPalletInDocComplectation" ReturnType="Collection(String)">
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -17740,6 +17746,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteNewPalletInDocComplectation" FunctionName="GammaDBModel.DeleteNewPalletInDocComplectation" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

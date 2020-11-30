@@ -67,13 +67,16 @@ namespace Gamma.Models
 		{
 			RaisePropertyChanged(() => PackedQuantity);
 			RaisePropertyChanged(() => NumPackedPallets);
-		}
+            RaisePropertyChanged(() => Packed);
+        }
 
 		private void UnpackedChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			RaisePropertyChanged(() => UnpackedQuantity);
 			RaisePropertyChanged(() => NumUnpackedPallets);
-		}
+            RaisePropertyChanged(() => Unpacked);
+            
+        }
 
         #endregion
 
