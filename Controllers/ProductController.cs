@@ -16,13 +16,13 @@ namespace Gamma.Controllers
 		/// <param name="nomenclatureId"></param>
 		/// <param name="characteristicId"></param>
 		/// <returns></returns>
-		public Product AddNewPalletToDocProduction(Guid docProductionId, Guid nomenclatureId, Guid characteristicId)
+		public Product AddNewPalletToDocProduction(Guid docProductionId, Guid nomenclatureId, Guid characteristicId, Guid? placeZoneID = null)
 		{
 			using (var context = DB.GammaDb)
 			{
 				var quantity = context.C1CCharacteristics.First(c => c.C1CCharacteristicID == characteristicId)
 									.C1CMeasureUnitsPallet.Coefficient ?? 1;
-                return AddNewPalletToDocProduction(docProductionId, nomenclatureId, characteristicId, quantity);
+                return AddNewPalletToDocProduction(docProductionId, nomenclatureId, characteristicId, quantity, placeZoneID);
                 /*var productId = SqlGuidUtil.NewSequentialid();
 				var pallet = new Products
 				{
@@ -77,7 +77,7 @@ namespace Gamma.Controllers
 		/// <param name="nomenclatureId"></param>
 		/// <param name="characteristicId"></param>
 		/// <returns></returns>
-		public Product AddNewPalletToDocProduction(Guid docProductionId, Guid nomenclatureId, Guid characteristicId, decimal quantity)
+		public Product AddNewPalletToDocProduction(Guid docProductionId, Guid nomenclatureId, Guid characteristicId, decimal quantity, Guid? placeZoneID = null)
         {
             using (var context = DB.GammaDb)
             {
@@ -120,6 +120,11 @@ namespace Gamma.Controllers
                     Quantity = quantity
                 });
                 context.SaveChanges();
+                if (placeZoneID != null)
+                {
+                    context.Rests.Where(r => r.ProductID == productId).FirstOrDefault().PlaceZoneID = placeZoneID;
+                    context.SaveChanges();
+                }
                 return context.Products.Where(p => p.ProductID == productId)
                     .Select(p => new Product
                     {

@@ -37,9 +37,11 @@ namespace Gamma.ViewModels
 
 		private int placeId;
 
-		#endregion
+        private Guid? placeZoneID;
 
-		#region Constructor
+        #endregion
+
+        #region Constructor
 
         public DocComplectationViewModel(Guid docId)
 		{
@@ -57,8 +59,12 @@ namespace Gamma.ViewModels
                     CloseWindow();
                     return;
                 }
-                placeId = context.Places.FirstOrDefault(p => p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID
-                    ?? WorkSession.PlaceID;
+                
+                placeId = (context.Places.FirstOrDefault(p => docComplectation.C1CDocComplectation.C1CWarehouseID != null && p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID
+                    ?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceID)
+                     ?? (WorkSession.BranchID == 1 ? 8 : (WorkSession.BranchID == 2 ? 28 : WorkSession.PlaceID));
+                placeZoneID = context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceZoneID
+                     ?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && ((p.Places.BranchID == 1 && p.PlaceID == 8) || (p.Places.BranchID == 2 && p.PlaceID == 28)))?.PlaceZoneID;
                 DocDate = (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
                 Number = docComplectation.C1CDocComplectation.C1CCode;
                 var complectation_Items = context.C1CDocComplectationNomenclature
@@ -292,7 +298,7 @@ namespace Gamma.ViewModels
 					return;
 				}
 				var docWithdrawalId = SqlGuidUtil.NewSequentialid();
-				if (!documentController.WithdrawProduct(pallet.ProductID, docWithdrawalId))
+				if (!documentController.WithdrawProduct(pallet.ProductID, docWithdrawalId, true))
 				{
 					MessageBox.Show("Не удалось списать паллету. Ошибка в базе.");
 					return;
@@ -308,7 +314,9 @@ namespace Gamma.ViewModels
 					Quantity = pallet.Quantity ?? 0
 				});
 			}
-		}
+
+            RaisePropertyChanged(() => ComplectationItems);
+        }
 
 		/// <summary>
 		/// Cancel unpack operation of product
@@ -354,7 +362,7 @@ namespace Gamma.ViewModels
             }
 
             var docProductionId = SqlGuidUtil.NewSequentialid();
-			var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
+			var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, true, placeId);
 			docProduction.DocProduction = new DocProduction
 			{
 				DocID = docProductionId,
@@ -367,7 +375,7 @@ namespace Gamma.ViewModels
 				context.SaveChanges();
 			}
 			var product = productController.AddNewPalletToDocProduction(docProductionId, item.NomenclatureID,
-				item.NewCharacteristicId);
+				item.NewCharacteristicId, placeZoneID);
 			var complectedPallet = new ComplectationProduct
 			{
 				DocId = docProductionId,
@@ -379,7 +387,9 @@ namespace Gamma.ViewModels
 			item.PackedPallets.Add(complectedPallet);
 			LastCreatedPalletNumber = product.Number;
 			ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 1);
-		}
+
+            RaisePropertyChanged(() => ComplectationItems);
+        }
 
         private void CreateNewPalletR(ComplectationItem item)
         {
@@ -394,15 +404,15 @@ namespace Gamma.ViewModels
                         MessageBoxImage.Error); ;
                 return;
             }
-            else 
-                if (item.OldPalletQuantity > item.NumUnpackedPallets)
-            {
-                MessageBox.Show("Ошибка! Создать неполную паллету невозможно, мало распакованных паллет" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
-                        MessageBoxImage.Error); ;
-                return;
-            }
+            //else 
+            //    if (item.OldPalletQuantity > item.NumUnpackedPallets)
+            //{
+            //    MessageBox.Show("Ошибка! Создать неполную паллету невозможно, мало распакованных паллет" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
+            //            MessageBoxImage.Error); ;
+            //    return;
+            //}
             else
-                if (unpackedProducts - packedProducts <= 0)
+            if (unpackedProducts - packedProducts <= 0)
             {
                 MessageBox.Show("Ошибка! Создать неполную паллету невозможно, все распакованные паллету уже запакованы в новые!" + "\n" + "Сначала распакуйте старую паллету!", "Ошибка документа", MessageBoxButton.OK,
                         MessageBoxImage.Error); ;
@@ -411,15 +421,22 @@ namespace Gamma.ViewModels
             int quantity;
             bool dialogResult;
             if (item.OldCharacteristicId != item.NewCharacteristicId)
-            {
+            {                
+                if (unpackedProducts - packedProducts >= item.NewPalletCoefficient)
+                {
+                    MessageBox.Show("Ошибка! Создать неполную паллету невозможно, распакованных паллет достаточно для создания полной паллеты" + "\n" + "Сначала создайте полную паллету!", "Ошибка документа", MessageBoxButton.OK,
+                            MessageBoxImage.Error); ;
+                    return;
+                }
+
                 quantity = (int)(unpackedProducts - packedProducts);
                 dialogResult = true;
             }
             else
             {
-                var baseQuantity = (int)item.NewPalletCoefficient;
+                var baseQuantity = (int)(item.NewGroupPacksInPallet);
 
-                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете", "Кол-во, рул/пачка", 1, Math.Min(baseQuantity, (int)(unpackedProducts - packedProducts)));
+                var model = new SetQuantityDialogModel("Укажите групповых упаковок в неполной паллете", "Кол-во, гр.уп.", 1, Math.Min(baseQuantity, (int)((unpackedProducts - packedProducts) / (item.NewPalletCoefficient / item.NewGroupPacksInPallet))));
                 var okCommand = new UICommand()
                 {
                     Caption = "OK",
@@ -439,16 +456,15 @@ namespace Gamma.ViewModels
                 var dialogService = GetService<IDialogService>("");
                 var result = dialogService.ShowDialog(
                     dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
-                    title: "Кол-во рулончиков/пачек",
+                    title: "Кол-во групповых упаковок",
                     viewModel: model);
-                quantity = model.Quantity;
+                quantity = model.Quantity * (int)(item.NewPalletCoefficient / item.NewGroupPacksInPallet);
                 dialogResult = (result == okCommand);
             }
             if (dialogResult)
             {
-
                 var docProductionId = SqlGuidUtil.NewSequentialid();
-                var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, placeId);
+                var docProduction = documentController.ConstructDoc(docProductionId, DocTypes.DocProduction, true, placeId);
                 docProduction.DocProduction = new DocProduction
                 {
                     DocID = docProductionId,
@@ -461,7 +477,7 @@ namespace Gamma.ViewModels
                     context.SaveChanges();
                 }
                 var product = productController.AddNewPalletToDocProduction(docProductionId, item.NomenclatureID,
-                    item.OldCharacteristicId, quantity);
+                    item.OldCharacteristicId, quantity, placeZoneID);
                 var complectedPallet = new ComplectationProduct
                 {
                     DocId = docProductionId,
@@ -481,7 +497,9 @@ namespace Gamma.ViewModels
                     ComplectationItems.Add(itemAdd);
                 }
                 LastCreatedPalletNumber = product.Number;
-                ReportManager.PrintReport("Амбалаж", "Pallet", docProductionId, false, 1);
+                ReportManager.PrintReport("Неполная паллета", "Pallet", docProductionId, false, 1);
+
+                RaisePropertyChanged(() => ComplectationItems);
             }
         }
 

@@ -117,7 +117,8 @@ namespace Gamma
         */
         public static void AddLogMessageInformation(string log) => AddLogMessage(log, CriticalLogTypes.Information);
         public static void AddLogMessageError(string log) => AddLogMessage(log, CriticalLogTypes.Error);
-        public static void AddLogMessageStartProgramInformation(string log) => AddLogMessage(log, CriticalLogTypes.StartProgramInformation);
+        public static void AddLogMessageStartProgramInformation(string log) => AddLogMessage(log, CriticalLogTypes.Information);
+        public static void AddLogMessageInformationWithImage(string log, System.IO.MemoryStream image ) => AddLogMessage(log, CriticalLogTypes.Information, image);
 
         public static void AddLogMessage(string log, CriticalLogTypes logTypeID)
         {
@@ -125,6 +126,16 @@ namespace Gamma
             using (var gammaBase = DB.GammaDb)
             {
                 gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = log });
+                gammaBase.SaveChanges();
+            }
+        }
+
+        public static void AddLogMessage(string log, CriticalLogTypes logTypeID, System.IO.MemoryStream image)
+        {
+
+            using (var gammaBase = DB.GammaDb)
+            {
+                gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = log, Image = image.ToArray() });
                 gammaBase.SaveChanges();
             }
         }

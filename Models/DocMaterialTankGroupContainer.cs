@@ -178,7 +178,7 @@ namespace Gamma.Models
 
             foreach (var tankGroup in TanksWhereExistNomenclatureInComposition)
             {
-                var quantityNotSendNomenclatureInTankGroup = Math.Round(tankGroup.Tanks.Sum(t => t.Quantity) / sumQuantityTanksWhereExistNomenclatureInComposition * quantityNotSendNomenclature, 2);
+                var quantityNotSendNomenclatureInTankGroup = sumQuantityTanksWhereExistNomenclatureInComposition == 0 ? 0 : Math.Round(tankGroup.Tanks.Sum(t => t.Quantity) / sumQuantityTanksWhereExistNomenclatureInComposition * quantityNotSendNomenclature, 2);
                 var notSendNomenclature = tankGroup.NotSendNomenclature.Where(c => c.Key == nomenclatureID).Count();
                 if (notSendNomenclature == 0)
                 {

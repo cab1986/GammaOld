@@ -36,6 +36,8 @@ namespace Gamma.ViewModels
             ShiftID = shiftID;
             CloseDate = closeDate;
 
+            DB.AddLogMessageInformation("Open DocMaterialProductionDirectCalculation @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID);
+
             AddDirectCalculationMaterialCommand = new DelegateCommand(AddDirectCalculationMaterial, () => !IsReadOnly);
             DeleteDirectCalculationMaterialCommand = new DelegateCommand(DeleteDirectCalculationMaterial, () => !IsReadOnly);
 
@@ -50,6 +52,8 @@ namespace Gamma.ViewModels
             CloseDate = closeDate;
 
             IsConfirmed = isConfirmed;
+
+            DB.AddLogMessageInformation("Open DocMaterialProductionDirectCalculation @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @IsConfirmed=" + IsConfirmed);
 
             AddDirectCalculationMaterialCommand = new DelegateCommand(AddDirectCalculationMaterial, () => !IsReadOnly);
             DeleteDirectCalculationMaterialCommand = new DelegateCommand(DeleteDirectCalculationMaterial, () => !IsReadOnly);
@@ -112,7 +116,7 @@ namespace Gamma.ViewModels
         {
             if (SelectedDirectCalculationMaterial == null) return;
             DirectCalculationMaterials.Materials.Remove(SelectedDirectCalculationMaterial);
-
+            DB.AddLogMessageInformation("Delete material DocMaterialProductionDirectCalculation @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @SelectedDirectCalculationMaterial.NomenclatureID=" + SelectedDirectCalculationMaterial.NomenclatureID);
         }
 
         private void AddDirectCalculationMaterial()
@@ -131,6 +135,7 @@ namespace Gamma.ViewModels
                     .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
                 DirectCalculationMaterials.MaterialNomenclatureChanged(nomenclatureInfo);
             }
+            DB.AddLogMessageInformation("Add material DocMaterialProductionDirectCalculation @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @msg.Nomenclature1CID=" + msg.Nomenclature1CID);
         }
 
         public void Clear()

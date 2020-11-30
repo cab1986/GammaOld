@@ -12,6 +12,7 @@ using System.Data.Entity.SqlServer;
 using System.Windows;
 using System.Collections.Generic;
 using System.Windows.Input;
+using System.Drawing;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -35,6 +36,7 @@ namespace Gamma.ViewModels
                 IsNewDoc = true;
                 Title = "Остатки сырья и материалов";
                 ShiftID = WorkSession.ShiftID;
+                DB.AddLogMessageInformation("Create new DocMaterialProduction @DocID="+DocID+" @Date="+Date+" @PlaceID="+PlaceID+" @ShiftID="+ ShiftID);
             }
             else
             {
@@ -46,6 +48,7 @@ namespace Gamma.ViewModels
                 IsNewDoc = false;
                 Title = "Остатки сырья и материалов №" + Doc.Number;
                 ShiftID = Doc.ShiftID;
+                DB.AddLogMessageInformation("Open DocMaterialProduction @DocID=" + DocID + " @Date=" + Date + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID);
             }
             
             var paperMachinePlace = DB.GetPaperMachinePlace(PlaceID) ?? 0;
@@ -231,6 +234,8 @@ namespace Gamma.ViewModels
                         activeProductionProductCharacteristicIDs.Add(((Characteristic)item).CharacteristicID);
                     grid.DocMaterialCompositionCalculations.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
                     grid.DocMaterialProductionDirectCalculationsGrid?.DirectCalculationMaterials?.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
+                    DB.AddLogMessageInformation("Change DocMaterialTankRemainders @Date" + Date+" @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " activeProductionProduct to " + string.Join(",",  activeProductionProductCharacteristicIDs));
+
                 }
                 RaisePropertyChanged("ActiveProductionProduct");
             }
@@ -295,9 +300,36 @@ namespace Gamma.ViewModels
             return SaveToModel(true);
         }
 
+        private System.IO.MemoryStream PrintScreen()
+        {
+
+            Bitmap printscreen = new Bitmap(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            Graphics graphics = Graphics.FromImage(printscreen as Image);
+            graphics.CopyFromScreen(0, 0, 0, 0, printscreen.Size);
+            System.IO.MemoryStream result = new System.IO.MemoryStream();
+            printscreen.Save(result, System.Drawing.Imaging.ImageFormat.Png);
+            return result;
+
+        }
+
+        private void addLogMessageInformationWithPrintScreen(bool isCheckCanSaveExecute)
+        {
+            try
+            {
+                DB.AddLogMessageInformationWithImage("Save document DocMaterialProduction @IsNewDoc=" + IsNewDoc + " @DocID =" + DocID + " @Date=" + Date + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + "@isCheckCanSaveExecute=" + isCheckCanSaveExecute, PrintScreen());
+            }
+            catch
+            {
+                DB.AddLogMessageInformation("Save document DocMaterialProduction (error save image) @IsNewDoc=" + IsNewDoc + " @DocID =" + DocID + " @Date=" + Date + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + "@isCheckCanSaveExecute=" + isCheckCanSaveExecute);
+            }
+        }
+
         public bool SaveToModel(bool isCheckCanSaveExecute)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            //PrintScreen();
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+            addLogMessageInformationWithPrintScreen(isCheckCanSaveExecute);
+
             if ((isCheckCanSaveExecute && !CanSaveExecute()) || DocIsUsedNextPlace())
             {
                 Mouse.OverrideCursor = null;

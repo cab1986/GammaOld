@@ -14,7 +14,7 @@ namespace Gamma.Controllers
 		/// <param name="productId"></param>
 		/// <param name="docId">DocWithdrawalId, if null new document</param>
 		/// <returns>True if success</returns>
-		public bool WithdrawProduct(Guid productId, Guid docId)
+		public bool WithdrawProduct(Guid productId, Guid docId, bool isConfirmed)
 		{
 			using (var context = DB.GammaDb)
 			{
@@ -23,7 +23,7 @@ namespace Gamma.Controllers
 					.FirstOrDefault(d => d.DocID == docId);
 				if (docWithdrawal == null)
 				{
-					docWithdrawal = ConstructDoc(docId, DocTypes.DocWithdrawal, WorkSession.PlaceID);
+					docWithdrawal = ConstructDoc(docId, DocTypes.DocWithdrawal, isConfirmed, WorkSession.PlaceID);
 					context.Docs.Add(docWithdrawal);
 				}
 				if (docWithdrawal.DocWithdrawal == null)
@@ -59,17 +59,18 @@ namespace Gamma.Controllers
 
 		#region Private methods
 
-		public Docs ConstructDoc(Guid id, DocTypes type, int placeId)
+		public Docs ConstructDoc(Guid id, DocTypes type, bool isConfirmed, int placeId)
 		{
-			var doc = new Docs
-			{
-				DocID = id,
-				Date = DB.CurrentDateTime,
-				DocTypeID = (int) type,
-				PrintName = WorkSession.PrintName,
-				UserID = WorkSession.UserID,
-				PlaceID = placeId,
-				ShiftID = WorkSession.ShiftID,
+            var doc = new Docs
+            {
+                DocID = id,
+                Date = DB.CurrentDateTime,
+                DocTypeID = (int)type,
+                PrintName = WorkSession.PrintName,
+                UserID = WorkSession.UserID,
+                PlaceID = placeId,
+                ShiftID = WorkSession.ShiftID,
+                IsConfirmed = isConfirmed
 			};
 			return doc;
 		}

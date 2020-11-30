@@ -41,6 +41,8 @@ namespace Gamma.ViewModels
         /// <param name="itemID">ID документа закрытия смены</param>
         public override bool SaveToModel(Guid itemID)
         {
+            DB.AddLogMessageInformation("Save DocMaterialTankRemainders @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @itemID=" + itemID + " @IsReadOnly=" + IsReadOnly);
+
 #if DEBUG
             Console.WriteLine(IsReadOnly.ToString());
 #endif
@@ -117,6 +119,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public void FillGrid()
         {
+            DB.AddLogMessageInformation("Fill DocMaterialTankRemainders @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @IsReadOnly=" + IsReadOnly);
             using (var gammaBase = DB.GammaDb)
             {
                 //    ClearGrid();

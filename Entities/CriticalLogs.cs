@@ -20,5 +20,6 @@ namespace Gamma.Entities
         public string LogUserID { get; set; }
         public string HostName { get; set; }
         public Nullable<int> LogTypeID { get; set; }
+        public byte[] Image { get; set; }
     }
 }

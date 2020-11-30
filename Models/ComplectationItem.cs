@@ -120,7 +120,11 @@ namespace Gamma.Models
 
 		public decimal NewGroupPacksInPallet => NewPalletCoefficient / newGroupPackCoefficient;
 
-		public decimal NumUnpackedPallets
+        public decimal OldGroupPackQuantity => Quantity / oldGroupPackCoefficient;
+
+        public decimal NewGroupPackQuantity => Quantity / oldPalletCoefficient;
+
+        public decimal NumUnpackedPallets
 		{
 			get { return OldPalletQuantity > 0 ? UnpackedQuantity / oldPalletCoefficient : 0; }
 		}
@@ -129,6 +133,26 @@ namespace Gamma.Models
 		{
 			get { return NewPalletQuantity > 0 ? PackedQuantity / NewPalletCoefficient : 0; }
 		}
+
+        public string Unpacked
+        {
+            get { return UnpackedPallets?.Count() + Environment.NewLine+"\\" + (int)(UnpackedQuantity/oldGroupPackCoefficient); }
+        }
+
+        public string Packed
+        {
+            get { return PackedPallets?.Count() + Environment.NewLine+"\\" + (int)(PackedQuantity/newGroupPackCoefficient); }
+        }
+
+        public string RequiredUnpacked
+        {
+            get { return (int)OldPalletQuantity + Environment.NewLine + "\\" + (int)OldGroupPackQuantity; }
+        }
+
+        public string RequiredPacked
+        {
+            get { return (int)NewPalletQuantity + Environment.NewLine + "\\" + (int)NewGroupPackQuantity; }
+        }
 
         public bool IsEnabledCreateNewPallet => (OldPalletQuantity > 0);
 	}

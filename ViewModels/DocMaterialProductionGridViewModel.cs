@@ -56,6 +56,8 @@ namespace Gamma.ViewModels
             ShiftID = shiftID;
             CloseDate = closeDate;
 
+            DB.AddLogMessageInformation("Open DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID);
+
             TankGroupContainer = new DocMaterialTankGroupContainer(PlaceID);
             CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
             DocMaterialCompositionCalculations = new DocMaterialProduction(PlaceID, ShiftID, CloseDate, TankGroupContainer);
@@ -71,7 +73,9 @@ namespace Gamma.ViewModels
             ShiftID = shiftID;
             CloseDate = closeDate;
 
-           IsConfirmed = isConfirmed;
+            IsConfirmed = isConfirmed;
+
+            DB.AddLogMessageInformation("Open DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @IsConfirmed=" + IsConfirmed);
 
             TankGroupContainer = new DocMaterialTankGroupContainer(docID, PlaceID);
             CurrentTankRemaindersView = new DocMaterialTankRemaindersViewModel(PlaceID, IsConfirmed, TankGroupContainer);
@@ -275,6 +279,7 @@ namespace Gamma.ViewModels
             if (SelectedDocMaterialProduction == null) return;
             TankGroupContainer?.DeleteComposition(SelectedDocMaterialProduction.NomenclatureID);
             DocMaterialCompositionCalculations.DocMaterialProductionCompositionCalculations.Remove(SelectedDocMaterialProduction);
+            DB.AddLogMessageInformation("Delete material DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @SelectedDocMaterialProduction.NomenclatureID=" + SelectedDocMaterialProduction.NomenclatureID);
         }
 
         private void AddDocMaterialProduction()
@@ -293,6 +298,7 @@ namespace Gamma.ViewModels
                     .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
                 DocMaterialCompositionCalculations.MaterialNomenclatureChanged(nomenclatureInfo);
             }
+            DB.AddLogMessageInformation("Add material DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @msg.Nomenclature1CID="+msg.Nomenclature1CID);
         }
 
         public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
@@ -323,6 +329,7 @@ namespace Gamma.ViewModels
 
         public void FillProductionMaterials(bool IsFillEnd = true)
         {
+            DB.AddLogMessageInformation("Fill DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @IsFillEnd =" + IsFillEnd);
             var tankRemaindersView = (CurrentTankRemaindersView as IFillClearGrid);
             if (tankRemaindersView != null)
                 tankRemaindersView.FillGrid();
@@ -341,6 +348,7 @@ namespace Gamma.ViewModels
 
         public void ClearGrid()
         {
+            DB.AddLogMessageInformation("Clear DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID);
             var tankRemaindersView = (CurrentTankRemaindersView as IFillClearGrid);
             if (tankRemaindersView != null)
                 tankRemaindersView.ClearGrid();
@@ -354,6 +362,7 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel(Guid docId)
         {
+            DB.AddLogMessageInformation("Save DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @docId=" + docId + " @IsReadOnly=" + IsReadOnly);
             if (IsReadOnly) return true;
             using (var gammaBase = DB.GammaDb)
             {

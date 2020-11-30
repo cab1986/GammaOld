@@ -102,9 +102,9 @@
                         </dxg:GridColumn>
                         <dxg:GridColumn Header="ГУ на паллете" FieldName="OldGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" 
                                         HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="60" FixedWidth="True"/>
-                        <dxg:GridColumn Header="Кол-во паллет распаковать" FieldName="OldPalletQuantity" CellTemplate="{StaticResource NumberColumn}"
+                        <dxg:GridColumn Header="Распаковать паллет\ГУ" FieldName="RequiredUnpacked" CellTemplate="{StaticResource NumberColumn}"
                                         HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="80" FixedWidth="True"/>
-                        <dxg:GridColumn Header="Кол-во паллет распаковано" FixedWidth="True"
+                        <dxg:GridColumn Header="Распаковано паллет\ГУ" FixedWidth="True"
                                         HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="90">
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
@@ -113,8 +113,8 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding Path=RowData.Row.NumUnpackedPallets, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Stretch"
-                                                 FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                        <TextBox Text="{Binding Path=RowData.Row.Unpacked, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Stretch"
+                                                 FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
                                         <ProgressBar Width="20"  Grid.Column="1" Minimum="0" Maximum="{Binding Path=RowData.Row.Quantity}" 
                                                      Value="{Binding Path=RowData.Row.UnpackedQuantity, Mode=OneWay}"
                                                      Orientation="Vertical" Foreground="ForestGreen">
@@ -169,9 +169,9 @@
                         </dxg:GridColumn>
                         <dxg:GridColumn Header="ГУ на паллете" FieldName="NewGroupPacksInPallet" CellTemplate="{StaticResource NumberColumn}" 
                                         HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="60" FixedWidth="True"/>
-                        <dxg:GridColumn Header="Кол-во паллет скомплектовать" FieldName="NewPalletQuantity" CellTemplate="{StaticResource NumberColumn}" 
+                        <dxg:GridColumn Header="Скомплектовать паллет\ГУ" FieldName="RequiredPacked" CellTemplate="{StaticResource NumberColumn}" 
                                         HeaderTemplate="{StaticResource ColumnHeaderTemplate}" Width="90" FixedWidth="True"/>
-                        <dxg:GridColumn Header="Кол-во паллет скомплектовано" Width="90" FixedWidth="True"
+                        <dxg:GridColumn Header="Скомплектовано паллет\ГУ" Width="90" FixedWidth="True"
                                         HeaderTemplate="{StaticResource ColumnHeaderTemplate}" >
                             <dxg:GridColumn.CellTemplate>
                                 <DataTemplate>
@@ -180,8 +180,8 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBox Text="{Binding Path=RowData.Row.NumPackedPallets, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Stretch"
-                                                 FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                                        <TextBox Text="{Binding Path=RowData.Row.Packed, Mode=OneWay}" IsReadOnly="True" VerticalAlignment="Stretch"
+                                                 FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
                                         <ProgressBar Width="20"  Grid.Column="1" Minimum="0" Maximum="{Binding Path=RowData.Row.Quantity}" 
                                                      Value="{Binding Path=RowData.Row.PackedQuantity, Mode=OneWay}" 
                                                      Orientation="Vertical" Foreground="ForestGreen">

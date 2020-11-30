@@ -107,7 +107,7 @@ namespace Gamma.ViewModels
 			if (selectedDocComplectation.DocId == null)
 			{
 				selectedDocComplectation.DocId = SqlGuidUtil.NewSequentialid();
-				var doc = documentController.ConstructDoc((Guid)selectedDocComplectation.DocId, DocTypes.DocComplectation, selectedDocComplectation.PlaceId ?? WorkSession.PlaceID);
+				var doc = documentController.ConstructDoc((Guid)selectedDocComplectation.DocId, DocTypes.DocComplectation, false, selectedDocComplectation.PlaceId ?? WorkSession.PlaceID);
 				doc.DocComplectation = new DocComplectation
 				{
 					C1CDocComplectationID = selectedDocComplectation.Doc1CId,
