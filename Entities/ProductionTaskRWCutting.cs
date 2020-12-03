@@ -19,6 +19,7 @@ namespace Gamma.Entities
         public Nullable<short> CutIndex { get; set; }
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public Nullable<System.Guid> C1CSpecificationID { get; set; }
     
         public virtual ProductionTasks ProductionTasks { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }

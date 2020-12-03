@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Entities;
+using System.Collections.Generic;
 
 namespace Gamma.Models
 {
@@ -59,11 +60,33 @@ namespace Gamma.Models
             set
             {
                 _characteristicID = value;
-                if (_characteristicID != null)
-                    BaseFormat =
-                        DB.GammaDb.vCharacteristicSGBProperties.FirstOrDefault(
-                            p => p.C1CCharacteristicID == _characteristicID)?.FormatNumeric ?? 0;
-                else BaseFormat = 0;
+                using (var gammaBase = DB.GammaDb)
+                {
+                    if (_characteristicID != null)
+                        BaseFormat =
+                            gammaBase.vCharacteristicSGBProperties.FirstOrDefault(
+                                p => p.C1CCharacteristicID == _characteristicID)?.FormatNumeric ?? 0;
+                    else BaseFormat = 0;
+                    Specifications = new List<KeyValuePair<Guid, string>>(
+                        gammaBase.v1CWorkingSpecifications
+                            .Where(s => s.C1CNomenclatureID == NomenclatureID && ((value != null && s.C1CCharacteristicID == value) || (value == null && s.C1CCharacteristicID == null))
+                                       && gammaBase.Places.Where(p => p.PlaceGroupID == (int)PlaceGroup.Rw)
+                                .Select(p => p.C1CPlaceID)
+                                .ToList().Contains(s.C1CPlaceID))
+                            .OrderBy(s => s.Period)
+                            .Select(s => new { s.C1CSpecificationID, s.C1CCode, s.ValidTill })
+                            .Distinct()
+                            .AsEnumerable()
+                            .Select(s => new KeyValuePair<Guid, string>
+                            (
+                                s.C1CSpecificationID,
+                                "Спец-я № " + s.C1CCode + " действует до " + s.ValidTill?.ToString("MM.yyyy") //+ " для передела " + gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == s.C1CPlaceID).Name
+                            ))).ToList();
+                    if (SpecificationID != null && SpecificationID != Guid.Empty && Specifications.Count(s => s.Key == SpecificationID) == 0)
+                        SpecificationID = null;
+                    if (SpecificationID == null && Specifications.Count() == 1)
+                        SpecificationID = Specifications.First().Key;
+                }
                 RaisePropertyChanged("CharacteristicID");
             }
         }
@@ -77,6 +100,30 @@ namespace Gamma.Models
             {
                 _characteristics = value;
                 RaisePropertyChanged("Characteristics");
+            }
+        }
+
+        private Guid? _specificationID;
+
+        public Guid? SpecificationID
+        {
+            get { return _specificationID; }
+            set
+            {
+                _specificationID = value;
+                RaisePropertyChanged("SpecificationID");
+            }
+        }
+
+        private List<KeyValuePair<Guid, string>> _specifications;
+
+        public List<KeyValuePair<Guid, string>> Specifications
+        {
+            get { return _specifications; }
+            set
+            {
+                _specifications = value;
+                RaisePropertyChanged("Specifications");
             }
         }
 

@@ -19,6 +19,9 @@
         <DataTemplate DataType="{x:Type vm:ProductionTaskSGBViewModel}">
             <views:ProductionTaskSGBView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductionTaskSpecificationViewModel}">
+            <views:ProductionTaskSpecificationView />
+        </DataTemplate>
     </UserControl.Resources>
     <dxlc:LayoutGroup Header="Задание БДМ" View="GroupBox" Orientation="Vertical" >
         <dxlc:LayoutGroup>
@@ -30,7 +33,7 @@
             </dxlc:LayoutItem>
             <ContentControl Content="{Binding ProductionTaskSGBViewModel}" Width="440" HorizontalAlignment="Left" />
             <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="80" HorizontalAlignment="Right" >
-                <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" 
+                <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Places}" 
                                   ValueMember="PlaceID" DisplayMember="PlaceName" />
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="80" HorizontalAlignment="Right">
@@ -60,6 +63,7 @@
             <dxe:ComboBoxEdit ItemsSource="{Binding Characteristics}" EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
                                   DisplayMember="CharacteristicName" ValueMember="CharacteristicID" MinWidth="200"/>
         </dxlc:LayoutItem>
+        <ContentControl Content="{Binding ProductionTaskSpecificationViewModel}" HorizontalAlignment="Left" />
     </dxlc:LayoutGroup>
     <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior/>

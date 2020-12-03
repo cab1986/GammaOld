@@ -17,6 +17,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="620" d:DesignWidth="850"
              d:DataContext="{d:DesignInstance Type=viewModels:ProductionTaskSGIViewModel, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type viewModels:ProductionTaskSpecificationViewModel}">
+            <local:ProductionTaskSpecificationView />
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <dx:DXTabControl>
             <dx:DXTabItem Header="Основная" >
@@ -48,10 +53,10 @@
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup>
                         <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="100" HorizontalAlignment="Left">
-                            <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}"
+                            <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Places}"
 					DisplayMember="PlaceName" ValueMember="PlaceID" SelectedItem="{Binding SelectedPlace, Mode=OneWayToSource}"/>
                         </dxlc:LayoutItem>
-                        <Button Content="Печать образца" Height="22" VerticalAlignment="Bottom" Width="120" Command="{Binding PrintExampleCommand}">
+                        <Button Content="Печать образца" Height="22" VerticalAlignment="Top" Width="120" Margin="0,18,0,0"  Command="{Binding PrintExampleCommand}">
                             <Button.Style>
                                 <Style>
                                     <Style.Triggers>
@@ -62,6 +67,7 @@
                                 </Style>
                             </Button.Style>
                         </Button>
+                        <ContentControl Content="{Binding ProductionTaskSpecificationViewModel}" HorizontalAlignment="Left" />
                         <!--<dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
                     <dxe:ComboBoxEdit IsTextEditable="False" 
                                                       ItemsSource="{Binding RobotNomenclatures}" EditValue="{Binding RobotProductNumber, UpdateSourceTrigger=PropertyChanged}"

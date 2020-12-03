@@ -115,6 +115,11 @@ namespace Gamma.ViewModels
                             .FirstOrDefault();
                             */
                     UpdateGroupPackageLabelImage(productionTask.ProductionTaskID);
+                    ProductionTaskSpecificationViewModel = new ProductionTaskSpecificationViewModel(productionTask.C1CSpecificationID, NomenclatureID, CharacteristicID, PlaceID, IsReadOnly);
+                }
+                else
+                {
+                    ProductionTaskSpecificationViewModel = new ProductionTaskSpecificationViewModel();
 
                 }
                 ProductionTaskStateID =
@@ -239,6 +244,7 @@ namespace Gamma.ViewModels
             set
             {
                 base.CharacteristicID = value;
+                ProductionTaskSpecificationViewModel?.SetSpecifications(NomenclatureID, value, PlaceID);
             }
         }
 
@@ -266,6 +272,7 @@ namespace Gamma.ViewModels
         }
 
         public Guid ProductionTaskID { get; private set; }
+        public ProductionTaskSpecificationViewModel ProductionTaskSpecificationViewModel { get; private set; }
 
         private int? _placeID;
         /// <summary>
@@ -281,6 +288,7 @@ namespace Gamma.ViewModels
             {
                 _placeID = value;
                 RefreshCharacteristics();
+                ProductionTaskSpecificationViewModel?.SetSpecifications(NomenclatureID, CharacteristicID, value);
                 RaisePropertiesChanged("PlaceID");
             }
         }
@@ -436,6 +444,7 @@ namespace Gamma.ViewModels
                 productionTask.DateEnd = DateEnd;
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
+                productionTask.C1CSpecificationID = ProductionTaskSpecificationViewModel.SpecificationID;// SelectedSpecification.Key;
             /*
             var placeIsRobot =
                 GammaBase.Places.Where(p => p.PlaceID == PlaceID)
@@ -534,11 +543,31 @@ namespace Gamma.ViewModels
         /// <summary>
         /// Статус задания в производстве или выполнено
         /// </summary>
-        private bool IsConfirmed { get; }
+        //private bool IsConfirmed { get; }
+        private bool _isConfirmed { get; set; }
+        private bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;
+                IsReadOnly = (value || !DB.HaveWriteAccess("ProductionTasks")) && IsValid;
+            }
+        }
         /// <summary>
         /// Только для чтения, если по каким-то причинам не задание невалидно, то есть возможность редактирования
         /// </summary>
-        public bool IsReadOnly => (IsConfirmed || !DB.HaveWriteAccess("ProductionTasks")) && IsValid;
+        //public bool IsReadOnly => (IsConfirmed || !DB.HaveWriteAccess("ProductionTasks")) && IsValid;
+        private bool _isReadOnly { get; set; }
+        public bool IsReadOnly
+        {
+            get { return _isReadOnly; }
+            set
+            {
+                _isReadOnly = value;
+                ProductionTaskSpecificationViewModel?.SetIsReadOnly(value);
+            }
+        }
         /*
         public Visibility _robotNomenclatureVisible { get; set; } = Visibility.Visible;
         /// <summary>

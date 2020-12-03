@@ -21,5 +21,6 @@ namespace Gamma.Entities
         public Nullable<int> PlaceID { get; set; }
         public System.Guid ProductionTaskID { get; set; }
         public bool IsActual { get; set; }
+        public Nullable<System.Guid> C1CSpecificationID { get; set; }
     }
 }

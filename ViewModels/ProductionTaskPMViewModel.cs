@@ -10,6 +10,7 @@ using System.Windows;
 using DevExpress.Mvvm;
 using Gamma.Attributes;
 using Gamma.Entities;
+using System.Collections.Generic;
 
 namespace Gamma.ViewModels
 {
@@ -92,11 +93,14 @@ namespace Gamma.ViewModels
                 NomenclatureID = productionTask.C1CNomenclatureID;
                 CharacteristicID = (Guid)productionTask.C1CCharacteristicID;
                 IsConfirmed = productionTask.IsActual;
+                //SpecificationID = productionTask.C1CSpecificationID;
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
+                ProductionTaskSpecificationViewModel = new ProductionTaskSpecificationViewModel(productionTask.C1CSpecificationID, NomenclatureID, CharacteristicID, PlaceID, IsReadOnly);
             }
             else
             {
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel();
+                ProductionTaskSpecificationViewModel = new ProductionTaskSpecificationViewModel();
             }
         }
 
@@ -142,9 +146,21 @@ namespace Gamma.ViewModels
             set
             {
                 base.CharacteristicID = value;
+                ProductionTaskSpecificationViewModel?.SetSpecifications(NomenclatureID, value, PlaceID);
             }
         }
-        private bool IsConfirmed { get; set; }
+        private bool _isConfirmed { get; set; }
+        private bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;
+                IsReadOnly = value || !DB.HaveWriteAccess("ProductionTasks");
+            }
+        }
+
+        
 
         private void ProductionTaskRwChanged(ProductionTaskRwMessage msg)
         {
@@ -234,7 +250,7 @@ namespace Gamma.ViewModels
                 }
                 RaisePropertyChanged("NomenclatureList");
             }
-        } 
+        }
 
         private void SetCharacteristics()
         {
@@ -254,7 +270,7 @@ namespace Gamma.ViewModels
                             sn => sn.NomenclatureID == NomenclatureID && sn.CharacteristicID != null)
                             .Select(sn => new Characteristic
                             {
-                                CharacteristicID = (Guid) sn.CharacteristicID,
+                                CharacteristicID = (Guid)sn.CharacteristicID,
                                 CharacteristicName = sn.CharacteristicName
                             }));
 
@@ -263,7 +279,7 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var charIds = characteristics.Select(c => c.CharacteristicID).ToList();
-                Characteristics =new ObservableCollection<Characteristic>(
+                Characteristics = new ObservableCollection<Characteristic>(
                     characteristics.Intersect(
                         gammaBase.vCharacteristicSGBProperties.Where(
                             cp => charIds.Contains(cp.C1CCharacteristicID)
@@ -274,6 +290,8 @@ namespace Gamma.ViewModels
                             })));
             }
         }
+
+        
 
         /// <summary>
         /// Цвет для фильтрации характеристик
@@ -314,6 +332,7 @@ namespace Gamma.ViewModels
 
         public Guid ProductionTaskID { get; set; }
         public ProductionTaskSGBViewModel ProductionTaskSGBViewModel { get; private set; }
+        public ProductionTaskSpecificationViewModel ProductionTaskSpecificationViewModel { get; private set; }
 
         private ObservableCollection<Nomenclature> _specificationNomenclature;
         public ObservableCollection<Nomenclature> SpecificationNomenclature
@@ -374,6 +393,7 @@ namespace Gamma.ViewModels
             	_placeID = value;
                 GetLimitParamters(PlaceID);
                 SetCharacteristics();
+                ProductionTaskSpecificationViewModel?.SetSpecifications(NomenclatureID, CharacteristicID, value);
                 RaisePropertyChanged("Places");
             }
         }
@@ -462,6 +482,7 @@ namespace Gamma.ViewModels
                 productionTask.Quantity = TaskQuantity;
                 productionTask.DateBegin = DateBegin;
                 productionTask.DateEnd = DateEnd;
+                productionTask.C1CSpecificationID = ProductionTaskSpecificationViewModel.SpecificationID;// SelectedSpecification.Key;
                 gammaBase.SaveChanges();
                 ProductionTaskSGBViewModel.SaveToModel(productionTask.ProductionTaskID);
             }
@@ -470,11 +491,15 @@ namespace Gamma.ViewModels
         [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal TaskQuantity { get; set; }
+
+        private bool _isReadOnly { get; set; }
         public bool IsReadOnly
         {
-            get 
+            get { return _isReadOnly; }
+            set
             {
-                return IsConfirmed || !DB.HaveWriteAccess("ProductionTasks");
+                _isReadOnly = value;
+                ProductionTaskSpecificationViewModel?.SetIsReadOnly(value);
             }
         }
     }

@@ -70,6 +70,15 @@
                                 </DataTemplate>
                             </dxg:GridColumn.CellTemplate>
                         </dxg:GridColumn>
+                        <dxg:GridColumn FieldName="SpecificationID" Header="Спецификация">
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <dxe:ComboBoxEdit x:Name="PART_Editor"   
+										DisplayMember="Value" 
+										ValueMember="Key" ItemsSource="{Binding RowData.Row.Specifications}" />
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
                         <dxg:GridColumn FieldName="Quantity" Header="Кол-во в съеме" Width="130" FixedWidth="True">
                             <dxg:GridColumn.EditSettings>
                                 <dxe:SpinEditSettings MinValue="1" MaxValue="16" IsFloatValue="False" />

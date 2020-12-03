@@ -41,12 +41,13 @@ namespace Gamma.ViewModels
                 TaskQuantity = productionTask.Quantity;
                 ProductionTaskSGBViewModel = new ProductionTaskSGBViewModel(productionTask.ProductionTaskID);
                 Cuttings = new ItemsChangeObservableCollection<Cutting>(GammaBase.ProductionTaskRWCutting.Where(
-                    p => p.ProductionTaskID == productionTask.ProductionTaskID).GroupBy(p => new {p.C1CNomenclatureID, p.C1CCharacteristicID})
+                    p => p.ProductionTaskID == productionTask.ProductionTaskID).GroupBy(p => new {p.C1CNomenclatureID, p.C1CCharacteristicID, p.C1CSpecificationID})
                     .Select(g => new Cutting()
                     {
                         NomenclatureID = g.Key.C1CNomenclatureID,
                         CharacteristicID = g.Key.C1CCharacteristicID,
-                        Quantity = g.Count()
+                        Quantity = g.Count(),
+                        SpecificationID = g.Key.C1CSpecificationID
                     }));
                 TotalFormat = Cuttings.Sum(cutting => cutting.BaseFormat * cutting.Quantity).ToString();
             }
@@ -172,7 +173,8 @@ namespace Gamma.ViewModels
                         C1CCharacteristicID = cutting.CharacteristicID,
                         ProductionTaskID = productionTaskRw.ProductionTaskID,
                         CutIndex = index,
-                        ProductionTaskRWCuttingID = SqlGuidUtil.NewSequentialid()
+                        ProductionTaskRWCuttingID = SqlGuidUtil.NewSequentialid(),
+                        C1CSpecificationID = cutting.SpecificationID
                     });
                     index++;
                 }

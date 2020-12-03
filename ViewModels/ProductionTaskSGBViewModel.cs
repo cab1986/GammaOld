@@ -25,6 +25,7 @@ namespace Gamma.ViewModels
         public ProductionTaskSGBViewModel()
         {
         }
+
         public ProductionTaskSGBViewModel(Guid productionTaskID)
         {
             var productionTaskSGB = DB.GammaDb.ProductionTaskSGB.
@@ -41,6 +42,7 @@ namespace Gamma.ViewModels
                 TechSpecification = productionTaskSGB.TechSpecification;
             }
         }
+
         private int _crepe;
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Range(0,60,ErrorMessage=@"Креп за пределами допустимого диапозона")]
@@ -105,6 +107,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("DiameterMinus");
             }
         }
+                
         private bool IsConfirmed { get; set; }
         /// <summary>
         /// 
