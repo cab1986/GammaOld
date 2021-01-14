@@ -93,7 +93,7 @@ namespace Gamma.Models
                     {
                         foreach (var item in DocMaterialProductionCompositionCalculations)
                         {
-                            TankGroupContainer.RefreshComposition(item.NomenclatureID, item.ParentID, ((item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0)), item.QuantityIn, item.IsNotSendMaterialIntoNextPlace, false);
+                            TankGroupContainer.RefreshComposition(item.NomenclatureID, item.ParentID, item.IsFullSendMaterialIntoNextPlace ? 0 : ((item.QuantityDismiss ?? 0) + (item.QuantityRemainderAtBegin ?? 0)), item.IsFullSendMaterialIntoNextPlace ? 0 : item.QuantityIn, item.IsNotSendMaterialIntoNextPlace, false);
                         }
                         TankGroupContainer.RecalcAllNomenclatureInComposition(true);
                         //RecalcQuantityEndFromTankReaminder(DocMaterialProductionCompositionCalculations.FirstOrDefault().NomenclatureID, DocMaterialProductionCompositionCalculations.FirstOrDefault().QuantityRemainderAtEnd ?? 0);
