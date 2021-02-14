@@ -49,5 +49,10 @@ namespace Gamma.Entities
         public string Buyer1CCode { get; set; }
         public string InActivePersons { get; set; }
         public string OutActivePersons { get; set; }
+        public bool IsReturned { get; set; }
+        public string InPlaceShortName { get; set; }
+        public string OutPlaceShortName { get; set; }
+        public Nullable<System.Guid> C1CWarehouseUnloadID { get; set; }
+        public Nullable<System.Guid> C1CWarehouseLoadID { get; set; }
     }
 }

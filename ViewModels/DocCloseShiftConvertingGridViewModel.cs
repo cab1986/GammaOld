@@ -334,7 +334,9 @@ namespace Gamma.ViewModels
             Dictionary<Guid, string> dict;
             using (var gammaBase = DB.GammaDb)
             {
-                dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CNomenclatureID == nomenclatureId).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);                
+                //dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CNomenclatureID == nomenclatureId).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);                
+                var measureUnitID = gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId).C1CMeaureUnitStorage;
+                dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CMeasureUnitID == measureUnitID).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);
             }
             return dict.OrderBy(x => x.Value).ToDictionary(x => x.Key, x=> x.Value);
         }
@@ -548,14 +550,33 @@ namespace Gamma.ViewModels
                 if (NomenclatureRests != null)
                     foreach (var rest in NomenclatureRests)
                     {
+                        decimal coefficient = 1;
+                        var charCoefficient =
+                        gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)
+                            .C1CMeasureUnitsPackage;
+                        if (charCoefficient != null && charCoefficient.Coefficient != null)
+                            coefficient = (decimal)charCoefficient.Coefficient;
+                        else
+                        {
+                            //Кол во рул в инд упак
+                            var nomenklCoefficient1 = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)
+                            .C1CNomenclature.C1CNomenclatureProperties.FirstOrDefault(n => n.C1CPropertyID == new Guid("492288ED-DBB4-11EA-943C-0015B2A9C22A")).C1CPropertyValues.Description;
+                            //Кол во упак в гр уп
+                            var nomenklCoefficient2 = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)
+                            .C1CNomenclature.C1CNomenclatureProperties.FirstOrDefault(n => n.C1CPropertyID == new Guid("E27C6973-DBB3-11EA-943C-0015B2A9C22A")).C1CPropertyValues.Description;
+                            if (nomenklCoefficient1 != null && nomenklCoefficient1 != String.Empty && nomenklCoefficient2 != null && nomenklCoefficient2 != String.Empty)
+                            {
+                                coefficient = int.Parse(nomenklCoefficient1) * int.Parse(nomenklCoefficient2);
+                            }
+                        }
+
                         docCloseShift.DocCloseShiftNomenclatureRests.Add(new DocCloseShiftNomenclatureRests
                         {
                             DocID = docId,
                             C1CNomenclatureID = rest.NomenclatureID,
                             C1CCharacteristicID = (Guid)rest.CharacteristicID,
                             DocCloseShiftNomenclatureRestID = SqlGuidUtil.NewSequentialid(),
-                            Quantity = rest.Quantity * gammaBase.C1CCharacteristics
-                                .FirstOrDefault(c => c.C1CCharacteristicID == rest.CharacteristicID)?.C1CMeasureUnitsPackage.Coefficient ?? 1
+                            Quantity = rest.Quantity * coefficient
                         });
                     }
                 gammaBase.DocCloseShiftWastes.RemoveRange(docCloseShift.DocCloseShiftWastes);

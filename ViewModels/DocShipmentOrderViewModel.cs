@@ -19,9 +19,11 @@ namespace Gamma.ViewModels
     public class DocShipmentOrderViewModel : SaveImplementedViewModel, ICheckedAccess
     {
         private bool _isShipped;
+        private bool _isReturned;
         private DateTime? _dateOut;
         private bool _isConfirmed;
         private DateTime? _dateIn;
+        private string _errorMessage;
 
         public DocShipmentOrderViewModel(Guid docShipmentOrderId)
         {
@@ -41,29 +43,53 @@ namespace Gamma.ViewModels
             //PersonsIn = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID).ToList();
             PlacesIn =
                 GammaBase.Places.Where(
-                    p =>
-                        p.BranchID ==
-                        GammaBase.Branches.FirstOrDefault(
-                            b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID
-                        && (p.IsWarehouse??false))
-                    .Select(p => new Place
-                    {
-                        PlaceID = p.PlaceID,
-                        PlaceGuid = p.PlaceGuid,
-                        PlaceName = p.Name
-                    }).ToList();
-            PlacesOut = GammaBase.Places.Where(
-                    p =>
-                        p.BranchID ==
-                        GammaBase.Branches.FirstOrDefault(
-                            b => b.C1CSubdivisionID == docShipmentOrderInfo.C1COutSubdivisionID).BranchID 
-                        && (p.IsWarehouse ?? false) && (p.IsShipmentWarehouse??false))
-                    .Select(p => new Place
-                    {
-                        PlaceID = p.PlaceID,
-                        PlaceGuid = p.PlaceGuid,
-                        PlaceName = p.Name
-                    }).ToList();
+                    p => GammaBase.Places1CWarehouses
+                .Where(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseLoadID)
+                .Select(w => w.PlaceID).ToList().Contains(p.PlaceID)
+                )
+                .Select(p => new Place
+                {
+                    PlaceID = p.PlaceID,
+                    PlaceGuid = p.PlaceGuid,
+                    PlaceName = p.Name
+                }).ToList();
+            /*GammaBase.Places.Where(
+                p =>
+                    p.BranchID ==
+                    GammaBase.Branches.FirstOrDefault(
+                        b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID
+                    && ((p.IsWarehouse??false) || (p.IsProductionPlace ?? false)))
+                .Select(p => new Place
+                {
+                    PlaceID = p.PlaceID,
+                    PlaceGuid = p.PlaceGuid,
+                    PlaceName = p.Name
+                }).ToList();
+        PlacesOut = GammaBase.Places.Where(
+                p =>
+                    p.BranchID ==
+                    GammaBase.Branches.FirstOrDefault(
+                        b => b.C1CSubdivisionID == docShipmentOrderInfo.C1COutSubdivisionID).BranchID 
+                    && ((p.IsWarehouse ?? false) || (p.IsProductionPlace ?? false))) //&& (p.IsShipmentWarehouse??false))
+                .Select(p => new Place
+                {
+                    PlaceID = p.PlaceID,
+                    PlaceGuid = p.PlaceGuid,
+                    PlaceName = p.Name
+                }).ToList();*/
+            PlacesOut =
+            GammaBase.Places.Where(
+                p => GammaBase.Places1CWarehouses
+            .Where(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseUnloadID)
+            .Select(w => w.PlaceID).ToList().Contains(p.PlaceID)
+            )
+            .Select(p => new Place
+            {
+                PlaceID = p.PlaceID,
+                PlaceGuid = p.PlaceGuid,
+                PlaceName = p.Name
+            }).ToList();
+
             OrderKindId = (byte) docShipmentOrderInfo.OrderKindID;
             Driver = docShipmentOrderInfo.Driver;
             DriverDocument = docShipmentOrderInfo.DriverDocument;
@@ -71,7 +97,7 @@ namespace Gamma.ViewModels
             DateOut = docShipmentOrderInfo.OutDate;
             DateIn = docShipmentOrderInfo.InDate;
             Number = docShipmentOrderInfo.Number;
-            Shipper = docShipmentOrderInfo.Shipper;
+            Shipper = docShipmentOrderInfo.Shipper ?? docShipmentOrderInfo.Warehouse;
             Consignee = docShipmentOrderInfo.Consignee;
             Buyer = docShipmentOrderInfo.Buyer;
             Title = $"{docShipmentOrderInfo.OrderType} № {Number}";
@@ -87,14 +113,24 @@ namespace Gamma.ViewModels
             ShiftOutId = docShipmentOrderInfo.OutShiftID;
             ShiftInId = docShipmentOrderInfo.InShiftId;
             IsShipped = docShipmentOrderInfo.IsShipped;
+            IsReturned = docShipmentOrderInfo.IsReturned;
             IsConfirmed = docShipmentOrderInfo.IsConfirmed??false;
-            OutPlaceId = docShipmentOrderInfo.OutPlaceID;//??PlacesOut.FirstOrDefault()?.PlaceID;
-            InPlaceId = docShipmentOrderInfo.InPlaceID;//??PlacesIn.FirstOrDefault()?.PlaceID;
+            OutPlaceId = docShipmentOrderInfo.OutPlaceID ?? (PlacesOut?.Count == 1 ? PlacesOut.FirstOrDefault()?.PlaceID : null);
+            InPlaceId = docShipmentOrderInfo.InPlaceID ?? (PlacesIn?.Count == 1 ? PlacesIn.FirstOrDefault()?.PlaceID : null);
             FillDocShipmentOrderGoods(docShipmentOrderId);
-            DenyEditIn = (InPlaceId != null && !WorkSession.PlaceIds.Contains((int)InPlaceId)) || docShipmentOrderInfo.InBranchID != WorkSession.BranchID;
-            DenyEditOut = (OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId)) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID;
-            InVisibible = docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ
-            IsReadOnly = !DB.HaveWriteAccess("DocMovement") || IsShipped;
+            DenyEditIn = (DateOut != null && InPlaceId != null && !WorkSession.PlaceIds.Contains((int)InPlaceId)) || docShipmentOrderInfo.InBranchID != WorkSession.BranchID;
+            DenyEditOut = (DateIn != null && OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId)) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID;
+            DenyEditInPlace = DenyEditIn || PlacesIn?.Count == 1;
+            DenyEditOutPlace = DenyEditOut || PlacesOut?.Count == 1;
+            OutVisibible = docShipmentOrderInfo.OrderKindID == 0 || docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
+            InVisibible = false;// docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
+            MovementVisibible = docShipmentOrderInfo.OrderKindID == 2; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
+            AbilityChange = DB.GetAbilityChangeDocShipmentOrder(DocShipmentOrderID);
+#if (!DEBUG)
+            IsReadOnly = !DB.HaveWriteAccess("DocMovement") || !((AbilityChange ?? 0) == 1);
+#else
+            IsReadOnly = !((AbilityChange ?? 0) == 1);
+#endif
             Movements = GammaBase.DocMovement.Include(m => m.Docs).Include(m => m.OutPlaces).Include(m => m.InPlaces)
                 .Where(m => m.DocOrderID == DocShipmentOrderID)
                 .Select(m => new MovementItem
@@ -160,7 +196,14 @@ namespace Gamma.ViewModels
             {
                 _outPlaceId = value;
 
-                PersonsOut = GammaBase.Persons.Where(p => value != null && (p.PlaceID == value || (value == 104 && p.PlaceID == 28)) ).OrderBy(p => p.Name).ToList();
+                if (value == null)
+                    PersonsOut = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список
+                else
+                {
+                    var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.UserID).ToList();
+                    var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.RootUserID).ToList();
+                    PersonsOut = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
+                }
                 RaisePropertyChanged("OutPlaceId");
             }
         }
@@ -174,7 +217,14 @@ namespace Gamma.ViewModels
             {
                 _inPlaceId = value;
 
-                PersonsIn = GammaBase.Persons.Where(p => value != null && (p.PlaceID == value || (value == 104 && p.PlaceID == 28))).OrderBy(p => p.Name).ToList();
+                if (value == null)
+                    PersonsIn = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список
+                else
+                {
+                    var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.UserID).ToList();
+                    var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.RootUserID).ToList();
+                    PersonsIn = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
+                }
                 RaisePropertyChanged("InPlaceId");
             }
         }
@@ -190,8 +240,24 @@ namespace Gamma.ViewModels
             set
             {
                 _isShipped = value;
+                if (IsReturned && value)
+                    IsReturned = !value;
                 if (DateOut == null && value) DateOut = DB.CurrentDateTime;
-                if (!InVisibible) IsConfirmed = IsShipped;
+                //if (!InVisibible)
+                    IsConfirmed = IsShipped;
+                RaisePropertyChanged("IsShipped");
+            }
+        }
+
+        public bool IsReturned
+        {
+            get { return _isReturned; }
+            set
+            {
+                _isReturned = value;
+                if (IsShipped && value)
+                    IsShipped = !value;
+                RaisePropertyChanged("IsReturned");
             }
         }
 
@@ -206,6 +272,16 @@ namespace Gamma.ViewModels
             }
         }
 
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set
+            {
+                _errorMessage = value;
+                RaisePropertyChanged("ErrorMessage");
+            }
+        }
+
         private bool? _checkAll;
 
         public string Title { get; set; }
@@ -217,10 +293,35 @@ namespace Gamma.ViewModels
             ReportManager.PrintReport(msg.ReportID, DocShipmentOrderID);
         }
 
-        public bool InVisibible { get; set; }
+        public bool OutVisibible { get; private set; }
+        public bool InVisibible { get; private set; }
+        public bool MovementVisibible { get; private set; }
 
         public bool DenyEditOut { get; private set; }
         public bool DenyEditIn { get; private set; }
+        public bool DenyEditOutPlace { get; private set; }
+        public bool DenyEditInPlace { get; private set; }
+
+        private int? _abilityChange { get; set; }
+        public int? AbilityChange
+        {
+            get { return _abilityChange; }
+            set
+            {
+                _abilityChange = value;
+                if (value == null)
+                    ErrorMessage = "Ошибка при проверке разрешения на изменения из 1С";
+                else
+                {
+                    if ((int)value != 1)
+                    {
+                        ErrorMessage = "Запрещено изменение. Задание заблокировано в 1С.";
+                    }
+                    else
+                        ErrorMessage = "";
+                }
+            }
+        }
 
         private Guid VMId { get; } = Guid.NewGuid();
 
@@ -357,6 +458,19 @@ namespace Gamma.ViewModels
         public override bool SaveToModel()
         {
             if (!DB.HaveWriteAccess("DocShipmentOrderInfo")) return true;
+            AbilityChange = DB.GetAbilityChangeDocShipmentOrder(DocShipmentOrderID);
+            if (AbilityChange == null)
+                MessageBox.Show("Ошибка при проверке разрешения на изменения из 1С");
+            else
+            {
+                if ((int)AbilityChange != 1)
+                {
+                    MessageBox.Show("Запрещено изменение. Задание заблокировано в 1С.");
+                    return false;
+                }
+            }
+
+
             using (var gammaBase = DB.GammaDb)
             {
                 var doc =
@@ -372,6 +486,7 @@ namespace Gamma.ViewModels
                 }
                 doc.VehicleNumber = VehicleNumber;
                 doc.IsShipped = IsShipped;
+                doc.IsReturned = IsReturned;
                 doc.InShiftID = ShiftInId;
                 doc.OutShiftID = ShiftOutId;
                 doc.OutPlaceID = OutPlaceId;
@@ -448,6 +563,9 @@ namespace Gamma.ViewModels
                 }
                 gammaBase.SaveChanges();
             }
+//#if (!DEBUG)
+            DB.UploadShipmentOrderTo1C(DocShipmentOrderID);
+//#endif
             return true;
         }
 
@@ -469,6 +587,11 @@ namespace Gamma.ViewModels
                     IsConfirmed = (bool)_checkAll;
                 }
             }
+        }
+
+        public override bool CanSaveExecute()
+        {
+            return base.CanSaveExecute() && !IsReadOnly;
         }
     }
 }

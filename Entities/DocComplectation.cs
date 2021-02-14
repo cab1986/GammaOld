@@ -23,6 +23,7 @@ namespace Gamma.Entities
     
         public System.Guid DocComplectationID { get; set; }
         public System.Guid C1CDocComplectationID { get; set; }
+        public Nullable<bool> IsReturned { get; set; }
     
         public virtual C1CDocComplectation C1CDocComplectation { get; set; }
         public virtual Docs Docs { get; set; }

@@ -110,12 +110,12 @@ namespace Gamma.ViewModels
                         .Where(s => s.C1CNomenclatureID == nomenclatureID && ((characteristicID != null && s.C1CCharacteristicID == characteristicID) || (characteristicID == null && s.C1CCharacteristicID == null))
                                    && s.C1CPlaceID == gammaBase.Places.FirstOrDefault(p => p.PlaceID == PlaceID).C1CPlaceID)
                         .OrderBy(s => s.Period)
-                        .Select(s => new { s.C1CSpecificationID, s.C1CCode, s.ValidTill })
+                        .Select(s => new { s.C1CSpecificationID, s.C1CCode, s.ValidTill, s.Description })
                         .AsEnumerable()
                         .Select(s => new KeyValuePair<Guid, string>
                         (
                             s.C1CSpecificationID,
-                            "Спец-я № " + s.C1CCode + " действует до " + s.ValidTill?.ToString("MM.yyyy")
+                            "№ " + s.C1CCode + (s.ValidTill != null ? "(до " + s.ValidTill?.ToString("MM.yyyy") + ") " : " ") + s.Description
                         ))).ToList();
                 if (SpecificationID != null && SpecificationID != Guid.Empty && Specifications.Count(s => s.Key == SpecificationID) == 0)
                     SpecificationID = null;

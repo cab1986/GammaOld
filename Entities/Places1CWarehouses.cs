@@ -12,15 +12,14 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class v1CWorkingSpecifications
+    public partial class Places1CWarehouses
     {
-        public System.DateTime Period { get; set; }
-        public System.Guid C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public Nullable<System.Guid> C1CPlaceID { get; set; }
-        public System.Guid C1CSpecificationID { get; set; }
-        public Nullable<System.DateTime> ValidTill { get; set; }
-        public string C1CCode { get; set; }
-        public string Description { get; set; }
+        public System.Guid Place1CWarehouseID { get; set; }
+        public Nullable<int> PlaceID { get; set; }
+        public Nullable<System.Guid> C1CWarehouseID { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
+    
+        public virtual C1CWarehouses C1CWarehouses { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

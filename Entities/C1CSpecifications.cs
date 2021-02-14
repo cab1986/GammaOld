@@ -31,6 +31,8 @@ namespace Gamma.Entities
         public Nullable<byte> SpecificationType { get; set; }
         public Nullable<System.DateTime> ValidTill { get; set; }
         public string C1CCode { get; set; }
+        public Nullable<bool> C1CDeleted { get; set; }
+        public string Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CSpecificationInputNomenclature> C1CSpecificationInputNomenclature { get; set; }

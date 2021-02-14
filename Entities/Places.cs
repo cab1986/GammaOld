@@ -34,6 +34,7 @@ namespace Gamma.Entities
             this.PlaceRemotePrinters = new HashSet<PlaceRemotePrinters>();
             this.Persons = new HashSet<Persons>();
             this.DocMaterialTankGroups = new HashSet<DocMaterialTankGroups>();
+            this.Places1CWarehouses = new HashSet<Places1CWarehouses>();
         }
     
         public int PlaceID { get; set; }
@@ -59,6 +60,7 @@ namespace Gamma.Entities
         public Nullable<bool> IsEnabledRemainderInDocCloseShift { get; set; }
         public Nullable<bool> IsEnabledSamplesInDocCloseShift { get; set; }
         public Nullable<bool> IsMaterialProductionPlace { get; set; }
+        public string ShortName { get; set; }
     
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }
@@ -102,5 +104,7 @@ namespace Gamma.Entities
         public virtual PlaceWithdrawalMaterialTypes PlaceWithdrawalMaterialTypes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMaterialTankGroups> DocMaterialTankGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Places1CWarehouses> Places1CWarehouses { get; set; }
     }
 }

@@ -39,6 +39,7 @@ namespace Gamma.Entities
         public byte ShiftID { get; set; }
         public Nullable<bool> MobileComputer { get; set; }
         public Nullable<short> DepartmentID { get; set; }
+        public Nullable<System.Guid> RootUserID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentPlaceUsers> CurrentPlaceUsers { get; set; }

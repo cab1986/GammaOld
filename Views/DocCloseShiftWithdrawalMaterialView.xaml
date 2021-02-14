@@ -20,7 +20,7 @@
             <dx:DXTabControl.View>
                 <dx:TabControlMultiLineView HeaderLocation="Bottom"/>
             </dx:DXTabControl.View>
-            <dx:DXTabItem Height="0" Header="{Binding NameWithdrawalMaterialIn}" Visibility="{Binding IsWithdrawalMaterialIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <dx:DXTabItem Height="0" Header="{Binding NameWithdrawalMaterialIn}" Visibility="{Binding IsWithdrawalMaterialIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager Margin="-9,-9,-9,-9">
                     <dxb:BarManager.Bars>
                         <dxb:Bar>

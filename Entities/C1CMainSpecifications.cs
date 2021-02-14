@@ -15,7 +15,7 @@ namespace Gamma.Entities
     public partial class C1CMainSpecifications
     {
         public System.Guid C1CMainSpecificationID { get; set; }
-        public System.DateTime Period { get; set; }
+        public Nullable<System.DateTime> Period { get; set; }
         public System.Guid C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<System.Guid> C1CSpecificationID { get; set; }

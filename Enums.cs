@@ -132,7 +132,8 @@ namespace Gamma
         DocUtilization,
         DocSpecificstionQuantity,
         DocUnwinderRemainder,
-        DocMaterialProduction
+        DocMaterialProduction,
+        ProductionTask
     }
     public enum PermissionMark
     {

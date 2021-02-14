@@ -35,7 +35,9 @@ namespace Gamma.Models
                             .Select(ws => ws.C1CCharacteristicID)
                             .ToList();                        
                     Characteristics = new ObservableCollection<C1CCharacteristics>(
-                        nomInfo.C1CCharacteristics.Where(c => characteristicIds.Contains(c.C1CCharacteristicID)).OrderBy(c => c.Name));
+                        nomInfo.C1CCharacteristics.Where(c => characteristicIds.Contains(c.C1CCharacteristicID) && !(c.C1CDeleted ?? false)).OrderBy(c => c.Name));
+                    if (CharacteristicID == null && Characteristics.Count() == 1)
+                        CharacteristicID = Characteristics.First().C1CCharacteristicID;
                 }
             }
         }
@@ -74,13 +76,13 @@ namespace Gamma.Models
                                 .Select(p => p.C1CPlaceID)
                                 .ToList().Contains(s.C1CPlaceID))
                             .OrderBy(s => s.Period)
-                            .Select(s => new { s.C1CSpecificationID, s.C1CCode, s.ValidTill })
+                            .Select(s => new { s.C1CSpecificationID, s.C1CCode, s.ValidTill, s.Description })
                             .Distinct()
                             .AsEnumerable()
                             .Select(s => new KeyValuePair<Guid, string>
                             (
                                 s.C1CSpecificationID,
-                                "Спец-я № " + s.C1CCode + " действует до " + s.ValidTill?.ToString("MM.yyyy") //+ " для передела " + gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == s.C1CPlaceID).Name
+                                "№ " + s.C1CCode + (s.ValidTill != null ? "(до " + s.ValidTill?.ToString("MM.yyyy") + ") " : " ") + s.Description //+ " для передела " + gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == s.C1CPlaceID).Name
                             ))).ToList();
                     if (SpecificationID != null && SpecificationID != Guid.Empty && Specifications.Count(s => s.Key == SpecificationID) == 0)
                         SpecificationID = null;

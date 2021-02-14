@@ -26,6 +26,8 @@ namespace Gamma.Entities
         public Nullable<bool> Folder { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
         public string Description { get; set; }
+        public Nullable<bool> ProductionByOrders { get; set; }
+        public Nullable<bool> ProductionWithoutOrders { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Places> Places { get; set; }

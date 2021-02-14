@@ -20,6 +20,7 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             DocMovementId = docMovementId;
+            //IsInitialize = true;
             using (var gammaBase = DB.GammaDb)
             {
                 /*
@@ -64,6 +65,11 @@ namespace Gamma.ViewModels
                                            gammaBase.C1CDocInternalOrders.FirstOrDefault(
                                                dso => dso.C1CDocInternalOrderID == DocOrderId)?.C1CNumber;
                                 break;
+                            case OrderType.MovementOrder:
+                                DocOrderInfo = "Заказ пер.№ " +
+                                           gammaBase.C1CDocInternalOrders.FirstOrDefault(
+                                               dso => dso.C1CDocInternalOrderID == DocOrderId)?.C1CNumber;
+                            break;
                     }
                 }
                 MovementProducts = new ItemsChangeObservableCollection<MovementProduct>(gammaBase.vDocMovementProducts.Where(dp => dp.DocMovementID == docMovementId)
@@ -84,7 +90,10 @@ namespace Gamma.ViewModels
             MovementProducts.CollectionChanged += MovementProductsOnCollectionChanged;
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
+            var canUploadTo1CCommand = IsConfirmed && DocOrderId == null;
+            UploadTo1CCommand = new DelegateCommand(UploadTo1C,() => canUploadTo1CCommand);
             Bars.Add(ReportManager.GetReportBar("DocMovement", VMID));
+            //IsInitialize = false;
         }
 
         private void PrintReport(PrintReportMessage msg)
@@ -102,6 +111,21 @@ namespace Gamma.ViewModels
 
         public bool DenyEditOut { get; private set; }
         public bool DenyEditIn { get; private set; }
+
+        public bool CanChangeIsConfirmed => DocOrderId == null;
+
+        public DelegateCommand UploadTo1CCommand { get; private set; }
+
+        //public bool CanUploadTo1C => IsConfirmed && DocOrderId == null;
+
+        private void UploadTo1C()
+        {
+            UIServices.SetBusyState();
+            if (DocOrderId == null)
+            {
+                DB.UploadFreeMovementTo1C(DocMovementId);
+            }
+        }
 
         public MovementProduct SelectedProduct { get; set; }
         public DelegateCommand ShowProductCommand { get; private set; }
@@ -225,6 +249,7 @@ namespace Gamma.ViewModels
         }
 
         public string InPlace { get; set; }
+        //private bool IsInitialize { get; set; } = false;
         private bool _isConfirmed;
 
         public bool IsConfirmed
@@ -232,10 +257,32 @@ namespace Gamma.ViewModels
             get { return _isConfirmed; }
             set
             {
-                _isConfirmed = value;
-                RaisePropertyChanged("IsConfirmed");
+                if (_isConfirmed != value)
+                {
+                    _isConfirmed = value;
+                    //saveDoc();
+                    RaisePropertyChanged("IsConfirmed");
+                }
             }
         }
+
+       /* private void saveDoc()
+        {
+            if (!IsInitialize)
+            {
+                using (var gammaBase = DB.GammaDb)
+                {
+                    var doc = gammaBase.Docs.Where(d => d.DocID == DocMovementId).FirstOrDefault();
+                    if (doc != null)
+                    {
+                        doc.IsConfirmed = IsConfirmed;
+                    }
+                    gammaBase.SaveChanges();
+                }
+                UploadTo1C();
+            }
+        }*/
+
         public ItemsChangeObservableCollection<MovementProduct> MovementProducts { get; set; }
 //        public List<Place> Warehouses { get; private set; }
 
@@ -275,6 +322,7 @@ namespace Gamma.ViewModels
                     }
                 }
                 gammaBase.SaveChanges();
+                UploadTo1C();
             }
             return true;
         }

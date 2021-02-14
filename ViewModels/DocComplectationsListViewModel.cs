@@ -136,7 +136,7 @@ namespace Gamma.ViewModels
 					case 0:
                         if (isSource1C)
                             DocComplectations = gammaBase.C1CDocComplectation.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID
-                            && (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger
+                            //&& (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger
                             && (!dc.DocComplectation.Any() || !dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed))
 							.OrderByDescending(dc => dc.Date).Take(100)
 							.Select(dc => new DocComplectationListItem
@@ -165,7 +165,7 @@ namespace Gamma.ViewModels
                             DocComplectations = gammaBase.C1CDocComplectation
 							.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID
                                                     //&& dc.C1CDocComplectationNomenclature.Any(c => gammaBase.C1CNomenclature.FirstOrDefault(e => gammaBase.C1CMeasureUnitQualifiers.FirstOrDefault(f => f.IsInteger == true).C1CMeasureUnitQualifierID == e.C1CBaseMeasureUnitQualifier).C1CNomenclatureID == c.C1CNomenclatureID)
-                                                    && (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger
+                                                    //&& (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger
                                                     )
                             .OrderByDescending(dc => dc.Date).Take(500)
 							.Select(dc => new DocComplectationListItem
@@ -193,7 +193,7 @@ namespace Gamma.ViewModels
                         if (isSource1C)
                             DocComplectations = gammaBase.C1CDocComplectation
 							.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID &&
-                                (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger &&
+                                //(bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger &&
                                 (string.IsNullOrEmpty(Number) || dc.C1CCode.Contains(Number)) &&
 								(DateBegin == null || dc.Date >= DateBegin) &&
 								(DateEnd == null || dc.Date <= DateEnd)

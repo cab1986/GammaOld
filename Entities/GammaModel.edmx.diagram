@@ -402,6 +402,9 @@
         <AssociationConnector Association="GammaModel.DocMaterialDocs" />
         <EntityTypeShape EntityType="GammaModel.vDocMaterialProductionDirectCalculations" Width="1.5" PointX="17.375" PointY="11.75" />
         <EntityTypeShape EntityType="GammaModel.vPlaceZones" Width="1.5" PointX="17.375" PointY="17.75" />
+        <EntityTypeShape EntityType="GammaModel.Places1CWarehouses" Width="1.5" PointX="30.25" PointY="69.25" />
+        <AssociationConnector Association="GammaModel.FK_Places1CWarehouses_1CWarehouses" />
+        <AssociationConnector Association="GammaModel.FK_Places1CWarehouses_Places" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

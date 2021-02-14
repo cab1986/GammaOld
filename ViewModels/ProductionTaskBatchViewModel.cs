@@ -37,6 +37,7 @@ namespace Gamma.ViewModels
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
             ShowProductCommand = new DelegateCommand(ShowProduct, () => SelectedProductionTaskProduct != null);
             DeleteProdutCommand = new DelegateCommand(DeleteProduct, () => SelectedProductionTaskProduct != null);
+            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => ProductionTaskStateID == (byte)ProductionTaskStates.InProduction);
             Intervals = new List<string> { "Все", "За мою смену", "За последние сутки"};
             if (WorkSession.IsProductionPlace)
             {
@@ -196,6 +197,16 @@ namespace Gamma.ViewModels
                 ProductionTaskProducts.Remove(SelectedProductionTaskProduct);
         }
 
+        public DelegateCommand UploadTo1CCommand { get; private set; }
+
+        private void UploadTo1C()
+        {
+            UIServices.SetBusyState();
+            if (CurrentView != null && ProductionTaskBatchID != null)
+            {
+                DB.UploadProductionTaskBatchTo1C(ProductionTaskBatchID, GammaBase);
+            }
+        }
 
         public override bool IsValid => base.IsValid && (!PartyControl || ContractorId != null);
 
@@ -640,6 +651,8 @@ namespace Gamma.ViewModels
                 gammaBase.SaveChanges();
             }
             CurrentView?.SaveToModel(ProductionTaskBatchID);
+            if (ProductionTaskStateID == (byte)ProductionTaskStates.InProduction || ProductionTaskStateID == (byte)ProductionTaskStates.Completed)
+                UploadTo1C();
             return true;
         }
 
@@ -1396,7 +1409,26 @@ namespace Gamma.ViewModels
             }
             set
             {
-            	_productionTaskStateID = value;
+                if (_productionTaskStateID == null)
+                {
+                    _productionTaskStateID = value;
+                }
+                else
+                    if((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && value == (byte)ProductionTaskStates.NeedsDecision)
+                    {
+                        var res = DB.GetAbilityChangeProductionTaskState(ProductionTaskBatchID);
+                        if (res == null)
+                            MessageBox.Show("Ошибка при получении данных из 1С");
+                        else
+                        {
+                            if ((int)res == 1)
+                                _productionTaskStateID = value;
+                            else
+                                MessageBox.Show("Запрещено изменение. Задание заблокировано, в 1С созданы этапы.");
+                        }
+                    }
+                else
+                    _productionTaskStateID = value;
                 RaisePropertyChanged("ProductionTaskStateID");
             }
         }

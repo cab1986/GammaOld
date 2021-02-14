@@ -266,6 +266,78 @@ namespace Gamma
             }
         }
 
+        public static void UploadProductionTaskBatchTo1C(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        {
+            gammaBase = gammaBase ?? GammaDb;
+            try
+            {
+                var docIdParameter = new SqlParameter("ProductionTaskBatchID", SqlDbType.UniqueIdentifier)
+                {
+                    Value = productionTaskBatchID
+                };
+                const string sql = "exec [dbo].[UploadProductionTaskBatchTo1C] @ProductionTaskBatchID";
+                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось выгрузить задание в 1С");
+            }
+        }
+
+        public static void UploadShipmentOrderTo1C(Guid docShipmentOrderID, GammaEntities gammaBase = null)
+        {
+            gammaBase = gammaBase ?? GammaDb;
+            try
+            {
+                var docIdParameter = new SqlParameter("DocShipmentOrderID", SqlDbType.UniqueIdentifier)
+                {
+                    Value = docShipmentOrderID
+                };
+                const string sql = "exec [dbo].[UploadShipmentOrderTo1C] @DocShipmentOrderID";
+                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось выгрузить приказ в 1С");
+            }
+        }
+
+        public static void UploadDocComplectationTo1C(Guid docComplectationID, GammaEntities gammaBase = null)
+        {
+            gammaBase = gammaBase ?? GammaDb;
+            try
+            {
+                var docIdParameter = new SqlParameter("DocComplectationID", SqlDbType.UniqueIdentifier)
+                {
+                    Value = docComplectationID
+                };
+                const string sql = "exec [dbo].[UploadDocComplectationTo1C] @DocComplectationID";
+                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось выгрузить документ в 1С");
+            }
+        }
+
+        public static void UploadFreeMovementTo1C(Guid docMovementId, GammaEntities gammaBase = null)
+        {
+            gammaBase = gammaBase ?? GammaDb;
+            try
+            {
+                var docIdParameter = new SqlParameter("DocMovementID", SqlDbType.UniqueIdentifier)
+                {
+                    Value = docMovementId
+                };
+                const string sql = "exec [dbo].[UploadFreeMovementTo1C] @DocMovementID";
+                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось выгрузить документ в 1С");
+            }
+        }
+
         public static void ChangeUserPassword(Guid userid,string password, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? GammaDb;
@@ -387,5 +459,19 @@ namespace Gamma
             return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetPaperMachinePlace('{placeid}')").AsEnumerable().First();
         }
 
+        public static int? GetAbilityChangeProductionTaskState(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeProductionTaskState('{productionTaskBatchID}')").AsEnumerable().First();
+        }
+
+        public static int? GetAbilityChangeDocShipmentOrder(Guid docShipmentOrderID, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocShipmentOrder('{docShipmentOrderID}')").AsEnumerable().First();
+        }
+
+        public static int? GetAbilityChangeDocComplectation(Guid docCompletationID, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocComplectation('{docCompletationID}')").AsEnumerable().First();
+        }
     }
 }

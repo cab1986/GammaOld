@@ -19,6 +19,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<decimal> Amount { get; set; }
+        public Nullable<System.Guid> C1CMeasureUnitID { get; set; }
     
         public virtual C1CSpecifications C1CSpecifications { get; set; }
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }

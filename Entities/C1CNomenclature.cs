@@ -64,6 +64,8 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CMeaureUnitStorage { get; set; }
         public Nullable<System.Guid> C1CMeasureUnitSet { get; set; }
         public Nullable<bool> C1CDeleted { get; set; }
+        public Nullable<System.Guid> C1CQualityID { get; set; }
+        public Nullable<System.Guid> C1COldNomenclatureID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics { get; set; }

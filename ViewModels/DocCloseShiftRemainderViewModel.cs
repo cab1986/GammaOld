@@ -83,11 +83,27 @@ namespace Gamma.ViewModels
                     coefficient = 1M;
                     break;
                 case PlaceGroup.Convertings:
+
                     using (var gammaBase = DB.GammaDb)
                     {
-                        coefficient =
+                        var charCoefficient =
                         gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)
-                            .C1CMeasureUnitsPackage.Coefficient ?? 1;
+                            .C1CMeasureUnitsPackage;
+                        if (charCoefficient != null && charCoefficient.Coefficient != null)
+                            coefficient = (decimal)charCoefficient.Coefficient;
+                        else
+                        {                            
+                            //Кол во рул в инд упак
+                            var nomenklCoefficient1 = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)
+                            .C1CNomenclature.C1CNomenclatureProperties.FirstOrDefault(n => n.C1CPropertyID == new Guid("492288ED-DBB4-11EA-943C-0015B2A9C22A")).C1CPropertyValues.Description;
+                            //Кол во упак в гр уп
+                            var nomenklCoefficient2 = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)
+                            .C1CNomenclature.C1CNomenclatureProperties.FirstOrDefault(n => n.C1CPropertyID == new Guid("E27C6973-DBB3-11EA-943C-0015B2A9C22A")).C1CPropertyValues.Description;
+                            if (nomenklCoefficient1 != null && nomenklCoefficient1 != String.Empty && nomenklCoefficient2 != null && nomenklCoefficient2 != String.Empty)
+                            {
+                                coefficient = int.Parse(nomenklCoefficient1) * int.Parse(nomenklCoefficient2);
+                            }
+                        }
                         break;
                     }
             }

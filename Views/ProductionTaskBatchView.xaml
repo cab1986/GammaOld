@@ -94,6 +94,7 @@
                                                       FindMode="Always" ImmediatePopup="True" AllowNullInput="True" AssignNullValueOnClearingEditText="True" FilterCondition="Contains" 
                                                       FindButtonPlacement="None" IncrementalFiltering="True" IncrementalSearch="False" ValidateOnTextInput="False"/>
                                 </dxlc:LayoutItem>
+                                <Button Command="{Binding UploadTo1CCommand}" Content="Выгрузить в 1С" Height="25" />
                             </dxlc:LayoutGroup>
                             <dxlc:LayoutGroup HorizontalAlignment="Stretch" Orientation="Vertical" ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                 <ContentControl Content="{Binding CurrentView}" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>

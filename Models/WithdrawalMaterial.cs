@@ -33,8 +33,11 @@ namespace Gamma.Models
         private void RefreshAvilableNomenclatures()
         {
             AvailableNomenclatures = new List<NomenclatureAnalog>();
+            
             using (var gammaBase = DB.GammaDb)
             {
+                if (NomenclatureID == null)
+                    System.Windows.MessageBox.Show("null");
                 var nomenclatureInfo =
                     gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == NomenclatureID);
                 var characteristicInfo =
@@ -68,7 +71,7 @@ namespace Gamma.Models
                         IsMarked = nomenclatureInfo.IsArchive ?? false
                     });
                 }
-
+                /*
                 var analogs =
                 gammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == NomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
                     .Select(a => new
@@ -97,7 +100,7 @@ namespace Gamma.Models
                             Coefficient = analog.Coefficient
                         });                
 
-                }
+                }*/
                 if (nomenclatureInfo.IsArchive ?? false)
                 {
                     var activeNomenclature = AvailableNomenclatures.FirstOrDefault(an => !an.IsMarked);
@@ -128,7 +131,7 @@ namespace Gamma.Models
 
                 //else
                 {
-                    var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == base.NomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
+                    var choosenNomenclature = AvailableNomenclatures?.FirstOrDefault(an => an.NomenclatureID == base.NomenclatureID && (an.CharacteristicID == CharacteristicID || CharacteristicID == null || CharacteristicID == Guid.Empty));
                     if (choosenNomenclature == null)
                     {
                         Quantity = 0;
@@ -184,7 +187,7 @@ namespace Gamma.Models
                 else
                     base.CharacteristicID = value;
 
-                var choosenNomenclature = AvailableNomenclatures?.First(an => an.NomenclatureID == base.NomenclatureID && (an.CharacteristicID == base.CharacteristicID || base.CharacteristicID == null || base.CharacteristicID == Guid.Empty));
+                var choosenNomenclature = AvailableNomenclatures?.FirstOrDefault(an => an.NomenclatureID == base.NomenclatureID && (an.CharacteristicID == base.CharacteristicID || base.CharacteristicID == null || base.CharacteristicID == Guid.Empty));
                 if (choosenNomenclature == null)
                 {
                     Quantity = 0;

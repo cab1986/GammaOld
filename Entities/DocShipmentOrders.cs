@@ -36,6 +36,7 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> InDate { get; set; }
         public string Driver { get; set; }
         public string DriverDocument { get; set; }
+        public Nullable<bool> IsReturned { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMovement> DocMovement { get; set; }

@@ -45,7 +45,7 @@ namespace Gamma.ViewModels
 
         private int _crepe;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(0,60,ErrorMessage=@"Креп за пределами допустимого диапозона")]
+        [Range(0,60,ErrorMessage=@"Креп за пределами допустимого диапазона")]
         public int Crepe
         {
             get
@@ -60,7 +60,7 @@ namespace Gamma.ViewModels
         }
         private int _diameter;
         [UIAuth(UIAuthLevel.ReadOnly)]
-        [Range(0, 4000, ErrorMessage = @"Диаметр за пределами допустимого диапозона")]
+        [Range(0, 4000, ErrorMessage = @"Диаметр за пределами допустимого диапазона")]
         public int Diameter
         {
             get

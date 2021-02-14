@@ -48,7 +48,7 @@ namespace Gamma.ViewModels
                     Application.Current.Shutdown();
                     return;
                 }
-                if (WorkSession.PlaceGroup == PlaceGroup.Convertings)
+                if (WorkSession.PlaceGroup == PlaceGroup.Convertings || WorkSession.PlaceGroup == PlaceGroup.PM || WorkSession.PlaceGroup == PlaceGroup.Rw)
                 {
                     var placeCurrentUser =
                         GammaBase.CurrentPlaceUsers.FirstOrDefault(pu => pu.PlaceID == WorkSession.PlaceID);

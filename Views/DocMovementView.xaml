@@ -20,8 +20,7 @@
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocMovementViewModel}}"
         common:WindowSettings.Save="True"
         Title="перемещение" Height="600" Width="1000">
-    
-    <Grid>
+<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition />
@@ -31,7 +30,7 @@
         <dxlc:LayoutControl Orientation="Horizontal" Grid.Row="1">
             <dxlc:LayoutGroup Orientation="Vertical" View="GroupBox" Width="200" Header="Документ" >
                 <dxlc:LayoutItem Label="Номер" LabelPosition="Top">
-                    <dxe:TextEdit EditValue="{Binding Number}" />
+                    <dxe:TextEdit EditValue="{Binding Number}"  IsReadOnly="True"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
                     <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False"/>
@@ -50,7 +49,10 @@
                     </dxe:ButtonEdit>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Выполнен">
-                    <dxe:CheckEdit EditValue="{Binding IsConfirmed}" IsReadOnly="True"/>
+                    <dxe:CheckEdit EditValue="{Binding IsConfirmed}" IsReadOnly="{Binding CanChangeIsConfirmed, Converter={StaticResource InverseBooleanConverter}}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Width="110" HorizontalAlignment="Center">
+                    <Button Command="{Binding UploadTo1CCommand}" Content="Выгрузить в 1С" Height="25"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Orientation="Vertical">

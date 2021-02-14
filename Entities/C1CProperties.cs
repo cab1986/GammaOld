@@ -28,6 +28,7 @@ namespace Gamma.Entities
         public string C1CCode { get; set; }
         public Nullable<bool> Marked { get; set; }
         public string Name { get; set; }
+        public string DevName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristicProperties> C1CCharacteristicProperties { get; set; }

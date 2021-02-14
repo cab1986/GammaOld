@@ -19,6 +19,9 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CPropertyValueID { get; set; }
         public string ValueText { get; set; }
         public Nullable<decimal> ValueNumeric { get; set; }
+        public Nullable<bool> C1CDeleted { get; set; }
+        public Nullable<bool> ValueBool { get; set; }
+        public Nullable<System.DateTime> ValueDate { get; set; }
     
         public virtual C1CProperties C1CProperties { get; set; }
         public virtual C1CPropertyValues C1CPropertyValues { get; set; }

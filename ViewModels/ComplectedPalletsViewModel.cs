@@ -74,15 +74,15 @@ namespace Gamma.ViewModels
                                 Date = d.Date,
                                 ProductId = d.DocProduction.DocProductionProducts.FirstOrDefault().ProductID,
                                 DocOrderId = (Guid)d.DocProduction.DocOrderId,
-                                OrderNumber = gammaBase.v1COrders.FirstOrDefault(order => order.C1COrderID == d.DocProduction.DocOrderId).Number,
-                                PalletItems = d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductPallets.ProductItems
-                                    .Select(p => new PalletItem
-                                    {
-                                        NomenclatureId = p.C1CNomenclatureID,
-                                        CharacteristicId = (Guid)p.C1CCharacteristicID,
-                                        Quantity = p.Quantity ??0,
-                                        NomenclatureName = p.C1CNomenclature.Name + " " + p.C1CCharacteristics.Name
-                                    }).ToList()
+                                OrderNumber = ""// gammaBase.v1COrders.FirstOrDefault(order => order.C1COrderID == d.DocProduction.DocOrderId).Number,
+                                //PalletItems = d.DocProduction.DocProductionProducts.FirstOrDefault().Products.ProductPallets.ProductItems
+                                //    .Select(p => new PalletItem
+                                //    {
+                                //        NomenclatureId = p.C1CNomenclatureID,
+                                //        CharacteristicId = (Guid)p.C1CCharacteristicID,
+                                //        Quantity = p.Quantity ??0,
+                                //        NomenclatureName = p.C1CNomenclature.Name + " " + p.C1CCharacteristics.Name
+                                //    }).ToList()
                             }).ToList();
                         break;
                     case 1:
