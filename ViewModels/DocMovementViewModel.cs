@@ -305,7 +305,7 @@ namespace Gamma.ViewModels
                     return true;
                 }
                 docMovement.Docs.Number = Number;
-                docMovement.Docs.Date = Date;
+                docMovement.Docs.Date = new DateTime(Date.Year, Date.Month, Date.Day, Date.Hour,Date.Minute, 0);
                 docMovement.InPlaceID = InPlaceId;
                 docMovement.OutPlaceID = OutPlaceId;
                 docMovement.Docs.IsConfirmed = IsConfirmed;
