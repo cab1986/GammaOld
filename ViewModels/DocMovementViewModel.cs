@@ -114,6 +114,12 @@ namespace Gamma.ViewModels
 
         public bool CanChangeIsConfirmed => DocOrderId == null;
 
+        public bool IsDateReadOnly
+        {
+            get
+            { return !(!IsConfirmed && DB.HaveWriteAccess("Docs") && WorkSession.ShiftID == 0 && (WorkSession.DBAdmin || WorkSession.RoleName == "Dispetcher")); }
+        }
+
         public DelegateCommand UploadTo1CCommand { get; private set; }
 
         //public bool CanUploadTo1C => IsConfirmed && DocOrderId == null;

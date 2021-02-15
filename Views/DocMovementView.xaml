@@ -33,7 +33,7 @@
                     <dxe:TextEdit EditValue="{Binding Number}"  IsReadOnly="True"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Дата" LabelPosition="Top">
-                    <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="True" AllowDefaultButton="False"/>
+                    <dxe:DateEdit EditValue="{Binding Date}" IsReadOnly="{Binding IsDateReadOnly}" Mask="g" MaskUseAsDisplayFormat="True" AllowDefaultButton="False"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Со склада" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding OutPlace}" IsReadOnly="True"/>
