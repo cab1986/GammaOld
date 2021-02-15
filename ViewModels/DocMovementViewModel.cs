@@ -42,6 +42,7 @@ namespace Gamma.ViewModels
                 }
                 Number = docMovement.Docs.Number;
                 Date = docMovement.Docs.Date;
+                dateInit = docMovement.Docs.Date;
                 OutPlaceId = docMovement.OutPlaceID;
                 InPlaceId = docMovement.InPlaceID;
                 IsInVisible = docMovement.OrderTypeID != (int) OrderType.ShipmentOrer;
@@ -112,7 +113,7 @@ namespace Gamma.ViewModels
         public bool DenyEditOut { get; private set; }
         public bool DenyEditIn { get; private set; }
 
-        public bool CanChangeIsConfirmed => DocOrderId == null;
+        public bool CanChangeIsConfirmed => WorkSession.ShiftID == 0 && (WorkSession.DBAdmin || WorkSession.RoleName == "Dispetcher");// DocOrderId == null;
 
         public bool IsDateReadOnly
         {
@@ -127,7 +128,7 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            if (DocOrderId == null)
+            if (DocOrderId == null || dateInit != Date)
             {
                 DB.UploadFreeMovementTo1C(DocMovementId);
             }
@@ -188,6 +189,8 @@ namespace Gamma.ViewModels
         {
             IsConfirmed = MovementProducts.All(p => p.IsConfirmed == true);
         }
+
+        private DateTime dateInit { get; set; }
 
         private Guid? DocOrderId { get; set; }
         public string DocOrderInfo { get; set; }
