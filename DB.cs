@@ -284,8 +284,9 @@ namespace Gamma
             }
         }
 
-        public static void UploadShipmentOrderTo1C(Guid docShipmentOrderID, GammaEntities gammaBase = null)
+        public static bool UploadShipmentOrderTo1C(Guid docShipmentOrderID, GammaEntities gammaBase = null)
         {
+            var ret = false;
             gammaBase = gammaBase ?? GammaDb;
             try
             {
@@ -295,11 +296,14 @@ namespace Gamma
                 };
                 const string sql = "exec [dbo].[UploadShipmentOrderTo1C] @DocShipmentOrderID";
                 gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
+                ret = true;
             }
             catch (Exception)
             {
                 MessageBox.Show("Не удалось выгрузить приказ в 1С");
+                ret = false;
             }
+            return ret;
         }
 
         public static void UploadDocComplectationTo1C(Guid docComplectationID, GammaEntities gammaBase = null)

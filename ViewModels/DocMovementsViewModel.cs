@@ -123,7 +123,7 @@ namespace Gamma.ViewModels
                         break;
                     case 3:
                         DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Where(d => (string.IsNullOrEmpty(Number) || Number == d.Docs.Number)
+                            .Where(d => (string.IsNullOrEmpty(Number) || d.Docs.Number.Contains(Number))
                                 && (DateBegin == null || d.Docs.Date >= DateBegin)
                                 && (DateEnd == null || d.Docs.Date <= DateEnd)
                             )

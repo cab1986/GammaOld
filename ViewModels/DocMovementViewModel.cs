@@ -128,7 +128,7 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            if (DocOrderId == null && MessageBox.Show("Документ будет подтвержден, сохранен и выгружен в 1С. Продожить?", "Выгрузка в 1С",
+            if (DocOrderId == null && MessageBox.Show("Документ будет подтвержден, сохранен и выгружен в 1С. Продолжить?", "Выгрузка в 1С",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)// || dateInit != Date)
             {
                 IsConfirmed = true;

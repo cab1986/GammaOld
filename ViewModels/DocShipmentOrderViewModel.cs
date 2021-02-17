@@ -114,18 +114,18 @@ namespace Gamma.ViewModels
             ShiftInId = docShipmentOrderInfo.InShiftId;
             IsShipped = docShipmentOrderInfo.IsShipped;
             IsReturned = docShipmentOrderInfo.IsReturned;
+            AbilityChange = DB.GetAbilityChangeDocShipmentOrder(DocShipmentOrderID); //может изменить значение IsReturned, влияет на расчет DenyEditOut, поэтому обязательно после IsReturned и до DenyEditOut/DenyEditIn
             IsConfirmed = docShipmentOrderInfo.IsConfirmed??false;
             OutPlaceId = docShipmentOrderInfo.OutPlaceID ?? (PlacesOut?.Count == 1 ? PlacesOut.FirstOrDefault()?.PlaceID : null);
             InPlaceId = docShipmentOrderInfo.InPlaceID ?? (PlacesIn?.Count == 1 ? PlacesIn.FirstOrDefault()?.PlaceID : null);
             FillDocShipmentOrderGoods(docShipmentOrderId);
-            DenyEditIn = !WorkSession.DBAdmin && ((DateOut != null && InPlaceId != null && !WorkSession.PlaceIds.Contains((int)InPlaceId)) || docShipmentOrderInfo.InBranchID != WorkSession.BranchID);
-            DenyEditOut = !WorkSession.DBAdmin && ((DateIn != null && OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId)) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID);
+            DenyEditIn = /*!WorkSession.DBAdmin &&*/ ((DateOut != null && InPlaceId != null && !WorkSession.PlaceIds.Contains((int)InPlaceId)) || docShipmentOrderInfo.InBranchID != WorkSession.BranchID || IsReturned);
+            DenyEditOut = /*!WorkSession.DBAdmin &&*/ ((DateIn != null && OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId)) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID || IsReturned);
             DenyEditInPlace = DenyEditIn || PlacesIn?.Count == 1;
             DenyEditOutPlace = DenyEditOut || PlacesOut?.Count == 1;
             OutVisibible = docShipmentOrderInfo.OrderKindID == 0 || docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
             InVisibible = false;// docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
             MovementVisibible = docShipmentOrderInfo.OrderKindID == 2; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
-            AbilityChange = DB.GetAbilityChangeDocShipmentOrder(DocShipmentOrderID);
 #if (!DEBUG)
             IsReadOnly = !DB.HaveWriteAccess("DocMovement") || !((AbilityChange ?? 0) == 1);
 #else
@@ -146,6 +146,9 @@ namespace Gamma.ViewModels
             OpenMovementCommand = new DelegateCommand(() => MessageManager.OpenDocMovement(SelectedMovementItem.DocId), () => SelectedMovementItem != null);
             DocShipmentOrderGoods.CollectionChanged +=DocShipmentOrderGoodsOnCollectionChanged;
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
+            //var canUploadTo1CCommand = DocOrderId == null;
+            UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => CanUploadTo1CCommand);
+            ReturnTo1CCommand = new DelegateCommand(ReturnTo1C, () => CanReturnTo1CCommand);
         }
 
         public List<Persons> TestItems { get; set; }
@@ -157,6 +160,10 @@ namespace Gamma.ViewModels
         public string DriverDocument { get; set; }
 
         public MovementProduct SelectedProduct { get; set; }
+
+        public bool CanUploadTo1CCommand => !DenyEditOut && IsShipped;
+
+        public bool CanReturnTo1CCommand => !DenyEditOut && !IsReturned && !IsShipped;
 
         public DelegateCommand DeleteProductCommand { get; private set; }
 
@@ -304,6 +311,8 @@ namespace Gamma.ViewModels
         public bool DenyEditOutPlace { get; private set; }
         public bool DenyEditInPlace { get; private set; }
 
+        public bool DenyEditReturned => DenyEditOut || !IsReturned;
+
         private int? _abilityChange { get; set; }
         public int? AbilityChange
         {
@@ -320,7 +329,52 @@ namespace Gamma.ViewModels
                         ErrorMessage = "Запрещено изменение. Задание заблокировано в 1С.";
                     }
                     else
+                        if (IsReturned)
+                    {
+                        //ErrorMessage = "Запрещено изменение. Документ возвращен в 1С.";
+                        IsReturned = false;
+                    }
+                    else
                         ErrorMessage = "";
+                }               
+
+            }
+        }
+
+        public DelegateCommand UploadTo1CCommand { get; private set; }
+
+        private void UploadTo1C()
+        {
+            UIServices.SetBusyState();
+            if (MessageBox.Show("Документ будет сохранен и выгружен в 1С. Продолжить?", "Выгрузка в 1С",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)// || dateInit != Date)
+            {
+                //IsShipped = true;
+                if (SaveToModel())
+                {
+//#if (!DEBUG)
+                    if (DB.UploadShipmentOrderTo1C(DocShipmentOrderID))
+                        CloseWindow();
+//#endif
+                }
+            }
+        }
+
+        public DelegateCommand ReturnTo1CCommand { get; private set; }
+
+        private void ReturnTo1C()
+        {
+            UIServices.SetBusyState();
+            if (MessageBox.Show("Документ будет сохранен и возвращен в 1С на изменение. Продолжить?", "Выгрузка в 1С",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)// || dateInit != Date)
+            {
+                IsReturned = true;
+                if (SaveToModel())
+                { 
+//#if (!DEBUG)
+                    if (DB.UploadShipmentOrderTo1C(DocShipmentOrderID))
+                        CloseWindow();
+//#endif
                 }
             }
         }
@@ -565,9 +619,6 @@ namespace Gamma.ViewModels
                 }
                 gammaBase.SaveChanges();
             }
-//#if (!DEBUG)
-            DB.UploadShipmentOrderTo1C(DocShipmentOrderID);
-//#endif
             return true;
         }
 

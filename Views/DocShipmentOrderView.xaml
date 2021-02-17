@@ -39,7 +39,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="70" />
         </Grid.RowDefinitions>
     <dx:DXTabControl>
             <dx:DXTabItem Header="Заявка">
@@ -98,8 +98,8 @@
                                 <dxlc:LayoutItem Label="Номер ТС" Width="250">
                                     <dxe:TextEdit EditValue="{Binding VehicleNumber}" IsReadOnly="{Binding DenyEditOut}"/>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Возвращено" Width="90" HorizontalAlignment="Right">
-                                    <dxe:CheckEdit EditValue="{Binding IsReturned, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditOut}" HorizontalAlignment="Right"/>
+                                <dxlc:LayoutItem Visibility="Hidden" Label="Возвращено" Width="90" HorizontalAlignment="Right">
+                                    <dxe:CheckEdit EditValue="{Binding IsReturned, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditReturned}" HorizontalAlignment="Right"/>
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
@@ -159,8 +159,8 @@
                                     <dxe:ComboBoxEdit EditValue="{Binding InPlaceId, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding PlacesIn}" ValueMember="PlaceID" DisplayMember="PlaceName"
                                                   IsReadOnly="{Binding DenyEditInPlace}"/>
                                 </dxlc:LayoutItem>
-                                <dxlc:LayoutItem Label="Возвращено" Width="90" HorizontalAlignment="Right">
-                                    <dxe:CheckEdit EditValue="{Binding IsReturned, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditOut}" HorizontalAlignment="Right"/>
+                                <dxlc:LayoutItem Visibility="Hidden"  Label="Возвращено" Width="90" HorizontalAlignment="Right">
+                                    <dxe:CheckEdit EditValue="{Binding IsReturned, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding DenyEditReturned}" HorizontalAlignment="Right"/>
                                 </dxlc:LayoutItem>
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
@@ -244,9 +244,19 @@
                 </dxg:GridControl>
         </dx:DXTabItem>
     </dx:DXTabControl>
-        <dxe:TextEdit Grid.Row="1" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Height="26" Width="500" VerticalAlignment="Center" Margin="195,0" EditValue="{Binding ErrorMessage}" IsReadOnly="True"/>
-        <Button Grid.Row="1" HorizontalAlignment="Right" Height="26" Width="100" VerticalAlignment="Center" Margin="95,0" Content="Сохранить" Command="{Binding SaveAndCloseCommand}"/>
-        <Button Grid.Row="1" Width="80" Content="Отмена"  Height="26" Margin="10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding CloseCommand}"/>
+        
+        <dxlc:LayoutGroup Grid.Row="1" Orientation="Horizontal">
+            <dxe:TextEdit HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="26" Width="440" VerticalAlignment="Bottom" EditValue="{Binding ErrorMessage}" IsReadOnly="True" Margin="5,-10.382,-0.073,10.564"/>
+            <dxlc:LayoutGroup Orientation="Horizontal" Header="Сохранить и ..." View="GroupBox" >
+                <Button Content="Вернуть на доработку в 1С" Height="26" Command="{Binding ReturnTo1CCommand}"/>
+                <Button Content="Выгрузить в 1С" Height="26" Command="{Binding UploadTo1CCommand}"/>
+                <Button Content="Только сохранить" Height="26" Command="{Binding SaveAndCloseCommand}"/>
+        </dxlc:LayoutGroup>
+        <!--<Button Grid.Row="1" HorizontalAlignment="Right"  Width="200" Height="26" VerticalAlignment="Center" Margin="350,0" Content="Вернуть на доработку в 1С" Command="{Binding ReturnedTo1CCommand}"/>
+        <Button Grid.Row="1" HorizontalAlignment="Right" Width="140"  Height="26" Margin="205,0" VerticalAlignment="Center" Content="Выгрузить в 1С" Command="{Binding UploadTo1CCommand}"/>
+        <Button Grid.Row="1" HorizontalAlignment="Right" Height="26" Width="100" VerticalAlignment="Center" Margin="115,0" Content="Только сохранить" Command="{Binding SaveAndCloseCommand}"/>-->
+        <Button Grid.Row="1" Width="80" Content="Отмена"  Height="26" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding CloseCommand}" Margin="3,-11.382,5,11.564"/>
+        </dxlc:LayoutGroup>
         <dxmvvm:Interaction.Behaviors>
             <gamma:UIAuthBehavior />
         </dxmvvm:Interaction.Behaviors>
