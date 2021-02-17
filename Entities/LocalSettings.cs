@@ -18,5 +18,6 @@ namespace Gamma.Entities
         public string LabelPath { get; set; }
         public string MailServiceAddress { get; set; }
         public string GammaServiceAddress { get; set; }
+        public Nullable<int> DocLastNumber { get; set; }
     }
 }

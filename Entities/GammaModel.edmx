@@ -183,8 +183,8 @@
           <Property Name="1CMeaureUnitStorage" Type="uniqueidentifier" />
           <Property Name="1CMeasureUnitSet" Type="uniqueidentifier" />
           <Property Name="1CDeleted" Type="bit" />
-          <Property Name="1CQualityID" Type="uniqueidentifier" />
           <Property Name="1COldNomenclatureID" Type="uniqueidentifier" />
+          <Property Name="1CQualityID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CNomenclatureAnalogs">
           <Key>
@@ -1019,7 +1019,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="LocalSettings">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -1028,6 +1028,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.LocalSettings' does not have a pr
           <Property Name="MailServiceAddress" Type="varchar" MaxLength="250" />
           <Property Name="LabelPath" Type="varchar" MaxLength="500" />
           <Property Name="GammaServiceAddress" Type="varchar" MaxLength="250" />
+          <Property Name="DocLastNumber" Type="int" />
         </EntityType>
         <EntityType Name="LogEvents">
           <Key>
@@ -1176,6 +1177,8 @@ warning 6002: The table/view 'GammaNewErp2.dbo.LocalSettings' does not have a pr
           <Property Name="IsEnabledSamplesInDocCloseShift" Type="bit" />
           <Property Name="IsMaterialProductionPlace" Type="bit" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
+          <Property Name="ProductionOut1СPlaceID" Type="uniqueidentifier" />
+          <Property Name="RootPlaceID" Type="int" />
         </EntityType>
         <EntityType Name="Places1CWarehouses">
           <Key>
@@ -1547,7 +1550,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.LocalSettings' does not have a pr
           <Property Name="RootUserID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1561,7 +1564,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.v1CDocComplectationPositions' doe
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1589,7 +1592,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.v1COrderGoods' does not have a pr
           <Property Name="InQuantityUnits" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1641,7 +1644,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.v1COrders' does not have a primar
           <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="1CNomenclatureID" />
@@ -1658,27 +1661,30 @@ warning 6002: The table/view 'GammaNewErp2.dbo.v1CWorkingSpecifications' does no
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
+            
+            
+            
           </Key>
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CoreDiameter" Type="varchar" MaxLength="100" />
           <Property Name="CoreDiameterNumeric" Type="int" />
           <Property Name="LayerNumber" Type="varchar" MaxLength="100" />
           <Property Name="LayerNumberNumeric" Type="int" />
-          <Property Name="Diameter" Type="varchar" MaxLength="100" />
+          <Property Name="Diameter" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="Destination" Type="varchar" MaxLength="100" />
           <Property Name="Format" Type="varchar" MaxLength="100" />
           <Property Name="FormatNumeric" Type="int" />
           <Property Name="Color" Type="varchar" MaxLength="100" />
           <Property Name="Buyer" Type="varchar" MaxLength="100" />
-          <Property Name="TypeKind" Type="varchar" MaxLength="100" />
-          <Property Name="TypeTransition" Type="varchar" MaxLength="100" />
+          <Property Name="TypeKind" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="TypeTransition" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1704,7 +1710,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vDocCloseShiftMaterials' does not
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionCompositionCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1732,7 +1738,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vDocMaterialProductionComposition
           <Property Name="IsNotCalculatedQuantityRemainderAtEnd" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionDirectCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1760,7 +1766,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vDocMaterialProductionDirectCalcu
           <Property Name="QuantitySendAtEnd" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1785,7 +1791,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vDocMovementGoods' does not have 
           <Property Name="OutPlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1836,7 +1842,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vDocMovementProducts' does not ha
           <Property Name="MovementID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -1848,7 +1854,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vGroupPackSpools' does not have a
           <Property Name="BreakNumber" Type="tinyint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -1859,7 +1865,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vPlacePropertiesValues' does not 
           <Property Name="CoreDiameter" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlaceZones">
           <Key>
             <PropertyRef Name="PlaceZoneID" />
@@ -1878,7 +1884,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vPlaceZones' does not have a prim
           <Property Name="PlaceZoneRootName" Type="varchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1899,7 +1905,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vPMSpoolsToGroupPack' does not ha
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionMaterials">
           <Key>
             <PropertyRef Name="ProductNomenclatureID" />
@@ -1920,7 +1926,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vProductionMaterials' does not ha
           <Property Name="ParentName" Type="varchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -1930,7 +1936,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vProductionTaskBatches' does not 
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1954,7 +1960,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vProductionTaskProducts' does not
           <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsCurrentStateInfo">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1969,7 +1975,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vProductsCurrentStateInfo' does n
           <Property Name="State" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2023,7 +2029,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vProductsInfo' does not have a pr
           <Property Name="KindValue" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vRobotNomenclatures">
           <Key>
             <PropertyRef Name="ProdNumber" />
@@ -5901,7 +5907,8 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
     [LocalSettings].[BranchID] AS [BranchID], 
     [LocalSettings].[MailServiceAddress] AS [MailServiceAddress], 
     [LocalSettings].[LabelPath] AS [LabelPath], 
-    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress]
+    [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress], 
+    [LocalSettings].[DocLastNumber] AS [DocLastNumber]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
@@ -10073,7 +10080,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
           <Property Name="C1CCharacteristicID" Type="Guid" Nullable="false" />
           <Property Name="CoreDiameter" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LayerNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Diameter" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Diameter" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Destination" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Format" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Color" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -10081,8 +10088,8 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
           <Property Name="LayerNumberNumeric" Type="Int32" />
           <Property Name="CoreDiameterNumeric" Type="Int32" />
           <Property Name="Buyer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TypeKind" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TypeTransition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TypeKind" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TypeTransition" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <ComplexType Name="GetCharacteristicsForPM_Result">
           <Property Type="Guid" Name="C1CCharacteristicID" Nullable="false" />
@@ -11597,6 +11604,8 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
           <Property Name="IsMaterialProductionPlace" Type="Boolean" />
           <Property Name="ShortName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Places1CWarehouses" Relationship="GammaModel.FK_Places1CWarehouses_Places" FromRole="Places" ToRole="Places1CWarehouses" />
+          <Property Name="ProductionOut1СPlaceID" Type="Guid" />
+          <Property Name="RootPlaceID" Type="Int32" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -13515,6 +13524,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
           <Property Name="LabelPath" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="MailServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="GammaServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="DocLastNumber" Type="Int32" />
         </EntityType>
         <EntityType Name="Devices">
           <Key>
@@ -16613,6 +16623,8 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="RootPlaceID" ColumnName="RootPlaceID" />
+                <ScalarProperty Name="ProductionOut1СPlaceID" ColumnName="ProductionOut1СPlaceID" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="IsMaterialProductionPlace" ColumnName="IsMaterialProductionPlace" />
                 <ScalarProperty Name="IsEnabledSamplesInDocCloseShift" ColumnName="IsEnabledSamplesInDocCloseShift" />
@@ -17078,6 +17090,7 @@ warning 6002: The table/view 'GammaNewErp2.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="LocalSettings">
             <EntityTypeMapping TypeName="GammaModel.LocalSettings">
               <MappingFragment StoreEntitySet="LocalSettings">
+                <ScalarProperty Name="DocLastNumber" ColumnName="DocLastNumber" />
                 <ScalarProperty Name="GammaServiceAddress" ColumnName="GammaServiceAddress" />
                 <ScalarProperty Name="MailServiceAddress" ColumnName="MailServiceAddress" />
                 <ScalarProperty Name="LabelPath" ColumnName="LabelPath" />
