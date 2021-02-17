@@ -91,7 +91,7 @@ namespace Gamma.ViewModels
             MovementProducts.CollectionChanged += MovementProductsOnCollectionChanged;
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
-            var canUploadTo1CCommand = IsConfirmed && DocOrderId == null;
+            var canUploadTo1CCommand = DocOrderId == null;
             UploadTo1CCommand = new DelegateCommand(UploadTo1C,() => canUploadTo1CCommand);
             Bars.Add(ReportManager.GetReportBar("DocMovement", VMID));
             //IsInitialize = false;
@@ -128,9 +128,12 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            if (DocOrderId == null || dateInit != Date)
+            if (DocOrderId == null && MessageBox.Show("Документ будет подтвержден, сохранен и выгружен в 1С. Продожить?", "Выгрузка в 1С",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)// || dateInit != Date)
             {
-                DB.UploadFreeMovementTo1C(DocMovementId);
+                IsConfirmed = true;
+                if (SaveToModel())
+                    DB.UploadFreeMovementTo1C(DocMovementId);
             }
         }
 
@@ -331,7 +334,6 @@ namespace Gamma.ViewModels
                     }
                 }
                 gammaBase.SaveChanges();
-                UploadTo1C();
             }
             return true;
         }

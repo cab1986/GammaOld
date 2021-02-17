@@ -200,8 +200,8 @@ namespace Gamma.ViewModels
                     PersonsOut = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список
                 else
                 {
-                    var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.UserID).ToList();
-                    var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.RootUserID).ToList();
+                    var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28) || (value == 109 && p.PlaceID == 26) || (value == 43 && p.PlaceID == 8))).Select(u => u.UserID).ToList();
+                    var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28) || (value == 109 && p.PlaceID == 26) || (value == 43 && p.PlaceID == 8))).Select(u => u.RootUserID).ToList();
                     PersonsOut = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
                 }
                 RaisePropertyChanged("OutPlaceId");
@@ -221,8 +221,8 @@ namespace Gamma.ViewModels
                     PersonsIn = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список
                 else
                 {
-                    var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.UserID).ToList();
-                    var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28))).Select(u => u.RootUserID).ToList();
+                    var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28) || (value == 109 && p.PlaceID == 26) || (value == 43 && p.PlaceID == 8))).Select(u => u.UserID).ToList();
+                    var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || (value == 104 && p.PlaceID == 28) || (value == 109 && p.PlaceID == 26) || (value == 43 && p.PlaceID == 8))).Select(u => u.RootUserID).ToList();
                     PersonsIn = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
                 }
                 RaisePropertyChanged("InPlaceId");
