@@ -64,16 +64,17 @@ namespace Gamma.ViewModels
                     CloseWindow();
                     return;
                 }
-                
+
+                IsComplectationFrom1C = docComplectation.C1CDocComplectationID != Guid.Empty;
                 placeId = (context.Places.FirstOrDefault(p => docComplectation.C1CDocComplectation.C1CWarehouseID != null && p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID
                     ?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceID)
                      ?? (WorkSession.BranchID == 1 ? 8 : (WorkSession.BranchID == 2 ? 28 : WorkSession.PlaceID));
                 placeZoneID = context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceZoneID
                      ?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && ((p.Places.BranchID == 1 && p.PlaceID == 8) || (p.Places.BranchID == 2 && p.PlaceID == 28)))?.PlaceZoneID;
-                DocDate = (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
-                Number = docComplectation.C1CDocComplectation.C1CCode;
+                DocDate = !IsComplectationFrom1C ? docComplectation.Docs.Date : (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
+                Number = !IsComplectationFrom1C ? docComplectation.Docs.Number : docComplectation.C1CDocComplectation.C1CCode;
                 IsReturned = docComplectation.IsReturned ?? false;
-                IsConfirmed = context.Docs.FirstOrDefault(d => d.DocID == docId).IsConfirmed;
+                IsConfirmed = docComplectation.Docs.IsConfirmed;//context.Docs.FirstOrDefault(d => d.DocID == docId).IsConfirmed;
                 var complectation_Items = context.C1CDocComplectationNomenclature
                     .Where(d => d.C1CDocComplectationID == docComplectation.C1CDocComplectationID)
                     .Select(d => new Complectation_Item()
@@ -85,9 +86,9 @@ namespace Gamma.ViewModels
                         Quantity = d.Quantity ?? 0
                     })
                     .ToList();
-                if (!(complectation_Items == null || complectation_Items.Count == 0))
+                if (IsComplectationFrom1C)//(!(complectation_Items == null || complectation_Items.Count == 0))
                 {
-                    IsComplectationFrom1C = true;
+                    //IsComplectationFrom1C = true;
                     foreach (var citem in complectation_Items)
                     {
                         var item = new ComplectationItem(citem.NomenclatureID,
@@ -153,7 +154,7 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
-                    IsComplectationFrom1C = true;
+                    //IsComplectationFrom1C = true;
                     var docWithdrawalProduct = docComplectation.DocWithdrawal.SelectMany(d => d.DocWithdrawalProducts).FirstOrDefault();
                     if (docWithdrawalProduct != null)
                     {
@@ -168,11 +169,11 @@ namespace Gamma.ViewModels
                                 .FirstOrDefault();
                             if (productProduction != null)
                             {
-                                complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productProduction.C1CCharacteristicID, QualityId = new Guid("D05404A0-6BCE-449B-A798-41EBE5E5B977"), Quantity = 1 });
-                                complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productItem.C1CCharacteristicID, QualityId = new Guid("D05404A0-6BCE-449B-A798-41EBE5E5B977"), Quantity = 0 });
+                                complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productProduction.C1CCharacteristicID, QualityId = new Guid("00000000-0000-0000-0000-000000000000"), Quantity = 1 });
+                                complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productItem.C1CCharacteristicID, QualityId = new Guid("00000000-0000-0000-0000-000000000000"), Quantity = 0 });
                             }
                             else
-                                complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productItem.C1CCharacteristicID, QualityId = new Guid("D05404A0-6BCE-449B-A798-41EBE5E5B977"), Quantity = 1 });
+                                complectation_Items.Add(new Complectation_Item() { NomenclatureID = productItem.C1CNomenclatureID, OldCharacteristicId = (Guid)productItem.C1CCharacteristicID, NewCharacteristicId = (Guid)productItem.C1CCharacteristicID, QualityId = new Guid("00000000-0000-0000-0000-000000000000"), Quantity = 1 });
                         }
 
                         foreach (var citem in complectation_Items)
@@ -328,7 +329,7 @@ namespace Gamma.ViewModels
                             IsCancel = true,
                             IsDefault = false,
                         };
-                        var dialogService = GetService<IDialogService>();
+                        var dialogService = GetService<IDialogService>("AddNomenclatureToPalletDialog");
                         var result = dialogService.ShowDialog(
                             dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
                             title: "Выберите новую номенклатуру",
@@ -397,6 +398,7 @@ namespace Gamma.ViewModels
 				}
 				context.DocComplectation.First(d => d.DocComplectationID == DocId).DocWithdrawal.Add(context.DocWithdrawal.First(d => d.DocID == docWithdrawalId));
 				context.SaveChanges();
+                Number = context.Docs.FirstOrDefault(d => d.DocID == DocId)?.Number;
 				item.UnpackedPallets.Add(new ComplectationProduct
 				{
 					DocId = docWithdrawalId,
@@ -538,7 +540,7 @@ namespace Gamma.ViewModels
                     IsCancel = true,
                     IsDefault = false,
                 };
-                var dialogService = GetService<IDialogService>("");
+                var dialogService = GetService<IDialogService>("SetQuantityDialog");
                 var result = dialogService.ShowDialog(
                     dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
                     title: "Кол-во групповых упаковок",
@@ -814,7 +816,7 @@ namespace Gamma.ViewModels
 
 		private Guid DocId { get; set; }
 
-		private List<Tuple<Guid, Guid>> OldNomenclature
+        private List<Tuple<Guid, Guid>> OldNomenclature
 		{
 			get
 			{

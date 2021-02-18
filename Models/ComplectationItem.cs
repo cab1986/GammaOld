@@ -32,7 +32,7 @@ namespace Gamma.Models
 			using (var context = DB.GammaDb)
 			{
 				var nomInfo = context.C1CCharacteristics.Where(c =>
-						c.C1CCharacteristicID == OldCharacteristicId || c.C1CCharacteristicID == NewCharacteristicId
+						(c.C1CCharacteristicID == OldCharacteristicId || c.C1CCharacteristicID == NewCharacteristicId)
 						&& c.C1CNomenclatureID == NomenclatureID)
 					.Select(c => new
 					{

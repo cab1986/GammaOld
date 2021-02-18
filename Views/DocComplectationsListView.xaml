@@ -34,7 +34,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <dxlc:LayoutControl>
-            <dxlc:LayoutItem Label="Диапозон:">
+            <dxlc:LayoutItem Label="Диапазон:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding IntervalId}" x:Name="IntervalList" IsTextEditable="False"/>
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Номер:">
@@ -55,7 +55,7 @@
             <dxg:GridControl.View>
                 <dxg:TableView AutoWidth="True" AllowEditing="False" FocusedViewChanged="TableView_FocusedViewChanged"/>
             </dxg:GridControl.View>
-            <dxg:GridControl.DetailDescriptor>
+            <!--<dxg:GridControl.DetailDescriptor>
                 <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding NomenclaturePositions}">
                     <dxg:GridControl>
                         <dxg:GridControl.View>
@@ -69,9 +69,17 @@
                         <dxg:GridColumn Header="Скомплектовано" FieldName="ComplectedQuantity" />
                     </dxg:GridControl>
                 </dxg:DataControlDetailDescriptor>
-            </dxg:GridControl.DetailDescriptor>
-            <dxg:GridColumn Header="Номер документа" FieldName="Number" VisibleIndex="0" />
-            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending"/>
+            </dxg:GridControl.DetailDescriptor>-->
+            <dxg:GridColumn Header="Номер документа" FieldName="Number" FixedWidth="True" Width="120" VisibleIndex="0" />
+            <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="110" VisibleIndex="2" SortIndex="1" SortOrder="Descending">
+                <dxg:GridColumn.EditSettings>
+                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                </dxg:GridColumn.EditSettings>
+            </dxg:GridColumn>
+            <dxg:GridColumn Header="Завершен" FieldName="IsConfirmed" FixedWidth="True" Width="80" VisibleIndex="3" />
+            <dxg:GridColumn Header="Возвращен" FieldName="IsReturned" FixedWidth="True" Width="80" VisibleIndex="4" />
+            <dxg:GridColumn Header="Смена" FieldName="ShiftID" FixedWidth="True" Width="50" VisibleIndex="5" />
+            <dxg:GridColumn Header="Автор" FieldName="UserName" VisibleIndex="6" />
         </dxg:GridControl>
     </Grid>
 </UserControl>

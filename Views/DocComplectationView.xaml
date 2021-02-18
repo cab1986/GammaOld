@@ -17,7 +17,7 @@
              d:DesignHeight="1000" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocComplectationViewModel}}">
     <dxmvvm:Interaction.Behaviors>
-        <dx:DialogService DialogWindowStartupLocation="CenterOwner">
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="SetQuantityDialog">
             <dx:DialogService.ViewTemplate>
                 <DataTemplate>
                     <dialogs:SetQuantityDialog/>
@@ -30,7 +30,7 @@
                 </Style>
             </dx:DialogService.DialogStyle>
         </dx:DialogService>
-        <dx:DialogService DialogWindowStartupLocation="CenterOwner">
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="AddNomenclatureToPalletDialog">
             <dx:DialogService.ViewTemplate>
                 <DataTemplate>
                     <dialogs:AddNomenclatureToPalletDialog/>

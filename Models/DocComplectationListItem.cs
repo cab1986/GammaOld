@@ -19,8 +19,16 @@ namespace Gamma.Models
 
 		public int? PlaceId { get; set; }
 
-		#endregion
-	}
+        public bool IsConfirmed { get; set; }
+
+        public bool IsReturned { get; set; }
+
+        public string UserName { get; set; }
+
+        public string ShiftID { get; set; }
+
+    #endregion
+}
 
 	public class ComplectationNomenclatureItem
 	{

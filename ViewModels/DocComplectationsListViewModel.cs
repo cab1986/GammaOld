@@ -138,15 +138,19 @@ namespace Gamma.ViewModels
                             DocComplectations = gammaBase.C1CDocComplectation.Where(dc => gammaBase.Branches.FirstOrDefault(b => b.BranchID == WorkSession.BranchID).C1CSubdivisionID == dc.C1CWarehouses.C1CSubdivisionID
                             //&& (bool)dc.C1CDocComplectationNomenclature.FirstOrDefault().C1CNomenclature.C1CMeasureUnitQualifiers.IsInteger
                             && (!dc.DocComplectation.Any() || !dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed))
-							.OrderByDescending(dc => dc.Date).Take(100)
-							.Select(dc => new DocComplectationListItem
-							{
-								DocId = dc.DocComplectation.Any() ? (Guid?)dc.DocComplectation.FirstOrDefault().DocComplectationID : null,
-								Doc1CId = dc.C1CDocComplectationID,
-								Number = dc.C1CCode,
-								Date = (DateTime)dc.Date,
-								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID
-							}).ToList();
+                            .OrderByDescending(dc => dc.Date).Take(100)
+                            .Select(dc => new DocComplectationListItem
+                            {
+                                DocId = dc.DocComplectation.Any() ? (Guid?)dc.DocComplectation.FirstOrDefault().DocComplectationID : null,
+                                Doc1CId = dc.C1CDocComplectationID,
+                                Number = dc.C1CCode,
+                                Date = (DateTime)dc.Date,
+                                PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID,
+                                IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
+                                IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
+                                UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
+                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : ""
+                            }).ToList();
                         else
                             DocComplectations = gammaBase.DocComplectation
                                 .Where(dc => dc.C1CDocComplectationID == Guid.Empty && (!dc.Docs.IsConfirmed))
@@ -157,7 +161,11 @@ namespace Gamma.ViewModels
                                 Doc1CId = dc.C1CDocComplectationID,
                                 Number = dc.Docs.Number,
                                 Date = (DateTime)dc.Docs.Date,
-                                PlaceId = dc.Docs.PlaceID
+                                PlaceId = dc.Docs.PlaceID,
+                                IsConfirmed = dc.Docs.IsConfirmed,
+                                IsReturned = dc.IsReturned ?? false,
+                                UserName = dc.Docs.PersonID != null ? dc.Docs.Persons.Name : dc.Docs.Users.Login,
+                                ShiftID = dc.Docs.ShiftID.ToString()
                             }).ToList();
                         break;
 					case 1:
@@ -174,8 +182,12 @@ namespace Gamma.ViewModels
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
 								Date = (DateTime)dc.Date,
-								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID
-							}).ToList();
+								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID,
+                                IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
+                                IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
+                                UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
+                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : ""
+                            }).ToList();
                         else
                             DocComplectations = gammaBase.DocComplectation
                                 .Where(dc => dc.C1CDocComplectationID == Guid.Empty)
@@ -186,7 +198,11 @@ namespace Gamma.ViewModels
                                 Doc1CId = dc.C1CDocComplectationID,
                                 Number = dc.Docs.Number,
                                 Date = (DateTime)dc.Docs.Date,
-                                PlaceId = dc.Docs.PlaceID
+                                PlaceId = dc.Docs.PlaceID,
+                                IsConfirmed = dc.Docs.IsConfirmed,
+                                IsReturned = dc.IsReturned ?? false,
+                                UserName = dc.Docs.PersonID != null ? dc.Docs.Persons.Name : dc.Docs.Users.Login,
+                                ShiftID = dc.Docs.ShiftID.ToString()
                             }).ToList();
                         break;
 					case 2:
@@ -205,8 +221,12 @@ namespace Gamma.ViewModels
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
 								Date = (DateTime)dc.Date,
-								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID
-							}).ToList();
+								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID,
+                                IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
+                                IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
+                                UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
+                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : ""
+                            }).ToList();
                         else
                             DocComplectations = gammaBase.DocComplectation
                             .Where(dc => dc.C1CDocComplectationID == Guid.Empty &&
@@ -221,11 +241,15 @@ namespace Gamma.ViewModels
                                 Doc1CId = dc.C1CDocComplectationID,
                                 Number = dc.Docs.Number,
                                 Date = (DateTime)dc.Docs.Date,
-                                PlaceId = dc.Docs.PlaceID
+                                PlaceId = dc.Docs.PlaceID,
+                                IsConfirmed = dc.Docs.IsConfirmed,
+                                IsReturned = dc.IsReturned ?? false,
+                                UserName = dc.Docs.PersonID != null ? dc.Docs.Persons.Name : dc.Docs.Users.Login,
+                                ShiftID = dc.Docs.ShiftID.ToString()
                             }).ToList();
                         break;
 				}
-				foreach (var docComplectation in DocComplectations)
+				/*foreach (var docComplectation in DocComplectations)
 				{
 					docComplectation.NomenclaturePositions = new List<ComplectationNomenclatureItem>(gammaBase
 						.v1CDocComplectationPositions.Where(p => p.C1CDocComplectationID == docComplectation.Doc1CId)
@@ -238,7 +262,7 @@ namespace Gamma.ViewModels
 							UnpackedQuantity = p.Withdraw ?? 0,
 							ComplectedQuantity = p.Complected ?? 0
 						}));
-				}
+				}*/
 			}
 		}
 

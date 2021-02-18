@@ -21,6 +21,7 @@ namespace Gamma.DialogViewModels
             {
                 var nomInfo =
                     gammaBase.Products.FirstOrDefault(p => p.BarCode == barcode)?
+                        .ProductPallets.ProductItems.FirstOrDefault() ?? gammaBase.Products.FirstOrDefault(p => p.Number == barcode)?
                         .ProductPallets.ProductItems.FirstOrDefault();
                 if (nomInfo == null) return;
                 NomenclatureID = nomInfo.C1CNomenclatureID;
