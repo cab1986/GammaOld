@@ -115,6 +115,7 @@ namespace Gamma.ViewModels
             IsShipped = docShipmentOrderInfo.IsShipped;
             IsReturned = docShipmentOrderInfo.IsReturned;
             AbilityChange = DB.GetAbilityChangeDocShipmentOrder(DocShipmentOrderID); //может изменить значение IsReturned, влияет на расчет DenyEditOut, поэтому обязательно после IsReturned и до DenyEditOut/DenyEditIn
+            if (AbilityChange == 1 && IsReturned) IsReturned = false;
             IsConfirmed = docShipmentOrderInfo.IsConfirmed??false;
             OutPlaceId = docShipmentOrderInfo.OutPlaceID ?? (PlacesOut?.Count == 1 ? PlacesOut.FirstOrDefault()?.PlaceID : null);
             InPlaceId = docShipmentOrderInfo.InPlaceID ?? (PlacesIn?.Count == 1 ? PlacesIn.FirstOrDefault()?.PlaceID : null);
@@ -327,12 +328,6 @@ namespace Gamma.ViewModels
                     if ((int)value != 1)
                     {
                         ErrorMessage = "Запрещено изменение. Задание заблокировано в 1С.";
-                    }
-                    else
-                        if (IsReturned)
-                    {
-                        //ErrorMessage = "Запрещено изменение. Документ возвращен в 1С.";
-                        IsReturned = false;
                     }
                     else
                         ErrorMessage = "";

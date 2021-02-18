@@ -129,7 +129,7 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             if (DocOrderId == null && MessageBox.Show("Документ будет подтвержден, сохранен и выгружен в 1С. Продолжить?", "Выгрузка в 1С",
-                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)// || dateInit != Date)
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)// || dateInit != Date)
             {
                 IsConfirmed = true;
                 if (SaveToModel())
