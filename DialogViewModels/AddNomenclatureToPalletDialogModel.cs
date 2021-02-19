@@ -20,9 +20,8 @@ namespace Gamma.DialogViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var nomInfo =
-                    gammaBase.Products.FirstOrDefault(p => p.BarCode == barcode)?
-                        .ProductPallets.ProductItems.FirstOrDefault() ?? gammaBase.Products.FirstOrDefault(p => p.Number == barcode)?
-                        .ProductPallets.ProductItems.FirstOrDefault();
+                    gammaBase.Products.FirstOrDefault(p => (p.BarCode == barcode || p.Number == barcode))?
+                        .ProductItems.FirstOrDefault();
                 if (nomInfo == null) return;
                 NomenclatureID = nomInfo.C1CNomenclatureID;
                 CharacteristicID = nomInfo.C1CCharacteristicID;
