@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
             EditItemCommand = new DelegateCommand(EditItem);
             NewItemCommand = new DelegateCommand(NewProductionTask);
             RefreshCommand = new DelegateCommand(GetProductionTasks);
-            DeleteItemCommand = new DelegateCommand(DeleteProductionTask);
+            DeleteItemCommand = new DelegateCommand(DeleteProductionTask, () => false);
         }
 
         public Dictionary<byte, string> ProductionTaskStates { get; set; }

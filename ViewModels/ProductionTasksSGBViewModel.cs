@@ -23,7 +23,7 @@ namespace Gamma.ViewModels
         {
             NewItemCommand = new DelegateCommand(NewItem);
             EditItemCommand = new DelegateCommand(EditItem,() => SelectedProductionTaskBatch != null);
-            DeleteItemCommand = new DelegateCommand(DeleteItem);
+            DeleteItemCommand = new DelegateCommand(DeleteItem, () => false);
             RefreshCommand = new DelegateCommand(Refresh);
             GetProductionTasks();
         }
