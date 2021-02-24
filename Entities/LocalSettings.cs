@@ -19,5 +19,8 @@ namespace Gamma.Entities
         public string MailServiceAddress { get; set; }
         public string GammaServiceAddress { get; set; }
         public Nullable<int> DocLastNumber { get; set; }
+        public Nullable<int> TaskLastNumber { get; set; }
+        public Nullable<bool> IsGet1CNomenclatureLanched { get; set; }
+        public Nullable<System.DateTime> LastExecGet1CNomenclature { get; set; }
     }
 }

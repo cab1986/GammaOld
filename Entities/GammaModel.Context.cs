@@ -1504,5 +1504,35 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteNewPalletInDocComplectation", productIDParameter);
         }
+    
+        [DbFunction("GammaEntities", "Get1COrders")]
+        public virtual IQueryable<Get1COrders_Result> Get1COrders(Nullable<int> placeID, string number, Nullable<System.DateTime> dateOfBegin, Nullable<System.DateTime> dateOfEnd, Nullable<bool> isOutOrders, Nullable<int> rowCount)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var numberParameter = number != null ?
+                new ObjectParameter("Number", number) :
+                new ObjectParameter("Number", typeof(string));
+    
+            var dateOfBeginParameter = dateOfBegin.HasValue ?
+                new ObjectParameter("DateOfBegin", dateOfBegin) :
+                new ObjectParameter("DateOfBegin", typeof(System.DateTime));
+    
+            var dateOfEndParameter = dateOfEnd.HasValue ?
+                new ObjectParameter("DateOfEnd", dateOfEnd) :
+                new ObjectParameter("DateOfEnd", typeof(System.DateTime));
+    
+            var isOutOrdersParameter = isOutOrders.HasValue ?
+                new ObjectParameter("IsOutOrders", isOutOrders) :
+                new ObjectParameter("IsOutOrders", typeof(bool));
+
+            var rowCountParameter = rowCount.HasValue ?
+                new ObjectParameter("RowCount", rowCount) :
+                new ObjectParameter("RowCount", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Get1COrders_Result>("[GammaEntities].[Get1COrders](@PlaceID, @Number, @DateOfBegin, @DateOfEnd, @IsOutOrders,@RowCount)", placeIDParameter, numberParameter, dateOfBeginParameter, dateOfEndParameter, isOutOrdersParameter, rowCountParameter);
+        }
     }
 }

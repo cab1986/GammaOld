@@ -30,6 +30,10 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CShipperID { get; set; }
         public Nullable<System.Guid> C1CWarehouseID { get; set; }
         public Nullable<System.Guid> C1CDocBuyerOrderID { get; set; }
+        public Nullable<bool> Locked_1C { get; set; }
+        public Nullable<bool> Locked_Gamma { get; set; }
+        public Nullable<int> Status_Gamma { get; set; }
+        public Nullable<System.DateTime> LastChanged_Gamma { get; set; }
     
         public virtual C1CContractors C1CContractors { get; set; }
         public virtual C1CContractors C1CConsignees { get; set; }

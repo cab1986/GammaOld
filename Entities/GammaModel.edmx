@@ -110,6 +110,10 @@
           <Property Name="1CShipperID" Type="uniqueidentifier" />
           <Property Name="1CWarehouseID" Type="uniqueidentifier" />
           <Property Name="1CDocBuyerOrderID" Type="uniqueidentifier" />
+          <Property Name="Locked_1C" Type="bit" />
+          <Property Name="Locked_Gamma" Type="bit" />
+          <Property Name="Status_Gamma" Type="int" />
+          <Property Name="LastChanged_Gamma" Type="datetime" />
         </EntityType>
         <EntityType Name="1CDocShipmentOrderGoods">
           <Key>
@@ -153,6 +157,7 @@
           <Property Name="1CCode" Type="varchar" MaxLength="20" />
           <Property Name="IsInteger" Type="bit" />
           <Property Name="Name" Type="varchar" MaxLength="250" />
+          <Property Name="1COldMeasureUnitQualifierID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CMeasureUnits">
           <Key>
@@ -1029,6 +1034,9 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="LabelPath" Type="varchar" MaxLength="500" />
           <Property Name="GammaServiceAddress" Type="varchar" MaxLength="250" />
           <Property Name="DocLastNumber" Type="int" />
+          <Property Name="TaskLastNumber" Type="int" />
+          <Property Name="IsGet1CNomenclatureLanched" Type="bit" />
+          <Property Name="LastExecGet1CNomenclature" Type="datetime" />
         </EntityType>
         <EntityType Name="LogEvents">
           <Key>
@@ -5516,6 +5524,60 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         </Function>
         <Function Name="Get1CDocShipmentOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Get1CNomenclature" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Get1COrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="Number" Type="varchar" Mode="In" />
+          <Parameter Name="DateOfBegin" Type="datetime" Mode="In" />
+          <Parameter Name="DateOfEnd" Type="datetime" Mode="In" />
+          <Parameter Name="IsOutOrders" Type="bit" Mode="In" />
+          <Parameter Name="RowCount" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="1COrderID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="Date" Type="datetime" />
+                <Property Name="Number" Type="char" MaxLength="11" />
+                <Property Name="Shipper" Type="nvarchar" MaxLength="100" />
+                <Property Name="Consignee" Type="nvarchar" MaxLength="100" />
+                <Property Name="Buyer" Type="nvarchar" MaxLength="100" />
+                <Property Name="1COutSubdivisionID" Type="uniqueidentifier" />
+                <Property Name="OutBranchID" Type="int" Nullable="false" />
+                <Property Name="1CInSubdivisionID" Type="uniqueidentifier" />
+                <Property Name="InBranchID" Type="int" />
+                <Property Name="OutDate" Type="datetime" />
+                <Property Name="InDate" Type="datetime" />
+                <Property Name="Driver" Type="varchar" MaxLength="255" />
+                <Property Name="DriverDocument" Type="varchar" MaxLength="255" />
+                <Property Name="VehicleNumber" Type="varchar" MaxLength="50" />
+                <Property Name="IsShipped" Type="bit" Nullable="false" />
+                <Property Name="IsReturned" Type="bit" Nullable="false" />
+                <Property Name="IsConfirmed" Type="bit" />
+                <Property Name="InActivePersonID" Type="uniqueidentifier" />
+                <Property Name="InActivePerson" Type="nvarchar" MaxLength="255" />
+                <Property Name="InShiftId" Type="tinyint" />
+                <Property Name="InPlaceID" Type="int" />
+                <Property Name="OutActivePersonID" Type="uniqueidentifier" />
+                <Property Name="OutActivePerson" Type="nvarchar" MaxLength="255" />
+                <Property Name="OutShiftID" Type="tinyint" />
+                <Property Name="OutPlaceID" Type="int" />
+                <Property Name="OrderKindID" Type="int" Nullable="false" />
+                <Property Name="OrderType" Type="varchar" MaxLength="20" Nullable="false" />
+                <Property Name="InPlaceName" Type="varchar" MaxLength="64" />
+                <Property Name="OutPlaceName" Type="varchar" MaxLength="64" />
+                <Property Name="Warehouse" Type="nvarchar" MaxLength="50" />
+                <Property Name="Shipper1CCode" Type="varchar" MaxLength="9" />
+                <Property Name="Consignee1CCode" Type="varchar" MaxLength="9" />
+                <Property Name="Buyer1CCode" Type="varchar" MaxLength="9" />
+                <Property Name="InActivePersons" Type="varchar(max)" />
+                <Property Name="OutActivePersons" Type="varchar(max)" />
+                <Property Name="InPlaceShortName" Type="varchar" MaxLength="10" />
+                <Property Name="OutPlaceShortName" Type="varchar" MaxLength="10" />
+                <Property Name="1CWarehouseUnloadID" Type="uniqueidentifier" />
+                <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="GetActiveSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
         </Function>
@@ -5908,7 +5970,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [LocalSettings].[MailServiceAddress] AS [MailServiceAddress], 
     [LocalSettings].[LabelPath] AS [LabelPath], 
     [LocalSettings].[GammaServiceAddress] AS [GammaServiceAddress], 
-    [LocalSettings].[DocLastNumber] AS [DocLastNumber]
+    [LocalSettings].[DocLastNumber] AS [DocLastNumber], 
+    [LocalSettings].[TaskLastNumber] AS [TaskLastNumber], 
+    [LocalSettings].[IsGet1CNomenclatureLanched] AS [IsGet1CNomenclatureLanched], 
+    [LocalSettings].[LastExecGet1CNomenclature] AS [LastExecGet1CNomenclature]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
@@ -7408,6 +7473,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="C1CMeasureUnits" Relationship="Self.FK_1CMeasureUnits_1CMeasureUnitQualifiers" FromRole="C1CMeasureUnitQualifiers" ToRole="C1CMeasureUnits" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CNomenclature_1CMeasureUnitQualifiers" FromRole="C1CMeasureUnitQualifiers" ToRole="C1CNomenclature" />
+          <Property Name="C1COldMeasureUnitQualifierID" Type="Guid" />
         </EntityType>
         <EntityType Name="C1CMeasureUnits">
           <Key>
@@ -9630,6 +9696,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Places" EntitySet="Places" />
             <End Role="Places1CWarehouses" EntitySet="Places1CWarehouses" />
           </AssociationSet>
+          <FunctionImport Name="Get1COrders" IsComposable="true" ReturnType="Collection(GammaModel.Get1COrders_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="DateOfBegin" Mode="In" Type="DateTime" />
+            <Parameter Name="DateOfEnd" Mode="In" Type="DateTime" />
+            <Parameter Name="IsOutOrders" Mode="In" Type="Boolean" />
+            <Parameter Name="RowCount" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10135,6 +10209,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CWarehouses" Relationship="GammaModel.FK_1CDocShipmentOrder_1CWarehouses" FromRole="C1CDocShipmentOrder" ToRole="C1CWarehouses" />
           <NavigationProperty Name="C1CDocShipmentOrderGoods" Relationship="GammaModel.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" FromRole="C1CDocShipmentOrder" ToRole="C1CDocShipmentOrderGoods" />
           <Property Name="C1CDocBuyerOrderID" Type="Guid" />
+          <Property Name="Locked_1C" Type="Boolean" />
+          <Property Name="Locked_Gamma" Type="Boolean" />
+          <Property Name="Status_Gamma" Type="Int32" />
+          <Property Name="LastChanged_Gamma" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="C1CDocShipmentOrderGoods">
           <Key>
@@ -13525,6 +13603,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="MailServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="GammaServiceAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="DocLastNumber" Type="Int32" />
+          <Property Name="TaskLastNumber" Type="Int32" />
+          <Property Name="IsGet1CNomenclatureLanched" Type="Boolean" />
+          <Property Name="LastExecGet1CNomenclature" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Devices">
           <Key>
@@ -15057,6 +15138,48 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="Get1COrders_Result">
+          <Property Type="Guid" Name="C1COrderID" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="11" />
+          <Property Type="String" Name="Shipper" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Consignee" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Buyer" Nullable="true" MaxLength="100" />
+          <Property Type="Guid" Name="C1COutSubdivisionID" Nullable="true" />
+          <Property Type="Int32" Name="OutBranchID" Nullable="false" />
+          <Property Type="Guid" Name="C1CInSubdivisionID" Nullable="true" />
+          <Property Type="Int32" Name="InBranchID" Nullable="true" />
+          <Property Type="DateTime" Name="OutDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="InDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Driver" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="DriverDocument" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="VehicleNumber" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="IsShipped" Nullable="false" />
+          <Property Type="Boolean" Name="IsReturned" Nullable="false" />
+          <Property Type="Boolean" Name="IsConfirmed" Nullable="true" />
+          <Property Type="Guid" Name="InActivePersonID" Nullable="true" />
+          <Property Type="String" Name="InActivePerson" Nullable="true" MaxLength="255" />
+          <Property Type="Byte" Name="InShiftId" Nullable="true" />
+          <Property Type="Int32" Name="InPlaceID" Nullable="true" />
+          <Property Type="Guid" Name="OutActivePersonID" Nullable="true" />
+          <Property Type="String" Name="OutActivePerson" Nullable="true" MaxLength="255" />
+          <Property Type="Byte" Name="OutShiftID" Nullable="true" />
+          <Property Type="Int32" Name="OutPlaceID" Nullable="true" />
+          <Property Type="Int32" Name="OrderKindID" Nullable="false" />
+          <Property Type="String" Name="OrderType" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="InPlaceName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="OutPlaceName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Warehouse" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Shipper1CCode" Nullable="true" MaxLength="9" />
+          <Property Type="String" Name="Consignee1CCode" Nullable="true" MaxLength="9" />
+          <Property Type="String" Name="Buyer1CCode" Nullable="true" MaxLength="9" />
+          <Property Type="String" Name="InActivePersons" Nullable="true" />
+          <Property Type="String" Name="OutActivePersons" Nullable="true" />
+          <Property Type="String" Name="InPlaceShortName" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="OutPlaceShortName" Nullable="true" MaxLength="10" />
+          <Property Type="Guid" Name="C1CWarehouseUnloadID" Nullable="true" />
+          <Property Type="Guid" Name="C1CWarehouseLoadID" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -15089,6 +15212,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CMeasureUnitQualifiers">
             <EntityTypeMapping TypeName="GammaModel.C1CMeasureUnitQualifiers">
               <MappingFragment StoreEntitySet="1CMeasureUnitQualifiers">
+                <ScalarProperty Name="C1COldMeasureUnitQualifierID" ColumnName="1COldMeasureUnitQualifierID" />
                 <ScalarProperty Name="C1CMeasureUnitQualifierID" ColumnName="1CMeasureUnitQualifierID" />
                 <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
                 <ScalarProperty Name="IsInteger" ColumnName="IsInteger" />
@@ -15807,6 +15931,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CDocShipmentOrder">
             <EntityTypeMapping TypeName="GammaModel.C1CDocShipmentOrder">
               <MappingFragment StoreEntitySet="1CDocShipmentOrder">
+                <ScalarProperty Name="LastChanged_Gamma" ColumnName="LastChanged_Gamma" />
+                <ScalarProperty Name="Status_Gamma" ColumnName="Status_Gamma" />
+                <ScalarProperty Name="Locked_Gamma" ColumnName="Locked_Gamma" />
+                <ScalarProperty Name="Locked_1C" ColumnName="Locked_1C" />
                 <ScalarProperty Name="C1CDocBuyerOrderID" ColumnName="1CDocBuyerOrderID" />
                 <ScalarProperty Name="C1CWarehouseID" ColumnName="1CWarehouseID" />
                 <ScalarProperty Name="C1CShipperID" ColumnName="1CShipperID" />
@@ -17090,6 +17218,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="LocalSettings">
             <EntityTypeMapping TypeName="GammaModel.LocalSettings">
               <MappingFragment StoreEntitySet="LocalSettings">
+                <ScalarProperty Name="LastExecGet1CNomenclature" ColumnName="LastExecGet1CNomenclature" />
+                <ScalarProperty Name="IsGet1CNomenclatureLanched" ColumnName="IsGet1CNomenclatureLanched" />
+                <ScalarProperty Name="TaskLastNumber" ColumnName="TaskLastNumber" />
                 <ScalarProperty Name="DocLastNumber" ColumnName="DocLastNumber" />
                 <ScalarProperty Name="GammaServiceAddress" ColumnName="GammaServiceAddress" />
                 <ScalarProperty Name="MailServiceAddress" ColumnName="MailServiceAddress" />
@@ -17966,6 +18097,52 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Get1COrders" FunctionName="GammaDBModel.Get1COrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.Get1COrders_Result">
+                <ScalarProperty Name="C1COrderID" ColumnName="1COrderID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Shipper" ColumnName="Shipper" />
+                <ScalarProperty Name="Consignee" ColumnName="Consignee" />
+                <ScalarProperty Name="Buyer" ColumnName="Buyer" />
+                <ScalarProperty Name="C1COutSubdivisionID" ColumnName="1COutSubdivisionID" />
+                <ScalarProperty Name="OutBranchID" ColumnName="OutBranchID" />
+                <ScalarProperty Name="C1CInSubdivisionID" ColumnName="1CInSubdivisionID" />
+                <ScalarProperty Name="InBranchID" ColumnName="InBranchID" />
+                <ScalarProperty Name="OutDate" ColumnName="OutDate" />
+                <ScalarProperty Name="InDate" ColumnName="InDate" />
+                <ScalarProperty Name="Driver" ColumnName="Driver" />
+                <ScalarProperty Name="DriverDocument" ColumnName="DriverDocument" />
+                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+                <ScalarProperty Name="IsShipped" ColumnName="IsShipped" />
+                <ScalarProperty Name="IsReturned" ColumnName="IsReturned" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="InActivePersonID" ColumnName="InActivePersonID" />
+                <ScalarProperty Name="InActivePerson" ColumnName="InActivePerson" />
+                <ScalarProperty Name="InShiftId" ColumnName="InShiftId" />
+                <ScalarProperty Name="InPlaceID" ColumnName="InPlaceID" />
+                <ScalarProperty Name="OutActivePersonID" ColumnName="OutActivePersonID" />
+                <ScalarProperty Name="OutActivePerson" ColumnName="OutActivePerson" />
+                <ScalarProperty Name="OutShiftID" ColumnName="OutShiftID" />
+                <ScalarProperty Name="OutPlaceID" ColumnName="OutPlaceID" />
+                <ScalarProperty Name="OrderKindID" ColumnName="OrderKindID" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="InPlaceName" ColumnName="InPlaceName" />
+                <ScalarProperty Name="OutPlaceName" ColumnName="OutPlaceName" />
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
+                <ScalarProperty Name="Shipper1CCode" ColumnName="Shipper1CCode" />
+                <ScalarProperty Name="Consignee1CCode" ColumnName="Consignee1CCode" />
+                <ScalarProperty Name="Buyer1CCode" ColumnName="Buyer1CCode" />
+                <ScalarProperty Name="InActivePersons" ColumnName="InActivePersons" />
+                <ScalarProperty Name="OutActivePersons" ColumnName="OutActivePersons" />
+                <ScalarProperty Name="InPlaceShortName" ColumnName="InPlaceShortName" />
+                <ScalarProperty Name="OutPlaceShortName" ColumnName="OutPlaceShortName" />
+                <ScalarProperty Name="C1CWarehouseUnloadID" ColumnName="1CWarehouseUnloadID" />
+                <ScalarProperty Name="C1CWarehouseLoadID" ColumnName="1CWarehouseLoadID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

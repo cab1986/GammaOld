@@ -25,6 +25,7 @@ namespace Gamma.Entities
         public string C1CCode { get; set; }
         public Nullable<bool> IsInteger { get; set; }
         public string Name { get; set; }
+        public Nullable<System.Guid> C1COldMeasureUnitQualifierID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CMeasureUnits> C1CMeasureUnits { get; set; }

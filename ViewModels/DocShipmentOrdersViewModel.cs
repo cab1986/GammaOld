@@ -31,7 +31,8 @@ namespace Gamma.ViewModels
                 Name = p.Name
             }).ToList();
 */
-            IntervalId = 0;
+            DateBegin = DateTime.Now.AddMonths(-6);
+            IntervalId = 2;
             Find();
         }
 
@@ -54,7 +55,18 @@ namespace Gamma.ViewModels
 
         public DelegateCommand FindCommand { get; private set; }
 
-        public string Number { get; set; }
+        private string _number;
+        public string Number
+        {
+            get { return _number; }
+            set
+            {
+                if (_number == value) return;
+                _number = value;
+                Find();
+                RaisePropertyChanged("Number");
+            }
+        }
         public DateTime? DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
         public List<string> Intervals { get; private set; }
@@ -72,7 +84,11 @@ namespace Gamma.ViewModels
             {
                 if (_intervalId == value) return;
                 _intervalId = value;
-                if (_intervalId < 2) Find();
+                if (_intervalId < 2)
+                {
+                    Number = null;
+                    //Find();
+                }
             }
         }
 
@@ -120,9 +136,10 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.v1COrders.Where(d => ((!d.IsShipped && IsOutOrders) || (!(d.IsConfirmed??false) && !IsOutOrders)) &&
+                            /*gammaBase.v1COrders.Where(d => ((!d.IsShipped && IsOutOrders) || (!(d.IsConfirmed??false) && !IsOutOrders)) &&
                             ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
-                            ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))))
+                            ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))))*/
+                            gammaBase.Get1COrders(WorkSession.PlaceID, "%" + Number + "%", DateBegin, DateEnd, IsOutOrders, 300)
                             .OrderByDescending(d => d.Date).Take(300)
                             .Select(d => new DocShipmentOrder
                             {
@@ -141,10 +158,11 @@ namespace Gamma.ViewModels
                         break;
                     case 1:
                         DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.v1COrders.Where(d =>
+                            /*gammaBase.v1COrders.Where(d =>
                             (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders) ||
-                            (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))
-                            .OrderByDescending(d => d.Date).Take(300)
+                            (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))*/
+                            gammaBase.Get1COrders(WorkSession.PlaceID, "%"+Number+"%" , DateBegin, DateEnd, IsOutOrders,300)
+                            .OrderByDescending(d => d.Date)//.Take(300)
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1COrderID,
@@ -161,32 +179,48 @@ namespace Gamma.ViewModels
                             }));
                         break;
                     case 2:
-                        DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
-                            gammaBase.v1COrders.Where(d =>
-                                (Number == null || d.Number.Contains(Number)) &&
-                                (d.Date >= DateBegin || DateBegin == null) &&
-                                (d.Date <= DateEnd || DateEnd == null) &&
+                        {
+                            /*var number = Number ?? "";
+                            var dateBegin = DateBegin ?? DateTime.MinValue;
+                            var dateEnd = DateEnd ?? DateTime.MaxValue;
+                            */
+                            DocShipmentOrders = new ObservableCollection<DocShipmentOrder>(
+                                /*gammaBase.v1COrders.Where(d =>
+                                    (Number == null || d.Number.Contains(Number)) &&
+                                    (d.Date >= DateBegin || DateBegin == null) &&
+                                    (d.Date <= DateEnd || DateEnd == null) &&
+                                    (
+                                        (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders)
+                                        ||
+                                        (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders)
+                                    ))*/
+                                /*gammaBase.v1COrders.Where(d =>
+                                (d.Number.Contains(number)) &&
+                                (d.Date >= dateBegin) &&
+                                (d.Date <= dateEnd) &&
                                 (
                                     (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1COutSubdivisionID && IsOutOrders)
                                     ||
                                     (gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders)
                                 ))
-                                .OrderByDescending(d => d.Date).Take(300)
-                                .Select(d => new DocShipmentOrder
-                                {
-                                    DocShipmentOrderId = d.C1COrderID,
-                                    Number = d.Number,
-                                    Date = d.Date ?? DB.CurrentDateTime,
-                                    VehicleNumber = d.VehicleNumber,
-                                    Shipper = d.Shipper,
-                                    Consignee = d.Consignee,
-                                    Buyer = d.Buyer,
-                                    ActivePerson = IsOutOrders ? d.OutActivePersons : d.InActivePersons,
-                                    OrderType = d.OrderType,
-                                    OutDate = d.OutDate,
-                                    Warehouse = d.Warehouse ?? ""
-                                }));
-                        break;
+                            */gammaBase.Get1COrders(WorkSession.PlaceID, "%" + Number, DateBegin, DateEnd, IsOutOrders, 300)
+                                    .OrderByDescending(d => d.Date).Take(300)
+                                    .Select(d => new DocShipmentOrder
+                                    {
+                                        DocShipmentOrderId = d.C1COrderID,
+                                        Number = d.Number,
+                                        Date = d.Date ?? DB.CurrentDateTime,
+                                        VehicleNumber = d.VehicleNumber,
+                                        Shipper = d.Shipper,
+                                        Consignee = d.Consignee,
+                                        Buyer = d.Buyer,
+                                        ActivePerson = IsOutOrders ? d.OutActivePersons : d.InActivePersons,
+                                        OrderType = d.OrderType,
+                                        OutDate = d.OutDate,
+                                        Warehouse = d.Warehouse ?? ""
+                                    }));
+                            break;
+                        }
                 }
             }
             //FillDocShipmentOrdersWithGoods(DocShipmentOrders);

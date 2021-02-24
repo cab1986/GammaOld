@@ -116,7 +116,7 @@ namespace Gamma.ViewModels
                 EditPlaceGroupNomenclatureCommand = new DelegateCommand<int>(EditPlaceGroupNomenclature);
                 PrintReportCommand = new DelegateCommand<Guid>(PrintReport);
                 OpenDocShipmentOrdersCommand = new DelegateCommand(OpenDocShipmentOrders, DB.HaveReadAccess("DocShipmentInfo"));
-                OpenDocInOrdersCommand = new DelegateCommand(OpenDocInOrders, DB.HaveReadAccess("DocShipmentInfo"));
+                OpenDocInOrdersCommand = new DelegateCommand(OpenDocInOrders, false/* DB.HaveReadAccess("DocShipmentInfo")*/);
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
                 OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
