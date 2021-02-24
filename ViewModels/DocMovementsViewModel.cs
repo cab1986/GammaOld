@@ -19,9 +19,10 @@ namespace Gamma.ViewModels
         public DocMovementsViewModel()
         {
             Intervals = new List<string> { "Активные", "Закрытые", "Последние 500", "Поиск" };
-            IntervalId = 0;
             RefreshCommand = new DelegateCommand(Find);
             EditItemCommand = new DelegateCommand(() => MessageManager.OpenDocMovement(SelectedDocMovement.DocId), SelectedDocMovement != null);
+            DateBegin = DateTime.Now.AddMonths(-6);
+            IntervalId = 3;
             Find();
         }
 
@@ -32,13 +33,28 @@ namespace Gamma.ViewModels
             {
                 if (_intervalId == value) return;
                 _intervalId = value;
-                if (_intervalId < 3) Find();
+                if (_intervalId < 3)
+                {
+                    Number = null;
+                    Find();
+                }
             }
         }
 
         public DateTime? DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
-        public string Number { get; set; }
+        private string _number;
+        public string Number
+        {
+            get { return _number; }
+            set
+            {
+                if (_number == value) return;
+                _number = value;
+                //Find();
+                RaisePropertyChanged("Number");
+            }
+        }
 
         public DelegateCommand DeleteItemCommand { get; }
         
@@ -122,10 +138,15 @@ namespace Gamma.ViewModels
                             }).ToList();
                         break;
                     case 3:
-                        DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Where(d => (string.IsNullOrEmpty(Number) || d.Docs.Number.Contains(Number))
-                                && (DateBegin == null || d.Docs.Date >= DateBegin)
-                                && (DateEnd == null || d.Docs.Date <= DateEnd)
+                        {
+                            var number = Number ?? "";
+                            var dateBegin = DateBegin ?? DateTime.MinValue;
+                            var dateEnd = DateEnd ?? DateTime.MaxValue;
+                            
+                            DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
+                            .Where(d => (d.Docs.Number.Contains(number))
+                                && (d.Docs.Date >= dateBegin)
+                                && (d.Docs.Date <= dateEnd)
                             )
                             .OrderByDescending(d => d.Docs.Date)
                             .Take(500)
@@ -141,7 +162,8 @@ namespace Gamma.ViewModels
                                 ShiftID = d.Docs.ShiftID,
                                 PlacePerson = d.Docs.Persons.Places.Name
                             }).ToList();
-                        break;
+                            break;
+                        }
                 }
             }
             FillDocMovement(DocMovements);

@@ -63,7 +63,7 @@ namespace Gamma.ViewModels
             {
                 if (_number == value) return;
                 _number = value;
-                Find();
+                //Find();
                 RaisePropertyChanged("Number");
             }
         }
@@ -87,7 +87,7 @@ namespace Gamma.ViewModels
                 if (_intervalId < 2)
                 {
                     Number = null;
-                    //Find();
+                    Find();
                 }
             }
         }
