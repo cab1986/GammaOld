@@ -61,11 +61,9 @@ namespace Gamma.ViewModels
 
             using (var gammaBase = DB.GammaDb)
             {
-                NomenclatureKindsList = gammaBase.C1CNomenclatureProperties.Where(
-                    p => p.C1CPropertyID == new Guid("E677C238-CAB1-11E3-AA54-002590304E93") && (p.C1CNomenclature.NomenclatureKindID == 3 || p.C1CNomenclature.NomenclatureKindID == 1))
-                    .OrderBy(p => p.C1CPropertyValues.Description)
-                    .Select(p => p.C1CPropertyValues.Description)
-                    .Distinct()
+                NomenclatureKindsList = gammaBase.vProductKinds
+                    .OrderBy(p => p.Name)
+                    .Select(p =>p.Name)
                     .ToList();
             }
             NomenclatureKindsList.Insert(0, "Все" );

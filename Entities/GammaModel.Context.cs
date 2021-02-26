@@ -167,6 +167,7 @@ namespace Gamma.Entities
         public virtual DbSet<vDocMaterialProductionDirectCalculations> vDocMaterialProductionDirectCalculations { get; set; }
         public virtual DbSet<vPlaceZones> vPlaceZones { get; set; }
         public virtual DbSet<Places1CWarehouses> Places1CWarehouses { get; set; }
+        public virtual DbSet<vProductKinds> vProductKinds { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1527,12 +1528,12 @@ namespace Gamma.Entities
             var isOutOrdersParameter = isOutOrders.HasValue ?
                 new ObjectParameter("IsOutOrders", isOutOrders) :
                 new ObjectParameter("IsOutOrders", typeof(bool));
-
+    
             var rowCountParameter = rowCount.HasValue ?
                 new ObjectParameter("RowCount", rowCount) :
                 new ObjectParameter("RowCount", typeof(int));
-
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Get1COrders_Result>("[GammaEntities].[Get1COrders](@PlaceID, @Number, @DateOfBegin, @DateOfEnd, @IsOutOrders,@RowCount)", placeIDParameter, numberParameter, dateOfBeginParameter, dateOfEndParameter, isOutOrdersParameter, rowCountParameter);
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Get1COrders_Result>("[GammaEntities].[Get1COrders](@PlaceID, @Number, @DateOfBegin, @DateOfEnd, @IsOutOrders, @RowCount)", placeIDParameter, numberParameter, dateOfBeginParameter, dateOfEndParameter, isOutOrdersParameter, rowCountParameter);
         }
     }
 }

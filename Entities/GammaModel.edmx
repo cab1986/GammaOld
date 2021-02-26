@@ -1968,6 +1968,19 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
           <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.vProductKinds' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vProductKinds">
+          <Key>
+            <PropertyRef Name="1CNomenclatureKindID" />
+            <PropertyRef Name="NomenclatureKindID" />
+          </Key>
+          <Property Name="1CNomenclatureKindID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ParentID" Type="uniqueidentifier" />
+          <Property Name="IsFolder" Type="bit" />
+          <Property Name="NomenclatureKindID" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsCurrentStateInfo">
           <Key>
@@ -6305,6 +6318,15 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductionTaskProducts].[DocProductionID] AS [DocProductionID]
     FROM [dbo].[vProductionTaskProducts] AS [vProductionTaskProducts]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vProductKinds" EntityType="Self.vProductKinds" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vProductKinds].[1CNomenclatureKindID] AS [1CNomenclatureKindID], 
+    [vProductKinds].[Name] AS [Name], 
+    [vProductKinds].[ParentID] AS [ParentID], 
+    [vProductKinds].[IsFolder] AS [IsFolder], 
+    [vProductKinds].[NomenclatureKindID] AS [NomenclatureKindID]
+    FROM [dbo].[vProductKinds] AS [vProductKinds]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vProductsCurrentStateInfo" EntityType="Self.vProductsCurrentStateInfo" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vProductsCurrentStateInfo].[ProductID] AS [ProductID], 
@@ -9704,6 +9726,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="IsOutOrders" Mode="In" Type="Boolean" />
             <Parameter Name="RowCount" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="vProductKinds" EntityType="GammaModel.vProductKinds" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -15180,6 +15203,17 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="C1CWarehouseUnloadID" Nullable="true" />
           <Property Type="Guid" Name="C1CWarehouseLoadID" Nullable="true" />
         </ComplexType>
+        <EntityType Name="vProductKinds">
+          <Key>
+            <PropertyRef Name="C1CNomenclatureKindID" />
+            <PropertyRef Name="NomenclatureKindID" />
+          </Key>
+          <Property Name="C1CNomenclatureKindID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ParentID" Type="Guid" />
+          <Property Name="IsFolder" Type="Boolean" />
+          <Property Name="NomenclatureKindID" Type="Int32" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -18143,6 +18177,17 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="vProductKinds">
+            <EntityTypeMapping TypeName="GammaModel.vProductKinds">
+              <MappingFragment StoreEntitySet="vProductKinds">
+                <ScalarProperty Name="NomenclatureKindID" ColumnName="NomenclatureKindID" />
+                <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="C1CNomenclatureKindID" ColumnName="1CNomenclatureKindID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
