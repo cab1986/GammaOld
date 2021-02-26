@@ -135,6 +135,8 @@ namespace Gamma.ViewModels
 
         public DelegateCommand PrintExampleCommand { get; private set; }
 
+        public bool IsHidePrintExample => WorkSession.ShiftID != 0;
+
         public SpoolWithdrawByShiftViewModel UsedSpools { get; private set; }
 
         private BitmapImage _groupPackageLabelImage;

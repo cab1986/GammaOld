@@ -60,7 +60,7 @@
                             <Button.Style>
                                 <Style>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsReadOnly}"  Value="True">
+                                        <DataTrigger Binding="{Binding IsHidePrintExample}"  Value="True">
                                             <Setter Property="Button.Visibility" Value="Collapsed" />
                                         </DataTrigger>
                                     </Style.Triggers>
