@@ -166,7 +166,7 @@ namespace Gamma.ViewModels
                         }
                 }
             }
-            FillDocMovement(DocMovements);
+            //FillDocMovement(DocMovements);
         }
 
         private void FillDocMovement(List<MovementItem> docMovements)
