@@ -18,6 +18,8 @@ namespace Gamma.Models
         public string OrderType { get; set; }
         public DateTime? OutDate { get; set; }
         public string Warehouse { get; set; }
+        public bool IsConfirmed { get; set; }
+        public bool IsReturned { get; set; }
 
         public ObservableCollection<DocNomenclatureItem> DocShipmentOrderGoods { get; set; }
     }
