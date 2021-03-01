@@ -91,6 +91,8 @@
                 <dxg:GridColumn Header="Получатель" FieldName="Consignee" VisibleIndex="7" />
                 <dxg:GridColumn Header="Номер ТС" FieldName="VehicleNumber" VisibleIndex="8" />
                 <dxg:GridColumn Header="Собирает" FieldName="ActivePerson" VisibleIndex="9" />
+                <dxg:GridColumn Header="Отгружен" FieldName="IsConfirmed" FixedWidth="True" Width="80" VisibleIndex="10" />
+                <dxg:GridColumn Header="Возвращен" FieldName="IsReturned" FixedWidth="True" Width="80" VisibleIndex="11" />
             </dxg:GridControl>
         </Grid>
     </dxb:BarManager>

@@ -141,6 +141,7 @@ namespace Gamma.ViewModels
                             ((gammaBase.Places.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID).Branches.C1CSubdivisionID == d.C1CInSubdivisionID && !IsOutOrders))))*/
                             gammaBase.Get1COrders(WorkSession.PlaceID, "%" + Number + "%", DateBegin, DateEnd, IsOutOrders, 300)
                             .OrderByDescending(d => d.Date).Take(300)
+                            .Where(d => (!d.IsShipped && IsOutOrders) || (!(d.IsConfirmed ?? false) && !IsOutOrders))
                             .Select(d => new DocShipmentOrder
                             {
                                 DocShipmentOrderId = d.C1COrderID,
@@ -153,7 +154,9 @@ namespace Gamma.ViewModels
                                 ActivePerson = IsOutOrders?d.OutActivePersons:d.InActivePersons,
                                 OrderType = d.OrderType,
                                 OutDate = d.OutDate,
-                                Warehouse = d.Warehouse ?? ""
+                                Warehouse = d.Warehouse ?? "",
+                                IsConfirmed = d.IsShipped,
+                                IsReturned = d.IsReturned
                             }));
                         break;
                     case 1:
@@ -175,7 +178,9 @@ namespace Gamma.ViewModels
                                 ActivePerson = IsOutOrders ? d.OutActivePersons : d.InActivePersons,
                                 OrderType = d.OrderType,
                                 OutDate = d.OutDate,
-                                Warehouse = d.Warehouse ?? ""
+                                Warehouse = d.Warehouse ?? "",
+                                IsConfirmed = d.IsShipped,
+                                IsReturned = d.IsReturned
                             }));
                         break;
                     case 2:
@@ -217,7 +222,9 @@ namespace Gamma.ViewModels
                                         ActivePerson = IsOutOrders ? d.OutActivePersons : d.InActivePersons,
                                         OrderType = d.OrderType,
                                         OutDate = d.OutDate,
-                                        Warehouse = d.Warehouse ?? ""
+                                        Warehouse = d.Warehouse ?? "",
+                                        IsConfirmed = d.IsShipped,
+                                        IsReturned = d.IsReturned
                                     }));
                             break;
                         }
