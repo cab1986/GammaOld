@@ -104,6 +104,8 @@ namespace Gamma.ViewModels
             }
         }
 
+        public override bool IsValid => base.IsValid && DateEnd != null && DateBegin != null && DateEnd >= DateBegin ;
+
         protected override bool CanChooseNomenclature()
         {
             return base.CanChooseNomenclature() && !IsReadOnly;

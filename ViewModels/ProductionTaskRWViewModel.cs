@@ -72,6 +72,8 @@ namespace Gamma.ViewModels
             ProductionTaskID = productionTask?.ProductionTaskID ?? SqlGuidUtil.NewSequentialid();
         }
 
+        public override bool IsValid => base.IsValid && DateEnd != null && DateBegin != null && DateEnd >= DateBegin;
+
         private void AddCutting()
         {
             var cutting = new Cutting();

@@ -150,7 +150,11 @@ namespace Gamma.ViewModels
                     from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int?)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID, doc?.DocID)
                     select pt
                 );
+#if (DEBUG)
+                IsEditable = true;
+#else
                 IsEditable = (IsEditableCollection.Count > 0) ? (bool)IsEditableCollection[0] : false;
+#endif
                 //IsReadOnly = (doc?.IsConfirmed ?? false) || !DB.HaveWriteAccess("DocBroke");
                 IsReadOnly = (!IsEditable || !DB.HaveWriteAccess("DocBroke"));
             }
@@ -237,7 +241,7 @@ namespace Gamma.ViewModels
                         MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
-                #region AddBrokeProduct
+#region AddBrokeProduct
                 var docBrokeProductInfo =
                         gammaBase.DocBrokeProducts.Include(d => d.DocBrokeProductRejectionReasons)
                         .FirstOrDefault(d => d.DocID == docId && d.ProductID == productId);
@@ -264,8 +268,8 @@ namespace Gamma.ViewModels
                 if (brokeProduct.BrokePlaceId == brokeProduct.ProductionPlaceId && brokeProduct.PrintName == null)
                     brokeProduct.PrintName = brokeProduct.ProductionPrintName;
                 brokeProducts.Add(brokeProduct);
-                #endregion AddBrokeProduct
-                #region AddBrokeDecisionProduct
+#endregion AddBrokeProduct
+#region AddBrokeDecisionProduct
                 var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
                 if (docBrokeDecisionProducts.Count == 0)
                 {
@@ -310,7 +314,7 @@ namespace Gamma.ViewModels
                         });
                     }
                 }
-                #endregion AddBrokeDecisionProduct
+#endregion AddBrokeDecisionProduct
                 RefreshRejectionReasonsList();
                 RefreshProductStateList();
             }
@@ -846,7 +850,7 @@ namespace Gamma.ViewModels
                     }
                     doc.DocBroke.DocBrokeProducts.Add(brokeProduct);
                 }
-                #region Сохранение решений по продукции
+#region Сохранение решений по продукции
                 if (doc.DocBroke.DocBrokeDecisionProducts == null)
                     doc.DocBroke.DocBrokeDecisionProducts = new List<DocBrokeDecisionProducts>();
                 else
@@ -865,7 +869,7 @@ namespace Gamma.ViewModels
                         DecisionApplied = decisionProduct.DecisionApplied
                     });
                 }
-                #endregion
+#endregion
                 gammaBase.SaveChanges();
             }
             Messenger.Default.Send(new RefreshBrokeListMessage { });

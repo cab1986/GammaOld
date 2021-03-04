@@ -131,6 +131,8 @@ namespace Gamma.ViewModels
             }
         }
 
+        public override bool IsValid => base.IsValid && DateEnd != null && DateBegin != null && DateEnd >= DateBegin;
+
         public event Func<bool> PrintExampleEvent;
 
         public DelegateCommand PrintExampleCommand { get; private set; }
