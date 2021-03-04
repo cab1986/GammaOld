@@ -369,13 +369,13 @@ namespace Gamma.ViewModels
                                     C1CCharacteristicID = material.CharacteristicID,
                                     DocCloseShiftMaterialID = SqlGuidUtil.NewSequentialid(),
                                     DocCloseShiftMaterialTypeID = (int)docCloseShiftMaterialType,
-                                    Quantity = quantity ?? 0,
+                                    Quantity = quantity == null ? 0 : (decimal)(material.MeasureUnit == "кг  " ? quantity / 1000 : quantity),
                                     C1CMeasureUnitID = material.MeasureUnitID,
                                     WithdrawByFact = material.WithdrawByFact
                                 });
                             else
                             {
-                                item.Quantity = quantity ?? 0;
+                                item.Quantity = quantity == null ? 0 : (decimal)(material.MeasureUnit == "кг  " ? quantity / 1000 : quantity);
                             }
                         }
                         else
