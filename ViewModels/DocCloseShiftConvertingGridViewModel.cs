@@ -109,10 +109,10 @@ namespace Gamma.ViewModels
                     {
                         NomenclatureID = dw.C1CNomenclatureID,
                         CharacteristicID = dw.C1CCharacteristicID,
-                        Quantity = dw.Quantity,
+                        Quantity = dw.C1CMeasureUnits.Name == "т" ? Math.Round(dw.Quantity * 1000,0) : dw.Quantity,
                         NomenclatureName = dw.C1CNomenclature.Name + " " + dw.C1CCharacteristics.Name ?? "",
                         MeasureUnitId = dw.C1CMeasureUnitID,
-                        MeasureUnit = dw.C1CMeasureUnits.Name,
+                        MeasureUnit = dw.C1CMeasureUnits.Name == "т" ? "кг  " : dw.C1CMeasureUnits.Name,
                         ProductNomenclatureID = dw.ProductNomenclatureID,
                         ProductCharacteristicID = dw.ProductCharacteristicID,
                         ProductName = dw.C1CNomenclature1.Name + " " + dw.C1CCharacteristics1.Name ?? "",
@@ -337,6 +337,11 @@ namespace Gamma.ViewModels
                 //dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CNomenclatureID == nomenclatureId).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);                
                 var measureUnitID = gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId).C1CMeaureUnitStorage;
                 dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CMeasureUnitID == measureUnitID).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);
+                var mesList = dict.Where(d => d.Value == "т").Select(d => d.Key).ToList();
+                foreach (var mes in mesList)
+                {
+                    dict[mes] = "кг  ";
+                }
             }
             return dict.OrderBy(x => x.Value).ToDictionary(x => x.Key, x=> x.Value);
         }
@@ -590,7 +595,7 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = waste.CharacteristicID,
                             DocCloseWhiftWasteID = SqlGuidUtil.NewSequentialid(),
                             C1CMeasureUnitID = (Guid)waste.MeasureUnitId,
-                            Quantity = waste.Quantity,
+                            Quantity = waste.MeasureUnit == "кг  " ? Math.Round(waste.Quantity / 1000, 3) : waste.Quantity,
                             ProductNomenclatureID = waste.ProductNomenclatureID,
                             ProductCharacteristicID = waste.ProductCharacteristicID
                         });
