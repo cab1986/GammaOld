@@ -435,6 +435,8 @@ namespace Gamma.ViewModels
                         }
                         if (quantity != null || docMaterialProductionType == DocMaterialProductionTypes.RemainderAtBegin)
                         {
+                            var coeffTonToKg = material.MeasureUnit == "кг  " ? 1000 : 1;//единица измерения номенклатуры - тонна. в форме выводим (и вводится) в кг, при сохранении применяем коэффициент. ИД единицы измерения не меняется - всегда тонна.
+                            quantity = quantity / coeffTonToKg;
                             var item = materialInDB.Where(d => d.DocMaterialProductionTypeID == (int)docMaterialProductionType && d.IsCompositionCalculation == isCompositionCalculationParameter).FirstOrDefault();
                             if (item == null)
                                 doc.DocMaterialProductions.Add(new DocMaterialProductions
@@ -519,6 +521,8 @@ namespace Gamma.ViewModels
                             }
                             if (quantity != null || docMaterialProductionType == DocMaterialProductionTypes.RemainderAtBegin)
                             {
+                                var coeffTonToKg = material.MeasureUnit == "кг  " ? 1000 : 1;//единица измерения номенклатуры - тонна. в форме выводим (и вводится) в кг, при сохранении применяем коэффициент. ИД единицы измерения не меняется - всегда тонна.
+                                quantity = quantity / coeffTonToKg;
                                 var item = materialInDB.Where(d => d.DocMaterialProductionTypeID == (int)docMaterialProductionType && d.IsCompositionCalculation == isCompositionCalculationParameter).FirstOrDefault();
                                 if (item == null)
                                     doc.DocMaterialProductions.Add(new DocMaterialProductions
