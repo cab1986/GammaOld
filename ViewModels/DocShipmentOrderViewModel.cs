@@ -117,6 +117,11 @@ namespace Gamma.ViewModels
             AbilityChange = DB.GetAbilityChangeDocShipmentOrder(DocShipmentOrderID); //может изменить значение IsReturned, влияет на расчет DenyEditOut, поэтому обязательно после IsReturned и до DenyEditOut/DenyEditIn
             if (AbilityChange == 1 && IsReturned) IsReturned = false;
             IsConfirmed = docShipmentOrderInfo.IsConfirmed??false;
+            OutVisibible = docShipmentOrderInfo.OrderKindID == 0 || docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
+            InVisibible = false;// docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
+            //обязательно раньше OutPlaceId и InPlaceId
+            MovementVisibible = docShipmentOrderInfo.OrderKindID == 2; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
+            //обязательно раньше OutPlaceId и InPlaceId
             OutPlaceId = docShipmentOrderInfo.OutPlaceID ?? (PlacesOut?.Count == 1 ? PlacesOut.FirstOrDefault()?.PlaceID : null);
             InPlaceId = docShipmentOrderInfo.InPlaceID ?? (PlacesIn?.Count == 1 ? PlacesIn.FirstOrDefault()?.PlaceID : null);
             FillDocShipmentOrderGoods(docShipmentOrderId);
@@ -124,9 +129,6 @@ namespace Gamma.ViewModels
             DenyEditOut = /*!WorkSession.DBAdmin &&*/ ((DateIn != null && OutPlaceId != null && !WorkSession.PlaceIds.Contains((int) OutPlaceId)) || docShipmentOrderInfo.OutBranchID != WorkSession.BranchID || IsReturned);
             DenyEditInPlace = DenyEditIn || PlacesIn?.Count == 1;
             DenyEditOutPlace = DenyEditOut || PlacesOut?.Count == 1;
-            OutVisibible = docShipmentOrderInfo.OrderKindID == 0 || docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
-            InVisibible = false;// docShipmentOrderInfo.OrderKindID == 1; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
-            MovementVisibible = docShipmentOrderInfo.OrderKindID == 2; // 0 - приказ на отгрузку, 1 - внутренний заказ, 2 - заказ на перемещение
 #if (!DEBUG)
             IsReadOnly = !DB.HaveWriteAccess("DocMovement") || !((AbilityChange ?? 0) == 1);
 #else
@@ -204,8 +206,8 @@ namespace Gamma.ViewModels
             {
                 _outPlaceId = value;
 
-                if (value == null)
-                    PersonsOut = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список
+                if (value == null || (MovementVisibible && InPlaceId == null && PlacesIn?.Count > 0))
+                    PersonsOut = GammaBase.Persons.Take(0).ToList(); //пустой список
                 else
                 {
                     var rootPlaces = GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
@@ -227,13 +229,26 @@ namespace Gamma.ViewModels
                 _inPlaceId = value;
 
                 if (value == null)
-                    PersonsIn = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список
+                    PersonsIn = GammaBase.Persons.Take(0).ToList(); //пустой список
                 else
                 {
                     var rootPlaces = GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
                     var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.UserID).ToList();
                     var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.RootUserID).ToList();
                     PersonsIn = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
+                }
+                if (MovementVisibible)
+                {
+                    OutPlaceId = OutPlaceId;
+                    /*if (InPlaceId == null)
+                        PersonsOut = GammaBase.Persons.Where(p => value != null).ToList(); //пустой список;
+                    else
+                    {
+                        var rootPlaces = GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
+                        var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.UserID).ToList();
+                        var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.RootUserID).ToList();
+                        PersonsOut = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
+                    }*/
                 }
                 RaisePropertyChanged("InPlaceId");
             }
@@ -313,6 +328,18 @@ namespace Gamma.ViewModels
         public bool DenyEditInPlace { get; private set; }
 
         public bool DenyEditReturned => DenyEditOut || !IsReturned;
+
+        //public bool DenyEditMovementPersonOut => DenyEditOut || (MovementVisibible && InPlaceId == null);
+        private bool _denyEditMovementPersonOut { get; set; }
+        public bool DenyEditMovementPersonOut
+        {
+            get { return _denyEditMovementPersonOut; }
+            set
+            {
+                _denyEditMovementPersonOut = value;
+                RaisePropertyChanged("DenyEditMovementPersonOut");
+            }
+        }
 
         private int? _abilityChange { get; set; }
         public int? AbilityChange
