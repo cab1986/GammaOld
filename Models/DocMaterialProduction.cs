@@ -453,7 +453,7 @@ namespace Gamma.Models
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
                     MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                    MeasureUnit = (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
                     DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
                     WithdrawByFact = true,
                     ParentID = parentID,
