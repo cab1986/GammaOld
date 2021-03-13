@@ -154,7 +154,11 @@ namespace Gamma
         [Description("В производстве")]
         InProduction,
         [Description("Выполнено")]
-        Completed
+        Completed,
+        [Description("На редактировании")]
+        OnEditing,
+        [Description("Отменено")]
+        Canceled
     }
 
     public enum PersonTypes

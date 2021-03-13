@@ -101,7 +101,7 @@
                             </dxlc:LayoutGroup>
                         </dxlc:LayoutGroup>
                         <dxlc:LayoutItem Label="Комментарий" LabelPosition="Top" Margin="0,0,0,0" MinHeight="100" VerticalAlignment="Bottom">
-                            <dxe:TextEdit Width="Auto" EditValue="{Binding Comment}" VerticalContentAlignment="Stretch" />
+                            <dxe:TextEdit Width="Auto" EditValue="{Binding Comment}" VerticalContentAlignment="Stretch" IsReadOnly="{Binding IsEditingComment, Converter={StaticResource InverseBooleanConverter}}" />
                         </dxlc:LayoutItem>
                     </dxlc:LayoutControl>
                 </Grid>

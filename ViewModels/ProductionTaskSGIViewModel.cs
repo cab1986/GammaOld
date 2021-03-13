@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
     /// <summary>
     /// ViewModel для задания на СГИ
     /// </summary>
-    public sealed class ProductionTaskSGIViewModel : DbEditItemWithNomenclatureViewModel, ICheckedAccess
+    public sealed class ProductionTaskSGIViewModel : DbEditItemWithNomenclatureViewModel, IProductionTask, ICheckedAccess
     {
         /// <summary>
         /// Инициализация ProductionTaskSGIViewModel
@@ -132,6 +132,21 @@ namespace Gamma.ViewModels
         }
 
         public override bool IsValid => base.IsValid && DateEnd != null && DateBegin != null && DateEnd >= DateBegin;
+
+        private bool _isEditingQuantity { get; set; }
+        public bool IsEditingQuantity
+        {
+            get
+            {
+                return _isEditingQuantity;
+            }
+            set
+            {
+                _isEditingQuantity = value;
+                RaisePropertyChanged("IsEditingQuantity");
+            }
+        }
+
 
         public event Func<bool> PrintExampleEvent;
 
@@ -275,7 +290,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public Guid ProductionTaskID { get; private set; }
+        public Guid ProductionTaskID { get; set; }
         public ProductionTaskSpecificationViewModel ProductionTaskSpecificationViewModel { get; private set; }
 
         private int? _placeID;
@@ -353,7 +368,7 @@ namespace Gamma.ViewModels
         /// Количество рулончиков в шт.
         /// </summary>
         [Range(100, int.MaxValue, ErrorMessage = @"Необходимо указать корректное количество")]
-        [UIAuth(UIAuthLevel.ReadOnly)]
+        //[UIAuth(UIAuthLevel.ReadOnly)]
         public int Quantity { get; set; }
 
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)

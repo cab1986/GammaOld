@@ -37,7 +37,7 @@
                                   ValueMember="PlaceID" DisplayMember="PlaceName" />
             </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Кол-во, тн" LabelPosition="Top" Width="80" HorizontalAlignment="Right">
-                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" 
+                <dxe:SpinEdit EditValue="{Binding TaskQuantity, ValidatesOnDataErrors=True}" MinValue="0" MaxValue="100000" IsReadOnly="{Binding IsEditingQuantity, Converter={StaticResource InverseBooleanConverter}}"
                               EditValueType="{x:Type sys:Decimal}" MaskUseAsDisplayFormat="True"/>
             </dxlc:LayoutItem>
         </dxlc:LayoutGroup>

@@ -117,6 +117,28 @@ namespace Gamma.ViewModels
                 }
             }
         }
+
+        private bool _onEditingStatus { get; set; }
+        public bool OnEditingStatus 
+        {
+            get
+            {
+                return _onEditingStatus;
+            }
+            set
+            {
+                _onEditingStatus = value;
+                if (FirstView != null &&  FirstView is IProductionTask)
+                {
+                    (FirstView as IProductionTask).IsEditingQuantity = value;
+                }
+                if (SecondView != null && SecondView is IProductionTask)
+                {
+                    (SecondView as IProductionTask).IsEditingQuantity = value;
+                }
+            }
+        }
+
         private SaveImplementedViewModel _firstView;
         public SaveImplementedViewModel FirstView
         {

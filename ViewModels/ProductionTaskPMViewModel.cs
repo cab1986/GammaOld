@@ -106,6 +106,20 @@ namespace Gamma.ViewModels
 
         public override bool IsValid => base.IsValid && DateEnd != null && DateBegin != null && DateEnd >= DateBegin ;
 
+        private bool _isEditingQuantity { get; set; }
+        public bool IsEditingQuantity
+        {
+            get
+            {
+                return _isEditingQuantity;
+            }
+            set
+            {
+                _isEditingQuantity = value;
+                RaisePropertyChanged("IsEditingQuantity");
+            }
+        }
+
         protected override bool CanChooseNomenclature()
         {
             return base.CanChooseNomenclature() && !IsReadOnly;
@@ -491,7 +505,7 @@ namespace Gamma.ViewModels
             return true;
         }
         [Range(1, 1000000, ErrorMessage = @"Значение должно быть больше 0")]
-        [UIAuth(UIAuthLevel.ReadOnly)]
+        //[UIAuth(UIAuthLevel.ReadOnly)]
         public decimal TaskQuantity { get; set; }
 
         private bool _isReadOnly { get; set; }

@@ -33,6 +33,8 @@ namespace Gamma.ViewModels
             ChangeStateReadOnly = !DB.HaveWriteAccess("ProductionTasks");
             BatchKind = msg.BatchKind;
             TaskStates = new ProductionTaskStates().ToDictionary();
+            if (WorkSession.RoleName != "Planner")
+                TaskStates.Remove(3);
             ProcessModels = new ProcessModels().ToDictionary();
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
             ShowProductCommand = new DelegateCommand(ShowProduct, () => SelectedProductionTaskProduct != null);
@@ -461,7 +463,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("Number");
             }
         }
-        [UIAuth(UIAuthLevel.ReadOnly)]
+        //[UIAuth(UIAuthLevel.ReadOnly)]
         public string Comment { get; set; }
         /// <summary>
         /// Создание нового продукта. В конструкторе привязка к CreateNewProduct();
@@ -488,11 +490,11 @@ namespace Gamma.ViewModels
         /// </summary>
         public DelegateCommand PrintGroupPackLabelCommand { get; private set; }
 
-        private bool IsInProduction { get; set; }
+        //private bool IsInProduction { get; set; }
         /// <summary>
         /// Только для чтения, если нет прав или задание не в состоянии "на рассмотрении"
         /// </summary>
-        public bool IsReadOnly => !DB.HaveWriteAccess("ProductionTasks") || IsInProduction;
+        public bool IsReadOnly => !DB.HaveWriteAccess("ProductionTasks") || ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
 
 
         private BatchKinds _batchKind;
@@ -579,7 +581,7 @@ namespace Gamma.ViewModels
             Date = productionTaskBatch?.Date;         
             Comment = productionTaskBatch?.Comment;
             ProductionTaskStateID = productionTaskBatch?.ProductionTaskStateID;
-            IsInProduction = ProductionTaskStateID != (byte) ProductionTaskStates.NeedsDecision;
+            //IsInProduction = ProductionTaskStateID != (byte) ProductionTaskStates.NeedsDecision;
             ProcessModelID = (byte?)productionTaskBatch?.ProcessModelID;
             ContractorId = productionTaskBatch?.C1CContractorID;
             if (productionTaskBatch?.ProductionTaskStates != null)
@@ -1218,7 +1220,7 @@ namespace Gamma.ViewModels
 
         public override bool CanSaveExecute()
         {
-            return base.CanSaveExecute() && (CurrentView?.IsValid ?? true) && (CurrentView?.CanSaveExecute() ?? true) &&
+            return base.CanSaveExecute() && (CurrentView?.IsValid ?? true) && (CurrentView?.CanSaveExecute() ?? true) && (ProductionTaskStateID != (byte)ProductionTaskStates.OnEditing) &&
                 (DB.HaveWriteAccess("ProductionTasks"));
         }
         public DelegateCommand RefreshProductionCommand { get; private set; }
@@ -1412,26 +1414,59 @@ namespace Gamma.ViewModels
                 if (_productionTaskStateID == null)
                 {
                     _productionTaskStateID = value;
+                    IsEditingComment = (!IsReadOnly) || ProductionTaskStateID == (byte)ProductionTaskStates.OnEditing;
+                    if (CurrentView is IProductionTaskBatch)
+                    {
+                        (CurrentView as IProductionTaskBatch).OnEditingStatus = IsEditingComment;
+                    }
+                    if (CurrentView is IProductionTask)
+                    {
+                        (CurrentView as IProductionTask).IsEditingQuantity = IsEditingComment;
+                    }
                 }
                 else
-                    if((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && value == (byte)ProductionTaskStates.NeedsDecision)
+                    if (!(_productionTaskStateID == (byte)ProductionTaskStates.OnEditing && value == (byte)ProductionTaskStates.InProduction) && !(_productionTaskStateID == (byte)ProductionTaskStates.InProduction && value == (byte)ProductionTaskStates.OnEditing) && ((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && _productionTaskStateID != value))
+                {
+                    var res = DB.GetAbilityChangeProductionTaskState(ProductionTaskBatchID);
+                    if (res == null)
+                        MessageBox.Show("Ошибка при получении данных из 1С");
+                    else
                     {
-                        var res = DB.GetAbilityChangeProductionTaskState(ProductionTaskBatchID);
-                        if (res == null)
-                            MessageBox.Show("Ошибка при получении данных из 1С");
+                        if ((int)res == 1)
+                            _productionTaskStateID = value;
                         else
-                        {
-                            if ((int)res == 1)
-                                _productionTaskStateID = value;
-                            else
-                                MessageBox.Show("Запрещено изменение. Задание заблокировано, в 1С созданы этапы.");
-                        }
+                            MessageBox.Show("Запрещено изменение. Задание заблокировано, в 1С созданы этапы.");
                     }
+                }
                 else
+                {
                     _productionTaskStateID = value;
+                    IsEditingComment = (!IsReadOnly) || ProductionTaskStateID == (byte)ProductionTaskStates.OnEditing;
+                    if (CurrentView is IProductionTaskBatch)
+                    {
+                        (CurrentView as IProductionTaskBatch).OnEditingStatus = IsEditingComment;
+                    }
+                    if (CurrentView is IProductionTask)
+                    {
+                        (CurrentView as IProductionTask).IsEditingQuantity = IsEditingComment;
+                    }
+                }
                 RaisePropertyChanged("ProductionTaskStateID");
             }
         }
+
+        private bool _isEditingComment { get; set; }
+        public bool IsEditingComment
+        {
+            get { return _isEditingComment; }
+            set
+            {
+                if (_isEditingComment == value) return;
+                _isEditingComment = value;
+                RaisePropertyChanged("IsEditingComment");
+            }
+        }           
+
         public Dictionary<byte, string> TaskStates { get; set; }
         public Dictionary<byte, string> ProcessModels { get; set; }
         public bool ChangeStateReadOnly { get; set; }

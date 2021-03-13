@@ -36,7 +36,7 @@
                             </dxe:ButtonEdit>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Необходимое кол-во" LabelPosition="Top" Width="130">
-                            <dxe:SpinEdit EditValue="{Binding Quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" MinValue="0" />
+                            <dxe:SpinEdit EditValue="{Binding Quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" MinValue="0"  IsReadOnly="{Binding IsEditingQuantity, Converter={StaticResource InverseBooleanConverter}}"/>
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Orientation="Horizontal">

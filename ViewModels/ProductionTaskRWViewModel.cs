@@ -74,6 +74,20 @@ namespace Gamma.ViewModels
 
         public override bool IsValid => base.IsValid && DateEnd != null && DateBegin != null && DateEnd >= DateBegin;
 
+        private bool _isEditingQuantity { get; set; }
+        public bool IsEditingQuantity
+        {
+            get
+            {
+                return _isEditingQuantity;
+            }
+            set
+            {
+                _isEditingQuantity = value;
+                RaisePropertyChanged("IsEditingQuantity");
+            }
+        }
+
         private void AddCutting()
         {
             var cutting = new Cutting();
@@ -281,7 +295,7 @@ namespace Gamma.ViewModels
 
         private decimal _taskQuantity;
         [Range(1,1000000000,ErrorMessage=@"Задание должно быть больше 0")]
-        [UIAuth(UIAuthLevel.ReadOnly)]
+        //[UIAuth(UIAuthLevel.ReadOnly)]
         public decimal TaskQuantity
         {
             get

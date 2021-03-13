@@ -5,5 +5,6 @@ namespace Gamma.Interfaces
     interface IProductionTaskBatch
     {
         short ProcessModelID { get; set; }
+        bool OnEditingStatus { get; set; }
     }
 }

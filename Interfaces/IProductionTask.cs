@@ -7,5 +7,6 @@ namespace Gamma.Interfaces
     interface IProductionTask
     {
         Guid ProductionTaskID { get; set; }
+        bool IsEditingQuantity { get; set; }
     }
 }
