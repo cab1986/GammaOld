@@ -392,7 +392,7 @@ namespace Gamma.ViewModels
                     EndSpools?.Clear();
 
                     EndSpools = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                        .Where(d => d.PlaceID == PlaceID && WorkSession.BranchID != 2).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
+                        .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsCurrentStateInfo, d => d.ProductID, p => p.ProductID
                         , (d, p) => new DocCloseShiftRemainder
                         {
                             ProductID = (Guid)d.ProductID,
