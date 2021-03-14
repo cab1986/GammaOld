@@ -14,7 +14,7 @@
 			SelectedItem="{Binding SelectedProductionTaskBatch}" HorizontalAlignment="Stretch" AllowLiveDataShaping="False" SelectionMode="Cell" UseLayoutRounding="False" >
             <dxg:GridControl.Bands >
                 <dxg:GridControlBand Header="Общие" HorizontalHeaderContentAlignment="Center" VisibleIndex="0"  >
-                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="80" VisibleIndex="0" />
+                    <dxg:GridColumn FieldName="Number" Header="Номер" Width="100" VisibleIndex="0" />
                     <dxg:GridColumn FieldName="DateBegin" Header="Дата начала" AllowBestFit="True" Width="140" VisibleIndex="1" />
                     <dxg:GridColumn FieldName="Place" Header="Передел" Width="100" VisibleIndex="2"/>
                 </dxg:GridControlBand>

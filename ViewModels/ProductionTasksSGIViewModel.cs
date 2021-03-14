@@ -86,7 +86,7 @@ namespace Gamma.ViewModels
 
         private void EditItem()
         {
-            MessageManager.OpenProductionTask(BatchKinds.SGI, SelectedProductionTaskSGI.ProductionTaskBatchID, WorkSession.PlaceGroup == PlaceGroup.Other);
+            MessageManager.OpenProductionTask(BatchKinds.SGI, SelectedProductionTaskSGI.ProductionTaskBatchID, true);// WorkSession.PlaceGroup == PlaceGroup.Other);
         }
 
         private void NewProductionTask()
