@@ -379,7 +379,7 @@ namespace Gamma.ViewModels
                 }
 
                 var item = ComplectationItems.FirstOrDefault(i => i.NomenclatureID.Equals(pallet.C1CNomenclatureID) &&
-																i.OldCharacteristicId.Equals(pallet.C1CCharacteristicID));
+																(!IsComplectationFrom1C || (IsComplectationFrom1C && i.OldCharacteristicId.Equals(pallet.C1CCharacteristicID))));
 				if (item == null)
 				{
 					MessageBox.Show("Номенклатура найденной паллеты не совпадает с документом");
