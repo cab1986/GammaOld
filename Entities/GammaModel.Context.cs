@@ -167,7 +167,6 @@ namespace Gamma.Entities
         public virtual DbSet<vDocMaterialProductionDirectCalculations> vDocMaterialProductionDirectCalculations { get; set; }
         public virtual DbSet<vPlaceZones> vPlaceZones { get; set; }
         public virtual DbSet<Places1CWarehouses> Places1CWarehouses { get; set; }
-        public virtual DbSet<vProductKinds> vProductKinds { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1534,6 +1533,16 @@ namespace Gamma.Entities
                 new ObjectParameter("RowCount", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Get1COrders_Result>("[GammaEntities].[Get1COrders](@PlaceID, @Number, @DateOfBegin, @DateOfEnd, @IsOutOrders, @RowCount)", placeIDParameter, numberParameter, dateOfBeginParameter, dateOfEndParameter, isOutOrdersParameter, rowCountParameter);
+        }
+    
+        [DbFunction("GammaEntities", "GetProductKinds")]
+        public virtual IQueryable<GetProductKinds_Result> GetProductKinds(Nullable<System.Guid> parentID)
+        {
+            var parentIDParameter = parentID.HasValue ?
+                new ObjectParameter("ParentID", parentID) :
+                new ObjectParameter("ParentID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetProductKinds_Result>("[GammaEntities].[GetProductKinds](@ParentID)", parentIDParameter);
         }
     }
 }

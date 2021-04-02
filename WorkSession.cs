@@ -25,19 +25,22 @@ namespace Gamma
                                      u.UserID == _userid
                                  select new
                                  {
-                                     u.Places.FirstOrDefault().PlaceID,
-                                     placeGroupID = u.Places.FirstOrDefault().PlaceGroupID, u.ShiftID, u.DBAdmin,
+                                     u.Places1.PlaceID,
+                                     placeGroupID = u.Places1.PlaceGroupID,
+                                     u.ShiftID, u.DBAdmin,
                                      programAdmin = u.ProgramAdmin,
-                                     u.Places.FirstOrDefault().BranchID,
-                                     u.Places.FirstOrDefault().IsProductionPlace,
-                                     u.Places.FirstOrDefault().IsMaterialProductionPlace,
+                                     u.Places1.BranchID,
+                                     u.Places1.IsProductionPlace,
+                                     u.Places1.IsMaterialProductionPlace,
                                      u.Places,
                                      u.DepartmentID,
                                      u.Name,
-                                     u.Places.FirstOrDefault().IsShipmentWarehouse,
-                                     u.Places.FirstOrDefault().IsTransitWarehouse,
+                                     u.Places1.IsShipmentWarehouse,
+                                     u.Places1.IsTransitWarehouse,
                                      RoleName = u.Roles.Name,
-                                     u.Places.FirstOrDefault().UnwindersCount
+                                     u.Places1.UnwindersCount,
+                                     u.Places1.IsRemotePrinting,
+                                     u.Places1.UseApplicator
                                  }).FirstOrDefault();
                 if (userInfo == null)
                 {
@@ -46,7 +49,6 @@ namespace Gamma
                 }
                 UserName = userInfo.Name;
                 DBAdmin = userInfo.DBAdmin;
-                ProgramAdmin = userInfo.programAdmin ?? false;
                 PlaceID = userInfo.PlaceID;
                 DepartmentID = userInfo.DepartmentID; /*(from u in DB.GammaDb.Places
                                     where u.PlaceID == PlaceID
@@ -61,8 +63,8 @@ namespace Gamma
                 IsTransitWarehouse = userInfo.IsTransitWarehouse ?? false;
                 PlaceIds = userInfo.Places.Select(p => p.PlaceID).ToList();
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
-                IsRemotePrinting = userInfo.Places.FirstOrDefault()?.IsRemotePrinting ?? false;
-                UseApplicator = userInfo.Places.FirstOrDefault()?.UseApplicator ?? false;
+                IsRemotePrinting = userInfo.IsRemotePrinting ?? false;
+                UseApplicator = userInfo.UseApplicator ?? false;
                 EndpointAddressOnMailService = (from u in DB.GammaDb.LocalSettings
                                    select u.MailServiceAddress).FirstOrDefault();
                 EndpointAddressOnGroupPackService = (from u in DB.GammaDb.PlaceRemotePrinters

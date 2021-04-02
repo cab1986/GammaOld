@@ -40,6 +40,7 @@ namespace Gamma.Entities
         public Nullable<bool> MobileComputer { get; set; }
         public Nullable<short> DepartmentID { get; set; }
         public Nullable<System.Guid> RootUserID { get; set; }
+        public Nullable<int> PrimePlaceID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CurrentPlaceUsers> CurrentPlaceUsers { get; set; }
@@ -56,5 +57,6 @@ namespace Gamma.Entities
         public virtual Departments Departments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Persons> Persons { get; set; }
+        public virtual Places Places1 { get; set; }
     }
 }

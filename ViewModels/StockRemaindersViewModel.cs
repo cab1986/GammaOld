@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
 
             using (var gammaBase = DB.GammaDb)
             {
-                NomenclatureKindsList = gammaBase.vProductKinds
+                NomenclatureKindsList = gammaBase.GetProductKinds(null)
                     .OrderBy(p => p.Name)
                     .Select(p =>p.Name)
                     .ToList();
@@ -123,6 +123,7 @@ namespace Gamma.ViewModels
                                 Number = d.Number,
                                 Date = d.Date,
                                 ShiftID = d.ShiftID ?? 0,
+                                ProductKind = (ProductKind)d.ProductKindID,
                                 CurrentPlace = d.CurrentPlace,
                                 State = d.State,
                                 NomenclatureName = d.NomenclatureName,

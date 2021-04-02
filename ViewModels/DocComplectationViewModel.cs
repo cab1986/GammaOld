@@ -66,11 +66,11 @@ namespace Gamma.ViewModels
                 }
 
                 IsComplectationFrom1C = docComplectation.C1CDocComplectationID != Guid.Empty;
-                placeId = (context.Places.FirstOrDefault(p => docComplectation.C1CDocComplectation.C1CWarehouseID != null && p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID
+                placeId = docComplectation.Docs.PlaceID ?? WorkSession.PlaceID;/* (context.Places.FirstOrDefault(p => docComplectation.C1CDocComplectation.C1CWarehouseID != null && p.C1CPlaceID == docComplectation.C1CDocComplectation.C1CWarehouseID)?.PlaceID
                     ?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceID)
-                     ?? (WorkSession.BranchID == 1 ? 8 : (WorkSession.BranchID == 2 ? 28 : WorkSession.PlaceID));
-                placeZoneID = context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceZoneID
-                     ?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && ((p.Places.BranchID == 1 && p.PlaceID == 8) || (p.Places.BranchID == 2 && p.PlaceID == 28)))?.PlaceZoneID;
+                     ?? (WorkSession.BranchID == 1 ? 8 : (WorkSession.BranchID == 2 ? 28 : WorkSession.PlaceID));*/
+                placeZoneID = context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == placeId)?.PlaceZoneID;
+                     //?? context.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && ((p.Places.BranchID == 1 && p.PlaceID == 8) || (p.Places.BranchID == 2 && p.PlaceID == 28)))?.PlaceZoneID;
                 DocDate = !IsComplectationFrom1C ? docComplectation.Docs.Date : (DateTime)(docComplectation.C1CDocComplectation.Date ?? DB.CurrentDateTime);
                 Number = !IsComplectationFrom1C ? docComplectation.Docs.Number : docComplectation.C1CDocComplectation.C1CCode;
                 IsReturned = docComplectation.IsReturned ?? false;
@@ -379,7 +379,7 @@ namespace Gamma.ViewModels
                 }
 
                 var item = ComplectationItems.FirstOrDefault(i => i.NomenclatureID.Equals(pallet.C1CNomenclatureID) &&
-																(!IsComplectationFrom1C || (IsComplectationFrom1C && i.OldCharacteristicId.Equals(pallet.C1CCharacteristicID))));
+																(!IsComplectationFrom1C || i.OldCharacteristicId == null || (IsComplectationFrom1C && i.OldCharacteristicId.Equals(pallet.C1CCharacteristicID))));
 				if (item == null)
 				{
 					MessageBox.Show("Номенклатура найденной паллеты не совпадает с документом");

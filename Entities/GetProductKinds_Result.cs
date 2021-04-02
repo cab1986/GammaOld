@@ -10,14 +10,13 @@
 namespace Gamma.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class vProductKinds
+    public partial class GetProductKinds_Result
     {
-        public System.Guid C1CNomenclatureKindID { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureKindID { get; set; }
         public string Name { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
-        public Nullable<bool> IsFolder { get; set; }
-        public int NomenclatureKindID { get; set; }
+        public Nullable<int> IsFolder { get; set; }
+        public Nullable<int> NomenclatureKindID { get; set; }
     }
 }

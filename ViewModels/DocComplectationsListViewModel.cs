@@ -94,7 +94,9 @@ namespace Gamma.ViewModels
                 db.SaveChanges();
             }
             MessageManager.OpenDocComplectation((Guid)docId);*/
-            var newDocComplectation = new DocComplectationListItem() { PlaceId = 8 };
+            var placeId = (GammaBase.PlaceZones.FirstOrDefault(p => p.Name == "Перепаллетировка" && p.PlaceID == WorkSession.PlaceID)?.PlaceID)
+                     ?? WorkSession.PlaceID;
+            var newDocComplectation = new DocComplectationListItem() { PlaceId = placeId };
             OpenDocComplectation(newDocComplectation);
         }
 
@@ -145,7 +147,7 @@ namespace Gamma.ViewModels
                                 Doc1CId = dc.C1CDocComplectationID,
                                 Number = dc.C1CCode,
                                 Date = (DateTime)dc.Date,
-                                PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID,
+                                PlaceId = gammaBase.Places.Any(p => p.C1CPlaceID == dc.C1CWarehouseID) ? gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID : gammaBase.Places1CWarehouses.FirstOrDefault(p => p.C1CWarehouseID == dc.C1CWarehouseID).PlaceID,
                                 IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
                                 IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
                                 UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
@@ -182,7 +184,7 @@ namespace Gamma.ViewModels
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
 								Date = (DateTime)dc.Date,
-								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID,
+								PlaceId = gammaBase.Places.Any(p => p.C1CPlaceID == dc.C1CWarehouseID) ? gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID : gammaBase.Places1CWarehouses.FirstOrDefault(p => p.C1CWarehouseID == dc.C1CWarehouseID).PlaceID,
                                 IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
                                 IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
                                 UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
@@ -221,7 +223,7 @@ namespace Gamma.ViewModels
 								Doc1CId = dc.C1CDocComplectationID,
 								Number = dc.C1CCode,
 								Date = (DateTime)dc.Date,
-								PlaceId = gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID,
+								PlaceId = gammaBase.Places.Any(p => p.C1CPlaceID == dc.C1CWarehouseID) ? gammaBase.Places.FirstOrDefault(p => p.C1CPlaceID == dc.C1CWarehouseID).PlaceID : gammaBase.Places1CWarehouses.FirstOrDefault(p => p.C1CWarehouseID == dc.C1CWarehouseID).PlaceID,
                                 IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
                                 IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
                                 UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",

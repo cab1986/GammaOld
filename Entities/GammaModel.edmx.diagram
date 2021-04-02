@@ -405,7 +405,7 @@
         <EntityTypeShape EntityType="GammaModel.Places1CWarehouses" Width="1.5" PointX="30.25" PointY="69.25" />
         <AssociationConnector Association="GammaModel.FK_Places1CWarehouses_1CWarehouses" />
         <AssociationConnector Association="GammaModel.FK_Places1CWarehouses_Places" />
-        <EntityTypeShape EntityType="GammaModel.vProductKinds" Width="1.5" PointX="18.375" PointY="0.75" />
+        <AssociationConnector Association="GammaModel.FK_Users_Places" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
