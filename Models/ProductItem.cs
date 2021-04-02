@@ -18,7 +18,7 @@ namespace Gamma.Models
         public Guid ProductItemId { get; set; }
         public string NomenclatureName { get; set; }
         public int Quantity { get; set; }
-        public Guid CharacteristicId { get; set; }
+        public Guid? CharacteristicId { get; set; }
         public Guid NomenclatureId { get; set; }
     }
 }
