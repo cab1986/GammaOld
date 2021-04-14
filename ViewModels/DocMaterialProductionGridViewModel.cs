@@ -69,7 +69,7 @@ namespace Gamma.ViewModels
 
         public DocMaterialProductionGridViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this(placeID, gammaDb)
         {
-
+            isLoading = true;
             ShiftID = shiftID;
             CloseDate = closeDate;
 
@@ -85,6 +85,7 @@ namespace Gamma.ViewModels
             IsReadOnlyQuantityRemainderAtEnd = !DocMaterialCompositionCalculations.IsNotCalculatedQuantityRemainderAtEnd;
             DocMaterialProductionDirectCalculationsGrid = new DocMaterialProductionDirectCalculationMaterialViewModel(PlaceID, ShiftID, CloseDate, docID, isConfirmed, productionProductCharacteristicIDs);
             DocMaterialProductionDirectCalculationsGrid.SelectedMaterialTabIndex = 0;
+            isLoading = false;
         }
 
         private MaterialType CurrentMaterialType;
@@ -301,6 +302,7 @@ namespace Gamma.ViewModels
             DB.AddLogMessageInformation("Add material DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @msg.Nomenclature1CID="+msg.Nomenclature1CID);
         }
 
+        public bool isLoading { get; set; } = false;
         public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;
         public bool IsNotSendMaterialIntoNextPlace
         {
@@ -312,7 +314,8 @@ namespace Gamma.ViewModels
                     _isNotSendMaterialIntoNextPlace = value;
 
                     IsReadOnlyColumnIsNotSendMaterialIntoNextPlace = IsReadOnly || IsNotSendMaterialIntoNextPlace;
-                    DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace = value;
+                    if (!isLoading)
+                        DocMaterialCompositionCalculations.IsNotSendMaterialIntoNextPlace = value;
                     if (DocMaterialProductionDirectCalculationsGrid != null && DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials != null)
                     {
                         DocMaterialProductionDirectCalculationsGrid.DirectCalculationMaterials.IsNotSendMaterialIntoNextPlace = value;
