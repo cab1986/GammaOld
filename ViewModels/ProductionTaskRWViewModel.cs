@@ -157,7 +157,7 @@ namespace Gamma.ViewModels
         /// <param name="productionTaskBatchID">ID пакета заданий</param>
         public override bool SaveToModel(Guid productionTaskBatchID)
         {
-            if (IsReadOnly) return true;
+            if (!DB.HaveWriteAccess("ProductionTasks")) return true;
             var productionTaskRw = GammaBase.ProductionTasks
                 .Include(
                     pt =>
