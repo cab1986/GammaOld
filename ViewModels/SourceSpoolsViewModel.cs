@@ -9,6 +9,8 @@ using System.Windows;
 using Gamma.Common;
 using Gamma.Entities;
 using System.Data.Entity.SqlServer;
+using System.Collections.Generic;
+using Gamma.Models;
 
 namespace Gamma.ViewModels
 {
@@ -38,10 +40,12 @@ namespace Gamma.ViewModels
                 DeleteSpoolCommand = new DelegateCommand<byte>(x => DeleteSpool(x));
                 ChooseSpoolCommand = new DelegateCommand<byte>(ChooseSpool);
                 OpenSpoolInfoCommand = new DelegateCommand<byte>(OpenSpoolInfo);
-                SourceSpools = GammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == WorkSession.PlaceID);
+                PlaceID = WorkSession.PlaceID;
+                AllowChangeCurrentPlaces = DB.GetPlaceProperty(PlaceID, "IsSourceSpoolInstallOnlyFromCurrentPlace") != "1";
+                SourceSpools = GammaBase.SourceSpools.FirstOrDefault(s => s.PlaceID == PlaceID);
                 if (SourceSpools == null)
                 {
-                    SourceSpools = new SourceSpools() { PlaceID = WorkSession.PlaceID };
+                    SourceSpools = new SourceSpools() { PlaceID = PlaceID };
                     GammaBase.SourceSpools.Add(SourceSpools);
                     GammaBase.SaveChanges();
                 }
@@ -56,7 +60,7 @@ namespace Gamma.ViewModels
                     Unwinder3Active = SourceSpools.Unwinder3Active ?? false;
                     Unwinder4Active = SourceSpools.Unwinder4Active ?? false;
                 }
-                var unwindersCount = DB.GetUnwindersCount(WorkSession.PlaceID, GammaBase);
+                var unwindersCount = DB.GetUnwindersCount(PlaceID, GammaBase);
                 switch (unwindersCount)
                 {
                     case 1:
@@ -78,6 +82,9 @@ namespace Gamma.ViewModels
                     break;
                 }
         }
+
+        private int PlaceID { get; set; }
+        private bool AllowChangeCurrentPlaces { get; set; }
 
         private void OpenSpoolInfo(byte unwinderId)
         {
@@ -116,7 +123,10 @@ namespace Gamma.ViewModels
                 || (unum == 4 && (Unwinder4ProductID == null || CheckSpoolInDocCloseShift((Guid)Unwinder4ProductID))))
             {
                 Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
-                MessageManager.OpenFindProduct(ProductKind.ProductSpool, true);
+                //MessageManager.OpenFindProduct(ProductKind.ProductSpool, true);
+                //var currentPlaces = GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceID).ToList();
+                
+                MessageManager.OpenFindProduct(BatchKinds.SGB, true, new List<int>() { PlaceID }, AllowChangeCurrentPlaces);
             }
         }
 
@@ -127,7 +137,7 @@ namespace Gamma.ViewModels
             {
                 var docWithdrawalProduct =
                 gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
+                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == PlaceID);
                 if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                 {
                     var docId = SqlGuidUtil.NewSequentialid();
@@ -138,14 +148,14 @@ namespace Gamma.ViewModels
                         DocWithdrawal = new DocWithdrawal
                         {
                             DocID = docId,
-                            OutPlaceID = WorkSession.PlaceID,
+                            OutPlaceID = PlaceID,
                             Docs = new Docs
                             {
                                 DocID = docId,
                                 IsConfirmed = true,
                                 Date = DB.CurrentDateTime,
                                 DocTypeID = (int)DocTypes.DocWithdrawal,
-                                PlaceID = WorkSession.PlaceID,
+                                PlaceID = PlaceID,
                                 PrintName = WorkSession.PrintName,
                                 ShiftID = WorkSession.ShiftID,
                                 UserID = WorkSession.UserID
@@ -182,7 +192,7 @@ namespace Gamma.ViewModels
                     return;
                 }
 
-                var checkResult = gammaBase.CheckInstallProductionTaskSourceSpools(WorkSession.PlaceID, msg.ProductID).First();
+                var checkResult = gammaBase.CheckInstallProductionTaskSourceSpools(PlaceID, msg.ProductID).First();
                 var resultMessage = checkResult.ResultMessage;
                 if (!(string.IsNullOrWhiteSpace(resultMessage) && !checkResult.BlockCreation))
                 {
@@ -229,7 +239,7 @@ namespace Gamma.ViewModels
                         SourceSpools.Unwinder4Active = Unwinder4Active;
                         break;
                 }
-                gammaBase.WriteSpoolInstallLog(msg.ProductID, WorkSession.PlaceID, WorkSession.ShiftID, CurrentUnwinder);
+                gammaBase.WriteSpoolInstallLog(msg.ProductID, PlaceID, WorkSession.ShiftID, CurrentUnwinder);
                 gammaBase.SaveChanges();
             }
         }
@@ -255,15 +265,15 @@ namespace Gamma.ViewModels
                             CompleteWithdraw((Guid)productID);
                             break;
                     }
-                    DB.AddLogMessageInformation("Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка ОК, выбор " + dialog.ChangeState.ToString() + " (" + dialog.Weight.ToString() + ")" );
+                    DB.AddLogMessageInformation("Снятие тамбура на переделе " + PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка ОК, выбор " + dialog.ChangeState.ToString() + " (" + dialog.Weight.ToString() + ")" );
                     ret = true;
                 }
                 else
-                    DB.AddLogMessageInformation("Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка Отмена, тамбур не снят." );
+                    DB.AddLogMessageInformation("Снятие тамбура на переделе " + PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Кнопка Отмена, тамбур не снят." );
             }
             else
             {
-                DB.AddLogMessageInformation("Снятие тамбура на переделе " + WorkSession.PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Продукция не была произведена, снят без списания." );
+                DB.AddLogMessageInformation("Снятие тамбура на переделе " + PlaceID.ToString() + " с раската " + unum.ToString() + ": тамбур " + productID.ToString() + ", Продукция не была произведена, снят без списания." );
                 ret = true;
             }
             return ret;
@@ -326,7 +336,7 @@ namespace Gamma.ViewModels
 
         private bool CheckSpoolInDocCloseShift(Guid productId)
         {
-            var ret = !GammaBase.DocUnwinderRemainders.Any(r => r.ProductID == productId && r.DocWithdrawalID != null && r.Docs1.PlaceID == WorkSession.PlaceID && r.Docs1.ShiftID == WorkSession.ShiftID &&
+            var ret = !GammaBase.DocUnwinderRemainders.Any(r => r.ProductID == productId && r.DocWithdrawalID != null && r.Docs1.PlaceID == PlaceID && r.Docs1.ShiftID == WorkSession.ShiftID &&
                     r.Docs1.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))) &&
                     r.Docs1.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))));
             if (!ret) MessageBox.Show("Нельзя снять тамбур с раската, так как он в документе Остатки на раскате. Сначала очистите документ Остатки на раскате, затем повторите.", "Ошибка", MessageBoxButton.OK,
@@ -341,7 +351,7 @@ namespace Gamma.ViewModels
             {
                 var docWithdrawalProduct =
                 gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
+                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == PlaceID);
                 //if (docWithdrawalProduct?.CompleteWithdrawal == true) return;
                 if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                 {
@@ -353,14 +363,14 @@ namespace Gamma.ViewModels
                         DocWithdrawal = new DocWithdrawal
                         {
                             DocID = docId,
-                            OutPlaceID = WorkSession.PlaceID,
+                            OutPlaceID = PlaceID,
                             Docs = new Docs
                             {
                                 DocID = docId,
                                 IsConfirmed = true,
                                 Date = DB.CurrentDateTime,
                                 DocTypeID = (int)DocTypes.DocWithdrawal,
-                                PlaceID = WorkSession.PlaceID,
+                                PlaceID = PlaceID,
                                 PrintName = WorkSession.PrintName,
                                 ShiftID = WorkSession.ShiftID,
                                 UserID = WorkSession.UserID
@@ -385,7 +395,7 @@ namespace Gamma.ViewModels
             {
                 var docWithdrawalProduct =
                 gammaBase.DocWithdrawalProducts.OrderByDescending(d => d.DocWithdrawal.Docs.Date).Include(d => d.DocWithdrawal.Docs)
-                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == WorkSession.PlaceID);
+                    .FirstOrDefault(d => d.ProductID == productId && d.DocWithdrawal.Docs.PlaceID == PlaceID);
                 if (docWithdrawalProduct == null || docWithdrawalProduct.Quantity != null || docWithdrawalProduct.CompleteWithdrawal == true)
                 {
                     var docId = SqlGuidUtil.NewSequentialid();
@@ -396,14 +406,14 @@ namespace Gamma.ViewModels
                         DocWithdrawal = new DocWithdrawal
                         {
                             DocID = docId,
-                            OutPlaceID = WorkSession.PlaceID,
+                            OutPlaceID = PlaceID,
                             Docs = new Docs
                             {
                                 DocID = docId,
                                 IsConfirmed = true,
                                 Date = DB.CurrentDateTime,
                                 DocTypeID = (int)DocTypes.DocWithdrawal,
-                                PlaceID = WorkSession.PlaceID,
+                                PlaceID = PlaceID,
                                 PrintName = WorkSession.PrintName,
                                 ShiftID = WorkSession.ShiftID,
                                 UserID = WorkSession.UserID
@@ -414,7 +424,7 @@ namespace Gamma.ViewModels
                 };
                 gammaBase.SaveChanges();
                 gammaBase.CreateDocBrokeWithBrokeDecisionComment(docID, productId, weight / 1000, rejectionReasonId,rejectionReasonComment,
-                WorkSession.PrintName, WorkSession.PlaceID);
+                WorkSession.PrintName, PlaceID);
             }
             ReportManager.PrintReport("Амбалаж", "Spool", productId);
         }
@@ -471,10 +481,10 @@ namespace Gamma.ViewModels
             using (var gammaBase = DB.GammaDb)
             {
                 var productionTaskID =
-                    gammaBase.ActiveProductionTasks.FirstOrDefault(pt => pt.PlaceID == WorkSession.PlaceID)?
+                    gammaBase.ActiveProductionTasks.FirstOrDefault(pt => pt.PlaceID == PlaceID)?
                         .ProductionTaskID;
                 if (productionTaskID == null) return;
-                var checkResult = gammaBase.CheckProductionTaskSourceSpools(WorkSession.PlaceID, productionTaskID).FirstOrDefault();
+                var checkResult = gammaBase.CheckProductionTaskSourceSpools(PlaceID, productionTaskID).FirstOrDefault();
                 if (!string.IsNullOrEmpty(checkResult?.ResultMessage))
                 {
                     MessageBox.Show(checkResult.ResultMessage, "Предупреждение", MessageBoxButton.OK,

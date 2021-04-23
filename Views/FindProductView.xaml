@@ -13,6 +13,11 @@
         d:DataContext="{d:DesignInstance Type=viewModels:FindProductViewModel, IsDesignTimeCreatable=False}"
         Title="Поиск изделий"
         common:WindowSettings.Save="True">
+    <Window.Resources>
+        <Style TargetType="dxe:ListBoxEdit">
+            <Setter Property="AllowUpdateTwoWayBoundPropertiesOnSynchronization" Value="False" />
+        </Style>
+    </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
@@ -29,7 +34,7 @@
                         <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"/>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Текущий передел" LabelPosition="Top" Width="160" VerticalAlignment="Stretch">
-                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedCurrentPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                        <dxe:ListBoxEdit VerticalContentAlignment="Stretch" ItemsSource="{Binding PlacesList}" EditValue="{Binding SelectedCurrentPlaces}" SelectionMode="Multiple"  DisplayMember="PlaceName" ValueMember="PlaceID"  IsEnabled="{Binding CurrentPlacesSelectEnabled}"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutGroup Orientation="Vertical">

@@ -254,6 +254,9 @@ namespace Gamma
         public ProductKind ProductKind;
         public bool AllowChangeProductKind = true;
         public bool AllowChooseOneValueOnly = true;
+        public BatchKinds? BatchKind;
+        public List<int> CurrentPlaces;
+        public bool AllowChangeCurrentPlaces = true;
     }
     public class ConfigureComPortMessage  { }
     public class ChoosenProductMessage
@@ -603,14 +606,28 @@ namespace Gamma
 		    Messenger.Default.Send(new EditDocComplectationMessage(docId));
 	    }
         
-        public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, bool allowChangeProductKind = false, bool allowChooseOneValueOnly = true )
+        public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, List<int> currentPlaces = null, bool allowChangeCurrentPlaces = true, bool allowChangeProductKind = false, bool allowChooseOneValueOnly = true )
         {
             Messenger.Default.Send(new FindProductMessage
             {
                     ProductKind = productKind,
                     ChooseProduct = chooseProduct,
                     AllowChangeProductKind = allowChangeProductKind,
-                    AllowChooseOneValueOnly = allowChooseOneValueOnly
+                    AllowChooseOneValueOnly = allowChooseOneValueOnly,
+                    CurrentPlaces = currentPlaces,
+                    AllowChangeCurrentPlaces = allowChangeCurrentPlaces
+            });
+        }
+        public static void OpenFindProduct(BatchKinds batchKind, bool chooseProduct = false, List<int> currentPlaces = null, bool allowChangeCurrentPlaces = true, bool allowChangeProductKind = false, bool allowChooseOneValueOnly = true)
+        {
+            Messenger.Default.Send(new FindProductMessage
+            {
+                BatchKind = batchKind,
+                ChooseProduct = chooseProduct,
+                AllowChangeProductKind = allowChangeProductKind,
+                AllowChooseOneValueOnly = allowChooseOneValueOnly,
+                CurrentPlaces = currentPlaces,
+                AllowChangeCurrentPlaces = allowChangeCurrentPlaces
             });
         }
         public static void OpenDocCloseShift(Guid docID)

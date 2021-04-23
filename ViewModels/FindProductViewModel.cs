@@ -29,6 +29,8 @@ namespace Gamma.ViewModels
         {
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             ProductKindsList = Functions.EnumDescriptionsToList(typeof(ProductKind));
+            ProductKindsList.Add("Бумага-основа");
+            ProductKindsList.Add("Готовая продукция");
             ProductKindsList.Add("Все");
             States = Functions.EnumDescriptionsToList(typeof(ProductState));
             States.Add("Любое");
@@ -56,10 +58,26 @@ namespace Gamma.ViewModels
         public FindProductViewModel(FindProductMessage msg) : this()
         {
             ButtonPanelVisible = msg.ChooseProduct;
-            if (msg.ChooseProduct && (int)msg.ProductKind >= 0) //для выбора по умолчанию пункта Все
+            if (msg.CurrentPlaces != null)
+                msg.CurrentPlaces.ForEach(i => SelectedCurrentPlaces.Add(i));
+            if (msg.ChooseProduct && msg.BatchKind == null && (int)msg.ProductKind >= 0) //для выбора по умолчанию пункта Все
                 SelectedProductKindIndex = (int)msg.ProductKind;
             else
-                SelectedProductKindIndex = (ProductKindsList.Count - 1);
+            {
+                if (msg.BatchKind == null)
+                    SelectedProductKindIndex = (ProductKindsList.Count - 1);
+                else
+                    switch (msg.BatchKind)
+                    {
+                        case BatchKinds.SGB:
+                            SelectedProductKindIndex = (ProductKindsList.Count - 3);
+                            break;
+                        case BatchKinds.SGI:
+                            SelectedProductKindIndex = (ProductKindsList.Count - 2);
+                            break;
+                    };
+            }
+            CurrentPlacesSelectEnabled = msg.AllowChangeCurrentPlaces;
             ProductKindSelectEnabled = msg.AllowChangeProductKind;
             ChooseAllProductEnabled = !msg.AllowChooseOneValueOnly;
         }
@@ -159,7 +177,10 @@ namespace Gamma.ViewModels
                 })));
             if (FoundProducts.Count == 0 && ButtonPanelVisible)
             {
-                MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
+                if (SelectedCurrentPlaces?.Count() > 0)
+                    MessageBox.Show("На выбранном переделе продукт не найден. Возможно находится на другом переделе или уже списан", "Продукт не найден");
+                else
+                    MessageBox.Show("Продукт уже списан или не существует в базе", "Продукт не найден");
             }
             if (FoundProducts.Count != 1 || !ButtonPanelVisible) return;
             SelectedProduct = FoundProducts.First();
@@ -182,6 +203,8 @@ namespace Gamma.ViewModels
                            (Number == null || pinfo.Number.Contains(Number) || Number == "") &&
                             (Barcode == null || pinfo.BarCode == Barcode || Barcode == "") &&
                             (pinfo.ProductKindID == SelectedProductKindIndex ||
+                            (SelectedProductKindIndex == ProductKindsList.Count - 3 && (pinfo.ProductKindID == (int)ProductKind.ProductSpool || pinfo.ProductKindID == (int)ProductKind.ProductGroupPack)) ||
+                            (SelectedProductKindIndex == ProductKindsList.Count - 2 && (pinfo.ProductKindID == (int)ProductKind.ProductPallet || pinfo.ProductKindID == (int)ProductKind.ProductPalletR)) ||
                              SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                             (!ButtonPanelVisible || (gammaBase.Rests.Any(gs => gs.ProductID == pinfo.ProductID && gs.Quantity >= 1)
                                 ) ||
@@ -268,6 +291,8 @@ namespace Gamma.ViewModels
                             (NomenclatureID == null || pinfo.C1CNomenclatureID == NomenclatureID) &&
                             (charId == new Guid() || pinfo.C1CCharacteristicID == charId) &&
                             (pinfo.ProductKindID == SelectedProductKindIndex ||
+                            (SelectedProductKindIndex == ProductKindsList.Count - 3 && (pinfo.ProductKindID == (int)ProductKind.ProductSpool || pinfo.ProductKindID == (int)ProductKind.ProductGroupPack)) ||
+                            (SelectedProductKindIndex == ProductKindsList.Count - 2 && (pinfo.ProductKindID == (int)ProductKind.ProductPallet || pinfo.ProductKindID == (int)ProductKind.ProductPalletR)) ||
                              SelectedProductKindIndex == ProductKindsList.Count - 1) &&
                             ((DateBegin == null || pinfo.Date >= DateBegin) &&
                              (DateEnd == null || pinfo.Date <= DateEnd)) &&
@@ -407,6 +432,7 @@ namespace Gamma.ViewModels
         }
 
         private bool ChooseAllProductEnabled { get; set; }
+        public bool CurrentPlacesSelectEnabled { get; private set; } = true;
         private DateTime? _dateBegin;
         private DateTime? _dateEnd;
 

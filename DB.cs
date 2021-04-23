@@ -477,5 +477,11 @@ namespace Gamma
         {
             return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocComplectation('{docCompletationID}')").AsEnumerable().First();
         }
+
+        public static string GetPlaceProperty(int placeID, string propertyName, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.GetPlaceProperty('{placeID}', '{propertyName}')").AsEnumerable().First();
+        }
+
     }
 }

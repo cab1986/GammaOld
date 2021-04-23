@@ -5730,6 +5730,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="Number" Type="varchar" Mode="In" />
           <Parameter Name="ProductKindId" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetPlaceProperty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="PropertyName" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="GetProductionTaskBatchCuttingsSGB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -9739,7 +9743,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
           <FunctionImport Name="GetProductKinds" IsComposable="true" ReturnType="Collection(GammaModel.GetProductKinds_Result)">
-            <Parameter Name="ParentID" Mode="In" Type="Guid" />
+          <Parameter Name="ParentID" Mode="In" Type="Guid" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">

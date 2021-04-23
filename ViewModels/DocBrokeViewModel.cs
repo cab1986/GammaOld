@@ -323,7 +323,7 @@ namespace Gamma.ViewModels
         private void ChooseProductToAdd()
         {
             Messenger.Default.Register<ChoosenProductMessage>(this, AddChoosenProduct);
-            MessageManager.OpenFindProduct(ProductKind.ProductSpool - 1, true, true, false);
+            MessageManager.OpenFindProduct(ProductKind.ProductSpool - 1, true, null, true, true, false);
         }
 
         private void AddChoosenProduct(ChoosenProductMessage msg)
