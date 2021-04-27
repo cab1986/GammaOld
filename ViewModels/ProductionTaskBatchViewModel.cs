@@ -1415,41 +1415,28 @@ namespace Gamma.ViewModels
                 {
                     _productionTaskStateID = value;
                     IsEditingComment = (!IsReadOnly) || ProductionTaskStateID == (byte)ProductionTaskStates.OnEditing;
-                    if (CurrentView is IProductionTaskBatch)
-                    {
-                        (CurrentView as IProductionTaskBatch).OnEditingStatus = IsEditingComment;
-                    }
-                    if (CurrentView is IProductionTask)
-                    {
-                        (CurrentView as IProductionTask).IsEditingQuantity = IsEditingComment;
-                    }
                 }
                 else
                     if (!(_productionTaskStateID == (byte)ProductionTaskStates.OnEditing && value == (byte)ProductionTaskStates.InProduction) && !(_productionTaskStateID == (byte)ProductionTaskStates.InProduction && value == (byte)ProductionTaskStates.OnEditing) && ((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && _productionTaskStateID != value))
                 {
-                    var res = DB.GetAbilityChangeProductionTaskState(ProductionTaskBatchID);
-                    if (res == null)
-                        MessageBox.Show("Ошибка при получении данных из 1С");
-                    else
+                    if (value != null) //для того, чтобы при нажатии кнопки Назад (когда окно открытовнутри основного окна, а не отдельно) не переходило в этот блок. Падает при MessageBox, так как окна уже не существует.
                     {
-                        if ((int)res == 1)
-                            _productionTaskStateID = value;
+                        var res = DB.GetAbilityChangeProductionTaskState(ProductionTaskBatchID);
+                        if (res == null)
+                            MessageBox.Show("Ошибка при получении данных из 1С");
                         else
-                            MessageBox.Show("Запрещено изменение. Задание заблокировано, в 1С созданы этапы.");
+                        {
+                            if ((int)res == 1)
+                                _productionTaskStateID = value;
+                            else
+                                MessageBox.Show("Запрещено изменение. Задание заблокировано, в 1С созданы этапы.");
+                        }
                     }
                 }
                 else
                 {
                     _productionTaskStateID = value;
                     IsEditingComment = (!IsReadOnly) || ProductionTaskStateID == (byte)ProductionTaskStates.OnEditing;
-                    if (CurrentView is IProductionTaskBatch)
-                    {
-                        (CurrentView as IProductionTaskBatch).OnEditingStatus = IsEditingComment;
-                    }
-                    if (CurrentView is IProductionTask)
-                    {
-                        (CurrentView as IProductionTask).IsEditingQuantity = IsEditingComment;
-                    }
                 }
                 RaisePropertyChanged("ProductionTaskStateID");
             }
@@ -1463,6 +1450,14 @@ namespace Gamma.ViewModels
             {
                 if (_isEditingComment == value) return;
                 _isEditingComment = value;
+                if (CurrentView is IProductionTaskBatch)
+                {
+                    (CurrentView as IProductionTaskBatch).OnEditingStatus = IsEditingComment;
+                }
+                if (CurrentView is IProductionTask)
+                {
+                    (CurrentView as IProductionTask).IsEditingQuantity = IsEditingComment;
+                }
                 RaisePropertyChanged("IsEditingComment");
             }
         }           

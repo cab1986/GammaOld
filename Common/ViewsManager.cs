@@ -190,7 +190,7 @@ namespace Gamma.Common
             //var view = new ProductionTaskBatchView(msg);
             if (!msg.Window) return;
             var view = new ProductionTaskBatchWindowView(msg);
-            view.ShowDialog();
+            view.Show();
         }
         private void OpenReportList(OpenReportListMessage msg)
         {
