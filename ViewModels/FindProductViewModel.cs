@@ -304,7 +304,13 @@ namespace Gamma.ViewModels
                                      (gs, pi) => new { IsWrittenOff = pi.IsWrittenOff ?? false }
                                  ).Any(j => !j.IsWrittenOff)) &&
                             (selectedPlaces.Count == 0 || selectedPlaces.Contains((int)pinfo.PlaceID)) &&
-                            (selectedCurrentPlaces.Count == 0 || selectedCurrentPlaces.Contains((int)pinfo.CurrentPlaceID)) &&
+                            (selectedCurrentPlaces.Count == 0 || selectedCurrentPlaces.Contains((int)pinfo.CurrentPlaceID) ||
+                             gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == pinfo.ProductID)
+                                 .Join(gammaBase.vProductsInfo,
+                                     gs => gs.ProductGroupPackID,
+                                     pi => pi.ProductID,
+                                     (gs, pi) => new { CurrentPlaceID = pi.CurrentPlaceID }
+                                 ).Any(j => selectedCurrentPlaces.Contains((int)j.CurrentPlaceID))) &&
                             (SelectedStateIndex == States.Count - 1 || SelectedStateIndex == pinfo.StateID)
                             ).Select(pinfo => new ProductInfo
                             {
