@@ -124,9 +124,13 @@ namespace Gamma.ViewModels
             {
                 Messenger.Default.Register<ChoosenProductMessage>(this, SourceSpoolChanged);
                 //MessageManager.OpenFindProduct(ProductKind.ProductSpool, true);
-                //var currentPlaces = GammaBase.Places.Where(p => p.PlaceID == PlaceID).Select(p => p.PlaceID).ToList();
-                
-                MessageManager.OpenFindProduct(BatchKinds.SGB, true, new List<int>() { PlaceID }, AllowChangeCurrentPlaces);
+                List<int> currentPlaces;
+                // для ростова СГБ привозят материал неизвестно куда, на один из этих переделов
+                if (PlaceID == 21 || PlaceID == 22 || PlaceID == 23 || PlaceID == 25)
+                    currentPlaces = new List<int>() { 21,22,23,25 };
+                else
+                    currentPlaces = new List<int>() { PlaceID };
+                MessageManager.OpenFindProduct(BatchKinds.SGB, true, currentPlaces, AllowChangeCurrentPlaces);
             }
         }
 
