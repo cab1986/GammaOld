@@ -1932,6 +1932,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="ParentID" Type="uniqueidentifier" />
           <Property Name="ParentName" Type="varchar" MaxLength="255" />
+          <Property Name="1CSpecificationID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -6309,7 +6310,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vProductionMaterials].[NomenclatureName] AS [NomenclatureName], 
     [vProductionMaterials].[Quantity] AS [Quantity], 
     [vProductionMaterials].[ParentID] AS [ParentID], 
-    [vProductionMaterials].[ParentName] AS [ParentName]
+    [vProductionMaterials].[ParentName] AS [ParentName],
+    [vProductionMaterials].[1CSpecificationID] AS [1CSpecificationID]
     FROM [dbo].[vProductionMaterials] AS [vProductionMaterials]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vProductionTaskBatches" EntityType="Self.vProductionTaskBatches" store:Type="Views" store:Schema="dbo">
@@ -14388,6 +14390,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
           <Property Name="ParentID" Type="Guid" />
           <Property Name="ParentName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="C1CSpecificationID" Type="Guid" />
         </EntityType>
         <ComplexType Name="FillDocCloseShiftMaterials_Result">
           <Property Type="Guid" Name="NomenclatureID" Nullable="true" />
@@ -17638,6 +17641,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vProductionMaterials">
             <EntityTypeMapping TypeName="GammaModel.vProductionMaterials">
               <MappingFragment StoreEntitySet="vProductionMaterials">
+                <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
                 <ScalarProperty Name="ParentName" ColumnName="ParentName" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />

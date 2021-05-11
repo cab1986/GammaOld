@@ -27,5 +27,6 @@ namespace Gamma.Entities
         public string NomenclatureName { get; set; }
         public Nullable<System.Guid> ParentID { get; set; }
         public string ParentName { get; set; }
+        public Nullable<System.Guid> C1CSpecificationID { get; set; }
     }
 }
