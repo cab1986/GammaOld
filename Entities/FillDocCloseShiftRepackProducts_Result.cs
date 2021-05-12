@@ -22,5 +22,6 @@ namespace Gamma.Entities
         public string NomenclatureName { get; set; }
         public Nullable<System.Guid> BaseMeasureUnitID { get; set; }
         public string BaseMeasureUnit { get; set; }
+        public Nullable<System.Guid> ProductionTaskID { get; set; }
     }
 }

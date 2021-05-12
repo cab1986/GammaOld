@@ -167,7 +167,8 @@ namespace Gamma.ViewModels
                         NomenclatureID = ds.C1CNomenclatureID,
                         CharacteristicID = ds.C1CCharacteristicID,
                         Quantity = ds.Quantity,
-                        NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name
+                        NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name,
+                        ProductionTaskID = ds.ProductionTaskID
                     }));
                 /*
                 var repackProducts = new ObservableCollection<Sample>(gammaBase.DocCloseShiftRepackProducts.Where(ds => ds.DocID == DocId)
@@ -389,7 +390,8 @@ namespace Gamma.ViewModels
                         NomenclatureID = (Guid)ds.NomenclatureID,
                         CharacteristicID = ds.CharacteristicID,
                         Quantity = ds.Quantity ?? 0,
-                        NomenclatureName = ds.NomenclatureName
+                        NomenclatureName = ds.NomenclatureName,
+                        ProductionTaskID = ds.ProductionTaskID
                     }));
 /*
                 var repackProducts = new ObservableCollection<Sample>(gammaBase.FillDocCloseShiftRepackProducts(PlaceID, ShiftID, CloseDate)
@@ -756,7 +758,8 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = (Guid)product.CharacteristicID,
                             DocCloseShiftRepackProductID = SqlGuidUtil.NewSequentialid(),
                             Quantity = product.Quantity,
-                            C1CMeasureUnitID = product.MeasureUnitId
+                            C1CMeasureUnitID = product.MeasureUnitId,
+                            ProductionTaskID = product.ProductionTaskID
                         });
                     }
                 if (IsChanged)

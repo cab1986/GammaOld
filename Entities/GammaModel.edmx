@@ -612,6 +612,7 @@
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
           <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocCloseShiftSamples">
           <Key>
@@ -14563,6 +14564,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CCharacteristics" FromRole="DocCloseShiftRepackProducts" ToRole="C1CCharacteristics" />
           <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CMeasureUnits" FromRole="DocCloseShiftRepackProducts" ToRole="C1CMeasureUnits" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CNomenclature" FromRole="DocCloseShiftRepackProducts" ToRole="C1CNomenclature" />
+          <Property Name="ProductionTaskID" Type="Guid" />
         </EntityType>
         <Association Name="FK_DocCloseShiftRepackProducts_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -14657,6 +14659,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
           <Property Type="Guid" Name="BaseMeasureUnitID" Nullable="true" />
           <Property Type="String" Name="BaseMeasureUnit" Nullable="true" MaxLength="250" />
+          <Property Type="Guid" Name="ProductionTaskID" Nullable="true" />
         </ComplexType>
         <EntityType Name="ProductionTaskConvertingSamples">
           <Key>
@@ -17778,6 +17781,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocCloseShiftRepackProducts">
             <EntityTypeMapping TypeName="GammaModel.DocCloseShiftRepackProducts">
               <MappingFragment StoreEntitySet="DocCloseShiftRepackProducts">
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
                 <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
                 <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
@@ -17846,6 +17850,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
                 <ScalarProperty Name="BaseMeasureUnitID" ColumnName="BaseMeasureUnitID" />
                 <ScalarProperty Name="BaseMeasureUnit" ColumnName="BaseMeasureUnit" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
