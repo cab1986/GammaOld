@@ -86,7 +86,8 @@ namespace Gamma.ViewModels
                         CharacteristicID = ds.C1CCharacteristicID,
                         Quantity = ds.Quantity,
                         NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name,
-                        MeasureUnitId = ds.C1CMeasureUnitID
+                        MeasureUnitId = ds.C1CMeasureUnitID,
+                        ProductionTaskID = ds.ProductionTaskID
                     }));
                 foreach (var sample in samples)
                 {
@@ -257,6 +258,7 @@ namespace Gamma.ViewModels
                             CharacteristicID = p.CharacteristicID,
                             Quantity = p.Quantity,
                             NomenclatureName = p.NomenclatureName,
+                            ProductionTaskID = p.ProductionTaskID
                         }));
                     Samples.Clear();
                     foreach (var sample in samples)
@@ -485,7 +487,8 @@ namespace Gamma.ViewModels
                             C1CCharacteristicID = (Guid)sample.CharacteristicID,
                             DocCloseShiftSampleID = SqlGuidUtil.NewSequentialid(),
                             Quantity = sample.Quantity,
-                            C1CMeasureUnitID = sample.MeasureUnitId
+                            C1CMeasureUnitID = sample.MeasureUnitId,
+                            ProductionTaskID = sample.ProductionTaskID
                         });
                     }
 
