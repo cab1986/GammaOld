@@ -12,5 +12,7 @@ namespace Gamma
         public string Place { get; set; }
         public string User { get; set; }
         public string Person { get; set; }
+        public string Number { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

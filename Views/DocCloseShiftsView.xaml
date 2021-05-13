@@ -40,12 +40,14 @@
                          SelectedItem="{Binding SelectedDocCloseShift}" AutoExpandAllGroups="False">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn GroupIndex="0" Header="Передел" FieldName="Place" />
-                <dxg:GridColumn Header="Дата" FieldName="Date" >
+                <dxg:GridColumn Header="Дата" FieldName="Date" Width="160">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
+                <dxg:GridColumn Header="Номер" FieldName="Number" Width="210"/>
+                <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" Width="100"/>
                 <dxg:GridColumn Header="Логин" FieldName="User" Width="140" />
                 <dxg:GridColumn Header="Пользователь" FieldName="Person" Width="140"/>
             </dxg:GridControl.Columns>

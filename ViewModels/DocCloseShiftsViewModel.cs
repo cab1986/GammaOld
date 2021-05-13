@@ -104,7 +104,9 @@ namespace Gamma.ViewModels
                 ShiftID = d.ShiftID ?? 0,
                 Place = d.Places.Name,
                 User = d.Users.Name,
-                Person = d.Persons.Name
+                Person = d.Persons.Name,
+                Number = d.Number,
+                IsConfirmed = d.IsConfirmed
             }
             ).Take(120));
         }
