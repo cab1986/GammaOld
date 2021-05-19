@@ -50,6 +50,16 @@ namespace Gamma.ViewModels
             set
             {
                 _processModelid = value;
+                bool isEditingComment = false;
+                if (FirstView is IProductionTaskBatch)
+                {
+                    isEditingComment = (FirstView as IProductionTaskBatch).OnEditingStatus;
+                }
+                if (FirstView is IProductionTask)
+                {
+                    isEditingComment = (FirstView as IProductionTask).IsEditingQuantity;
+                }
+
                 switch (ProcessModelID)
                 {
                     case (byte)ProcessModels.PM:
@@ -114,6 +124,22 @@ namespace Gamma.ViewModels
                         SecondView = null;
                         ProductionTaskWrView = ProductionTaskWrView ?? new ProductionTaskWrViewModel(ProductionTaskBatchID);
                         break;
+                }
+                if (FirstView is IProductionTaskBatch)
+                {
+                    (FirstView as IProductionTaskBatch).OnEditingStatus = isEditingComment;
+                }
+                if (FirstView is IProductionTask)
+                {
+                    (FirstView as IProductionTask).IsEditingQuantity = isEditingComment;
+                }
+                if (SecondView != null && SecondView is IProductionTaskBatch)
+                {
+                    (SecondView as IProductionTaskBatch).OnEditingStatus = isEditingComment;
+                }
+                if (SecondView != null && SecondView is IProductionTask)
+                {
+                    (SecondView as IProductionTask).IsEditingQuantity = isEditingComment;
                 }
             }
         }
