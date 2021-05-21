@@ -120,7 +120,7 @@ namespace Gamma.ViewModels
                     }));
                 foreach (var waste in Wastes)
                 {
-                    waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
+                    waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID, waste.MeasureUnitId);
                 }
                 
             }
@@ -315,7 +315,7 @@ namespace Gamma.ViewModels
                     Wastes = new ObservableCollection<DocCloseShiftWaste>();
                 foreach (var waste in wastes)
                 {
-                    waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID);
+                    waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID, waste.MeasureUnitId);
                     waste.MeasureUnitId = waste.MeasureUnits.FirstOrDefault().Key;
                     if (!Wastes.Any(s => s.NomenclatureID == waste.NomenclatureID && (s.CharacteristicID == waste.CharacteristicID || (s.CharacteristicID == null && waste.CharacteristicID == null))
                         && ((s.ProductNomenclatureID == waste.ProductNomenclatureID || (s.ProductNomenclatureID == null && waste.ProductNomenclatureID == null)) && (s.ProductCharacteristicID == waste.ProductCharacteristicID || (s.ProductCharacteristicID == null && waste.ProductCharacteristicID == null)))))
@@ -331,14 +331,22 @@ namespace Gamma.ViewModels
             }
         }
 
-        private Dictionary<Guid, string> GetWasteMeasureUnits(Guid nomenclatureId)
+        private Dictionary<Guid, string> GetWasteMeasureUnits(Guid nomenclatureId, Guid? measureUnitId)
         {
             Dictionary<Guid, string> dict;
             using (var gammaBase = DB.GammaDb)
             {
                 //dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CNomenclatureID == nomenclatureId).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);                
-                var measureUnitID = gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId).C1CMeaureUnitStorage;
-                dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CMeasureUnitID == measureUnitID).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);
+                var NomenclatureMeasureUnitID = gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId).C1CMeaureUnitStorage;
+
+                if (measureUnitId != null)
+                {
+                    dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CMeasureUnitID == measureUnitId | mu.C1CMeasureUnitID == NomenclatureMeasureUnitID).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);
+                }
+                else
+                {
+                    dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CMeasureUnitID == NomenclatureMeasureUnitID).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);
+                }
                 var mesList = dict.Where(d => d.Value == "т").Select(d => d.Key).ToList();
                 foreach (var mes in mesList)
                 {
