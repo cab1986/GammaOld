@@ -250,96 +250,54 @@ namespace Gamma
 
         public static void UploadDocCloseShiftTo1C(Guid docId, GammaEntities gammaBase = null)
         {
+            const string sql = "exec [dbo].[UploadDocCloseShiftReportTo1C] @DocID";
+            UploadDocTo1C(sql, docId, gammaBase);
+        }
+
+        public static void UploadProductionTaskBatchTo1C(Guid productionTaskBatchID, GammaEntities gammaBase = null)
+        {
+            const string sql = "exec [dbo].[UploadProductionTaskBatchTo1C] @DocID";
+            UploadDocTo1C(sql, productionTaskBatchID, gammaBase);
+        }
+
+        public static bool UploadShipmentOrderTo1C(Guid docShipmentOrderID, GammaEntities gammaBase = null)
+        {
+            const string sql = "exec [dbo].[UploadShipmentOrderTo1C] @DocID";
+            return UploadDocTo1C(sql, docShipmentOrderID, gammaBase); 
+        }
+
+        public static void UploadDocComplectationTo1C(Guid docComplectationID, GammaEntities gammaBase = null)
+        {
+            const string sql = "exec [dbo].[UploadDocComplectationTo1C] @DocID";
+            UploadDocTo1C(sql, docComplectationID, gammaBase);
+        }
+
+        public static void UploadFreeMovementTo1C(Guid docMovementId, GammaEntities gammaBase = null)
+        {
+            const string sql = "exec [dbo].[UploadFreeMovementTo1C] @DocID";
+            UploadDocTo1C(sql, docMovementId, gammaBase);
+        }
+
+        public static bool UploadDocTo1C(string sql, Guid docId, GammaEntities gammaBase = null)
+        {
             gammaBase = gammaBase ?? GammaDb;
+            var ret = false;
             try
             {
                 var docIdParameter = new SqlParameter("DocID", SqlDbType.UniqueIdentifier)
                 {
                     Value = docId
                 };
-                const string sql = "exec [dbo].[UploadDocCloseShiftReportTo1C] @DocID";
-                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Не удалось выгрузить рапорт в 1С");
-            }
-        }
-
-        public static void UploadProductionTaskBatchTo1C(Guid productionTaskBatchID, GammaEntities gammaBase = null)
-        {
-            gammaBase = gammaBase ?? GammaDb;
-            try
-            {
-                var docIdParameter = new SqlParameter("ProductionTaskBatchID", SqlDbType.UniqueIdentifier)
-                {
-                    Value = productionTaskBatchID
-                };
-                const string sql = "exec [dbo].[UploadProductionTaskBatchTo1C] @ProductionTaskBatchID";
-                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Не удалось выгрузить задание в 1С");
-            }
-        }
-
-        public static bool UploadShipmentOrderTo1C(Guid docShipmentOrderID, GammaEntities gammaBase = null)
-        {
-            var ret = false;
-            gammaBase = gammaBase ?? GammaDb;
-            try
-            {
-                var docIdParameter = new SqlParameter("DocShipmentOrderID", SqlDbType.UniqueIdentifier)
-                {
-                    Value = docShipmentOrderID
-                };
-                const string sql = "exec [dbo].[UploadShipmentOrderTo1C] @DocShipmentOrderID";
                 gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
                 ret = true;
             }
             catch (Exception)
             {
-                MessageBox.Show("Не удалось выгрузить приказ в 1С");
+                MessageBox.Show("Не удалось выгрузить документ в 1С");
+                AddLogMessageError("Error " + sql+"=" + docId.ToString());
                 ret = false;
             }
             return ret;
-        }
-
-        public static void UploadDocComplectationTo1C(Guid docComplectationID, GammaEntities gammaBase = null)
-        {
-            gammaBase = gammaBase ?? GammaDb;
-            try
-            {
-                var docIdParameter = new SqlParameter("DocComplectationID", SqlDbType.UniqueIdentifier)
-                {
-                    Value = docComplectationID
-                };
-                const string sql = "exec [dbo].[UploadDocComplectationTo1C] @DocComplectationID";
-                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Не удалось выгрузить документ в 1С");
-            }
-        }
-
-        public static void UploadFreeMovementTo1C(Guid docMovementId, GammaEntities gammaBase = null)
-        {
-            gammaBase = gammaBase ?? GammaDb;
-            try
-            {
-                var docIdParameter = new SqlParameter("DocMovementID", SqlDbType.UniqueIdentifier)
-                {
-                    Value = docMovementId
-                };
-                const string sql = "exec [dbo].[UploadFreeMovementTo1C] @DocMovementID";
-                gammaBase.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, sql, docIdParameter);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Не удалось выгрузить документ в 1С");
-            }
         }
 
         public static void ChangeUserPassword(Guid userid,string password, GammaEntities gammaBase = null)
