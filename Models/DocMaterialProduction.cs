@@ -444,12 +444,13 @@ namespace Gamma.Models
        
         public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo)//, List<Guid> productionProductCharacteristicIDs)
         {
-            //В сырье не учитываем хараеткристики
+            //В сырье не учитываем характеристики
             //var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
             var nomenclatureName = nomenclatureInfo.Name;// + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
             var parentID = nomenclatureInfo.C1CParentID;
             var parentName = parentID == null ? "" : GammaBase.C1CNomenclature.Where(n => n.C1CNomenclatureID == nomenclatureInfo.C1CParentID).FirstOrDefault().Name;
-
+            var measureUnitID = (parentName == "Целлюлоза" || parentName == "Брак и Тех. Отходы" || parentName == "Макулатура") && nomenclatureInfo.C1CMeasureUnitStorage.Name != "т" ? GammaBase.C1CMeasureUnits.Where(m => m.Name == "т").FirstOrDefault().C1CMeasureUnitID : nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID;
+            var measureUnitName = GammaBase.C1CMeasureUnits.Where(m => m.C1CMeasureUnitID == measureUnitID).FirstOrDefault().Name;
             if (DocMaterialProductionCompositionCalculations.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
                 DocMaterialProductionCompositionCalculations.Add(new DocMaterialProductionCompositionCalculationItem
                 {
@@ -457,8 +458,8 @@ namespace Gamma.Models
                     //CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
-                    MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                    MeasureUnitID = measureUnitID,
+                    MeasureUnit = (measureUnitName == "т" || measureUnitName == "т.") ? "кг  " : measureUnitName,
                     DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
                     WithdrawByFact = true,
                     ParentID = parentID,
