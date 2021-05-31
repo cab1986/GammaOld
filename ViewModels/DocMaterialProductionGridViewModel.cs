@@ -292,12 +292,13 @@ namespace Gamma.ViewModels
         private void SetMaterialNomenclature(Nomenclature1CMessage msg)
         {
             Messenger.Default.Unregister<Nomenclature1CMessage>(this);
+            var isWithdrawalByFact = MessageBox.Show("Материал учитывается по факту?", "Вопрос", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
             using (var gammaBase = DB.GammaDb)
             {
                 var nomenclatureInfo =
                 gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
                     .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
-                DocMaterialCompositionCalculations.MaterialNomenclatureChanged(nomenclatureInfo);
+                DocMaterialCompositionCalculations.MaterialNomenclatureChanged(nomenclatureInfo, isWithdrawalByFact);
             }
             DB.AddLogMessageInformation("Add material DocMaterialProductionGrid @CloseDate=" + CloseDate + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @msg.Nomenclature1CID="+msg.Nomenclature1CID);
         }

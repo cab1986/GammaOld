@@ -442,7 +442,7 @@ namespace Gamma.Models
             DocMaterialProductionCompositionCalculations.Remove(n);
         }
        
-        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo)//, List<Guid> productionProductCharacteristicIDs)
+        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact)//, List<Guid> productionProductCharacteristicIDs)
         {
             //В сырье не учитываем характеристики
             //var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
@@ -461,7 +461,7 @@ namespace Gamma.Models
                     MeasureUnitID = measureUnitID,
                     MeasureUnit = (measureUnitName == "т" || measureUnitName == "т.") ? "кг  " : measureUnitName,
                     DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
-                    WithdrawByFact = true,
+                    WithdrawByFact = isWithdrawalByFact,
                     ParentID = parentID,
                     ParentName = parentName
                 });

@@ -775,7 +775,7 @@ namespace Gamma.Models
             }
         }
 
-        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo)//, List<Guid> productionProductCharacteristicIDs)
+        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact)//, List<Guid> productionProductCharacteristicIDs)
         {
             var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
             var nomenclatureName = nomenclatureInfo.Name + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
@@ -790,7 +790,7 @@ namespace Gamma.Models
                     MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
                     MeasureUnit = (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
                     DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
-                    WithdrawByFact = true
+                    WithdrawByFact = isWithdrawalByFact
                 });
 
             /* if (WithdrawalMaterials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
