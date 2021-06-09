@@ -117,23 +117,42 @@ namespace Gamma
     }
     public enum DocTypes
     {
+        [Description("Производство")]
         DocProduction,
+        [Description("Списание")]
         DocWithdrawal,
+        [Description("Премещение")]
         DocMovement,
+        [Description("Закрытие смены")]
         DocCloseShift,
+        [Description("Изменение состояния продукта")]
         DocChangeState,
+        [Description("Отгрузка")]
         DocShipment,
+        [Description("Распаковка")]
         DocUnpack,
+        [Description("Акт о браке")]
         DocBroke,
+        [Description("Заказ на перемещение")]
         DocMovementOrder,
+        [Description("Приемка на склад")]
         DocWarehouseAccept,
+        [Description("Инвентаризация")]
         DocInventarisation,
+        [Description("Комплектация")]
         DocComplectation,
+        [Description("Утилизация")]
         DocUtilization,
+        [Description("Уточнение кол-ва")]
         DocSpecificstionQuantity,
+        [Description("Остатки на раскате ")]
         DocUnwinderRemainder,
+        [Description("Производство сырья и материалов")]
         DocMaterialProduction,
-        ProductionTask
+        [Description("Задание на производство")]
+        ProductionTask,
+        [Description("Акт на переупаковку")]
+        DocRepack
     }
     public enum PermissionMark
     {

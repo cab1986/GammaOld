@@ -406,6 +406,14 @@
         <AssociationConnector Association="GammaModel.FK_Places1CWarehouses_1CWarehouses" />
         <AssociationConnector Association="GammaModel.FK_Places1CWarehouses_Places" />
         <AssociationConnector Association="GammaModel.FK_Users_Places" />
+        <EntityTypeShape EntityType="GammaModel.DocRepack" Width="1.5" PointX="24.75" PointY="70.25" />
+        <EntityTypeShape EntityType="GammaModel.DocRepackProducts" Width="1.5" PointX="35.75" PointY="58.25" />
+        <EntityTypeShape EntityType="GammaModel.vDocRepackProducts" Width="1.5" PointX="9.375" PointY="18.75" />
+        <AssociationConnector Association="GammaModel.FK_DocRepackProducts_DocBrokeProducts" />
+        <AssociationConnector Association="GammaModel.FK_DocRepack_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocRepack_ProductionTasks" />
+        <AssociationConnector Association="GammaModel.FK_DocRepackProducts_DocRepack" />
+        <AssociationConnector Association="GammaModel.DocRepackProductWithdrawals" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

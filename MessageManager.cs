@@ -91,7 +91,17 @@ namespace Gamma
         public Guid DocId { get; private set; }
     }
 
-	public class EditDocComplectationMessage
+    public class EditDocRepackMessage
+    {
+        public EditDocRepackMessage(Guid? docId)
+        {
+            DocId = docId;
+        }
+
+        public Guid? DocId { get; private set; }
+    }
+
+    public class EditDocComplectationMessage
 	{
 		public EditDocComplectationMessage(Guid docId)
 		{
@@ -568,6 +578,22 @@ namespace Gamma
                 );
         }
 
+        public static void OpenDoc(DocTypes docType, Guid docId)
+        {
+            switch (docType)
+            {
+                case DocTypes.DocBroke:
+                    OpenDocBroke(docId);
+                    break;
+                case DocTypes.DocComplectation:
+                    OpenDocComplectation(docId);
+                    break;
+                case DocTypes.DocRepack:
+                    OpenDocRepack(docId);
+                    break;
+            }
+        }
+
         public static void OpenDocBroke(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
             Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
@@ -601,7 +627,12 @@ namespace Gamma
             Messenger.Default.Send(new EditDocMovementMessage(docId));
         }
 
-	    public static void OpenDocComplectation(Guid docId)
+        public static void OpenDocRepack(Guid? docId)
+        {
+            Messenger.Default.Send(new EditDocRepackMessage(docId));
+        }
+
+        public static void OpenDocComplectation(Guid docId)
 	    {
 		    Messenger.Default.Send(new EditDocComplectationMessage(docId));
 	    }

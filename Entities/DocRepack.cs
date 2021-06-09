@@ -12,27 +12,19 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocBrokeProducts
+    public partial class DocRepack
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocBrokeProducts()
+        public DocRepack()
         {
-            this.DocBrokeProductRejectionReasons = new HashSet<DocBrokeProductRejectionReasons>();
             this.DocRepackProducts = new HashSet<DocRepackProducts>();
         }
     
         public System.Guid DocID { get; set; }
-        public System.Guid ProductID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
-        public Nullable<int> BrokePlaceID { get; set; }
-        public Nullable<byte> BrokeShiftID { get; set; }
-        public string BrokePrintName { get; set; }
+        public Nullable<System.Guid> ProductionTaskID { get; set; }
     
-        public virtual DocBroke DocBroke { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
-        public virtual Places Places { get; set; }
-        public virtual Products Products { get; set; }
+        public virtual Docs Docs { get; set; }
+        public virtual ProductionTasks ProductionTasks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocRepackProducts> DocRepackProducts { get; set; }
     }

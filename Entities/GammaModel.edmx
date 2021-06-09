@@ -883,6 +883,37 @@
           <Property Name="IsInConfirmed" Type="bit" />
           <Property Name="IsOutConfirmed" Type="bit" />
         </EntityType>
+        <EntityType Name="DocRepack">
+          <Key>
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="DocRepackProducts">
+          <Key>
+            <PropertyRef Name="DocRepackProductID" />
+          </Key>
+          <Property Name="DocRepackProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="PersonID" Type="uniqueidentifier" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="QuantityGood" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="QuantityBroke" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="StateID" Type="tinyint" />
+          <Property Name="DocBrokeID" Type="uniqueidentifier" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+        </EntityType>
+        <EntityType Name="DocRepackProductWithdrawals">
+          <Key>
+            <PropertyRef Name="DocRepackProductID" />
+            <PropertyRef Name="DocWithdrawalID" />
+          </Key>
+          <Property Name="DocRepackProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocWithdrawalID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Docs">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1026,7 +1057,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="LocalSettings">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -1189,6 +1220,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="ProductionOut1СPlaceID" Type="uniqueidentifier" />
           <Property Name="RootPlaceID" Type="int" />
+          <Property Name="IsEnabledRepackInProductionTask" Type="bit" />
         </EntityType>
         <EntityType Name="Places1CWarehouses">
           <Key>
@@ -1561,7 +1593,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="PrimePlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1575,7 +1607,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does no
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1603,7 +1635,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primar
           <Property Name="InQuantityUnits" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1655,7 +1687,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary ke
           <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="1CNomenclatureID" />
@@ -1672,7 +1704,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not ha
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1694,7 +1726,7 @@ warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does no
           <Property Name="TypeTransition" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1720,7 +1752,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not hav
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionCompositionCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1748,7 +1780,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalc
           <Property Name="IsNotCalculatedQuantityRemainderAtEnd" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionDirectCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1776,7 +1808,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculati
           <Property Name="QuantitySendAtEnd" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1801,7 +1833,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a pr
           <Property Name="OutPlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1852,7 +1884,44 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="MovementID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocRepackProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vDocRepackProducts">
+          <Key>
+            <PropertyRef Name="DocRepackProductID" />
+            <PropertyRef Name="DocRepackID" />
+            <PropertyRef Name="DocRepackDate" />
+            <PropertyRef Name="DocRepackIsConfirmed" />
+            <PropertyRef Name="ProductID" />
+            <PropertyRef Name="1CNomenclatureID" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="ProductKindID" />
+          </Key>
+          <Property Name="DocRepackProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocRepackID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocRepackNumber" Type="varchar" MaxLength="50" />
+          <Property Name="DocRepackDate" Type="datetime" Nullable="false" />
+          <Property Name="DocRepackIsConfirmed" Type="bit" Nullable="false" />
+          <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductNumber" Type="varchar" MaxLength="20" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="MeasureUnitName" Type="varchar" MaxLength="50" />
+          <Property Name="NomenclatureName" Type="varchar" MaxLength="511" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="QuantityGood" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="QuantityBroke" Type="decimal" Precision="15" Scale="5" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="ProductKindID" Type="tinyint" Nullable="false" />
+          <Property Name="ShiftID" Type="tinyint" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
+          <Property Name="DocBrokeID" Type="uniqueidentifier" />
+          <Property Name="DocBrokeNumber" Type="varchar" MaxLength="50" />
+          <Property Name="DocBrokeDate" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewTemp.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -1864,7 +1933,7 @@ warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a pri
           <Property Name="BreakNumber" Type="tinyint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -1875,7 +1944,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have
           <Property Name="CoreDiameter" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlaceZones">
           <Key>
             <PropertyRef Name="PlaceZoneID" />
@@ -1894,7 +1963,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary 
           <Property Name="PlaceZoneRootName" Type="varchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1915,7 +1984,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionMaterials">
           <Key>
             <PropertyRef Name="ProductNomenclatureID" />
@@ -1937,7 +2006,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a
           <Property Name="1CSpecificationID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -1947,7 +2016,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1971,7 +2040,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
           <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsCurrentStateInfo">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1986,7 +2055,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not h
           <Property Name="State" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2040,7 +2109,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="KindValue" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vRobotNomenclatures">
           <Key>
             <PropertyRef Name="ProdNumber" />
@@ -4075,6 +4144,82 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocRepack_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="DocRepack" Type="Self.DocRepack" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocRepack">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepack_ProductionTasks">
+          <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="0..1" />
+          <End Role="DocRepack" Type="Self.DocRepack" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="DocRepack">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepackProducts_DocBrokeProducts">
+          <End Role="DocBrokeProducts" Type="Self.DocBrokeProducts" Multiplicity="0..1" />
+          <End Role="DocRepackProducts" Type="Self.DocRepackProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocBrokeProducts">
+              <PropertyRef Name="DocID" />
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocRepackProducts">
+              <PropertyRef Name="DocBrokeID" />
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepackProducts_DocRepack">
+          <End Role="DocRepack" Type="Self.DocRepack" Multiplicity="1" />
+          <End Role="DocRepackProducts" Type="Self.DocRepackProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocRepack">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocRepackProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepackProductWithdrawals_DocRepackProduct">
+          <End Role="DocRepackProducts" Type="Self.DocRepackProducts" Multiplicity="1" />
+          <End Role="DocRepackProductWithdrawals" Type="Self.DocRepackProductWithdrawals" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocRepackProducts">
+              <PropertyRef Name="DocRepackProductID" />
+            </Principal>
+            <Dependent Role="DocRepackProductWithdrawals">
+              <PropertyRef Name="DocRepackProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepackProductWithdrawals_DocWithdrawal">
+          <End Role="DocWithdrawal" Type="Self.DocWithdrawal" Multiplicity="1" />
+          <End Role="DocRepackProductWithdrawals" Type="Self.DocRepackProductWithdrawals" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocWithdrawal">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocRepackProductWithdrawals">
+              <PropertyRef Name="DocWithdrawalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Docs_DocTypes">
           <End Role="DocTypes" Type="Self.DocTypes" Multiplicity="0..1" />
           <End Role="Docs" Type="Self.Docs" Multiplicity="*" />
@@ -5599,6 +5744,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="GetBatchRepackProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="IntervalID" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetBatchSamples" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="IntervalID" Type="int" Mode="In" />
@@ -5842,6 +5991,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="IsPreviousDocClose" Type="bit" Mode="In" />
         </Function>
+        <Function Name="UtilizationProductInDocBroke" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="QuantityBroke" Type="decimal" Mode="In" />
+        </Function>
         <Function Name="ValidateGroupPackBeforeSave" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
@@ -5936,6 +6089,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="DocProductionProducts" EntityType="Self.DocProductionProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocProductionWithdrawals" EntityType="Self.DocProductionWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocProducts" EntityType="Self.DocProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocRepack" EntityType="Self.DocRepack" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocRepackProducts" EntityType="Self.DocRepackProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocRepackProductWithdrawals" EntityType="Self.DocRepackProductWithdrawals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Docs" EntityType="Self.Docs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocShipmentOrderPersons" EntityType="Self.DocShipmentOrderPersons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocShipmentOrders" EntityType="Self.DocShipmentOrders" Schema="dbo" store:Type="Tables" />
@@ -6251,6 +6407,33 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vDocMovementProducts].[StateName] AS [StateName], 
     [vDocMovementProducts].[MovementID] AS [MovementID]
     FROM [dbo].[vDocMovementProducts] AS [vDocMovementProducts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vDocRepackProducts" EntityType="Self.vDocRepackProducts" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vDocRepackProducts].[DocRepackProductID] AS [DocRepackProductID], 
+    [vDocRepackProducts].[DocRepackID] AS [DocRepackID], 
+    [vDocRepackProducts].[DocRepackNumber] AS [DocRepackNumber], 
+    [vDocRepackProducts].[DocRepackDate] AS [DocRepackDate], 
+    [vDocRepackProducts].[DocRepackIsConfirmed] AS [DocRepackIsConfirmed], 
+    [vDocRepackProducts].[ProductID] AS [ProductID], 
+    [vDocRepackProducts].[ProductNumber] AS [ProductNumber], 
+    [vDocRepackProducts].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vDocRepackProducts].[1CCharacteristicID] AS [1CCharacteristicID], 
+    [vDocRepackProducts].[1CMeasureUnitID] AS [1CMeasureUnitID], 
+    [vDocRepackProducts].[MeasureUnitName] AS [MeasureUnitName], 
+    [vDocRepackProducts].[NomenclatureName] AS [NomenclatureName], 
+    [vDocRepackProducts].[Quantity] AS [Quantity], 
+    [vDocRepackProducts].[QuantityGood] AS [QuantityGood], 
+    [vDocRepackProducts].[QuantityBroke] AS [QuantityBroke], 
+    [vDocRepackProducts].[Date] AS [Date], 
+    [vDocRepackProducts].[IsConfirmed] AS [IsConfirmed], 
+    [vDocRepackProducts].[ProductKindID] AS [ProductKindID], 
+    [vDocRepackProducts].[ShiftID] AS [ShiftID], 
+    [vDocRepackProducts].[ProductionTaskID] AS [ProductionTaskID], 
+    [vDocRepackProducts].[DocBrokeID] AS [DocBrokeID], 
+    [vDocRepackProducts].[DocBrokeNumber] AS [DocBrokeNumber], 
+    [vDocRepackProducts].[DocBrokeDate] AS [DocBrokeDate]
+    FROM [dbo].[vDocRepackProducts] AS [vDocRepackProducts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vGroupPackSpools" EntityType="Self.vGroupPackSpools" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -7066,6 +7249,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocProducts" EntitySet="DocProducts" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocRepack_Docs" Association="Self.FK_DocRepack_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocRepack" EntitySet="DocRepack" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepack_ProductionTasks" Association="Self.FK_DocRepack_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="DocRepack" EntitySet="DocRepack" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepackProducts_DocBrokeProducts" Association="Self.FK_DocRepackProducts_DocBrokeProducts">
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+            <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepackProducts_DocRepack" Association="Self.FK_DocRepackProducts_DocRepack">
+            <End Role="DocRepack" EntitySet="DocRepack" />
+            <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepackProductWithdrawals_DocRepackProduct" Association="Self.FK_DocRepackProductWithdrawals_DocRepackProduct">
+            <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
+            <End Role="DocRepackProductWithdrawals" EntitySet="DocRepackProductWithdrawals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepackProductWithdrawals_DocWithdrawal" Association="Self.FK_DocRepackProductWithdrawals_DocWithdrawal">
+            <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+            <End Role="DocRepackProductWithdrawals" EntitySet="DocRepackProductWithdrawals" />
+          </AssociationSet>
           <AssociationSet Name="FK_Docs_DocTypes" Association="Self.FK_Docs_DocTypes">
             <End Role="DocTypes" EntitySet="DocTypes" />
             <End Role="Docs" EntitySet="Docs" />
@@ -7733,6 +7940,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocWithdrawal_Places" FromRole="DocWithdrawal" ToRole="Places" />
           <NavigationProperty Name="DocComplectation" Relationship="GammaModel.DocComplectationWithdrawals" FromRole="DocWithdrawal" ToRole="DocComplectation" />
           <NavigationProperty Name="DocBrokeDecisionProductWithdrawalProducts" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocWithdrawal" FromRole="DocWithdrawal" ToRole="DocBrokeDecisionProductWithdrawalProducts" />
+          <NavigationProperty Name="DocRepackProducts" Relationship="GammaModel.DocRepackProductWithdrawals" FromRole="DocWithdrawal" ToRole="DocRepackProducts" />
           </EntityType>
         <EntityType Name="Enterprises">
           <Key>
@@ -9749,6 +9957,37 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImport Name="GetProductKinds" IsComposable="true" ReturnType="Collection(GammaModel.GetProductKinds_Result)">
           <Parameter Name="ParentID" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="DocRepack" EntityType="GammaModel.DocRepack" />
+          <EntitySet Name="DocRepackProducts" EntityType="GammaModel.DocRepackProducts" />
+          <EntitySet Name="vDocRepackProducts" EntityType="GammaModel.vDocRepackProducts" />
+          <AssociationSet Name="FK_DocRepackProducts_DocBrokeProducts" Association="GammaModel.FK_DocRepackProducts_DocBrokeProducts">
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+            <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepack_Docs" Association="GammaModel.FK_DocRepack_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocRepack" EntitySet="DocRepack" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepack_ProductionTasks" Association="GammaModel.FK_DocRepack_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="DocRepack" EntitySet="DocRepack" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocRepackProducts_DocRepack" Association="GammaModel.FK_DocRepackProducts_DocRepack">
+            <End Role="DocRepack" EntitySet="DocRepack" />
+            <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
+          </AssociationSet>
+          <FunctionImport Name="GetBatchRepackProducts" ReturnType="Collection(GammaModel.GetBatchRepackProducts_Result)">
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+            <Parameter Name="IntervalID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <AssociationSet Name="DocRepackProductWithdrawals" Association="GammaModel.DocRepackProductWithdrawals">
+            <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
+            <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
+          </AssociationSet>
+          <FunctionImport Name="UtilizationProductInDocBroke" ReturnType="Collection(GammaModel.UtilizationProductInDocBroke_Result)">
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+            <Parameter Name="QuantityBroke"  Mode="In" Type="Decimal" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10147,6 +10386,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskConvertingSamples" />
           <Property Name="C1CSpecificationID" Type="Guid" />
           <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepack_ProductionTasks" FromRole="ProductionTasks" ToRole="DocRepack" />
         </EntityType>
         <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
@@ -11000,6 +11240,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocMaterialTankRemainders" Relationship="GammaModel.FK_DocMaterialTankRemainders_Docs" FromRole="Docs" ToRole="DocMaterialTankRemainders" />
           <NavigationProperty Name="DocMaterialProductDocs" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs" ToRole="Docs1" />
           <NavigationProperty Name="DocMaterialProduct" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs1" ToRole="Docs" />
+          <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepack_Docs" FromRole="Docs" ToRole="DocRepack" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -11517,6 +11758,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocBrokeProductRejectionReasons" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_DocBrokeProducts" FromRole="DocBrokeProducts" ToRole="DocBrokeProductRejectionReasons" />
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocBrokeProducts_Places" FromRole="DocBrokeProducts" ToRole="Places" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeProducts_Products" FromRole="DocBrokeProducts" ToRole="Products" />
+          <NavigationProperty Name="DocRepackProducts" Relationship="GammaModel.FK_DocRepackProducts_DocBrokeProducts" FromRole="DocBrokeProducts" ToRole="DocRepackProducts" />
         </EntityType>
         <Association Name="FK_DocBrokeProducts_DocBroke">
           <End Type="GammaModel.DocBroke" Role="DocBroke" Multiplicity="1" />
@@ -11730,6 +11972,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductionOut1СPlaceID" Type="Guid" />
           <Property Name="RootPlaceID" Type="Int32" />
           <NavigationProperty Name="Users1" Relationship="GammaModel.FK_Users_Places" FromRole="Places" ToRole="Users" />
+          <Property Name="IsEnabledRepackInProductionTask" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -15252,6 +15495,156 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Int32" Name="IsFolder" Nullable="true" />
           <Property Type="Int32" Name="NomenclatureKindID" Nullable="true" />
         </ComplexType>
+        <EntityType Name="DocRepack">
+          <Key>
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="Guid" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocRepack_Docs" FromRole="DocRepack" ToRole="Docs" />
+          <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_DocRepack_ProductionTasks" FromRole="DocRepack" ToRole="ProductionTasks" />
+          <NavigationProperty Name="DocRepackProducts" Relationship="GammaModel.FK_DocRepackProducts_DocRepack" FromRole="DocRepack" ToRole="DocRepackProducts" />
+        </EntityType>
+        <EntityType Name="DocRepackProducts">
+          <Key>
+            <PropertyRef Name="DocRepackProductID" />
+          </Key>
+          <Property Name="DocRepackProductID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="PersonID" Type="Guid" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="QuantityGood" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="QuantityBroke" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="StateID" Type="Byte" />
+          <Property Name="DocBrokeID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
+          <NavigationProperty Name="DocBrokeProducts" Relationship="GammaModel.FK_DocRepackProducts_DocBrokeProducts" FromRole="DocRepackProducts" ToRole="DocBrokeProducts" />
+          <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepackProducts_DocRepack" FromRole="DocRepackProducts" ToRole="DocRepack" />
+          <NavigationProperty Name="DocWithdrawal" Relationship="GammaModel.DocRepackProductWithdrawals" FromRole="DocRepackProducts" ToRole="DocWithdrawal" />
+        </EntityType>
+        <EntityType Name="vDocRepackProducts">
+          <Key>
+            <PropertyRef Name="DocRepackProductID" />
+            <PropertyRef Name="DocRepackID" />
+            <PropertyRef Name="DocRepackDate" />
+            <PropertyRef Name="DocRepackIsConfirmed" />
+            <PropertyRef Name="ProductID" />
+            <PropertyRef Name="C1CNomenclatureID" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="ProductKindID" />
+          </Key>
+          <Property Name="DocRepackProductID" Type="Guid" Nullable="false" />
+          <Property Name="DocRepackID" Type="Guid" Nullable="false" />
+          <Property Name="DocRepackNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DocRepackDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DocRepackIsConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="ProductID" Type="Guid" Nullable="false" />
+          <Property Name="ProductNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="MeasureUnitName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NomenclatureName" Type="String" MaxLength="511" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="QuantityGood" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="QuantityBroke" Type="Decimal" Precision="15" Scale="5" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsConfirmed" Type="Boolean" />
+          <Property Name="ProductKindID" Type="Byte" Nullable="false" />
+          <Property Name="ShiftID" Type="Byte" />
+          <Property Name="ProductionTaskID" Type="Guid" />
+          <Property Name="DocBrokeID" Type="Guid" />
+          <Property Name="DocBrokeNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DocBrokeDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_DocRepackProducts_DocBrokeProducts">
+          <End Type="GammaModel.DocBrokeProducts" Role="DocBrokeProducts" Multiplicity="0..1" />
+          <End Type="GammaModel.DocRepackProducts" Role="DocRepackProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocBrokeProducts">
+              <PropertyRef Name="DocID" />
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocRepackProducts">
+              <PropertyRef Name="DocBrokeID" />
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepack_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GammaModel.DocRepack" Role="DocRepack" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocRepack">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepack_ProductionTasks">
+          <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="0..1" />
+          <End Type="GammaModel.DocRepack" Role="DocRepack" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="DocRepack">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocRepackProducts_DocRepack">
+          <End Type="GammaModel.DocRepack" Role="DocRepack" Multiplicity="1" />
+          <End Type="GammaModel.DocRepackProducts" Role="DocRepackProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocRepack">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocRepackProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetBatchRepackProducts_Result">
+          <Property Type="Guid" Name="DocRepackProductID" Nullable="false" />
+          <Property Type="Guid" Name="DocRepackID" Nullable="false" />
+          <Property Type="String" Name="DocRepackNumber" Nullable="true" MaxLength="66" />
+          <Property Type="Boolean" Name="DocRepackIsConfirmed" Nullable="false" />
+          <Property Type="Guid" Name="ProductID" Nullable="false" />
+          <Property Type="String" Name="ProductNumber" Nullable="true" MaxLength="20" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="Guid" Name="C1CMeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="15" Scale="5" />
+          <Property Type="Decimal" Name="QuantityGood" Nullable="true" Precision="15" Scale="5" />
+          <Property Type="Decimal" Name="QuantityBroke" Nullable="true" Precision="15" Scale="5" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+          <Property Type="Boolean" Name="IsConfirmed" Nullable="true" />
+          <Property Type="Byte" Name="ProductKindID" Nullable="false" />
+          <Property Type="Byte" Name="ShiftID" Nullable="true" />
+          <Property Type="Guid" Name="ProductionTaskID" Nullable="true" />
+          <Property Type="Guid" Name="DocBrokeID" Nullable="true" />
+          <Property Type="String" Name="DocBrokeNumber" Nullable="true" MaxLength="66" />
+        </ComplexType>
+        <Association Name="DocRepackProductWithdrawals">
+          <End Type="GammaModel.DocRepackProducts" Role="DocRepackProducts" Multiplicity="*" />
+          <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="UtilizationProductInDocBroke_Result">
+          <Property Type="Guid" Name="DocBrokeID" Nullable="true" />
+          <Property Type="String" Name="DocBrokeNumber" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="QuantityBroke" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
+          <Property Type="Decimal" Name="QuantityGood" Nullable="true" Precision="18" Scale="5" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -16823,6 +17216,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsEnabledRepackInProductionTask" ColumnName="IsEnabledRepackInProductionTask" />
                 <ScalarProperty Name="RootPlaceID" ColumnName="RootPlaceID" />
                 <ScalarProperty Name="ProductionOut1СPlaceID" ColumnName="ProductionOut1СPlaceID" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
@@ -18229,6 +18623,106 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
                 <ScalarProperty Name="NomenclatureKindID" ColumnName="NomenclatureKindID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="DocRepack">
+            <EntityTypeMapping TypeName="GammaModel.DocRepack">
+              <MappingFragment StoreEntitySet="DocRepack">
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocRepackProducts">
+            <EntityTypeMapping TypeName="GammaModel.DocRepackProducts">
+              <MappingFragment StoreEntitySet="DocRepackProducts">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="QuantityBroke" ColumnName="QuantityBroke" />
+                <ScalarProperty Name="QuantityGood" ColumnName="QuantityGood" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocRepackProductID" ColumnName="DocRepackProductID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vDocRepackProducts">
+            <EntityTypeMapping TypeName="GammaModel.vDocRepackProducts">
+              <MappingFragment StoreEntitySet="vDocRepackProducts">
+                <ScalarProperty Name="DocBrokeDate" ColumnName="DocBrokeDate" />
+                <ScalarProperty Name="DocBrokeNumber" ColumnName="DocBrokeNumber" />
+                <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="QuantityBroke" ColumnName="QuantityBroke" />
+                <ScalarProperty Name="QuantityGood" ColumnName="QuantityGood" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocRepackIsConfirmed" ColumnName="DocRepackIsConfirmed" />
+                <ScalarProperty Name="DocRepackDate" ColumnName="DocRepackDate" />
+                <ScalarProperty Name="DocRepackNumber" ColumnName="DocRepackNumber" />
+                <ScalarProperty Name="DocRepackID" ColumnName="DocRepackID" />
+                <ScalarProperty Name="DocRepackProductID" ColumnName="DocRepackProductID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetBatchRepackProducts" FunctionName="GammaDBModel.GetBatchRepackProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetBatchRepackProducts_Result">
+                <ScalarProperty Name="DocRepackProductID" ColumnName="DocRepackProductID" />
+                <ScalarProperty Name="DocRepackID" ColumnName="DocRepackID" />
+                <ScalarProperty Name="DocRepackNumber" ColumnName="DocRepackNumber" />
+                <ScalarProperty Name="DocRepackIsConfirmed" ColumnName="DocRepackIsConfirmed" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductNumber" ColumnName="ProductNumber" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="QuantityGood" ColumnName="QuantityGood" />
+                <ScalarProperty Name="QuantityBroke" ColumnName="QuantityBroke" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="ProductKindID" ColumnName="ProductKindID" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
+                <ScalarProperty Name="DocBrokeNumber" ColumnName="DocBrokeNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <AssociationSetMapping Name="DocRepackProductWithdrawals" TypeName="GammaModel.DocRepackProductWithdrawals" StoreEntitySet="DocRepackProductWithdrawals">
+            <EndProperty Name="DocWithdrawal">
+              <ScalarProperty Name="DocID" ColumnName="DocWithdrawalID" />
+            </EndProperty>
+            <EndProperty Name="DocRepackProducts">
+              <ScalarProperty Name="DocRepackProductID" ColumnName="DocRepackProductID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="UtilizationProductInDocBroke" FunctionName="GammaDBModel.UtilizationProductInDocBroke">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.UtilizationProductInDocBroke_Result">
+                <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
+                <ScalarProperty Name="DocBrokeNumber" ColumnName="DocBrokeNumber" />
+                <ScalarProperty Name="QuantityBroke" ColumnName="QuantityBroke" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="QuantityGood" ColumnName="QuantityGood" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

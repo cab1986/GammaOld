@@ -6,6 +6,9 @@ using Gamma.Interfaces;
 using Gamma.Models;
 using System.Data.Entity;
 using System.Windows;
+using DevExpress.Mvvm;
+using Gamma.Common;
+
 
 namespace Gamma.ViewModels
 {
@@ -31,7 +34,7 @@ namespace Gamma.ViewModels
                 Date = doc.Date;
                 PrintName = doc.PrintName;
                 DocNumber = doc.Number;
-                Place = doc.DocWithdrawal.Places?.Name;
+                Place = doc.Places?.Name;
                 UserName = doc.Users?.Name;
                 ShiftID = doc.ShiftID;
                 IsConfirmed = doc.IsConfirmed || !AllowEditDoc;
@@ -65,10 +68,25 @@ namespace Gamma.ViewModels
                 var docProductionIDs = dW?.DocProduction?.Select(x => x.DocID).ToList();
                 ProductWithdrawals = docProductionIDs == null ? new ObservableCollection<Products>() : new ObservableCollection<Products>(
                     gammaBase.Products.Where(x => x.DocProductionProducts.Any(dpp => docProductionIDs.Contains(dpp.DocID))));
+                var groundDoc = dW?.DocComplectation?.FirstOrDefault()?.Docs ?? dW?.DocBrokeDecisionProductWithdrawalProducts?.FirstOrDefault()?.DocBroke?.Docs ?? dW?.DocRepackProducts?.FirstOrDefault()?.DocRepack?.Docs;
+                if (groundDoc != null)
+                {
+                    GroundDocId = groundDoc.DocID;
+                    GroundDocTypeId = groundDoc.DocTypeID;
+                    var groundDocType = (DocTypes)GroundDocTypeId;
+                    var enumType = typeof(DocTypes);
+                    var memberInfos = enumType.GetMember(groundDocType.ToString());
+                    var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+                    var valueAttributes =
+                          enumValueMemberInfo.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false);
+                    var description = ((System.ComponentModel.DescriptionAttribute)valueAttributes[0]).Description;
+                    GroundDocInfo = description + " № " + groundDoc.Number + " от " + groundDoc.Date;
+                }
             }
+            OpendGroundDocCommand = new DelegateCommand(OpenGroundDoc, () => GroundDocId != null);
             AllowEditDoc = DB.AllowEditDoc(DocId);
             IsReadOnly = !DB.HaveWriteAccess("DocWithdrawalProducts") || (IsConfirmed && IsValid);
-        }
+        }       
 
         public bool IsReadOnly { get; }
         public bool IsAllowEditing
@@ -156,6 +174,19 @@ namespace Gamma.ViewModels
             }
         }
 
+        private Guid? GroundDocId { get; set; }
+        private int? GroundDocTypeId { get; set; }
+        public string GroundDocInfo { get; set; }
+        public DelegateCommand OpendGroundDocCommand { get; private set; }
+
+        private void OpenGroundDoc()
+        {
+            if (GroundDocId != null)
+            {
+                UIServices.SetBusyState();
+                MessageManager.OpenDoc((DocTypes)GroundDocTypeId, (Guid)GroundDocId);
+            }
+        }
 
         public override bool CanSaveExecute()
         {

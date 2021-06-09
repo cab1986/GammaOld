@@ -12,28 +12,29 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocBrokeProducts
+    public partial class DocRepackProducts
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocBrokeProducts()
+        public DocRepackProducts()
         {
-            this.DocBrokeProductRejectionReasons = new HashSet<DocBrokeProductRejectionReasons>();
-            this.DocRepackProducts = new HashSet<DocRepackProducts>();
+            this.DocWithdrawal = new HashSet<DocWithdrawal>();
         }
     
+        public System.Guid DocRepackProductID { get; set; }
         public System.Guid DocID { get; set; }
         public System.Guid ProductID { get; set; }
+        public Nullable<bool> IsConfirmed { get; set; }
+        public Nullable<System.Guid> PersonID { get; set; }
+        public System.DateTime Date { get; set; }
+        public Nullable<decimal> QuantityGood { get; set; }
+        public Nullable<decimal> QuantityBroke { get; set; }
+        public Nullable<byte> StateID { get; set; }
+        public Nullable<System.Guid> DocBrokeID { get; set; }
         public Nullable<decimal> Quantity { get; set; }
-        public Nullable<int> BrokePlaceID { get; set; }
-        public Nullable<byte> BrokeShiftID { get; set; }
-        public string BrokePrintName { get; set; }
     
-        public virtual DocBroke DocBroke { get; set; }
+        public virtual DocBrokeProducts DocBrokeProducts { get; set; }
+        public virtual DocRepack DocRepack { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
-        public virtual Places Places { get; set; }
-        public virtual Products Products { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocRepackProducts> DocRepackProducts { get; set; }
+        public virtual ICollection<DocWithdrawal> DocWithdrawal { get; set; }
     }
 }

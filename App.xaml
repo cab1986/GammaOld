@@ -168,5 +168,6 @@
         <Style TargetType="{x:Type v:DocWithdrawalView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:DocUnwinderRemainderView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
         <Style TargetType="{x:Type v:DocMaterialProductionView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}"/>
+        <Style TargetType="{x:Type v:DocRepackView}" BasedOn="{StaticResource ResourceKey=DefaultWindowStyle}" />
     </Application.Resources>
 </Application>

@@ -44,28 +44,32 @@ namespace Gamma.ViewModels
                 {
                     case 0:
                         DocWithdrawals = gammaBase.Docs.Where(
-                            d => d.DocTypeID == (int)DocTypes.DocWithdrawal
+                            d => d.DocTypeID == (int)DocTypes.DocWithdrawal || d.DocTypeID == (int)DocTypes.DocUtilization
                             ).OrderByDescending(d => d.Date).Take(500).Select(d => new DocWithdrawalsItem
                             {
                                 DocId = d.DocID,
                                 Number = d.Number,
                                 Place = d.Places.Name,
-                                Date = d.Date
+                                Date = d.Date,
+                                ShiftID = d.ShiftID,
+                                IsConfirmed = d.IsConfirmed
                             }).ToList();
                         break;
                     case 1:
                         DocWithdrawals = gammaBase.Docs.Where(
-                            d => d.DocTypeID == (int)DocTypes.DocWithdrawal &&
+                            d => (d.DocTypeID == (int)DocTypes.DocWithdrawal || d.DocTypeID == (int)DocTypes.DocUtilization) &&
                                 (DateBegin == null || d.Date >= DateBegin) &&
                                 (DateEnd == null || d.Date <= DateEnd) &&
                                 (PlaceId == null || d.PlaceID == PlaceId) &&
-                                (string.IsNullOrWhiteSpace(Number) || d.Number.Contains(Number))
+                                (Number == null || Number == string.Empty || d.Number.Contains(Number))
                             ).OrderByDescending(d => d.Date).Take(500).Select(d => new DocWithdrawalsItem
                             {
                                 DocId = d.DocID,
                                 Number = d.Number,
                                 Place = d.Places.Name,
-                                Date = d.Date
+                                Date = d.Date,
+                                ShiftID = d.ShiftID,
+                                IsConfirmed = d.IsConfirmed
                             }).ToList();
                         break;
                     

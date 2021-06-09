@@ -59,12 +59,14 @@
         <dxg:GridControl EnableSmartColumnsGeneration="False" Grid.Row="1" ItemsSource="{Binding DocWithdrawals}" SelectedItem="{Binding SelectedDocWithdrawal}" AllowLiveDataShaping="False" >
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
-                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="80" >
+                <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="140" >
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Передел" FieldName="Place"/>
+                <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
+                <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" Width="100"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>

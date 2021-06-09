@@ -41,6 +41,13 @@
                 <dxlc:LayoutItem Label="Смена" LabelPosition="Top">
                     <dxe:TextEdit EditValue="{Binding ShiftID}" IsReadOnly="True"/>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Основание" LabelPosition="Top">
+                    <dxe:ButtonEdit AllowDefaultButton="False" EditValue="{Binding GroundDocInfo}" IsReadOnly="True">
+                        <dxe:ButtonEdit.Buttons>
+                            <dxe:ButtonInfo Command="{Binding OpendGroundDocCommand}" Content="i"/>
+                        </dxe:ButtonEdit.Buttons>
+                    </dxe:ButtonEdit>
+                </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Подтвержден:">
                     <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left" IsReadOnly="False"/>
                 </dxlc:LayoutItem>

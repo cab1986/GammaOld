@@ -15,6 +15,7 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:common="clr-namespace:Gamma.Common"
         xmlns:dialogs="clr-namespace:Gamma.Dialogs"
+        xmlns:models="clr-namespace:Gamma.Models"
         x:Class="Gamma.Views.ProductionTaskBatchView"
         mc:Ignorable="d ignore" d:DesignHeight="900" d:DesignWidth="1700"
         common:WindowSettings.Save="True"
@@ -164,10 +165,100 @@
                             <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
                         </dxg:GridControl.View>
                         <dxmvvm:Interaction.Behaviors>
-                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"/>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"
+                                                   CommandParameter="{Binding SelectedProductionTaskProduct.ProductID}"/>
                         </dxmvvm:Interaction.Behaviors>
                     </dxg:GridControl>
 
+                </Grid>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Переупаковка"  Visibility="{Binding IsEnabledRepack, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <dxb:BarManager>
+                        <dxb:BarManager.Bars>
+                            <dxb:Bar>
+                                <dxb:BarButtonItem Content="Обновить" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshRepackCommand}"/>
+                                <dxb:BarItemSeparator />
+                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding AddRepackCommand}"/>                                
+                            </dxb:Bar>
+                        </dxb:BarManager.Bars>
+                    </dxb:BarManager>
+                    <dxlc:LayoutControl Grid.Row="1">
+                        <dxlc:LayoutItem Label="Диапазон:">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding RepackIntervalid}" x:Name="RepackIntervalList" IsTextEditable="False"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutControl>
+                    <dxg:GridControl Grid.Row="2" ItemsSource="{Binding Repacks}" DesignTimeDataObjectType="{x:Type models:RepackProduct}" 
+                                     SelectionMode="Row" SelectedItem="{Binding SelectedRepack}" EnableSmartColumnsGeneration="True" >
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="ProductNumber" ReadOnly="True" VisibleIndex="1"  Header="Номер"  Width="80"/>
+                            <dxg:GridColumn FieldName="Date" Header="Дата" ReadOnly="True" VisibleIndex="2" Width="120" FixedWidth="True" SortOrder="Descending" SortIndex="1">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="ShiftID" Header="Смена" VisibleIndex="3" Width="28" />
+                            <dxg:GridColumn FieldName="NomenclatureName" ReadOnly="True" VisibleIndex="4"  Header="Номенклатура"/>
+                            <dxg:GridColumn FieldName="Quantity" ReadOnly="True" Header="Кол-во" VisibleIndex="5" Width="100" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" DisplayFormat="0.###"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="QuantityGood" ReadOnly="True" Header="Годная" VisibleIndex="6" Width="80" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" DisplayFormat="0.###"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="QuantityBroke" ReadOnly="True" Header="Утилизировано" VisibleIndex="7" Width="80" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" DisplayFormat="0.###"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="DocBrokeNumber" Header="Акт о браке" VisibleIndex="8"  Width="120"/>
+                            <dxg:GridColumn FieldName="DocRepackNumber" Header="Акт переупаковки" GroupIndex="0" SortOrder="Descending" SortIndex="0">
+                                <!--<dxg:GridColumn.DisplayTemplate>
+                                    <ControlTemplate>
+                                        <Button Content="DocRepackNumber"/>
+                                    </ControlTemplate>
+                                </dxg:GridColumn.DisplayTemplate>
+                                <dxg:GridColumn.EditTemplate>
+                                    <ControlTemplate>
+                                        <Button Content="DocRepackNumber" Command="{Binding Path=RowData.Row.ShowRepackCommand}"/>
+                                    </ControlTemplate>
+                                </dxg:GridColumn.EditTemplate>-->
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="ShiftID" SummaryType="Max" DisplayFormat="Смена {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem FieldName="Quantity" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"  EnableImmediatePosting="True"  GroupSummaryDisplayMode="AlignByColumns">
+                                <dxg:TableView.GroupValueTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding RowData.Row.DocRepackNumber}"  Command="{Binding RowData.Row.ShowRepackCommand}" />
+                                    </DataTemplate>
+                                </dxg:TableView.GroupValueTemplate>
+                                <!--<dxg:TableView.GroupColumnSummaryItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Value}" Command="{Binding View.DataContext.ShowRepackCommand}"/>
+                                    </DataTemplate>
+                                </dxg:TableView.GroupColumnSummaryItemTemplate>-->
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowProductCommand}"
+                                                   CommandParameter="{Binding SelectedRepack.ProductID}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
                 </Grid>
             </dx:DXTabItem>
             <dx:DXTabItem Header="Отобранные образцы"  Visibility="{Binding IsEnabledSamples, Converter={StaticResource BooleanToVisibilityConverter}}">

@@ -14,9 +14,9 @@ namespace Gamma.Controllers
 		/// <param name="productId"></param>
 		/// <param name="docId">DocWithdrawalId, if null new document</param>
 		/// <returns>True if success</returns>
-		public bool WithdrawProduct(Guid productId, Guid docId, bool isConfirmed)
+		public bool WithdrawProduct(Guid productId, Guid docId, bool isConfirmed, GammaEntities currentContext = null )
 		{
-			using (var context = DB.GammaDb)
+			using (var context = currentContext ?? DB.GammaDb)
 			{
 				var docWithdrawal = context.Docs.Include(d => d.DocWithdrawal)
 					.Include(d => d.DocWithdrawal.DocWithdrawalProducts)

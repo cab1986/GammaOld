@@ -167,6 +167,9 @@ namespace Gamma.Entities
         public virtual DbSet<vDocMaterialProductionDirectCalculations> vDocMaterialProductionDirectCalculations { get; set; }
         public virtual DbSet<vPlaceZones> vPlaceZones { get; set; }
         public virtual DbSet<Places1CWarehouses> Places1CWarehouses { get; set; }
+        public virtual DbSet<DocRepack> DocRepack { get; set; }
+        public virtual DbSet<DocRepackProducts> DocRepackProducts { get; set; }
+        public virtual DbSet<vDocRepackProducts> vDocRepackProducts { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1543,6 +1546,32 @@ namespace Gamma.Entities
                 new ObjectParameter("ParentID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetProductKinds_Result>("[GammaEntities].[GetProductKinds](@ParentID)", parentIDParameter);
+        }
+    
+        public virtual ObjectResult<GetBatchRepackProducts_Result> GetBatchRepackProducts(Nullable<System.Guid> productionTaskBatchID, Nullable<int> intervalID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            var intervalIDParameter = intervalID.HasValue ?
+                new ObjectParameter("IntervalID", intervalID) :
+                new ObjectParameter("IntervalID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchRepackProducts_Result>("GetBatchRepackProducts", productionTaskBatchIDParameter, intervalIDParameter);
+        }
+    
+        public virtual ObjectResult<UtilizationProductInDocBroke_Result> UtilizationProductInDocBroke(Nullable<System.Guid> productID, Nullable<decimal> quantityBroke)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+
+            var quantityBrokeParameter = quantityBroke.HasValue ?
+                new ObjectParameter("QuantityBroke", quantityBroke) :
+                new ObjectParameter("QuantityBroke", typeof(decimal));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductInDocBroke_Result>("UtilizationProductInDocBroke", productIDParameter, quantityBrokeParameter);
         }
     }
 }

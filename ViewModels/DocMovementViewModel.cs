@@ -157,7 +157,7 @@ namespace Gamma.ViewModels
                     MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedProduct.ProductId);
                     break;
                 default:
-                    MessageBox.Show("Ошибка программы, действие не предусмотрено");
+                    //MessageBox.Show("Ошибка программы, действие не предусмотрено");
                     return;
             }
         }

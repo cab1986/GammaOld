@@ -120,5 +120,6 @@ namespace Gamma.Entities
         public virtual ICollection<Docs> DocMaterialProductDocs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Docs> DocMaterialProduct { get; set; }
+        public virtual DocRepack DocRepack { get; set; }
     }
 }

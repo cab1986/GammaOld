@@ -8,5 +8,7 @@ namespace Gamma.Models
         public string Number { get; set; }
         public DateTime Date { get; set; }
         public string Place { get; set; }
+        public byte? ShiftID { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

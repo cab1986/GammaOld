@@ -37,7 +37,7 @@ namespace Gamma.ViewModels
                 TaskStates.Remove(3);
             ProcessModels = new ProcessModels().ToDictionary();
             RefreshProductionCommand = new DelegateCommand(RefreshProduction);
-            ShowProductCommand = new DelegateCommand(ShowProduct, () => SelectedProductionTaskProduct != null);
+            ShowProductCommand = new DelegateCommand<Guid>(ShowProduct);//, () => SelectedProductionTaskProduct != null);
             DeleteProdutCommand = new DelegateCommand(DeleteProduct, () => SelectedProductionTaskProduct != null);
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => ProductionTaskStateID == (byte)ProductionTaskStates.InProduction);
             Intervals = new List<string> { "Все", "За мою смену", "За последние сутки"};
@@ -63,6 +63,7 @@ namespace Gamma.ViewModels
             {
                 GetProductionTaskInfo(ProductionTaskBatchID);
                 RefreshProduction();
+                RefreshRepack();
                 RefreshSample();
                 Title = "Задание на производство № " + Number;
             }
@@ -104,6 +105,9 @@ namespace Gamma.ViewModels
             PrintGroupPackLabelCommand = new DelegateCommand(PrintGroupPackLabel, CanPrintGroupPack);
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
+            AddRepackCommand = new DelegateCommand(AddRepack);
+            RefreshRepackCommand = new DelegateCommand(RefreshRepack);
+            //DeleteRepackCommand = new DelegateCommand(DeleteRepack, () => SelectedRepack != null);
             AddSampleCommand = new DelegateCommand(AddSample);
             ShowSampleCommand = new DelegateCommand(ShowSample, () => SelectedSample != null);
             DeleteSampleCommand = new DelegateCommand(DeleteSample, () => SelectedSample != null);
@@ -588,6 +592,8 @@ namespace Gamma.ViewModels
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
             if (productionTaskBatch?.ProductionTasks.FirstOrDefault().Places?.IsEnabledSamplesInDocCloseShift != null)
                 IsEnabledSamples = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places.IsEnabledSamplesInDocCloseShift ?? true;
+            if (productionTaskBatch?.ProductionTasks.FirstOrDefault().Places?.IsEnabledRepackInProductionTask != null)
+                IsEnabledRepack = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places.IsEnabledRepackInProductionTask ?? true;
         }
 
         private void ChangeCurrentView(BatchKinds batchKind)
@@ -1224,7 +1230,7 @@ namespace Gamma.ViewModels
                 (DB.HaveWriteAccess("ProductionTasks"));
         }
         public DelegateCommand RefreshProductionCommand { get; private set; }
-        public DelegateCommand ShowProductCommand { get; private set; }
+        public DelegateCommand<Guid> ShowProductCommand { get; private set; }
         private ProductInfo _selectedProductionTaskProduct;
         public ProductInfo SelectedProductionTaskProduct
         {
@@ -1332,24 +1338,26 @@ namespace Gamma.ViewModels
                     break;
             }
             }
-        private void ShowProduct()
+        private void ShowProduct(Guid productID)
         {
-            switch (SelectedProductionTaskProduct.ProductKind)
+            //var productKind = (ProductionTaskProducts != null ? ProductionTaskProducts.FirstOrDefault(p => p.ProductID == productID)?.ProductKind : (ProductKind?)null) ?? (Repacks != null ? Repacks.FirstOrDefault(p => p.ProductID == productID)?.ProductKind : (ProductKind?)null);
+            var productKind = Repacks.FirstOrDefault(p => p.ProductID == productID)?.ProductKind ?? ProductionTaskProducts?.FirstOrDefault(p => p.ProductID == productID)?.ProductKind;
+            switch (productKind)
             {
                 case ProductKind.ProductSpool:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedProductionTaskProduct.ProductID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productID);
                     break;
                 case ProductKind.ProductGroupPack:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, SelectedProductionTaskProduct.ProductID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, productID);
                     break;
                 case ProductKind.ProductPallet:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, SelectedProductionTaskProduct.ProductID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPallet, productID);
                     break;
                 case ProductKind.ProductPalletR:
-                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, SelectedProductionTaskProduct.ProductID);
+                    MessageManager.OpenDocProduct(DocProductKinds.DocProductPalletR, productID);
                     break;
                 default:
-                    MessageBox.Show("Ошибка программы, действие не предусмотрено");
+                    //MessageBox.Show("Ошибка программы, действие не предусмотрено");
                     return;
             }
         }
@@ -1691,6 +1699,107 @@ namespace Gamma.ViewModels
             RefreshSample();
         }
 
+        public DelegateCommand AddRepackCommand { get; private set; }
+        public DelegateCommand ShowRepackCommand { get; private set; }
+        //public DelegateCommand DeleteRepackCommand { get; private set; }
+        public DelegateCommand RefreshRepackCommand { get; private set; }
+
+        private int _RepackIntervalid;
+
+        public int RepackIntervalid
+        {
+            get { return _RepackIntervalid; }
+            set
+            {
+                if (_RepackIntervalid == value) return;
+                _RepackIntervalid = value < 0 ? 0 : value;
+                if (_RepackIntervalid < 3) RefreshRepack();
+            }
+        }
+        public bool IsEnabledRepack { get; set; } = false;
+
+        private ItemsChangeObservableCollection<RepackProduct> _Repacks = new ItemsChangeObservableCollection<RepackProduct>();
+        public ItemsChangeObservableCollection<RepackProduct> Repacks
+        {
+            get
+            {
+                return _Repacks;
+            }
+            set
+            {
+                _Repacks = value;
+                RaisePropertyChanged("Repacks");
+            }
+        }
+
+        private RepackProduct _selectedRepack;
+        public RepackProduct SelectedRepack
+        {
+            get
+            {
+                return _selectedRepack;
+            }
+            set
+            {
+                _selectedRepack = value;
+                RaisePropertyChanged("SelectedRepack");
+            }
+        }
+
+        private void RefreshRepack()
+        {
+            Repacks = new ItemsChangeObservableCollection<RepackProduct>
+                (from Repack in GammaBase.GetBatchRepackProducts(ProductionTaskBatchID, RepackIntervalid)
+                 select new RepackProduct
+                 {
+                     DocRepackID = Repack.DocRepackID,
+                     DocRepackNumber = Repack.DocRepackNumber,
+                     ProductID = Repack.ProductID,
+                     ProductNumber = Repack.ProductNumber,
+                     NomenclatureID = Repack.C1CNomenclatureID,
+                     CharacteristicID = Repack.C1CCharacteristicID,
+                     NomenclatureName = Repack.NomenclatureName,
+                     Date = Repack.Date,
+                     Quantity = Repack.Quantity ?? 0,
+                     QuantityGood = Repack.QuantityGood,
+                     QuantityBroke = Repack.QuantityBroke,
+                     ShiftID = Repack.ShiftID ?? 0,
+                     ProductionTaskID = Repack.ProductionTaskID,
+                     DocBrokeID = Repack.DocBrokeID,
+                     DocBrokeNumber = Repack.DocBrokeNumber,
+                     ProductKind = (ProductKind)Repack.ProductKindID
+        });            
+        }
+        private void ShowRepack()
+        {
+            if (SelectedRepack?.DocRepackID != null)
+                MessageManager.OpenDocRepack(SelectedRepack.DocRepackID);
+        }
+
+        private void AddRepack()
+        {
+            MessageManager.OpenDocRepack(ProductionTaskBatchID);
+            RefreshRepack();
+        }
+
+        /*private void DeleteRepack()
+        {
+            if (SelectedRepack == null) return;
+            if (WorkSession.ShiftID != 0 && (SelectedRepack.ShiftID != WorkSession.ShiftID))
+            {
+                MessageBox.Show("Вы не можете удалить переупакованную продукцию другой смены");
+                return;
+            }
+            if (MessageBox.Show(
+                "Вы уверены, что хотите удалить переупакованную продукцию от " + SelectedRepack.Date + " смена " + SelectedRepack.ShiftID + "?",
+                "Удаление переупакованной продукции", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+            {
+                return;
+            };
+            
+            RefreshRepack();
+        }*/
 
     }
 

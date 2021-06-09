@@ -37,8 +37,8 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>26</ApplicationRevision>
-    <ApplicationVersion>3.0.4.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.0.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -460,6 +460,12 @@
     <Compile Include="Entities\DocRelations_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\DocRepack.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocRepackProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Docs.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -590,6 +596,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetBatchProducts_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetBatchRepackProducts_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetBatchSamples_Result.cs">
@@ -847,6 +856,9 @@
     <Compile Include="Entities\Users.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\UtilizationProductInDocBroke_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\v1CDocComplectationPositions.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -875,6 +887,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\vDocMovementProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\vDocRepackProducts.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\vGroupPackSpools.cs">
@@ -908,6 +923,7 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
+    <Compile Include="Models\RepackProduct.cs" />
     <Compile Include="Models\ReportParameters.cs" />
     <Compile Include="Models\WithdrawalMaterialBaseItem.cs" />
     <Compile Include="Models\DocMaterialProductionDirectCalculationItem.cs" />
@@ -1032,6 +1048,7 @@
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionDirectCalculationMaterialViewModel.cs" />
+    <Compile Include="ViewModels\DocRepackViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSpecificationViewModel.cs" />
     <Compile Include="ViewModels\StockRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialTankRemaindersViewModel.cs" />
@@ -1126,6 +1143,9 @@
     </Compile>
     <Compile Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml.cs">
       <DependentUpon>DocMaterialProductionDirectCalculationMaterialView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocRepackView.xaml.cs">
+      <DependentUpon>DocRepackView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTaskSpecificationView.xaml.cs">
       <DependentUpon>ProductionTaskSpecificationView.xaml</DependentUpon>
@@ -1388,6 +1408,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DocRepackView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1794,7 +1818,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

@@ -35,6 +35,7 @@ namespace Gamma.Common
             Messenger.Default.Register<NomenclatureEditMessage>(this, NomenclatureEdit);
             //Messenger.Default.Register<EditDocMovementOrderMessage>(this, EditDocMovementOrder);
             Messenger.Default.Register<EditDocMovementMessage>(this, EditDocMovement);
+            Messenger.Default.Register<EditDocRepackMessage>(this, EditDocRepack);
             Messenger.Default.Register<OpenPlaceZonesMessage>(this, OpenPlaceZones);
             Messenger.Default.Register<OpenQualityReportPMMessage>(this, OpenQualityReportPM);
             Messenger.Default.Register<OpenDocInventarisationMessage>(this, OpenDocInventarisation);
@@ -84,12 +85,18 @@ namespace Gamma.Common
         {
             new DocMovementView(msg.DocId).Show();
         }
-/*
-        private void EditDocMovementOrder(EditDocMovementOrderMessage msg)
+
+        private void EditDocRepack(EditDocRepackMessage msg)
         {
-            new DocMovementOrderView(msg.DocId).Show();
+            new DocRepackView(msg.DocId).ShowDialog();
         }
-        */
+
+        /*
+                private void EditDocMovementOrder(EditDocMovementOrderMessage msg)
+                {
+                    new DocMovementOrderView(msg.DocId).Show();
+                }
+                */
 
         private void NomenclatureEdit(NomenclatureEditMessage msg)
         {

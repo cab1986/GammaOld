@@ -24,6 +24,7 @@ namespace Gamma.Entities
             this.DocProduction = new HashSet<DocProduction>();
             this.DocComplectation = new HashSet<DocComplectation>();
             this.DocBrokeDecisionProductWithdrawalProducts = new HashSet<DocBrokeDecisionProductWithdrawalProducts>();
+            this.DocRepackProducts = new HashSet<DocRepackProducts>();
         }
     
         public System.Guid DocID { get; set; }
@@ -45,5 +46,7 @@ namespace Gamma.Entities
         public virtual ICollection<DocComplectation> DocComplectation { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocRepackProducts> DocRepackProducts { get; set; }
     }
 }
