@@ -476,7 +476,7 @@ namespace Gamma.ViewModels
             set
             {
                 _date = value;
-                ShiftEndTime = DB.GetShiftEndTimeFromDate(Date.AddHours(-1));
+                ShiftEndTime = DB.GetShiftEndTimeFromDate(Date);
             }
         }
         public byte ShiftID { get; set; }
