@@ -33,6 +33,7 @@ namespace Gamma.Entities
             this.DocCloseShiftRepackProducts = new HashSet<DocCloseShiftRepackProducts>();
             this.ProductionTaskConvertingSamples = new HashSet<ProductionTaskConvertingSamples>();
             this.DocMaterialProductions = new HashSet<DocMaterialProductions>();
+            this.DocCloseShiftAuxiliaryMaterials = new HashSet<DocCloseShiftAuxiliaryMaterials>();
         }
     
         public System.Guid C1CMeasureUnitID { get; set; }
@@ -75,5 +76,7 @@ namespace Gamma.Entities
         public virtual ICollection<ProductionTaskConvertingSamples> ProductionTaskConvertingSamples { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocMaterialProductions> DocMaterialProductions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
     }
 }

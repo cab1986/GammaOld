@@ -525,6 +525,18 @@
           <Property Name="StateID" Type="tinyint" Nullable="false" />
           <Property Name="1CRejectionReasonID" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="DocCloseShiftAuxiliaryMaterials">
+          <Key>
+            <PropertyRef Name="DocCloseShiftAuxiliaryMaterialID" />
+          </Key>
+          <Property Name="DocCloseShiftAuxiliaryMaterialID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
+          <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="DocCloseShiftDocs">
           <Key>
             <PropertyRef Name="DocCloseShiftID" />
@@ -1221,6 +1233,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="ProductionOut1СPlaceID" Type="uniqueidentifier" />
           <Property Name="RootPlaceID" Type="int" />
           <Property Name="IsEnabledRepackInProductionTask" Type="bit" />
+          <Property Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" Type="bit" />
         </EntityType>
         <EntityType Name="Places1CWarehouses">
           <Key>
@@ -1917,7 +1930,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocRepackProducts' does not have
           <Property Name="ShiftID" Type="tinyint" />
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
           <Property Name="DocBrokeID" Type="uniqueidentifier" />
-          <Property Name="DocBrokeNumber" Type="varchar" MaxLength="50" />
+          <Property Name="DocBrokeNumber" Type="varchar" MaxLength="73" />
           <Property Name="DocBrokeDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -3107,6 +3120,54 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Principal>
             <Dependent Role="DocBrokeProducts">
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+          <End Role="DocCloseShiftAuxiliaryMaterials" Type="Self.DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="DocCloseShiftAuxiliaryMaterials" Type="Self.DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="DocCloseShiftAuxiliaryMaterials" Type="Self.DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocCloseShiftAuxiliaryMaterials" Type="Self.DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5539,6 +5600,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
         <Function Name="DeletPlaceZone" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceZoneID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="FillDocCloseShiftConvertingAuxiliaryMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="FillDocCloseShiftConvertingMaterials" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
@@ -6056,6 +6122,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="DocBrokeProductRejectionReasons" EntityType="Self.DocBrokeProductRejectionReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBrokeProducts" EntityType="Self.DocBrokeProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocCloseShiftAuxiliaryMaterials" EntityType="Self.DocCloseShiftAuxiliaryMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftMaterials" EntityType="Self.DocCloseShiftMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftMaterialTypes" EntityType="Self.DocCloseShiftMaterialTypes" Schema="dbo" store:Type="Tables" />
@@ -6909,6 +6976,22 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="Products" EntitySet="Products" />
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics" Association="Self.FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" Association="Self.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" Association="Self.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_Docs" Association="Self.FK_DocCloseShiftAuxiliaryMaterials_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftDocs_Docs2" Association="Self.FK_DocCloseShiftDocs_Docs2">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
@@ -7747,6 +7830,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocCloseShiftRepackProducts" Relationship="GammaModel.FK_DocCloseShiftRepackProducts_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftRepackProducts" />
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="ProductionTaskConvertingSamples" />
           <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocMaterialProductions" />
+          <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftAuxiliaryMaterials" />
         </EntityType>
         <EntityType Name="C1CNomenclatureGroups">
           <Key>
@@ -9986,7 +10070,29 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           </AssociationSet>
           <FunctionImport Name="UtilizationProductInDocBroke" ReturnType="Collection(GammaModel.UtilizationProductInDocBroke_Result)">
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
-            <Parameter Name="QuantityBroke"  Mode="In" Type="Decimal" />
+            <Parameter Name="QuantityBroke" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <EntitySet Name="DocCloseShiftAuxiliaryMaterials" EntityType="GammaModel.DocCloseShiftAuxiliaryMaterials" />
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics" Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits">
+            <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftAuxiliaryMaterials_Docs" Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftAuxiliaryMaterials" EntitySet="DocCloseShiftAuxiliaryMaterials" />
+          </AssociationSet>
+          <FunctionImport Name="FillDocCloseShiftConvertingAuxiliaryMaterials" ReturnType="Collection(GammaModel.FillDocCloseShiftConvertingAuxiliaryMaterials_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -11241,6 +11347,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocMaterialProductDocs" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs" ToRole="Docs1" />
           <NavigationProperty Name="DocMaterialProduct" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs1" ToRole="Docs" />
           <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepack_Docs" FromRole="Docs" ToRole="DocRepack" />
+          <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" FromRole="Docs" ToRole="DocCloseShiftAuxiliaryMaterials" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -11973,6 +12080,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="RootPlaceID" Type="Int32" />
           <NavigationProperty Name="Users1" Relationship="GammaModel.FK_Users_Places" FromRole="Places" ToRole="Users" />
           <Property Name="IsEnabledRepackInProductionTask" Type="Boolean" />
+          <Property Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -12276,6 +12384,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocMaterialProducts" Relationship="GammaModel.FK_DocMaterialProducts_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocMaterialProducts" />
           <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocMaterialProductions" />
           <Property Name="C1COldCharacteristicID" Type="Guid" />
+          <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftAuxiliaryMaterials" />
           </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -13151,6 +13260,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocMaterialTankGroups" Relationship="GammaModel.DocMaterialTankGroupNomenclatureGroups" FromRole="C1CNomenclature" ToRole="DocMaterialTankGroups" />
           <Property Name="C1CQualityID" Type="Guid" />
           <Property Name="C1COldNomenclatureID" Type="Guid" />
+          <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftAuxiliaryMaterials" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -15556,7 +15666,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="ShiftID" Type="Byte" />
           <Property Name="ProductionTaskID" Type="Guid" />
           <Property Name="DocBrokeID" Type="Guid" />
-          <Property Name="DocBrokeNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DocBrokeNumber" Type="String" MaxLength="73" FixedLength="false" Unicode="false" />
           <Property Name="DocBrokeDate" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_DocRepackProducts_DocBrokeProducts">
@@ -15644,6 +15754,79 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="Decimal" Name="QuantityBroke" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="5" />
           <Property Type="Decimal" Name="QuantityGood" Nullable="true" Precision="18" Scale="5" />
+        </ComplexType>
+        <EntityType Name="DocCloseShiftAuxiliaryMaterials">
+          <Key>
+            <PropertyRef Name="DocCloseShiftAuxiliaryMaterialID" />
+          </Key>
+          <Property Name="DocCloseShiftAuxiliaryMaterialID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="15" Scale="5" />
+          <Property Name="C1CMeasureUnitID" Type="Guid" />
+          <Property Name="ProductionTaskID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics" FromRole="DocCloseShiftAuxiliaryMaterials" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CMeasureUnits" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" FromRole="DocCloseShiftAuxiliaryMaterials" ToRole="C1CMeasureUnits" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" FromRole="DocCloseShiftAuxiliaryMaterials" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" FromRole="DocCloseShiftAuxiliaryMaterials" ToRole="Docs" />
+        </EntityType>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftAuxiliaryMaterials" Role="DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits">
+          <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftAuxiliaryMaterials" Role="DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CMeasureUnits">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftAuxiliaryMaterials" Role="DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftAuxiliaryMaterials_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftAuxiliaryMaterials" Role="DocCloseShiftAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftAuxiliaryMaterials">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="FillDocCloseShiftConvertingAuxiliaryMaterials_Result">
+          <Property Type="Guid" Name="NomenclatureID" Nullable="false" />
+          <Property Type="Guid" Name="CharacteristicID" Nullable="true" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="String" Name="NomenclatureName" Nullable="true" MaxLength="511" />
+          <Property Type="Guid" Name="C1CMeasureUnitID" Nullable="true" />
+          <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
+          <Property Type="Guid" Name="ProductionTaskID" Nullable="true" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -17216,6 +17399,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" ColumnName="IsEnabledAuxiliaryMaterialsInDocCloseShift" />
                 <ScalarProperty Name="IsEnabledRepackInProductionTask" ColumnName="IsEnabledRepackInProductionTask" />
                 <ScalarProperty Name="RootPlaceID" ColumnName="RootPlaceID" />
                 <ScalarProperty Name="ProductionOut1СPlaceID" ColumnName="ProductionOut1СPlaceID" />
@@ -18723,6 +18907,32 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="QuantityBroke" ColumnName="QuantityBroke" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="QuantityGood" ColumnName="QuantityGood" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="DocCloseShiftAuxiliaryMaterials">
+            <EntityTypeMapping TypeName="GammaModel.DocCloseShiftAuxiliaryMaterials">
+              <MappingFragment StoreEntitySet="DocCloseShiftAuxiliaryMaterials">
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocCloseShiftAuxiliaryMaterialID" ColumnName="DocCloseShiftAuxiliaryMaterialID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftConvertingAuxiliaryMaterials" FunctionName="GammaDBModel.FillDocCloseShiftConvertingAuxiliaryMaterials">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftConvertingAuxiliaryMaterials_Result">
+                <ScalarProperty Name="NomenclatureID" ColumnName="NomenclatureID" />
+                <ScalarProperty Name="CharacteristicID" ColumnName="CharacteristicID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

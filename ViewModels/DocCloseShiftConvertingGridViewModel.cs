@@ -24,9 +24,8 @@ namespace Gamma.ViewModels
         public DocCloseShiftConvertingGridViewModel()
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftConverting", VMID));
-            /*AddWithdrawalMaterialCommand = new DelegateCommand(AddWithdrawalMaterial, () => !IsReadOnly);
-            DeleteWithdrawalMaterialCommand = new DelegateCommand(DeleteWithdrawalMaterial, () => !IsReadOnly);
-            */
+            AddAuxiliaryMaterialCommand = new DelegateCommand(AddAuxiliaryMaterial, () => !IsReadOnly);
+            DeleteAuxiliaryMaterialCommand = new DelegateCommand(DeleteAuxiliaryMaterial, () => !IsReadOnly);
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
             MaterialCommand = new DelegateCommand(ShowMaterialTab, SelectedProduct != null);
             WithdrawalMaterialCommand = new DelegateCommand(ShowWithdrawalMaterialTab, SelectedProduct != null);
@@ -43,6 +42,7 @@ namespace Gamma.ViewModels
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
             IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
+            IsEnabledAuxiliaryMaterials = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledAuxiliaryMaterialsInDocCloseShift).First() ?? false;
         }
         public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel _spoolUnwinderRemainders) : this()
         {
@@ -60,6 +60,7 @@ namespace Gamma.ViewModels
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
                 DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(docId,IsConfirmed);
                 IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
+                IsEnabledAuxiliaryMaterials = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledAuxiliaryMaterialsInDocCloseShift).First() ?? false;
                 Pallets = new ObservableCollection<Pallet>(gammaBase.GetDocCloseShiftConvertingPallets(docId).Select(d => new Pallet()
                 {
                     DocID = d.DocID,
@@ -122,7 +123,24 @@ namespace Gamma.ViewModels
                 {
                     waste.MeasureUnits = GetWasteMeasureUnits(waste.NomenclatureID, waste.MeasureUnitId);
                 }
-                
+                // Получение вспомогательных материалов
+                var auxiliaryMaterials = new ObservableCollection<Sample>(gammaBase.DocCloseShiftAuxiliaryMaterials.Where(ds => ds.DocID == docId)
+                    .Select(ds => new Sample
+                    {
+                        NomenclatureID = ds.C1CNomenclatureID,
+                        CharacteristicID = ds.C1CCharacteristicID,
+                        Quantity = ds.Quantity,
+                        NomenclatureName = ds.C1CNomenclature.Name + " " + ds.C1CCharacteristics.Name,
+                        MeasureUnitId = ds.C1CMeasureUnitID,
+                        ProductionTaskID = ds.ProductionTaskID
+                    }));
+                foreach (var auxiliaryMaterial in auxiliaryMaterials)
+                {
+                    auxiliaryMaterial.MeasureUnits = GetSampleMeasureUnits(auxiliaryMaterial.NomenclatureID, auxiliaryMaterial.CharacteristicID);
+                    if (auxiliaryMaterial.MeasureUnitId == null) auxiliaryMaterial.MeasureUnitId = auxiliaryMaterial.MeasureUnits.FirstOrDefault().Key;
+                }
+                AuxiliaryMaterials = auxiliaryMaterials;
+
             }
         }
 
@@ -135,9 +153,12 @@ namespace Gamma.ViewModels
         public Guid? VMID { get; } = Guid.NewGuid();
 
         public Pallet SelectedProduct { get; set; }
+        public Sample SelectedAuxiliaryMaterial { get; set; }
         public DelegateCommand ShowProductCommand { get; private set; }
         public DelegateCommand MaterialCommand { get; private set; }
         public DelegateCommand WithdrawalMaterialCommand { get; private set; }
+        public DelegateCommand AddAuxiliaryMaterialCommand { get; private set; }
+        public DelegateCommand DeleteAuxiliaryMaterialCommand { get; private set; }
 
         private void ShowProduct()
         {
@@ -154,6 +175,43 @@ namespace Gamma.ViewModels
         {
             if (WithdrawalMaterialsGrid != null)
                 WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 1;
+        }
+
+        private void DeleteAuxiliaryMaterial()
+        {
+            if (SelectedAuxiliaryMaterial == null) return;
+            //AuxiliaryMaterials.RemoveRange(AuxiliaryMaterials.Where(d => d.NomenclatureID == SelectedAuxiliaryMaterial.NomenclatureID && (d.CharacteristicID == SelectedAuxiliaryMaterial.CharacteristicID || (d.CharacteristicID == null && SelectedAuxiliaryMaterial.CharacteristicID == null))));
+
+            //var removeItems = AuxiliaryMaterials.Where(d => d.NomenclatureID == SelectedAuxiliaryMaterial.NomenclatureID && (d.CharacteristicID == SelectedAuxiliaryMaterial.CharacteristicID || (d.CharacteristicID == null && SelectedAuxiliaryMaterial.CharacteristicID == null))).ToArray();
+            //foreach (var item in removeItems)
+            //    AuxiliaryMaterials.Remove(item);
+            AuxiliaryMaterials.Remove(SelectedAuxiliaryMaterial);
+
+        }
+
+        private void AddAuxiliaryMaterial()
+        {
+            Messenger.Default.Register<Nomenclature1CMessage>(this, AuxiliaryMaterialNomenclature);
+            MessageManager.FindNomenclature(MaterialType.MaterialsSGI);
+        }
+
+        private void AuxiliaryMaterialNomenclature(Nomenclature1CMessage msg)
+        {
+            Messenger.Default.Unregister<Nomenclature1CMessage>(this);
+            using (var gammaBase = DB.GammaDb)
+            {
+                var nomenclatureInfo =
+                gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
+                    .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
+                AuxiliaryMaterials.Add(new Sample()
+                {
+                    NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
+                    CharacteristicID = nomenclatureInfo.C1CCharacteristics.FirstOrDefault()?.C1CCharacteristicID,
+                    Quantity = 0,
+                    NomenclatureName = nomenclatureInfo.Name,
+                    ProductionTaskID = null
+                });
+            }
         }
 
         private DocCloseShiftWithdrawalMaterialViewModel _withdrawalMaterialsGrid;
@@ -325,7 +383,29 @@ namespace Gamma.ViewModels
                 }
                 //Wastes = wastes;
 
-                
+                if (IsEnabledAuxiliaryMaterials)
+                {
+                    var auxiliaryMaterials = new ObservableCollection<Sample>(gammaBase.FillDocCloseShiftConvertingAuxiliaryMaterials(PlaceID, ShiftID, CloseDate)
+                        .Select(p => new Sample
+                        {
+                            NomenclatureID = p.NomenclatureID,
+                            CharacteristicID = p.CharacteristicID,
+                            Quantity = p.Quantity ?? 0,
+                            NomenclatureName = p.NomenclatureName,
+                            ProductionTaskID = p.ProductionTaskID
+                        }));
+                    AuxiliaryMaterials.Clear();
+                    foreach (var auxiliaryMaterial in auxiliaryMaterials)
+                    {
+                        auxiliaryMaterial.MeasureUnits = GetSampleMeasureUnits(auxiliaryMaterial.NomenclatureID, auxiliaryMaterial.CharacteristicID);
+                        auxiliaryMaterial.MeasureUnitId = auxiliaryMaterial.MeasureUnits.FirstOrDefault().Key;
+                        if (!AuxiliaryMaterials.Any(s => s.NomenclatureID == auxiliaryMaterial.NomenclatureID && (s.CharacteristicID == auxiliaryMaterial.CharacteristicID || (s.CharacteristicID == null && auxiliaryMaterial.CharacteristicID == null))))
+                        {
+                            AuxiliaryMaterials.Add(auxiliaryMaterial);
+                        }
+                    }
+                    //AuxiliaryMaterials = auxiliaryMaterials;
+                }
 
                 IsChanged = true;
             }
@@ -389,6 +469,7 @@ namespace Gamma.ViewModels
         
         public bool IsWithdrawalMaterial { get; set; }
         public bool IsEnabledSamples { get; set; }
+        public bool IsEnabledAuxiliaryMaterials { get; set; }
 
         private List<Guid> productionProductCharacteristicIDs { get; set; }
         private DocCloseShiftUnwinderRemainderViewModel spoolUnwinderRemainders { get; set; }
@@ -401,6 +482,7 @@ namespace Gamma.ViewModels
             //WithdrawalMaterialsGrid?.Clear();
 
             Samples?.Clear();
+            AuxiliaryMaterials?.Clear();
             IsChanged = true;
             Wastes?.Clear();
             NomenclatureRests?.Clear();
@@ -443,6 +525,17 @@ namespace Gamma.ViewModels
             }
         }
 
+        private ObservableCollection<Sample> _auxiliaryMaterials = new ObservableCollection<Sample>();
+
+        public ObservableCollection<Sample> AuxiliaryMaterials
+        {
+            get { return _auxiliaryMaterials; }
+            set
+            {
+                _auxiliaryMaterials = value;
+                RaisePropertiesChanged("AuxiliaryMaterials");
+            }
+        }
 
         private ObservableCollection<Pallet> _pallets = new ObservableCollection<Pallet>();
         private ObservableCollection<DocCloseShiftWaste> _wastes;
@@ -470,6 +563,7 @@ namespace Gamma.ViewModels
             {
                 var docCloseShift = gammaBase.Docs
                 .Include(d => d.DocCloseShiftSamples).Include(d => d.DocCloseShiftWastes).Include(d => d.DocCloseShiftNomenclatureRests)
+                .Include(d => d.DocCloseShiftAuxiliaryMaterials)
                 .First(d => d.DocID == docId);
                 if (docCloseShift.DocCloseShiftSamples == null)
                     docCloseShift.DocCloseShiftSamples = new List<DocCloseShiftSamples>();
@@ -483,6 +577,8 @@ namespace Gamma.ViewModels
                     docCloseShift.DocCloseShiftMovementProducts = new List<DocCloseShiftMovementProducts>();
                 if (docCloseShift.DocCloseShiftUtilizationProducts == null)
                     docCloseShift.DocCloseShiftUtilizationProducts = new List<DocCloseShiftUtilizationProducts>();
+                if (docCloseShift.DocCloseShiftAuxiliaryMaterials == null)
+                    docCloseShift.DocCloseShiftAuxiliaryMaterials = new List<DocCloseShiftAuxiliaryMaterials>();
 
                 gammaBase.DocCloseShiftSamples.RemoveRange(docCloseShift.DocCloseShiftSamples);
                 if (Samples != null)
@@ -497,6 +593,22 @@ namespace Gamma.ViewModels
                             Quantity = sample.Quantity,
                             C1CMeasureUnitID = sample.MeasureUnitId,
                             ProductionTaskID = sample.ProductionTaskID
+                        });
+                    }
+
+                gammaBase.DocCloseShiftAuxiliaryMaterials.RemoveRange(docCloseShift.DocCloseShiftAuxiliaryMaterials);
+                if (AuxiliaryMaterials != null)
+                    foreach (var auxiliaryMaterial in AuxiliaryMaterials)
+                    {
+                        docCloseShift.DocCloseShiftAuxiliaryMaterials.Add(new DocCloseShiftAuxiliaryMaterials
+                        {
+                            DocID = docId,
+                            C1CNomenclatureID = auxiliaryMaterial.NomenclatureID,
+                            C1CCharacteristicID = auxiliaryMaterial.CharacteristicID,
+                            DocCloseShiftAuxiliaryMaterialID = SqlGuidUtil.NewSequentialid(),
+                            Quantity = auxiliaryMaterial.Quantity,
+                            C1CMeasureUnitID = auxiliaryMaterial.MeasureUnitId,
+                            ProductionTaskID = auxiliaryMaterial.ProductionTaskID
                         });
                     }
 

@@ -414,6 +414,11 @@
         <AssociationConnector Association="GammaModel.FK_DocRepack_ProductionTasks" />
         <AssociationConnector Association="GammaModel.FK_DocRepackProducts_DocRepack" />
         <AssociationConnector Association="GammaModel.DocRepackProductWithdrawals" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftAuxiliaryMaterials" Width="1.5" PointX="30.75" PointY="35" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

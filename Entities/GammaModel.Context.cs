@@ -170,6 +170,7 @@ namespace Gamma.Entities
         public virtual DbSet<DocRepack> DocRepack { get; set; }
         public virtual DbSet<DocRepackProducts> DocRepackProducts { get; set; }
         public virtual DbSet<vDocRepackProducts> vDocRepackProducts { get; set; }
+        public virtual DbSet<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1566,12 +1567,29 @@ namespace Gamma.Entities
             var productIDParameter = productID.HasValue ?
                 new ObjectParameter("ProductID", productID) :
                 new ObjectParameter("ProductID", typeof(System.Guid));
-
+    
             var quantityBrokeParameter = quantityBroke.HasValue ?
                 new ObjectParameter("QuantityBroke", quantityBroke) :
                 new ObjectParameter("QuantityBroke", typeof(decimal));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductInDocBroke_Result>("UtilizationProductInDocBroke", productIDParameter, quantityBrokeParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftConvertingAuxiliaryMaterials_Result> FillDocCloseShiftConvertingAuxiliaryMaterials(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingAuxiliaryMaterials_Result>("FillDocCloseShiftConvertingAuxiliaryMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     }
 }
