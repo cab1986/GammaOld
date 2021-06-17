@@ -227,7 +227,7 @@ namespace Gamma.ViewModels
 
                 if ((ProductState)product.StateID == ProductState.Broke || (ProductState)product.StateID == ProductState.NeedsDecision)
                 {
-                    var model = new SetQuantityDialogModel("Укажите кол-во бракованных рулончиков (или пачек для салфеток) в паллете", "Брак", 1, (int)product.Quantity);
+                    var model = new SetQuantityDialogModel("Укажите кол-во бракованных рулончиков (или пачек для салфеток) в паллете №"+ product.Number, "Брак", 0, (int)product.Quantity);
                     var okCommand = new UICommand()
                     {
                         Caption = "OK",
@@ -235,7 +235,7 @@ namespace Gamma.ViewModels
                         IsDefault = true,
                         Command = new DelegateCommand<CancelEventArgs>(
                     x => DebugFunc(),
-                    x => model.Quantity > 0 && model.Quantity <= (int)product.Quantity),
+                    x => model.Quantity >= 0 && model.Quantity <= (int)product.Quantity),
                     };
                     var cancelCommand = new UICommand()
                     {
@@ -360,7 +360,7 @@ namespace Gamma.ViewModels
         private void AddProduct()
         {
             Messenger.Default.Register<ChoosenProductMessage>(this, AddChoosenProduct);
-            MessageManager.OpenFindProduct(ProductKind.ProductSpool - 1, true, null, true, true, false);
+            MessageManager.OpenFindProduct((ProductKind)(Functions.EnumDescriptionsToList(typeof(ProductKind)).Count + 1), true, null, true, false, true);
         }
 
         private void AddChoosenProduct(ChoosenProductMessage msg)
