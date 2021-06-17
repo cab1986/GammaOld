@@ -44,8 +44,9 @@
                         <dxg:GridColumn Header="Номер" FieldName="Number" Width="100" FixedWidth="True" VisibleIndex="1" SortOrder="Descending" SortIndex="0" SortMode="Value" />
                         <dxg:GridColumn Header="Дата" FieldName="Date" Width="80" FixedWidth="True" VisibleIndex="2" />
                         <dxg:GridColumn Header="Номенклатура" FieldName="Nomenclature" VisibleIndex="3" />
-                        <dxg:GridColumn Header="Количество" FieldName="Quantity" VisibleIndex="4" Width="90" FixedWidth="True"/>
+                        <dxg:GridColumn Header="Необходимое кол-во" FieldName="Quantity" VisibleIndex="4" Width="90" FixedWidth="True"/>
                         <dxg:GridColumn Header="Состояние" FieldName="State" Width="100" FixedWidth="True" VisibleIndex="5" />
+                        <dxg:GridColumn Header="Сделано" FieldName="MadeQuantityStr" Width="190" FixedWidth="True" VisibleIndex="6" />
                     </dxg:GridControl.Columns>
                     <dxg:GridControl.View>
                         <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" AllowEditing="False"/>

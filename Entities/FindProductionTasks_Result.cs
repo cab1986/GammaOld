@@ -23,5 +23,6 @@ namespace Gamma.Entities
         public decimal Quantity { get; set; }
         public Nullable<int> BatchKindID { get; set; }
         public string Place { get; set; }
+        public string MadeQuantity { get; set; }
     }
 }

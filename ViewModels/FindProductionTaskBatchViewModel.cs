@@ -67,7 +67,8 @@ namespace Gamma.ViewModels
                     DateBegin = pt.DateBegin,
                     Quantity = pt.Quantity,
                     Nomenclature = pt.Nomenclature,
-                    Place = pt.Place
+                    Place = pt.Place,
+                    MadeQuantityStr = pt.MadeQuantity
                 }
             );
         }

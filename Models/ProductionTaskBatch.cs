@@ -17,5 +17,6 @@ namespace Gamma.Models
         public byte BatchKindID { get; set; }
         public int PlaceID { get; set; }
         public string Place { get; set; }
+        public string MadeQuantityStr { get; set; }
     }
 }
