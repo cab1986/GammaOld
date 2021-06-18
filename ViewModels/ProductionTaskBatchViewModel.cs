@@ -47,7 +47,7 @@ namespace Gamma.ViewModels
             }
             if (msg.ProductionTaskBatchID == null)
             {
-                Date = DB.CurrentDateTime;
+                //Date = DB.CurrentDateTime;
                 //                ProductionTaskBatchID = SqlGuidUtil.NewSequentialid();
                 Title = "Новое задание на производство";
                 IsActual = false;
@@ -651,7 +651,7 @@ namespace Gamma.ViewModels
                 }
                 productionTaskBatch.ProcessModelID = ProcessModelID;
                 productionTaskBatch.ProductionTaskStateID = ProductionTaskStateID ?? 0;
-                productionTaskBatch.Date = Date;
+                productionTaskBatch.Date = Date ?? DB.CurrentDateTime;
                 productionTaskBatch.Comment = Comment;
                 productionTaskBatch.PartyControl = PartyControl;
                 productionTaskBatch.BatchKindID = (short)BatchKind;
