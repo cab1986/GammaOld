@@ -318,7 +318,7 @@ namespace Gamma.ViewModels
                             NomenclatureName = p.NomenclatureName,
                             ProductionTaskID = p.ProductionTaskID
                         }));
-                    Samples.Clear();
+                    //Samples.Clear();
                     foreach (var sample in samples)
                     {
                         sample.MeasureUnits = GetSampleMeasureUnits(sample.NomenclatureID, sample.CharacteristicID);
@@ -394,7 +394,7 @@ namespace Gamma.ViewModels
                             NomenclatureName = p.NomenclatureName,
                             ProductionTaskID = p.ProductionTaskID
                         }));
-                    AuxiliaryMaterials.Clear();
+                    //AuxiliaryMaterials.Clear();
                     foreach (var auxiliaryMaterial in auxiliaryMaterials)
                     {
                         auxiliaryMaterial.MeasureUnits = GetSampleMeasureUnits(auxiliaryMaterial.NomenclatureID, auxiliaryMaterial.CharacteristicID);
@@ -481,10 +481,25 @@ namespace Gamma.ViewModels
             //WithdrawalMaterials?.Clear();
             //WithdrawalMaterialsGrid?.Clear();
 
-            Samples?.Clear();
-            AuxiliaryMaterials?.Clear();
+            //Samples?.Clear();
+            var sampleItems = Samples?.Where(d => !(d.Quantity > 0)).ToArray();
+            foreach (var item in sampleItems)
+            {
+                Samples?.Remove(item);
+            }
+            //AuxiliaryMaterials?.Clear();
+            var auxItems = AuxiliaryMaterials?.Where(d => !(d.Quantity > 0 )).ToArray();
+            foreach (var item in auxItems)
+            {
+                AuxiliaryMaterials?.Remove(item);
+            }
             IsChanged = true;
-            Wastes?.Clear();
+            //Wastes?.Clear();
+            var wasteItems = Wastes?.Where(d => !(d.Quantity > 0)).ToArray();
+            foreach (var item in wasteItems)
+            {
+                Wastes?.Remove(item);
+            }
             NomenclatureRests?.Clear();
             WithdrawalMaterialsGrid.Clear();
             DocCloseShiftProductsGrid.Clear();       
