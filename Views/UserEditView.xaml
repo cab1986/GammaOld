@@ -58,6 +58,9 @@
                         </dxg:GridControl>
                     </dxb:BarManager>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Основное подразделение" LabelPosition="Top">
+                    <dxe:ComboBoxEdit EditValue="{Binding PrimePlaceID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Places}" DisplayMember="Name" ValueMember="PlaceID" />
+                </dxlc:LayoutItem>
                 <dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Номер смены" >
                         <dxe:SpinEdit MinValue="0" MaxValue="4" EditValue="{Binding ShiftID}" EditValueType="{x:Type sys:Byte}"/>

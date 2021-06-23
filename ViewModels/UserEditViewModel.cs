@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using Gamma.Common;
 using Gamma.Entities;
-
+using System.Windows;
 
 namespace Gamma.ViewModels
 {
@@ -47,6 +47,7 @@ namespace Gamma.ViewModels
             DepartmentID = User.DepartmentID;
             IsDBAdmin = User.DBAdmin;
             ShiftID = User.ShiftID;
+            PrimePlaceID = User.PrimePlaceID;
             InitializeFields();
         }
         private void InitializeFields()
@@ -103,10 +104,30 @@ namespace Gamma.ViewModels
         [Required(ErrorMessage = @"Укажите службу пользователя")]
         public short? DepartmentID { get; set; }
 
+        [Required(ErrorMessage = @"Основной передел пользователя")]
+        public int? _primePlaceID { get; set; }
+        public int? PrimePlaceID
+        {
+            get
+            {
+                return _primePlaceID;
+            }
+            set
+            {
+                if (value != null && UserPlaces.FirstOrDefault(p=> p.Value == value) == null)
+                    MessageBox.Show("Такого подразделения нет в списке подразделений", "Ошибка", MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+                else
+                    _primePlaceID = value;
+                RaisePropertyChanged("PrimePlaceID");
+            }
+        }
+
         private Guid UserID { get; set; }
         private string _login;
         private string _name;
         private Users User { get; set; }
+        
 
         public override bool SaveToModel()
         {
@@ -123,6 +144,7 @@ namespace Gamma.ViewModels
             User.ShiftID = ShiftID;
             User.Post = Post;
             User.DBAdmin = IsDBAdmin;
+            User.PrimePlaceID = PrimePlaceID;
             if (_isNewUser)
             {
                 GammaBase.Users.Add(User);
