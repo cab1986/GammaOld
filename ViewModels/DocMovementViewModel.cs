@@ -113,12 +113,12 @@ namespace Gamma.ViewModels
         public bool DenyEditOut { get; private set; }
         public bool DenyEditIn { get; private set; }
 
-        public bool CanChangeIsConfirmed => WorkSession.ShiftID == 0 && (WorkSession.DBAdmin || WorkSession.RoleName == "Dispetcher");// DocOrderId == null;
+        public bool CanChangeIsConfirmed => WorkSession.ShiftID == 0 && (WorkSession.DBAdmin || WorkSession.RoleName == "Dispetcher" || WorkSession.RoleName == "WarehouseOperator");// DocOrderId == null;
 
         public bool IsDateReadOnly
         {
             get
-            { return !(!IsConfirmed && DB.HaveWriteAccess("Docs") && WorkSession.ShiftID == 0 && (WorkSession.DBAdmin || WorkSession.RoleName == "Dispetcher")); }
+            { return !(!IsConfirmed && DB.HaveWriteAccess("Docs") && WorkSession.ShiftID == 0 && (WorkSession.DBAdmin || WorkSession.RoleName == "Dispetcher" || WorkSession.RoleName == "WarehouseOperator")); }
         }
 
         public DelegateCommand UploadTo1CCommand { get; private set; }
