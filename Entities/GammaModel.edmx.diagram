@@ -419,6 +419,19 @@
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" />
+        <EntityTypeShape EntityType="GammaModel.C1CDowntimeTypeDetails" Width="1.5" PointX="21.625" PointY="3.125" />
+        <EntityTypeShape EntityType="GammaModel.C1CDowntimeTypes" Width="1.5" PointX="19.375" PointY="3.125" />
+        <EntityTypeShape EntityType="GammaModel.DocCloseShiftDowntimes" Width="1.5" PointX="26.875" PointY="31.125" />
+        <EntityTypeShape EntityType="GammaModel.ProductionTaskDowntimes" Width="1.5" PointX="23.875" PointY="30.75" />
+        <AssociationConnector Association="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails" />
+        <AssociationConnector Association="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypeDetails" />
+        <AssociationConnector Association="GammaModel.FK_1CDowntimeTypes_1CDowntimeTypes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypes" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftDowntimes_Docs" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_ProductionTasks" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

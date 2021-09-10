@@ -1,0 +1,57 @@
+﻿<UserControl  x:Class="Gamma.Dialogs.AddDowntimeDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Gamma.Dialogs"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dialogViewModels="clr-namespace:Gamma.DialogViewModels"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="320" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance Type=dialogViewModels:AddDowntimeDialogModel, IsDesignTimeCreatable=False}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="86"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="32"/>
+        </Grid.RowDefinitions>
+        <dxlc:LayoutControl Name="lcDate" Grid.Row="0" Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
+            <dxlc:LayoutGroup Header="Период простоя" View="GroupBox" Margin="-12">
+                <dxlc:LayoutItem Label="Начало" LabelPosition="Top" >
+                    <dxe:DateEdit Name="EdtDateBegin" EditValue="{Binding DateBegin}" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                                               DisplayFormatString="dd-MMM-yyyy HH:mm"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Окончание" LabelPosition="Top">
+                    <dxe:DateEdit Name="EdtDateEnd" EditValue="{Binding DateEnd}"  MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                                               DisplayFormatString="dd-MMM-yyyy HH:mm" />
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <dxlc:LayoutControl Name="lcDowntimeType" Grid.Row="1" >
+            <dxlc:LayoutGroup Header="Виды простоя" View="GroupBox" Margin="-12" Orientation="Vertical">
+                <dxlc:LayoutItem Label="Основной" LabelPosition="Top">
+                    <dxe:ComboBoxEdit Name="EdtType" ItemsSource="{Binding Types}" EditValue="{Binding TypeID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMember="DowntimeTypeName" ValueMember="DowntimeTypeID" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дополнительный" LabelPosition="Top">
+                    <dxe:ComboBoxEdit Name="EdtTypeDetail"  ItemsSource="{Binding TypeDetailsFiltered}" EditValue="{Binding TypeDetailID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMember="DowntimeTypeName" ValueMember="DowntimeTypeID"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <dxlc:LayoutControl Name="lcDowntimeComment" Grid.Row="2" >
+        <dxlc:LayoutGroup Header="Комментарий" View="GroupBox" Margin="-12" Orientation="Vertical">
+            <dxlc:LayoutItem LabelPosition="Top">
+                <dxe:TextEdit Name="EdtComment" EditValue="{Binding Comment}"/>
+            </dxlc:LayoutItem>
+        </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <!--<Button Content="OK" Name="BtnOk" Grid.Row="3" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
+        <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="3"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />-->
+    </Grid>
+</UserControl>
+

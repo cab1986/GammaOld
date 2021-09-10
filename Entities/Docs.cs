@@ -43,6 +43,7 @@ namespace Gamma.Entities
             this.DocMaterialProductDocs = new HashSet<Docs>();
             this.DocMaterialProduct = new HashSet<Docs>();
             this.DocCloseShiftAuxiliaryMaterials = new HashSet<DocCloseShiftAuxiliaryMaterials>();
+            this.DocCloseShiftDowntimes = new HashSet<DocCloseShiftDowntimes>();
         }
     
         public System.Guid DocID { get; set; }
@@ -124,5 +125,7 @@ namespace Gamma.Entities
         public virtual DocRepack DocRepack { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocCloseShiftDowntimes> DocCloseShiftDowntimes { get; set; }
     }
 }

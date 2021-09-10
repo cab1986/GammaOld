@@ -51,5 +51,7 @@ namespace Gamma.Entities
         public string SCU { get; set; }
         public Nullable<System.Guid> KindValueID { get; set; }
         public string KindValue { get; set; }
+        public Nullable<System.Guid> ProductionTaskID { get; set; }
+        public string ProductionTaskNumber { get; set; }
     }
 }

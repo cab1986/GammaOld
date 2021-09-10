@@ -9,6 +9,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking" 
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:dialogs="clr-namespace:Gamma.Dialogs"
     xmlns:gc="clr-namespace:Gamma.Common"
     xmlns:s="clr-namespace:System;assembly=mscorlib"
     xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
@@ -22,6 +24,21 @@
     WindowState="Maximized"
     ResizeMode="NoResize"
     gc:WindowSettings.Save="False">
+    <!--<dxmvvm:Interaction.Behaviors>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="AddDowntimeDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:AddDowntimeDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="500"/>
+                    <Setter Property="Height" Value="240"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+    </dxmvvm:Interaction.Behaviors>-->
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftConvertingGridViewModel}">
             <v:DocCloseShiftConvertingGridView />
@@ -52,6 +69,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftProductViewModel}">
             <v:DocCloseShiftProductView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocCloseShiftDowntimesViewModel}">
+            <v:DocCloseShiftDowntimesView />
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate">
             <ContentControl>

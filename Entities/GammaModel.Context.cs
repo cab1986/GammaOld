@@ -171,6 +171,10 @@ namespace Gamma.Entities
         public virtual DbSet<DocRepackProducts> DocRepackProducts { get; set; }
         public virtual DbSet<vDocRepackProducts> vDocRepackProducts { get; set; }
         public virtual DbSet<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
+        public virtual DbSet<C1CDowntimeTypeDetails> C1CDowntimeTypeDetails { get; set; }
+        public virtual DbSet<C1CDowntimeTypes> C1CDowntimeTypes { get; set; }
+        public virtual DbSet<DocCloseShiftDowntimes> DocCloseShiftDowntimes { get; set; }
+        public virtual DbSet<ProductionTaskDowntimes> ProductionTaskDowntimes { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1590,6 +1594,78 @@ namespace Gamma.Entities
                 new ObjectParameter("CloseDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingAuxiliaryMaterials_Result>("FillDocCloseShiftConvertingAuxiliaryMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<string> CreateDowntime(Nullable<System.Guid> productionTaskBatchID, Nullable<int> duration, Nullable<System.Guid> downtimeTypeID, Nullable<System.Guid> downtimeTypeDetailID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd, string comment)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            var durationParameter = duration.HasValue ?
+                new ObjectParameter("Duration", duration) :
+                new ObjectParameter("Duration", typeof(int));
+    
+            var downtimeTypeIDParameter = downtimeTypeID.HasValue ?
+                new ObjectParameter("DowntimeTypeID", downtimeTypeID) :
+                new ObjectParameter("DowntimeTypeID", typeof(System.Guid));
+    
+            var downtimeTypeDetailIDParameter = downtimeTypeDetailID.HasValue ?
+                new ObjectParameter("DowntimeTypeDetailID", downtimeTypeDetailID) :
+                new ObjectParameter("DowntimeTypeDetailID", typeof(System.Guid));
+    
+            var dateBeginParameter = dateBegin.HasValue ?
+                new ObjectParameter("DateBegin", dateBegin) :
+                new ObjectParameter("DateBegin", typeof(System.DateTime));
+    
+            var dateEndParameter = dateEnd.HasValue ?
+                new ObjectParameter("DateEnd", dateEnd) :
+                new ObjectParameter("DateEnd", typeof(System.DateTime));
+    
+            var commentParameter = comment != null ?
+                new ObjectParameter("Comment", comment) :
+                new ObjectParameter("Comment", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CreateDowntime", productionTaskBatchIDParameter, durationParameter, downtimeTypeIDParameter, downtimeTypeDetailIDParameter, dateBeginParameter, dateEndParameter, commentParameter);
+        }
+    
+        public virtual ObjectResult<string> DeleteDowntime(Nullable<System.Guid> productionTaskDowntimeID)
+        {
+            var productionTaskDowntimeIDParameter = productionTaskDowntimeID.HasValue ?
+                new ObjectParameter("ProductionTaskDowntimeID", productionTaskDowntimeID) :
+                new ObjectParameter("ProductionTaskDowntimeID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("DeleteDowntime", productionTaskDowntimeIDParameter);
+        }
+    
+        public virtual ObjectResult<FillDocCloseShiftDowntimes_Result> FillDocCloseShiftDowntimes(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var closeDateParameter = closeDate.HasValue ?
+                new ObjectParameter("CloseDate", closeDate) :
+                new ObjectParameter("CloseDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftDowntimes_Result>("FillDocCloseShiftDowntimes", placeIDParameter, shiftIDParameter, closeDateParameter);
+        }
+    
+        public virtual ObjectResult<GetBatchDowntimes_Result> GetBatchDowntimes(Nullable<System.Guid> productionTaskBatchID, Nullable<int> intervalID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            var intervalIDParameter = intervalID.HasValue ?
+                new ObjectParameter("IntervalID", intervalID) :
+                new ObjectParameter("IntervalID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchDowntimes_Result>("GetBatchDowntimes", productionTaskBatchIDParameter, intervalIDParameter);
         }
     }
 }

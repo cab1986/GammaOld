@@ -132,7 +132,19 @@ namespace Gamma.ViewModels
             }
         }
 
-        public bool IsConfirmed { get; set; }
+        private bool _isConfirmed { get; set; }
+        public bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;
+                var grid = CurrentViewModelGrid as DocCloseShiftConvertingGridViewModel;
+                if (grid != null)
+                    grid?.UpdateIsConfirmed(value);
+            }
+        }
+
         public byte? ShiftID { get; set; }
         public bool IsVisibilityUnwinderRemainder { get; set; }
         public bool IsVisibilityRemainder { get; set; }

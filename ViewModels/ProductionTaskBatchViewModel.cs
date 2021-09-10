@@ -12,6 +12,7 @@ using System.Data.Entity;
 using Gamma.Common;
 using Gamma.Entities;
 using Gamma.DialogViewModels;
+using Gamma.Dialogs;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Data.Entity.SqlServer;
@@ -65,6 +66,7 @@ namespace Gamma.ViewModels
                 RefreshProduction();
                 RefreshRepack();
                 RefreshSample();
+                RefreshDowntime();
                 Title = "Задание на производство № " + Number;
             }
 
@@ -111,6 +113,10 @@ namespace Gamma.ViewModels
             AddSampleCommand = new DelegateCommand(AddSample);
             ShowSampleCommand = new DelegateCommand(ShowSample, () => SelectedSample != null);
             DeleteSampleCommand = new DelegateCommand(DeleteSample, () => SelectedSample != null);
+            AddDowntimeCommand = new DelegateCommand(AddDowntime);
+            ShowDowntimeCommand = new DelegateCommand(ShowDowntime, () => SelectedDowntime != null);
+            DeleteDowntimeCommand = new DelegateCommand(DeleteDowntime, () => SelectedDowntime != null);
+            RefreshDowntimeCommand = new DelegateCommand(RefreshDowntime);
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             Messenger.Default.Register<ProductChangedMessage>(this, ProductChanged);
 
@@ -590,10 +596,10 @@ namespace Gamma.ViewModels
             ContractorId = productionTaskBatch?.C1CContractorID;
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
-            if (productionTaskBatch?.ProductionTasks.FirstOrDefault().Places?.IsEnabledSamplesInDocCloseShift != null)
-                IsEnabledSamples = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places.IsEnabledSamplesInDocCloseShift ?? true;
-            if (productionTaskBatch?.ProductionTasks.FirstOrDefault().Places?.IsEnabledRepackInProductionTask != null)
-                IsEnabledRepack = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places.IsEnabledRepackInProductionTask ?? true;
+            var place = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places;
+            IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
+            IsEnabledRepack = place?.IsEnabledRepackInProductionTask ?? true;
+            IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
         }
 
         private void ChangeCurrentView(BatchKinds batchKind)
@@ -1641,7 +1647,7 @@ namespace Gamma.ViewModels
                 IsCancel = true,
                 IsDefault = false,
             };
-            var dialogService = GetService<IDialogService>("");
+            var dialogService = GetService<IDialogService>("SetQuantityDialog");
             var result = dialogService.ShowDialog(
                 dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
                 title: "Отобранные образцы",
@@ -1800,6 +1806,158 @@ namespace Gamma.ViewModels
             
             RefreshRepack();
         }*/
+
+        public DelegateCommand AddDowntimeCommand { get; private set; }
+        public DelegateCommand ShowDowntimeCommand { get; private set; }
+        public DelegateCommand DeleteDowntimeCommand { get; private set; }
+        public DelegateCommand RefreshDowntimeCommand { get; private set; }
+
+        private int _downtimeIntervalid;
+
+        public int DowntimeIntervalid
+        {
+            get { return _downtimeIntervalid; }
+            set
+            {
+                if (_downtimeIntervalid == value) return;
+                _downtimeIntervalid = value < 0 ? 0 : value;
+                if (_downtimeIntervalid < 3) RefreshDowntime();
+            }
+        }
+        public bool IsEnabledDowntimes { get; set; } = false;
+
+        private ItemsChangeObservableCollection<Downtime> _downtimes = new ItemsChangeObservableCollection<Downtime>();
+        public ItemsChangeObservableCollection<Downtime> Downtimes
+        {
+            get
+            {
+                return _downtimes;
+            }
+            set
+            {
+                _downtimes = value;
+                RaisePropertyChanged("Downtimes");
+            }
+        }
+
+        private Downtime _selectedDowntime;
+        public Downtime SelectedDowntime
+        {
+            get
+            {
+                return _selectedDowntime;
+            }
+            set
+            {
+                _selectedDowntime = value;
+                RaisePropertyChanged("SelectedDowntime");
+            }
+        }
+
+        private void RefreshDowntime()
+        {
+            Downtimes = new ItemsChangeObservableCollection<Downtime>
+                (from downtime in GammaBase.GetBatchDowntimes(ProductionTaskBatchID, DowntimeIntervalid)
+                 select new Downtime
+                 {
+                     ProductionTaskConvertingDowntimeID = downtime.ProductionTaskDowntimeID,
+                     DowntimeTypeID = downtime.C1CDowntimeTypeID,
+                     DowntimeTypeDetailID = downtime.C1CDowntimeTypeDetailID,
+                     Date = downtime.Date,
+                     ShiftID = downtime.ShiftID,
+                     DowntimeType = downtime.DowntimeType,
+                     DowntimeTypeDetail = downtime.DowntimeTypeDetail,
+                     Duration = downtime.Duration,
+                     Comment = downtime.Comment,
+                     DateBegin = downtime.DateBegin,
+                     DateEnd = downtime.DateEnd
+                 });
+        }
+        private void ShowDowntime()
+        {
+            MessageBox.Show(SelectedDowntime?.Date.ToString());
+        }
+
+        private void AddDowntime()
+        {
+            var model = new AddDowntimeDialogModel();// "Укажите параметры простоя", "Простои", 1, 1000);
+             var okCommand = new UICommand()
+             {
+                 Caption = "OK",
+                 IsCancel = false,
+                 IsDefault = true,
+                 Command = new DelegateCommand<CancelEventArgs>(
+             x => DebugFunc(),
+             x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14 * 60),
+             };
+             var cancelCommand = new UICommand()
+             {
+                 Id = MessageBoxResult.Cancel,
+                 Caption = "Отмена",
+                 IsCancel = true,
+                 IsDefault = false,
+             };
+             var dialogService = GetService<IDialogService>("AddDowntimeDialog");
+             var result = dialogService.ShowDialog(
+                 dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                 title: "Добавление простоя",
+                 viewModel: model);
+             if (result == okCommand)
+            //var dialog = new AddDowntimeDialog();
+            //dialog.ShowDialog();
+            //if (dialog.DialogResult == true)
+            {
+                string addResult = "";
+                if (DB.HaveWriteAccess("ProductionTaskDowntimes"))
+                {
+                    addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, model.TypeID, model.TypeDetailID, model.DateBegin, model.DateEnd, model.Comment).FirstOrDefault();
+                    //addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, dialog.TypeID, dialog.TypeDetailID, dialog.DateBegin, dialog.DateEnd, dialog.Comment).FirstOrDefault();
+                }
+                else
+                {
+                    MessageBox.Show("Недостаточно прав для добавления!");
+                }
+
+                if (addResult != "")
+                {
+                    MessageBox.Show(addResult, "Добавить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
+                else
+                    RefreshDowntime();
+            }
+        }
+
+        private void DeleteDowntime()
+        {
+            if (SelectedDowntime == null) return;
+            if (WorkSession.ShiftID != 0 && (SelectedDowntime.ShiftID != WorkSession.ShiftID))
+            {
+                MessageBox.Show("Вы не можете удалить простои другой смены");
+                return;
+            }
+            if (MessageBox.Show(
+                "Вы уверены, что хотите удалить простой от " + SelectedDowntime.Date + " смена " + SelectedDowntime.ShiftID + "?",
+                "Удаление простоев", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+            {
+                return;
+            };
+            string delResult = "";
+            if (DB.HaveWriteAccess("ProductionTaskConvertingDowntimes"))
+            {
+                delResult = GammaBase.DeleteDowntime(SelectedDowntime.ProductionTaskConvertingDowntimeID).FirstOrDefault();
+            }
+            else
+            {
+                MessageBox.Show("Недостаточно прав для удаления!");
+            }
+
+            if (delResult != "")
+            {
+                MessageBox.Show(delResult, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            RefreshDowntime();
+        }
 
     }
 

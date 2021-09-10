@@ -107,8 +107,13 @@ namespace Gamma.ViewModels
         public DocCloseShiftWithdrawalMaterial DocCloseShiftWithdrawalMaterials { get; set; }
         //private List<Guid> ProductionProductCharacteristicIDs { get; set; }
 
-        private bool IsConfirmed { get; }
+        private bool IsConfirmed { get; set; }
         public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftMaterials") || WorkSession.DBAdmin) || IsConfirmed;
+
+        public void UpdateIsConfirmed(bool isConfirmed)
+        {
+            IsConfirmed = isConfirmed;
+        }
 
         public DocCloseShiftRemainder SelectedBeginProduct { get; set; }
         public DocCloseShiftRemainder SelectedEndProduct { get; set; }

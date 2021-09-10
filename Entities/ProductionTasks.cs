@@ -23,6 +23,7 @@ namespace Gamma.Entities
             this.ActiveProductionTasks = new HashSet<ActiveProductionTasks>();
             this.ProductionTaskConvertingSamples = new HashSet<ProductionTaskConvertingSamples>();
             this.DocRepack = new HashSet<DocRepack>();
+            this.ProductionTaskDowntimes = new HashSet<ProductionTaskDowntimes>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
@@ -54,5 +55,7 @@ namespace Gamma.Entities
         public virtual ICollection<ProductionTaskConvertingSamples> ProductionTaskConvertingSamples { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocRepack> DocRepack { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionTaskDowntimes> ProductionTaskDowntimes { get; set; }
     }
 }

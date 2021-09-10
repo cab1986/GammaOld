@@ -38,7 +38,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.11.%2a</ApplicationVersion>
+    <ApplicationVersion>3.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -245,10 +245,14 @@
     <Compile Include="Dialogs\AddNomenclatureToPalletDialog.xaml.cs">
       <DependentUpon>AddNomenclatureToPalletDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\AddDowntimeDialog.xaml.cs">
+      <DependentUpon>AddDowntimeDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SetQuantityDialog.xaml.cs">
       <DependentUpon>SetQuantityDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="DialogViewModels\AddNomenclatureToPalletDialogModel.cs" />
+    <Compile Include="DialogViewModels\AddDowntimeDialogModel.cs" />
     <Compile Include="DialogViewModels\SetQuantityDialogModel.cs" />
     <Compile Include="Entities\ActiveProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
@@ -281,6 +285,12 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\C1CDocShipmentOrderGoods.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\C1CDowntimeTypeDetails.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\C1CDowntimeTypes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\C1CEnumGroupTypes.cs">
@@ -386,6 +396,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocCloseShiftAuxiliaryMaterials.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DocCloseShiftDowntimes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocCloseShiftMaterials.cs">
@@ -520,6 +533,9 @@
     <Compile Include="Entities\FillDocCloseShiftConvertingWastes_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\FillDocCloseShiftDowntimes_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\FillDocCloseShiftMaterialsAtBegin_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -599,6 +615,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Get1COrders_Result.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetBatchDowntimes_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetBatchProducts_Result.cs">
@@ -790,6 +809,9 @@
     <Compile Include="Entities\ProductionTaskConvertingSamples.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ProductionTaskDowntimes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ProductionTaskRWCutting.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -929,8 +951,10 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
+    <Compile Include="Models\DowntimeType.cs" />
     <Compile Include="Models\RepackProduct.cs" />
     <Compile Include="Models\ReportParameters.cs" />
+    <Compile Include="Models\Downtime.cs" />
     <Compile Include="Models\WithdrawalMaterialBaseItem.cs" />
     <Compile Include="Models\DocMaterialProductionDirectCalculationItem.cs" />
     <Compile Include="Models\DocMaterialProductionDirectCalculationMaterial.cs" />
@@ -1053,6 +1077,7 @@
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
+    <Compile Include="ViewModels\DocCloseShiftDowntimesViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionDirectCalculationMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocRepackViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSpecificationViewModel.cs" />
@@ -1146,6 +1171,9 @@
     </Compile>
     <Compile Include="Views\DocBrokeView.xaml.cs">
       <DependentUpon>DocBrokeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocCloseShiftDowntimesView.xaml.cs">
+      <DependentUpon>DocCloseShiftDowntimesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml.cs">
       <DependentUpon>DocMaterialProductionDirectCalculationMaterialView.xaml</DependentUpon>
@@ -1389,6 +1417,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AddDowntimeDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\FilterDateReportDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1412,6 +1444,10 @@
     <Page Include="Views\DocBrokeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocCloseShiftDowntimesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocMaterialProductionDirectCalculationMaterialView.xaml">
       <Generator>MSBuild:Compile</Generator>

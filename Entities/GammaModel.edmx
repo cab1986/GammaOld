@@ -130,6 +130,36 @@
           <Property Name="Amount" Type="decimal" Precision="15" Scale="3" />
           <Property Name="LoadToTop" Type="bit" />
         </EntityType>
+        <EntityType Name="1CDowntimeTypeDetails">
+          <Key>
+            <PropertyRef Name="1CDowntimeTypeDetailID" />
+          </Key>
+          <Property Name="1CDowntimeTypeDetailID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsMetadata" Type="bit" />
+          <Property Name="1CDeleted" Type="bit" />
+          <Property Name="Folder" Type="bit" />
+          <Property Name="IsArchive" Type="bit" />
+          <Property Name="1CCode" Type="char" MaxLength="11" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+          <Property Name="FullDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="1CParentID" Type="uniqueidentifier" />
+          <Property Name="1CDowntimeTypeID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="1CDowntimeTypes">
+          <Key>
+            <PropertyRef Name="1CDowntimeTypeID" />
+          </Key>
+          <Property Name="1CDowntimeTypeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsMetadata" Type="bit" />
+          <Property Name="1CDeleted" Type="bit" />
+          <Property Name="Folder" Type="bit" />
+          <Property Name="IsArchive" Type="bit" />
+          <Property Name="1CCode" Type="char" MaxLength="11" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+          <Property Name="FullDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="1CParentID" Type="uniqueidentifier" />
+          <Property Name="1COEEClassifierID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="1CEnumGroupTypes">
           <Key>
             <PropertyRef Name="1CEnumGroupTypeID" />
@@ -544,6 +574,20 @@
           </Key>
           <Property Name="DocCloseShiftID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DocCloseShiftDowntimes">
+          <Key>
+            <PropertyRef Name="DocCloseShiftDowntimeID" />
+          </Key>
+          <Property Name="DocCloseShiftDowntimeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CDowntimeTypeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CDowntimeTypeDetailID" Type="uniqueidentifier" />
+          <Property Name="DateBegin" Type="datetime" />
+          <Property Name="DateEnd" Type="datetime" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="2000" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="DocCloseShiftMaterials">
           <Key>
@@ -1069,7 +1113,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="LocalSettings">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -1234,6 +1278,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="RootPlaceID" Type="int" />
           <Property Name="IsEnabledRepackInProductionTask" Type="bit" />
           <Property Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" Type="bit" />
+          <Property Name="IsEnabledDowntimes" Type="bit" />
         </EntityType>
         <EntityType Name="Places1CWarehouses">
           <Key>
@@ -1340,6 +1385,21 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" Nullable="false" />
           <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="ProductionTaskDowntimes">
+          <Key>
+            <PropertyRef Name="ProductionTaskDowntimeID" />
+          </Key>
+          <Property Name="ProductionTaskDowntimeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ShiftID" Type="int" Nullable="false" />
+          <Property Name="1CDowntimeTypeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CDowntimeTypeDetailID" Type="uniqueidentifier" />
+          <Property Name="DateBegin" Type="datetime" Nullable="false" />
+          <Property Name="DateEnd" Type="datetime" Nullable="false" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="2000" />
         </EntityType>
         <EntityType Name="ProductionTaskRWCutting">
           <Key>
@@ -1606,7 +1666,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="PrimePlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1620,7 +1680,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.v1CDocComplectationPositions' doe
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1648,7 +1708,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.v1COrderGoods' does not have a pr
           <Property Name="InQuantityUnits" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1700,7 +1760,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.v1COrders' does not have a primar
           <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="1CNomenclatureID" />
@@ -1717,7 +1777,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.v1CWorkingSpecifications' does no
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1739,7 +1799,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vCharacteristicSGBProperties' doe
           <Property Name="TypeTransition" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1765,7 +1825,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionCompositionCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1793,7 +1853,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionComposition
           <Property Name="IsNotCalculatedQuantityRemainderAtEnd" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionDirectCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1821,7 +1881,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionDirectCalcu
           <Property Name="QuantitySendAtEnd" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1846,7 +1906,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementGoods' does not have 
           <Property Name="OutPlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1897,7 +1957,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementProducts' does not ha
           <Property Name="MovementID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vDocRepackProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vDocRepackProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocRepackProducts">
           <Key>
             <PropertyRef Name="DocRepackProductID" />
@@ -1934,7 +1994,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vDocRepackProducts' does not have
           <Property Name="DocBrokeDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -1946,7 +2006,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vGroupPackSpools' does not have a
           <Property Name="BreakNumber" Type="tinyint" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -1957,7 +2017,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vPlacePropertiesValues' does not 
           <Property Name="CoreDiameter" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlaceZones">
           <Key>
             <PropertyRef Name="PlaceZoneID" />
@@ -1976,7 +2036,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vPlaceZones' does not have a prim
           <Property Name="PlaceZoneRootName" Type="varchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -1997,7 +2057,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vPMSpoolsToGroupPack' does not ha
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionMaterials">
           <Key>
             <PropertyRef Name="ProductNomenclatureID" />
@@ -2019,7 +2079,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vProductionMaterials' does not ha
           <Property Name="1CSpecificationID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -2029,7 +2089,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskBatches' does not 
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2053,7 +2113,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskProducts' does not
           <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsCurrentStateInfo">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -2068,7 +2128,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vProductsCurrentStateInfo' does n
           <Property Name="State" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2120,9 +2180,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vProductsInfo' does not have a pr
           <Property Name="SCU" Type="varchar" MaxLength="201" />
           <Property Name="KindValueID" Type="uniqueidentifier" />
           <Property Name="KindValue" Type="nvarchar" MaxLength="100" />
+          <Property Name="ProductionTaskID" Type="uniqueidentifier" />
+          <Property Name="ProductionTaskNumber" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vRobotNomenclatures">
           <Key>
             <PropertyRef Name="ProdNumber" />
@@ -2376,6 +2438,42 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Principal>
             <Dependent Role="1CDocShipmentOrderGoods">
               <PropertyRef Name="1CDocShipmentOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails">
+          <End Role="1CDowntimeTypeDetails" Type="Self.1CDowntimeTypeDetails" Multiplicity="0..1" />
+          <End Role="1CDowntimeTypeDetails1" Type="Self.1CDowntimeTypeDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypeDetails">
+              <PropertyRef Name="1CDowntimeTypeDetailID" />
+            </Principal>
+            <Dependent Role="1CDowntimeTypeDetails1">
+              <PropertyRef Name="1CParentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDowntimeTypeDetails_1CDowntimeTypes">
+          <End Role="1CDowntimeTypes" Type="Self.1CDowntimeTypes" Multiplicity="0..1" />
+          <End Role="1CDowntimeTypeDetails" Type="Self.1CDowntimeTypeDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypes">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="1CDowntimeTypeDetails">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDowntimeTypes_1CDowntimeTypes">
+          <End Role="1CDowntimeTypes" Type="Self.1CDowntimeTypes" Multiplicity="0..1" />
+          <End Role="1CDowntimeTypes1" Type="Self.1CDowntimeTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypes">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="1CDowntimeTypes1">
+              <PropertyRef Name="1CParentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3191,6 +3289,42 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               <PropertyRef Name="DocID" />
             </Principal>
             <Dependent Role="DocCloseShiftDocs">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails">
+          <End Role="1CDowntimeTypeDetails" Type="Self.1CDowntimeTypeDetails" Multiplicity="0..1" />
+          <End Role="DocCloseShiftDowntimes" Type="Self.DocCloseShiftDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypeDetails">
+              <PropertyRef Name="1CDowntimeTypeDetailID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftDowntimes">
+              <PropertyRef Name="1CDowntimeTypeDetailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftDowntimes_1CDowntimeTypes">
+          <End Role="1CDowntimeTypes" Type="Self.1CDowntimeTypes" Multiplicity="1" />
+          <End Role="DocCloseShiftDowntimes" Type="Self.DocCloseShiftDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypes">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftDowntimes">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftDowntimes_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocCloseShiftDowntimes" Type="Self.DocCloseShiftDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftDowntimes">
               <PropertyRef Name="DocID" />
             </Dependent>
           </ReferentialConstraint>
@@ -5029,6 +5163,42 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductionTaskDowntimes_1CDowntimeTypeDetails">
+          <End Role="1CDowntimeTypeDetails" Type="Self.1CDowntimeTypeDetails" Multiplicity="0..1" />
+          <End Role="ProductionTaskDowntimes" Type="Self.ProductionTaskDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypeDetails">
+              <PropertyRef Name="1CDowntimeTypeDetailID" />
+            </Principal>
+            <Dependent Role="ProductionTaskDowntimes">
+              <PropertyRef Name="1CDowntimeTypeDetailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskDowntimes_1CDowntimeTypes">
+          <End Role="1CDowntimeTypes" Type="Self.1CDowntimeTypes" Multiplicity="1" />
+          <End Role="ProductionTaskDowntimes" Type="Self.ProductionTaskDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDowntimeTypes">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="ProductionTaskDowntimes">
+              <PropertyRef Name="1CDowntimeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskDowntimes_ProductionTasks">
+          <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1" />
+          <End Role="ProductionTaskDowntimes" Type="Self.ProductionTaskDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskDowntimes">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionTaskRWCutting_1CCharacteristics">
           <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
           <End Role="ProductionTaskRWCutting" Type="Self.ProductionTaskRWCutting" Multiplicity="*" />
@@ -5557,6 +5727,15 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
           <Parameter Name="PlaceID" Type="int" Mode="In" />
         </Function>
+        <Function Name="CreateDowntime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Duration" Type="int" Mode="In" />
+          <Parameter Name="DowntimeTypeID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="DowntimeTypeDetailID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="DateBegin" Type="datetime" Mode="In" />
+          <Parameter Name="DateEnd" Type="datetime" Mode="In" />
+          <Parameter Name="Comment" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
@@ -5575,6 +5754,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
         <Function Name="CurrentUserID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="uniqueidentifier" />
         <Function Name="DeleteDocFromDocCloseShiftDocs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="DeleteDowntime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskDowntimeID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="DeleteGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -5626,6 +5808,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
         </Function>
         <Function Name="FillDocCloseShiftConvertingWastesProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="CloseDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="FillDocCloseShiftDowntimes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
           <Parameter Name="ShiftID" Type="int" Mode="In" />
           <Parameter Name="CloseDate" Type="datetime" Mode="In" />
@@ -5806,6 +5993,10 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
         </Function>
         <Function Name="GetActiveSourceSpools" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetBatchDowntimes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="IntervalID" Type="int" Mode="In" />
         </Function>
         <Function Name="GetBatchProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
@@ -6088,6 +6279,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="1CDocInternalOrders" EntityType="Self.1CDocInternalOrders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CDocShipmentOrder" EntityType="Self.1CDocShipmentOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CDocShipmentOrderGoods" EntityType="Self.1CDocShipmentOrderGoods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="1CDowntimeTypeDetails" EntityType="Self.1CDowntimeTypeDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="1CDowntimeTypes" EntityType="Self.1CDowntimeTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CEnumGroupTypes" EntityType="Self.1CEnumGroupTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMainSpecifications" EntityType="Self.1CMainSpecifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMeasureUnitQualifiers" EntityType="Self.1CMeasureUnitQualifiers" Schema="dbo" store:Type="Tables" />
@@ -6124,6 +6317,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="DocChangeStateProducts" EntityType="Self.DocChangeStateProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftAuxiliaryMaterials" EntityType="Self.DocCloseShiftAuxiliaryMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftDocs" EntityType="Self.DocCloseShiftDocs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocCloseShiftDowntimes" EntityType="Self.DocCloseShiftDowntimes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftMaterials" EntityType="Self.DocCloseShiftMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftMaterialTypes" EntityType="Self.DocCloseShiftMaterialTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocCloseShiftMovementProducts" EntityType="Self.DocCloseShiftMovementProducts" Schema="dbo" store:Type="Tables" />
@@ -6195,6 +6389,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="ProductionTaskBatches" EntityType="Self.ProductionTaskBatches" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskConverting" EntityType="Self.ProductionTaskConverting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskConvertingSamples" EntityType="Self.ProductionTaskConvertingSamples" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductionTaskDowntimes" EntityType="Self.ProductionTaskDowntimes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskRWCutting" EntityType="Self.ProductionTaskRWCutting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTasks" EntityType="Self.ProductionTasks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductionTaskSGB" EntityType="Self.ProductionTaskSGB" Schema="dbo" store:Type="Tables" />
@@ -6638,7 +6833,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     [vProductsInfo].[GroupNumberByTimeProductionDate] AS [GroupNumberByTimeProductionDate], 
     [vProductsInfo].[SCU] AS [SCU], 
     [vProductsInfo].[KindValueID] AS [KindValueID], 
-    [vProductsInfo].[KindValue] AS [KindValue]
+    [vProductsInfo].[KindValue] AS [KindValue], 
+    [vProductsInfo].[ProductionTaskID] AS [ProductionTaskID], 
+    [vProductsInfo].[ProductionTaskNumber] AS [ProductionTaskNumber]
     FROM [dbo].[vProductsInfo] AS [vProductsInfo]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vRobotNomenclatures" EntityType="Self.vRobotNomenclatures" store:Type="Views" store:Schema="dbo">
@@ -6731,6 +6928,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_1CDocShipmentOrderGoods_1CDocShipmentOrder" Association="Self.FK_1CDocShipmentOrderGoods_1CDocShipmentOrder">
             <End Role="1CDocShipmentOrder" EntitySet="1CDocShipmentOrder" />
             <End Role="1CDocShipmentOrderGoods" EntitySet="1CDocShipmentOrderGoods" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails" Association="Self.FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails">
+            <End Role="1CDowntimeTypeDetails" EntitySet="1CDowntimeTypeDetails" />
+            <End Role="1CDowntimeTypeDetails1" EntitySet="1CDowntimeTypeDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDowntimeTypeDetails_1CDowntimeTypes" Association="Self.FK_1CDowntimeTypeDetails_1CDowntimeTypes">
+            <End Role="1CDowntimeTypes" EntitySet="1CDowntimeTypes" />
+            <End Role="1CDowntimeTypeDetails" EntitySet="1CDowntimeTypeDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDowntimeTypes_1CDowntimeTypes" Association="Self.FK_1CDowntimeTypes_1CDowntimeTypes">
+            <End Role="1CDowntimeTypes" EntitySet="1CDowntimeTypes" />
+            <End Role="1CDowntimeTypes1" EntitySet="1CDowntimeTypes" />
           </AssociationSet>
           <AssociationSet Name="FK_1CMainSpecifications_1CCharacteristics" Association="Self.FK_1CMainSpecifications_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -6999,6 +7208,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_DocCloseShiftDocs_Docs3" Association="Self.FK_DocCloseShiftDocs_Docs3">
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocCloseShiftDocs" EntitySet="DocCloseShiftDocs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails" Association="Self.FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails">
+            <End Role="1CDowntimeTypeDetails" EntitySet="1CDowntimeTypeDetails" />
+            <End Role="DocCloseShiftDowntimes" EntitySet="DocCloseShiftDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftDowntimes_1CDowntimeTypes" Association="Self.FK_DocCloseShiftDowntimes_1CDowntimeTypes">
+            <End Role="1CDowntimeTypes" EntitySet="1CDowntimeTypes" />
+            <End Role="DocCloseShiftDowntimes" EntitySet="DocCloseShiftDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftDowntimes_Docs" Association="Self.FK_DocCloseShiftDowntimes_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftDowntimes" EntitySet="DocCloseShiftDowntimes" />
           </AssociationSet>
           <AssociationSet Name="FK_DocCloseShiftMaterials_1CCharacteristics" Association="Self.FK_DocCloseShiftMaterials_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -7603,6 +7824,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_ProductionTaskConvertingSamples_ProductionTasks" Association="Self.FK_ProductionTaskConvertingSamples_ProductionTasks">
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskConvertingSamples" EntitySet="ProductionTaskConvertingSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskDowntimes_1CDowntimeTypeDetails" Association="Self.FK_ProductionTaskDowntimes_1CDowntimeTypeDetails">
+            <End Role="1CDowntimeTypeDetails" EntitySet="1CDowntimeTypeDetails" />
+            <End Role="ProductionTaskDowntimes" EntitySet="ProductionTaskDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskDowntimes_1CDowntimeTypes" Association="Self.FK_ProductionTaskDowntimes_1CDowntimeTypes">
+            <End Role="1CDowntimeTypes" EntitySet="1CDowntimeTypes" />
+            <End Role="ProductionTaskDowntimes" EntitySet="ProductionTaskDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskDowntimes_ProductionTasks" Association="Self.FK_ProductionTaskDowntimes_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskDowntimes" EntitySet="ProductionTaskDowntimes" />
           </AssociationSet>
           <AssociationSet Name="FK_ProductionTaskRWCutting_1CCharacteristics" Association="Self.FK_ProductionTaskRWCutting_1CCharacteristics">
             <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
@@ -10094,6 +10327,67 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <Parameter Name="ShiftID" Mode="In" Type="Int32" />
             <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="C1CDowntimeTypeDetails" EntityType="GammaModel.C1CDowntimeTypeDetails" />
+          <EntitySet Name="C1CDowntimeTypes" EntityType="GammaModel.C1CDowntimeTypes" />
+          <EntitySet Name="DocCloseShiftDowntimes" EntityType="GammaModel.DocCloseShiftDowntimes" />
+          <EntitySet Name="ProductionTaskDowntimes" EntityType="GammaModel.ProductionTaskDowntimes" />
+          <AssociationSet Name="FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails" Association="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails">
+            <End Role="C1CDowntimeTypeDetails" EntitySet="C1CDowntimeTypeDetails" />
+            <End Role="C1CDowntimeTypeDetails1" EntitySet="C1CDowntimeTypeDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDowntimeTypeDetails_1CDowntimeTypes" Association="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypes">
+            <End Role="C1CDowntimeTypes" EntitySet="C1CDowntimeTypes" />
+            <End Role="C1CDowntimeTypeDetails" EntitySet="C1CDowntimeTypeDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails" Association="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails">
+            <End Role="C1CDowntimeTypeDetails" EntitySet="C1CDowntimeTypeDetails" />
+            <End Role="DocCloseShiftDowntimes" EntitySet="DocCloseShiftDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskDowntimes_1CDowntimeTypeDetails" Association="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypeDetails">
+            <End Role="C1CDowntimeTypeDetails" EntitySet="C1CDowntimeTypeDetails" />
+            <End Role="ProductionTaskDowntimes" EntitySet="ProductionTaskDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CDowntimeTypes_1CDowntimeTypes" Association="GammaModel.FK_1CDowntimeTypes_1CDowntimeTypes">
+            <End Role="C1CDowntimeTypes" EntitySet="C1CDowntimeTypes" />
+            <End Role="C1CDowntimeTypes1" EntitySet="C1CDowntimeTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftDowntimes_1CDowntimeTypes" Association="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypes">
+            <End Role="C1CDowntimeTypes" EntitySet="C1CDowntimeTypes" />
+            <End Role="DocCloseShiftDowntimes" EntitySet="DocCloseShiftDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskDowntimes_1CDowntimeTypes" Association="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypes">
+            <End Role="C1CDowntimeTypes" EntitySet="C1CDowntimeTypes" />
+            <End Role="ProductionTaskDowntimes" EntitySet="ProductionTaskDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocCloseShiftDowntimes_Docs" Association="GammaModel.FK_DocCloseShiftDowntimes_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocCloseShiftDowntimes" EntitySet="DocCloseShiftDowntimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskDowntimes_ProductionTasks" Association="GammaModel.FK_ProductionTaskDowntimes_ProductionTasks">
+            <End Role="ProductionTasks" EntitySet="ProductionTasks" />
+            <End Role="ProductionTaskDowntimes" EntitySet="ProductionTaskDowntimes" />
+          </AssociationSet>
+          <FunctionImport Name="CreateDowntime" ReturnType="Collection(String)">
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+            <Parameter Name="Duration" Mode="In" Type="Int32" />
+            <Parameter Name="DowntimeTypeID" Mode="In" Type="Guid" />
+            <Parameter Name="DowntimeTypeDetailID" Mode="In" Type="Guid" />
+            <Parameter Name="DateBegin" Mode="In" Type="DateTime" />
+            <Parameter Name="DateEnd" Mode="In" Type="DateTime" />
+            <Parameter Name="Comment" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteDowntime" ReturnType="Collection(String)">
+          <Parameter Name="ProductionTaskDowntimeID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="FillDocCloseShiftDowntimes" ReturnType="Collection(GammaModel.FillDocCloseShiftDowntimes_Result)">
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="CloseDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GetBatchDowntimes" ReturnType="Collection(GammaModel.GetBatchDowntimes_Result)">
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+            <Parameter Name="IntervalID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10494,6 +10788,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="C1CSpecificationID" Type="Guid" />
           <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepack_ProductionTasks" FromRole="ProductionTasks" ToRole="DocRepack" />
+          <NavigationProperty Name="ProductionTaskDowntimes" Relationship="GammaModel.FK_ProductionTaskDowntimes_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskDowntimes" />
         </EntityType>
         <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
@@ -11349,6 +11644,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocMaterialProduct" Relationship="GammaModel.DocMaterialDocs" FromRole="Docs1" ToRole="Docs" />
           <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepack_Docs" FromRole="Docs" ToRole="DocRepack" />
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" FromRole="Docs" ToRole="DocCloseShiftAuxiliaryMaterials" />
+          <NavigationProperty Name="DocCloseShiftDowntimes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_Docs" FromRole="Docs" ToRole="DocCloseShiftDowntimes" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -11825,6 +12121,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="SCU" Type="String" MaxLength="201" FixedLength="false" Unicode="false" />
           <Property Name="KindValueID" Type="Guid" />
           <Property Name="KindValue" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ProductionTaskID" Type="Guid" />
+          <Property Name="ProductionTaskNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="DocShipmentOrders">
           <Key>
@@ -12082,6 +12380,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="Users1" Relationship="GammaModel.FK_Users_Places" FromRole="Places" ToRole="Users" />
           <Property Name="IsEnabledRepackInProductionTask" Type="Boolean" />
           <Property Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" Type="Boolean" />
+          <Property Name="IsEnabledDowntimes" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -15829,6 +16128,211 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="String" Name="MeasureUnitName" Nullable="true" MaxLength="50" />
           <Property Type="Guid" Name="ProductionTaskID" Nullable="true" />
         </ComplexType>
+        <EntityType Name="C1CDowntimeTypeDetails">
+          <Key>
+            <PropertyRef Name="C1CDowntimeTypeDetailID" />
+          </Key>
+          <Property Name="C1CDowntimeTypeDetailID" Type="Guid" Nullable="false" />
+          <Property Name="IsMetadata" Type="Boolean" />
+          <Property Name="C1CDeleted" Type="Boolean" />
+          <Property Name="Folder" Type="Boolean" />
+          <Property Name="IsArchive" Type="Boolean" />
+          <Property Name="C1CCode" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FullDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="C1CParentID" Type="Guid" />
+          <Property Name="C1CDowntimeTypeID" Type="Guid" />
+          <NavigationProperty Name="C1CDowntimeTypeDetails1" Relationship="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails" FromRole="C1CDowntimeTypeDetails" ToRole="C1CDowntimeTypeDetails1" />
+          <NavigationProperty Name="C1CDowntimeTypeDetails2" Relationship="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails" FromRole="C1CDowntimeTypeDetails1" ToRole="C1CDowntimeTypeDetails" />
+          <NavigationProperty Name="C1CDowntimeTypes" Relationship="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypes" FromRole="C1CDowntimeTypeDetails" ToRole="C1CDowntimeTypes" />
+          <NavigationProperty Name="DocCloseShiftDowntimes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails" FromRole="C1CDowntimeTypeDetails" ToRole="DocCloseShiftDowntimes" />
+          <NavigationProperty Name="ProductionTaskDowntimes" Relationship="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypeDetails" FromRole="C1CDowntimeTypeDetails" ToRole="ProductionTaskDowntimes" />
+        </EntityType>
+        <EntityType Name="C1CDowntimeTypes">
+          <Key>
+            <PropertyRef Name="C1CDowntimeTypeID" />
+          </Key>
+          <Property Name="C1CDowntimeTypeID" Type="Guid" Nullable="false" />
+          <Property Name="IsMetadata" Type="Boolean" />
+          <Property Name="C1CDeleted" Type="Boolean" />
+          <Property Name="Folder" Type="Boolean" />
+          <Property Name="IsArchive" Type="Boolean" />
+          <Property Name="C1CCode" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FullDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="C1CParentID" Type="Guid" />
+          <Property Name="C1COEEClassifierID" Type="Guid" />
+          <NavigationProperty Name="C1CDowntimeTypeDetails" Relationship="GammaModel.FK_1CDowntimeTypeDetails_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="C1CDowntimeTypeDetails" />
+          <NavigationProperty Name="C1CDowntimeTypes1" Relationship="GammaModel.FK_1CDowntimeTypes_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="C1CDowntimeTypes1" />
+          <NavigationProperty Name="C1CDowntimeTypes2" Relationship="GammaModel.FK_1CDowntimeTypes_1CDowntimeTypes" FromRole="C1CDowntimeTypes1" ToRole="C1CDowntimeTypes" />
+          <NavigationProperty Name="DocCloseShiftDowntimes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="DocCloseShiftDowntimes" />
+          <NavigationProperty Name="ProductionTaskDowntimes" Relationship="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="ProductionTaskDowntimes" />
+        </EntityType>
+        <EntityType Name="DocCloseShiftDowntimes">
+          <Key>
+            <PropertyRef Name="DocCloseShiftDowntimeID" />
+          </Key>
+          <Property Name="DocCloseShiftDowntimeID" Type="Guid" Nullable="false" />
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="C1CDowntimeTypeID" Type="Guid" Nullable="false" />
+          <Property Name="C1CDowntimeTypeDetailID" Type="Guid" />
+          <Property Name="DateBegin" Type="DateTime" Precision="3" />
+          <Property Name="DateEnd" Type="DateTime" Precision="3" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="ProductionTaskID" Type="Guid" />
+          <NavigationProperty Name="C1CDowntimeTypeDetails" Relationship="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails" FromRole="DocCloseShiftDowntimes" ToRole="C1CDowntimeTypeDetails" />
+          <NavigationProperty Name="C1CDowntimeTypes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypes" FromRole="DocCloseShiftDowntimes" ToRole="C1CDowntimeTypes" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocCloseShiftDowntimes_Docs" FromRole="DocCloseShiftDowntimes" ToRole="Docs" />
+        </EntityType>
+        <EntityType Name="ProductionTaskDowntimes">
+          <Key>
+            <PropertyRef Name="ProductionTaskDowntimeID" />
+          </Key>
+          <Property Name="ProductionTaskDowntimeID" Type="Guid" Nullable="false" />
+          <Property Name="ProductionTaskID" Type="Guid" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ShiftID" Type="Int32" Nullable="false" />
+          <Property Name="C1CDowntimeTypeID" Type="Guid" Nullable="false" />
+          <Property Name="C1CDowntimeTypeDetailID" Type="Guid" />
+          <Property Name="DateBegin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateEnd" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="C1CDowntimeTypeDetails" Relationship="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypeDetails" FromRole="ProductionTaskDowntimes" ToRole="C1CDowntimeTypeDetails" />
+          <NavigationProperty Name="C1CDowntimeTypes" Relationship="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypes" FromRole="ProductionTaskDowntimes" ToRole="C1CDowntimeTypes" />
+          <NavigationProperty Name="ProductionTasks" Relationship="GammaModel.FK_ProductionTaskDowntimes_ProductionTasks" FromRole="ProductionTaskDowntimes" ToRole="ProductionTasks" />
+        </EntityType>
+        <Association Name="FK_1CDowntimeTypeDetails_1CDowntimeTypeDetails">
+          <End Type="GammaModel.C1CDowntimeTypeDetails" Role="C1CDowntimeTypeDetails" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CDowntimeTypeDetails" Role="C1CDowntimeTypeDetails1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypeDetails">
+              <PropertyRef Name="C1CDowntimeTypeDetailID" />
+            </Principal>
+            <Dependent Role="C1CDowntimeTypeDetails1">
+              <PropertyRef Name="C1CParentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDowntimeTypeDetails_1CDowntimeTypes">
+          <End Type="GammaModel.C1CDowntimeTypes" Role="C1CDowntimeTypes" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CDowntimeTypeDetails" Role="C1CDowntimeTypeDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypes">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="C1CDowntimeTypeDetails">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftDowntimes_1CDowntimeTypeDetails">
+          <End Type="GammaModel.C1CDowntimeTypeDetails" Role="C1CDowntimeTypeDetails" Multiplicity="0..1" />
+          <End Type="GammaModel.DocCloseShiftDowntimes" Role="DocCloseShiftDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypeDetails">
+              <PropertyRef Name="C1CDowntimeTypeDetailID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftDowntimes">
+              <PropertyRef Name="C1CDowntimeTypeDetailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskDowntimes_1CDowntimeTypeDetails">
+          <End Type="GammaModel.C1CDowntimeTypeDetails" Role="C1CDowntimeTypeDetails" Multiplicity="0..1" />
+          <End Type="GammaModel.ProductionTaskDowntimes" Role="ProductionTaskDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypeDetails">
+              <PropertyRef Name="C1CDowntimeTypeDetailID" />
+            </Principal>
+            <Dependent Role="ProductionTaskDowntimes">
+              <PropertyRef Name="C1CDowntimeTypeDetailID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CDowntimeTypes_1CDowntimeTypes">
+          <End Type="GammaModel.C1CDowntimeTypes" Role="C1CDowntimeTypes" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CDowntimeTypes" Role="C1CDowntimeTypes1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypes">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="C1CDowntimeTypes1">
+              <PropertyRef Name="C1CParentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftDowntimes_1CDowntimeTypes">
+          <End Type="GammaModel.C1CDowntimeTypes" Role="C1CDowntimeTypes" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftDowntimes" Role="DocCloseShiftDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypes">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftDowntimes">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskDowntimes_1CDowntimeTypes">
+          <End Type="GammaModel.C1CDowntimeTypes" Role="C1CDowntimeTypes" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskDowntimes" Role="ProductionTaskDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDowntimeTypes">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Principal>
+            <Dependent Role="ProductionTaskDowntimes">
+              <PropertyRef Name="C1CDowntimeTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocCloseShiftDowntimes_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocCloseShiftDowntimes" Role="DocCloseShiftDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocCloseShiftDowntimes">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductionTaskDowntimes_ProductionTasks">
+          <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskDowntimes" Role="ProductionTaskDowntimes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTasks">
+              <PropertyRef Name="ProductionTaskID" />
+            </Principal>
+            <Dependent Role="ProductionTaskDowntimes">
+              <PropertyRef Name="ProductionTaskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="FillDocCloseShiftDowntimes_Result">
+          <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
+          <Property Type="Guid" Name="C1CDowntimeTypeID" Nullable="false" />
+          <Property Type="Guid" Name="C1CDowntimeTypeDetailID" Nullable="true" />
+          <Property Type="Int32" Name="Duration" Nullable="true" />
+          <Property Type="String" Name="DowntimeType" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DowntimeTypeDetail" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetBatchDowntimes_Result">
+          <Property Type="Guid" Name="ProductionTaskDowntimeID" Nullable="false" />
+          <Property Type="Guid" Name="ProductionTaskID" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="ShiftID" Nullable="false" />
+          <Property Type="Guid" Name="C1CDowntimeTypeID" Nullable="false" />
+          <Property Type="Guid" Name="C1CDowntimeTypeDetailID" Nullable="true" />
+          <Property Type="DateTime" Name="DateBegin" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateEnd" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="Duration" Nullable="false" />
+          <Property Type="String" Name="Comment" Nullable="true" MaxLength="2000" />
+          <Property Type="String" Name="DowntimeType" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DowntimeTypeDetail" Nullable="true" MaxLength="50" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17236,6 +17740,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="vProductsInfo">
             <EntityTypeMapping TypeName="GammaModel.vProductsInfo">
               <MappingFragment StoreEntitySet="vProductsInfo">
+                <ScalarProperty Name="ProductionTaskNumber" ColumnName="ProductionTaskNumber" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
                 <ScalarProperty Name="KindValue" ColumnName="KindValue" />
                 <ScalarProperty Name="KindValueID" ColumnName="KindValueID" />
                 <ScalarProperty Name="SCU" ColumnName="SCU" />
@@ -17401,6 +17907,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsEnabledDowntimes" ColumnName="IsEnabledDowntimes" />
                 <ScalarProperty Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" ColumnName="IsEnabledAuxiliaryMaterialsInDocCloseShift" />
                 <ScalarProperty Name="IsEnabledRepackInProductionTask" ColumnName="IsEnabledRepackInProductionTask" />
                 <ScalarProperty Name="RootPlaceID" ColumnName="RootPlaceID" />
@@ -18935,6 +19442,101 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
                 <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="C1CDowntimeTypeDetails">
+            <EntityTypeMapping TypeName="GammaModel.C1CDowntimeTypeDetails">
+              <MappingFragment StoreEntitySet="1CDowntimeTypeDetails">
+                <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
+                <ScalarProperty Name="C1CParentID" ColumnName="1CParentID" />
+                <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
+                <ScalarProperty Name="IsMetadata" ColumnName="IsMetadata" />
+                <ScalarProperty Name="C1CDowntimeTypeDetailID" ColumnName="1CDowntimeTypeDetailID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C1CDowntimeTypes">
+            <EntityTypeMapping TypeName="GammaModel.C1CDowntimeTypes">
+              <MappingFragment StoreEntitySet="1CDowntimeTypes">
+                <ScalarProperty Name="C1COEEClassifierID" ColumnName="1COEEClassifierID" />
+                <ScalarProperty Name="C1CParentID" ColumnName="1CParentID" />
+                <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
+                <ScalarProperty Name="IsArchive" ColumnName="IsArchive" />
+                <ScalarProperty Name="Folder" ColumnName="Folder" />
+                <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
+                <ScalarProperty Name="IsMetadata" ColumnName="IsMetadata" />
+                <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocCloseShiftDowntimes">
+            <EntityTypeMapping TypeName="GammaModel.DocCloseShiftDowntimes">
+              <MappingFragment StoreEntitySet="DocCloseShiftDowntimes">
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="C1CDowntimeTypeDetailID" ColumnName="1CDowntimeTypeDetailID" />
+                <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+                <ScalarProperty Name="DocCloseShiftDowntimeID" ColumnName="DocCloseShiftDowntimeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductionTaskDowntimes">
+            <EntityTypeMapping TypeName="GammaModel.ProductionTaskDowntimes">
+              <MappingFragment StoreEntitySet="ProductionTaskDowntimes">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="C1CDowntimeTypeDetailID" ColumnName="1CDowntimeTypeDetailID" />
+                <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="ProductionTaskDowntimeID" ColumnName="ProductionTaskDowntimeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateDowntime" FunctionName="GammaDBModel.CreateDowntime" />
+          <FunctionImportMapping FunctionImportName="DeleteDowntime" FunctionName="GammaDBModel.DeleteDowntime" />
+          <FunctionImportMapping FunctionImportName="FillDocCloseShiftDowntimes" FunctionName="GammaDBModel.FillDocCloseShiftDowntimes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.FillDocCloseShiftDowntimes_Result">
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
+                <ScalarProperty Name="C1CDowntimeTypeDetailID" ColumnName="1CDowntimeTypeDetailID" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="DowntimeType" ColumnName="DowntimeType" />
+                <ScalarProperty Name="DowntimeTypeDetail" ColumnName="DowntimeTypeDetail" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetBatchDowntimes" FunctionName="GammaDBModel.GetBatchDowntimes">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetBatchDowntimes_Result">
+                <ScalarProperty Name="ProductionTaskDowntimeID" ColumnName="ProductionTaskDowntimeID" />
+                <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ShiftID" ColumnName="ShiftID" />
+                <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
+                <ScalarProperty Name="C1CDowntimeTypeDetailID" ColumnName="1CDowntimeTypeDetailID" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="DowntimeType" ColumnName="DowntimeType" />
+                <ScalarProperty Name="DowntimeTypeDetail" ColumnName="DowntimeTypeDetail" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

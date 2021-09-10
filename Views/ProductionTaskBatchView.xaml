@@ -21,7 +21,7 @@
         common:WindowSettings.Save="True"
         d:DataContext="{d:DesignInstance Type=vm:ProductionTaskBatchViewModel, IsDesignTimeCreatable=False}">
     <dxmvvm:Interaction.Behaviors>
-        <dx:DialogService DialogWindowStartupLocation="CenterOwner">
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="SetQuantityDialog">
             <dx:DialogService.ViewTemplate>
                 <DataTemplate>
                     <dialogs:SetQuantityDialog/>
@@ -31,6 +31,19 @@
                 <Style TargetType="dx:DXDialogWindow">
                     <Setter Property="Width" Value="300"/>
                     <Setter Property="Height" Value="160"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="AddDowntimeDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:AddDowntimeDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="500"/>
+                    <Setter Property="Height" Value="400"/>
                 </Style>
             </dx:DialogService.DialogStyle>
         </dx:DialogService>
@@ -182,9 +195,9 @@
                     <dxb:BarManager>
                         <dxb:BarManager.Bars>
                             <dxb:Bar>
-                                <dxb:BarButtonItem Content="Обновить" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshRepackCommand}"/>
+                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding AddRepackCommand}"/>
                                 <dxb:BarItemSeparator />
-                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding AddRepackCommand}"/>                                
+                                <dxb:BarButtonItem Content="Обновить" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshRepackCommand}"/>
                             </dxb:Bar>
                         </dxb:BarManager.Bars>
                     </dxb:BarManager>
@@ -309,6 +322,73 @@
                         </dxg:GridControl.View>
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowSampleCommand}"/>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dxg:GridControl>
+                </Grid>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Простои"  Visibility="{Binding IsEnabledDowntimes, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <dxb:BarManager>
+                        <dxb:BarManager.Bars>
+                            <dxb:Bar>
+                                
+                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding AddDowntimeCommand}"/>
+                                <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDowntimeCommand}"
+                                                   LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" GlyphSize="Small"/>
+                                <dxb:BarItemSeparator />
+                                <dxb:BarButtonItem Content="Обновить" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshDowntimeCommand}"/>
+                            </dxb:Bar>
+                        </dxb:BarManager.Bars>
+                    </dxb:BarManager>
+                    <dxlc:LayoutControl Grid.Row="1">
+                        <dxlc:LayoutItem Label="Диапазон:">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding DowntimeIntervalid}" x:Name="DowntimesIntervalList" IsTextEditable="False"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutControl>
+                    <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="2" ItemsSource="{Binding Downtimes}"
+                                     SelectionMode="Row" SelectedItem="{Binding SelectedDowntime}" >
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="Date" Header="Дата добавления" ReadOnly="True" VisibleIndex="1" Width="110" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="ShiftID" Header="Смена" VisibleIndex="2" Width="13" />
+                            <dxg:GridColumn FieldName="Duration" ReadOnly="True" Header="Длит-ть(мин)" VisibleIndex="3" Width="90" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:TextEditSettings Mask="0.###" MaskType="Numeric" DisplayFormat="0.###"/>
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="DowntimeType" ReadOnly="True" VisibleIndex="6"  Header="Вид простоя"  Width="60" />
+                            <dxg:GridColumn FieldName="DowntimeTypeDetail" ReadOnly="True" VisibleIndex="7"  Header="Вид простоя (дополнительно)" Width="60"/>
+                            <dxg:GridColumn FieldName="DateBegin" Header="Начало" ReadOnly="True" VisibleIndex="4" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="DateEnd" Header="Окончание" ReadOnly="True" VisibleIndex="5" Width="120" FixedWidth="True">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="Comment" Header="Комментарий" VisibleIndex="8"/>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                        </dxg:GridControl.GroupSummary>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                        </dxg:GridControl.TotalSummary>
+                        <dxg:GridControl.View>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
+                        </dxg:GridControl.View>
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowDowntimeCommand}"/>
                         </dxmvvm:Interaction.Behaviors>
                     </dxg:GridControl>
                 </Grid>

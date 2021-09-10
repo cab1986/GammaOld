@@ -32,17 +32,20 @@ namespace Gamma.ViewModels
             
         }
 
-        public DocCloseShiftConvertingGridViewModel(DateTime closeDate) : this()
+        public DocCloseShiftConvertingGridViewModel(DateTime closeDate, int? placeID = null, int? shiftID = null) : this()
         {
-            PlaceID = WorkSession.PlaceID;
-            ShiftID = WorkSession.ShiftID;
+            PlaceID = placeID ?? WorkSession.PlaceID;
+            ShiftID = shiftID ?? WorkSession.ShiftID;
             CloseDate = closeDate;
 
             IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
-            IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
-            IsEnabledAuxiliaryMaterials = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledAuxiliaryMaterialsInDocCloseShift).First() ?? false;
+            DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate);
+            var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+            IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
+            IsEnabledAuxiliaryMaterials = place?.IsEnabledAuxiliaryMaterialsInDocCloseShift ?? false;
+            IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
         }
         public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel _spoolUnwinderRemainders) : this()
         {
@@ -56,11 +59,14 @@ namespace Gamma.ViewModels
                 IsConfirmed = doc.IsConfirmed;
                 DocId = docId;
                 spoolUnwinderRemainders = _spoolUnwinderRemainders;
-                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+                var place = gammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+                IsWithdrawalMaterial = (place?.PlaceWithdrawalMaterialTypeID != 0) ;
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
                 DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(docId,IsConfirmed);
-                IsEnabledSamples = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledSamplesInDocCloseShift).First() ?? true;
-                IsEnabledAuxiliaryMaterials = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.IsEnabledAuxiliaryMaterialsInDocCloseShift).First() ?? false;
+                DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate, docId, IsConfirmed);
+                IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
+                IsEnabledAuxiliaryMaterials = place?.IsEnabledAuxiliaryMaterialsInDocCloseShift ?? false;
+                IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
                 Pallets = new ObservableCollection<Pallet>(gammaBase.GetDocCloseShiftConvertingPallets(docId).Select(d => new Pallet()
                 {
                     DocID = d.DocID,
@@ -146,7 +152,23 @@ namespace Gamma.ViewModels
 
         public bool IsChanged { get; private set; }
 
-        private bool IsConfirmed { get; set; }
+        private bool _isConfirmed { get; set; }
+        private bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;
+                WithdrawalMaterialsGrid?.UpdateIsConfirmed(value);
+                DowntimesGrid?.UpdateIsConfirmed(value);
+            }
+        }
+
+        public void UpdateIsConfirmed(bool isConfirmed)
+        {
+            IsConfirmed = isConfirmed;
+        }
+
         private List<Guid> DocCloseDocIds { get; set; }
         public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || !DB.HaveWriteAccess("DocCloseShiftSamples");// || IsConfirmed;
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
@@ -238,6 +260,20 @@ namespace Gamma.ViewModels
             set
             {
                 _docCloseShiftProductsGrid = value;
+                //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
+            }
+        }
+
+        private DocCloseShiftDowntimesViewModel _downtimesGrid;
+        public DocCloseShiftDowntimesViewModel DowntimesGrid
+        {
+            get
+            {
+                return _downtimesGrid;
+            }
+            set
+            {
+                _downtimesGrid = value;
                 //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
             }
         }
@@ -406,7 +442,7 @@ namespace Gamma.ViewModels
                     }
                     //AuxiliaryMaterials = auxiliaryMaterials;
                 }
-
+                DowntimesGrid?.FillGrid();
                 IsChanged = true;
             }
         }
@@ -470,6 +506,7 @@ namespace Gamma.ViewModels
         public bool IsWithdrawalMaterial { get; set; }
         public bool IsEnabledSamples { get; set; }
         public bool IsEnabledAuxiliaryMaterials { get; set; }
+        public bool IsEnabledDowntimes { get; set; }
 
         private List<Guid> productionProductCharacteristicIDs { get; set; }
         private DocCloseShiftUnwinderRemainderViewModel spoolUnwinderRemainders { get; set; }
@@ -502,7 +539,8 @@ namespace Gamma.ViewModels
             }
             NomenclatureRests?.Clear();
             WithdrawalMaterialsGrid.Clear();
-            DocCloseShiftProductsGrid.Clear();       
+            DocCloseShiftProductsGrid.Clear();
+            DowntimesGrid?.Clear();
         }
 
 
@@ -836,6 +874,7 @@ namespace Gamma.ViewModels
                     }
                 WithdrawalMaterialsGrid?.SaveToModel(docId);
                 DocCloseShiftProductsGrid?.SaveToModel(docId);
+                DowntimesGrid?.SaveToModel(docId);
 
                 gammaBase.SaveChanges();
 
