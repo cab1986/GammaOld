@@ -1943,7 +1943,7 @@ namespace Gamma.ViewModels
                 return;
             };
             string delResult = "";
-            if (DB.HaveWriteAccess("ProductionTaskConvertingDowntimes"))
+            if (DB.HaveWriteAccess("ProductionTaskDowntimes"))
             {
                 delResult = GammaBase.DeleteDowntime(SelectedDowntime.ProductionTaskConvertingDowntimeID).FirstOrDefault();
             }
