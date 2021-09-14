@@ -787,7 +787,7 @@ namespace Gamma.ViewModels
                     IsCancel = true,
                     IsDefault = false,
                 };
-                var dialogService = GetService<IDialogService>("");
+                var dialogService = GetService<IDialogService>("SetQuantityDialog");
                 var result = dialogService.ShowDialog(
                     dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
                     title: "Кол-во рулончиков/пачек",
