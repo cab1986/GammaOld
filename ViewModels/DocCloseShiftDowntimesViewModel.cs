@@ -240,7 +240,11 @@ namespace Gamma.ViewModels
                             Duration = dt.Duration ?? 0,
                             //Comment = dt.Comment,
                             //DateBegin = dt.DateBegin,
-                            //DateEnd = dt.DateEnd
+                            //DateEnd = dt.DateEnd,
+                            EquipmentNodeID = dt.C1CEquipmentNodeID,
+                            EquipmentNodeDetailID = dt.C1CEquipmentNodeDetailID,
+                            EquipmentNode = dt.EquipmentNode,
+                            EquipmentNodeDetail = dt.EquipmentNodeDetail
                         }));
                     foreach (var downtime in downtimes)
                     {

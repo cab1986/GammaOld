@@ -20,6 +20,7 @@ namespace Gamma.Entities
             this.C1CDowntimeTypeDetails1 = new HashSet<C1CDowntimeTypeDetails>();
             this.DocCloseShiftDowntimes = new HashSet<DocCloseShiftDowntimes>();
             this.ProductionTaskDowntimes = new HashSet<ProductionTaskDowntimes>();
+            this.DowntimeTemplates = new HashSet<DowntimeTemplates>();
         }
     
         public System.Guid C1CDowntimeTypeDetailID { get; set; }
@@ -41,5 +42,7 @@ namespace Gamma.Entities
         public virtual ICollection<DocCloseShiftDowntimes> DocCloseShiftDowntimes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskDowntimes> ProductionTaskDowntimes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DowntimeTemplates> DowntimeTemplates { get; set; }
     }
 }

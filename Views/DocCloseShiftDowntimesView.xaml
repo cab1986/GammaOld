@@ -27,7 +27,7 @@
                 <dx:DialogService.DialogStyle>
                     <Style TargetType="dx:DXDialogWindow">
                         <Setter Property="Width" Value="500"/>
-                        <Setter Property="Height" Value="400"/>
+                        <Setter Property="Height" Value="540"/>
                     </Style>
                 </dx:DialogService.DialogStyle>
             </dx:DialogService>
@@ -63,6 +63,8 @@
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="DowntimeType" ReadOnly="True" VisibleIndex="6"  Header="Вид простоя"  Width="60" />
                 <dxg:GridColumn FieldName="DowntimeTypeDetail" ReadOnly="True" VisibleIndex="7"  Header="Вид простоя (дополнительно)" Width="60"/>
+                <dxg:GridColumn FieldName="EquipmentType" ReadOnly="True" VisibleIndex="8"  Header="Узел оборудования"  Width="60" />
+                <dxg:GridColumn FieldName="EquipmentNodeDetail" ReadOnly="True" VisibleIndex="9"  Header="Узел (дополнительно)" Width="60"/>
                 <dxg:GridColumn FieldName="DateBegin" Header="Начало" ReadOnly="True" VisibleIndex="4" Width="120" FixedWidth="True">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
@@ -73,7 +75,7 @@
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
-                <dxg:GridColumn FieldName="Comment" Header="Комментарий" VisibleIndex="8"  ReadOnly="True" />
+                <dxg:GridColumn FieldName="Comment" Header="Комментарий" VisibleIndex="10"  ReadOnly="True" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.GroupSummary>
                 <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Всего: {0:d} (минут)" />

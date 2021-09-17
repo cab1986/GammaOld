@@ -13,6 +13,8 @@ namespace Gamma.Entities
     
     public partial class GetProductionTaskByBatchID_Result
     {
+        public Nullable<System.DateTime> ActualStartDate { get; set; }
+        public Nullable<System.DateTime> ActualEndDate { get; set; }
         public Nullable<System.DateTime> DateBegin { get; set; }
         public Nullable<System.DateTime> DateEnd { get; set; }
         public decimal Quantity { get; set; }

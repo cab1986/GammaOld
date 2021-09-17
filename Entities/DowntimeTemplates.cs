@@ -12,25 +12,20 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class ProductionTaskDowntimes
+    public partial class DowntimeTemplates
     {
-        public System.Guid ProductionTaskDowntimeID { get; set; }
-        public System.Guid ProductionTaskID { get; set; }
-        public System.DateTime Date { get; set; }
-        public int ShiftID { get; set; }
+        public System.Guid DowntimeTemplateID { get; set; }
+        public int PlaceID { get; set; }
         public System.Guid C1CDowntimeTypeID { get; set; }
         public Nullable<System.Guid> C1CDowntimeTypeDetailID { get; set; }
-        public System.DateTime DateBegin { get; set; }
-        public System.DateTime DateEnd { get; set; }
-        public int Duration { get; set; }
         public string Comment { get; set; }
         public Nullable<System.Guid> C1CEquipmentNodeID { get; set; }
         public Nullable<System.Guid> C1CEquipmentNodeDetailID { get; set; }
     
         public virtual C1CDowntimeTypeDetails C1CDowntimeTypeDetails { get; set; }
         public virtual C1CDowntimeTypes C1CDowntimeTypes { get; set; }
-        public virtual ProductionTasks ProductionTasks { get; set; }
         public virtual C1CEquipmentNodeDetails C1CEquipmentNodeDetails { get; set; }
         public virtual C1CEquipmentNodes C1CEquipmentNodes { get; set; }
+        public virtual Places Places { get; set; }
     }
 }

@@ -9,7 +9,7 @@
              xmlns:dialogViewModels="clr-namespace:Gamma.DialogViewModels"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="320" d:DesignWidth="400"
+             d:DesignHeight="450" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance Type=dialogViewModels:AddDowntimeDialogModel, IsDesignTimeCreatable=False}">
 
     <Grid>
@@ -31,8 +31,8 @@
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
-        <dxlc:LayoutControl Name="lcDowntimeType" Grid.Row="1" >
-            <dxlc:LayoutGroup Header="Виды простоя" View="GroupBox" Margin="-12" Orientation="Vertical">
+        <dxlc:LayoutControl Name="lcDowntimeType" Grid.Row="1"  Orientation="Vertical" >
+            <dxlc:LayoutGroup Header="Виды простоя" View="GroupBox" Orientation="Vertical" Margin="-12,-12,-12,0">
                 <dxlc:LayoutItem Label="Основной" LabelPosition="Top">
                     <dxe:ComboBoxEdit Name="EdtType" ItemsSource="{Binding Types}" EditValue="{Binding TypeID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMember="DowntimeTypeName" ValueMember="DowntimeTypeID" />
@@ -40,6 +40,16 @@
                 <dxlc:LayoutItem Label="Дополнительный" LabelPosition="Top">
                     <dxe:ComboBoxEdit Name="EdtTypeDetail"  ItemsSource="{Binding TypeDetailsFiltered}" EditValue="{Binding TypeDetailID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMember="DowntimeTypeName" ValueMember="DowntimeTypeID"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Header="Узлы оборудования" View="GroupBox" Orientation="Vertical" Margin="-12,-5,-12,0">
+                <dxlc:LayoutItem Label="Основной" LabelPosition="Top">
+                    <dxe:ComboBoxEdit Name="EdtEquipmentNode" ItemsSource="{Binding EquipmentNodes}" EditValue="{Binding EquipmentNodeID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMember="EquipmentNodeName" ValueMember="EquipmentNodeID" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Дополнительный" LabelPosition="Top">
+                    <dxe:ComboBoxEdit Name="EdtEquipmentNodeDetail"  ItemsSource="{Binding EquipmentNodeDetailsFiltered}" EditValue="{Binding EquipmentNodeDetailID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMember="EquipmentNodeName" ValueMember="EquipmentNodeID"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>

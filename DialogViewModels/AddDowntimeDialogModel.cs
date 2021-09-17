@@ -14,9 +14,9 @@ namespace Gamma.DialogViewModels
     {
         public AddDowntimeDialogModel()
         {
-            //var curDate = DateTime.Today;
-            DateBegin = DateTime.Today;//new DateTime(curDate.Year, curDate.Month, 1).AddMonths(-1);
-            DateEnd = DateTime.Today;//new DateTime(curDate.Year, curDate.Month, 1).AddSeconds(-1);
+            var curDate = DateTime.Now;
+            DateBegin = curDate;//new DateTime(curDate.Year, curDate.Month, 1).AddMonths(-1);
+            DateEnd = curDate;//new DateTime(curDate.Year, curDate.Month, 1).AddSeconds(-1);
 
             GammaBase = DB.GammaDb;
             Types = (from p in GammaBase.C1CDowntimeTypes
@@ -39,11 +39,44 @@ namespace Gamma.DialogViewModels
                            }
                       ).ToList();
             TypeDetailsFiltered = new List<DowntimeType>(TypeDetails);
+            EquipmentNodes = (from p in GammaBase.C1CEquipmentNodes
+                         //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+                     select new
+                     EquipmentNode
+                     {
+                         EquipmentNodeName = p.Description,
+                         EquipmentNodeID = p.C1CEquipmentNodeID
+                     }
+                      ).ToList();
+            EquipmentNodeDetails = (from p in GammaBase.C1CEquipmentNodeDetails
+                               //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+                           select new
+                           EquipmentNode
+                           {
+                               EquipmentNodeName = p.Description,
+                               EquipmentNodeID = p.C1CEquipmentNodeDetailID,
+                               EquipmentNodeMasterID = p.C1CEquipmentNodeID
+                           }
+                      ).ToList();
+            EquipmentNodeDetailsFiltered = new List<EquipmentNode>(EquipmentNodeDetails);
+        }
+
+        public AddDowntimeDialogModel(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, string comment = null):this()
+        {
+            if (downtimeTypeID != null) TypeID = (Guid)downtimeTypeID;
+            if (downtimeTypeDetailID != null) TypeDetailID = (Guid)downtimeTypeDetailID;
+            if (equipmentNodeID != null) EquipmentNodeID = (Guid)equipmentNodeID;
+            if (equipmentNodeDetailID != null) EquipmentNodeDetailID = (Guid)equipmentNodeDetailID;
+            if (comment != null) Comment = comment;
         }
 
         public List<DowntimeType> Types { get; private set; }
         public List<DowntimeType> TypeDetails { get; private set; }
         public List<DowntimeType> TypeDetailsFiltered { get; private set; }
+        public List<EquipmentNode> EquipmentNodes { get; private set; }
+        public List<EquipmentNode> EquipmentNodeDetails { get; private set; }
+        public List<EquipmentNode> EquipmentNodeDetailsFiltered { get; private set; }
+        public override bool IsValid => base.IsValid && TypeID != Guid.Empty && EquipmentNodeID != Guid.Empty;
         public DateTime DateBegin { get; set; }
         public DateTime DateEnd { get; set; }
         private Guid _typeID { get; set; }
@@ -60,6 +93,20 @@ namespace Gamma.DialogViewModels
             }
         }
         public Guid? TypeDetailID { get; set; }
+        private Guid _equipmentNodeID { get; set; }
+        public Guid EquipmentNodeID
+        {
+            get { return _equipmentNodeID; }
+            set
+            {
+                _equipmentNodeID = value;
+                //System.Data.DataView view = (System.Data.DataView)EdtEquipmentNode.ItemsSource;
+                //view.RowFilter = ("Name like '*" + Cmb.Text + "*'");
+                EquipmentNodeDetailsFiltered = new List<EquipmentNode>(EquipmentNodeDetails.FindAll(t => t.EquipmentNodeMasterID == value));
+                RaisePropertyChanged("EquipmentNodeDetailsFiltered");
+            }
+        }
+        public Guid? EquipmentNodeDetailID { get; set; }
         public string Comment { get; set; }
         /*        public List<Place> Places { get; set; }
                 private int? _placeID;

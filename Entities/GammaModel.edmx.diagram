@@ -432,6 +432,21 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypes" />
         <AssociationConnector Association="GammaModel.FK_DocCloseShiftDowntimes_Docs" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_ProductionTasks" />
+        <EntityTypeShape EntityType="GammaModel.C1CEquipmentNodeDetails" Width="1.5" PointX="21.625" PointY="9" />
+        <EntityTypeShape EntityType="GammaModel.C1CEquipmentNodes" Width="1.5" PointX="19.375" PointY="9.125" />
+        <AssociationConnector Association="GammaModel.FK_1CEquipmentNodeDetails_1CEquipmentNodeDetails" />
+        <AssociationConnector Association="GammaModel.FK_1CEquipmentNodeDetails_1CEquipmentNodes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftDowntimes_1CEquipmentNodeDetails" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_1CEquipmentNodeDetails" />
+        <AssociationConnector Association="GammaModel.FK_1CEquipmentNodes_1CEquipmentNodes" />
+        <AssociationConnector Association="GammaModel.FK_DocCloseShiftDowntimes_1CEquipmentNodes" />
+        <AssociationConnector Association="GammaModel.FK_ProductionTaskDowntimes_1CEquipmentNodes" />
+        <EntityTypeShape EntityType="GammaModel.DowntimeTemplates" Width="1.5" PointX="33.875" PointY="31.25" />
+        <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_1CDowntimeTypeDetails" />
+        <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_1CDowntimeTypes" />
+        <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_1CEquipmentNodeDetails" />
+        <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_1CEquipmentNodes" />
+        <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_Places" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

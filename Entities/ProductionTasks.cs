@@ -36,6 +36,8 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> DateEnd { get; set; }
         public Nullable<System.Guid> C1CSpecificationID { get; set; }
         public string Number { get; set; }
+        public Nullable<System.DateTime> ActualStartDate { get; set; }
+        public Nullable<System.DateTime> ActualEndDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }

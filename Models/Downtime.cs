@@ -20,6 +20,10 @@ namespace Gamma.Models
         public Guid? ProductionTaskID { get; set; }
         public string ProductionTaskNumber { get; set; }
         public string ProductionTaskGroup => ProductionTaskID == null ? "Общие" : "По заданию на производство";
+        public Guid EquipmentNodeID { get; set; }
+        public Guid? EquipmentNodeDetailID { get; set; }
+        public string EquipmentNode { get; set; }
+        public string EquipmentNodeDetail { get; set; }
 
         //protected bool Equals(Sample other)
         //{

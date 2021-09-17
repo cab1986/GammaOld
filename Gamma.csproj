@@ -38,7 +38,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.1.2.%2a</ApplicationVersion>
+    <ApplicationVersion>3.1.3.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -248,11 +248,15 @@
     <Compile Include="Dialogs\AddDowntimeDialog.xaml.cs">
       <DependentUpon>AddDowntimeDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\SetDateDialog.xaml.cs">
+      <DependentUpon>SetDateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\SetQuantityDialog.xaml.cs">
       <DependentUpon>SetQuantityDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="DialogViewModels\AddNomenclatureToPalletDialogModel.cs" />
     <Compile Include="DialogViewModels\AddDowntimeDialogModel.cs" />
+    <Compile Include="DialogViewModels\SetDateDialogViewModel.cs" />
     <Compile Include="DialogViewModels\SetQuantityDialogModel.cs" />
     <Compile Include="Entities\ActiveProductionTasks.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
@@ -294,6 +298,12 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\C1CEnumGroupTypes.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\C1CEquipmentNodeDetails.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\C1CEquipmentNodes.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\C1CMainSpecifications.cs">
@@ -504,6 +514,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\DocWithdrawalProducts.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\DowntimeTemplates.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\Enterprises.cs">
@@ -951,6 +964,7 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
+    <Compile Include="Models\EquipmentNode.cs" />
     <Compile Include="Models\DowntimeType.cs" />
     <Compile Include="Models\RepackProduct.cs" />
     <Compile Include="Models\ReportParameters.cs" />
@@ -1424,6 +1438,10 @@
     <Page Include="Dialogs\FilterDateReportDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SetDateDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\SetQuantityDialog.xaml">
       <SubType>Designer</SubType>

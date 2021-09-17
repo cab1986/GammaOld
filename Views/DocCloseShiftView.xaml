@@ -23,22 +23,7 @@
     Width="1200" 
     WindowState="Maximized"
     ResizeMode="NoResize"
-    gc:WindowSettings.Save="False">
-    <!--<dxmvvm:Interaction.Behaviors>
-        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="AddDowntimeDialog">
-            <dx:DialogService.ViewTemplate>
-                <DataTemplate>
-                    <dialogs:AddDowntimeDialog/>
-                </DataTemplate>
-            </dx:DialogService.ViewTemplate>
-            <dx:DialogService.DialogStyle>
-                <Style TargetType="dx:DXDialogWindow">
-                    <Setter Property="Width" Value="500"/>
-                    <Setter Property="Height" Value="240"/>
-                </Style>
-            </dx:DialogService.DialogStyle>
-        </dx:DialogService>
-    </dxmvvm:Interaction.Behaviors>-->
+    gc:WindowSettings.Save="False">    
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:DocCloseShiftConvertingGridViewModel}">
             <v:DocCloseShiftConvertingGridView />

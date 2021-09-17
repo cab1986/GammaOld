@@ -16,6 +16,7 @@ using Gamma.Dialogs;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Data.Entity.SqlServer;
+using System.Collections.ObjectModel;
 
 namespace Gamma.ViewModels
 {
@@ -136,9 +137,40 @@ namespace Gamma.ViewModels
             //VisiblityMakeProductionTaskActiveForPlace = Visibility.Visible;
             IsProductionTaskActiveForPlace = CheckProductionTaskActiveForPlace();
             VisiblityPrintGroupPack = Visibility.Visible;
-            
+
             //VisiblityCreateNewProduct = VisiblityMakeProductionTaskActiveForPlace == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+
+            var barFirst = new BarViewModel();
+            barFirst.Commands.Add(new BarCommand<object>(p => AddDowntime()) { Caption = "Добавить" });
+            barFirst.Commands.Add(new BarCommand<object>(p => DeleteDowntime()) { Caption = "Удалить" });
+            barFirst.Commands.Add(new BarCommand<object>(p => RefreshDowntime()) { Caption = "Обновить" });
+            DowntimeBars.Add(barFirst);
+            var placeID = GammaBase.ProductionTaskBatches.Where(t => t.ProductionTaskBatchID == ProductionTaskBatchID).FirstOrDefault().ProductionTasks.FirstOrDefault().PlaceID;
+            var templates = GammaBase.DowntimeTemplates.Where(t => t.PlaceID == placeID).ToList();
+            var bar = new BarViewModel();
+            foreach (var template in templates)
+            {
+                var command = new BarCommand<object>(dnt => AddDowntime((AddDowntimeParameter)dnt))
+                {
+                    Caption = template.C1CDowntimeTypes.Description.Substring(0, Math.Min(7, template.C1CDowntimeTypes.Description.Length))
+                                + (template.C1CDowntimeTypeDetails != null ? "__" + template.C1CDowntimeTypeDetails.Description.Substring(0,Math.Min(5, template.C1CDowntimeTypeDetails.Description.Length)) : "")
+                                + (template.C1CEquipmentNodes != null ? "#" + template.C1CEquipmentNodes.Description.Substring(0, Math.Min(7, template.C1CEquipmentNodes.Description.Length)) : "")
+                                + (template.C1CEquipmentNodeDetails != null ? "__" + template.C1CEquipmentNodeDetails.Description.Substring(0, Math.Min(5, template.C1CEquipmentNodeDetails.Description.Length)) : "") +"  |",
+                    CommandParameter = new AddDowntimeParameter
+                    {
+                        DowntimeTypeID = template.C1CDowntimeTypeID,
+                        DowntimeTypeDetailID = template.C1CDowntimeTypeDetailID,
+                        EquipmentNodeID = template.C1CEquipmentNodeID,
+                        EquipmentNodeDetailID = template.C1CEquipmentNodeDetailID,
+                        Comment = template.Comment
+                    }
+                };
+                bar.Commands.Add(command);
+            }
+            DowntimeBars.Add(bar);
         }
+
+        public ObservableCollection<BarViewModel> DowntimeBars { get; set; } = new ObservableCollection<BarViewModel>();
 
         public DelegateCommand DeleteProdutCommand { get; private set; }
 
@@ -1870,7 +1902,11 @@ namespace Gamma.ViewModels
                      Duration = downtime.Duration,
                      Comment = downtime.Comment,
                      DateBegin = downtime.DateBegin,
-                     DateEnd = downtime.DateEnd
+                     DateEnd = downtime.DateEnd,
+                     EquipmentNodeID = downtime.C1CEquipmentNodeID,
+                     EquipmentNodeDetailID = downtime.C1CEquipmentNodeDetailID,
+                     EquipmentNode = downtime.EquipmentNode,
+                     EquipmentNodeDetail = downtime.EquipmentNodeDetail
                  });
         }
         private void ShowDowntime()
@@ -1878,12 +1914,31 @@ namespace Gamma.ViewModels
             MessageBox.Show(SelectedDowntime?.Date.ToString());
         }
 
+        private void AddDowntime(AddDowntimeParameter downtime)
+        {
+            AddDowntime(downtime.DowntimeTypeID, downtime.DowntimeTypeDetailID, downtime.EquipmentNodeID, downtime.EquipmentNodeDetailID, downtime.Comment);
+        }
+
         private void AddDowntime()
         {
-            var model = new AddDowntimeDialogModel();// "Укажите параметры простоя", "Простои", 1, 1000);
-             var okCommand = new UICommand()
+            AddDowntime(null,null);
+        }
+
+        private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, string comment = null)
+        {
+            var model = new AddDowntimeDialogModel(downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, comment);
+            var setCurrentTimeEndAndOkCommand = new UICommand()
+            {
+                Caption = "Сохранить текущим временем окончания",
+                IsCancel = false,
+                IsDefault = false,
+                Command = new DelegateCommand<CancelEventArgs>(
+            x => DebugFunc(),
+            x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes == 0),
+            };
+            var okCommand = new UICommand()
              {
-                 Caption = "OK",
+                 Caption = "Сохранить",
                  IsCancel = false,
                  IsDefault = true,
                  Command = new DelegateCommand<CancelEventArgs>(
@@ -1899,10 +1954,10 @@ namespace Gamma.ViewModels
              };
              var dialogService = GetService<IDialogService>("AddDowntimeDialog");
              var result = dialogService.ShowDialog(
-                 dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                 dialogCommands: new List<UICommand>() { setCurrentTimeEndAndOkCommand, okCommand, cancelCommand },
                  title: "Добавление простоя",
                  viewModel: model);
-             if (result == okCommand)
+             if (result == okCommand || result == setCurrentTimeEndAndOkCommand)
             //var dialog = new AddDowntimeDialog();
             //dialog.ShowDialog();
             //if (dialog.DialogResult == true)
@@ -1910,7 +1965,7 @@ namespace Gamma.ViewModels
                 string addResult = "";
                 if (DB.HaveWriteAccess("ProductionTaskDowntimes"))
                 {
-                    addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, model.TypeID, model.TypeDetailID, model.DateBegin, model.DateEnd, model.Comment).FirstOrDefault();
+                    addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, model.TypeID, model.TypeDetailID, model.DateBegin, result == setCurrentTimeEndAndOkCommand ? DateTime.Now : model.DateEnd, model.Comment, model.EquipmentNodeID, model.EquipmentNodeDetailID).FirstOrDefault();
                     //addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, dialog.TypeID, dialog.TypeDetailID, dialog.DateBegin, dialog.DateEnd, dialog.Comment).FirstOrDefault();
                 }
                 else

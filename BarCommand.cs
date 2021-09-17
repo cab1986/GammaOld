@@ -22,8 +22,19 @@ namespace Gamma
         public  string Caption { get; set; }
         public  ImageSource LargeGlyph { get; set; }
         public  ImageSource SmallGlyph { get; set; }
-        public PrintReportMessage CommandParameter { get; set; }
+        public BarCommandParameter CommandParameter { get; set; }
         
     }
 
+    public class BarCommandParameter
+    { }
+
+    public class AddDowntimeParameter : BarCommandParameter
+    {
+        public Guid DowntimeTypeID { get; set; }
+        public Guid? DowntimeTypeDetailID { get; set; }
+        public Guid? EquipmentNodeID { get; set; }
+        public Guid? EquipmentNodeDetailID { get; set; }
+        public string Comment { get; set; }
+    }
 }

@@ -19,5 +19,9 @@ namespace Gamma.Entities
         public Nullable<int> Duration { get; set; }
         public string DowntimeType { get; set; }
         public string DowntimeTypeDetail { get; set; }
+        public System.Guid C1CEquipmentNodeID { get; set; }
+        public Nullable<System.Guid> C1CEquipmentNodeDetailID { get; set; }
+        public string EquipmentNode { get; set; }
+        public string EquipmentNodeDetail { get; set; }
     }
 }

@@ -23,9 +23,13 @@ namespace Gamma.Entities
         public int Duration { get; set; }
         public string Comment { get; set; }
         public Nullable<System.Guid> ProductionTaskID { get; set; }
+        public Nullable<System.Guid> C1CEquipmentNodeID { get; set; }
+        public Nullable<System.Guid> C1CEquipmentNodeDetailID { get; set; }
     
         public virtual C1CDowntimeTypeDetails C1CDowntimeTypeDetails { get; set; }
         public virtual C1CDowntimeTypes C1CDowntimeTypes { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual C1CEquipmentNodeDetails C1CEquipmentNodeDetails { get; set; }
+        public virtual C1CEquipmentNodes C1CEquipmentNodes { get; set; }
     }
 }

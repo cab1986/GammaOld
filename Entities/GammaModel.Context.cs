@@ -175,6 +175,9 @@ namespace Gamma.Entities
         public virtual DbSet<C1CDowntimeTypes> C1CDowntimeTypes { get; set; }
         public virtual DbSet<DocCloseShiftDowntimes> DocCloseShiftDowntimes { get; set; }
         public virtual DbSet<ProductionTaskDowntimes> ProductionTaskDowntimes { get; set; }
+        public virtual DbSet<C1CEquipmentNodeDetails> C1CEquipmentNodeDetails { get; set; }
+        public virtual DbSet<C1CEquipmentNodes> C1CEquipmentNodes { get; set; }
+        public virtual DbSet<DowntimeTemplates> DowntimeTemplates { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1596,7 +1599,7 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FillDocCloseShiftConvertingAuxiliaryMaterials_Result>("FillDocCloseShiftConvertingAuxiliaryMaterials", placeIDParameter, shiftIDParameter, closeDateParameter);
         }
     
-        public virtual ObjectResult<string> CreateDowntime(Nullable<System.Guid> productionTaskBatchID, Nullable<int> duration, Nullable<System.Guid> downtimeTypeID, Nullable<System.Guid> downtimeTypeDetailID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd, string comment)
+        public virtual ObjectResult<string> CreateDowntime(Nullable<System.Guid> productionTaskBatchID, Nullable<int> duration, Nullable<System.Guid> downtimeTypeID, Nullable<System.Guid> downtimeTypeDetailID, Nullable<System.DateTime> dateBegin, Nullable<System.DateTime> dateEnd, string comment, Nullable<System.Guid> equipmentNodeID, Nullable<System.Guid> equipmentNodeDetailID)
         {
             var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
                 new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
@@ -1626,7 +1629,15 @@ namespace Gamma.Entities
                 new ObjectParameter("Comment", comment) :
                 new ObjectParameter("Comment", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CreateDowntime", productionTaskBatchIDParameter, durationParameter, downtimeTypeIDParameter, downtimeTypeDetailIDParameter, dateBeginParameter, dateEndParameter, commentParameter);
+            var equipmentNodeIDParameter = equipmentNodeID.HasValue ?
+                new ObjectParameter("EquipmentNodeID", equipmentNodeID) :
+                new ObjectParameter("EquipmentNodeID", typeof(System.Guid));
+    
+            var equipmentNodeDetailIDParameter = equipmentNodeDetailID.HasValue ?
+                new ObjectParameter("EquipmentNodeDetailID", equipmentNodeDetailID) :
+                new ObjectParameter("EquipmentNodeDetailID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("CreateDowntime", productionTaskBatchIDParameter, durationParameter, downtimeTypeIDParameter, downtimeTypeDetailIDParameter, dateBeginParameter, dateEndParameter, commentParameter, equipmentNodeIDParameter, equipmentNodeDetailIDParameter);
         }
     
         public virtual ObjectResult<string> DeleteDowntime(Nullable<System.Guid> productionTaskDowntimeID)

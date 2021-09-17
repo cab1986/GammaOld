@@ -36,6 +36,7 @@ namespace Gamma.Entities
             this.DocMaterialTankGroups = new HashSet<DocMaterialTankGroups>();
             this.Places1CWarehouses = new HashSet<Places1CWarehouses>();
             this.Users1 = new HashSet<Users>();
+            this.DowntimeTemplates = new HashSet<DowntimeTemplates>();
         }
     
         public int PlaceID { get; set; }
@@ -114,5 +115,7 @@ namespace Gamma.Entities
         public virtual ICollection<Places1CWarehouses> Places1CWarehouses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DowntimeTemplates> DowntimeTemplates { get; set; }
     }
 }

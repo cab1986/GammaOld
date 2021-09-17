@@ -28,7 +28,7 @@ namespace Gamma
 
     public class SpoolWithdrawed { }
 
-    public class PrintReportMessage
+    public class PrintReportMessage:BarCommandParameter
     {
         public Guid ReportID { get; set; } // id отчета
         public Guid? VMID { get; set; } // id ViewModel, которая должна обработать событие

@@ -12,19 +12,19 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class C1CDowntimeTypes
+    public partial class C1CEquipmentNodes
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public C1CDowntimeTypes()
+        public C1CEquipmentNodes()
         {
-            this.C1CDowntimeTypeDetails = new HashSet<C1CDowntimeTypeDetails>();
-            this.C1CDowntimeTypes1 = new HashSet<C1CDowntimeTypes>();
+            this.C1CEquipmentNodeDetails = new HashSet<C1CEquipmentNodeDetails>();
+            this.C1CEquipmentNodes1 = new HashSet<C1CEquipmentNodes>();
             this.DocCloseShiftDowntimes = new HashSet<DocCloseShiftDowntimes>();
             this.ProductionTaskDowntimes = new HashSet<ProductionTaskDowntimes>();
             this.DowntimeTemplates = new HashSet<DowntimeTemplates>();
         }
     
-        public System.Guid C1CDowntimeTypeID { get; set; }
+        public System.Guid C1CEquipmentNodeID { get; set; }
         public Nullable<bool> IsMetadata { get; set; }
         public Nullable<bool> C1CDeleted { get; set; }
         public Nullable<bool> Folder { get; set; }
@@ -33,13 +33,12 @@ namespace Gamma.Entities
         public string Description { get; set; }
         public string FullDescription { get; set; }
         public Nullable<System.Guid> C1CParentID { get; set; }
-        public Nullable<System.Guid> C1COEEClassifierID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<C1CDowntimeTypeDetails> C1CDowntimeTypeDetails { get; set; }
+        public virtual ICollection<C1CEquipmentNodeDetails> C1CEquipmentNodeDetails { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<C1CDowntimeTypes> C1CDowntimeTypes1 { get; set; }
-        public virtual C1CDowntimeTypes C1CDowntimeTypes2 { get; set; }
+        public virtual ICollection<C1CEquipmentNodes> C1CEquipmentNodes1 { get; set; }
+        public virtual C1CEquipmentNodes C1CEquipmentNodes2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftDowntimes> DocCloseShiftDowntimes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

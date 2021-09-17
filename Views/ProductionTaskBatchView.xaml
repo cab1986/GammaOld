@@ -43,7 +43,7 @@
             <dx:DialogService.DialogStyle>
                 <Style TargetType="dx:DXDialogWindow">
                     <Setter Property="Width" Value="500"/>
-                    <Setter Property="Height" Value="400"/>
+                    <Setter Property="Height" Value="540"/>
                 </Style>
             </dx:DialogService.DialogStyle>
         </dx:DialogService>
@@ -333,18 +333,9 @@
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <dxb:BarManager>
-                        <dxb:BarManager.Bars>
-                            <dxb:Bar>
-                                
-                                <dxb:BarButtonItem Content="Добавить" Glyph="{dx:DXImage Image=Add_32x32.png}" Command="{Binding AddDowntimeCommand}"/>
-                                <dxb:BarButtonItem Content="Удалить" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDowntimeCommand}"
-                                                   LargeGlyph="{dx:DXImage Image=Cancel_32x32.png}" GlyphSize="Small"/>
-                                <dxb:BarItemSeparator />
-                                <dxb:BarButtonItem Content="Обновить" Glyph="{dx:DXImage Image=Refresh2_32x32.png}" Command="{Binding RefreshDowntimeCommand}"/>
-                            </dxb:Bar>
-                        </dxb:BarManager.Bars>
-                    </dxb:BarManager>
+                    <dxb:BarManager BarsSource="{Binding DowntimeBars}" BarTemplate="{StaticResource BarTemplate}"/>
+
+
                     <dxlc:LayoutControl Grid.Row="1">
                         <dxlc:LayoutItem Label="Диапазон:">
                             <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding DowntimeIntervalid}" x:Name="DowntimesIntervalList" IsTextEditable="False"/>
@@ -366,6 +357,8 @@
                             </dxg:GridColumn>
                             <dxg:GridColumn FieldName="DowntimeType" ReadOnly="True" VisibleIndex="6"  Header="Вид простоя"  Width="60" />
                             <dxg:GridColumn FieldName="DowntimeTypeDetail" ReadOnly="True" VisibleIndex="7"  Header="Вид простоя (дополнительно)" Width="60"/>
+                            <dxg:GridColumn FieldName="EquipmentNode" ReadOnly="True" VisibleIndex="8"  Header="Узел оборудования"  Width="60" />
+                            <dxg:GridColumn FieldName="EquipmentNodeDetail" ReadOnly="True" VisibleIndex="9"  Header="Узел (дополнительно)" Width="60"/>
                             <dxg:GridColumn FieldName="DateBegin" Header="Начало" ReadOnly="True" VisibleIndex="4" Width="120" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
@@ -376,7 +369,7 @@
                                     <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
-                            <dxg:GridColumn FieldName="Comment" Header="Комментарий" VisibleIndex="8"/>
+                            <dxg:GridColumn FieldName="Comment" Header="Комментарий" VisibleIndex="10"/>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
                             <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
