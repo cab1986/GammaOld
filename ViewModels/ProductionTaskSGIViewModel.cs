@@ -60,6 +60,7 @@ namespace Gamma.ViewModels
                     RobotNomenclatures = new ObservableCollection<RobotNomenclature>();
             }*/
             PrintExampleCommand = new DelegateCommand(PrintExample);
+            SetActualDateCommand = new DelegateCommand(SetActualDate, () => ProductionTaskID != Guid.Empty);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
         }
         /// <summary>
@@ -81,6 +82,8 @@ namespace Gamma.ViewModels
                     DateBegin = productionTask.DateBegin;
                     DateEnd = productionTask.DateEnd;
                     Quantity = (int)productionTask.Quantity;
+                    ActualStartDate = productionTask.ActualStartDate;
+                    ActualEndDate = productionTask.ActualEndDate;
                     if (!Places.Any(p => p.PlaceID == PlaceID))
                         foreach (var place in GammaBase.Places.Where(p => p.PlaceID == PlaceID).
                                                 Select(p => new Place()
@@ -151,6 +154,8 @@ namespace Gamma.ViewModels
         public event Func<bool> PrintExampleEvent;
 
         public DelegateCommand PrintExampleCommand { get; private set; }
+
+        public DelegateCommand SetActualDateCommand { get; private set; }
 
         public bool IsHidePrintExample => WorkSession.ShiftID != 0;
 
@@ -559,6 +564,7 @@ namespace Gamma.ViewModels
                 RaisePropertiesChanged("DateEnd");
             }
         }
+        
         /// <summary>
         /// Статус задания в производстве или выполнено
         /// </summary>
@@ -587,6 +593,111 @@ namespace Gamma.ViewModels
                 ProductionTaskSpecificationViewModel?.SetIsReadOnly(value);
             }
         }
+
+        private DateTime? _actualStartDate;
+        /// <summary>
+        /// Дата начала выполнения задания
+        /// </summary>
+        //[UIAuth(UIAuthLevel.ReadOnly)]
+        public DateTime? ActualStartDate
+        {
+            get { return _actualStartDate; }
+            set
+            {
+                _actualStartDate = value;
+                RaisePropertyChanged("ActualStartDate");
+            }
+        }
+
+        private DateTime? _actualEndDate;
+        /// <summary>
+        /// Дата окончания задания
+        /// </summary>
+        //[UIAuth(UIAuthLevel.ReadOnly)]
+        public DateTime? ActualEndDate
+        {
+            get { return _actualEndDate; }
+            set
+            {
+                _actualEndDate = value;
+                RaisePropertiesChanged("ActualEndDate");
+            }
+        }
+
+        public void DebugFunc()
+        { }
+
+        public void SetActualDate()
+        {
+            if (DB.HaveWriteAccess("ProductionTasks") || DB.HaveWriteAccess("ActiveProductionTasks"))
+            {
+                var model = new SetDateDialogViewModel("Укажите дату/время начала и окончания производства", "Период производства", true, ActualStartDate, "Начало", true, ActualEndDate, "Окончание");
+                var okCommand = new UICommand()
+                {
+                    Caption = "OK",
+                    IsCancel = false,
+                    IsDefault = true,
+                    Command = new DelegateCommand<CancelEventArgs>(
+                        x => DebugFunc(),
+                        x => true),// model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14 * 60),
+                };
+                var cancelCommand = new UICommand()
+                {
+                    Id = MessageBoxResult.Cancel,
+                    Caption = "Отмена",
+                    IsCancel = true,
+                    IsDefault = false,
+                };
+                var dialogService = GetService<IDialogService>("SetDateDialog");
+                var result = dialogService.ShowDialog(
+                    dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                    title: "Изменение периода производства",
+                    viewModel: model);
+                if (result == okCommand)
+                //var dialog = new AddDowntimeDialog();
+                //dialog.ShowDialog();
+                //if (dialog.DialogResult == true)
+                {
+                    string addResult = "";
+                    if (model.IsVisibleStartDate)
+                        ActualStartDate = model.StartDate;
+                    if (model.IsVisibleEndDate)
+                        ActualEndDate = model.EndDate;
+                    var productionTask =
+                    GammaBase.ProductionTasks
+                        .First(pt => pt.ProductionTaskID == ProductionTaskID);
+                    if (productionTask == null)
+                    {
+                        addResult = "Ошибка при сохранении! Фактическая дата не изменена! " + Environment.NewLine + "Задание на производство должно быть сохранено.";
+                    }
+                    else
+                    {
+                        //ProductionTasks productionTask = productionTaskBatch.ProductionTasks.First();
+                        try
+                        {
+                            if (model.IsVisibleStartDate)
+                                productionTask.ActualStartDate = model.StartDate;
+                            if (model.IsVisibleEndDate)
+                                productionTask.ActualEndDate = model.EndDate;
+                            GammaBase.SaveChanges();
+                            if (model.IsVisibleStartDate)
+                                ActualStartDate = model.StartDate;
+                            if (model.IsVisibleEndDate)
+                                ActualEndDate = model.EndDate;
+                        }
+                        catch
+                        {
+                            addResult = "Ошибка при сохранении! Фактическая дата не изменена! " + Environment.NewLine + "Попробуйте еще раз.";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Ошибка при сохранении! Недостаточно прав!");
+            }
+        }
+
         /*
         public Visibility _robotNomenclatureVisible { get; set; } = Visibility.Visible;
         /// <summary>

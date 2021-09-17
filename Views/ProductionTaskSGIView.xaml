@@ -9,6 +9,7 @@
              xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
              xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" 
+             xmlns:dialogs="clr-namespace:Gamma.Dialogs"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:g="clr-namespace:Gamma"
@@ -17,6 +18,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="620" d:DesignWidth="850"
              d:DataContext="{d:DesignInstance Type=viewModels:ProductionTaskSGIViewModel, IsDesignTimeCreatable=False}">
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="SetDateDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:SetDateDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="380"/>
+                    <Setter Property="Height" Value="220"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+    </dxmvvm:Interaction.Behaviors>
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewModels:ProductionTaskSpecificationViewModel}">
             <local:ProductionTaskSpecificationView />
@@ -27,9 +43,14 @@
             <dx:DXTabItem Header="Основная" >
                 <dxlc:LayoutControl Orientation="Vertical">
                     <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Horizontal">
-                        <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
-                            <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}"/>
-                        </dxlc:LayoutItem>
+                        <dxlc:LayoutGroup Header="План" Orientation="Horizontal">
+                            <dxlc:LayoutItem Label="Плановое начало" LabelPosition="Top" Width="100">
+                                <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="и окончание" LabelPosition="Top" Width="100">
+                                <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutGroup>
                         <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
                             <dxe:ButtonEdit EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" AllowDefaultButton="False" IsReadOnly="True">
                                 <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
@@ -40,9 +61,17 @@
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Orientation="Horizontal">
-                        <dxlc:LayoutItem Label="Дата окончания" LabelPosition="Top" Width="130">
-                            <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
-                        </dxlc:LayoutItem>
+                        <dxlc:LayoutGroup Header="Факт" Orientation="Horizontal">
+                            <dxlc:LayoutItem Label="Фактическое начало" LabelPosition="Top" Width="130">
+                                <dxe:DateEdit EditValue="{Binding ActualStartDate, ValidatesOnDataErrors=True}" IsReadOnly="True" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                                                   DisplayFormatString="dd-MMM-yyyy HH:mm"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label=" и окончание" LabelPosition="Top" Width="130">
+                                <dxe:DateEdit EditValue="{Binding ActualEndDate, ValidatesOnDataErrors=True}" IsReadOnly="True" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
+                                                   DisplayFormatString="dd-MMM-yyyy HH:mm"/>
+                            </dxlc:LayoutItem>
+                            <Button Content="..." Height="22" VerticalAlignment="Top" Width="30" Margin="0,18,0,0"  Command="{Binding SetActualDateCommand}"/>
+                        </dxlc:LayoutGroup>
                         <dxlc:LayoutItem Label="Параметры" LabelPosition="Top">
                             <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
 						DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
