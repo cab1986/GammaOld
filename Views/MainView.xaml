@@ -149,6 +149,7 @@
                         <dxb:BarSubItem Content="Конфигурация">
                             <dxb:BarButtonItem Content="Номенклатура групп переделов" Command="{Binding OpenPlaceGroupsNomenclatureCommand}" />
                             <dxb:BarButtonItem Content="Номенклатура по типам материалов" Command="{Binding OpenMaterialTypesNomenclatureCommand}"/>
+                            <dxb:BarButtonItem Content="Шаблоны простоев" Command="{Binding OpenDowntimeTemplatesCommand}" />
                             <dxb:BarButtonItem Content="Редактирование шаблонов отчетов" Command="{Binding ShowReportListCommand}" />
                             <dxb:BarButtonItem Content="Управление логинами" Command="{Binding ManageUsersCommand}" />
                             <dxb:BarButtonItem Content="Настройка COM-порта" Command="{Binding ConfigureComPortCommand}" />
