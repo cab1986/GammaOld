@@ -13,7 +13,7 @@
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         x:Class="Gamma.Views.DowntimeTemplatesView"
         mc:Ignorable="d"
-        Title="Пользователи" Height="300" Width="750"
+        Title="Шаблоны простоев" Height="300" Width="750"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DowntimeTemplatesViewModel}}"
         common:WindowSettings.Save="True">
     <Window.Resources>
