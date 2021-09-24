@@ -13,7 +13,7 @@
                         <dxg:GridControl ItemsSource="{Binding UsedSpools}" SelectedItem="{Binding SelectedSpool}" SelectionMode="Row"
                                          MaxHeight="1000">
                                     <dxg:GridControl.View>
-                                                <dxg:TableView AllowEditing="False" AutoWidth="True"/>
+                                                <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False"/>
                                     </dxg:GridControl.View>
                                     <dxmvvm:Interaction.Behaviors>
                                                 <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenSpoolCommand}"/>

@@ -51,10 +51,14 @@
                                 <dxe:DateEdit EditValue="{Binding DateEnd, ValidatesOnDataErrors=True}"/>
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top">
+                        <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" >
                             <dxe:ButtonEdit EditValue="{Binding NomenclatureName, ValidatesOnDataErrors=True}" AllowDefaultButton="False" IsReadOnly="True">
                                 <dxe:ButtonInfo Content="..." Command="{Binding ChooseNomenclatureCommand}"/>
                             </dxe:ButtonEdit>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top"  Width="200">
+                            <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
+						DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Необходимое кол-во" LabelPosition="Top" Width="130">
                             <dxe:SpinEdit EditValue="{Binding Quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}" MinValue="0"  IsReadOnly="{Binding IsEditingQuantity, Converter={StaticResource InverseBooleanConverter}}"/>
@@ -72,19 +76,23 @@
                             </dxlc:LayoutItem>
                             <Button Content="..." Height="22" VerticalAlignment="Top" Width="30" Margin="0,18,0,0"  Command="{Binding SetActualDateCommand}"/>
                         </dxlc:LayoutGroup>
-                        <dxlc:LayoutItem Label="Параметры" LabelPosition="Top">
-                            <dxe:ComboBoxEdit EditValue="{Binding CharacteristicID, ValidatesOnDataErrors=True}" ItemsSource="{Binding Characteristics}"
-						DisplayMember="CharacteristicName" ValueMember="CharacteristicID"/>
-                        </dxlc:LayoutItem>
-                        <dxlc:LayoutItem Label="Сделано" LabelPosition="Top" Width="130">
-                            <dxe:SpinEdit EditValue="{Binding MadeQuantity}" IsReadOnly="True" AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}"/>
-                        </dxlc:LayoutItem>
+                        <dxlc:LayoutGroup HorizontalAlignment="Right">
+                            <dxlc:LayoutItem Label="ОЕЕ" LabelPosition="Top" Width="80">
+                                <dxe:ButtonEdit EditValue="{Binding OEE}" HorizontalContentAlignment="Right" AllowDefaultButton="False" IsReadOnly="True" EditValueType="{x:Type sys:Decimal}">
+                                        <dxe:ButtonInfo Content="..." GlyphKind="Refresh" Command="{Binding RecalcOEECommand}"/>
+                                </dxe:ButtonEdit>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Сделано" LabelPosition="Top" Width="130">
+                                <dxe:SpinEdit EditValue="{Binding MadeQuantity}" IsReadOnly="True" AllowDefaultButton="False" EditValueType="{x:Type sys:Int32}"/>
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutGroup>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup>
                         <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Width="100" HorizontalAlignment="Left">
                             <dxe:ComboBoxEdit EditValue="{Binding PlaceID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Places}"
 					DisplayMember="PlaceName" ValueMember="PlaceID" SelectedItem="{Binding SelectedPlace, Mode=OneWayToSource}"/>
                         </dxlc:LayoutItem>
+                        <ContentControl Content="{Binding ProductionTaskSpecificationViewModel}" HorizontalAlignment="Left" />
                         <Button Content="Печать образца" Height="22" VerticalAlignment="Top" Width="120" Margin="0,18,0,0"  Command="{Binding PrintExampleCommand}">
                             <Button.Style>
                                 <Style>
@@ -96,7 +104,6 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <ContentControl Content="{Binding ProductionTaskSpecificationViewModel}" HorizontalAlignment="Left" />
                         <!--<dxlc:LayoutItem Label="Номер задания робота" LabelPosition="Top" Visibility="{Binding RobotNomenclatureVisible}">
                     <dxe:ComboBoxEdit IsTextEditable="False" 
                                                       ItemsSource="{Binding RobotNomenclatures}" EditValue="{Binding RobotProductNumber, UpdateSourceTrigger=PropertyChanged}"

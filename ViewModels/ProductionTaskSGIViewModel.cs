@@ -62,6 +62,7 @@ namespace Gamma.ViewModels
             PrintExampleCommand = new DelegateCommand(PrintExample);
             SetActualDateCommand = new DelegateCommand(SetActualDate, () => ProductionTaskID != Guid.Empty);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
+            RecalcOEECommand = new DelegateCommand(() => RaisePropertiesChanged("OEE"));
         }
         /// <summary>
         /// Открытие задания для редактирования
@@ -156,6 +157,8 @@ namespace Gamma.ViewModels
         public DelegateCommand PrintExampleCommand { get; private set; }
 
         public DelegateCommand SetActualDateCommand { get; private set; }
+
+        public DelegateCommand RecalcOEECommand { get; private set; }
 
         public bool IsHidePrintExample => WorkSession.ShiftID != 0;
 
@@ -514,6 +517,7 @@ namespace Gamma.ViewModels
             ProductionTaskId = productionTask.ProductionTaskID;
             return true;
         }
+
         private decimal _madeQuantiy;
         /// <summary>
         /// Кол-во выпущенных рулончиков в шт.
@@ -525,6 +529,20 @@ namespace Gamma.ViewModels
             {
                 _madeQuantiy = value;
                 RaisePropertiesChanged("MadeQuantity");
+            }
+        }
+
+        //private decimal? _oEE;
+        /// <summary>
+        /// ОЕЕ
+        /// </summary>
+        public decimal? OEE //=> DB.GetProductionTaskOEE(ProductionTaskID);
+        {
+            get { return DB.GetProductionTaskOEE(ProductionTaskID); }
+            set
+            {
+                //_oEE = value;
+                RaisePropertiesChanged("OEE");
             }
         }
 

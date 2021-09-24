@@ -441,5 +441,10 @@ namespace Gamma
             return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.GetPlaceProperty('{placeID}', '{propertyName}')").AsEnumerable().First();
         }
 
+        public static decimal? GetProductionTaskOEE(Guid productionTaskID, GammaEntities gammaBase = null)
+        {
+            return (gammaBase ?? GammaDb).Database.SqlQuery<decimal?>($"SELECT dbo.GetProductionTaskOEE('{productionTaskID}')").AsEnumerable().First();
+        }
+
     }
 }
