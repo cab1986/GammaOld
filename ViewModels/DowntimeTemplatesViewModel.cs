@@ -43,8 +43,8 @@ namespace Gamma.ViewModels
                       }
                     ).ToList();
             DowntimeTypes = (from p in GammaBase.C1CDowntimeTypes
-                      where (p.C1CDeleted == false && p.Folder == false)
-                      select new
+                             where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                             select new
                       DowntimeType
                       {
                           DowntimeTypeName = p.Description,
@@ -52,8 +52,8 @@ namespace Gamma.ViewModels
                       }
                     ).ToList();
             DowntimeTypeDetails = (from p in GammaBase.C1CDowntimeTypeDetails
-                             where (p.C1CDeleted == false && p.Folder == false)
-                             select new
+                                   where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                                   select new
                              DowntimeType
                              {
                                  DowntimeTypeName = p.Description,
@@ -63,8 +63,8 @@ namespace Gamma.ViewModels
                     ).ToList();
             DowntimeTypeDetailsFiltered = new List<DowntimeType>(DowntimeTypeDetails);
             EquipmentNodes = (from p in GammaBase.C1CEquipmentNodes
-                             where (p.C1CDeleted == false && p.Folder == false)
-                             select new
+                              where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                              select new
                              EquipmentNode
                              {
                                  EquipmentNodeName = p.Description,
@@ -72,8 +72,8 @@ namespace Gamma.ViewModels
                              }
                     ).ToList();
             EquipmentNodeDetails = (from p in GammaBase.C1CEquipmentNodeDetails
-                                   where (p.C1CDeleted == false && p.Folder == false)
-                                   select new
+                                    where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                                    select new
                                    EquipmentNode
                                    {
                                        EquipmentNodeName = p.Description,

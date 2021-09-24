@@ -20,7 +20,7 @@ namespace Gamma.DialogViewModels
 
             GammaBase = DB.GammaDb;
             Types = (from p in GammaBase.C1CDowntimeTypes
-                                       //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+                                       where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
                                    select new
                                    DowntimeType
                                    {
@@ -29,7 +29,7 @@ namespace Gamma.DialogViewModels
                                    }
                       ).ToList();
             TypeDetails = (from p in GammaBase.C1CDowntimeTypeDetails
-                               //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+                           where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
                            select new
                            DowntimeType
                            {
@@ -40,8 +40,8 @@ namespace Gamma.DialogViewModels
                       ).ToList();
             TypeDetailsFiltered = new List<DowntimeType>(TypeDetails);
             EquipmentNodes = (from p in GammaBase.C1CEquipmentNodes
-                         //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
-                     select new
+                              where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                              select new
                      EquipmentNode
                      {
                          EquipmentNodeName = p.Description,
@@ -49,8 +49,8 @@ namespace Gamma.DialogViewModels
                      }
                       ).ToList();
             EquipmentNodeDetails = (from p in GammaBase.C1CEquipmentNodeDetails
-                               //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
-                           select new
+                                    where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                                    select new
                            EquipmentNode
                            {
                                EquipmentNodeName = p.Description,
