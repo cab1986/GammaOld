@@ -1322,6 +1322,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="IsEnabledRepackInProductionTask" Type="bit" />
           <Property Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" Type="bit" />
           <Property Name="IsEnabledDowntimes" Type="bit" />
+          <Property Name="IsAllowEditingDowntimesInDocCloseShift" Type="bit" />
         </EntityType>
         <EntityType Name="Places1CWarehouses">
           <Key>
@@ -12682,6 +12683,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="IsEnabledRepackInProductionTask" Type="Boolean" />
           <Property Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" Type="Boolean" />
           <Property Name="IsEnabledDowntimes" Type="Boolean" />
+          <Property Name="IsAllowEditingDowntimesInDocCloseShift" Type="Boolean" />
           <NavigationProperty Name="DowntimeTemplates" Relationship="GammaModel.FK_DowntimeTemplates_Places" FromRole="Places" ToRole="DowntimeTemplates" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
@@ -16634,6 +16636,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Type="Guid" Name="C1CEquipmentNodeDetailID" Nullable="true" />
           <Property Type="String" Name="EquipmentNode" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="EquipmentNodeDetail" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Comment" Nullable="true" MaxLength="2000" />
+          <Property Type="DateTime" Name="DateBegin" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="DateEnd" Nullable="false" Precision="23" />
         </ComplexType>
         <ComplexType Name="GetBatchDowntimes_Result">
           <Property Type="Guid" Name="ProductionTaskDowntimeID" Nullable="false" />
@@ -18433,6 +18438,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="Places">
             <EntityTypeMapping TypeName="GammaModel.Places">
               <MappingFragment StoreEntitySet="Places">
+                <ScalarProperty Name="IsAllowEditingDowntimesInDocCloseShift" ColumnName="IsAllowEditingDowntimesInDocCloseShift" />
                 <ScalarProperty Name="IsEnabledDowntimes" ColumnName="IsEnabledDowntimes" />
                 <ScalarProperty Name="IsEnabledAuxiliaryMaterialsInDocCloseShift" ColumnName="IsEnabledAuxiliaryMaterialsInDocCloseShift" />
                 <ScalarProperty Name="IsEnabledRepackInProductionTask" ColumnName="IsEnabledRepackInProductionTask" />
@@ -20053,6 +20059,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="C1CEquipmentNodeDetailID" ColumnName="1CEquipmentNodeDetailID" />
                 <ScalarProperty Name="EquipmentNode" ColumnName="EquipmentNode" />
                 <ScalarProperty Name="EquipmentNodeDetail" ColumnName="EquipmentNodeDetail" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
+                <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

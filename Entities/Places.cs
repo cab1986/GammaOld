@@ -68,7 +68,8 @@ namespace Gamma.Entities
         public Nullable<bool> IsEnabledRepackInProductionTask { get; set; }
         public Nullable<bool> IsEnabledAuxiliaryMaterialsInDocCloseShift { get; set; }
         public Nullable<bool> IsEnabledDowntimes { get; set; }
-    
+        public Nullable<bool> IsAllowEditingDowntimesInDocCloseShift { get; set; }
+
         public virtual C1CPlaces C1CPlaces { get; set; }
         public virtual ActiveProductionTasks ActiveProductionTasks { get; set; }
         public virtual Branches Branches { get; set; }

@@ -35,8 +35,8 @@ namespace Gamma.ViewModels
         public DocCloseShiftDowntimesViewModel()
         {
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDowntimes", VMID));
-            AddDowntimeCommand = new DelegateCommand(AddDowntime, () => !IsReadOnly);
-            DeleteDowntimeCommand = new DelegateCommand(DeleteDowntime, () =>  !IsReadOnly && SelectedDowntime != null && SelectedDowntime?.ProductionTaskID == null);
+            AddDowntimeCommand = new DelegateCommand(AddDowntime, () => IsAllowEditingDowntimesInDocCloseShift && !IsReadOnly);
+            DeleteDowntimeCommand = new DelegateCommand(DeleteDowntime, () => IsAllowEditingDowntimesInDocCloseShift && !IsReadOnly && SelectedDowntime != null && SelectedDowntime?.ProductionTaskID == null);
             //Downtimes = new ObservableCollection<Downtime>();
 
         }
@@ -67,7 +67,7 @@ namespace Gamma.ViewModels
                          DateBegin = dt.DateBegin,
                          DateEnd = dt.DateEnd
                      }));
-                Downtimes = downtimes ?? new ObservableCollection<Downtime>();
+                Downtimes = downtimes ?? new ObservableCollection<Downtime>();                
             }
         }
 
@@ -95,6 +95,7 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
+                IsAllowEditingDowntimesInDocCloseShift = GammaBase.Places.FirstOrDefault(p => p.PlaceID == value)?.IsAllowEditingDowntimesInDocCloseShift ?? false;
                 /*var placeGroupID =  GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First();
                 if (placeGroupID == 0)
                 {
@@ -106,16 +107,18 @@ namespace Gamma.ViewModels
                     CurrentMaterialType = MaterialType.MaterialsSGI;
                     IsVisibleQuantityDismiss = false;
                 }*/
-                
+
             }
         }
         private int ShiftID;
         DateTime CloseDate;
-
+               
         private bool IsConfirmed { get; set; }
         public bool IsReadOnly => !(DB.HaveWriteAccess("DocCloseShiftDowntimes") || WorkSession.DBAdmin) || IsConfirmed;
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
+
+        private bool IsAllowEditingDowntimesInDocCloseShift { get; set; }
 
         public Downtime SelectedDowntime { get; set; }
         public ObservableCollection<Downtime> Downtimes { get; set; }
@@ -238,9 +241,9 @@ namespace Gamma.ViewModels
                             DowntimeType = dt.DowntimeType,
                             DowntimeTypeDetail = dt.DowntimeTypeDetail,
                             Duration = dt.Duration ?? 0,
-                            //Comment = dt.Comment,
-                            //DateBegin = dt.DateBegin,
-                            //DateEnd = dt.DateEnd,
+                            Comment = dt.Comment,
+                            DateBegin = dt.DateBegin,
+                            DateEnd = dt.DateEnd,
                             EquipmentNodeID = dt.C1CEquipmentNodeID,
                             EquipmentNodeDetailID = dt.C1CEquipmentNodeDetailID,
                             EquipmentNode = dt.EquipmentNode,
