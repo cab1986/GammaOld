@@ -38,7 +38,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.1.7.%2a</ApplicationVersion>
+    <ApplicationVersion>3.1.8.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -783,6 +783,9 @@
     <Compile Include="Entities\Persons.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\PlaceAuxiliaryMaterials.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\PlaceGroups.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
@@ -964,6 +967,7 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
+    <Compile Include="Models\PlaceAuxiliaryMaterial.cs" />
     <Compile Include="Models\DowntimeTemplate.cs" />
     <Compile Include="Models\EquipmentNode.cs" />
     <Compile Include="Models\DowntimeType.cs" />
@@ -1095,6 +1099,7 @@
     <Compile Include="ViewModels\DocCloseShiftDowntimesViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialProductionDirectCalculationMaterialViewModel.cs" />
     <Compile Include="ViewModels\DocRepackViewModel.cs" />
+    <Compile Include="ViewModels\PlaceAuxiliaryMaterialsViewModel.cs" />
     <Compile Include="ViewModels\ProductionTaskSpecificationViewModel.cs" />
     <Compile Include="ViewModels\StockRemaindersViewModel.cs" />
     <Compile Include="ViewModels\DocMaterialTankRemaindersViewModel.cs" />
@@ -1196,6 +1201,9 @@
     </Compile>
     <Compile Include="Views\DocRepackView.xaml.cs">
       <DependentUpon>DocRepackView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaceAuxiliaryMaterialsView.xaml.cs">
+      <DependentUpon>PlaceAuxiliaryMaterialsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProductionTaskSpecificationView.xaml.cs">
       <DependentUpon>ProductionTaskSpecificationView.xaml</DependentUpon>
@@ -1477,6 +1485,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DocRepackView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PlaceAuxiliaryMaterialsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1887,7 +1899,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

@@ -308,7 +308,9 @@ namespace Gamma.ViewModels
                     downtimeInDB.DateBegin = downtime.DateBegin;
                     downtimeInDB.DateEnd = downtime.DateEnd;
                     downtimeInDB.Duration = downtime.Duration;
-                    }
+                    downtimeInDB.C1CEquipmentNodeID = downtime.EquipmentNodeID;
+                    downtimeInDB.C1CEquipmentNodeDetailID = downtime.EquipmentNodeDetailID;
+                }
                 gammaBase.SaveChanges();
             }
             return true;
