@@ -144,6 +144,8 @@
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Номенклатура">
                         <dxb:BarButtonItem Content="Номенклатура СГИ" Command="{Binding EditPlaceGroupNomenclatureCommand}" CommandParameter="2"/>
+
+                        <dxb:BarButtonItem Content="Вспомогательные материалы" Command="{Binding OpenPlaceAuxiliaryMaterialsCommand}"/>
                     </dxb:BarSubItem>
                     <dxb:BarSubItem Content="Параметры">
                         <dxb:BarSubItem Content="Конфигурация">

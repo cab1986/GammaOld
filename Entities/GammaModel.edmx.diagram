@@ -447,6 +447,10 @@
         <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_1CEquipmentNodeDetails" />
         <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_1CEquipmentNodes" />
         <AssociationConnector Association="GammaModel.FK_DowntimeTemplates_Places" />
+        <EntityTypeShape EntityType="GammaModel.PlaceAuxiliaryMaterials" Width="1.5" PointX="27.75" PointY="70.75" />
+        <AssociationConnector Association="GammaModel.FK_PlaceAuxiliaryMaterials_1CCharacteristics" />
+        <AssociationConnector Association="GammaModel.FK_PlaceAuxiliaryMaterials_1CNomenclature" />
+        <AssociationConnector Association="GammaModel.FK_PlaceAuxiliaryMaterials_Places" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

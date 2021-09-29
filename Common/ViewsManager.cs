@@ -30,6 +30,7 @@ namespace Gamma.Common
             Messenger.Default.Register<OpenDocShipmentOrderMessage>(this, OpenDocShipmentOrder);
             Messenger.Default.Register<OpenWarehousePersonsMessage>(this, OpenWarehousePersons);
             Messenger.Default.Register<OpenDowntimeTemplatesMessage>(this, OpenDowntimeTemplates);
+            Messenger.Default.Register<OpenPlaceAuxiliaryMaterialsMessage>(this, OpenPlaceAuxiliaryMaterials);
             Messenger.Default.Register<OpenImportOldProductsMessage>(this, OpenImportOldProducts);
             Messenger.Default.Register<OpenDocBrokeMessage>(this, OpenDocBroke);
             Messenger.Default.Register<EditRejectionReasonsMessage>(this, EditRejectionReasonsDialog);
@@ -127,6 +128,11 @@ namespace Gamma.Common
         private void OpenDowntimeTemplates(OpenDowntimeTemplatesMessage msg)
         {
             new DowntimeTemplatesView().Show();
+        }
+
+        private void OpenPlaceAuxiliaryMaterials(OpenPlaceAuxiliaryMaterialsMessage msg)
+        {
+            new PlaceAuxiliaryMaterialsView().Show();
         }
 
         private void OpenDocShipmentOrder(OpenDocShipmentOrderMessage msg)

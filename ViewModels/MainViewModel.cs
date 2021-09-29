@@ -119,6 +119,7 @@ namespace Gamma.ViewModels
                 OpenDocInOrdersCommand = new DelegateCommand(OpenDocInOrders, () => false/* DB.HaveReadAccess("DocShipmentOrders")*/);
                 OpenPlaceGroupsNomenclatureCommand = new DelegateCommand(MessageManager.OpenPlaceGroupsNomenclature
                     , () => DB.HaveWriteAccess("PlaceGroup1CNomenclature"));
+                OpenPlaceAuxiliaryMaterialsCommand = new DelegateCommand(MessageManager.OpenPlaceAuxiliaryMaterials, () => DB.HaveReadAccess("PlaceAuxiliaryMaterials"));
                 OpenMaterialTypesNomenclatureCommand = new DelegateCommand(MessageManager.OpenMaterialTypesNomenclature,
                     () => DB.HaveWriteAccess("MaterialType1CNomenclature"));
                 OpenWarehousePersonsCommand = new DelegateCommand(MessageManager.OpenWarehousePersons, () => DB.HaveReadAccess("Persons"));
@@ -528,6 +529,7 @@ namespace Gamma.ViewModels
         public DelegateCommand FindProductionTaskCommand { get; private set; }
         public DelegateCommand<int> OpenPlaceProductsCommand { get; private set; }
         public DelegateCommand OpenPlaceGroupsNomenclatureCommand { get; private set; }
+        public DelegateCommand OpenPlaceAuxiliaryMaterialsCommand { get; private set; }
         public DelegateCommand OpenMaterialTypesNomenclatureCommand { get; private set; }
         public DelegateCommand OpenWarehousePersonsCommand { get; private set; }
         public DelegateCommand OpenDowntimeTemplatesCommand { get; private set; }

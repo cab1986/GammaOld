@@ -342,6 +342,7 @@ namespace Gamma
     public class OpenMaterialTypesNomenclatureMessage { }
     public class OpenWarehousePersonsMessage { }
     public class OpenDowntimeTemplatesMessage { }
+    public class OpenPlaceAuxiliaryMaterialsMessage { }
     public class OpenImportOldProductsMessage { }
     public class OpenDocCloseShiftsMessage 
     {
@@ -722,6 +723,11 @@ namespace Gamma
         public static void OpenDowntimeTemplates()
         {
             Messenger.Default.Send(new OpenDowntimeTemplatesMessage());
+        }
+
+        public static void OpenPlaceAuxiliaryMaterials()
+        {
+            Messenger.Default.Send(new OpenPlaceAuxiliaryMaterialsMessage());
         }
 
         public static void OpenImportOldProducts()

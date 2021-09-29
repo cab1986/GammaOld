@@ -44,6 +44,7 @@ namespace Gamma.Entities
             this.DocMaterialProducts = new HashSet<DocMaterialProducts>();
             this.DocMaterialProductions = new HashSet<DocMaterialProductions>();
             this.DocCloseShiftAuxiliaryMaterials = new HashSet<DocCloseShiftAuxiliaryMaterials>();
+            this.PlaceAuxiliaryMaterials = new HashSet<PlaceAuxiliaryMaterials>();
         }
     
         public System.Guid C1CCharacteristicID { get; set; }
@@ -116,5 +117,7 @@ namespace Gamma.Entities
         public virtual ICollection<DocMaterialProductions> DocMaterialProductions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PlaceAuxiliaryMaterials> PlaceAuxiliaryMaterials { get; set; }
     }
 }

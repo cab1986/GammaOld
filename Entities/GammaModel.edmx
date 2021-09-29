@@ -1263,6 +1263,15 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="PlaceID" Type="int" />
           <Property Name="UserID" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="PlaceAuxiliaryMaterials">
+          <Key>
+            <PropertyRef Name="PlaceAuxiliaryMaterialID" />
+          </Key>
+          <Property Name="PlaceAuxiliaryMaterialID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PlaceID" Type="int" Nullable="false" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="PlaceGroup1CNomenclature">
           <Key>
             <PropertyRef Name="PlaceGroupID" />
@@ -5017,6 +5026,42 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PlaceAuxiliaryMaterials_1CCharacteristics">
+          <End Role="1CCharacteristics" Type="Self.1CCharacteristics" Multiplicity="0..1" />
+          <End Role="PlaceAuxiliaryMaterials" Type="Self.PlaceAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CCharacteristics">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="PlaceAuxiliaryMaterials">
+              <PropertyRef Name="1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaceAuxiliaryMaterials_1CNomenclature">
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
+          <End Role="PlaceAuxiliaryMaterials" Type="Self.PlaceAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CNomenclature">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="PlaceAuxiliaryMaterials">
+              <PropertyRef Name="1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaceAuxiliaryMaterials_Places">
+          <End Role="Places" Type="Self.Places" Multiplicity="1" />
+          <End Role="PlaceAuxiliaryMaterials" Type="Self.PlaceAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="PlaceAuxiliaryMaterials">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlaceGroup1CNomenclature_1CNomenclature">
           <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="1" />
           <End Role="PlaceGroup1CNomenclature" Type="Self.PlaceGroup1CNomenclature" Multiplicity="*" />
@@ -6572,6 +6617,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="Permits" EntityType="Self.Permits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PermitTables" EntityType="Self.PermitTables" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Persons" EntityType="Self.Persons" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlaceAuxiliaryMaterials" EntityType="Self.PlaceAuxiliaryMaterials" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceGroup1CNomenclature" EntityType="Self.PlaceGroup1CNomenclature" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceGroups" EntityType="Self.PlaceGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlaceRemotePrinters" EntityType="Self.PlaceRemotePrinters" Schema="dbo" store:Type="Tables" />
@@ -7957,6 +8003,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_Persons_Users" Association="Self.FK_Persons_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Persons" EntitySet="Persons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaceAuxiliaryMaterials_1CCharacteristics" Association="Self.FK_PlaceAuxiliaryMaterials_1CCharacteristics">
+            <End Role="1CCharacteristics" EntitySet="1CCharacteristics" />
+            <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaceAuxiliaryMaterials_1CNomenclature" Association="Self.FK_PlaceAuxiliaryMaterials_1CNomenclature">
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
+            <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaceAuxiliaryMaterials_Places" Association="Self.FK_PlaceAuxiliaryMaterials_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaceGroup1CNomenclature_1CNomenclature" Association="Self.FK_PlaceGroup1CNomenclature_1CNomenclature">
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
@@ -10686,6 +10744,19 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="Places" EntitySet="Places" />
             <End Role="DowntimeTemplates" EntitySet="DowntimeTemplates" />
           </AssociationSet>
+          <EntitySet Name="PlaceAuxiliaryMaterials" EntityType="GammaModel.PlaceAuxiliaryMaterials" />
+          <AssociationSet Name="FK_PlaceAuxiliaryMaterials_1CCharacteristics" Association="GammaModel.FK_PlaceAuxiliaryMaterials_1CCharacteristics">
+            <End Role="C1CCharacteristics" EntitySet="C1CCharacteristics" />
+            <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaceAuxiliaryMaterials_1CNomenclature" Association="GammaModel.FK_PlaceAuxiliaryMaterials_1CNomenclature">
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+            <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaceAuxiliaryMaterials_Places" Association="GammaModel.FK_PlaceAuxiliaryMaterials_Places">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -12685,6 +12756,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="IsEnabledDowntimes" Type="Boolean" />
           <Property Name="IsAllowEditingDowntimesInDocCloseShift" Type="Boolean" />
           <NavigationProperty Name="DowntimeTemplates" Relationship="GammaModel.FK_DowntimeTemplates_Places" FromRole="Places" ToRole="DowntimeTemplates" />
+          <NavigationProperty Name="PlaceAuxiliaryMaterials" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_Places" FromRole="Places" ToRole="PlaceAuxiliaryMaterials" />
         </EntityType>
         <Association Name="FK_Places_1CPlaces">
           <End Type="GammaModel.C1CPlaces" Role="C1CPlaces" Multiplicity="0..1" />
@@ -12989,6 +13061,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocMaterialProductions" />
           <Property Name="C1COldCharacteristicID" Type="Guid" />
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="DocCloseShiftAuxiliaryMaterials" />
+          <NavigationProperty Name="PlaceAuxiliaryMaterials" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_1CCharacteristics" FromRole="C1CCharacteristics" ToRole="PlaceAuxiliaryMaterials" />
           </EntityType>
         <Association Name="FK_1CCharacteristicProperties_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="1" />
@@ -13865,6 +13938,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="C1CQualityID" Type="Guid" />
           <Property Name="C1COldNomenclatureID" Type="Guid" />
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftAuxiliaryMaterials" />
+          <NavigationProperty Name="PlaceAuxiliaryMaterials" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="PlaceAuxiliaryMaterials" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -16856,6 +16930,54 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               <PropertyRef Name="PlaceID" />
             </Principal>
             <Dependent Role="DowntimeTemplates">
+              <PropertyRef Name="PlaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PlaceAuxiliaryMaterials">
+          <Key>
+            <PropertyRef Name="PlaceAuxiliaryMaterialID" />
+          </Key>
+          <Property Name="PlaceAuxiliaryMaterialID" Type="Guid" Nullable="false" />
+          <Property Name="PlaceID" Type="Int32" Nullable="false" />
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <NavigationProperty Name="C1CCharacteristics" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_1CCharacteristics" FromRole="PlaceAuxiliaryMaterials" ToRole="C1CCharacteristics" />
+          <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_1CNomenclature" FromRole="PlaceAuxiliaryMaterials" ToRole="C1CNomenclature" />
+          <NavigationProperty Name="Places" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_Places" FromRole="PlaceAuxiliaryMaterials" ToRole="Places" />
+        </EntityType>
+        <Association Name="FK_PlaceAuxiliaryMaterials_1CCharacteristics">
+          <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
+          <End Type="GammaModel.PlaceAuxiliaryMaterials" Role="PlaceAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CCharacteristics">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Principal>
+            <Dependent Role="PlaceAuxiliaryMaterials">
+              <PropertyRef Name="C1CCharacteristicID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaceAuxiliaryMaterials_1CNomenclature">
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
+          <End Type="GammaModel.PlaceAuxiliaryMaterials" Role="PlaceAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CNomenclature">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Principal>
+            <Dependent Role="PlaceAuxiliaryMaterials">
+              <PropertyRef Name="C1CNomenclatureID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaceAuxiliaryMaterials_Places">
+          <End Type="GammaModel.Places" Role="Places" Multiplicity="1" />
+          <End Type="GammaModel.PlaceAuxiliaryMaterials" Role="PlaceAuxiliaryMaterials" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="PlaceAuxiliaryMaterials">
               <PropertyRef Name="PlaceID" />
             </Dependent>
           </ReferentialConstraint>
@@ -20128,6 +20250,16 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="C1CDowntimeTypeID" ColumnName="1CDowntimeTypeID" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="DowntimeTemplateID" ColumnName="DowntimeTemplateID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlaceAuxiliaryMaterials">
+            <EntityTypeMapping TypeName="GammaModel.PlaceAuxiliaryMaterials">
+              <MappingFragment StoreEntitySet="PlaceAuxiliaryMaterials">
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="PlaceAuxiliaryMaterialID" ColumnName="PlaceAuxiliaryMaterialID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
