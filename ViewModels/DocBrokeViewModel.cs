@@ -282,7 +282,7 @@ namespace Gamma.ViewModels
                         DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
                         product.BaseMeasureUnit,
                         product.C1CNomenclatureID,
-                        (Guid)product.C1CCharacteristicID,
+                        product.C1CCharacteristicID,
                         product.BaseMeasureUnitQuantity ?? 0
                         )
                     );
@@ -301,7 +301,7 @@ namespace Gamma.ViewModels
                                 DB.GetProductNomenclatureNameBeforeDate(product.ProductID, Date),
                                 product.BaseMeasureUnit,
                                 product.C1CNomenclatureID,
-                                (Guid)product.C1CCharacteristicID,
+                                product.C1CCharacteristicID,
                                 decisionProduct.Quantity ?? 0,
                                 decisionProduct.DecisionApplied,
                                 (docWithdrawalID?.DocWithdrawalID == Guid.Empty ? null : docWithdrawalID?.DocWithdrawalID)

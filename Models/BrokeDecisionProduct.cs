@@ -10,7 +10,7 @@ namespace Gamma.Models
     public class BrokeDecisionProduct : ViewModelBase
     {
         public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, ProductState state, decimal maxQuantity,  string nomenclatureName, 
-            string measureUnit, Guid nomenclatureOldId , Guid characteristicOldId, decimal quantity = 0, bool decisionApplied = false, Guid? docWithdrawalID = null)
+            string measureUnit, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false, Guid? docWithdrawalID = null)
         {
             MaxQuantity = maxQuantity;
             Quantity = quantity;
@@ -95,7 +95,7 @@ namespace Gamma.Models
         }
 
         public Guid NomenclatureOldId { get; set; }
-        public Guid CharacteristicOldId { get; set; }
+        public Guid? CharacteristicOldId { get; set; }
         
 
         public string MeasureUnit { get; set; }
