@@ -22,5 +22,6 @@ namespace Gamma.Entities
         public Nullable<int> TaskLastNumber { get; set; }
         public Nullable<bool> IsGet1CNomenclatureLanched { get; set; }
         public Nullable<System.DateTime> LastExecGet1CNomenclature { get; set; }
+        public Nullable<bool> IsUploadDocBrokeTo1CWhenSave { get; set; }
     }
 }

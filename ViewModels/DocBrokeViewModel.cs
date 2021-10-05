@@ -145,6 +145,7 @@ namespace Gamma.ViewModels
                 DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
                 EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
                 OpenProductCommand = new DelegateCommand(OpenProduct);
+                UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => DocId != null);
                 var IsEditableCollection = new ObservableCollection<bool?>
                 (
                     from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int?)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID, doc?.DocID)
@@ -719,12 +720,29 @@ namespace Gamma.ViewModels
 
         public DelegateCommand OpenProductCommand { get; private set; }
         public DelegateCommand EditRejectionReasonsCommand { get; private set; }
+        public DelegateCommand UploadTo1CCommand { get; private set; }
 
         private void EditRejectionReasons()
         {
             if (SelectedBrokeProduct?.RejectionReasons == null) return;
             MessageManager.EditRejectionReasons(SelectedBrokeProduct);
         }
+
+        private void UploadTo1C()
+        {
+            if (!IsValid)
+            {
+                MessageBox.Show("Не заполнены некоторые обязательные поля!", "Поля не заполнены", MessageBoxButton.OK,
+                    MessageBoxImage.Asterisk);
+                return;
+            }
+            if (CanSaveExecute())
+                SaveToModel();
+            else
+                DB.UploadDocBrokeTo1C(DocId);
+        }
+
+
 
         /// <summary>
         /// Создает новое решение по продукту на базе другого с отличием состояния и количества
@@ -872,6 +890,8 @@ namespace Gamma.ViewModels
 #endregion
                 gammaBase.SaveChanges();
             }
+            if (WorkSession.IsUploadDocBrokeTo1CWhenSave)
+                DB.UploadDocBrokeTo1C(DocId);
             Messenger.Default.Send(new RefreshBrokeListMessage { });
             return true;
         }

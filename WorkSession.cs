@@ -81,6 +81,8 @@ namespace Gamma
                                    select u.LabelPath).FirstOrDefault();
                 RoleName = userInfo.RoleName;
                 UnwindersCount = userInfo.UnwindersCount ?? 0;
+                IsUploadDocBrokeTo1CWhenSave = (from u in DB.GammaDb.LocalSettings
+                                                select u.IsUploadDocBrokeTo1CWhenSave).FirstOrDefault() ?? false;
             }
         }
         public static bool DBAdmin
@@ -154,6 +156,11 @@ namespace Gamma
         /// Кол-во раскатов на переделе
         /// </summary>
         public static int UnwindersCount { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static bool IsUploadDocBrokeTo1CWhenSave { get; private set; }
 
     }
 }

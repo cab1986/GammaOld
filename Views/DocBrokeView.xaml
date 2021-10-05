@@ -100,6 +100,7 @@
                         <dxlc:LayoutItem Label="Подтвержден">
                             <dxe:CheckEdit EditValue="{Binding IsConfirmed, UpdateSourceTrigger=PropertyChanged}"/>
                         </dxlc:LayoutItem>
+                        <Button Command="{Binding UploadTo1CCommand}" Content="Выгрузить в 1С" Height="25"/>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Header="Дефект и причина" Orientation="Vertical" Width="230" VerticalAlignment="Bottom"  Visibility="{Binding IsVisibleSetRejectionReasonForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxlc:LayoutItem Label="Дефект" LabelPosition="Top">

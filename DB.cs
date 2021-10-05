@@ -300,6 +300,12 @@ namespace Gamma
             return ret;
         }
 
+        public static void UploadDocBrokeTo1C(Guid docBrokeId, GammaEntities gammaBase = null)
+        {
+            const string sql = "exec [dbo].[UploadDocBrokeTo1C] @DocID";
+            UploadDocTo1C(sql, docBrokeId, gammaBase);
+        }
+        
         public static void ChangeUserPassword(Guid userid,string password, GammaEntities gammaBase = null)
         {
             gammaBase = gammaBase ?? GammaDb;

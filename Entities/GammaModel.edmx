@@ -1169,6 +1169,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a pr
           <Property Name="TaskLastNumber" Type="int" />
           <Property Name="IsGet1CNomenclatureLanched" Type="bit" />
           <Property Name="LastExecGet1CNomenclature" Type="datetime" />
+          <Property Name="IsUploadDocBrokeTo1CWhenSave" Type="bit" />
         </EntityType>
         <EntityType Name="LogEvents">
           <Key>
@@ -6667,7 +6668,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     [LocalSettings].[DocLastNumber] AS [DocLastNumber], 
     [LocalSettings].[TaskLastNumber] AS [TaskLastNumber], 
     [LocalSettings].[IsGet1CNomenclatureLanched] AS [IsGet1CNomenclatureLanched], 
-    [LocalSettings].[LastExecGet1CNomenclature] AS [LastExecGet1CNomenclature]
+    [LocalSettings].[LastExecGet1CNomenclature] AS [LastExecGet1CNomenclature], 
+    [LocalSettings].[IsUploadDocBrokeTo1CWhenSave] AS [IsUploadDocBrokeTo1CWhenSave]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
@@ -14686,6 +14688,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="TaskLastNumber" Type="Int32" />
           <Property Name="IsGet1CNomenclatureLanched" Type="Boolean" />
           <Property Name="LastExecGet1CNomenclature" Type="DateTime" Precision="3" />
+          <Property Name="IsUploadDocBrokeTo1CWhenSave" Type="Boolean" />
         </EntityType>
         <EntityType Name="Devices">
           <Key>
@@ -19033,6 +19036,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="LocalSettings">
             <EntityTypeMapping TypeName="GammaModel.LocalSettings">
               <MappingFragment StoreEntitySet="LocalSettings">
+                <ScalarProperty Name="IsUploadDocBrokeTo1CWhenSave" ColumnName="IsUploadDocBrokeTo1CWhenSave" />
                 <ScalarProperty Name="LastExecGet1CNomenclature" ColumnName="LastExecGet1CNomenclature" />
                 <ScalarProperty Name="IsGet1CNomenclatureLanched" ColumnName="IsGet1CNomenclatureLanched" />
                 <ScalarProperty Name="TaskLastNumber" ColumnName="TaskLastNumber" />
