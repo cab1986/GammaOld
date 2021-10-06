@@ -145,7 +145,7 @@ namespace Gamma.ViewModels
             barFirst.Commands.Add(new BarCommand<object>(p => DeleteDowntime()) { Caption = "Удалить" });
             barFirst.Commands.Add(new BarCommand<object>(p => RefreshDowntime()) { Caption = "Обновить" });
             DowntimeBars.Add(barFirst);
-            var placeID = GammaBase.ProductionTaskBatches.Where(t => t.ProductionTaskBatchID == ProductionTaskBatchID).FirstOrDefault().ProductionTasks.FirstOrDefault().PlaceID;
+            var placeID = GammaBase.ProductionTaskBatches.Where(t => t.ProductionTaskBatchID == ProductionTaskBatchID).FirstOrDefault()?.ProductionTasks.FirstOrDefault()?.PlaceID;
             var templates = GammaBase.DowntimeTemplates.Where(t => t.PlaceID == placeID).ToList();
             var bar = new BarViewModel();
             foreach (var template in templates)
