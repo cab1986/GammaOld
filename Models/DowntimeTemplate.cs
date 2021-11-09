@@ -18,6 +18,7 @@ namespace Gamma.Models
         public string EquipmentNodeDetail { get; set; }
         public int? PlaceID { get; set; }
         public string PlaceName { get; set; }
+        public int? Duration { get; set; }
 
     }
 }

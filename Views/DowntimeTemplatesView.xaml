@@ -58,6 +58,9 @@
             <dxlc:LayoutItem Label="Узлы(доп)" LabelPosition="Top">
                 <dxe:ComboBoxEdit ItemsSource="{Binding EquipmentNodeDetailsFiltered}" EditValue="{Binding EquipmentNodeDetailID, UpdateSourceTrigger=PropertyChanged}" DisplayMember="EquipmentNodeName" ValueMember="EquipmentNodeID"/>
             </dxlc:LayoutItem>
+            <dxlc:LayoutItem Label="Длит-сть (мин)" LabelPosition="Top">
+                <dxe:TextEdit EditValue="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"/>
+            </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Примечание" LabelPosition="Top">
                 <dxe:TextEdit EditValue="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
@@ -70,6 +73,7 @@
                 <dxg:GridColumn FieldName="DowntimeTypeDetail" Header="Вид(доп)" />
                 <dxg:GridColumn FieldName="EquipmentNode" Header="Узел" />
                 <dxg:GridColumn FieldName="EquipmentNodeDetail" Header="Узел(доп)" />
+                <dxg:GridColumn FieldName="Duration" Header="Длительность (мин)" />
                 <dxg:GridColumn FieldName="Comment" Header="Примечание" />
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>

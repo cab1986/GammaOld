@@ -103,7 +103,8 @@ namespace Gamma.ViewModels
                 C1CDowntimeTypeDetailID = DowntimeTypeDetailID,
                 C1CEquipmentNodeID = EquipmentNodeID,
                 C1CEquipmentNodeDetailID = EquipmentNodeDetailID,
-                Comment = Comment
+                Comment = Comment,
+                Duration = Duration
             };
             GammaBase.DowntimeTemplates.Add(DowntimeTemplate);
             GammaBase.SaveChanges();
@@ -143,13 +144,16 @@ namespace Gamma.ViewModels
                     DowntimeTypeDetail = p.C1CDowntimeTypeDetails.Description,
                     EquipmentNode = p.C1CEquipmentNodes.Description,
                     EquipmentNodeDetail = p.C1CEquipmentNodeDetails.Description,
-                    Comment = p.Comment
+                    Comment = p.Comment,
+                    Duration = p.Duration
                 }));
         }
 
         public DowntimeTemplate SelectedDowntimeTemplate { get; set; }
 
         public string Comment { get; set; }
+
+        public int? Duration { get; set; }
 
         public List<Place> Places { get; set; }
 

@@ -37,8 +37,8 @@
     <PublisherName>STG</PublisherName>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>3.1.11.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.1.12.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -68,10 +68,10 @@
     <ApplicationIcon>kbemusedsrv_7641.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9AAEE5069B907BB15B0492BFF0CFD668187165B1</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>CA2E9A75C2972BC8B2BC03371F2F348910C68051</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Gamma_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Gamma_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -1799,6 +1799,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Gamma_1_TemporaryKey.pfx" />
     <None Include="Gamma_4_TemporaryKey.pfx" />
     <None Include="Gamma_TemporaryKey.pfx" />
     <None Include="Service References\GammaService\Reference.svcmap">

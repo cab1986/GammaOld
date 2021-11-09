@@ -155,13 +155,15 @@ namespace Gamma.ViewModels
                     Caption = template.C1CDowntimeTypes.Description.Substring(0, Math.Min(7, template.C1CDowntimeTypes.Description.Length))
                                 + (template.C1CDowntimeTypeDetails != null ? "__" + template.C1CDowntimeTypeDetails.Description.Substring(0,Math.Min(5, template.C1CDowntimeTypeDetails.Description.Length)) : "")
                                 + (template.C1CEquipmentNodes != null ? "#" + template.C1CEquipmentNodes.Description.Substring(0, Math.Min(7, template.C1CEquipmentNodes.Description.Length)) : "")
-                                + (template.C1CEquipmentNodeDetails != null ? "__" + template.C1CEquipmentNodeDetails.Description.Substring(0, Math.Min(5, template.C1CEquipmentNodeDetails.Description.Length)) : "") +"  |",
+                                + (template.C1CEquipmentNodeDetails != null ? "__" + template.C1CEquipmentNodeDetails.Description.Substring(0, Math.Min(5, template.C1CEquipmentNodeDetails.Description.Length)) : "")
+                                + (template.Duration != null ? "#" + template.Duration.ToString() : "") + "  |",
                     CommandParameter = new AddDowntimeParameter
                     {
                         DowntimeTypeID = template.C1CDowntimeTypeID,
                         DowntimeTypeDetailID = template.C1CDowntimeTypeDetailID,
                         EquipmentNodeID = template.C1CEquipmentNodeID,
                         EquipmentNodeDetailID = template.C1CEquipmentNodeDetailID,
+                        Duration = template.Duration,
                         Comment = template.Comment
                     }
                 };
@@ -1916,7 +1918,7 @@ namespace Gamma.ViewModels
 
         private void AddDowntime(AddDowntimeParameter downtime)
         {
-            AddDowntime(downtime.DowntimeTypeID, downtime.DowntimeTypeDetailID, downtime.EquipmentNodeID, downtime.EquipmentNodeDetailID, downtime.Comment);
+            AddDowntime(downtime.DowntimeTypeID, downtime.DowntimeTypeDetailID, downtime.EquipmentNodeID, downtime.EquipmentNodeDetailID, downtime.Duration, downtime.Comment);
         }
 
         private void AddDowntime()
@@ -1924,9 +1926,9 @@ namespace Gamma.ViewModels
             AddDowntime(null,null);
         }
 
-        private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, string comment = null)
+        private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null)
         {
-            var model = new AddDowntimeDialogModel(downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, comment);
+            var model = new AddDowntimeDialogModel(downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
             var setCurrentTimeEndAndOkCommand = new UICommand()
             {
                 Caption = "Сохранить текущим временем окончания",

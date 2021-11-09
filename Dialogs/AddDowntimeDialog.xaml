@@ -29,6 +29,9 @@
                     <dxe:DateEdit Name="EdtDateEnd" EditValue="{Binding DateEnd}"  MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm" />
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Длит-сть (мин)"  LabelPosition="Top" Width="90" IsEnabled="False">
+                    <dxe:TextEdit Name="EdtDuration" EditValue="{Binding Duration}"/>
+                </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <dxlc:LayoutControl Name="lcDowntimeType" Grid.Row="1"  Orientation="Vertical" >

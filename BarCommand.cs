@@ -35,6 +35,7 @@ namespace Gamma
         public Guid? DowntimeTypeDetailID { get; set; }
         public Guid? EquipmentNodeID { get; set; }
         public Guid? EquipmentNodeDetailID { get; set; }
+        public int? Duration { get; set; }
         public string Comment { get; set; }
     }
 }

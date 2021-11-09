@@ -61,13 +61,14 @@ namespace Gamma.DialogViewModels
             EquipmentNodeDetailsFiltered = new List<EquipmentNode>(EquipmentNodeDetails);
         }
 
-        public AddDowntimeDialogModel(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, string comment = null):this()
+        public AddDowntimeDialogModel(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null):this()
         {
             if (downtimeTypeID != null) TypeID = (Guid)downtimeTypeID;
             if (downtimeTypeDetailID != null) TypeDetailID = (Guid)downtimeTypeDetailID;
             if (equipmentNodeID != null) EquipmentNodeID = (Guid)equipmentNodeID;
             if (equipmentNodeDetailID != null) EquipmentNodeDetailID = (Guid)equipmentNodeDetailID;
             if (comment != null) Comment = comment;
+            if (duration != null) DateEnd = DateBegin.AddMinutes((int)duration);
         }
 
         public List<DowntimeType> Types { get; private set; }
@@ -77,8 +78,36 @@ namespace Gamma.DialogViewModels
         public List<EquipmentNode> EquipmentNodeDetails { get; private set; }
         public List<EquipmentNode> EquipmentNodeDetailsFiltered { get; private set; }
         public override bool IsValid => base.IsValid && TypeID != Guid.Empty && EquipmentNodeID != Guid.Empty;
-        public DateTime DateBegin { get; set; }
-        public DateTime DateEnd { get; set; }
+        private DateTime _dateBegin { get; set; }
+        public DateTime DateBegin
+        {
+            get { return _dateBegin; }
+            set
+            {
+                _dateBegin = value;
+                RefreshDates();
+                RaisePropertyChanged("DateBegin");
+            }
+        }
+        private DateTime _dateEnd { get; set; }
+        public DateTime DateEnd
+        {
+            get { return _dateEnd; }
+            set
+            {
+                _dateEnd = value;
+                RefreshDates();
+                RaisePropertyChanged("DateEnd");
+            }
+        }
+        public int? Duration { get; set; }
+
+        public void RefreshDates()
+        {
+            Duration = (int)(DateEnd - DateBegin).TotalMinutes;
+            RaisePropertyChanged("Duration");
+        }
+
         private Guid _typeID { get; set; }
         public Guid TypeID
         {
