@@ -16735,6 +16735,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Guid" Name="C1CEquipmentNodeDetailID" Nullable="true" />
           <Property Type="String" Name="EquipmentNode" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="EquipmentNodeDetail" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PlaceName" Nullable="true" MaxLength="50" />
+          <Property Type="Int16" Name="PlaceGroupID" Nullable="true" />
         </ComplexType>
         <EntityType Name="C1CEquipmentNodeDetails">
           <Key>
@@ -20212,6 +20214,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="C1CEquipmentNodeDetailID" ColumnName="1CEquipmentNodeDetailID" />
                 <ScalarProperty Name="EquipmentNode" ColumnName="EquipmentNode" />
                 <ScalarProperty Name="EquipmentNodeDetail" ColumnName="EquipmentNodeDetail" />
+                <ScalarProperty Name="PlaceName" ColumnName="PlaceName" />
+                <ScalarProperty Name="PlaceGroupID" ColumnName="PlaceGroupID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

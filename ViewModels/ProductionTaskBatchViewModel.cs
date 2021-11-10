@@ -630,7 +630,8 @@ namespace Gamma.ViewModels
             ContractorId = productionTaskBatch?.C1CContractorID;
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
-            var place = productionTaskBatch?.ProductionTasks.FirstOrDefault().Places;
+            var place = (productionTaskBatch?.ProductionTasks.Where(p => p.PlaceID == WorkSession.PlaceID).FirstOrDefault()?.Places)
+                     ?? (productionTaskBatch != null && productionTaskBatch.ProductionTasks.Any(p => (p.PlaceID == null) && (p.PlaceGroupID == (int?)WorkSession.PlaceGroup)) ? GammaBase.Places.FirstOrDefault(pl => pl.PlaceID == WorkSession.PlaceID) : (Places) null);
             IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
             IsEnabledRepack = place?.IsEnabledRepackInProductionTask ?? true;
             IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
@@ -1908,7 +1909,9 @@ namespace Gamma.ViewModels
                      EquipmentNodeID = downtime.C1CEquipmentNodeID,
                      EquipmentNodeDetailID = downtime.C1CEquipmentNodeDetailID,
                      EquipmentNode = downtime.EquipmentNode,
-                     EquipmentNodeDetail = downtime.EquipmentNodeDetail
+                     EquipmentNodeDetail = downtime.EquipmentNodeDetail,
+                     PlaceName = downtime.PlaceName,
+                     PlaceGroupID = downtime.PlaceGroupID
                  });
         }
         private void ShowDowntime()
@@ -1987,9 +1990,9 @@ namespace Gamma.ViewModels
         private void DeleteDowntime()
         {
             if (SelectedDowntime == null) return;
-            if (WorkSession.ShiftID != 0 && (SelectedDowntime.ShiftID != WorkSession.ShiftID))
+            if (WorkSession.ShiftID != 0 && (SelectedDowntime.ShiftID != WorkSession.ShiftID || SelectedDowntime.PlaceGroupID != (int)WorkSession.PlaceGroup ))
             {
-                MessageBox.Show("Вы не можете удалить простои другой смены");
+                MessageBox.Show("Вы не можете удалить простой другой смены");
                 return;
             }
             if (MessageBox.Show(

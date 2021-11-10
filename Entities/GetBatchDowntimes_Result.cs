@@ -29,5 +29,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CEquipmentNodeDetailID { get; set; }
         public string EquipmentNode { get; set; }
         public string EquipmentNodeDetail { get; set; }
+        public string PlaceName { get; set; }
+        public System.Int16? PlaceGroupID { get; set; }
     }
 }

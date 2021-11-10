@@ -24,6 +24,8 @@ namespace Gamma.Models
         public Guid? EquipmentNodeDetailID { get; set; }
         public string EquipmentNode { get; set; }
         public string EquipmentNodeDetail { get; set; }
+        public string PlaceName { get; set; }
+        public int? PlaceGroupID { get; set; }
 
         //protected bool Equals(Sample other)
         //{

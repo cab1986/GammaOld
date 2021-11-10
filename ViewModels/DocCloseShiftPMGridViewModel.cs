@@ -57,7 +57,10 @@ namespace Gamma.ViewModels
             ShiftID = WorkSession.ShiftID;
             CloseDate = closeDate;
 
-            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+            DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate);
+            var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+            IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
+            IsWithdrawalMaterial = place?.PlaceWithdrawalMaterialTypeID != 0 ;
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 7;
         }
@@ -85,12 +88,15 @@ namespace Gamma.ViewModels
                 //Получение списка материалов
                 //productionProductCharacteristicIDs = new List<Guid>(Spools
                 //    .Select(p => p.CharacteristicID).Distinct().ToList());
-                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
                 var spools = new List<DocCloseShiftWithdrawalMaterial.Product>(Spools.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
                 {
                     ProductID = x.ProductID,
                     CharacteristicID = x.CharacteristicID
                 })).ToList();
+                DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate, docId, IsConfirmed);
+                var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+                IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
+                IsWithdrawalMaterial = place?.PlaceWithdrawalMaterialTypeID != 0;
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, spools, IsConfirmed, productionProductCharacteristicIDs);
                 WithdrawalMaterialsGrid.SelectedMaterialTabIndex = 7;
 
@@ -188,7 +194,18 @@ namespace Gamma.ViewModels
 
         public bool IsChanged { get; private set; }
 
-        private bool IsConfirmed { get; set; }
+        private bool _isConfirmed { get; set; }
+        private bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;
+                WithdrawalMaterialsGrid?.UpdateIsConfirmed(value);
+                DowntimesGrid?.UpdateIsConfirmed(value);
+            }
+        }
+
         private List<Guid> DocCloseDocIds { get; set; }
         public bool IsReadOnly => !DB.HaveWriteAccess("DocCloseShiftWithdrawals") || IsConfirmed;
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
@@ -210,6 +227,20 @@ namespace Gamma.ViewModels
             set
             {
                 _withdrawalMaterialsGrid = value;
+                //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
+            }
+        }
+        
+        private DocCloseShiftDowntimesViewModel _downtimesGrid;
+        public DocCloseShiftDowntimesViewModel DowntimesGrid
+        {
+            get
+            {
+                return _downtimesGrid;
+            }
+            set
+            {
+                _downtimesGrid = value;
                 //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
             }
         }
@@ -378,7 +409,7 @@ namespace Gamma.ViewModels
                         }
                     }
                 }
-
+                DowntimesGrid?.FillGrid();
                 IsChanged = true;
             }
         }
@@ -465,6 +496,7 @@ namespace Gamma.ViewModels
         private DateTime CloseDate { get; set; }
 
         public bool IsWithdrawalMaterial { get; set; }
+        public bool IsEnabledDowntimes { get; set; }
 
         public void ClearGrid() => Clear(true);
         
@@ -482,6 +514,7 @@ namespace Gamma.ViewModels
             IsChanged = true;
             Wastes?.Clear();
             NomenclatureRests?.Clear();
+            DowntimesGrid?.Clear();
             //            gammaBase.SaveChanges();           
         }
 
@@ -832,7 +865,7 @@ namespace Gamma.ViewModels
 
                 gammaBase.SaveChanges();
                 WithdrawalMaterialsGrid?.SaveToModel(docId);
-
+                DowntimesGrid?.SaveToModel(docId);
             }
             return true;
         }

@@ -326,24 +326,23 @@
                     </dxg:GridControl>
                 </Grid>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Простои"  Visibility="{Binding IsEnabledDowntimes, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <dx:DXTabItem Header="Простои">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <dxb:BarManager BarsSource="{Binding DowntimeBars}" BarTemplate="{StaticResource BarTemplate}"/>
-
-
+                    <dxb:BarManager BarsSource="{Binding DowntimeBars}" BarTemplate="{StaticResource BarTemplate}" Visibility="{Binding IsEnabledDowntimes, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <dxlc:LayoutControl Grid.Row="1">
                         <dxlc:LayoutItem Label="Диапазон:">
                             <dxe:ComboBoxEdit ItemsSource="{Binding Intervals}" SelectedIndex="{Binding DowntimeIntervalid}" x:Name="DowntimesIntervalList" IsTextEditable="False"/>
                         </dxlc:LayoutItem>
                     </dxlc:LayoutControl>
                     <dxg:GridControl EnableSmartColumnsGeneration="True" Grid.Row="2" ItemsSource="{Binding Downtimes}"
-                                     SelectionMode="Row" SelectedItem="{Binding SelectedDowntime}" >
+                                     SelectionMode="Row" SelectedItem="{Binding SelectedDowntime}" AutoExpandAllGroups="True">
                         <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="PlaceName" ReadOnly="True" Visible="False" Header="Передел"  Width="60" GroupIndex="0" />
                             <dxg:GridColumn FieldName="Date" Header="Дата добавления" ReadOnly="True" VisibleIndex="1" Width="110" FixedWidth="True">
                                 <dxg:GridColumn.EditSettings>
                                     <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True" />
@@ -372,13 +371,13 @@
                             <dxg:GridColumn FieldName="Comment" Header="Комментарий" VisibleIndex="10"/>
                         </dxg:GridControl.Columns>
                         <dxg:GridControl.GroupSummary>
-                            <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого (мин): {0:d}" />
                         </dxg:GridControl.GroupSummary>
                         <dxg:GridControl.TotalSummary>
-                            <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого: {0:d}" />
+                            <dxg:GridSummaryItem FieldName="Duration" SummaryType="Sum" DisplayFormat="Итого (мин): {0:d}" />
                         </dxg:GridControl.TotalSummary>
                         <dxg:GridControl.View>
-                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True"/>
+                            <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AutoWidth="True" />
                         </dxg:GridControl.View>
                         <dxmvvm:Interaction.Behaviors>
                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding ShowDowntimeCommand}"/>

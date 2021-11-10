@@ -4,6 +4,7 @@
     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" x:Class="Gamma.Views.DocCloseShiftRwGridView"
         >
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -65,6 +66,11 @@
                         </dxmvvm:Interaction.Behaviors>
                     </dxg:GridControl>
                 </Grid>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Простои"  Visibility="{Binding IsEnabledDowntimes, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
+                    <ContentControl Content="{Binding DowntimesGrid}"/>
+                </dxlc:LayoutItem>
             </dx:DXTabItem>
         </dx:DXTabControl>
 

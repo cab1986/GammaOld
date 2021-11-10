@@ -277,6 +277,11 @@
                     </dx:DXTabItem>
                 </dx:DXTabControl>
             </dx:DXTabItem>
+            <dx:DXTabItem Header="Простои"  Visibility="{Binding IsEnabledDowntimes, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
+                    <ContentControl Content="{Binding DowntimesGrid}"/>
+                </dxlc:LayoutItem>
+            </dx:DXTabItem>
         </dx:DXTabControl>
 
     </Grid>

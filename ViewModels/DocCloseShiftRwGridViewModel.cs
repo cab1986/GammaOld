@@ -24,7 +24,9 @@ namespace Gamma.ViewModels
                 PlaceID = (int)msg.PlaceID;
                 CloseDate = (DateTime)msg.CloseDate;
                 ShiftID = (byte)msg.ShiftID;
+                IsConfirmed = false;
                 DocCloseShiftDocs = new ObservableCollection<Docs>();
+                DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate);
             }
             else
             {
@@ -63,7 +65,11 @@ namespace Gamma.ViewModels
                 CloseDate = DocCloseShift.Date;
                 ShiftID = (byte)DocCloseShift.ShiftID;
                 PlaceID = (byte)DocCloseShift.PlaceID;
-            }
+                IsConfirmed = DocCloseShift.IsConfirmed;
+                DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate, msg.DocID, IsConfirmed);
+            }          
+            var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+            IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
             ShowSpoolCommand = new DelegateCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),
                 () => SelectedSpool != null);
@@ -83,6 +89,33 @@ namespace Gamma.ViewModels
         private Docs DocCloseShift { get; set; }
         private ObservableCollection<Docs> DocCloseShiftDocs { get; set; }
         private List<Guid> DocCloseDocIds { get; set; }
+        
+        public bool IsEnabledDowntimes { get; set; }
+
+        private bool _isConfirmed { get; set; }
+        private bool IsConfirmed
+        {
+            get { return _isConfirmed; }
+            set
+            {
+                _isConfirmed = value;                
+                DowntimesGrid?.UpdateIsConfirmed(value);
+            }
+        }
+
+        private DocCloseShiftDowntimesViewModel _downtimesGrid;
+        public DocCloseShiftDowntimesViewModel DowntimesGrid
+        {
+            get
+            {
+                return _downtimesGrid;
+            }
+            set
+            {
+                _downtimesGrid = value;
+                //Bars = (_currentViewModelGrid as IBarImplemented).Bars;
+            }
+        }
 
         public void FillGridWithNoFillEnd()
         {
@@ -141,6 +174,7 @@ namespace Gamma.ViewModels
                                 );
                         }
             */
+            DowntimesGrid?.FillGrid();
             IsChanged = true;
         }
 
@@ -150,14 +184,15 @@ namespace Gamma.ViewModels
             DocCloseDocIds?.Clear();
             Spools?.Clear();
             UnwinderSpools?.Clear();
+            DowntimesGrid?.Clear();
             SaveToModel();
             IsChanged = true;
         }
-        public override bool SaveToModel(Guid itemID)
+        public override bool SaveToModel(Guid docId)
         {
             if (DocCloseShift == null)
             {
-                DocCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d=>d.DocCloseShiftProducts).First(d => d.DocID == itemID);
+                DocCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d=>d.DocCloseShiftProducts).First(d => d.DocID == docId);
                 foreach (var doc in DocCloseShiftDocs)
                 {
                     DocCloseShift.DocCloseShiftDocs.Add(doc);
@@ -187,7 +222,7 @@ namespace Gamma.ViewModels
             {
                 DocCloseShift.DocCloseShiftRemainders.Add(new DocCloseShiftRemainders
                 {
-                    DocID = itemID,
+                    DocID = docId,
                     ProductID = Product.ProductID,
                     DocCloseShiftRemainderID = SqlGuidUtil.NewSequentialid(),
                     RemainderTypeID = 0,
@@ -204,6 +239,7 @@ namespace Gamma.ViewModels
             }
             //DocCloseShift.DocCloseShiftProducts.Add( = GammaBase.Products.Where(p => productIds.Contains(p.ProductID)).ToList();
             GammaBase.SaveChanges();
+            DowntimesGrid?.SaveToModel(docId);
             return true;
         }
         private ObservableCollection<PaperBase> _spools = new ObservableCollection<PaperBase>();
