@@ -139,6 +139,14 @@
             </dx:DXTabItem>
             <dx:DXTabItem Header="Транспортная этикетка" >
                 <dxlc:LayoutControl Orientation="Vertical">
+                    <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Тип транспортной этикетки" LabelPosition="Top" Width="200" HorizontalAlignment="Left">
+                        <dxe:ComboBoxEdit EditValue="{Binding TypeTransportLabelID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TypeTransportLabels}"
+					DisplayMember="Value" ValueMember="Key" IsReadOnly="{Binding IsReadOnlyTypeTransportLabel}" />
+                        <!--SelectedItem="{Binding SelectedTypeTransportLabel, Mode=OneWayToSource}"/>-->
+                    </dxlc:LayoutItem>
+                    <dxe:CheckEdit EditValue="{Binding IsReadOnlyTypeTransportLabel}" Height="22" VerticalAlignment="Top" Width="23" Margin="0,18,0,0"  />
+                    </dxlc:LayoutGroup>
                     <dxlc:LayoutItem Label="Транспортная этикетка" LabelPosition="Top" Width="700" Height="800" >
                         <Border BorderThickness="1" BorderBrush="#FF000000">
                             <Image Source="{Binding TransportPackageLabelImage, Mode=OneWay}"/>

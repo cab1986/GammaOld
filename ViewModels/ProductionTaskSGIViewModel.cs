@@ -41,24 +41,26 @@ namespace Gamma.ViewModels
                 }));
             if (Places.Count > 0)
                 PlaceID = Places[0].PlaceID;
-           /* try
-            {
-                RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
-                    Select(p => new RobotNomenclature()
-                    {
-                        ProdNumber = p.ProdNumber,
-                        ProdDescription = p.ProdDescription,
-                        EANFullPallet = p.EANFullPallet,
-                        ProductionLine = p.ProductionLine,
-                        PlaceID = p.PlaceID,
-                        ProdName = p.ProdName
-                    }));
-            }
-            catch
-            {
-                if (RobotNomenclatures == null)
-                    RobotNomenclatures = new ObservableCollection<RobotNomenclature>();
-            }*/
+            TypeTransportLabels = GammaBase.C1CPropertyValues.Where(p => p.ParentID == new Guid("A6139C32-C3BE-11E3-B873-002590304E93")).
+                OrderBy(mu => mu.C1CCode).ToDictionary(x => x.C1CPropertyValueID, v => v.PrintDescription);
+            /* try
+             {
+                 RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
+                     Select(p => new RobotNomenclature()
+                     {
+                         ProdNumber = p.ProdNumber,
+                         ProdDescription = p.ProdDescription,
+                         EANFullPallet = p.EANFullPallet,
+                         ProductionLine = p.ProductionLine,
+                         PlaceID = p.PlaceID,
+                         ProdName = p.ProdName
+                     }));
+             }
+             catch
+             {
+                 if (RobotNomenclatures == null)
+                     RobotNomenclatures = new ObservableCollection<RobotNomenclature>();
+             }*/
             PrintExampleCommand = new DelegateCommand(PrintExample);
             SetActualDateCommand = new DelegateCommand(SetActualDate, () => ProductionTaskID != Guid.Empty);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
@@ -118,6 +120,8 @@ namespace Gamma.ViewModels
                             .Select(p => p.RobotProductNumber)
                             .FirstOrDefault();
                             */
+                    var oldCharacteristicID = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == CharacteristicID)?.C1COldCharacteristicID;
+                    TypeTransportLabelID = gammaBase.C1CCharacteristicProperties.FirstOrDefault(pr => pr.C1CPropertyID == new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6") && pr.C1CCharacteristicID == oldCharacteristicID)?.C1CPropertyValueID;
                     UpdateGroupPackageLabelImage(productionTask.ProductionTaskID);
                     ProductionTaskSpecificationViewModel = new ProductionTaskSpecificationViewModel(productionTask.C1CSpecificationID, NomenclatureID, CharacteristicID, PlaceID, IsReadOnly);
                 }
@@ -298,6 +302,11 @@ namespace Gamma.ViewModels
             }
         }
 
+        /// <summary>
+        /// Список типов транспортных этикеток
+        /// </summary>
+        public Dictionary<Guid, string>  TypeTransportLabels { get; set; }
+
         public Guid ProductionTaskID { get; set; }
         public ProductionTaskSpecificationViewModel ProductionTaskSpecificationViewModel { get; private set; }
 
@@ -335,6 +344,63 @@ namespace Gamma.ViewModels
                     _selectedPlace = value;
                     if (value != null) PlaceChanged(value.PlaceID);
                 }
+            }
+        }
+
+        private Guid? _typeTransportLabelID;
+        /// <summary>
+        /// id выбранного типа транспортной этикетки
+        /// </summary>        
+        public Guid? TypeTransportLabelID
+        {
+            get { return _typeTransportLabelID; }
+            set
+            {
+                _typeTransportLabelID = value;
+                RaisePropertiesChanged("TypeTransportLabelID");
+            }
+        }
+
+        private bool _isReadOnlyTypeTransportLabel = true;
+        /// <summary>
+        /// Доступность редактирования типа транспортной этикетки
+        /// </summary>        
+        public bool IsReadOnlyTypeTransportLabel
+        {
+            get { return _isReadOnlyTypeTransportLabel; }
+            set
+            {
+                _isReadOnlyTypeTransportLabel = value;
+                if (value)
+                {
+                    try
+                    {
+                        using (var gammaBase = DB.GammaDb)
+                        {
+                            var oldCharacteristicID = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == CharacteristicID)?.C1COldCharacteristicID;
+                            var typeTransportLabel = gammaBase.C1CCharacteristicProperties.FirstOrDefault(pr => pr.C1CPropertyID == new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6") && pr.C1CCharacteristicID == oldCharacteristicID);
+                            if (typeTransportLabel == null)
+                            {
+                                gammaBase.C1CCharacteristicProperties.Add(new C1CCharacteristicProperties()
+                                {
+                                    C1CCharacteristicID = (Guid)oldCharacteristicID,
+                                    C1CPropertyID = new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6"),
+                                    C1CPropertyValueID = TypeTransportLabelID
+                                });
+                            }
+                            else
+                            {
+                                typeTransportLabel.C1CPropertyValueID = TypeTransportLabelID;
+                            }
+                            gammaBase.SaveChanges();
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Ошибка! Изменение типа транспортной этикетки не сохранено!");
+                    }
+                }
+                RaisePropertiesChanged("IsReadOnlyTypeTransportLabel");
             }
         }
 
@@ -512,7 +578,7 @@ namespace Gamma.ViewModels
             //{
             //    GammaBase.ProductionTaskConverting.RemoveRange(GammaBase.ProductionTaskConverting.Where(c => c.ProductionTaskID == productionTask.ProductionTaskID));
             //}
-
+            
             GammaBase.SaveChanges();
             ProductionTaskId = productionTask.ProductionTaskID;
             return true;
