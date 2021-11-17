@@ -65,7 +65,11 @@ namespace Gamma.ViewModels
                          Duration = dt.Duration,
                          Comment = dt.Comment,
                          DateBegin = dt.DateBegin,
-                         DateEnd = dt.DateEnd
+                         DateEnd = dt.DateEnd,
+                         EquipmentNodeID = (Guid)dt.C1CEquipmentNodeID,
+                         EquipmentNodeDetailID = dt.C1CEquipmentNodeDetailID,
+                         EquipmentNode = dt.C1CEquipmentNodes.Description,
+                         EquipmentNodeDetail = dt.C1CEquipmentNodeDetails.Description
                      }));
                 Downtimes = downtimes ?? new ObservableCollection<Downtime>();                
             }

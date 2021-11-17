@@ -63,7 +63,7 @@
                 </dxg:GridColumn>
                 <dxg:GridColumn FieldName="DowntimeType" ReadOnly="True" VisibleIndex="6"  Header="Вид простоя"  Width="60" />
                 <dxg:GridColumn FieldName="DowntimeTypeDetail" ReadOnly="True" VisibleIndex="7"  Header="Вид простоя (дополнительно)" Width="60"/>
-                <dxg:GridColumn FieldName="EquipmentType" ReadOnly="True" VisibleIndex="8"  Header="Узел оборудования"  Width="60" />
+                <dxg:GridColumn FieldName="EquipmentNode" ReadOnly="True" VisibleIndex="8"  Header="Узел оборудования"  Width="60" />
                 <dxg:GridColumn FieldName="EquipmentNodeDetail" ReadOnly="True" VisibleIndex="9"  Header="Узел (дополнительно)" Width="60"/>
                 <dxg:GridColumn FieldName="DateBegin" Header="Начало" ReadOnly="True" VisibleIndex="4" Width="120" FixedWidth="True">
                     <dxg:GridColumn.EditSettings>
