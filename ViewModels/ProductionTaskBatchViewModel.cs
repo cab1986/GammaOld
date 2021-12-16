@@ -1288,7 +1288,7 @@ namespace Gamma.ViewModels
 
         private void RefreshProduction()
         {
-
+            var dBCurrentDateTime = (DateTime)(DB.CurrentDateTime);
             switch (Intervalid)
             {
                 case 0:
@@ -1315,7 +1315,7 @@ namespace Gamma.ViewModels
                 case 1:
                     ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                               where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-10)//SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                               where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= dBCurrentDateTime.AddHours(-10)//SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
                                                                                               select new ProductInfo
                                                                                               {
                                                                                                   DocID = taskProducts.DocID,
@@ -1337,7 +1337,7 @@ namespace Gamma.ViewModels
                 case 2:
                     ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                               where taskProducts.Date >= (DateTime)(DB.CurrentDateTime).AddHours(-24)//DateTime.Now.AddHours(-24)
+                                                                               where taskProducts.Date >= dBCurrentDateTime.AddHours(-24)//DateTime.Now.AddHours(-24)
                                                                                               select new ProductInfo
                                                                                               {
                                                                                                   DocID = taskProducts.DocID,
