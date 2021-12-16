@@ -378,6 +378,7 @@
           <Property Name="ParentID" Type="uniqueidentifier" />
           <Property Name="Description" Type="varchar" MaxLength="100" />
           <Property Name="FullDescription" Type="ntext" />
+          <Property Name="1CNewRejectionReasonID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="1CSpecificationInputNomenclature">
           <Key>
@@ -1020,6 +1021,7 @@
           <Property Name="IsFromOldGamma" Type="bit" />
           <Property Name="BranchID" Type="tinyint" />
           <Property Name="PersonGuid" Type="uniqueidentifier" />
+          <Property Name="LastUploadedTo1C" Type="datetime" />
         </EntityType>
         <EntityType Name="DocShipmentOrderPersons">
           <Key>
@@ -1626,6 +1628,17 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="PlaceZoneID" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="RobotProduct1CCharacteristic">
+          <Key>
+            <PropertyRef Name="ProdNumber" />
+          </Key>
+          <Property Name="ProdNumber" Type="int" Nullable="false" />
+          <Property Name="1CCharCode" Type="varchar" MaxLength="50" />
+          <Property Name="DateInsertToRobot" Type="datetime" />
+          <Property Name="PlaceID" Type="int" />
+          <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="RolePermits">
           <Key>
             <PropertyRef Name="RoleID" />
@@ -2063,6 +2076,7 @@ warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a pri
           <Property Name="ProductID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ProductionTaskID" Type="uniqueidentifier" />
           <Property Name="BreakNumber" Type="tinyint" />
+          <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -6651,6 +6665,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="RemotePrinters" EntityType="Self.RemotePrinters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reports" EntityType="Self.Reports" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rests" EntityType="Self.Rests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RobotProduct1CCharacteristic" EntityType="Self.RobotProduct1CCharacteristic" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RolePermits" EntityType="Self.RolePermits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shifts" EntityType="Self.Shifts" Schema="dbo" store:Type="Tables" />
@@ -6948,7 +6963,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vGroupPackSpools].[ProductGroupPackID] AS [ProductGroupPackID], 
     [vGroupPackSpools].[ProductID] AS [ProductID], 
     [vGroupPackSpools].[ProductionTaskID] AS [ProductionTaskID], 
-    [vGroupPackSpools].[BreakNumber] AS [BreakNumber]
+    [vGroupPackSpools].[BreakNumber] AS [BreakNumber], 
+    [vGroupPackSpools].[Quantity] AS [Quantity]
     FROM [dbo].[vGroupPackSpools] AS [vGroupPackSpools]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vPlacePropertiesValues" EntityType="Self.vPlacePropertiesValues" store:Type="Views" store:Schema="dbo">
@@ -8476,6 +8492,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocChangeStateProducts" Relationship="Self.FK_DocProductChangeState_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocChangeStateProducts" />
           <NavigationProperty Name="DocBrokeProductRejectionReasons" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocBrokeProductRejectionReasons" />
           <NavigationProperty Name="ProductKinds" Relationship="GammaModel.ProductKindRejectionReasons" FromRole="C1CRejectionReasons" ToRole="ProductKinds" />
+          <Property Name="C1CNewRejectionReasonID" Type="Guid" />
         </EntityType>
         <EntityType Name="C1CSpecificationInputNomenclature">
           <Key>
@@ -10760,6 +10777,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Places" EntitySet="Places" />
             <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
           </AssociationSet>
+          <EntitySet Name="RobotProduct1CCharacteristic" EntityType="GammaModel.RobotProduct1CCharacteristic" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -12021,6 +12039,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocRepack" Relationship="GammaModel.FK_DocRepack_Docs" FromRole="Docs" ToRole="DocRepack" />
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" FromRole="Docs" ToRole="DocCloseShiftAuxiliaryMaterials" />
           <NavigationProperty Name="DocCloseShiftDowntimes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_Docs" FromRole="Docs" ToRole="DocCloseShiftDowntimes" />
+          <Property Name="LastUploadedTo1C" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -13652,6 +13671,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="ProductID" Type="Guid" Nullable="false" />
           <Property Name="ProductionTaskID" Type="Guid" />
           <Property Name="BreakNumber" Type="Byte" />
+          <Property Name="Quantity" Type="Decimal" Precision="15" Scale="5" />
         </EntityType>
         <Association Name="FK_Rests_Products">
           <End Type="GammaModel.Products" Role="Products" Multiplicity="1" />
@@ -16989,6 +17009,17 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="RobotProduct1CCharacteristic">
+          <Key>
+            <PropertyRef Name="ProdNumber" />
+          </Key>
+          <Property Name="ProdNumber" Type="Int32" Nullable="false" />
+          <Property Name="C1CCharCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateInsertToRobot" Type="DateTime" Precision="3" />
+          <Property Name="PlaceID" Type="Int32" />
+          <Property Name="C1CCharacteristicID" Type="Guid" />
+          <Property Name="C1CNomenclatureID" Type="Guid" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17120,6 +17151,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CRejectionReasons">
             <EntityTypeMapping TypeName="GammaModel.C1CRejectionReasons">
               <MappingFragment StoreEntitySet="1CRejectionReasons">
+                <ScalarProperty Name="C1CNewRejectionReasonID" ColumnName="1CNewRejectionReasonID" />
                 <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
                 <ScalarProperty Name="IsMarked" ColumnName="IsMarked" />
                 <ScalarProperty Name="IsFolder" ColumnName="IsFolder" />
@@ -18169,6 +18201,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="Docs">
             <EntityTypeMapping TypeName="GammaModel.Docs">
               <MappingFragment StoreEntitySet="Docs">
+                <ScalarProperty Name="LastUploadedTo1C" ColumnName="LastUploadedTo1C" />
                 <ScalarProperty Name="PersonID" ColumnName="PersonID" />
                 <ScalarProperty Name="PersonGuid" ColumnName="PersonGuid" />
                 <ScalarProperty Name="BranchID" ColumnName="BranchID" />
@@ -18760,6 +18793,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="vGroupPackSpools">
             <EntityTypeMapping TypeName="GammaModel.vGroupPackSpools">
               <MappingFragment StoreEntitySet="vGroupPackSpools">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="BreakNumber" ColumnName="BreakNumber" />
                 <ScalarProperty Name="ProductionTaskID" ColumnName="ProductionTaskID" />
                 <ScalarProperty Name="ProductID" ColumnName="ProductID" />
@@ -20271,6 +20305,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="PlaceAuxiliaryMaterialID" ColumnName="PlaceAuxiliaryMaterialID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RobotProduct1CCharacteristic">
+            <EntityTypeMapping TypeName="GammaModel.RobotProduct1CCharacteristic">
+              <MappingFragment StoreEntitySet="RobotProduct1CCharacteristic">
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="DateInsertToRobot" ColumnName="DateInsertToRobot" />
+                <ScalarProperty Name="C1CCharCode" ColumnName="1CCharCode" />
+                <ScalarProperty Name="ProdNumber" ColumnName="ProdNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

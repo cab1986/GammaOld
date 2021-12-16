@@ -30,6 +30,6 @@ namespace Gamma.Entities
         public string EquipmentNode { get; set; }
         public string EquipmentNodeDetail { get; set; }
         public string PlaceName { get; set; }
-        public System.Int16? PlaceGroupID { get; set; }
+        public Nullable<short> PlaceGroupID { get; set; }
     }
 }

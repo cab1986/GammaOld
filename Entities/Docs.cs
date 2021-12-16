@@ -61,6 +61,7 @@ namespace Gamma.Entities
         public Nullable<byte> BranchID { get; set; }
         public Nullable<System.Guid> PersonGuid { get; set; }
         public Nullable<int> PersonID { get; set; }
+        public Nullable<System.DateTime> LastUploadedTo1C { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

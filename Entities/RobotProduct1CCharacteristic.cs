@@ -12,12 +12,13 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class vGroupPackSpools
+    public partial class RobotProduct1CCharacteristic
     {
-        public System.Guid ProductGroupPackID { get; set; }
-        public System.Guid ProductID { get; set; }
-        public Nullable<System.Guid> ProductionTaskID { get; set; }
-        public Nullable<byte> BreakNumber { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
+        public int ProdNumber { get; set; }
+        public string C1CCharCode { get; set; }
+        public Nullable<System.DateTime> DateInsertToRobot { get; set; }
+        public Nullable<int> PlaceID { get; set; }
+        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
     }
 }

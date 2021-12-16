@@ -451,6 +451,7 @@
         <AssociationConnector Association="GammaModel.FK_PlaceAuxiliaryMaterials_1CCharacteristics" />
         <AssociationConnector Association="GammaModel.FK_PlaceAuxiliaryMaterials_1CNomenclature" />
         <AssociationConnector Association="GammaModel.FK_PlaceAuxiliaryMaterials_Places" />
+        <EntityTypeShape EntityType="GammaModel.RobotProduct1CCharacteristic" Width="1.5" PointX="0.75" PointY="19.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

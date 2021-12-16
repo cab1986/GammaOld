@@ -43,7 +43,7 @@ namespace Gamma.ViewModels
                 PlaceID = Places[0].PlaceID;
             TypeTransportLabels = GammaBase.C1CPropertyValues.Where(p => p.ParentID == new Guid("A6139C32-C3BE-11E3-B873-002590304E93")).
                 OrderBy(mu => mu.C1CCode).ToDictionary(x => x.C1CPropertyValueID, v => v.PrintDescription);
-            /* try
+            try
              {
                  RobotNomenclatures = new ObservableCollection<RobotNomenclature>(GammaBase.vRobotNomenclatures.Where(p => p.PlaceID == PlaceID).
                      Select(p => new RobotNomenclature()
@@ -60,7 +60,7 @@ namespace Gamma.ViewModels
              {
                  if (RobotNomenclatures == null)
                      RobotNomenclatures = new ObservableCollection<RobotNomenclature>();
-             }*/
+             }
             PrintExampleCommand = new DelegateCommand(PrintExample);
             SetActualDateCommand = new DelegateCommand(SetActualDate, () => ProductionTaskID != Guid.Empty);
             UsedSpools = new SpoolWithdrawByShiftViewModel();
@@ -114,12 +114,15 @@ namespace Gamma.ViewModels
                             ProductionLine = p.ProductionLine,
                             PlaceID = p.PlaceID,
                             ProdName = p.ProdName
-                        }));
+                        }));*/
                     RobotProductNumber =
                         gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)
                             .Select(p => p.RobotProductNumber)
+                            .FirstOrDefault() ??
+                        gammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID)
+                            .Select(p => p.ProdNumber)
                             .FirstOrDefault();
-                            */
+
                     var oldCharacteristicID = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == CharacteristicID)?.C1COldCharacteristicID;
                     TypeTransportLabelID = gammaBase.C1CCharacteristicProperties.FirstOrDefault(pr => pr.C1CPropertyID == new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6") && pr.C1CCharacteristicID == oldCharacteristicID)?.C1CPropertyValueID;
                     UpdateGroupPackageLabelImage(productionTask.ProductionTaskID);
@@ -404,12 +407,89 @@ namespace Gamma.ViewModels
             }
         }
 
+        private bool _isReadOnlyRobotNomenclature = true;
+        /// <summary>
+        /// Доступность редактирования привязки номера рецепта робота
+        /// </summary>        
+        public bool IsReadOnlyRobotNomenclature
+        {
+            get { return _isReadOnlyRobotNomenclature; }
+            set
+            {
+                var prev_value = _isReadOnlyRobotNomenclature;
+                _isReadOnlyRobotNomenclature = value;
+                if (value && value != prev_value)
+                {
+                    try
+                    {
+                        using (var gammaBase = DB.GammaDb)
+                        {
+                            var productionTaskConverting =
+                                gammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == ProductionTaskID).ProductionTaskConverting;
+
+                            var robotProductDescription = GammaBase.vRobotNomenclatures.Where(p => p.ProdNumber == RobotProductNumber)
+                                .Select(p => p.ProdDescription)
+                                .FirstOrDefault();
+                            if (productionTaskConverting == null)
+                            {
+                                gammaBase.ProductionTaskConverting.Add(new ProductionTaskConverting()
+                                {
+                                    ProductionTaskID = ProductionTaskID,
+                                    RobotProductNumber = RobotProductNumber,
+                                    RobotProductDescription = robotProductDescription
+                                });
+                            }
+                            else
+                            {
+
+                                productionTaskConverting.RobotProductNumber = RobotProductNumber;
+                                productionTaskConverting.RobotProductDescription = robotProductDescription;
+                            }
+
+                            var robotProduct1CCharacteristics = gammaBase.RobotProduct1CCharacteristic.Where(p => p.ProdNumber == RobotProductNumber || (p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID)).ToList();
+                            if (robotProduct1CCharacteristics == null)
+                            {
+                                gammaBase.RobotProduct1CCharacteristic.Add(new RobotProduct1CCharacteristic()
+                                {
+                                    ProdNumber = (int)RobotProductNumber,
+                                    C1CNomenclatureID = NomenclatureID,
+                                    C1CCharacteristicID = (Guid)CharacteristicID
+                                });
+                            }
+                            else
+                            {
+                                if (robotProduct1CCharacteristics.Count() == 1)
+                                {
+                                    robotProduct1CCharacteristics.First().ProdNumber = (int)RobotProductNumber;
+                                    robotProduct1CCharacteristics.First().C1CNomenclatureID = NomenclatureID;
+                                    robotProduct1CCharacteristics.First().C1CCharacteristicID = (Guid)CharacteristicID;
+                                }
+                                else
+                                {
+                                    throw new Exception();
+                                }
+                            }
+                            
+                            gammaBase.SaveChanges();
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Ошибка! Изменение привязки рецепта робота не сохранено!");
+                        DB.AddLogMessageError("Ошибка! Изменение привязки рецепта робота не сохранено! ProductionTask='"+ProductionTaskID + "', RobotProductNumber='" + RobotProductNumber
+                             + "', NomenclatureID='" + NomenclatureID + "', CharacteristicID='" + CharacteristicID+"'");
+                    }
+                }
+                RaisePropertiesChanged("IsReadOnlyRobotNomenclature");
+            }
+        }
+
         /// <summary>
         /// Обновить список номеров робота при смене передела
         /// </summary>
         private void PlaceChanged(int PlaceID)
         {
-            /*using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDb)
             {
                 var IsRobot =
                 gammaBase.Places.Where(p => p.PlaceID == PlaceID)
@@ -434,8 +514,11 @@ namespace Gamma.ViewModels
                     RobotNomenclatureVisible = Visibility.Collapsed;
                     RobotNomenclatures = null;
                 }
-            }*/
-            //RobotProductNumber = null;
+            }
+            RobotProductNumber = GammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID)
+        .Select(p => p.ProdNumber)
+        .FirstOrDefault();
+
         }
 
         /// <summary>
@@ -538,7 +621,7 @@ namespace Gamma.ViewModels
                 productionTask.PlaceID = PlaceID;
                 productionTask.Quantity = Quantity;
                 productionTask.C1CSpecificationID = ProductionTaskSpecificationViewModel.SpecificationID;// SelectedSpecification.Key;
-            /*
+            
             var placeIsRobot =
                 GammaBase.Places.Where(p => p.PlaceID == PlaceID)
                         .Select(p => p.IsRobot)
@@ -564,7 +647,7 @@ namespace Gamma.ViewModels
                     productionTaskBatch.ProductionTasks.First().ProductionTaskConverting.RobotProductNumber = RobotProductNumber;
                     productionTaskBatch.ProductionTasks.First().ProductionTaskConverting.RobotProductDescription = RobotProductDescription;
                 }
-                var productionTaskStateID =
+                /*var productionTaskStateID =
                     GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == productionTaskBatchID)
                             .Select(p => p.ProductionTaskStateID)
                             .FirstOrDefault();
@@ -572,8 +655,8 @@ namespace Gamma.ViewModels
                 {
                     MessageBox.Show("Вы попытались сохранить задание в производстве без указания номера задания робота. Оно не будет сохранено");
                     return false;
-                }
-            }*/
+                }*/
+            }
             //else
             //{
             //    GammaBase.ProductionTaskConverting.RemoveRange(GammaBase.ProductionTaskConverting.Where(c => c.ProductionTaskID == productionTask.ProductionTaskID));
@@ -782,8 +865,8 @@ namespace Gamma.ViewModels
             }
         }
 
-        /*
-        public Visibility _robotNomenclatureVisible { get; set; } = Visibility.Visible;
+        
+        public Visibility _robotNomenclatureVisible { get; set; } = Visibility.Collapsed;
         /// <summary>
         /// Видимость задания номера для робота
         /// </summary>
@@ -801,7 +884,7 @@ namespace Gamma.ViewModels
         /// <summary>
         /// номер выбранного задания
         /// </summary>
-        [UIAuth(UIAuthLevel.ReadOnly)]
+        //[UIAuth(UIAuthLevel.ReadOnly)]
         public int? RobotProductNumber
         {
             get { return _robotProductNumber; }
@@ -828,6 +911,6 @@ namespace Gamma.ViewModels
                 //else RobotProductNumberID = null;
                 RaisePropertyChanged("RobotNomenclatures");
             }
-        }*/
+        }
     }
 }
