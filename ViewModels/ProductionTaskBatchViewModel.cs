@@ -509,6 +509,22 @@ namespace Gamma.ViewModels
         }
         //[UIAuth(UIAuthLevel.ReadOnly)]
         public string Comment { get; set; }
+
+        private int _selectedTabIndex { get; set; }
+        public int SelectedTabIndex
+        {
+            get
+            {
+                return _selectedTabIndex;
+            }
+            set
+            {
+                _selectedTabIndex = value;
+                if (value == 4)
+                    RefreshDowntime();
+            }
+        }
+
         /// <summary>
         /// Создание нового продукта. В конструкторе привязка к CreateNewProduct();
         /// </summary>

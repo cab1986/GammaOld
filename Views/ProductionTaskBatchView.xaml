@@ -76,7 +76,7 @@
             <Button Content="Напечатать этикетку ГУ" Command="{Binding PrintGroupPackLabelCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
             <Button Content="{Binding ChangeStatusApplicatorText}" Command="{Binding ChangeStatusApplicatorCommand}" FontSize="20" FontWeight="Bold" Visibility="{Binding VisiblityPrintGroupPack}" Style="{StaticResource {x:Type Button}}" Background="LightSteelBlue" Margin="2" BorderThickness="2"/>
         </ToolBar>
-        <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" >
+        <dx:DXTabControl Margin="0,0,0,1" Grid.Row="1" VerticalContentAlignment="Stretch" SelectedIndex="{Binding SelectedTabIndex}">
             <dx:DXTabItem Header="Параметры задания">
                 <Grid Background="Transparent">
                     <dxlc:LayoutControl Header="Header" UseLayoutRounding="True" Margin="0,0,0,0" Orientation="Vertical">
