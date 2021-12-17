@@ -119,7 +119,7 @@ namespace Gamma.ViewModels
                         gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)
                             .Select(p => p.RobotProductNumber)
                             .FirstOrDefault() ??
-                        gammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID)
+                        gammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID && p.PlaceID == PlaceID)
                             .Select(p => p.ProdNumber)
                             .FirstOrDefault();
 
@@ -453,7 +453,8 @@ namespace Gamma.ViewModels
                                 {
                                     ProdNumber = (int)RobotProductNumber,
                                     C1CNomenclatureID = NomenclatureID,
-                                    C1CCharacteristicID = (Guid)CharacteristicID
+                                    C1CCharacteristicID = (Guid)CharacteristicID,
+                                    PlaceID = PlaceID
                                 });
                             }
                             else
@@ -463,6 +464,7 @@ namespace Gamma.ViewModels
                                     robotProduct1CCharacteristics.First().ProdNumber = (int)RobotProductNumber;
                                     robotProduct1CCharacteristics.First().C1CNomenclatureID = NomenclatureID;
                                     robotProduct1CCharacteristics.First().C1CCharacteristicID = (Guid)CharacteristicID;
+                                    robotProduct1CCharacteristics.First().PlaceID = PlaceID;
                                 }
                                 else
                                 {
@@ -515,7 +517,7 @@ namespace Gamma.ViewModels
                     RobotNomenclatures = null;
                 }
             }
-            RobotProductNumber = GammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID)
+            RobotProductNumber = GammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID && p.PlaceID == PlaceID)
         .Select(p => p.ProdNumber)
         .FirstOrDefault();
 
