@@ -281,19 +281,24 @@ namespace Gamma.Models
             var parentName = parentID == null ? "" : GammaBase.C1CNomenclature.Where(n => n.C1CNomenclatureID == nomenclatureInfo.C1CParentID).FirstOrDefault().Name;
 
             if (Materials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
+            {
+                var standardQuantity = Materials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == nomenclatureInfo.C1CNomenclatureID && ((n.CharacteristicID == null && characteristicID == null) || n.CharacteristicID == characteristicID))).FirstOrDefault();
                 Materials.Add(new DocMaterialProductionDirectCalculationItem
                 {
                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
                     CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
-                    MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                    MeasureUnit = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : nomenclatureInfo.C1CMeasureUnitStorage.Name,
                     DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
                     WithdrawByFact = isWithdrawalByFact,
+                    NomenclatureKindID = nomenclatureInfo.NomenclatureKindID,
+                    StandardQuantity = standardQuantity?.StandardQuantity,
                     ParentID = parentID,
                     ParentName = parentName
                 });
+            }
         }
 
         public bool _isNotSendMaterialIntoNextPlace { get; set; } = false;

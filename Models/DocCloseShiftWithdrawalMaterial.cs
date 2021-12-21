@@ -359,6 +359,49 @@ namespace Gamma.Models
                     DocCloseShiftMaterials.Add(item);
                 }
 
+                var WithdrawalMaterialsLoad =
+                        new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
+                            GammaBase.FillDocCloseShiftMaterials(PlaceID, ShiftID, CloseDate)
+                            //.Take(0)    
+                            .Select(m => new WithdrawalMaterialBaseItem()
+                            {
+                                NomenclatureID = (Guid)m.NomenclatureID,
+                                CharacteristicID = m.CharacteristicID,
+                                NomenclatureName = m.NomenclatureName,
+                                QuantityIsReadOnly = false, //!m.WithdrawByFact ?? true,
+                                Quantity = m.Quantity ?? 0,
+                                BaseQuantity = m.Quantity ?? 0,
+                                //DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                                MeasureUnit = m.MeasureUnit,
+                                MeasureUnitID = m.MeasureUnitID,
+                                WithdrawByFact = m.WithdrawByFact ?? true
+                            }).OrderBy(m => m.NomenclatureName));
+
+
+                foreach (WithdrawalMaterialBaseItem addedItem in WithdrawalMaterialsLoad)
+                {
+                    var materialItem = DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == addedItem.NomenclatureID && (d.CharacteristicID == addedItem.CharacteristicID || (d.CharacteristicID == null && addedItem.CharacteristicID == null)));
+                    if (materialItem == null)
+                    {
+                        DocCloseShiftMaterials.Add(new DocCloseShiftMaterial()
+                        {
+                            NomenclatureID = addedItem.NomenclatureID,
+                            CharacteristicID = addedItem.CharacteristicID,
+                            NomenclatureName = addedItem.NomenclatureName,
+                            QuantityIsReadOnly = addedItem.QuantityIsReadOnly,
+                            DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
+                            MeasureUnit = addedItem.MeasureUnit,
+                            MeasureUnitID = addedItem.MeasureUnitID,
+                            WithdrawByFact = addedItem.WithdrawByFact,
+                            StandardQuantity = addedItem.Quantity
+                        });
+                    }
+                    else
+                    {
+                        materialItem.StandardQuantity = addedItem.Quantity;
+                    };
+                }
+
                 InProducts = new ItemsChangeObservableCollection<MovementProduct>(GammaBase.FillDocCloseShiftMovementProducts(PlaceID, ShiftID, CloseDate)
                                 .Where(d => (bool)d.IsMovementIn && (bool)d.IsMaterial).Select(d => new MovementProduct
                                 {
@@ -502,7 +545,7 @@ namespace Gamma.Models
                         item.QuantityUtil = (item.QuantityUtil ?? 0) + addedItem.Weight;
                 }
 
-                var WithdrawalMaterialsLoad =
+                /*var WithdrawalMaterialsLoad =
                         new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
                             GammaBase.FillDocCloseShiftMaterials(PlaceID, ShiftID, CloseDate)
                             //.Take(0)    
@@ -544,7 +587,7 @@ namespace Gamma.Models
                         materialItem.StandardQuantity = addedItem.Quantity;
                     };
                 }
-
+                */
                 var withdrawalMaterialsRemainderAtBegin =
                         new ItemsChangeObservableCollection<WithdrawalMaterialBaseItem>(
                             GammaBase.FillDocCloseShiftMaterialsAtBegin(PlaceID, ShiftID, CloseDate)
@@ -781,18 +824,23 @@ namespace Gamma.Models
             var nomenclatureName = nomenclatureInfo.Name + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
 
             if (DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
+            {
+                var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == nomenclatureInfo.C1CNomenclatureID && ((n.CharacteristicID == null && characteristicID == null) || n.CharacteristicID == characteristicID))).FirstOrDefault();
                 DocCloseShiftMaterials.Add(new DocCloseShiftMaterial
                 {
                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
                     CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
-                    MeasureUnitID = nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                    MeasureUnit = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
                     DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
-                    WithdrawByFact = isWithdrawalByFact
+                    WithdrawByFact = isWithdrawalByFact,
+                    NomenclatureKindID = nomenclatureInfo.NomenclatureKindID,
+                    StandardQuantity = standardQuantity?.StandardQuantity
                 });
-
+            }
+            
             /* if (WithdrawalMaterials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
                  WithdrawalMaterials.Add(new WithdrawalMaterial(new ArrayList() { ProductionProductCharacteristicIDs, PlaceID })
                  {

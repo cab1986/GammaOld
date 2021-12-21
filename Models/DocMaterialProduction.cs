@@ -452,20 +452,24 @@ namespace Gamma.Models
             var measureUnitID = (parentName == "Целлюлоза" || parentName == "Брак и Тех. Отходы" || parentName == "Макулатура") && nomenclatureInfo.C1CMeasureUnitStorage.Name != "т" ? GammaBase.C1CMeasureUnits.Where(m => m.Name == "т").FirstOrDefault().C1CMeasureUnitID : nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID;
             var measureUnitName = GammaBase.C1CMeasureUnits.Where(m => m.C1CMeasureUnitID == measureUnitID).FirstOrDefault().Name;
             if (DocMaterialProductionCompositionCalculations.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
+            {
+                var standardQuantity = DocMaterialProductionCompositionCalculations.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == nomenclatureInfo.C1CNomenclatureID )).FirstOrDefault();
                 DocMaterialProductionCompositionCalculations.Add(new DocMaterialProductionCompositionCalculationItem
                 {
                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
                     //CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
-                    MeasureUnitID = measureUnitID,
-                    MeasureUnit = (measureUnitName == "т" || measureUnitName == "т.") ? "кг  " : measureUnitName,
+                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? measureUnitID,
+                    MeasureUnit = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : (measureUnitName == "т" || measureUnitName == "т.") ? "кг  " : measureUnitName,
                     DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
                     WithdrawByFact = isWithdrawalByFact,
+                    NomenclatureKindID = nomenclatureInfo.NomenclatureKindID,
+                    StandardQuantity = standardQuantity?.StandardQuantity,
                     ParentID = parentID,
                     ParentName = parentName
                 });
-
+            }
             
         }
 
