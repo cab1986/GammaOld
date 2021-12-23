@@ -192,31 +192,19 @@ namespace Gamma.ViewModels
         {
             if (DocCloseShift == null)
             {
-                DocCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d=>d.DocCloseShiftProducts).First(d => d.DocID == docId);
-                foreach (var doc in DocCloseShiftDocs)
-                {
-                    DocCloseShift.DocCloseShiftDocs.Add(doc);
-                }
-                //if (DocCloseShift.DocCloseShiftRemainders == null)
-                //    DocCloseShift.DocCloseShiftRemainders = new List<DocCloseShiftRemainders>();
+                DocCloseShift = GammaBase.Docs.Include(d => d.DocCloseShiftDocs).Include(d => d.DocCloseShiftProducts).First(d => d.DocID == docId);
             }
-            else
+            DocCloseShift.DocCloseShiftDocs.Clear();
+            DocCloseShift.DocCloseShiftProducts.Clear();
+
+            if (DocCloseDocIds != null)
             {
-                DocCloseShift.DocCloseShiftDocs.Clear();
-                DocCloseShift.DocCloseShiftProducts.Clear();
-
-                if (DocCloseDocIds != null)
+                foreach (var doc in DocCloseDocIds)
                 {
-                    foreach (var doc in DocCloseDocIds)
-                    {
-                        DocCloseShift.DocCloseShiftDocs.Add(GammaBase.Docs.First(d => d.DocID == doc));
-                    }
+                    DocCloseShift.DocCloseShiftDocs.Add(GammaBase.Docs.First(d => d.DocID == doc));
                 }
-                //if (DocCloseShift.DocCloseShiftRemainders == null)
-                //    DocCloseShift.DocCloseShiftRemainders = new List<DocCloseShiftRemainders>();
-                GammaBase.DocCloseShiftRemainders.RemoveRange(DocCloseShift.DocCloseShiftRemainders.Where(p => p.IsSourceProduct == true && (p.RemainderTypeID == null || p.RemainderTypeID == 0) ));//(p => (p.RemainderTypeID ?? 0) != 0));
-
             }
+            GammaBase.DocCloseShiftRemainders.RemoveRange(DocCloseShift.DocCloseShiftRemainders.Where(p => p.IsSourceProduct == true && (p.RemainderTypeID == null || p.RemainderTypeID == 0) ));//(p => (p.RemainderTypeID ?? 0) != 0));
 
             foreach (var Product in UnwinderSpools)
             {
