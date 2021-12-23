@@ -32,6 +32,10 @@ namespace Gamma.Models
         private int PlaceID;
         private int ShiftID;
         DateTime CloseDate;
+        public void SetCloseDate(DateTime value)
+        {
+            CloseDate = value;
+        }
 
         private GammaEntities GammaBase { get; }
 
@@ -303,7 +307,7 @@ namespace Gamma.Models
                 }
                 else
                 {
-                    fromDocID = DB.GetDocMaterialInFromDocID(PlaceID, ShiftID, CloseDate, ids);
+                    fromDocID = DB.GetDocMaterialInFromDocIDconsideringComposition(PlaceID, ShiftID, CloseDate, isCompositionCalculationParameter, ids);
                     if (fromDocID != null)
                     {
                         var doc = GammaBase.Docs.Where(d => d.DocID == fromDocID).FirstOrDefault();

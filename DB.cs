@@ -422,6 +422,12 @@ namespace Gamma
             return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}','{productionCharacteristicIDs}')").AsEnumerable().First();
         }
 
+        public static Guid? GetDocMaterialInFromDocIDconsideringComposition(int placeID, int shiftID, DateTime date, bool? isCompositionCalculationParameter, string productionCharacteristicIDs)
+        {
+            string comp = (isCompositionCalculationParameter == null ? "NULL" : (bool)isCompositionCalculationParameter ? "1" : "0");
+            return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocIDconsideringComposition({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}',{comp},'{productionCharacteristicIDs}')").AsEnumerable().First();
+        }
+
         public static short? GetPaperMachinePlace(int placeid, GammaEntities gammaBase = null)
         {
             return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetPaperMachinePlace('{placeid}')").AsEnumerable().First();

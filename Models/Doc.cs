@@ -30,5 +30,6 @@ namespace Gamma
         public string Person { get; set; }
         public bool IsConfirmed { get; set; }
         public int? DocTypeID { get; set; }
+        public string Comment { get; set; }
     }
 }

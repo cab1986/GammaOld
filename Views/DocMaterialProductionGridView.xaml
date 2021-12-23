@@ -30,7 +30,7 @@
             <dx:DXTabControl.View>
                 <dx:TabControlMultiLineView HeaderLocation="Top"/>
             </dx:DXTabControl.View>
-            <dx:DXTabItem Header="Сырье">
+            <dx:DXTabItem Header="Сырье" Visibility="{Binding IsVisibleCompositions, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxb:BarManager Margin="-9,-9,-9,-9">
                     <dxb:BarManager.Bars>
                         <dxb:Bar>
@@ -187,7 +187,7 @@
                     <ContentControl Content="{Binding CurrentTankRemaindersView}" />
                 </dxlc:LayoutItem>
             </dx:DXTabItem>
-            <dx:DXTabItem Header="Материалы" >
+            <dx:DXTabItem Header="Материалы"  Visibility="{Binding IsVisibleDirectCalculations, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <dxlc:LayoutItem VerticalAlignment="Stretch" Margin="-9,-9,-9,-9">
                     <ContentControl Content="{Binding DocMaterialProductionDirectCalculationsGrid}" />
                 </dxlc:LayoutItem>

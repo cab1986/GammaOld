@@ -1173,6 +1173,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="IsGet1CNomenclatureLanched" Type="bit" />
           <Property Name="LastExecGet1CNomenclature" Type="datetime" />
           <Property Name="IsUploadDocBrokeTo1CWhenSave" Type="bit" />
+          <Property Name="IsUsedInOneDocMaterialDirectCalcAndComposition" Type="bit" />
         </EntityType>
         <EntityType Name="LogEvents">
           <Key>
@@ -6685,7 +6686,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [LocalSettings].[TaskLastNumber] AS [TaskLastNumber], 
     [LocalSettings].[IsGet1CNomenclatureLanched] AS [IsGet1CNomenclatureLanched], 
     [LocalSettings].[LastExecGet1CNomenclature] AS [LastExecGet1CNomenclature], 
-    [LocalSettings].[IsUploadDocBrokeTo1CWhenSave] AS [IsUploadDocBrokeTo1CWhenSave]
+    [LocalSettings].[IsUploadDocBrokeTo1CWhenSave] AS [IsUploadDocBrokeTo1CWhenSave],
+    [LocalSettings].[IsUsedInOneDocMaterialDirectCalcAndComposition] AS [IsUsedInOneDocMaterialDirectCalcAndComposition]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v1CDocComplectationPositions" EntityType="Self.v1CDocComplectationPositions" store:Type="Views" store:Schema="dbo">
@@ -14710,6 +14712,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="IsGet1CNomenclatureLanched" Type="Boolean" />
           <Property Name="LastExecGet1CNomenclature" Type="DateTime" Precision="3" />
           <Property Name="IsUploadDocBrokeTo1CWhenSave" Type="Boolean" />
+          <Property Name="IsUsedInOneDocMaterialDirectCalcAndComposition" Type="Boolean" />
         </EntityType>
         <EntityType Name="Devices">
           <Key>
@@ -19074,6 +19077,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="LocalSettings">
             <EntityTypeMapping TypeName="GammaModel.LocalSettings">
               <MappingFragment StoreEntitySet="LocalSettings">
+                <ScalarProperty Name="IsUsedInOneDocMaterialDirectCalcAndComposition" ColumnName="IsUsedInOneDocMaterialDirectCalcAndComposition" />
                 <ScalarProperty Name="IsUploadDocBrokeTo1CWhenSave" ColumnName="IsUploadDocBrokeTo1CWhenSave" />
                 <ScalarProperty Name="LastExecGet1CNomenclature" ColumnName="LastExecGet1CNomenclature" />
                 <ScalarProperty Name="IsGet1CNomenclatureLanched" ColumnName="IsGet1CNomenclatureLanched" />

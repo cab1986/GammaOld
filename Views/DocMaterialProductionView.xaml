@@ -65,7 +65,7 @@
                             <dxe:CheckEdit EditValue="{Binding IsConfirmed}" IsReadOnly="{Binding ConfirmedIsReadOnly}" />
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup Orientation="Vertical" Height="170">
+                    <dxlc:LayoutGroup Orientation="Vertical" Height="170"  Visibility="{Binding IsVisibleActiveProductionProducts, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxlc:LayoutItem Label="Продукция" LabelPosition="Top">
                             <dxe:ComboBoxEdit EditValue="{Binding ActiveProductionProduct, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ProductionProductsList}" DisplayMember="CharacteristicName" IsReadOnly="{Binding IsConfirmed}">
                                 <dxe:ComboBoxEdit.StyleSettings>
@@ -77,10 +77,10 @@
                             <dxe:ListBoxEdit ItemsSource="{Binding ActiveProductionProduct}" DisplayMember="CharacteristicName" IsReadOnly="True"/>
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
-                    <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150">
-                        <Button Content="Заполнить рапорт"  Height="30" Margin="10,30,10,5" Command="{Binding FillGridCommand}"/>
-                        <Button Content="Очистить рапорт" Height="30" Margin="10,5" Command = "{Binding ClearGridCommand}"/>
-                        <!--<Button Content="Заполнить без остатков"  Height="30" Margin="10,5" Command="{Binding FillGridWithNoEndCommand}"/>-->
+                    <dxlc:LayoutGroup View="Group" dxlc:DockLayoutControl.Dock="Right" VerticalAlignment="Top" Orientation="Vertical" Width="150" HorizontalAlignment="Right">
+                        <Button Content="Заполнить рапорт"  Height="30" Width="120" Margin="10,30,10,5" Command="{Binding FillGridCommand}" HorizontalAlignment="Right"/>
+                        <Button Content="Очистить рапорт" Height="30"  Width="120" Margin="10,5" Command = "{Binding ClearGridCommand}" HorizontalAlignment="Right"/>
+                        <!--<Button Content="Заполнить без остатков"  Height="30" Margin="10,5" Command="{Binding FillGridWithNoEndCommand}" HorizontalAlignment="Right"/>-->
                     </dxlc:LayoutGroup>
                 </dxlc:LayoutGroup>
                 <dxlc:LayoutItem VerticalAlignment="Stretch">

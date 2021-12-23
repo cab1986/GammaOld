@@ -81,6 +81,10 @@ namespace Gamma.ViewModels
         }
         private int ShiftID;
         DateTime CloseDate;
+        public void SetCloseDate(DateTime value)
+        {
+            CloseDate = value;
+        }
 
         public DocMaterialProductionDirectCalculationMaterial DirectCalculationMaterials { get; set; }
         

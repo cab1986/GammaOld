@@ -36,7 +36,9 @@ namespace Gamma.ViewModels
                 IsNewDoc = true;
                 Title = "Остатки сырья и материалов";
                 ShiftID = WorkSession.ShiftID;
-                DB.AddLogMessageInformation("Create new DocMaterialProduction @DocID="+DocID+" @Date="+Date+" @PlaceID="+PlaceID+" @ShiftID="+ ShiftID);
+                if (!WorkSession.IsUsedInOneDocMaterialDirectCalcAndComposition)
+                    IsDocCompositions = MessageBox.Show("Вы создаете документ по сырью?","Новый документ",MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.Yes;
+                DB.AddLogMessageInformation("Create new DocMaterialProduction @DocID='"+DocID+"' @Date='"+Date+"' @PlaceID="+PlaceID+" @ShiftID="+ ShiftID + " @IsDocCompositions=" + IsDocCompositions);
             }
             else
             {
@@ -48,7 +50,13 @@ namespace Gamma.ViewModels
                 IsNewDoc = false;
                 Title = "Остатки сырья и материалов №" + Doc.Number;
                 ShiftID = Doc.ShiftID;
-                DB.AddLogMessageInformation("Open DocMaterialProduction @DocID=" + DocID + " @Date=" + Date + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID);
+                var d = Doc.Comment?.ToLower().IndexOf("сырье");
+                    var f = Doc.Comment?.ToLower().IndexOf("материалы");
+                if (String.IsNullOrEmpty(Doc.Comment) || (Doc.Comment?.ToLower().IndexOf("сырье") >= 0 && Doc.Comment?.ToLower().IndexOf("материалы") >= 0))
+                    IsDocCompositions = null;
+                else
+                    IsDocCompositions = !(Doc.Comment?.IndexOf("Материалы") >= 0);
+                DB.AddLogMessageInformation("Open DocMaterialProduction @DocID='" + DocID + "' @Date='" + Date + "' @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @IsDocCompositions=" + IsDocCompositions);
             }
             
             var paperMachinePlace = DB.GetPaperMachinePlace(PlaceID) ?? 0;
@@ -103,14 +111,29 @@ namespace Gamma.ViewModels
                                 CharacteristicName = r.C1CNomenclature.Name + " " + r.C1CCharacteristics.Name
                             }))
                 ProductionProductsList.Add(item);
+
+            if (IsNewDoc && (!IsDocCompositions ?? false))
+            {
+                 ActiveProductionProduct = new List<object>(ProductionProductsList
+                             .Select(r => new Characteristic
+                             {
+                                 CharacteristicID = (Guid)r.CharacteristicID,
+                                 CharacteristicName = r.CharacteristicName
+                             })); 
+            }
+            /*
             var activeProductionProductCharacteristicIDs =  new List<Guid>();
             if (!IsNewDoc)
                 foreach (object item in ((List<object>)ActiveProductionProduct))
                     activeProductionProductCharacteristicIDs.Add(((Characteristic)item).CharacteristicID);
-
+            else
+                if (!IsDocCompositions ?? false)
+                foreach (object item in ProductionProductsList)
+                    activeProductionProductCharacteristicIDs.Add(((Characteristic)item).CharacteristicID); 
+                    */
             CurrentViewModelGrid = Doc == null
-                       ? new DocMaterialProductionGridViewModel(PlaceID, (int)ShiftID, Date)
-                       : new DocMaterialProductionGridViewModel(PlaceID, (int)ShiftID, Date, Doc.DocID, IsConfirmed, productionProductCharacteristicIDs);
+                       ? new DocMaterialProductionGridViewModel(PlaceID, (int)ShiftID, Date, IsDocCompositions)
+                       : new DocMaterialProductionGridViewModel(PlaceID, (int)ShiftID, Date, Doc.DocID, IsConfirmed, productionProductCharacteristicIDs, IsDocCompositions);
 
             var grid = CurrentViewModelGrid as IFillClearGrid;
             if (grid != null)
@@ -154,9 +177,18 @@ namespace Gamma.ViewModels
             {
                 _date = value;
                 ShiftEndTime = DB.GetShiftEndTimeFromDate(Date.AddHours(-1));
+                var grid = CurrentViewModelGrid as DocMaterialProductionGridViewModel;
+                if (grid != null && value != null)
+                {
+                    grid.CloseDate = value;
+                    DB.AddLogMessageInformation("Change Date @Date" + Date + " @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " activeProductionProduct to " );
+
+                }
             }
         }
 
+        private bool? IsDocCompositions { get; set; }
+        public bool IsVisibleActiveProductionProducts => IsDocCompositions ?? true;
         private bool isInitialize { get; set; }
         public bool _isConfirmed { get; set; }
         public bool IsConfirmed
@@ -232,7 +264,7 @@ namespace Gamma.ViewModels
                     var activeProductionProductCharacteristicIDs = new List<Guid>();
                     foreach (object item in ((List<object>)value))
                         activeProductionProductCharacteristicIDs.Add(((Characteristic)item).CharacteristicID);
-                    grid.DocMaterialCompositionCalculations.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
+                    grid.DocMaterialCompositionCalculations?.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
                     grid.DocMaterialProductionDirectCalculationsGrid?.DirectCalculationMaterials?.SetProductionProductCharacteristics(activeProductionProductCharacteristicIDs);
                     DB.AddLogMessageInformation("Change DocMaterialTankRemainders @Date" + Date+" @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " activeProductionProduct to " + string.Join(",",  activeProductionProductCharacteristicIDs));
 
@@ -258,7 +290,13 @@ namespace Gamma.ViewModels
         public bool IsDateReadOnly
         {
             get
-            { return !(!IsNewDoc && !IsConfirmed && DB.HaveWriteAccess("DocMaterialProductions") && WorkSession.ShiftID == 0); }
+            {
+#if DEBUG
+                return !(!IsConfirmed && DB.HaveWriteAccess("DocMaterialProductions"));
+#else
+                return !(!IsNewDoc && !IsConfirmed && DB.HaveWriteAccess("DocMaterialProductions") && WorkSession.ShiftID == 0); 
+#endif
+            }
         }
 
         public bool ConfirmedIsReadOnly => !CanEditable();
@@ -347,7 +385,8 @@ namespace Gamma.ViewModels
                     ShiftID = WorkSession.ShiftID,
                     IsConfirmed = IsConfirmed,
                     PrintName = WorkSession.PrintName,
-                    PersonGuid = WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" ? null : WorkSession.PersonID
+                    PersonGuid = WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" ? null : WorkSession.PersonID,
+                    Comment = WorkSession.IsUsedInOneDocMaterialDirectCalcAndComposition ? "Сырье и материалы" : (bool)IsDocCompositions ? "Сырье" : "Материалы"
                 };
                 GammaBase.Docs.Add(Doc);
             }
@@ -403,8 +442,11 @@ namespace Gamma.ViewModels
         public string Title { get; set; }
         public override bool CanSaveExecute()
         {
-
+#if DEBUG
+            return base.CanSaveExecute() && CurrentViewModelGrid.IsValid;
+#else
             return base.CanSaveExecute() && CanEditable() && !isDocUsedNextPlace && !IsConfirmed && CurrentViewModelGrid.IsValid;
+#endif
         }
         private bool DocIsUsedNextPlace()
         {

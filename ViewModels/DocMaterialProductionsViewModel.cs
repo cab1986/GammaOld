@@ -76,7 +76,8 @@ namespace Gamma.ViewModels
                             Place = d.Places.Name,
                             User = d.Users.Name,
                             Person = d.Persons.Name,
-                            IsConfirmed = d.IsConfirmed
+                            IsConfirmed = d.IsConfirmed,
+                            Comment = d.Comment
                         }).ToList();
                         break;
                     case 1:
@@ -95,7 +96,8 @@ namespace Gamma.ViewModels
                                 Place = d.Places.Name,
                                 User = d.Users.Name,
                                 Person = d.Persons.Name,
-                                IsConfirmed = d.IsConfirmed
+                                IsConfirmed = d.IsConfirmed,
+                                Comment = d.Comment
                             }).ToList();
                         break;
                     case 2:
@@ -116,7 +118,8 @@ namespace Gamma.ViewModels
                             Place = d.Places.Name,
                             User = d.Users.Name,
                             Person = d.Persons.Name,
-                            IsConfirmed = d.IsConfirmed
+                            IsConfirmed = d.IsConfirmed,
+                            Comment = d.Comment
                         }).ToList();
                         break;
                 }

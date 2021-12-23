@@ -83,6 +83,8 @@ namespace Gamma
                 UnwindersCount = userInfo.UnwindersCount ?? 0;
                 IsUploadDocBrokeTo1CWhenSave = (from u in DB.GammaDb.LocalSettings
                                                 select u.IsUploadDocBrokeTo1CWhenSave).FirstOrDefault() ?? false;
+                IsUsedInOneDocMaterialDirectCalcAndComposition = (from u in DB.GammaDb.LocalSettings
+                                                                  select u.IsUsedInOneDocMaterialDirectCalcAndComposition).FirstOrDefault() ?? true; ;
             }
         }
         public static bool DBAdmin
@@ -162,5 +164,6 @@ namespace Gamma
         /// </summary>
         public static bool IsUploadDocBrokeTo1CWhenSave { get; private set; }
 
-    }
+        public static bool IsUsedInOneDocMaterialDirectCalcAndComposition { get; private set; }
+}
 }

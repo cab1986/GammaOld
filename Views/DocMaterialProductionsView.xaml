@@ -60,14 +60,15 @@
                 <dxg:TableView AutoWidth="True" AllowEditing="False" />
             </dxg:GridControl.View>
             <dxg:GridColumn Header="Номер" FieldName="Number" VisibleIndex="0" />
-            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="1" SortIndex="0" SortOrder="Descending" Width="50" >
+            <dxg:GridColumn Header="Вид" FieldName="Comment" VisibleIndex="1" />
+            <dxg:GridColumn Header="Дата" FieldName="Date" VisibleIndex="2" SortIndex="0" SortOrder="Descending" Width="50" >
                 <dxg:GridColumn.EditSettings>
                     <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
-            <dxg:GridColumn Header="Смена" FieldName="ShiftID" VisibleIndex="2" Width="25" />
-            <dxg:GridColumn Header="Передел" FieldName="Place" VisibleIndex="3" />
-            <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" VisibleIndex="4" Width="50" />
+            <dxg:GridColumn Header="Смена" FieldName="ShiftID" VisibleIndex="3" Width="25" />
+            <dxg:GridColumn Header="Передел" FieldName="Place" VisibleIndex="4" />
+            <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" VisibleIndex="5" Width="50" />
         </dxg:GridControl>
     </Grid>
 </UserControl>
