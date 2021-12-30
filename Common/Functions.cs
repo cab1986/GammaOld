@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Deployment.Application;
 using System.Linq;
+using System.Reflection;
 
 namespace Gamma.Common
 {
@@ -61,6 +63,32 @@ namespace Gamma.Common
             var volume = Math.PI*format*(Math.Pow(diameter, 2) - Math.Pow(coreDiameter, 2))/4000000000;
             if (volume == 0) return null;
             return (decimal)(weight/volume);
+        }
+
+        public static string CurrentVersion
+        {
+            get
+            {
+                string version;
+                try
+                {
+                    version = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                }
+                catch
+                {
+                    version = "Ошибка";
+                }
+                if (version == "Ошибка")
+                    try
+                    {
+                        version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    }
+                    catch
+                    {
+                        version = "------";
+                    }
+                return "Текущая версия приложения: " + version;
+            }
         }
     }
 

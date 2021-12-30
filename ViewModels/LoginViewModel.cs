@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows;
 using Gamma.Common;
-using System;
 
 namespace Gamma.ViewModels
 {
@@ -48,6 +47,8 @@ namespace Gamma.ViewModels
         [Required(ErrorMessage = @"Поле не может быть пустым")]
         public string Password { get; set; }
 
+        public string CurrentVersion => Functions.CurrentVersion;
+        
         /*
         public static LoginViewModel Create()
         {

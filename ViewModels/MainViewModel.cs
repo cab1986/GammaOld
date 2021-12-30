@@ -66,8 +66,8 @@ namespace Gamma.ViewModels
                     GammaBase.SaveChanges();
                 }
             }
-            StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Логин: {2}, Имя для печати: {3}, ID пользователя: {5}", settings.HostName, settings.DbName, 
-                settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл", WorkSession.PersonID);
+            StatusText = string.Format("Сервер: {0}, БД: {1}, Сканер: {4}, Логин: {2}, Имя для печати: {3}, {5}, {6}", settings.HostName, settings.DbName, 
+                settings.User, WorkSession.PrintName, settings.UseScanner ? "вкл" : "выкл", Functions.CurrentVersion, WorkSession.PersonID == null || WorkSession.PersonID == Guid.Empty ? "" : "ID пользователя: " + WorkSession.PersonID.ToString());
             try
             {
                 string myIP = Dns.GetHostByName(GammaSettings.LocalHostName).AddressList[0].ToString();
@@ -473,16 +473,7 @@ namespace Gamma.ViewModels
 
         private void ShowProgrammInfo()
         {
-            string version;
-            try
-            {
-                version = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
-            }
-            catch
-            {
-                version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-            MessageBox.Show(@"Текущая версия приложения " + version);
+            MessageBox.Show(Functions.CurrentVersion);
         }
 
         public DelegateCommand OpenPlaceZonesCommand { get; private set; }
