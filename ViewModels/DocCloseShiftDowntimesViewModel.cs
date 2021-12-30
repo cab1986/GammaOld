@@ -171,7 +171,9 @@ namespace Gamma.ViewModels
                 IsDefault = true,
                 Command = new DelegateCommand<CancelEventArgs>(
             x => DebugFunc(),
-            x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14*60),
+            x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14* 60
+                    && (model.TypeDetailsFiltered?.Count() == 0 || (model.TypeDetailsFiltered?.Count() > 0 && model.TypeDetailID != null))
+                    && (model.EquipmentNodeDetailsFiltered?.Count() == 0 || (model.EquipmentNodeDetailsFiltered?.Count() > 0 && model.EquipmentNodeDetailID != null))),
             };
             var cancelCommand = new UICommand()
             {
