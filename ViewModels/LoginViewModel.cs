@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows;
 using Gamma.Common;
+using System;
 
 namespace Gamma.ViewModels
 {
