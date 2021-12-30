@@ -1482,7 +1482,7 @@ namespace Gamma.ViewModels
                     IsEditingComment = (!IsReadOnly) || ProductionTaskStateID == (byte)ProductionTaskStates.OnEditing;
                 }
                 else
-                    if (!(_productionTaskStateID == (byte)ProductionTaskStates.OnEditing && value == (byte)ProductionTaskStates.InProduction) && !(_productionTaskStateID == (byte)ProductionTaskStates.InProduction && value == (byte)ProductionTaskStates.OnEditing) && ((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && _productionTaskStateID != value))
+                    if (!(_productionTaskStateID == (byte)ProductionTaskStates.OnEditing && value == (byte)ProductionTaskStates.InProduction) && !(_productionTaskStateID == (byte)ProductionTaskStates.InProduction && value == (byte)ProductionTaskStates.OnEditing) && ((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && (_productionTaskStateID != value && value != (byte) ProductionTaskStates.Completed)))
                 {
                     if (value != null) //для того, чтобы при нажатии кнопки Назад (когда окно открытовнутри основного окна, а не отдельно) не переходило в этот блок. Падает при MessageBox, так как окна уже не существует.
                     {
