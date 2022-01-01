@@ -395,6 +395,20 @@ namespace Gamma.ViewModels
                             {
                                 typeTransportLabel.C1CPropertyValueID = TypeTransportLabelID;
                             }
+                            var typeTransportLabel1 = gammaBase.C1CCharacteristicProperties.FirstOrDefault(pr => pr.C1CPropertyID == new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6") && pr.C1CCharacteristicID == CharacteristicID);
+                            if (typeTransportLabel1 == null)
+                            {
+                                gammaBase.C1CCharacteristicProperties.Add(new C1CCharacteristicProperties()
+                                {
+                                    C1CCharacteristicID = (Guid)CharacteristicID,
+                                    C1CPropertyID = new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6"),
+                                    C1CPropertyValueID = TypeTransportLabelID
+                                });
+                            }
+                            else
+                            {
+                                typeTransportLabel1.C1CPropertyValueID = TypeTransportLabelID;
+                            }
                             gammaBase.SaveChanges();
                         }
                     }
