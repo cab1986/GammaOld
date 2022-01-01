@@ -461,7 +461,7 @@ namespace Gamma.ViewModels
                             }
 
                             var robotProduct1CCharacteristics = gammaBase.RobotProduct1CCharacteristic.Where(p => p.ProdNumber == RobotProductNumber || (p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID)).ToList();
-                            if (robotProduct1CCharacteristics == null)
+                            if (robotProduct1CCharacteristics == null || robotProduct1CCharacteristics.Count == 0)
                             {
                                 gammaBase.RobotProduct1CCharacteristic.Add(new RobotProduct1CCharacteristic()
                                 {
