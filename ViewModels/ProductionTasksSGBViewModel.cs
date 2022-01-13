@@ -25,6 +25,7 @@ namespace Gamma.ViewModels
             EditItemCommand = new DelegateCommand(EditItem,() => SelectedProductionTaskBatch != null);
             DeleteItemCommand = new DelegateCommand(DeleteItem, () => false);
             RefreshCommand = new DelegateCommand(Refresh);
+            CopyProductionTaskCommand = new DelegateCommand(CopyProductionTask, () => SelectedProductionTaskBatch != null);
             GetProductionTasks();
         }
 
@@ -32,6 +33,7 @@ namespace Gamma.ViewModels
         public DelegateCommand<object> EditItemCommand {get; set;}
         public DelegateCommand DeleteItemCommand {get; set;}
         public DelegateCommand RefreshCommand { get; set; }
+        public DelegateCommand CopyProductionTaskCommand { get; private set; }
         private void NewItem()
         {
             MessageManager.NewProductionTask(BatchKinds.SGB);
@@ -51,6 +53,25 @@ namespace Gamma.ViewModels
             if (string.IsNullOrEmpty(delResult)) return;
             MessageBox.Show(delResult, "Не удалось удалить", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+        private void CopyProductionTask()
+        {
+            //Create new Task from selected Task
+            using (var gammaBase = DB.GammaDb)
+            {
+                Guid? newProductionTaskBatchID = gammaBase.CreateNewTaskBatchOneBased(SelectedProductionTaskBatch.ProductionTaskBatchID).FirstOrDefault();
+
+                if (newProductionTaskBatchID != null && newProductionTaskBatchID != Guid.Empty)
+                    MessageManager.OpenProductionTask(BatchKinds.SGB, (Guid)newProductionTaskBatchID, WorkSession.PlaceGroup == PlaceGroup.Other);
+                else
+                {
+                    string errorText = "Ошибка при копировании задания. Новое задание не создано.";
+                    MessageBox.Show(errorText, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    DB.AddLogMessageError(errorText);
+                }
+            }
+        }
+
         private void Refresh()
         {
             GetProductionTasks();

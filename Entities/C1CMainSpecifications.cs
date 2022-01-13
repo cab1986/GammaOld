@@ -20,6 +20,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public Nullable<System.Guid> C1CSpecificationID { get; set; }
         public Nullable<System.Guid> C1CPlaceID { get; set; }
+        public Nullable<bool> C1CDeleted { get; set; }
     
         public virtual C1CCharacteristics C1CCharacteristics { get; set; }
         public virtual C1CPlaces C1CPlaces { get; set; }

@@ -207,6 +207,7 @@
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="1CSpecificationID" Type="uniqueidentifier" />
           <Property Name="1CPlaceID" Type="uniqueidentifier" />
+          <Property Name="1CDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="1CMeasureUnitQualifiers">
           <Key>
@@ -379,6 +380,7 @@
           <Property Name="Description" Type="varchar" MaxLength="100" />
           <Property Name="FullDescription" Type="ntext" />
           <Property Name="1CNewRejectionReasonID" Type="uniqueidentifier" />
+          <Property Name="1CCode" Type="varchar" MaxLength="9" />
         </EntityType>
         <EntityType Name="1CSpecificationInputNomenclature">
           <Key>
@@ -422,6 +424,7 @@
           <Property Name="1CCode" Type="varchar" MaxLength="20" />
           <Property Name="1CDeleted" Type="bit" />
           <Property Name="Status" Type="varchar" MaxLength="150" />
+          <Property Name="ValidFrom" Type="datetime" />
         </EntityType>
         <EntityType Name="1CWarehouses">
           <Key>
@@ -483,7 +486,7 @@
             <PropertyRef Name="LogID" />
           </Key>
           <Property Name="LogID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Log" Type="varchar" MaxLength="500" />
+          <Property Name="Log" Type="varchar" MaxLength="2000" />
           <Property Name="LogDate" Type="datetime" />
           <Property Name="LogUserID" Type="varchar" MaxLength="150" />
           <Property Name="HostName" Type="varchar" MaxLength="150" />
@@ -1488,6 +1491,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="Number" Type="varchar" MaxLength="50" />
           <Property Name="ActualStartDate" Type="datetime" />
           <Property Name="ActualEndDate" Type="datetime" />
+          <Property Name="ProductionTaskStateID" Type="tinyint" />
         </EntityType>
         <EntityType Name="ProductionTaskSGB">
           <Key>
@@ -5541,6 +5545,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProductionTaskStates_ProductionTaskStates">
+          <End Role="ProductionTaskStates" Type="Self.ProductionTaskStates" Multiplicity="1" />
+          <End Role="ProductionTaskStates1" Type="Self.ProductionTaskStates" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTaskStates">
+              <PropertyRef Name="ProductionTaskStateID" />
+            </Principal>
+            <Dependent Role="ProductionTaskStates1">
+              <PropertyRef Name="ProductionTaskStateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ProductionTaskWR_ProductionTasks">
           <End Role="ProductionTasks" Type="Self.ProductionTasks" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -5995,6 +6011,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="CreateNewTaskBatchOneBased" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="CreateSample" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductionTaskBatchID" Type="uniqueidentifier" Mode="In" />
@@ -6686,7 +6705,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [LocalSettings].[TaskLastNumber] AS [TaskLastNumber], 
     [LocalSettings].[IsGet1CNomenclatureLanched] AS [IsGet1CNomenclatureLanched], 
     [LocalSettings].[LastExecGet1CNomenclature] AS [LastExecGet1CNomenclature], 
-    [LocalSettings].[IsUploadDocBrokeTo1CWhenSave] AS [IsUploadDocBrokeTo1CWhenSave],
+    [LocalSettings].[IsUploadDocBrokeTo1CWhenSave] AS [IsUploadDocBrokeTo1CWhenSave], 
     [LocalSettings].[IsUsedInOneDocMaterialDirectCalcAndComposition] AS [IsUsedInOneDocMaterialDirectCalcAndComposition]
     FROM [dbo].[LocalSettings] AS [LocalSettings]</DefiningQuery>
           </EntitySet>
@@ -8189,6 +8208,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskSGB" EntitySet="ProductionTaskSGB" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProductionTaskStates_ProductionTaskStates" Association="Self.FK_ProductionTaskStates_ProductionTaskStates">
+            <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+            <End Role="ProductionTaskStates1" EntitySet="ProductionTaskStates" />
+          </AssociationSet>
           <AssociationSet Name="FK_ProductionTaskWR_ProductionTasks" Association="Self.FK_ProductionTaskWR_ProductionTasks">
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTaskWR" EntitySet="ProductionTaskWR" />
@@ -8495,6 +8518,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocBrokeProductRejectionReasons" Relationship="GammaModel.FK_DocBrokeProductRejectionReasons_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocBrokeProductRejectionReasons" />
           <NavigationProperty Name="ProductKinds" Relationship="GammaModel.ProductKindRejectionReasons" FromRole="C1CRejectionReasons" ToRole="ProductKinds" />
           <Property Name="C1CNewRejectionReasonID" Type="Guid" />
+          <Property Name="C1CCode" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="C1CSpecificationInputNomenclature">
           <Key>
@@ -8652,6 +8676,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="IsActual" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="ProductionTaskBatches" Relationship="GammaModel.FK_ProductionTaskBatches_ProductionTaskStates" FromRole="ProductionTaskStates" ToRole="ProductionTaskBatches" />
+          <NavigationProperty Name="ProductionTaskStates1" Relationship="GammaModel.FK_ProductionTaskStates_ProductionTaskStates" FromRole="ProductionTaskStates" ToRole="ProductionTaskStates1" />
+          <NavigationProperty Name="ProductionTaskStates2" Relationship="GammaModel.FK_ProductionTaskStates_ProductionTaskStates" FromRole="ProductionTaskStates1" ToRole="ProductionTaskStates" />
         </EntityType>
         <EntityType Name="ProductionTaskWR">
           <Key>
@@ -10780,6 +10806,13 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="PlaceAuxiliaryMaterials" EntitySet="PlaceAuxiliaryMaterials" />
           </AssociationSet>
           <EntitySet Name="RobotProduct1CCharacteristic" EntityType="GammaModel.RobotProduct1CCharacteristic" />
+          <AssociationSet Name="FK_ProductionTaskStates_ProductionTaskStates" Association="GammaModel.FK_ProductionTaskStates_ProductionTaskStates">
+            <End Role="ProductionTaskStates" EntitySet="ProductionTaskStates" />
+            <End Role="ProductionTaskStates1" EntitySet="ProductionTaskStates" />
+          </AssociationSet>
+          <FunctionImport Name="CreateNewTaskBatchOneBased" ReturnType="Collection(Guid)">
+            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -10980,6 +11013,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="C1CCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="C1CDeleted" Type="Boolean" />
           <Property Name="Status" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ValidFrom" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_1CSpecificationInputNomenclature_1CSpecifications1">
           <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="1" />
@@ -11185,6 +11219,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductionTaskDowntimes" Relationship="GammaModel.FK_ProductionTaskDowntimes_ProductionTasks" FromRole="ProductionTasks" ToRole="ProductionTaskDowntimes" />
           <Property Name="ActualStartDate" Type="DateTime" Precision="3" />
           <Property Name="ActualEndDate" Type="DateTime" Precision="3" />
+          <Property Name="ProductionTaskStateID" Type="Byte" />
         </EntityType>
         <Association Name="FK_ProductionTaskRWCutting_ProductionTasks">
           <End Type="GammaModel.ProductionTasks" Role="ProductionTasks" Multiplicity="1">
@@ -13814,6 +13849,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CPlaces" Relationship="GammaModel.FK_1CMainSpecifications_1CPlaces" FromRole="C1CMainSpecifications" ToRole="C1CPlaces" />
           <NavigationProperty Name="C1CSpecifications" Relationship="GammaModel.FK_1CMainSpecifications_1CSpecifications" FromRole="C1CMainSpecifications" ToRole="C1CSpecifications" />
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CMainSpecifications_1CNomenclature" FromRole="C1CMainSpecifications" ToRole="C1CNomenclature" />
+          <Property Name="C1CDeleted" Type="Boolean" />
         </EntityType>
         <Association Name="FK_1CMainSpecifications_1CCharacteristics">
           <End Type="GammaModel.C1CCharacteristics" Role="C1CCharacteristics" Multiplicity="0..1" />
@@ -15542,7 +15578,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <PropertyRef Name="LogID" />
           </Key>
           <Property Name="LogID" Type="Guid" Nullable="false" />
-          <Property Name="Log" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Log" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="LogDate" Type="DateTime" Precision="3" />
           <Property Name="LogUserID" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="HostName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
@@ -17023,6 +17059,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="C1CCharacteristicID" Type="Guid" />
           <Property Name="C1CNomenclatureID" Type="Guid" />
         </EntityType>
+        <Association Name="FK_ProductionTaskStates_ProductionTaskStates">
+          <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates" Multiplicity="1" />
+          <End Type="GammaModel.ProductionTaskStates" Role="ProductionTaskStates1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ProductionTaskStates">
+              <PropertyRef Name="ProductionTaskStateID" />
+            </Principal>
+            <Dependent Role="ProductionTaskStates1">
+              <PropertyRef Name="ProductionTaskStateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17154,6 +17202,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CRejectionReasons">
             <EntityTypeMapping TypeName="GammaModel.C1CRejectionReasons">
               <MappingFragment StoreEntitySet="1CRejectionReasons">
+                <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
                 <ScalarProperty Name="C1CNewRejectionReasonID" ColumnName="1CNewRejectionReasonID" />
                 <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
                 <ScalarProperty Name="IsMarked" ColumnName="IsMarked" />
@@ -17608,6 +17657,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CSpecifications">
             <EntityTypeMapping TypeName="GammaModel.C1CSpecifications">
               <MappingFragment StoreEntitySet="1CSpecifications">
+                <ScalarProperty Name="ValidFrom" ColumnName="ValidFrom" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
                 <ScalarProperty Name="C1CCode" ColumnName="1CCode" />
@@ -17705,6 +17755,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="ProductionTasks">
             <EntityTypeMapping TypeName="GammaModel.ProductionTasks">
               <MappingFragment StoreEntitySet="ProductionTasks">
+                <ScalarProperty Name="ProductionTaskStateID" ColumnName="ProductionTaskStateID" />
                 <ScalarProperty Name="ActualEndDate" ColumnName="ActualEndDate" />
                 <ScalarProperty Name="ActualStartDate" ColumnName="ActualStartDate" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
@@ -18848,6 +18899,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CMainSpecifications">
             <EntityTypeMapping TypeName="GammaModel.C1CMainSpecifications">
               <MappingFragment StoreEntitySet="1CMainSpecifications">
+                <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
                 <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
                 <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
@@ -20324,6 +20376,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateNewTaskBatchOneBased" FunctionName="GammaDBModel.CreateNewTaskBatchOneBased" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

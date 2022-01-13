@@ -1680,5 +1680,14 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchDowntimes_Result>("GetBatchDowntimes", productionTaskBatchIDParameter, intervalIDParameter);
         }
+    
+        public virtual ObjectResult<Nullable<System.Guid>> CreateNewTaskBatchOneBased(Nullable<System.Guid> productionTaskBatchID)
+        {
+            var productionTaskBatchIDParameter = productionTaskBatchID.HasValue ?
+                new ObjectParameter("ProductionTaskBatchID", productionTaskBatchID) :
+                new ObjectParameter("ProductionTaskBatchID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateNewTaskBatchOneBased", productionTaskBatchIDParameter);
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace Gamma.Entities
         public string Description { get; set; }
         public string FullDescription { get; set; }
         public Nullable<System.Guid> C1CNewRejectionReasonID { get; set; }
+        public string C1CCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocChangeStateProducts> DocChangeStateProducts { get; set; }

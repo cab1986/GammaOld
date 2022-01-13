@@ -29,10 +29,11 @@ namespace Gamma.ViewModels
             ProductionTaskStates = new ProductionTaskStates().ToDictionary();
             ProductionTaskStateID = 1;
             //GetProductionTasks();
-            EditItemCommand = new DelegateCommand(EditItem);
+            EditItemCommand = new DelegateCommand(EditItem, SelectedProductionTaskSGI != null);
             NewItemCommand = new DelegateCommand(NewProductionTask);
             RefreshCommand = new DelegateCommand(GetProductionTasks);
             DeleteItemCommand = new DelegateCommand(DeleteProductionTask, () => false);
+            CopyProductionTaskCommand = new DelegateCommand(CopyProductionTask);
         }
 
         public Dictionary<byte, string> ProductionTaskStates { get; set; }
@@ -94,6 +95,24 @@ namespace Gamma.ViewModels
             MessageManager.NewProductionTask(BatchKinds.SGI);
         }
 
+        private void CopyProductionTask()
+        {
+            //Create new Task from selected Task
+            using (var gammaBase = DB.GammaDb)
+            {
+                Guid? newProductionTaskBatchID = gammaBase.CreateNewTaskBatchOneBased(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
+
+                if (newProductionTaskBatchID != null && newProductionTaskBatchID != Guid.Empty)
+                    MessageManager.OpenProductionTask(BatchKinds.SGI, (Guid)newProductionTaskBatchID, WorkSession.PlaceGroup == PlaceGroup.Other);
+                else
+                {
+                    string errorText = "Ошибка при копировании задания. Новое задание не создано.";
+                    MessageBox.Show(errorText,"Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
+                    DB.AddLogMessageError(errorText);
+                }
+            }
+        }
+
         private ObservableCollection<ProductionTaskSGI> _productionTasks;
         public ObservableCollection<ProductionTaskSGI> ProductionTasks
         {
@@ -130,6 +149,9 @@ namespace Gamma.ViewModels
             get;
             set;
         }
+
+        public DelegateCommand CopyProductionTaskCommand { get; private set; }
+
         public ProductionTaskSGI SelectedProductionTaskSGI
         {
             get

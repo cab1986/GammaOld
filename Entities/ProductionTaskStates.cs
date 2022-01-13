@@ -26,5 +26,7 @@ namespace Gamma.Entities
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskBatches> ProductionTaskBatches { get; set; }
+        public virtual ProductionTaskStates ProductionTaskStates1 { get; set; }
+        public virtual ProductionTaskStates ProductionTaskStates2 { get; set; }
     }
 }
