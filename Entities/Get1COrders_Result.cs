@@ -53,5 +53,6 @@ namespace Gamma.Entities
         public string OutPlaceShortName { get; set; }
         public Nullable<System.Guid> C1CWarehouseUnloadID { get; set; }
         public Nullable<System.Guid> C1CWarehouseLoadID { get; set; }
+        public Nullable<System.DateTime> LastUploadedTo1C { get; set; }
     }
 }

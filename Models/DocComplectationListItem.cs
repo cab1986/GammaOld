@@ -27,8 +27,10 @@ namespace Gamma.Models
 
         public string ShiftID { get; set; }
 
+        public DateTime? LastUploadedTo1C { get; set; }
+
     #endregion
-}
+    }
 
 	public class ComplectationNomenclatureItem
 	{

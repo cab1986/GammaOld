@@ -14,5 +14,6 @@ namespace Gamma
         public string Person { get; set; }
         public string Number { get; set; }
         public bool IsConfirmed { get; set; }
+        public DateTime? LastUploadedTo1C { get; set; }
     }
 }

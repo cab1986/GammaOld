@@ -106,7 +106,8 @@ namespace Gamma.ViewModels
                 User = d.Users.Name,
                 Person = d.Persons.Name,
                 Number = d.Number,
-                IsConfirmed = d.IsConfirmed
+                IsConfirmed = d.IsConfirmed,
+                LastUploadedTo1C = d.LastUploadedTo1C
             }
             ).Take(120));
         }

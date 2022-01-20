@@ -6278,6 +6278,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <Property Name="OutPlaceShortName" Type="varchar" MaxLength="10" />
                 <Property Name="1CWarehouseUnloadID" Type="uniqueidentifier" />
                 <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
+                <Property Name="LastUploadedTo1C" Type="datetime" Nullable="true"/>
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -16390,6 +16391,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="OutPlaceShortName" Nullable="true" MaxLength="10" />
           <Property Type="Guid" Name="C1CWarehouseUnloadID" Nullable="true" />
           <Property Type="Guid" Name="C1CWarehouseLoadID" Nullable="true" />
+          <Property Type="DateTime" Name="LastUploadedTo1C" Nullable="true" Precision="23" />
         </ComplexType>
         <Association Name="FK_Users_Places">
           <End Type="GammaModel.Places" Role="Places" Multiplicity="0..1" />
@@ -20161,6 +20163,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="OutPlaceShortName" ColumnName="OutPlaceShortName" />
                 <ScalarProperty Name="C1CWarehouseUnloadID" ColumnName="1CWarehouseUnloadID" />
                 <ScalarProperty Name="C1CWarehouseLoadID" ColumnName="1CWarehouseLoadID" />
+                <ScalarProperty Name="LastUploadedTo1C" ColumnName="LastUploadedTo1C" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

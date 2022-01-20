@@ -156,7 +156,8 @@ namespace Gamma.ViewModels
                                 OutDate = d.OutDate,
                                 Warehouse = d.Warehouse ?? "",
                                 IsConfirmed = d.IsShipped,
-                                IsReturned = d.IsReturned
+                                IsReturned = d.IsReturned,
+                                LastUploadedTo1C = d.LastUploadedTo1C
                             }));
                         break;
                     case 1:
@@ -180,7 +181,8 @@ namespace Gamma.ViewModels
                                 OutDate = d.OutDate,
                                 Warehouse = d.Warehouse ?? "",
                                 IsConfirmed = d.IsShipped,
-                                IsReturned = d.IsReturned
+                                IsReturned = d.IsReturned,
+                                LastUploadedTo1C = d.LastUploadedTo1C
                             }));
                         break;
                     case 2:
@@ -224,7 +226,8 @@ namespace Gamma.ViewModels
                                         OutDate = d.OutDate,
                                         Warehouse = d.Warehouse ?? "",
                                         IsConfirmed = d.IsShipped,
-                                        IsReturned = d.IsReturned
+                                        IsReturned = d.IsReturned,
+                                        LastUploadedTo1C = d.LastUploadedTo1C
                                     }));
                             break;
                         }

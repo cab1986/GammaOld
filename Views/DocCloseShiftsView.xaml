@@ -48,6 +48,11 @@
                 <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True"/>
                 <dxg:GridColumn Header="Номер" FieldName="Number" Width="210"/>
                 <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" Width="100"/>
+                <dxg:GridColumn Header="Выгружен в 1С" FieldName="LastUploadedTo1C" Width="130">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="G" MaskUseAsDisplayFormat="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
                 <dxg:GridColumn Header="Логин" FieldName="User" Width="140" />
                 <dxg:GridColumn Header="Пользователь" FieldName="Person" Width="140"/>
             </dxg:GridControl.Columns>

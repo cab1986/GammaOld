@@ -151,7 +151,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
                                 IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
                                 UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
-                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : ""
+                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : "",
+                                LastUploadedTo1C = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.LastUploadedTo1C : null
                             }).ToList();
                         else
                             DocComplectations = gammaBase.DocComplectation
@@ -167,7 +168,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = dc.Docs.IsConfirmed,
                                 IsReturned = dc.IsReturned ?? false,
                                 UserName = dc.Docs.PersonID != null ? dc.Docs.Persons.Name : dc.Docs.Users.Login,
-                                ShiftID = dc.Docs.ShiftID.ToString()
+                                ShiftID = dc.Docs.ShiftID.ToString(),
+                                LastUploadedTo1C = dc.Docs.LastUploadedTo1C
                             }).ToList();
                         break;
 					case 1:
@@ -188,7 +190,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
                                 IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
                                 UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
-                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : ""
+                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : "",
+                                LastUploadedTo1C = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.LastUploadedTo1C : null
                             }).ToList();
                         else
                             DocComplectations = gammaBase.DocComplectation
@@ -204,7 +207,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = dc.Docs.IsConfirmed,
                                 IsReturned = dc.IsReturned ?? false,
                                 UserName = dc.Docs.PersonID != null ? dc.Docs.Persons.Name : dc.Docs.Users.Login,
-                                ShiftID = dc.Docs.ShiftID.ToString()
+                                ShiftID = dc.Docs.ShiftID.ToString(),
+                                LastUploadedTo1C = dc.Docs.LastUploadedTo1C
                             }).ToList();
                         break;
 					case 2:
@@ -227,7 +231,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.IsConfirmed : false,
                                 IsReturned = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().IsReturned ?? false) : false,
                                 UserName = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.PersonID != null ? dc.DocComplectation.FirstOrDefault().Docs.Persons.Name : dc.DocComplectation.FirstOrDefault().Docs.Users.Login : "",
-                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : ""
+                                ShiftID = dc.DocComplectation.Any() ? (dc.DocComplectation.FirstOrDefault().Docs.ShiftID == 0 ? "" : dc.DocComplectation.FirstOrDefault().Docs.ShiftID.ToString()) : "",
+                                LastUploadedTo1C = dc.DocComplectation.Any() ? dc.DocComplectation.FirstOrDefault().Docs.LastUploadedTo1C : null
                             }).ToList();
                         else
                             DocComplectations = gammaBase.DocComplectation
@@ -247,7 +252,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = dc.Docs.IsConfirmed,
                                 IsReturned = dc.IsReturned ?? false,
                                 UserName = dc.Docs.PersonID != null ? dc.Docs.Persons.Name : dc.Docs.Users.Login,
-                                ShiftID = dc.Docs.ShiftID.ToString()
+                                ShiftID = dc.Docs.ShiftID.ToString(),
+                                LastUploadedTo1C = dc.Docs.LastUploadedTo1C
                             }).ToList();
                         break;
 				}

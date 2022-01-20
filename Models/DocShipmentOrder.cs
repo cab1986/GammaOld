@@ -20,6 +20,7 @@ namespace Gamma.Models
         public string Warehouse { get; set; }
         public bool IsConfirmed { get; set; }
         public bool IsReturned { get; set; }
+        public DateTime? LastUploadedTo1C { get; set; }
 
         public ObservableCollection<DocNomenclatureItem> DocShipmentOrderGoods { get; set; }
     }

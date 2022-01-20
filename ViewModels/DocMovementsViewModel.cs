@@ -101,7 +101,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = d.Docs.IsConfirmed,
                                 Person = d.Docs.Persons.Name,
                                 ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name
+                                PlacePerson = d.Docs.Persons.Places.Name,
+                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
                             }).ToList();
                         break;
                     case 1:
@@ -117,7 +118,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = d.Docs.IsConfirmed,
                                 Person = d.Docs.Persons.Name,
                                 ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name
+                                PlacePerson = d.Docs.Persons.Places.Name,
+                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
                             }).ToList();
                         break;
                     case 2:
@@ -134,7 +136,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = d.Docs.IsConfirmed,
                                 Person = d.Docs.Persons.Name,
                                 ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name
+                                PlacePerson = d.Docs.Persons.Places.Name,
+                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
                             }).ToList();
                         break;
                     case 3:
@@ -160,7 +163,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = d.Docs.IsConfirmed,
                                 Person = d.Docs.Persons.Name,
                                 ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name
+                                PlacePerson = d.Docs.Persons.Places.Name,
+                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
                             }).ToList();
                             break;
                         }

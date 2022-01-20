@@ -17,6 +17,7 @@ namespace Gamma.Models
         public bool IsConfirmed { get; set; }
         public string Person { get; set; }
         public string PlacePerson { get; set; }
+        public DateTime? LastUploadedTo1C { get; set; }
 
         private ObservableCollection<DocNomenclatureItem> _nomenclatureItems;
 
