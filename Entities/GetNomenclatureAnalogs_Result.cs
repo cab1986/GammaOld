@@ -10,9 +10,8 @@
 namespace Gamma.Entities
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class C1CNomenclatureAnalogs
+    public partial class GetNomenclatureAnalogs_Result
     {
         public System.Guid ID { get; set; }
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
@@ -22,22 +21,17 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1COutputNomenclatureID { get; set; }
         public Nullable<System.Guid> C1COutputCharacteristicID { get; set; }
         public Nullable<System.Guid> C1CSpecificationID { get; set; }
-        public Nullable<decimal> Priority { get; set; }
         public Nullable<System.Guid> C1CMeasureUnitID { get; set; }
         public Nullable<decimal> Amount { get; set; }
         public Nullable<System.Guid> C1CMeasureUnitAnalogID { get; set; }
         public Nullable<decimal> AmountAnalog { get; set; }
+        public Nullable<decimal> Priority { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
-    
-        public virtual C1CSpecifications C1CSpecifications { get; set; }
-        public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }
-        public virtual C1CMeasureUnits C1CAnalogMeasureUnits { get; set; }
-        public virtual C1CCharacteristics C1CCharacteristics { get; set; }
-        public virtual C1CCharacteristics C1CCharacteristics1 { get; set; }
-        public virtual C1CCharacteristics C1CCharacteristics2 { get; set; }
-        public virtual C1CNomenclature C1CNomenclature { get; set; }
-        public virtual C1CNomenclature C1CAnalogNomenclature { get; set; }
-        public virtual C1CNomenclature C1CNomenclature2 { get; set; }
+        public string NomenclatureName { get; set; }
+        public string NomenclatureAnalogName { get; set; }
+        public Nullable<bool> NomenclatureAnalogIsArchive { get; set; }
+        public string MeasureUnitName { get; set; }
+        public string MeasureUnitAnalogName { get; set; }
     }
 }

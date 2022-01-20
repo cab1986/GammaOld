@@ -250,6 +250,8 @@
           <Property Name="1CDeleted" Type="bit" />
           <Property Name="1COldNomenclatureID" Type="uniqueidentifier" />
           <Property Name="1CQualityID" Type="uniqueidentifier" />
+          <Property Name="1CMeasureUnitVolume" Type="uniqueidentifier" />
+          <Property Name="MeasureUnitVolumeCoefficient" Type="decimal" Precision="10" Scale="5" />
         </EntityType>
         <EntityType Name="1CNomenclatureAnalogs">
           <Key>
@@ -268,6 +270,8 @@
           <Property Name="1CMeasureUnitAnalogID" Type="uniqueidentifier" />
           <Property Name="AmountAnalog" Type="decimal" Precision="15" Scale="3" />
           <Property Name="Priority" Type="decimal" Precision="5" Scale="0" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
         </EntityType>
         <EntityType Name="1CNomenclatureGroupNomenclature">
           <Key>
@@ -2864,6 +2868,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Principal>
             <Dependent Role="1CNomenclatureGroups">
               <PropertyRef Name="1CMeasureUnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_1CNomenclature-MeasureUnitsVolume_1CMeasureUnits">
+          <End Role="1CMeasureUnits" Type="Self.1CMeasureUnits" Multiplicity="0..1" />
+          <End Role="1CNomenclature" Type="Self.1CNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CMeasureUnits">
+              <PropertyRef Name="1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="1CNomenclature">
+              <PropertyRef Name="1CMeasureUnitVolume" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6407,6 +6423,35 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
         <Function Name="GetMaterialNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MaterialTypeID" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetNomenclatureAnalogs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Date" Type="datetime" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
+                <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
+                <Property Name="1CNomenclatureAnalogID" Type="uniqueidentifier" />
+                <Property Name="1CCharacteristicAnalogID" Type="uniqueidentifier" />
+                <Property Name="1COutputNomenclatureID" Type="uniqueidentifier" />
+                <Property Name="1COutputCharacteristicID" Type="uniqueidentifier" />
+                <Property Name="1CSpecificationID" Type="uniqueidentifier" />
+                <Property Name="1CMeasureUnitID" Type="uniqueidentifier" />
+                <Property Name="Amount" Type="decimal" Precision="15" Scale="3" />
+                <Property Name="1CMeasureUnitAnalogID" Type="uniqueidentifier" />
+                <Property Name="AmountAnalog" Type="decimal" Precision="15" Scale="3" />
+                <Property Name="Priority" Type="decimal" Precision="5" Scale="0" />
+                <Property Name="StartDate" Type="datetime" />
+                <Property Name="EndDate" Type="datetime" />
+                <Property Name="NomenclatureName" Type="varchar" MaxLength="1000" />
+                <Property Name="NomenclatureAnalogName" Type="varchar" MaxLength="1000" />
+                <Property Name="NomenclatureAnalogIsArchive" Type="bit" />
+                <Property Name="MeasureUnitName" Type="varchar" MaxLength="50" />
+                <Property Name="MeasureUnitAnalogName" Type="varchar" MaxLength="50" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="GetNomenclatureFolders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PlaceGroupID" Type="int" Mode="In" />
         </Function>
@@ -7327,6 +7372,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <AssociationSet Name="FK_1CNomenclatureGroups_1CMeasureUnits" Association="Self.FK_1CNomenclatureGroups_1CMeasureUnits">
             <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
             <End Role="1CNomenclatureGroups" EntitySet="1CNomenclatureGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_1CNomenclature-MeasureUnitsVolume_1CMeasureUnits" Association="Self.FK_1CNomenclature-MeasureUnitsVolume_1CMeasureUnits">
+            <End Role="1CMeasureUnits" EntitySet="1CMeasureUnits" />
+            <End Role="1CNomenclature" EntitySet="1CNomenclature" />
           </AssociationSet>
           <AssociationSet Name="FK_1CNomenclatureProperties_1CNomenclature" Association="Self.FK_1CNomenclatureProperties_1CNomenclature">
             <End Role="1CNomenclature" EntitySet="1CNomenclature" />
@@ -8411,6 +8460,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductionTaskConvertingSamples" Relationship="GammaModel.FK_ProductionTaskConvertingSamples_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="ProductionTaskConvertingSamples" />
           <NavigationProperty Name="DocMaterialProductions" Relationship="GammaModel.FK_DocMaterialProductions_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocMaterialProductions" />
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="DocCloseShiftAuxiliaryMaterials" />
+          <NavigationProperty Name="C1CNomenclature2" Relationship="GammaModel.FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits" FromRole="C1CMeasureUnits" ToRole="C1CNomenclature" />
         </EntityType>
         <EntityType Name="C1CNomenclatureGroups">
           <Key>
@@ -10811,7 +10861,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductionTaskStates1" EntitySet="ProductionTaskStates" />
           </AssociationSet>
           <FunctionImport Name="CreateNewTaskBatchOneBased" ReturnType="Collection(Guid)">
-            <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+          <Parameter Name="ProductionTaskBatchID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <AssociationSet Name="FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits" Association="GammaModel.FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits">
+            <End Role="C1CMeasureUnits" EntitySet="C1CMeasureUnits" />
+            <End Role="C1CNomenclature" EntitySet="C1CNomenclature" />
+          </AssociationSet>
+          <FunctionImport Name="GetNomenclatureAnalogs" IsComposable="true" ReturnType="Collection(GammaModel.GetNomenclatureAnalogs_Result)">
+          <Parameter Name="Date" Mode="In" Type="DateTime" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
@@ -10928,6 +10985,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Boolean" Name="IsActual" Nullable="false" />
         </ComplexType>
         <ComplexType Name="GetProductionTaskByBatchID_Result">
+          <Property Type="String" Name="Number" Nullable="true" MaxLength="50" />
           <Property Type="DateTime" Name="ActualStartDate" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="ActualEndDate" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="DateBegin" Nullable="true" Precision="23" />
@@ -11074,6 +11132,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CNomenclature" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature" FromRole="C1CNomenclatureAnalogs" ToRole="C1CNomenclature" />
           <NavigationProperty Name="C1CAnalogNomenclature" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature1" FromRole="C1CNomenclatureAnalogs" ToRole="C1CNomenclature" />
           <NavigationProperty Name="C1CNomenclature2" Relationship="GammaModel.FK_1CNomenclatureAnalogs_1CNomenclature2" FromRole="C1CNomenclatureAnalogs" ToRole="C1CNomenclature" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_1CNomenclatureAnalogs_1CSpecifications">
           <End Type="GammaModel.C1CSpecifications" Role="C1CSpecifications" Multiplicity="0..1" />
@@ -14000,6 +14060,9 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="C1COldNomenclatureID" Type="Guid" />
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="DocCloseShiftAuxiliaryMaterials" />
           <NavigationProperty Name="PlaceAuxiliaryMaterials" Relationship="GammaModel.FK_PlaceAuxiliaryMaterials_1CNomenclature" FromRole="C1CNomenclature" ToRole="PlaceAuxiliaryMaterials" />
+          <Property Name="C1CMeasureUnitVolume" Type="Guid" />
+          <Property Name="MeasureUnitVolumeCoefficient" Type="Decimal" Precision="10" Scale="5" />
+          <NavigationProperty Name="C1CMeasureUnits2" Relationship="GammaModel.FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits" FromRole="C1CNomenclature" ToRole="C1CMeasureUnits" />
         </EntityType>
         <Association Name="FK_1CCharacteristics_1CNomenclature">
           <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="1" />
@@ -16202,6 +16265,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="QuantitySendAtEnd" Type="Decimal" Precision="38" Scale="5" />
         </EntityType>
         <ComplexType Name="FillDocCloseShiftMaterialsDismiss_Result">
+          <Property Name="DocDate" Type="DateTime" Nullable="false" Precision="23" />
           <Property Name="DocNumberDate" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
           <Property Name="DocID" Type="Guid" Nullable="false" />
           <Property Name="PlaceID" Type="Int32" Nullable="true" />
@@ -17071,6 +17135,40 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits">
+          <End Type="GammaModel.C1CMeasureUnits" Role="C1CMeasureUnits" Multiplicity="0..1" />
+          <End Type="GammaModel.C1CNomenclature" Role="C1CNomenclature" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CMeasureUnits">
+              <PropertyRef Name="C1CMeasureUnitID" />
+            </Principal>
+            <Dependent Role="C1CNomenclature">
+              <PropertyRef Name="C1CMeasureUnitVolume" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetNomenclatureAnalogs_Result">
+          <Property Type="Guid" Name="ID" Nullable="false" />
+          <Property Type="Guid" Name="C1CNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicID" Nullable="true" />
+          <Property Type="Guid" Name="C1CNomenclatureAnalogID" Nullable="true" />
+          <Property Type="Guid" Name="C1CCharacteristicAnalogID" Nullable="true" />
+          <Property Type="Guid" Name="C1COutputNomenclatureID" Nullable="true" />
+          <Property Type="Guid" Name="C1COutputCharacteristicID" Nullable="true" />
+          <Property Type="Guid" Name="C1CSpecificationID" Nullable="true" />
+          <Property Type="Guid" Name="C1CMeasureUnitID" Nullable="true" />
+          <Property Type="Decimal" Name="Amount" Nullable="true" Precision="15" Scale="3" />
+          <Property Type="Guid" Name="C1CMeasureUnitAnalogID" Nullable="true" />
+          <Property Type="Decimal" Name="AmountAnalog" Nullable="true" Precision="15" Scale="3" />
+          <Property Type="Decimal" Name="Priority" Nullable="true" Precision="5" Scale="0" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="NomenclatureName" MaxLength="1000" />
+          <Property Type="String" Name="NomenclatureAnalogName" MaxLength="1000" />
+          <Property Type="Boolean" Name="NomenclatureAnalogIsArchive" Nullable="true" />
+          <Property Type="String" Name="MeasureUnitName" MaxLength="50" />
+          <Property Type="String" Name="MeasureUnitAnalogName" MaxLength="50" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -17582,6 +17680,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImportMapping FunctionImportName="GetProductionTaskByBatchID" FunctionName="GammaDBModel.GetProductionTaskByBatchID">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GammaModel.GetProductionTaskByBatchID_Result">
+                <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="ActualStartDate" ColumnName="ActualStartDate" />
                 <ScalarProperty Name="ActualEndDate" ColumnName="ActualEndDate" />
                 <ScalarProperty Name="DateBegin" ColumnName="DateBegin" />
@@ -17687,6 +17786,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CNomenclatureAnalogs">
             <EntityTypeMapping TypeName="GammaModel.C1CNomenclatureAnalogs">
               <MappingFragment StoreEntitySet="1CNomenclatureAnalogs">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
                 <ScalarProperty Name="AmountAnalog" ColumnName="AmountAnalog" />
                 <ScalarProperty Name="C1CMeasureUnitAnalogID" ColumnName="1CMeasureUnitAnalogID" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
@@ -18926,6 +19027,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CNomenclature">
             <EntityTypeMapping TypeName="GammaModel.C1CNomenclature">
               <MappingFragment StoreEntitySet="1CNomenclature">
+                <ScalarProperty Name="MeasureUnitVolumeCoefficient" ColumnName="MeasureUnitVolumeCoefficient" />
+                <ScalarProperty Name="C1CMeasureUnitVolume" ColumnName="1CMeasureUnitVolume" />
                 <ScalarProperty Name="C1COldNomenclatureID" ColumnName="1COldNomenclatureID" />
                 <ScalarProperty Name="C1CQualityID" ColumnName="1CQualityID" />
                 <ScalarProperty Name="C1CDeleted" ColumnName="1CDeleted" />
@@ -19965,6 +20068,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
                 <ScalarProperty Name="DocNumberDate" ColumnName="DocNumberDate" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -20377,6 +20481,32 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="CreateNewTaskBatchOneBased" FunctionName="GammaDBModel.CreateNewTaskBatchOneBased" />
+          <FunctionImportMapping FunctionImportName="GetNomenclatureAnalogs" FunctionName="GammaDBModel.GetNomenclatureAnalogs">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GammaModel.GetNomenclatureAnalogs_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+                <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
+                <ScalarProperty Name="C1CNomenclatureAnalogID" ColumnName="1CNomenclatureAnalogID" />
+                <ScalarProperty Name="C1CCharacteristicAnalogID" ColumnName="1CCharacteristicAnalogID" />
+                <ScalarProperty Name="C1COutputNomenclatureID" ColumnName="1COutputNomenclatureID" />
+                <ScalarProperty Name="C1COutputCharacteristicID" ColumnName="1COutputCharacteristicID" />
+                <ScalarProperty Name="C1CSpecificationID" ColumnName="1CSpecificationID" />
+                <ScalarProperty Name="C1CMeasureUnitID" ColumnName="1CMeasureUnitID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="C1CMeasureUnitAnalogID" ColumnName="1CMeasureUnitAnalogID" />
+                <ScalarProperty Name="AmountAnalog" ColumnName="AmountAnalog" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="NomenclatureName" ColumnName="NomenclatureName" />
+                <ScalarProperty Name="NomenclatureAnalogName" ColumnName="NomenclatureAnalogName" />
+                <ScalarProperty Name="NomenclatureAnalogIsArchive" ColumnName="NomenclatureAnalogIsArchive" />
+                <ScalarProperty Name="MeasureUnitName" ColumnName="MeasureUnitName" />
+                <ScalarProperty Name="MeasureUnitAnalogName" ColumnName="MeasureUnitAnalogName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

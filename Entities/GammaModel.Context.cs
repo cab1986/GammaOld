@@ -1689,5 +1689,15 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<System.Guid>>("CreateNewTaskBatchOneBased", productionTaskBatchIDParameter);
         }
+    
+        [DbFunction("GammaEntities", "GetNomenclatureAnalogs")]
+        public virtual IQueryable<GetNomenclatureAnalogs_Result> GetNomenclatureAnalogs(Nullable<System.DateTime> date)
+        {
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetNomenclatureAnalogs_Result>("[GammaEntities].[GetNomenclatureAnalogs](@Date)", dateParameter);
+        }
     }
 }

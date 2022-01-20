@@ -68,6 +68,8 @@ namespace Gamma.Entities
         public Nullable<bool> C1CDeleted { get; set; }
         public Nullable<System.Guid> C1CQualityID { get; set; }
         public Nullable<System.Guid> C1COldNomenclatureID { get; set; }
+        public Nullable<System.Guid> C1CMeasureUnitVolume { get; set; }
+        public Nullable<decimal> MeasureUnitVolumeCoefficient { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CCharacteristics> C1CCharacteristics { get; set; }
@@ -140,5 +142,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PlaceAuxiliaryMaterials> PlaceAuxiliaryMaterials { get; set; }
+        public virtual C1CMeasureUnits C1CMeasureUnits2 { get; set; }
     }
 }

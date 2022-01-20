@@ -62,7 +62,9 @@ namespace Gamma.ViewModels
                         CharacteristicID = wm.C1CCharacteristicID,
                         MeasureUnit = wm.C1CNomenclature.C1CMeasureUnitStorage.Name,
                         MeasureUnitID = wm.C1CNomenclature.C1CMeaureUnitStorage,
-                        DocWithdrawalMaterialID = wm.DocWithdrawalMaterialID
+                        DocWithdrawalMaterialID = wm.DocWithdrawalMaterialID,
+                        DocID = wm.DocID,
+                        DocDate = wm.Docs.Date
                     }));
                 var dW = gammaBase.DocWithdrawal.FirstOrDefault(dw => dw.DocID == DocId);
                 var docProductionIDs = dW?.DocProduction?.Select(x => x.DocID).ToList();

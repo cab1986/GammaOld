@@ -29,7 +29,10 @@ namespace Gamma.Models
         }
 
         private List<Guid> _productionProducts { get; set; }
-        
+
+        public DateTime? DocDate { get; set; }
+        public Guid DocID { get; set; }
+
         private void RefreshAvilableNomenclatures()
         {
             AvailableNomenclatures = new List<NomenclatureAnalog>();
@@ -41,7 +44,7 @@ namespace Gamma.Models
                 var nomenclatureInfo =
                     gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == NomenclatureID);
                 var characteristicInfo =
-                    gammaBase.C1CCharacteristics.Where(n => n.C1CNomenclatureID == NomenclatureID && (n.C1CCharacteristicID == CharacteristicID || CharacteristicID == null));
+                    gammaBase.C1CCharacteristics.Where(n => !(n.C1CDeleted ?? false) &&  n.C1CNomenclatureID == NomenclatureID && (n.C1CCharacteristicID == CharacteristicID || CharacteristicID == null));
                 if (characteristicInfo?.Count() > 0)
                 {
                     foreach (var item in characteristicInfo)
@@ -71,16 +74,16 @@ namespace Gamma.Models
                         IsMarked = nomenclatureInfo.IsArchive ?? false
                     });
                 }
-                /*
+                
                 var analogs =
-                gammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == NomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
+                gammaBase.GetNomenclatureAnalogs(DocDate).Where(a => a.C1CNomenclatureID == NomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
                     .Select(a => new
                     {
                         NomenclatureId = a.C1CNomenclatureAnalogID,
                         CharacteristicID = a.C1CCharacteristicAnalogID,
-                        NomenclatureName = gammaBase.C1CNomenclature.Where(x => x.C1CNomenclatureID == a.C1CNomenclatureAnalogID).Select(x => x.Name).FirstOrDefault() + gammaBase.C1CCharacteristics.Where(x => x.C1CCharacteristicID == a.C1CCharacteristicAnalogID).Select(x => " " + x.Name).FirstOrDefault(),
-                        IsMarked = a.C1CAnalogNomenclature.IsArchive ?? false,
-                        MeasureUnit = a.C1CAnalogMeasureUnits.Name,
+                        NomenclatureName = a.NomenclatureAnalogName,
+                        IsMarked = a.NomenclatureAnalogIsArchive ?? false,
+                        MeasureUnit = a.MeasureUnitAnalogName,
                         MeasureUnitID = a.C1CMeasureUnitAnalogID,
                         Coefficient = (a.AmountAnalog / a.Amount) ?? 0
                     }).Distinct()
@@ -100,7 +103,7 @@ namespace Gamma.Models
                             Coefficient = analog.Coefficient
                         });                
 
-                }*/
+                }
                 if (nomenclatureInfo.IsArchive ?? false)
                 {
                     var activeNomenclature = AvailableNomenclatures.FirstOrDefault(an => !an.IsMarked);
@@ -289,7 +292,7 @@ namespace Gamma.Models
                 }
                 if (AvailableProductionProducts == null || AvailableProductionProducts?.Count == 0)
                 {
-                    AvailableProductionProducts = DB.GammaDb.C1CCharacteristics.Where(x => _productionProducts.Contains(x.C1CCharacteristicID)).Select(x => new ProductionProducts()
+                    AvailableProductionProducts = DB.GammaDb.C1CCharacteristics.Where(x => (x.C1CDeleted ?? false) &&  _productionProducts.Contains(x.C1CCharacteristicID)).Select(x => new ProductionProducts()
                     {
                         NomenclatureID = x.C1CNomenclatureID,
                         CharacteristicID = x.C1CCharacteristicID,

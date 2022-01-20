@@ -446,15 +446,17 @@ namespace Gamma.Models
             DocMaterialProductionCompositionCalculations.Remove(n);
         }
        
-        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact)//, List<Guid> productionProductCharacteristicIDs)
+        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact, Dictionary<Guid, String> measure = null)
         {
             //В сырье не учитываем характеристики
             //var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
             var nomenclatureName = nomenclatureInfo.Name;// + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
             var parentID = nomenclatureInfo.C1CParentID;
             var parentName = parentID == null ? "" : GammaBase.C1CNomenclature.Where(n => n.C1CNomenclatureID == nomenclatureInfo.C1CParentID).FirstOrDefault().Name;
-            var measureUnitID = (parentName == "Целлюлоза" || parentName == "Брак и Тех. Отходы" || parentName == "Макулатура") && nomenclatureInfo.C1CMeasureUnitStorage.Name != "т" ? GammaBase.C1CMeasureUnits.Where(m => m.Name == "т").FirstOrDefault().C1CMeasureUnitID : nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID;
+            var c1CMeasureUnitID = measure?.OrderBy(m => m.Key).FirstOrDefault().Key ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID;
+            var measureUnitID = (parentName == "Целлюлоза" || parentName == "Брак и Тех. Отходы" || parentName == "Макулатура") && nomenclatureInfo.C1CMeasureUnitStorage.Name != "т" ? GammaBase.C1CMeasureUnits.Where(m => m.Name == "т").FirstOrDefault().C1CMeasureUnitID : c1CMeasureUnitID;
             var measureUnitName = GammaBase.C1CMeasureUnits.Where(m => m.C1CMeasureUnitID == measureUnitID).FirstOrDefault().Name;
+            
             if (DocMaterialProductionCompositionCalculations.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
             {
                 var standardQuantity = DocMaterialProductionCompositionCalculations.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == nomenclatureInfo.C1CNomenclatureID )).FirstOrDefault();

@@ -13,6 +13,7 @@ namespace Gamma.Entities
     
     public partial class FillDocCloseShiftMaterialsDismiss_Result
     {
+        public DateTime DocDate { get; set; }
         public string DocNumberDate { get; set; }
         public System.Guid DocID { get; set; }
         public Nullable<int> PlaceID { get; set; }

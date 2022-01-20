@@ -36,6 +36,7 @@ namespace Gamma.ViewModels
 //           IsConfirmed = ProductionTask.ProductionTaskStateID == (byte)ProductionTaskStates.InProduction;
             if (productionTask != null)
             {
+                Number = productionTask.Number;
                 DateBegin = productionTask.DateBegin;
                 DateEnd = productionTask.DateEnd;
                 TaskQuantity = productionTask.Quantity;
@@ -237,6 +238,9 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("CuttingFormats");
             }
         }
+
+        public string Number { get; set; }
+
         private DateTime? _dateBegin;
         [Required(ErrorMessage = @"Необходимо указать дату начала")]
         [UIAuth(UIAuthLevel.ReadOnly)]

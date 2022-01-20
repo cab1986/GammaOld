@@ -82,6 +82,7 @@ namespace Gamma.ViewModels
                     CharacteristicID = productionTask.C1CCharacteristicID;
                     PlaceID = productionTask.PlaceID;
                     //после NomenclatureID, чтобы обновился список Places
+                    Number = productionTask.Number;
                     DateBegin = productionTask.DateBegin;
                     DateEnd = productionTask.DateEnd;
                     Quantity = (int)productionTask.Quantity;
@@ -715,6 +716,9 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && !IsReadOnly;
         }
+
+        public string Number { get; set; }
+
         private DateTime? _dateBegin;
         /// <summary>
         /// Дата начала выполнения задания

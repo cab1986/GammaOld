@@ -16,6 +16,8 @@ using System.Collections;
 using System.Windows.Data;
 using System.Windows.Markup;
 using DevExpress.Xpf.Grid;
+using Gamma.DialogViewModels;
+using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -311,6 +313,11 @@ namespace Gamma.ViewModels
             DB.AddLogMessageInformation("Delete material DocMaterialProductionGrid @CloseDate='" + CloseDate + "', @PlaceID=" + PlaceID + ", @ShiftID=" + ShiftID + ", @SelectedDocMaterialProduction.NomenclatureID='" + SelectedDocMaterialProduction?.NomenclatureID+"'");
         }
 
+        private void DebugFunc()
+        {
+            System.Diagnostics.Debug.Print("Кол-во задано");
+        }
+
         private void AddDocMaterialProduction()
         {
             Messenger.Default.Register<Nomenclature1CMessage>(this, SetMaterialNomenclature);
@@ -320,13 +327,44 @@ namespace Gamma.ViewModels
         private void SetMaterialNomenclature(Nomenclature1CMessage msg)
         {
             Messenger.Default.Unregister<Nomenclature1CMessage>(this);
-            var isWithdrawalByFact = MessageBox.Show("Материал учитывается по факту?", "Вопрос", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+
+            var model = new ChooseMeasureUnitDialogModel(msg.Nomenclature1CID);
+            var okCommand = new UICommand()
+            {
+                Caption = "OK",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
+            x => DebugFunc(),
+            x => model.WithdrawalTypeID != null || model.MeasureUnitID != null),
+            };
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("ChooseMeasureUnitDialog");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                title: "Укажите параметры",
+                viewModel: model);
+            if (result != okCommand) return;
+            if (model.WithdrawalTypeID == null || model.MeasureUnitID == null)// || model.Quantity <= 0)
+            {
+                MessageBox.Show("Не удалось определить параметры");
+                return;
+            }
+
             using (var gammaBase = DB.GammaDb)
             {
                 var nomenclatureInfo =
                 gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
                     .First(n => n.C1CNomenclatureID == msg.Nomenclature1CID);
-                DocMaterialCompositionCalculations?.MaterialNomenclatureChanged(nomenclatureInfo, isWithdrawalByFact);
+                var m = new Dictionary<Guid, String>();
+                m.Add(model.MeasureUnitID, model.MeasureUnitName);
+                DocMaterialCompositionCalculations?.MaterialNomenclatureChanged(nomenclatureInfo, model.WithdrawalTypeID == 1, m);
             }
             DB.AddLogMessageInformation("Add material DocMaterialProductionGrid @CloseDate='" + CloseDate + "', @PlaceID=" + PlaceID + ", @ShiftID=" + ShiftID + ", @msg.Nomenclature1CID='"+msg?.Nomenclature1CID+"'");
         }

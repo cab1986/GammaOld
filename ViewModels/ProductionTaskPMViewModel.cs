@@ -87,6 +87,7 @@ namespace Gamma.ViewModels
             if (productionTask != null)
             {
                 PlaceID = productionTask.PlaceID ?? PlaceID;
+                Number = productionTask.Number;
                 DateBegin = productionTask.DateBegin;
                 DateEnd = productionTask.DateEnd;
                 TaskQuantity = productionTask.Quantity;
@@ -124,6 +125,9 @@ namespace Gamma.ViewModels
         {
             return base.CanChooseNomenclature() && !IsReadOnly;
         }
+
+        public string Number { get; set; }
+
         private DateTime? _dateBegin;
         [Required(ErrorMessage=@"Необходимо указать дату начала")]
         [UIAuth(UIAuthLevel.ReadOnly)]

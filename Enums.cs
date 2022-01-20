@@ -259,4 +259,12 @@ namespace Gamma
         [Description("Сообщение об ошибке")]
         Error
     }
+
+    public enum WithdrawalTypes
+    {
+        [Description("По норме")]
+        WithdrawalByFact,
+        [Description("По факту")]
+        WithdrawalByNormal
+    }
 }

@@ -273,7 +273,7 @@ namespace Gamma.Models
         }
 
 
-        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact)//, List<Guid> productionProductCharacteristicIDs)
+        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact, Dictionary<Guid, String> measure = null)
         {
             var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
             var nomenclatureName = nomenclatureInfo.Name + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
@@ -283,14 +283,15 @@ namespace Gamma.Models
             if (Materials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
             {
                 var standardQuantity = Materials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == nomenclatureInfo.C1CNomenclatureID && ((n.CharacteristicID == null && characteristicID == null) || n.CharacteristicID == characteristicID))).FirstOrDefault();
+                var measureUnitName = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : measure?.OrderBy(m => m.Key).FirstOrDefault().Key != null ? measure?.OrderBy(m => m.Key).FirstOrDefault().Value : nomenclatureInfo.C1CMeasureUnitStorage.Name;
                 Materials.Add(new DocMaterialProductionDirectCalculationItem
                 {
                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
                     CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
-                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? measure?.OrderBy(m => m.Key).FirstOrDefault().Key ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,//standardQuantity?.MeasureUnitID ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                    MeasureUnit = (measureUnitName == "т" || measureUnitName == "т.") ? "кг  " : measureUnitName,//standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : nomenclatureInfo.C1CMeasureUnitStorage.Name,
                     DocMaterialProductionItemID = SqlGuidUtil.NewSequentialid(),
                     WithdrawByFact = isWithdrawalByFact,
                     NomenclatureKindID = nomenclatureInfo.NomenclatureKindID,

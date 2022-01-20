@@ -44,6 +44,9 @@
                 <dxlc:LayoutControl Orientation="Vertical">
                     <dxlc:LayoutGroup Header="LayoutGroup" View="Group" Orientation="Horizontal">
                         <dxlc:LayoutGroup Header="План" Orientation="Horizontal">
+                            <dxlc:LayoutItem Label="Номер" LabelPosition="Top" Width="100">
+                                <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Плановое начало" LabelPosition="Top" Width="100">
                                 <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}"/>
                             </dxlc:LayoutItem>

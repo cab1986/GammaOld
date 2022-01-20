@@ -38,6 +38,8 @@ namespace Gamma.Models
         }
 
         public string DocNumberDate { get; set; }
+        public DateTime? DocDate { get; set; }
+
         private Guid _docID { get; set; }
         public Guid DocID
         {
@@ -121,14 +123,14 @@ namespace Gamma.Models
                 }
 
                 var analogs =
-                gammaBase.C1CNomenclatureAnalogs.Where(a => a.C1CNomenclatureID == _nomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
+                gammaBase.GetNomenclatureAnalogs(DocDate).Where(a => a.C1CNomenclatureID == _nomenclatureID && (a.C1CCharacteristicID == CharacteristicID || CharacteristicID == null))
                     .Select(a => new
                     {
                         NomenclatureId = a.C1CNomenclatureAnalogID,
                         CharacteristicID = a.C1CCharacteristicAnalogID,
-                        NomenclatureName = gammaBase.C1CNomenclature.Where(x => x.C1CNomenclatureID == a.C1CNomenclatureAnalogID).Select(x => x.Name).FirstOrDefault() + gammaBase.C1CCharacteristics.Where(x => x.C1CCharacteristicID == a.C1CCharacteristicAnalogID).Select(x => " " + x.Name).FirstOrDefault(),
-                        IsMarked = a.C1CAnalogNomenclature.IsArchive ?? false,
-                        MeasureUnit = a.C1CAnalogMeasureUnits.Name,
+                        NomenclatureName = a.NomenclatureAnalogName,
+                        IsMarked = a.NomenclatureAnalogIsArchive ?? false,
+                        MeasureUnit = a.MeasureUnitAnalogName,
                         MeasureUnitID = a.C1CMeasureUnitAnalogID,
                         Coefficient = (a.AmountAnalog / a.Amount) ?? 0
                     }).Distinct()

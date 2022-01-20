@@ -38,7 +38,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.3.0.0</ApplicationVersion>
+    <ApplicationVersion>3.4.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -242,6 +242,9 @@
     <Compile Include="Converters\DefaultBooleanConverter.cs" />
     <Compile Include="Converters\MarkupMultivalueConverter.cs" />
     <Compile Include="Converters\WithdrawByFactConverter.cs" />
+    <Compile Include="Dialogs\ChooseMeasureUnitDialog.xaml.cs">
+      <DependentUpon>ChooseMeasureUnitDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AddNomenclatureToPalletDialog.xaml.cs">
       <DependentUpon>AddNomenclatureToPalletDialog.xaml</DependentUpon>
     </Compile>
@@ -254,6 +257,7 @@
     <Compile Include="Dialogs\SetQuantityDialog.xaml.cs">
       <DependentUpon>SetQuantityDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DialogViewModels\ChooseMeasureUnitDialogModel.cs" />
     <Compile Include="DialogViewModels\AddNomenclatureToPalletDialogModel.cs" />
     <Compile Include="DialogViewModels\AddDowntimeDialogModel.cs" />
     <Compile Include="DialogViewModels\SetDateDialogViewModel.cs" />
@@ -694,6 +698,9 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetMaterialNomenclatureFolders_Result1.cs">
+      <DependentUpon>GammaModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\GetNomenclatureAnalogs_Result.cs">
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\GetNomenclatureFolders_Result.cs">
@@ -1435,6 +1442,10 @@
     <Compile Include="WindowCloseBehavior.cs" />
     <Compile Include="MessageManager.cs" />
     <Compile Include="WorkSession.cs" />
+    <Page Include="Dialogs\ChooseMeasureUnitDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\AddNomenclatureToPalletDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1903,7 +1914,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

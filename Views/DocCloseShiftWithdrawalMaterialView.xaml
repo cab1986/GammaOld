@@ -11,6 +11,7 @@
              xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
              xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
              xmlns:viewModels="clr-namespace:Gamma.ViewModels"
+             xmlns:dialogs="clr-namespace:Gamma.Dialogs"
              x:Class="Gamma.Views.DocCloseShiftWithdrawalMaterialView" 
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="500"
@@ -573,5 +574,18 @@
     </Grid>
     <dxmvvm:Interaction.Behaviors>
         <g:UIAuthBehavior />
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="ChooseMeasureUnitDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:ChooseMeasureUnitDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="500"/>
+                    <Setter Property="Height" Value="240"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
     </dxmvvm:Interaction.Behaviors>
 </UserControl>

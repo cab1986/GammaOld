@@ -25,6 +25,9 @@
     </UserControl.Resources>
     <dxlc:LayoutGroup Header="Задание БДМ" View="GroupBox" Orientation="Vertical" >
         <dxlc:LayoutGroup>
+            <dxlc:LayoutItem Label="Номер" LabelPosition="Top" Width="100">
+                <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
+            </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
                 <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True}" Mask="g" MaskUseAsDisplayFormat="True" />
             </dxlc:LayoutItem>

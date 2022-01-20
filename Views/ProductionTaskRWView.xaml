@@ -26,6 +26,9 @@
     </dxmvvm:Interaction.Behaviors>
     <dxlc:LayoutGroup Header="Задание на ПРС" View="GroupBox" Orientation="Vertical" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True">
         <dxlc:LayoutGroup Orientation="Horizontal">
+            <dxlc:LayoutItem Label="Номер" LabelPosition="Top" Width="100">
+                <dxe:TextEdit EditValue="{Binding Number}" IsReadOnly="True"/>
+            </dxlc:LayoutItem>
             <dxlc:LayoutItem Label="Дата начала" LabelPosition="Top" Width="130">
                 <dxe:DateEdit EditValue="{Binding DateBegin, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Mask="g" MaskUseAsDisplayFormat="True" />
             </dxlc:LayoutItem>

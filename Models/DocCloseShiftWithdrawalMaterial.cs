@@ -270,7 +270,8 @@ namespace Gamma.Models
                              ParentName = d.ParentName,
                              PlaceID = dm.PlaceID ?? 0,
                              DocID = dm.DocID,
-                             DocNumberDate = dm.Number + " от " + dm.Date
+                             DocNumberDate = dm.Number + " от " + dm.Date,
+                             DocDate = dm.Date
                          }).OrderBy(d => d.NomenclatureName));
             }
             //Получение списка списанных материалов
@@ -289,7 +290,9 @@ namespace Gamma.Models
                     MeasureUnitID = d.C1CNomenclature.C1CMeasureUnitStorage.C1CMeasureUnitID,
                     QuantityIsReadOnly = !d.WithdrawByFact ?? true,
                     ProductionProductCharacteristicID = d.DocWithdrawal.DocProduction.FirstOrDefault().DocProductionProducts.FirstOrDefault().C1CCharacteristicID,
-                    WithdrawByFact = d.WithdrawByFact
+                    WithdrawByFact = d.WithdrawByFact,
+                    DocID = d.DocID,
+                    DocDate = d.Docs.Date
                 }).OrderBy(d => d.NomenclatureName));
             foreach (var item in WithdrawalMaterials)
             {
@@ -714,7 +717,8 @@ namespace Gamma.Models
                                ParentName = m.ParentName,
                                PlaceID = m.PlaceID ?? 0,
                                DocID = m.DocID,
-                               DocNumberDate = m.DocNumberDate
+                               DocNumberDate = m.DocNumberDate,
+                               DocDate = m.DocDate
                            }).OrderBy(m => m.NomenclatureName));
 
                 foreach (DocCloseShiftMaterial addedItem in DocCloseShiftMaterials.Where(x => x.StandardQuantity == null || x.StandardQuantity == 0))
@@ -742,7 +746,9 @@ namespace Gamma.Models
                             DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                             MeasureUnit = addedItem.MeasureUnit,
                             MeasureUnitID = addedItem.MeasureUnitID,
-                            WithdrawByFact = addedItem.WithdrawByFact
+                            WithdrawByFact = addedItem.WithdrawByFact,
+                            DocID = addedItem.DocID,
+                            DocDate = addedItem.DocDate
                         });
                 }
                 
@@ -818,7 +824,7 @@ namespace Gamma.Models
             }
         }
 
-        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact)//, List<Guid> productionProductCharacteristicIDs)
+        public void MaterialNomenclatureChanged(C1CNomenclature nomenclatureInfo, bool isWithdrawalByFact, Dictionary<Guid, String> measure = null)//, List<Guid> productionProductCharacteristicIDs)
         {
             var characteristicID = nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault() == Guid.Empty ? (Guid?)null : nomenclatureInfo.C1CCharacteristics.Select(x => x.C1CCharacteristicID).FirstOrDefault();
             var nomenclatureName = nomenclatureInfo.Name + " " + nomenclatureInfo.C1CCharacteristics.Select(x => x.Name).FirstOrDefault();
@@ -826,14 +832,15 @@ namespace Gamma.Models
             if (DocCloseShiftMaterials.FirstOrDefault(d => d.NomenclatureID == nomenclatureInfo.C1CNomenclatureID) == null)
             {
                 var standardQuantity = DocCloseShiftMaterials.Where(d => d.AvailableNomenclatures.Any(n => n.NomenclatureID == nomenclatureInfo.C1CNomenclatureID && ((n.CharacteristicID == null && characteristicID == null) || n.CharacteristicID == characteristicID))).FirstOrDefault();
+                var measureUnitName = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : measure?.OrderBy(m => m.Key).FirstOrDefault().Key != null ? measure?.OrderBy(m => m.Key).FirstOrDefault().Value : nomenclatureInfo.C1CMeasureUnitStorage.Name;
                 DocCloseShiftMaterials.Add(new DocCloseShiftMaterial
                 {
                     NomenclatureID = nomenclatureInfo.C1CNomenclatureID,
                     CharacteristicID = characteristicID,
                     NomenclatureName = nomenclatureName,
                     QuantityIsReadOnly = false,
-                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
-                    MeasureUnit = standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
+                    MeasureUnitID = standardQuantity?.MeasureUnitID ?? measure?.OrderBy(m => m.Key).FirstOrDefault().Key ?? nomenclatureInfo.C1CMeasureUnitStorage.C1CMeasureUnitID,
+                    MeasureUnit = (measureUnitName == "т" || measureUnitName == "т.") ? "кг  " : measureUnitName,//standardQuantity?.MeasureUnitID != null ? standardQuantity?.MeasureUnit : measure?.OrderBy(m => m.Key).FirstOrDefault().Key != null ? measure?.OrderBy(m => m.Key).FirstOrDefault().Value : (nomenclatureInfo.C1CMeasureUnitStorage.Name == "т" || nomenclatureInfo.C1CMeasureUnitStorage.Name == "т.") ? "кг  " : nomenclatureInfo.C1CMeasureUnitStorage.Name,
                     DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
                     WithdrawByFact = isWithdrawalByFact,
                     NomenclatureKindID = nomenclatureInfo.NomenclatureKindID,
@@ -877,7 +884,9 @@ namespace Gamma.Models
                         BaseQuantity = docCloseShiftMaterial,
                         MeasureUnit = selectedMaterial.MeasureUnit,
                         MeasureUnitID = selectedMaterial.MeasureUnitID,
-                        WithdrawByFact = selectedMaterial.WithdrawByFact
+                        WithdrawByFact = selectedMaterial.WithdrawByFact,
+                        DocID = selectedMaterial.DocID,
+                        DocDate = selectedMaterial.DocDate
                     };
                     WithdrawalMaterials.Add(withdrawalMaterial);
                 }
