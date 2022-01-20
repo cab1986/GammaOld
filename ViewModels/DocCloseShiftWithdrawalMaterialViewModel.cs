@@ -290,7 +290,7 @@ namespace Gamma.ViewModels
                 IsDefault = true,
                 Command = new DelegateCommand<CancelEventArgs>(
             x => DebugFunc(),
-            x => model.WithdrawalTypeID != null || model.MeasureUnitID != null),
+            x => model.WithdrawalTypeID != null && model.MeasureUnitID != null && model.MeasureUnitID != Guid.Empty),
             };
             var cancelCommand = new UICommand()
             {
@@ -305,7 +305,7 @@ namespace Gamma.ViewModels
                 title: "Укажите параметры",
                 viewModel: model);
             if (result != okCommand) return;
-            if (model.WithdrawalTypeID == null || model.MeasureUnitID == null)// || model.Quantity <= 0)
+            if (!(model.WithdrawalTypeID != null && model.MeasureUnitID != null && model.MeasureUnitID != Guid.Empty))
             {
                 MessageBox.Show("Не удалось определить параметры");
                 return;

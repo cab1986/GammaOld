@@ -58,6 +58,8 @@ namespace Gamma.DialogViewModels
                 if (nomInfo == null) return;
                 MeasureUnits =
                     gammaBase.C1CMeasureUnits.Where(c => c.C1CMeasureUnitID == nomInfo.C1CMeaureUnitStorage || c.C1CMeasureUnitID == nomInfo.C1CMeasureUnitVolume ).ToList();
+                if (MeasureUnits?.Count == 1)
+                    MeasureUnitID = MeasureUnits.First().C1CMeasureUnitID;
             }
         }
         /*
