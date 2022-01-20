@@ -12,5 +12,6 @@ namespace Gamma.ViewModels
         public string PlaceStore { get; set; }
         public string Comment { get; set; }
         public bool IsConfirmed { get; set; }
+        public DateTime? LastUploadedTo1C { get; set; }
     }
 }

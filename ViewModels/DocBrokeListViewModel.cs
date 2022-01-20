@@ -165,7 +165,8 @@ namespace Gamma.ViewModels
                         PlaceStore = db.Name,
                         PlaceDiscover = x.Name,
                         Comment = d.Comment,
-                        IsConfirmed = d.IsConfirmed
+                        IsConfirmed = d.IsConfirmed,
+                        LastUploadedTo1C = d.LastUploadedTo1C
                     });
             }
                 

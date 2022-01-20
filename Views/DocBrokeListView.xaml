@@ -55,6 +55,11 @@
                 <dxg:GridColumn Header="Место обнаружения" FieldName="PlaceDiscover"/>
                 <dxg:GridColumn Header="Место хранения" FieldName="PlaceStore"/>
                 <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" FixedWidth="True" Width="100"/>
+                <dxg:GridColumn Visible="False" Header="Выгружен в 1С" FieldName="LastUploadedTo1C" Width="130">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="G" MaskUseAsDisplayFormat="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView AllowPerPixelScrolling="True" ShowTotalSummary="True" AllowEditing="False" AutoWidth="True"/>
