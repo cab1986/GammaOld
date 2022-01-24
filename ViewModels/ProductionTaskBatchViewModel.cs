@@ -145,8 +145,8 @@ namespace Gamma.ViewModels
             barFirst.Commands.Add(new BarCommand<object>(p => DeleteDowntime()) { Caption = "Удалить" });
             barFirst.Commands.Add(new BarCommand<object>(p => RefreshDowntime()) { Caption = "Обновить" });
             DowntimeBars.Add(barFirst);
-            var placeID = GammaBase.ProductionTaskBatches.Where(t => t.ProductionTaskBatchID == ProductionTaskBatchID).FirstOrDefault()?.ProductionTasks.FirstOrDefault()?.PlaceID;
-            var templates = GammaBase.DowntimeTemplates.Where(t => t.PlaceID == placeID).ToList();
+            PlaceID = GammaBase.ProductionTaskBatches.Where(t => t.ProductionTaskBatchID == ProductionTaskBatchID).FirstOrDefault()?.ProductionTasks.FirstOrDefault()?.PlaceID;
+            var templates = GammaBase.DowntimeTemplates.Where(t => t.PlaceID == PlaceID).ToList();
             var bar = new BarViewModel();
             foreach (var template in templates)
             {
@@ -584,6 +584,8 @@ namespace Gamma.ViewModels
         private byte? _processModelId;
 
         private bool _partyControl;
+
+        private int? PlaceID { get; set; }
 
         /// <summary>
         /// Идентификатор контрагента
@@ -1947,7 +1949,7 @@ namespace Gamma.ViewModels
 
         private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null)
         {
-            var model = new AddDowntimeDialogModel(downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
+            var model = new AddDowntimeDialogModel(PlaceID,downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
             var setCurrentTimeEndAndOkCommand = new UICommand()
             {
                 Caption = "Сохранить текущим временем окончания",
@@ -1955,9 +1957,7 @@ namespace Gamma.ViewModels
                 IsDefault = false,
                 Command = new DelegateCommand<CancelEventArgs>(
             x => DebugFunc(),
-            x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes == 0
-                    && (model.TypeDetailsFiltered?.Count() == 0 || (model.TypeDetailsFiltered?.Count() > 0 && model.TypeDetailID != null))
-                    && (model.EquipmentNodeDetailsFiltered?.Count() == 0 || (model.EquipmentNodeDetailsFiltered?.Count() > 0 && model.EquipmentNodeDetailID != null))),
+            x => model.IsSaveEnabled && (model.DateEnd - model.DateBegin).TotalMinutes == 0),
             };
             var okCommand = new UICommand()
              {
@@ -1966,9 +1966,7 @@ namespace Gamma.ViewModels
                  IsDefault = true,
                  Command = new DelegateCommand<CancelEventArgs>(
              x => DebugFunc(),
-             x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14 * 60
-                    && (model.TypeDetailsFiltered?.Count() == 0 || (model.TypeDetailsFiltered?.Count() > 0 && model.TypeDetailID != null))
-                    && (model.EquipmentNodeDetailsFiltered?.Count() == 0 || (model.EquipmentNodeDetailsFiltered?.Count() > 0 && model.EquipmentNodeDetailID != null))),
+             x => model.IsSaveEnabled && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14 * 60),
              };
              var cancelCommand = new UICommand()
              {

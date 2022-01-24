@@ -159,6 +159,7 @@
           <Property Name="FullDescription" Type="nvarchar" MaxLength="500" />
           <Property Name="1CParentID" Type="uniqueidentifier" />
           <Property Name="1COEEClassifierID" Type="uniqueidentifier" />
+          <Property Name="DowntimeKind" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="1CEnumGroupTypes">
           <Key>
@@ -196,6 +197,14 @@
           <Property Name="Description" Type="nvarchar" MaxLength="50" />
           <Property Name="FullDescription" Type="nvarchar" MaxLength="500" />
           <Property Name="1CParentID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="1CEquipmentNodesPlaces">
+          <Key>
+            <PropertyRef Name="1CEquipmentNodeID" />
+            <PropertyRef Name="1CPlaceID" />
+          </Key>
+          <Property Name="1CEquipmentNodeID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="1CPlaceID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="1CMainSpecifications">
           <Key>
@@ -805,11 +814,11 @@
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="Quantity" Type="decimal" Precision="18" Scale="5" />
           <Property Name="1CQualityID" Type="uniqueidentifier" />
-          <Property Name="NomenclatureName" Type="varchar" MaxLength="1000" StoreGeneratedPattern="Computed" />
           <Property Name="Date" Type="datetime" />
           <Property Name="InventarisationProductID" Type="uniqueidentifier" />
           <Property Name="PlaceZoneID" Type="uniqueidentifier" />
           <Property Name="PersonID" Type="uniqueidentifier" />
+          <Property Name="NomenclatureName" Type="varchar" MaxLength="1000" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="DocMaterialDocs">
           <Key>
@@ -6278,7 +6287,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <Property Name="OutPlaceShortName" Type="varchar" MaxLength="10" />
                 <Property Name="1CWarehouseUnloadID" Type="uniqueidentifier" />
                 <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
-                <Property Name="LastUploadedTo1C" Type="datetime" Nullable="true"/>
+                <Property Name="LastUploadedTo1C" Type="datetime" />
               </RowType>
             </CollectionType>
           </ReturnType>
@@ -6605,6 +6614,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySet Name="1CEnumGroupTypes" EntityType="Self.1CEnumGroupTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CEquipmentNodeDetails" EntityType="Self.1CEquipmentNodeDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CEquipmentNodes" EntityType="Self.1CEquipmentNodes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="1CEquipmentNodesPlaces" EntityType="Self.1CEquipmentNodesPlaces" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMainSpecifications" EntityType="Self.1CMainSpecifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMeasureUnitQualifiers" EntityType="Self.1CMeasureUnitQualifiers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="1CMeasureUnits" EntityType="Self.1CMeasureUnits" Schema="dbo" store:Type="Tables" />
@@ -10871,6 +10881,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <FunctionImport Name="GetNomenclatureAnalogs" IsComposable="true" ReturnType="Collection(GammaModel.GetNomenclatureAnalogs_Result)">
           <Parameter Name="Date" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="C1CEquipmentNodesPlaces" EntityType="GammaModel.C1CEquipmentNodesPlaces" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -16676,6 +16687,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="DocCloseShiftDowntimes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="DocCloseShiftDowntimes" />
           <NavigationProperty Name="ProductionTaskDowntimes" Relationship="GammaModel.FK_ProductionTaskDowntimes_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="ProductionTaskDowntimes" />
           <NavigationProperty Name="DowntimeTemplates" Relationship="GammaModel.FK_DowntimeTemplates_1CDowntimeTypes" FromRole="C1CDowntimeTypes" ToRole="DowntimeTemplates" />
+          <Property Name="DowntimeKind" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DocCloseShiftDowntimes">
           <Key>
@@ -17171,6 +17183,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="String" Name="MeasureUnitName" MaxLength="50" />
           <Property Type="String" Name="MeasureUnitAnalogName" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="C1CEquipmentNodesPlaces">
+          <Key>
+            <PropertyRef Name="C1CEquipmentNodeID" />
+            <PropertyRef Name="C1CPlaceID" />
+          </Key>
+          <Property Name="C1CEquipmentNodeID" Type="Guid" Nullable="false" />
+          <Property Name="C1CPlaceID" Type="Guid" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -20323,6 +20343,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="C1CDowntimeTypes">
             <EntityTypeMapping TypeName="GammaModel.C1CDowntimeTypes">
               <MappingFragment StoreEntitySet="1CDowntimeTypes">
+                <ScalarProperty Name="DowntimeKind" ColumnName="DowntimeKind" />
                 <ScalarProperty Name="C1COEEClassifierID" ColumnName="1COEEClassifierID" />
                 <ScalarProperty Name="C1CParentID" ColumnName="1CParentID" />
                 <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
@@ -20510,6 +20531,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="C1CEquipmentNodesPlaces">
+            <EntityTypeMapping TypeName="GammaModel.C1CEquipmentNodesPlaces">
+              <MappingFragment StoreEntitySet="1CEquipmentNodesPlaces">
+                <ScalarProperty Name="C1CPlaceID" ColumnName="1CPlaceID" />
+                <ScalarProperty Name="C1CEquipmentNodeID" ColumnName="1CEquipmentNodeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

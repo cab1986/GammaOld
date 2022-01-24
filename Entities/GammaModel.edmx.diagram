@@ -454,6 +454,7 @@
         <EntityTypeShape EntityType="GammaModel.RobotProduct1CCharacteristic" Width="1.5" PointX="0.75" PointY="19.75" />
         <AssociationConnector Association="GammaModel.FK_ProductionTaskStates_ProductionTaskStates" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits" />
+        <EntityTypeShape EntityType="GammaModel.C1CEquipmentNodesPlaces" Width="1.5" PointX="18.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

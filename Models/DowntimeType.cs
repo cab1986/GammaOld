@@ -9,5 +9,6 @@ namespace Gamma.Models
         public Guid DowntimeTypeID { get; set; }
         public string DowntimeTypeName { get; set; }
         public Guid? DowntimeTypeMasterID { get; set; }
+        public string DowntimeKind { get; set; }
     }
 }

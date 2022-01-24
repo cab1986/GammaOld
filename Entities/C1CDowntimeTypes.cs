@@ -34,6 +34,7 @@ namespace Gamma.Entities
         public string FullDescription { get; set; }
         public Nullable<System.Guid> C1CParentID { get; set; }
         public Nullable<System.Guid> C1COEEClassifierID { get; set; }
+        public string DowntimeKind { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C1CDowntimeTypeDetails> C1CDowntimeTypeDetails { get; set; }

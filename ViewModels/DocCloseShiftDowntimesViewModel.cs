@@ -163,7 +163,7 @@ namespace Gamma.ViewModels
 
         private void AddDowntime()
         {
-            var model = new AddDowntimeDialogModel();// "Укажите параметры простоя", "Простои", 1, 1000);
+            var model = new AddDowntimeDialogModel(PlaceID);// "Укажите параметры простоя", "Простои", 1, 1000);
             var okCommand = new UICommand()
             {
                 Caption = "OK",
@@ -171,9 +171,7 @@ namespace Gamma.ViewModels
                 IsDefault = true,
                 Command = new DelegateCommand<CancelEventArgs>(
             x => DebugFunc(),
-            x => model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14* 60
-                    && (model.TypeDetailsFiltered?.Count() == 0 || (model.TypeDetailsFiltered?.Count() > 0 && model.TypeDetailID != null))
-                    && (model.EquipmentNodeDetailsFiltered?.Count() == 0 || (model.EquipmentNodeDetailsFiltered?.Count() > 0 && model.EquipmentNodeDetailID != null))),
+            x => model.IsSaveEnabled),
             };
             var cancelCommand = new UICommand()
             {

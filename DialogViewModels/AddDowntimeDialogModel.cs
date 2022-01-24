@@ -12,7 +12,7 @@ namespace Gamma.DialogViewModels
 {
     public partial class AddDowntimeDialogModel : ValidationViewModelBase
     {
-        public AddDowntimeDialogModel()
+        public AddDowntimeDialogModel(int? placeID)
         {
             var curDate = DateTime.Now;
             DateBegin = curDate;//new DateTime(curDate.Year, curDate.Month, 1).AddMonths(-1);
@@ -24,8 +24,9 @@ namespace Gamma.DialogViewModels
                                    select new
                                    DowntimeType
                                    {
-                                       DowntimeTypeName = p.Description,
-                                       DowntimeTypeID = p.C1CDowntimeTypeID
+                                       DowntimeTypeName = p.Description + " (" + p.DowntimeKind + ")",
+                                       DowntimeTypeID = p.C1CDowntimeTypeID,
+                                       DowntimeKind = p.DowntimeKind
                                    }
                       ).ToList();
             TypeDetails = (from p in GammaBase.C1CDowntimeTypeDetails
@@ -40,7 +41,9 @@ namespace Gamma.DialogViewModels
                       ).ToList();
             TypeDetailsFiltered = new List<DowntimeType>(TypeDetails);
             EquipmentNodes = (from p in GammaBase.C1CEquipmentNodes
-                              where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
+                              join pl in GammaBase.C1CEquipmentNodesPlaces on p.C1CEquipmentNodeID equals pl.C1CEquipmentNodeID
+                              join places in GammaBase.Places on pl.C1CPlaceID equals places.C1CPlaceID
+                              where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true) && (places.PlaceID == placeID))
                               select new
                      EquipmentNode
                      {
@@ -61,7 +64,7 @@ namespace Gamma.DialogViewModels
             EquipmentNodeDetailsFiltered = new List<EquipmentNode>(EquipmentNodeDetails);
         }
 
-        public AddDowntimeDialogModel(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null):this()
+        public AddDowntimeDialogModel(int? placeID, Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null):this(placeID)
         {
             if (downtimeTypeID != null) TypeID = (Guid)downtimeTypeID;
             if (downtimeTypeDetailID != null) TypeDetailID = (Guid)downtimeTypeDetailID;
@@ -137,6 +140,9 @@ namespace Gamma.DialogViewModels
         }
         public Guid? EquipmentNodeDetailID { get; set; }
         public string Comment { get; set; }
+        public bool IsSaveEnabled => IsValid && (Types.FirstOrDefault(t => t.DowntimeTypeID == TypeID && (t.DowntimeKind == "Внеплановый" || t.DowntimeKind == "Недоступность")) == null || (Types.FirstOrDefault(t => t.DowntimeTypeID == TypeID && (t.DowntimeKind == "Внеплановый" || t.DowntimeKind == "Недоступность")) != null && Comment?.Length > 0))
+                    && (TypeDetailsFiltered?.Count() == 0 || (TypeDetailsFiltered?.Count() > 0 && TypeDetailID != null))
+                    && (EquipmentNodeDetailsFiltered?.Count() == 0 || (EquipmentNodeDetailsFiltered?.Count() > 0 && EquipmentNodeDetailID != null));
         /*        public List<Place> Places { get; set; }
                 private int? _placeID;
                 public int? PlaceID
