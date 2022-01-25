@@ -1949,7 +1949,7 @@ namespace Gamma.ViewModels
 
         private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null)
         {
-            var model = new AddDowntimeDialogModel(PlaceID,downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
+            var model = new AddDowntimeDialogModel(PlaceID ?? WorkSession.PlaceID,downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
             var setCurrentTimeEndAndOkCommand = new UICommand()
             {
                 Caption = "Сохранить текущим временем окончания",
