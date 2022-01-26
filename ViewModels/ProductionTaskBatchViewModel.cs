@@ -716,6 +716,7 @@ namespace Gamma.ViewModels
                 productionTaskBatch.BatchKindID = (short)BatchKind;
                 productionTaskBatch.C1CContractorID = ContractorId;
                 gammaBase.SaveChanges();
+                Date = productionTaskBatch.Date;
             }
             CurrentView?.SaveToModel(ProductionTaskBatchID);
             if (ProductionTaskStateID == (byte)ProductionTaskStates.InProduction || ProductionTaskStateID == (byte)ProductionTaskStates.Completed)
