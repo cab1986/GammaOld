@@ -43,6 +43,7 @@
                     <dxb:Bar>
                         <dxb:BarButtonItem Content="Добавить простой" Glyph="{dx:DXImage Image=Add_16x16.png}" Command="{Binding AddDowntimeCommand}"/>
                         <dxb:BarButtonItem Content="Удалить простой" Glyph="{dx:DXImage Image=Cancel_16x16.png}" Command="{Binding DeleteDowntimeCommand}"/>
+                        <dxb:BarButtonItem Content="Заполнить простои" Glyph="{dx:DXImage Image=Refresh_16x16.png}" Command="{Binding FillDowntimesCommand}"/>
                     </dxb:Bar>
                 </dxb:BarManager.Bars>
             </dxb:BarManager>

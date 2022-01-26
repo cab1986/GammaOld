@@ -138,13 +138,15 @@ namespace Gamma.ViewModels
             get { return _isConfirmed; }
             set
             {
+                if (_isConfirmed != value)
+                    IsChanged = true;
                 _isConfirmed = value;
                 var grid = CurrentViewModelGrid as DocCloseShiftConvertingGridViewModel;
                 if (grid != null)
                     grid?.UpdateIsConfirmed(value);
             }
         }
-
+        private bool IsChanged { get; set; } = false;
         public byte? ShiftID { get; set; }
         public bool IsVisibilityUnwinderRemainder { get; set; }
         public bool IsVisibilityRemainder { get; set; }
@@ -230,7 +232,7 @@ namespace Gamma.ViewModels
                 Doc.Date = Date;
 
             GammaBase.SaveChanges();
-            if (IsNewDoc || !isConfirmedPrev || !IsConfirmed)
+            if (IsNewDoc || !isConfirmedPrev || !IsConfirmed || IsChanged)
             {
                 CurrentViewModelRemainder?.SaveToModel(Doc.DocID);
                 CurrentViewModelUnwinderRemainder?.SaveToModel(Doc.DocID);

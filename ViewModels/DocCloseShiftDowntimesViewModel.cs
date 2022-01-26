@@ -37,6 +37,7 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("DocCloseShiftDowntimes", VMID));
             AddDowntimeCommand = new DelegateCommand(AddDowntime, () => IsAllowEditingDowntimesInDocCloseShift && !IsReadOnly);
             DeleteDowntimeCommand = new DelegateCommand(DeleteDowntime, () => IsAllowEditingDowntimesInDocCloseShift && !IsReadOnly && SelectedDowntime != null && SelectedDowntime?.ProductionTaskID == null);
+            FillDowntimesCommand = new DelegateCommand(FillGrid, () => !IsReadOnly);
             //Downtimes = new ObservableCollection<Downtime>();
 
         }
@@ -138,7 +139,8 @@ namespace Gamma.ViewModels
 
         public DelegateCommand AddDowntimeCommand { get; private set; }
         public DelegateCommand DeleteDowntimeCommand { get; private set; }
-        
+        public DelegateCommand FillDowntimesCommand { get; private set; }
+
         public DelegateCommand ShowDowntimeCommand { get; private set; }
         
         public void UpdateIsConfirmed(bool isConfirmed)
