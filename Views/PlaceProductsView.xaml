@@ -68,8 +68,9 @@
                 </dxg:GridColumn>
                 <dxg:GridColumn Header="Номенклатура" FieldName="NomenclatureName" VisibleIndex="2" />
                 <dxg:GridColumn Header="Смена" FieldName="ShiftID" Width="40" FixedWidth="True" VisibleIndex="3" />
-                <dxg:GridColumn Header="Текущий передел" FieldName="CurrentPlace" VisibleIndex="4" Width="30" />
-                <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="5">
+                <dxg:GridColumn Header="Номер задания" FieldName="ProductionTaskNumber" Width="40" VisibleIndex="4" />
+                <dxg:GridColumn Header="Текущий передел" FieldName="CurrentPlace" VisibleIndex="5" Width="30" />
+                <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" ReadOnly="True" Width="60" FixedWidth="True" VisibleIndex="6">
                     <dxg:GridColumn.EditSettings>
                         <dxe:CheckEditSettings/>
                     </dxg:GridColumn.EditSettings>

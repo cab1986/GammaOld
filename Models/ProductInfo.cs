@@ -38,5 +38,6 @@ namespace Gamma.Models
         public string MeasureUnit { get; set; }
         public string CurrentPlace { get; set; }
         public int Count { get; set; }
+        public string ProductionTaskNumber { get; set; }
     }
 }

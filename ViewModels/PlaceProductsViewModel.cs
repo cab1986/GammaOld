@@ -280,7 +280,8 @@ namespace Gamma.ViewModels
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
                                 CurrentPlace = vpi.CurrentPlace,
-                                IsConfirmed = vpi.IsConfirmed
+                                IsConfirmed = vpi.IsConfirmed,
+                                ProductionTaskNumber = vpi.ProductionTaskNumber
                             })   
                         );
                         break;
@@ -308,7 +309,8 @@ namespace Gamma.ViewModels
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
                                 CurrentPlace = vpi.CurrentPlace,
-                                IsConfirmed = vpi.IsConfirmed
+                                IsConfirmed = vpi.IsConfirmed,
+                                ProductionTaskNumber = vpi.ProductionTaskNumber
                             }
                         );
                         break;
@@ -338,7 +340,8 @@ namespace Gamma.ViewModels
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
                                 CurrentPlace = vpi.CurrentPlace,
-                                IsConfirmed = vpi.IsConfirmed
+                                IsConfirmed = vpi.IsConfirmed,
+                                ProductionTaskNumber = vpi.ProductionTaskNumber
                             }
                         );
                         break;
@@ -368,7 +371,8 @@ namespace Gamma.ViewModels
                                 PlaceID = vpi.PlaceID,
                                 PlaceGroup = (PlaceGroup)vpi.PlaceGroupID,
                                 CurrentPlace = vpi.CurrentPlace,
-                                IsConfirmed = vpi.IsConfirmed
+                                IsConfirmed = vpi.IsConfirmed,
+                                ProductionTaskNumber = vpi.ProductionTaskNumber
                             }
                         );
                         break;
