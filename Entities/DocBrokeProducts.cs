@@ -27,6 +27,10 @@ namespace Gamma.Entities
         public Nullable<int> BrokePlaceID { get; set; }
         public Nullable<byte> BrokeShiftID { get; set; }
         public string BrokePrintName { get; set; }
+        public Nullable<System.Guid> C1CRejectionReasonID { get; set; }
+        public Nullable<System.Guid> C1CSecondRejectionReasonID { get; set; }
+        public string RejectionReasonComment { get; set; }
+        public Nullable<int> PlaceID { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -35,5 +39,7 @@ namespace Gamma.Entities
         public virtual Products Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocRepackProducts> DocRepackProducts { get; set; }
+        public virtual C1CRejectionReasons C1CRejectionReasons { get; set; }
+        public virtual C1CRejectionReasons C1CRejectionReasons1 { get; set; }
     }
 }

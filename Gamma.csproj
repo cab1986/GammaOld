@@ -38,7 +38,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.8.0.0</ApplicationVersion>
+    <ApplicationVersion>3.9.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -242,6 +242,12 @@
     <Compile Include="Converters\DefaultBooleanConverter.cs" />
     <Compile Include="Converters\MarkupMultivalueConverter.cs" />
     <Compile Include="Converters\WithdrawByFactConverter.cs" />
+    <Compile Include="Dialogs\SetBrokePlaceDialog.xaml.cs">
+      <DependentUpon>SetBrokePlaceDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddRejectionReasonDialog.xaml.cs">
+      <DependentUpon>AddRejectionReasonDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ChooseMeasureUnitDialog.xaml.cs">
       <DependentUpon>ChooseMeasureUnitDialog.xaml</DependentUpon>
     </Compile>
@@ -257,6 +263,8 @@
     <Compile Include="Dialogs\SetQuantityDialog.xaml.cs">
       <DependentUpon>SetQuantityDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DialogViewModels\SetBrokePlaceDialogModel.cs" />
+    <Compile Include="DialogViewModels\AddRejectionReasonDialogModel.cs" />
     <Compile Include="DialogViewModels\ChooseMeasureUnitDialogModel.cs" />
     <Compile Include="DialogViewModels\AddNomenclatureToPalletDialogModel.cs" />
     <Compile Include="DialogViewModels\AddDowntimeDialogModel.cs" />
@@ -1445,6 +1453,14 @@
     <Compile Include="WindowCloseBehavior.cs" />
     <Compile Include="MessageManager.cs" />
     <Compile Include="WorkSession.cs" />
+    <Page Include="Dialogs\SetBrokePlaceDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\AddRejectionReasonDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\ChooseMeasureUnitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

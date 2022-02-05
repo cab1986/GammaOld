@@ -455,6 +455,8 @@
         <AssociationConnector Association="GammaModel.FK_ProductionTaskStates_ProductionTaskStates" />
         <AssociationConnector Association="GammaModel.FK_1CNomenclature_MeasureUnitsVolume_1CMeasureUnits" />
         <EntityTypeShape EntityType="GammaModel.C1CEquipmentNodesPlaces" Width="1.5" PointX="18.375" PointY="0.75" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

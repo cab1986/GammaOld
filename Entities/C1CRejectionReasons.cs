@@ -20,6 +20,8 @@ namespace Gamma.Entities
             this.DocChangeStateProducts = new HashSet<DocChangeStateProducts>();
             this.DocBrokeProductRejectionReasons = new HashSet<DocBrokeProductRejectionReasons>();
             this.ProductKinds = new HashSet<ProductKinds>();
+            this.DocBrokeProducts = new HashSet<DocBrokeProducts>();
+            this.DocBrokeProducts1 = new HashSet<DocBrokeProducts>();
         }
     
         public System.Guid C1CRejectionReasonID { get; set; }
@@ -37,5 +39,9 @@ namespace Gamma.Entities
         public virtual ICollection<DocBrokeProductRejectionReasons> DocBrokeProductRejectionReasons { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductKinds> ProductKinds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeProducts> DocBrokeProducts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeProducts> DocBrokeProducts1 { get; set; }
     }
 }

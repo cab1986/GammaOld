@@ -46,7 +46,7 @@ namespace Gamma.Models
             set
             {
                 _productStateID = value;
-                if (value.Key == (int)ProductState.Repack)
+                if (value.Key == (int)ProductState.ForConversion)
                     if (IsReadOnly) IsReadOnly = false;
                 else
                     if (!IsReadOnly) IsReadOnly = true;
@@ -73,7 +73,7 @@ namespace Gamma.Models
             if (ProductStateList?.Count == 0)
             {
                 var productStateList = GammaBase.ProductStates
-                    .Where(r => r.StateID != (int)ProductState.NeedsDecision && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.StateID != (int)ProductState.InternalUsage && r.StateID != (int)ProductState.Limited && r.StateID != (int)ProductState.Repack)))
+                    .Where(r => r.StateID != (int)ProductState.NeedsDecision && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.StateID != (int)ProductState.InternalUsage && r.StateID != (int)ProductState.Limited && r.StateID != (int)ProductState.ForConversion)))
                     .OrderBy(r => r.StateID);
                 foreach (var item in productStateList)
                 {

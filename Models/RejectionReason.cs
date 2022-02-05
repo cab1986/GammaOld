@@ -33,5 +33,7 @@ namespace Gamma.Models
                 RaisePropertyChanged("Comment");
             }
         }
+
+        public Guid? ParentID { get; set; }
     }
 }

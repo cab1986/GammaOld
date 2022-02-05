@@ -14,7 +14,7 @@ namespace Gamma.ViewModels
     {
         public EditRejectionReasonsViewModel(BrokeProduct brokeProduct)
         {
-            RejectionReasons = brokeProduct.RejectionReasons;
+            //RejectionReasons = brokeProduct.RejectionReasons;
             using (var gammaBase = DB.GammaDb)
             {
                 RejectionReasonsList = new List<RejectionReason>(gammaBase.C1CRejectionReasons

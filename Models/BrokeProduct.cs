@@ -18,7 +18,19 @@ namespace Gamma.Models
             
         }
 
-        public BrokeProduct(ItemsChangeObservableCollection<RejectionReason> rejectionReasons, int? brokePlaceId = null, byte? brokeShiftId = null
+        public BrokeProduct(Guid? rejectionReasonID, Guid? secondRejectionReasonID, string comment , int? placeId, int? brokePlaceId = null, byte? brokeShiftId = null
+            , string brokePrintName = null) : this()
+        {
+            RejectionReasonID = rejectionReasonID;
+            SecondRejectionReasonID = secondRejectionReasonID;
+            RejectionReasonComment = comment;
+            BrokePlaceId = brokePlaceId;
+            BrokeShiftId = brokeShiftId;
+            PrintName = brokePrintName;
+            PlaceId = placeId;
+        }
+
+        /*public BrokeProduct(ItemsChangeObservableCollection<RejectionReason> rejectionReasons, int? placeId, int? brokePlaceId = null, byte? brokeShiftId = null
             , string brokePrintName = null) : this()
         {
             RejectionReasons = rejectionReasons;
@@ -28,15 +40,16 @@ namespace Gamma.Models
             BrokePlaceId = brokePlaceId;
             BrokeShiftId = brokeShiftId;
             PrintName = brokePrintName;
+            PlaceId = placeId;
         }
-
+        
         private void FormRejectionReasonString(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             if (RejectionReasons == null) return;
             RejectionReasonsString = FormRejectionReasonsString(RejectionReasons);
             RejectionReasonCommentsString = FormRejectionReasonCommentsString(RejectionReasons);
         }
-
+        */
         public Guid ProductId { get; set; }
         public ProductKind ProductKind { get; set; }
         public string NomenclatureName { get; set; }
@@ -44,34 +57,78 @@ namespace Gamma.Models
         public string BaseMeasureUnit { get; set; }
         public decimal Quantity { get; set; }
 
-        private string _rejectionReasonsString;
-
-        public string RejectionReasonsString
+        private Guid? _rejectionReasonID;
+        public Guid? RejectionReasonID
         {
-            get { return _rejectionReasonsString; }
+            get { return _rejectionReasonID; }
             set
             {
-                _rejectionReasonsString = value;
-                RaisePropertyChanged("RejectionReasonsString");
+                _rejectionReasonID = value;
+                using (var gammaBase = DB.GammaDb)
+                {
+                   RejectionReasonName = gammaBase.C1CRejectionReasons.FirstOrDefault(
+                                r => r.C1CRejectionReasonID == _rejectionReasonID)?.Description;
+                }
+                RaisePropertyChanged("RejectionReasonID");
             }
         }
 
-        private string _rejectionReasonCommentsString;
+        private Guid? _secondRejectionReasonID;
+        public Guid? SecondRejectionReasonID
+        {
+            get { return _secondRejectionReasonID; }
+            set
+            {
+                _secondRejectionReasonID = value;
+                using (var gammaBase = DB.GammaDb)
+                {
+                    SecondRejectionReasonName = gammaBase.C1CRejectionReasons.FirstOrDefault(
+                                 r => r.C1CRejectionReasonID == _secondRejectionReasonID)?.Description;
+                }
+                RaisePropertyChanged("SecondRejectionReasonID");
+            }
+        }
+
+        public string SecondRejectionReasonName { get; set; }
+
+        private string _rejectionReasonName;
+        public string RejectionReasonName
+        {
+            get { return _rejectionReasonName; }
+            set
+            {
+                _rejectionReasonName = value;
+                RaisePropertyChanged("RejectionReasonName");
+            }
+        }        
+
+        private string _rejectionReasonComment;
+        public string RejectionReasonComment
+        {
+            get { return _rejectionReasonComment; }
+            set
+            {
+                _rejectionReasonComment = value;
+                RaisePropertyChanged("RejectionReasonComment");
+            }
+        }
+        
         private byte? _shiftId;
         private int _productionPlaceId;
         private int? _brokePlaceId;
 
-        public string RejectionReasonCommentsString
+        public DateTime? Date { get; set; }
+
+        private string _brokePlaceName { get; set; }
+        public string BrokePlaceName
         {
-            get { return _rejectionReasonCommentsString; }
+            get { return _brokePlaceName; }
             set
             {
-                _rejectionReasonCommentsString = value;
-                RaisePropertyChanged("RejectionReasonCommentsString");
+                _brokePlaceName = value;
+                RaisePropertyChanged("BrokePlaceName");
             }
         }
-
-        public DateTime? Date { get; set; }
 
         public int? BrokePlaceId
         {
@@ -80,6 +137,7 @@ namespace Gamma.Models
             {
                 _brokePlaceId = value;
                 if (BrokePlaceId == ProductionPlaceId) PrintName = ProductionPrintName;
+                RefreshBrokePlaceName();
                 RaisePropertyChanged("BrokePlaceId");
             }
         }
@@ -90,12 +148,22 @@ namespace Gamma.Models
             set
             {
                 _productionPlaceId = value;
-                if (BrokePlaceId == null) BrokePlaceId = ProductionPlaceId;
+                if (BrokePlaceId == null) BrokePlaceId = value;
             }
         }
 
         public string Place { get; set; }
-        public byte? BrokeShiftId { get; set; }
+        private byte? _brokeShiftId { get; set; }
+        public byte? BrokeShiftId
+        {
+            get { return _brokeShiftId; }
+            set
+            {
+                _brokeShiftId = value;
+                RefreshBrokePlaceName();
+                RaisePropertyChanged("BrokeShiftId");
+            }
+        }
 
         public byte? ShiftId
         {
@@ -103,19 +171,67 @@ namespace Gamma.Models
             set
             {
                 _shiftId = value;
-                if (BrokeShiftId == null) BrokeShiftId = ShiftId;
+                if (BrokeShiftId == null) BrokeShiftId = value;
             }
         }
 
         public string ProductionPrintName { get; set; }
-        public string PrintName { get; set; }
-//        public List<Place> Places { get; set; }
+        private string _printName { get; set; }
+        public string PrintName
+        {
+            get { return _printName; }
+            set
+            {
+                _printName = value;
+                RefreshBrokePlaceName();
+                RaisePropertyChanged("PrintName");
+            }
+        }
 
+        private int? _placeId { get; set; }
+        public int? PlaceId
+        {
+            get
+            {
+                return _placeId;
+            }
+            set
+            {
+                _placeId = value;
+                using (var gammaBase = DB.GammaDb)
+                {
+                    PlaceName = value == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == value).Name;
+                }
+            }
+        }
+        public string PlaceName { get; private set; }
+        
+        private void RefreshBrokePlaceName ()
+        {
+            using (var gammaBase = DB.GammaDb)
+            {
+                BrokePlaceName = (BrokePlaceId == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == BrokePlaceId)?.Name)
+                    + (BrokeShiftId == null ? string.Empty : ", Смена " + BrokeShiftId.ToString())
+                    + (PrintName == null ? string.Empty : ",  " + PrintName);
+            }
+        }
+
+        //private byte? _stateId { get; set; }
+        //public byte? StateId
+        //{
+        //    get { return _stateId; }
+        //    set
+        //    {
+        //        _stateId = value;
+        //        RaisePropertyChanged("StateId");
+        //    }
+        //}
+        /*
         public ItemsChangeObservableCollection<RejectionReason> RejectionReasons { get; }
 
         private string FormRejectionReasonsString(IEnumerable<RejectionReason> list, GammaEntities gammaDb = null)
         {
-            var sbuilderReason = new StringBuilder();
+            var sbuilderReason = new StringBuilder(); 
             using (var gammaBase = DB.GammaDb)
             {
                 foreach (var reason in list)
@@ -135,12 +251,12 @@ namespace Gamma.Models
         private string FormRejectionReasonCommentsString(IEnumerable<RejectionReason> list)
         {
             var sbuilderReason = new StringBuilder();
-            foreach (var reason in list.Where(reason => reason.Comment != null))
+            foreach (var reason in list.Where(reason => reason.Comment != null).Distinct())
                 {
                     sbuilderReason.Append(reason.Comment);
                     sbuilderReason.Append(Environment.NewLine);
                 }
             return sbuilderReason.ToString();
-        }
+        }*/
     }
 }

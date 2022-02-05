@@ -73,6 +73,8 @@ namespace Gamma
         [Description("Хоз. нужды")]
         InternalUsage,
         [Description("На переделку")]
+        ForConversion,
+        [Description("На переупаковку")]
         Repack
     }
 

@@ -554,6 +554,8 @@
           <Property Name="1CNomenclatureID" Type="uniqueidentifier" />
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" />
           <Property Name="DecisionApplied" Type="bit" Nullable="false" />
+          <Property Name="DecisionDate" Type="datetime" />
+          <Property Name="DecisionPlaceID" Type="int" />
         </EntityType>
         <EntityType Name="DocBrokeDecisionProductWithdrawalProducts">
           <Key>
@@ -589,6 +591,10 @@
           <Property Name="BrokePlaceID" Type="int" />
           <Property Name="BrokeShiftID" Type="tinyint" />
           <Property Name="BrokePrintName" Type="varchar" MaxLength="255" />
+          <Property Name="1CRejectionReasonID" Type="uniqueidentifier" />
+          <Property Name="1CSecondRejectionReasonID" Type="uniqueidentifier" />
+          <Property Name="RejectionReasonComment" Type="varchar" MaxLength="1000" />
+          <Property Name="PlaceID" Type="int" />
         </EntityType>
         <EntityType Name="DocChangeStateProducts">
           <Key>
@@ -1175,7 +1181,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.LocalSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="LocalSettings">
           <Key>
             <PropertyRef Name="BranchID" />
@@ -1756,7 +1762,7 @@ warning 6002: The table/view 'GammaNew.dbo.LocalSettings' does not have a primar
           <Property Name="PrimePlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1CDocComplectationPositions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CDocComplectationPositions">
           <Key>
             <PropertyRef Name="1CDocComplectationID" />
@@ -1770,7 +1776,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CDocComplectationPositions' does no
           <Property Name="Complected" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1COrderGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrderGoods">
           <Key>
             <PropertyRef Name="Quantity" />
@@ -1798,7 +1804,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrderGoods' does not have a primar
           <Property Name="InQuantityUnits" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1COrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1COrders">
           <Key>
             <PropertyRef Name="1COrderID" />
@@ -1850,7 +1856,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1COrders' does not have a primary ke
           <Property Name="1CWarehouseLoadID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.v1CWorkingSpecifications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="v1CWorkingSpecifications">
           <Key>
             <PropertyRef Name="1CNomenclatureID" />
@@ -1867,7 +1873,7 @@ warning 6002: The table/view 'GammaNew.dbo.v1CWorkingSpecifications' does not ha
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vCharacteristicSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vCharacteristicSGBProperties">
           <Key>
             <PropertyRef Name="1CCharacteristicID" />
@@ -1889,7 +1895,7 @@ warning 6002: The table/view 'GammaNew.dbo.vCharacteristicSGBProperties' does no
           <Property Name="TypeTransition" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1915,7 +1921,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocCloseShiftMaterials' does not hav
           <Property Name="StandardQuantity" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionCompositionCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionCompositionCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1943,7 +1949,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionCompositionCalc
           <Property Name="IsNotCalculatedQuantityRemainderAtEnd" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMaterialProductionDirectCalculations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMaterialProductionDirectCalculations">
           <Key>
             <PropertyRef Name="DocID" />
@@ -1971,7 +1977,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMaterialProductionDirectCalculati
           <Property Name="QuantitySendAtEnd" Type="decimal" Precision="38" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementGoods' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementGoods">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -1996,7 +2002,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementGoods' does not have a pr
           <Property Name="OutPlaceID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocMovementProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocMovementProducts">
           <Key>
             <PropertyRef Name="DocMovementID" />
@@ -2047,7 +2053,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocMovementProducts' does not have a
           <Property Name="MovementID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vDocRepackProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocRepackProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vDocRepackProducts">
           <Key>
             <PropertyRef Name="DocRepackProductID" />
@@ -2084,7 +2090,7 @@ warning 6002: The table/view 'GammaNew.dbo.vDocRepackProducts' does not have a p
           <Property Name="DocBrokeDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vGroupPackSpools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vGroupPackSpools">
           <Key>
             <PropertyRef Name="ProductGroupPackID" />
@@ -2097,7 +2103,7 @@ warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a pri
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
             <PropertyRef Name="PlaceID" />
@@ -2108,7 +2114,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have
           <Property Name="CoreDiameter" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPlaceZones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlaceZones">
           <Key>
             <PropertyRef Name="PlaceZoneID" />
@@ -2127,7 +2133,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPlaceZones' does not have a primary 
           <Property Name="PlaceZoneRootName" Type="varchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vPMSpoolsToGroupPack' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPMSpoolsToGroupPack">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -2148,7 +2154,7 @@ warning 6002: The table/view 'GammaNew.dbo.vPMSpoolsToGroupPack' does not have a
           <Property Name="1CCharacteristicID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionMaterials">
           <Key>
             <PropertyRef Name="ProductNomenclatureID" />
@@ -2170,7 +2176,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionMaterials' does not have a
           <Property Name="1CSpecificationID" Type="uniqueidentifier" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskBatches' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskBatches">
           <Key>
             <PropertyRef Name="ProductionTaskBatchID" />
@@ -2180,7 +2186,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskBatches' does not have
           <Property Name="EnumColor" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductionTaskProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductionTaskProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2204,7 +2210,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductionTaskProducts' does not hav
           <Property Name="DocProductionID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductsCurrentStateInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsCurrentStateInfo">
           <Key>
             <PropertyRef Name="ProductID" />
@@ -2219,7 +2225,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsCurrentStateInfo' does not h
           <Property Name="State" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vProductsInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vProductsInfo">
           <Key>
             <PropertyRef Name="DocID" />
@@ -2275,7 +2281,7 @@ warning 6002: The table/view 'GammaNew.dbo.vProductsInfo' does not have a primar
           <Property Name="ProductionTaskNumber" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vRobotNomenclatures">
           <Key>
             <PropertyRef Name="ProdNumber" />
@@ -3321,6 +3327,42 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Dependent Role="DocBrokeProductRejectionReasons">
               <PropertyRef Name="DocID" />
               <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeProducts_1CRejectionReasons">
+          <End Role="1CRejectionReasons" Type="Self.1CRejectionReasons" Multiplicity="0..1" />
+          <End Role="DocBrokeProducts" Type="Self.DocBrokeProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CRejectionReasons">
+              <PropertyRef Name="1CRejectionReasonID" />
+            </Principal>
+            <Dependent Role="DocBrokeProducts">
+              <PropertyRef Name="1CRejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeProducts_1CRejectionReasons_Second">
+          <End Role="1CRejectionReasons" Type="Self.1CRejectionReasons" Multiplicity="0..1" />
+          <End Role="DocBrokeProducts" Type="Self.DocBrokeProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CRejectionReasons">
+              <PropertyRef Name="1CRejectionReasonID" />
+            </Principal>
+            <Dependent Role="DocBrokeProducts">
+              <PropertyRef Name="1CSecondRejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeProducts_BrokePlaces">
+          <End Role="Places" Type="Self.Places" Multiplicity="0..1" />
+          <End Role="DocBrokeProducts" Type="Self.DocBrokeProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Places">
+              <PropertyRef Name="PlaceID" />
+            </Principal>
+            <Dependent Role="DocBrokeProducts">
+              <PropertyRef Name="BrokePlaceID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -7528,6 +7570,18 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
             <End Role="DocBrokeProductRejectionReasons" EntitySet="DocBrokeProductRejectionReasons" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeProducts_1CRejectionReasons" Association="Self.FK_DocBrokeProducts_1CRejectionReasons">
+            <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeProducts_1CRejectionReasons_Second" Association="Self.FK_DocBrokeProducts_1CRejectionReasons_Second">
+            <End Role="1CRejectionReasons" EntitySet="1CRejectionReasons" />
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeProducts_BrokePlaces" Association="Self.FK_DocBrokeProducts_BrokePlaces">
+            <End Role="Places" EntitySet="Places" />
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+          </AssociationSet>
           <AssociationSet Name="FK_DocBrokeProducts_DocBroke" Association="Self.FK_DocBrokeProducts_DocBroke">
             <End Role="DocBroke" EntitySet="DocBroke" />
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
@@ -8580,6 +8634,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="ProductKinds" Relationship="GammaModel.ProductKindRejectionReasons" FromRole="C1CRejectionReasons" ToRole="ProductKinds" />
           <Property Name="C1CNewRejectionReasonID" Type="Guid" />
           <Property Name="C1CCode" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DocBrokeProducts" Relationship="GammaModel.FK_DocBrokeProducts_1CRejectionReasons" FromRole="C1CRejectionReasons" ToRole="DocBrokeProducts" />
+          <NavigationProperty Name="DocBrokeProducts1" Relationship="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second" FromRole="C1CRejectionReasons" ToRole="DocBrokeProducts" />
         </EntityType>
         <EntityType Name="C1CSpecificationInputNomenclature">
           <Key>
@@ -10882,6 +10938,14 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="Date" Mode="In" Type="DateTime" />
           </FunctionImport>
           <EntitySet Name="C1CEquipmentNodesPlaces" EntityType="GammaModel.C1CEquipmentNodesPlaces" />
+          <AssociationSet Name="FK_DocBrokeProducts_1CRejectionReasons" Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons">
+            <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeProducts_1CRejectionReasons_Second" Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second">
+            <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
+            <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -11722,6 +11786,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeDecisionProducts_Products" FromRole="DocBrokeDecisionProducts" ToRole="Products" />
           <NavigationProperty Name="DocBrokeDecisionProductWithdrawalProducts" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecisionProducts" FromRole="DocBrokeDecisionProducts" ToRole="DocBrokeDecisionProductWithdrawalProducts" />
           <Property Name="DecisionApplied" Type="Boolean" Nullable="false" />
+          <Property Name="DecisionDate" Type="DateTime" Precision="3" />
+          <Property Name="DecisionPlaceID" Type="Int32" />
         </EntityType>
         <Association Name="FK_DocBrokeDecisionProducts_ProductStates">
           <End Type="GammaModel.ProductStates" Role="ProductStates" Multiplicity="1" />
@@ -12669,6 +12735,12 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="Places" Relationship="GammaModel.FK_DocBrokeProducts_Places" FromRole="DocBrokeProducts" ToRole="Places" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeProducts_Products" FromRole="DocBrokeProducts" ToRole="Products" />
           <NavigationProperty Name="DocRepackProducts" Relationship="GammaModel.FK_DocRepackProducts_DocBrokeProducts" FromRole="DocBrokeProducts" ToRole="DocRepackProducts" />
+          <Property Name="C1CRejectionReasonID" Type="Guid" />
+          <Property Name="C1CSecondRejectionReasonID" Type="Guid" />
+          <Property Name="RejectionReasonComment" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="PlaceID" Type="Int32" />
+          <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.FK_DocBrokeProducts_1CRejectionReasons" FromRole="DocBrokeProducts" ToRole="C1CRejectionReasons" />
+          <NavigationProperty Name="C1CRejectionReasons1" Relationship="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second" FromRole="DocBrokeProducts" ToRole="C1CRejectionReasons" />
         </EntityType>
         <Association Name="FK_DocBrokeProducts_DocBroke">
           <End Type="GammaModel.DocBroke" Role="DocBroke" Multiplicity="1" />
@@ -17191,6 +17263,30 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Name="C1CEquipmentNodeID" Type="Guid" Nullable="false" />
           <Property Name="C1CPlaceID" Type="Guid" Nullable="false" />
         </EntityType>
+        <Association Name="FK_DocBrokeProducts_1CRejectionReasons">
+          <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="0..1" />
+          <End Type="GammaModel.DocBrokeProducts" Role="DocBrokeProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CRejectionReasons">
+              <PropertyRef Name="C1CRejectionReasonID" />
+            </Principal>
+            <Dependent Role="DocBrokeProducts">
+              <PropertyRef Name="C1CRejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeProducts_1CRejectionReasons_Second">
+          <End Type="GammaModel.C1CRejectionReasons" Role="C1CRejectionReasons" Multiplicity="0..1" />
+          <End Type="GammaModel.DocBrokeProducts" Role="DocBrokeProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CRejectionReasons">
+              <PropertyRef Name="C1CRejectionReasonID" />
+            </Principal>
+            <Dependent Role="DocBrokeProducts">
+              <PropertyRef Name="C1CSecondRejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -18110,6 +18206,8 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocBrokeDecisionProducts">
             <EntityTypeMapping TypeName="GammaModel.DocBrokeDecisionProducts">
               <MappingFragment StoreEntitySet="DocBrokeDecisionProducts">
+                <ScalarProperty Name="DecisionPlaceID" ColumnName="DecisionPlaceID" />
+                <ScalarProperty Name="DecisionDate" ColumnName="DecisionDate" />
                 <ScalarProperty Name="DecisionApplied" ColumnName="DecisionApplied" />
                 <ScalarProperty Name="C1CCharacteristicID" ColumnName="1CCharacteristicID" />
                 <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
@@ -18676,6 +18774,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocBrokeProducts">
             <EntityTypeMapping TypeName="GammaModel.DocBrokeProducts">
               <MappingFragment StoreEntitySet="DocBrokeProducts">
+                <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
+                <ScalarProperty Name="RejectionReasonComment" ColumnName="RejectionReasonComment" />
+                <ScalarProperty Name="C1CSecondRejectionReasonID" ColumnName="1CSecondRejectionReasonID" />
+                <ScalarProperty Name="C1CRejectionReasonID" ColumnName="1CRejectionReasonID" />
                 <ScalarProperty Name="BrokePrintName" ColumnName="BrokePrintName" />
                 <ScalarProperty Name="BrokeShiftID" ColumnName="BrokeShiftID" />
                 <ScalarProperty Name="BrokePlaceID" ColumnName="BrokePlaceID" />

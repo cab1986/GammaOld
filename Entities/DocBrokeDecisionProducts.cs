@@ -28,6 +28,8 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CNomenclatureID { get; set; }
         public Nullable<System.Guid> C1CCharacteristicID { get; set; }
         public bool DecisionApplied { get; set; }
+        public Nullable<System.DateTime> DecisionDate { get; set; }
+        public Nullable<int> DecisionPlaceID { get; set; }
     
         public virtual ProductStates ProductStates { get; set; }
         public virtual DocBroke DocBroke { get; set; }

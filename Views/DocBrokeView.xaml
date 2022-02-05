@@ -14,11 +14,40 @@
         xmlns:gamma="clr-namespace:Gamma"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:models="clr-namespace:Gamma.Models"
+        xmlns:dialogs="clr-namespace:Gamma.Dialogs"
         x:Class="Gamma.Views.DocBrokeView"
         mc:Ignorable="d"
         Title="Акт о браке" Height="750" Width="1200"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocBrokeViewModel}}"
         common:WindowSettings.Save="True">
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="AddRejectionReasonDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:AddRejectionReasonDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="500"/>
+                    <Setter Property="Height" Value="340"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="SetBrokePlaceDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:SetBrokePlaceDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="360"/>
+                    <Setter Property="Height" Value="270"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
+    </dxmvvm:Interaction.Behaviors>
     <Window.Resources>
         <DataTemplate x:Key="ColumnHeaderTemplate">
             <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
@@ -42,7 +71,7 @@
                         <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding Path=BrokeDecisionProduct.Comment}" IsReadOnly="{Binding Path=IsReadOnly}"/>
                         </dxlc:LayoutItem>
-                        <dxlc:LayoutItem Label="Срезан в брак" Width="120" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <dxlc:LayoutItem Label="Выполнено" Width="120" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <dxe:CheckEdit EditValue="{Binding Path=BrokeDecisionProduct.DecisionApplied}" AllowNullInput="True" IsReadOnly="False" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Width="15" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -51,12 +80,12 @@
                             </dxe:ButtonEdit>
                         </dxlc:LayoutItem>
                     </dxlc:LayoutGroup>
-                    <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dxlc:LayoutItem Label="Номенклатура  " LabelPosition="Left" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxe:ButtonEdit EditValue="{Binding Path=NomenclatureName}" AllowDefaultButton="False" IsReadOnly="True">
                             <dxe:ButtonInfo Command="{Binding ChooseNomenclatureCommand}" Content="..."/>
                         </dxe:ButtonEdit>
                     </dxlc:LayoutItem>
-                    <dxlc:LayoutItem Label="Характеристика" LabelPosition="Top" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <dxlc:LayoutItem Label="Характеристика" LabelPosition="Left" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxe:ComboBoxEdit EditValue="{Binding Path=CharacteristicID}" ItemsSource="{Binding Path=Characteristics}" IsReadOnly="{Binding Path=IsReadOnly}"
                                           ValueMember="CharacteristicID" DisplayMember="CharacteristicName"/>
                     </dxlc:LayoutItem>
@@ -146,51 +175,57 @@
                                                                Command="{Binding DeleteProductCommand}"/>
                                         </dxb:Bar>
                                     </dxb:BarManager.Bars>
-                                    <dxg:GridControl ItemsSource="{Binding BrokeProducts}" SelectedItem="{Binding SelectedBrokeProduct}"  >
+                                    <dxg:GridControl ItemsSource="{Binding BrokeProducts}" SelectedItem="{Binding SelectedBrokeProduct}" AutoExpandAllGroups="True">
                                         <dxmvvm:Interaction.Behaviors>
                                             <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
                                         </dxmvvm:Interaction.Behaviors>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ColumnHeaderTemplate="{StaticResource ColumnHeaderTemplate}" ScrollViewer.CanContentScroll="True" 
-                                                           EnableImmediatePosting="True"/>
+                                                           EnableImmediatePosting="True"
+                                                           AllowGrouping="False">
+                                            </dxg:TableView>
                                         </dxg:GridControl.View>
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" AllowEditing="False" AllowBestFit="True" >
-                                                <dxg:GridColumn.EditSettings>
-                                                    <dxe:TextEditSettings TextWrapping="WrapWithOverflow"/>
-                                                </dxg:GridColumn.EditSettings>
-                                            </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="Number" Header="Номер" AllowEditing="False" SortOrder="Ascending" SortIndex="0"
-                                                            Width="120" FixedWidth="True"/>
-                                            <dxg:GridColumn FieldName="BaseMeasureUnit" Header="Ед. изм." Width="40" FixedWidth="True" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
-                                                <dxg:GridColumn.EditSettings>
-                                                    <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
-                                                </dxg:GridColumn.EditSettings>
-                                            </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="RejectionReasonsString" Header="Несоответствия, дефекты">
-                                                <dxg:GridColumn.EditSettings>
-                                                    <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">
-                                                        <dxe:ButtonEditSettings.Buttons>
-                                                            <dxe:ButtonInfo Content="..." Command="{Binding EditRejectionReasonsCommand}"/>
-                                                        </dxe:ButtonEditSettings.Buttons>
-                                                    </dxe:ButtonEditSettings>
-                                                </dxg:GridColumn.EditSettings>
-                                            </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="RejectionReasonCommentsString" Header="Причины" AllowEditing="False"/>
-                                            <dxg:GridColumn FieldName="Date" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False" />
-                                            <dxg:GridColumn FieldName="BrokePlaceId" Header="Участок-виновник" ReadOnly="{Binding IsReadOnly}" Width="100">
-                                                <dxg:GridColumn.EditSettings>
-                                                    <dxe:ComboBoxEditSettings ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
-                                                </dxg:GridColumn.EditSettings>
-                                            </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="BrokeShiftId" Header="Смена-виновник" ReadOnly="{Binding IsReadOnly}" Width="65" FixedWidth="True">
-                                                <dxg:GridColumn.EditSettings>
-                                                    <dxe:SpinEditSettings MaxValue="4" MinValue="1"/>
-                                                </dxg:GridColumn.EditSettings>
-                                            </dxg:GridColumn>
-                                            <dxg:GridColumn FieldName="PrintName" Header="ФИО" ReadOnly="{Binding IsReadOnly}" Width="140" FixedWidth="True"/>
-                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.Bands>
+                                            <dxg:GridControlBand VisibleIndex="0">
+                                                <dxg:GridColumn FieldName="Number" VisibleIndex="1" Header="Номер" AllowEditing="False" Width="120" FixedWidth="True"/>
+                                                <dxg:GridColumn FieldName="Date" VisibleIndex="2" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False"/>
+                                                <dxg:GridColumn FieldName="Quantity" VisibleIndex="3" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>
+                                                <dxg:GridColumn FieldName="NomenclatureName" VisibleIndex="4" Header="Номенклатура" AllowEditing="False" AllowBestFit="True"/>
+                                                <dxg:GridColumn FieldName="RejectionReasonName" VisibleIndex="5" dxg:BandBase.GridRow="1" Header="Несоответствия, дефекты">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">
+                                                            <dxe:ButtonEditSettings.Buttons>
+                                                                <dxe:ButtonInfo Content="..." Command="{Binding EditRejectionReasonsCommand}"/>
+                                                            </dxe:ButtonEditSettings.Buttons>
+                                                        </dxe:ButtonEditSettings>
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>
+                                                <dxg:GridColumn FieldName="RejectionReasonComment" VisibleIndex="6" dxg:BandBase.GridRow="1" Header="Причины" AllowEditing="False"/>
+                                                <dxg:GridColumn FieldName="PlaceId" VisibleIndex="7" dxg:BandBase.GridRow="1" Header="Место актирования" ReadOnly="{Binding IsReadOnly}" Width="100">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:ComboBoxEditSettings ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>
+                                                <!--<dxg:GridColumn FieldName="StateId" VisibleIndex="8" dxg:BandBase.GridRow="1" Header="Требует решения" ReadOnly="{Binding IsReadOnly}" Width="100">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:ComboBoxEditSettings ItemsSource="{Binding NeedsDecisionStateList}" ValueMember="Key" DisplayMember="Value"/>
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>-->
+                                                <dxg:GridColumn FieldName="BrokePlaceName" VisibleIndex="9" dxg:BandBase.GridRow="1" Header="Участок-виновник" ReadOnly="{Binding IsReadOnly}" Width="180">
+                                                    <dxg:GridColumn.EditSettings>
+                                                        <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">
+                                                            <dxe:ButtonEditSettings.Buttons>
+                                                                <dxe:ButtonInfo Content="..." Command="{Binding EditBrokePlaceCommand}"/>
+                                                            </dxe:ButtonEditSettings.Buttons>
+                                                        </dxe:ButtonEditSettings>
+                                                    </dxg:GridColumn.EditSettings>
+                                                </dxg:GridColumn>
+                                            </dxg:GridControlBand>                                            
+                                        </dxg:GridControl.Bands>
                                     </dxg:GridControl>
                                 </dxb:BarManager>
                             </dxlc:LayoutItem>
@@ -200,41 +235,73 @@
                         <dxlc:LayoutControl Orientation="Vertical">
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">
                                 <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" SelectedItem="{Binding SelectedBrokeDecisionProduct}" dxlc:LayoutControl.UseDesiredHeightAsMaxHeight="True"
-                                                 DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}" >
+                                                 DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}">
                                     <dxg:GridControl.View>
                                         <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False" BestFitMode="Smart"/>
                                     </dxg:GridControl.View>
                                     <dxg:GridControl.Columns>
-                                        <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" VisibleIndex="0"/>
-                                        <dxg:GridColumn FieldName="Number" Header="Номер" VisibleIndex="1" SortOrder="Ascending" SortIndex="0" Width="120" FixedWidth="True"/>
-                                        <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="80" FixedWidth="True" VisibleIndex="2">
+                                        <dxg:GridColumn FieldName="NumberAndNomenclature" Width="280" Header="Продукт" VisibleIndex="0" SortOrder="Ascending" SortIndex="0" ReadOnly="True" AllowCellMerge="True"/>
+                                        <!--<dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" VisibleIndex="0" ReadOnly="True"/>
+                                        <dxg:GridColumn FieldName="Number"  Header="Номер" VisibleIndex="1" SortOrder="Ascending" SortIndex="0" Width="120" FixedWidth="True" ReadOnly="True"/>-->
+                                        <dxg:GridColumn FieldName="MeasureUnit" Width="60" Header="ед. изм." Visible="False" VisibleIndex="5" FixedWidth="True" ReadOnly="True"/>
+                                        <dxg:GridColumn FieldName="DecisionDateAndPlace" Header="Дата и место принятия решения" Width="280" FixedWidth="True" VisibleIndex="2" ReadOnly="{Binding IsReadOnly}"  AllowCellMerge="True"/>
+                                        <!--<dxg:GridColumn FieldName="DecisionDate" Header="Дата принятия решения" Width="80" FixedWidth="True" VisibleIndex="2" ReadOnly="{Binding IsReadOnly}" />
+                                        <dxg:GridColumn FieldName="DecisionPlaceId" Header="Место принятия решения" VisibleIndex="3"  ReadOnly="{Binding IsReadOnly}" Width="100">
+                                            <dxg:GridColumn.EditSettings>
+                                                <dxe:ComboBoxEditSettings ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                                            </dxg:GridColumn.EditSettings>
+                                        </dxg:GridColumn>-->
+                                        <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="80" FixedWidth="True" VisibleIndex="4" ReadOnly="True">
                                             <dxg:GridColumn.EditSettings>
                                                 <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
                                             </dxg:GridColumn.EditSettings>
                                         </dxg:GridColumn>
-                                        <dxg:GridColumn FieldName="MeasureUnit" Width="60" Header="ед. изм." VisibleIndex="3" FixedWidth="True"/>
-                                        <dxg:GridColumn FieldName="Decision" Header="Решение" VisibleIndex="4" Width="120" FixedWidth="True"/>
-                                        <dxg:GridColumn FieldName="DecisionApplied" Header="Исполнено решение" VisibleIndex="5" Width="60"  FixedWidth="True"/>
+                                        <dxg:GridColumn FieldName="Decision" Header="Решение" VisibleIndex="6" Width="120" FixedWidth="True" ReadOnly="True"/>
+                                        <dxg:GridColumn FieldName="DecisionApplied" Header="Исполнено решение" VisibleIndex="7" Width="60"  FixedWidth="True" ReadOnly="True"/>
                                     </dxg:GridControl.Columns>
                                 </dxg:GridControl>
                             </dxlc:LayoutItem>
-                            <dxlc:LayoutGroup View="GroupBox" HorizontalAlignment="Stretch" Header="Решение" VerticalAlignment="Stretch" Orientation="Vertical" Height="300">
-                                <dxlc:LayoutItem>
-                                    <ContentControl Content="{Binding InternalUsageProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem>
-                                    <ContentControl Content="{Binding GoodProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem>
-                                    <ContentControl Content="{Binding LimitedProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
-                                </dxlc:LayoutItem>
-                                <dxlc:LayoutItem>
-                                    <ContentControl Content="{Binding BrokeProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                <dxlc:LayoutGroup View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Height="350">
+                                    <dxlc:LayoutGroup>
+                                        <dxlc:LayoutItem Label="Изменить решение">
+                                            <dxe:CheckEdit EditValue="{Binding Path=SelectedBrokeDecisionProduct.IsEditableDecision, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </dxlc:LayoutItem>
+                                        <dxlc:LayoutItem Label="Дата принятия решения">
+                                            <dxe:DateEdit EditValue="{Binding Path=SelectedBrokeDecisionProduct.DecisionDate}" IsReadOnly="{Binding IsReadOnly}" Mask="g" MaskUseAsDisplayFormat="True" />
+                                        </dxlc:LayoutItem>
+                                        <dxlc:LayoutItem Label="Место принятия решения" LabelPosition="Left">
+                                            <dxe:ComboBoxEdit EditValue="{Binding Path=SelectedBrokeDecisionProduct.DecisionPlaceId, ValidatesOnDataErrors=True}" IsReadOnly="{Binding IsReadOnly}" ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                                        </dxlc:LayoutItem>
+                                    </dxlc:LayoutGroup>
+                                <dxlc:LayoutGroup Header="Требует решения" IsEnabled="{Binding Path=SelectedBrokeDecisionProduct.IsEditableDecision}" View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Height="140">
+                                    <dxlc:LayoutItem>
+                                        <ContentControl Content="{Binding RepackProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                    </dxlc:LayoutItem>
+                                    <dxlc:LayoutItem>
+                                        <ContentControl Content="{Binding ForConversionProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                    </dxlc:LayoutItem>
+                                </dxlc:LayoutGroup>
+                                <dxlc:LayoutGroup Header="Принятое решение" IsEnabled="{Binding Path=SelectedBrokeDecisionProduct.IsEditableDecision}" View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
+                                        <dxlc:LayoutItem>
+                                            <ContentControl Content="{Binding InternalUsageProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        </dxlc:LayoutItem>
+                                        <dxlc:LayoutItem>
+                                            <ContentControl Content="{Binding GoodProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        </dxlc:LayoutItem>
+                                        <dxlc:LayoutItem>
+                                            <ContentControl Content="{Binding LimitedProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        </dxlc:LayoutItem>
+                                        <dxlc:LayoutItem>
+                                            <ContentControl Content="{Binding BrokeProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        </dxlc:LayoutItem>
+                                        <!--<dxlc:LayoutItem>
+                                    <ContentControl Content="{Binding ForConversionProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                 </dxlc:LayoutItem>
                                 <dxlc:LayoutItem>
                                     <ContentControl Content="{Binding RepackProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
-                                </dxlc:LayoutItem>
-                            </dxlc:LayoutGroup>
+                                </dxlc:LayoutItem>-->
+                                    </dxlc:LayoutGroup>
+                                </dxlc:LayoutGroup>
                         </dxlc:LayoutControl>
                     </dx:DXTabItem>
                 </dx:DXTabControl>
