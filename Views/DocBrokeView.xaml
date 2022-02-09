@@ -57,22 +57,25 @@
                 <dxlc:LayoutItem Width="20">
                     <dxe:CheckEdit EditValue="{Binding Path=IsChecked}" AllowNullInput="True" IsReadOnly="{Binding Path=IsReadOnly}"/>
                 </dxlc:LayoutItem>
+                <dxlc:LayoutItem Width="20">
+                    <dxe:CheckEdit EditValue="{Binding Path=IsReadOnly}" AllowNullInput="True" />
+                </dxlc:LayoutItem>
                 <dxlc:LayoutGroup Orientation="Vertical">
                     <dxlc:LayoutGroup Orientation="Horizontal">
                         <dxlc:LayoutItem Width ="120">
                             <Label Content="{Binding Path=Name}" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Кол-во" Width="100" >
-                            <dxe:SpinEdit MinValue="0" EditValue="{Binding Path=Quantity, UpdateSourceTrigger=PropertyChanged}" Increment="0.001"
-                                          EditValueType="{x:Type system:Decimal}" IsFloatValue="True" IsReadOnly="{Binding Path=IsReadOnly}"
-                                          ShowEditorButtons="False" MaxValue="{Binding Path=BrokeDecisionProduct.MaxQuantity}"
+                            <dxe:SpinEdit MinValue="{Binding Path=MinQuantity}" EditValue="{Binding Path=Quantity, UpdateSourceTrigger=PropertyChanged}" Increment="0.001"
+                                          EditValueType="{x:Type system:Decimal}" IsFloatValue="True" IsReadOnly="{Binding Path=IsReadOnlyFields}"
+                                          ShowEditorButtons="False" MaxValue="{Binding Path=MaxQuantity}"
                                           MaskUseAsDisplayFormat="True"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Примечание">
-                            <dxe:TextEdit EditValue="{Binding Path=BrokeDecisionProduct.Comment}" IsReadOnly="{Binding Path=IsReadOnly}"/>
+                            <dxe:TextEdit EditValue="{Binding Path=BrokeDecisionProduct.Comment}" IsReadOnly="{Binding Path=IsReadOnlyFields}"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Выполнено" Width="120" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <dxe:CheckEdit EditValue="{Binding Path=BrokeDecisionProduct.DecisionApplied}" AllowNullInput="True" IsReadOnly="False" />
+                            <dxe:CheckEdit EditValue="{Binding Path=BrokeDecisionProduct.DecisionApplied}" AllowNullInput="True" IsReadOnly="{Binding Path=IsReadOnlyFields}" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Width="15" Visibility="{Binding Path=IsDecisionAppliedVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <dxe:ButtonEdit AllowDefaultButton="False" IsReadOnly="True">
@@ -86,7 +89,7 @@
                         </dxe:ButtonEdit>
                     </dxlc:LayoutItem>
                     <dxlc:LayoutItem Label="Характеристика" LabelPosition="Left" Visibility="{Binding Path=NomenclatureVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <dxe:ComboBoxEdit EditValue="{Binding Path=CharacteristicID}" ItemsSource="{Binding Path=Characteristics}" IsReadOnly="{Binding Path=IsReadOnly}"
+                        <dxe:ComboBoxEdit EditValue="{Binding Path=CharacteristicID}" ItemsSource="{Binding Path=Characteristics}" IsReadOnly="{Binding Path=IsReadOnlyFields}"
                                           ValueMember="CharacteristicID" DisplayMember="CharacteristicName"/>
                     </dxlc:LayoutItem>
                 </dxlc:LayoutGroup>
@@ -187,7 +190,7 @@
                                         </dxg:GridControl.View>
                                         <dxg:GridControl.Bands>
                                             <dxg:GridControlBand VisibleIndex="0">
-                                                <dxg:GridColumn FieldName="Number" VisibleIndex="1" Header="Номер" AllowEditing="False" Width="120" FixedWidth="True"/>
+                                                <dxg:GridColumn FieldName="Number" VisibleIndex="1" Header="Номер" AllowEditing="False" Width="115" FixedWidth="True"/>
                                                 <dxg:GridColumn FieldName="Date" VisibleIndex="2" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False"/>
                                                 <dxg:GridColumn FieldName="Quantity" VisibleIndex="3" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
                                                     <dxg:GridColumn.EditSettings>
@@ -234,7 +237,7 @@
                     <dx:DXTabItem Header="Решение">
                         <dxlc:LayoutControl Orientation="Vertical">
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">
-                                <dxg:GridControl ItemsSource="{Binding BrokeDecisionProducts}" SelectedItem="{Binding SelectedBrokeDecisionProduct}" dxlc:LayoutControl.UseDesiredHeightAsMaxHeight="True"
+                                <dxg:GridControl ItemsSource="{Binding DocBrokeDecision.BrokeDecisionProducts}" SelectedItem="{Binding DocBrokeDecision.SelectedBrokeDecisionProduct}" dxlc:LayoutControl.UseDesiredHeightAsMaxHeight="True"
                                                  DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}">
                                     <dxg:GridControl.View>
                                         <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False" BestFitMode="Smart"/>
@@ -261,38 +264,42 @@
                                     </dxg:GridControl.Columns>
                                 </dxg:GridControl>
                             </dxlc:LayoutItem>
-                                <dxlc:LayoutGroup View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Height="350">
+                            <dxlc:LayoutGroup View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Height="380" IsEnabled = "{Binding DocBrokeDecision.IsEnabledEditBrokeDecision}">
                                     <dxlc:LayoutGroup>
                                         <dxlc:LayoutItem Label="Изменить решение">
-                                            <dxe:CheckEdit EditValue="{Binding Path=SelectedBrokeDecisionProduct.IsEditableDecision, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <dxe:CheckEdit EditValue="{Binding DocBrokeDecision.IsEditableDecision, UpdateSourceTrigger=PropertyChanged}"/>
                                         </dxlc:LayoutItem>
                                         <dxlc:LayoutItem Label="Дата принятия решения">
-                                            <dxe:DateEdit EditValue="{Binding Path=SelectedBrokeDecisionProduct.DecisionDate}" IsReadOnly="{Binding IsReadOnly}" Mask="g" MaskUseAsDisplayFormat="True" />
+                                        <dxe:DateEdit EditValue="{Binding DocBrokeDecision.DecisionDate}" IsReadOnly="{Binding IsReadOnly}" Mask="g" MaskUseAsDisplayFormat="True" />
                                         </dxlc:LayoutItem>
                                         <dxlc:LayoutItem Label="Место принятия решения" LabelPosition="Left">
-                                            <dxe:ComboBoxEdit EditValue="{Binding Path=SelectedBrokeDecisionProduct.DecisionPlaceId, ValidatesOnDataErrors=True}" IsReadOnly="{Binding IsReadOnly}" ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                                        <dxe:ComboBoxEdit EditValue="{Binding DocBrokeDecision.DecisionPlaceId, ValidatesOnDataErrors=True}" IsReadOnly="{Binding IsReadOnly}" ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
                                         </dxlc:LayoutItem>
                                     </dxlc:LayoutGroup>
-                                <dxlc:LayoutGroup Header="Требует решения" IsEnabled="{Binding Path=SelectedBrokeDecisionProduct.IsEditableDecision}" View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Height="140">
+                                <dxlc:LayoutGroup Header="Требует решения" IsEnabled="{Binding Path=DocBrokeDecision.IsEditableDecision}" View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Height="160">
                                     <dxlc:LayoutItem>
-                                        <ContentControl Content="{Binding RepackProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        <!--<ContentControl Content="{Binding Path=EditBrokeDecisionItems, Converter={StaticResource dictconverter}, ConverterParameter=ProductState.NeedsDecision}" ContentTemplate="{StaticResource EditDecisionItem}" />-->
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[1]}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                     </dxlc:LayoutItem>
                                     <dxlc:LayoutItem>
-                                        <ContentControl Content="{Binding ForConversionProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[6]}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                    </dxlc:LayoutItem>
+                                    <dxlc:LayoutItem>
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[5]}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                     </dxlc:LayoutItem>
                                 </dxlc:LayoutGroup>
-                                <dxlc:LayoutGroup Header="Принятое решение" IsEnabled="{Binding Path=SelectedBrokeDecisionProduct.IsEditableDecision}" View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
+                                <dxlc:LayoutGroup Header="Принятое решение" IsEnabled="{Binding Path=DocBrokeDecision.IsEditableDecision}" View="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
                                         <dxlc:LayoutItem>
-                                            <ContentControl Content="{Binding InternalUsageProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[4]}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                         </dxlc:LayoutItem>
                                         <dxlc:LayoutItem>
-                                            <ContentControl Content="{Binding GoodProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[0]}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                         </dxlc:LayoutItem>
                                         <dxlc:LayoutItem>
-                                            <ContentControl Content="{Binding LimitedProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[3]}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                         </dxlc:LayoutItem>
                                         <dxlc:LayoutItem>
-                                            <ContentControl Content="{Binding BrokeProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />
+                                        <ContentControl Content="{Binding DocBrokeDecision.EditBrokeDecisionItems[2]}" ContentTemplate="{StaticResource EditDecisionItem}" />
                                         </dxlc:LayoutItem>
                                         <!--<dxlc:LayoutItem>
                                     <ContentControl Content="{Binding ForConversionProduct}" ContentTemplate="{StaticResource EditDecisionItem}" />

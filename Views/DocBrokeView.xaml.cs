@@ -1,5 +1,8 @@
 ﻿using System;
 using Gamma.ViewModels;
+using System.Windows.Data;
+using System.Collections.Generic;
+using Gamma.Models;
 
 namespace Gamma.Views
 {

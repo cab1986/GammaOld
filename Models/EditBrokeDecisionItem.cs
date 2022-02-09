@@ -11,14 +11,17 @@ namespace Gamma.Models
 {
     public class EditBrokeDecisionItem: DbEditItemWithNomenclatureViewModel
     {
-        public EditBrokeDecisionItem(string name, ProductState productState, ItemsChangeObservableCollection<BrokeDecisionProduct> decisionProducts, bool canChooseNomenclature = false)
+        public EditBrokeDecisionItem(string name, ProductState productState, 
+            DocBrokeDecisionModel parentModel, bool canChooseNomenclature = false)
         {
             Name = name;
+            ParentModel = parentModel;
             ProductState = productState;
             NomenclatureVisible = canChooseNomenclature;
-            BrokeDecisionProducts = decisionProducts;
-            OpenWithdrawalCommand = new DelegateCommand(OpenWithdrawal);
+            OpenWithdrawalCommand = new DelegateCommand(OpenWithdrawal, () => !IsReadOnlyFields);
         }
+
+        private DocBrokeDecisionModel ParentModel { get; }
 
         public DelegateCommand OpenWithdrawalCommand { get; private set; }
 
@@ -29,58 +32,9 @@ namespace Gamma.Models
             get { return _quantity; }
             set
             {
-                if (BrokeDecisionProduct != null)
-                {
-                    if (IsChecked && ProductState == ProductState.Broke && BrokeDecisionProducts.Any(bp => bp.ProductState == ProductState.ForConversion && bp.ProductId == BrokeDecisionProduct.ProductId && IsChecked))
-                    {
-                        var productForConversionDecision = BrokeDecisionProducts.FirstOrDefault(bp => bp.ProductState == ProductState.ForConversion && bp.ProductId == BrokeDecisionProduct.ProductId && IsChecked);
-                        if (productForConversionDecision != null)
-                        {
-                            productForConversionDecision.Quantity = productForConversionDecision.Quantity - (value - _quantity);
-                        }
-                    }
-
-                    var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(bp => bp.ProductState == ProductState.NeedsDecision && bp.ProductId == BrokeDecisionProduct.ProductId);
-                    var sumQuantity = 
-                        BrokeDecisionProducts
-                            .Where(p => p.ProductId == BrokeDecisionProduct.ProductId).ToList().Except(new List<BrokeDecisionProduct>
-                        {
-                            BrokeDecisionProduct,
-                            productNeedsDecision
-                        })
-                        .Sum(p => p.Quantity);
-                    if (sumQuantity + value >= BrokeDecisionProduct.MaxQuantity)
-                    {
-                        value = BrokeDecisionProduct.MaxQuantity - sumQuantity;
-                        if (IsChecked)
-                            BrokeDecisionProducts.Remove(productNeedsDecision);                          
-                    }
-                    else if (IsChecked)
-                    {
-                        if (productNeedsDecision == null)
-                        {
-                            productNeedsDecision = new BrokeDecisionProduct
-                            (BrokeDecisionProducts,
-                                BrokeDecisionProduct.ProductId,
-                                BrokeDecisionProduct.ProductKind,
-                                BrokeDecisionProduct.Number,
-                                ProductState.NeedsDecision,
-                                BrokeDecisionProduct.MaxQuantity,
-                                BrokeDecisionProduct.NomenclatureName,
-                                BrokeDecisionProduct.MeasureUnit,
-                                BrokeDecisionProduct.NomenclatureOldId,
-                                BrokeDecisionProduct.CharacteristicOldId                                
-                            );
-                            productNeedsDecision.DecisionDate = BrokeDecisionProduct.DecisionDate;
-                            productNeedsDecision.DecisionPlaceId = BrokeDecisionProduct.DecisionPlaceId;
-                            BrokeDecisionProducts.Add(productNeedsDecision);
-                        }
-                        productNeedsDecision.Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity - value;                        
-                    }
-                    BrokeDecisionProduct.Quantity = value;                   
-                }
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
+                RefreshEditBrokeDecisionItem();
             }
         }
 
@@ -101,7 +55,7 @@ namespace Gamma.Models
 
         protected override bool CanChooseNomenclature()
         {
-            return base.CanChooseNomenclature() && !IsReadOnly;
+            return base.CanChooseNomenclature() && !IsReadOnlyFields;
         }
 
         public override Guid? CharacteristicID
@@ -127,170 +81,49 @@ namespace Gamma.Models
             set
             {
                 _isReadOnly = value;
+                RefreshReadOnlyFields(value);
                 RaisePropertyChanged("IsReadOnly");
             }
         }
 
-        private ItemsChangeObservableCollection<BrokeDecisionProduct> BrokeDecisionProducts { get; set; }
+        private void RefreshReadOnlyFields(bool isReadOnly)
+        {
+            IsReadOnlyFields = /*!IsChecked ||*/ isReadOnly || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
+        }
+
+        private bool _isReadOnlyFields { get; set; }
+
+        public bool IsReadOnlyFields
+        {
+            get { return _isReadOnlyFields; }
+            set
+            {
+                _isReadOnlyFields = value;
+                RaisePropertyChanged("IsReadOnlyFields");
+            }
+        } 
+
         public bool NomenclatureVisible { get; private set; }
 
-        private bool _isChecked;
+        public bool? ExternalRefresh { get; set; } = false;
 
+        public void RefreshEditBrokeDecisionItem()
+        {
+            if (ExternalRefresh == false)
+                ParentModel.RefreshEditBrokeDecisionItem(ProductState);
+        }
+
+        private bool _isChecked { get; set; }
         public bool IsChecked
         {
             get { return _isChecked; }
             set
             {
-                if (_isChecked == value) return;
-                if (BrokeDecisionProduct == null)
-                {
-                    _isChecked = value;
-                    RaisePropertyChanged("IsChecked");
-                    return;
-                }
-                // Если не тамбур или тамбур, но не утилизация, то возврат (2 состояния недоступно)
-                if (value && (ProductState != ProductState.Broke || (ProductState == ProductState.Broke && (BrokeDecisionProduct.ProductKind != ProductKind.ProductSpool && BrokeDecisionProduct.ProductKind != ProductKind.ProductPallet && BrokeDecisionProduct.ProductKind != ProductKind.ProductPalletR))) && 
-                    (
-                        BrokeDecisionProducts.Any(p => p.ProductState != ProductState 
-                        && p.ProductId == BrokeDecisionProduct.ProductId
-                        && (p.ProductState != ProductState.Broke || (p.ProductState == ProductState.Broke && (BrokeDecisionProduct.ProductKind != ProductKind.ProductSpool && BrokeDecisionProduct.ProductKind != ProductKind.ProductPallet && BrokeDecisionProduct.ProductKind != ProductKind.ProductPalletR))) && p.ProductState != ProductState.NeedsDecision)
-                    )) return;
-                _isChecked = value;
+                if (_isChecked == value || (_isChecked && !value && ExternalRefresh == false && ParentModel.NeedsProductStates.Contains(ProductState))) return;
+               _isChecked = value;
+                RefreshReadOnlyFields(IsReadOnly);
                 RaisePropertyChanged("IsChecked");
-                var productNeedsDecision = BrokeDecisionProducts.FirstOrDefault(
-                        bp =>
-                            bp.ProductId == BrokeDecisionProduct.ProductId &&
-                            bp.ProductState == ProductState.NeedsDecision);
-                if (value)
-                {
-
-                    if (!BrokeDecisionProducts.Contains(BrokeDecisionProduct))
-                    {
-                        if (BrokeDecisionProducts.Count != 0)
-                        {
-                            BrokeDecisionProduct.IsEditableDecision = BrokeDecisionProducts.FirstOrDefault(p => p.IsEditableDecision = true)?.IsEditableDecision ?? false;
-                            BrokeDecisionProduct.DecisionDate = BrokeDecisionProducts.FirstOrDefault(p => p.DecisionDate != null)?.DecisionDate;
-                            BrokeDecisionProduct.DecisionPlaceId = BrokeDecisionProducts.FirstOrDefault(p => p.DecisionPlaceId != null)?.DecisionPlaceId;
-                        }
-                        BrokeDecisionProducts.Add(BrokeDecisionProduct);
-                    }
-                    if (BrokeDecisionProduct.ProductKind == ProductKind.ProductSpool || BrokeDecisionProduct.ProductKind == ProductKind.ProductPallet || BrokeDecisionProduct.ProductKind == ProductKind.ProductPalletR) // ветка для тамбуров
-                    {
-                        var sumQuantity = BrokeDecisionProducts.Where(p => p.ProductId == BrokeDecisionProduct.ProductId).Except(new List<BrokeDecisionProduct>
-                        {
-                            productNeedsDecision
-                        })
-                        .Sum(p => p.Quantity);
-                        if (sumQuantity >= BrokeDecisionProduct.MaxQuantity)
-                        {
-                            BrokeDecisionProducts.Remove(productNeedsDecision);
-                        }
-                        else
-                        {
-                            if (productNeedsDecision != null)
-                            {
-                                productNeedsDecision.Quantity = BrokeDecisionProduct.MaxQuantity - sumQuantity;
-                            }
-                            else
-                            {
-                                productNeedsDecision = new BrokeDecisionProduct
-                                    (BrokeDecisionProducts,
-                                        BrokeDecisionProduct.ProductId,
-                                        BrokeDecisionProduct.ProductKind,
-                                        BrokeDecisionProduct.Number,
-                                        ProductState.NeedsDecision,
-                                        BrokeDecisionProduct.MaxQuantity,
-                                        BrokeDecisionProduct.NomenclatureName,
-                                        BrokeDecisionProduct.MeasureUnit,
-                                        BrokeDecisionProduct.NomenclatureOldId,
-                                        BrokeDecisionProduct.CharacteristicOldId,
-                                        BrokeDecisionProduct.MaxQuantity - sumQuantity
-                                    );
-                                productNeedsDecision.DecisionDate = BrokeDecisionProduct.DecisionDate;
-                                productNeedsDecision.DecisionPlaceId = BrokeDecisionProduct.DecisionPlaceId;
-                                BrokeDecisionProducts.Add(productNeedsDecision);
-                            }
-                        }
-                    }
-                    else // ветка для всего, кроме тамбуров (количество перелетает полностью)
-                    {
-                        if (productNeedsDecision == null) return;
-                        BrokeDecisionProduct.Quantity = productNeedsDecision.Quantity;
-                        Quantity = productNeedsDecision.Quantity;
-                        BrokeDecisionProducts.Remove(productNeedsDecision);
-                        if (BrokeDecisionProduct.ProductKind != ProductKind.ProductPallet && BrokeDecisionProduct.ProductKind != ProductKind.ProductPalletR && BrokeDecisionProduct.ProductState != ProductState.ForConversion) return;
-                        NomenclatureID = productNeedsDecision.NomenclatureOldId;
-                        CharacteristicID = productNeedsDecision.CharacteristicOldId;
-                    }
-                }
-                else
-                {
-                    if (BrokeDecisionProduct.ProductKind == ProductKind.ProductSpool || BrokeDecisionProduct.ProductKind == ProductKind.ProductPallet || BrokeDecisionProduct.ProductKind == ProductKind.ProductPalletR)
-                    {
-                        var sumQuantity = BrokeDecisionProducts.Except(new List<BrokeDecisionProduct>
-                        {
-                            BrokeDecisionProduct
-                        }).Where(p => p.ProductId == BrokeDecisionProduct.ProductId)
-                            .Sum(p => p.Quantity);
-                        if (productNeedsDecision == null)
-                        {
-                            productNeedsDecision = new BrokeDecisionProduct
-                                (BrokeDecisionProducts,
-                                    BrokeDecisionProduct.ProductId,
-                                    BrokeDecisionProduct.ProductKind,
-                                    BrokeDecisionProduct.Number,
-                                    ProductState.NeedsDecision,
-                                    BrokeDecisionProduct.MaxQuantity,
-                                    BrokeDecisionProduct.NomenclatureName,
-                                    BrokeDecisionProduct.MeasureUnit,
-                                    BrokeDecisionProduct.NomenclatureOldId,
-                                    BrokeDecisionProduct.CharacteristicOldId,
-                                    BrokeDecisionProduct.MaxQuantity - sumQuantity
-                                );
-                            productNeedsDecision.DecisionDate = BrokeDecisionProduct.DecisionDate;
-                            productNeedsDecision.DecisionPlaceId = BrokeDecisionProduct.DecisionPlaceId;
-                            BrokeDecisionProducts.Add(productNeedsDecision);
-                        }
-                        else
-                        {
-                            productNeedsDecision.Quantity += BrokeDecisionProduct.Quantity;
-                            Quantity = 0;
-                            NomenclatureID = null;
-                            CharacteristicID = null;
-                        }
-                        BrokeDecisionProducts.Remove(BrokeDecisionProduct);
-                    }
-                    else
-                    {
-                        if (productNeedsDecision == null)
-                        {
-                            productNeedsDecision = new BrokeDecisionProduct
-                                (BrokeDecisionProducts,
-                                    BrokeDecisionProduct.ProductId,
-                                    BrokeDecisionProduct.ProductKind,
-                                    BrokeDecisionProduct.Number,
-                                    ProductState.NeedsDecision,
-                                    BrokeDecisionProduct.MaxQuantity,
-                                    BrokeDecisionProduct.NomenclatureName,
-                                    BrokeDecisionProduct.MeasureUnit,
-                                    BrokeDecisionProduct.NomenclatureOldId,
-                                    BrokeDecisionProduct.CharacteristicOldId,
-                                    BrokeDecisionProduct.MaxQuantity
-                                );
-                            productNeedsDecision.DecisionDate = BrokeDecisionProduct.DecisionDate;
-                            productNeedsDecision.DecisionPlaceId = BrokeDecisionProduct.DecisionPlaceId;
-                            BrokeDecisionProducts.Add(productNeedsDecision);
-                        }
-                        else
-                        {
-                            productNeedsDecision.Quantity = BrokeDecisionProduct.Quantity;
-                        }
-                        BrokeDecisionProducts.Remove(BrokeDecisionProduct);
-                        Quantity = 0;
-                        NomenclatureID = null;
-                        CharacteristicID = null;
-                    }
-                }
+                RefreshEditBrokeDecisionItem();
             }
         }
 
@@ -298,16 +131,16 @@ namespace Gamma.Models
 
         private ProductState _productState { get; set; }
 
-        private ProductState ProductState
+        public ProductState ProductState
         {
             get { return _productState; }
-            set
+            private set
             {
                 _productState = value;
                 IsDecisionAppliedVisible = (value == ProductState.Broke) || (value == ProductState.ForConversion);
             }
         }
-
+        
         private BrokeDecisionProduct _brokeDecisionProduct;
 
         public BrokeDecisionProduct BrokeDecisionProduct
@@ -328,7 +161,7 @@ namespace Gamma.Models
                 RaisePropertyChanged("BrokeDecisionProduct");
             }
         }
-
+        
         private bool _isDecisionAppliedVisible;
 
         public bool IsDecisionAppliedVisible
@@ -359,6 +192,28 @@ namespace Gamma.Models
         {
             if (DocWithdrawalID == null ) return;
             MessageManager.OpenDocWithdrawal((Guid)DocWithdrawalID);
+        }
+
+        private decimal _maxQuantity { get; set; }
+        public decimal MaxQuantity
+        {
+            get { return _maxQuantity; }
+            set
+            {
+                _maxQuantity = value;
+                RaisePropertyChanged("MaxQuantity");
+            }
+        }
+
+        private decimal _minQuantity { get; set; }
+        public decimal MinQuantity
+        {
+            get { return _minQuantity; }
+            set
+            {
+                _minQuantity = value;
+                RaisePropertyChanged("MinQuantity");
+            }
         }
     }
 }

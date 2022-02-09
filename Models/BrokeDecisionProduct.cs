@@ -10,11 +10,9 @@ namespace Gamma.Models
 {
     public class BrokeDecisionProduct : ViewModelBase
     {
-        public BrokeDecisionProduct(ItemsChangeObservableCollection<BrokeDecisionProduct> brokeDecisionProducts, Guid productId, ProductKind productKind, string number, ProductState state, decimal maxQuantity,  string nomenclatureName, 
+        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, ProductState state, string nomenclatureName, 
             string measureUnit, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false, Guid? docWithdrawalID = null, DateTime? decisionDate = null, int? decisionPlaceId = null)
         {
-            BrokeDecisionProducts = brokeDecisionProducts;
-            MaxQuantity = maxQuantity;
             Quantity = quantity;
             ProductId = productId;
             Number = number;
@@ -30,15 +28,12 @@ namespace Gamma.Models
             DecisionPlaceId = decisionPlaceId;
         }
 
-        public BrokeDecisionProduct(ItemsChangeObservableCollection<BrokeDecisionProduct> brokeDecisionProducts, Guid productId, ProductKind productKind, string number, ProductState state, decimal maxQuantity, string nomenclatureName,
+        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, ProductState state, 
+            string nomenclatureName,
             string measureUnit, Guid nomenclatureOldId, Guid? characteristicOldId, DateTime? decisionDate, int? decisionPlaceId)
-                : this(brokeDecisionProducts, productId, productKind, number, state, maxQuantity, nomenclatureName, 
+                : this(productId, productKind, number, state, nomenclatureName, 
                 measureUnit, nomenclatureOldId, characteristicOldId, 0, false, null, decisionDate, decisionPlaceId)
         { }
-
-        private ItemsChangeObservableCollection<BrokeDecisionProduct> BrokeDecisionProducts { get; set; }
-
-        public decimal MaxQuantity { get; set; }
 
         public Guid ProductId { get; set; }
 
@@ -74,8 +69,7 @@ namespace Gamma.Models
             {
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
-            }
-            
+            }            
         }
         public string Comment { get; set; }
         public string Number { get; set; }
@@ -83,8 +77,8 @@ namespace Gamma.Models
         public ProductKind ProductKind { get; set; }
         public string NumberAndNomenclature => Number.PadRight(14) + "  |  " + NomenclatureName;
         public string DecisionDateAndPlace => (DecisionDate == null ? "" : ((DateTime)DecisionDate).ToString("dd.MM.yyyy HH:mm:ss")).PadRight(19) + (DecisionPlaceName?.Length > 0 ? "  |  " + DecisionPlaceName : "");
-        public string DecisionPlaceName { get; private set; }
-
+        public string DecisionPlaceName { get; set; }
+                
         private DateTime? _decisionDate { get; set; }
         public DateTime? DecisionDate
         {
@@ -92,11 +86,6 @@ namespace Gamma.Models
             set
             {
                 _decisionDate = value;
-                foreach (var decisionItem in BrokeDecisionProducts)
-                {
-                    if (value != null && decisionItem.Number == Number && decisionItem.ProductState != ProductState && decisionItem.DecisionDate != value)
-                        decisionItem.DecisionDate = value;
-                }
                 RaisePropertyChanged("DecisionDate");
 
             }
@@ -109,45 +98,8 @@ namespace Gamma.Models
             set
             {
                 _decisionPlaceId = value;
-                foreach (var decisionItem in BrokeDecisionProducts)
-                {
-                    if (value != null && decisionItem.Number == Number && decisionItem.ProductState != ProductState && decisionItem.DecisionPlaceId != value)
-                        decisionItem.DecisionPlaceId = value;
-                }
-                using (var gammaBase = DB.GammaDb)
-                {
-                    DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == value)?.Name;
-                }
                 RaisePropertyChanged("DecisionPlaceId");
 
-            }
-        }
-
-        private bool _isEditableDecision { get; set; } = false;
-        public bool IsEditableDecision
-        {
-            get { return _isEditableDecision; }
-            set
-            {
-                _isEditableDecision = value;
-                foreach (var decisionItem in BrokeDecisionProducts)
-                {
-                    if (decisionItem.Number == Number && decisionItem.ProductState != ProductState && decisionItem.IsEditableDecision != value)
-                        decisionItem.IsEditableDecision = value;
-                    if (value == true)
-                    {
-                        if (DecisionDate == null)
-                            DecisionDate = DateTime.Now;
-                        if (DecisionPlaceId == null)
-                        {
-                            using (var gammaBase = DB.GammaDb)
-                            {
-                                DecisionPlaceId = gammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductId)?.PlaceID;
-                            }
-                        }
-                    }
-                }
-                RaisePropertyChanged("IsEditableDecision");
             }
         }
 
