@@ -155,7 +155,6 @@ namespace Gamma.Models
         }
 
         private bool _DecisionApplied;
-
         public bool DecisionApplied
         {
             get { return _DecisionApplied; }

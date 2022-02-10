@@ -18,15 +18,14 @@ namespace Gamma.Models
             ParentModel = parentModel;
             ProductState = productState;
             NomenclatureVisible = canChooseNomenclature;
-            OpenWithdrawalCommand = new DelegateCommand(OpenWithdrawal, () => !IsReadOnlyFields);
+            OpenWithdrawalCommand = new DelegateCommand(OpenWithdrawal, () => DocWithdrawalID != null);
         }
 
         private DocBrokeDecisionModel ParentModel { get; }
 
         public DelegateCommand OpenWithdrawalCommand { get; private set; }
-
+                
         private decimal _quantity;
-
         public decimal Quantity
         {
             get { return _quantity; }
@@ -34,6 +33,18 @@ namespace Gamma.Models
             {
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
+                RefreshEditBrokeDecisionItem();
+            }
+        }
+
+        private string _comment;
+        public string Comment
+        {
+            get { return _comment; }
+            set
+            {
+                _comment = value;
+                RaisePropertyChanged("Comment");
                 RefreshEditBrokeDecisionItem();
             }
         }
@@ -50,6 +61,7 @@ namespace Gamma.Models
                         BrokeDecisionProduct.NomenclatureId = NomenclatureID;
                 }
                 RaisePropertyChanged("NomenclatureID");
+                RefreshEditBrokeDecisionItem();
             }
         }
 
@@ -70,11 +82,11 @@ namespace Gamma.Models
                         BrokeDecisionProduct.CharacteristicId = CharacteristicID;
                 }
                 RaisePropertyChanged("CharacteristicID");
+                RefreshEditBrokeDecisionItem();
             }
         }
 
         private bool _isReadOnly = true;
-
         public bool IsReadOnly
         {
             get { return _isReadOnly; }
@@ -88,11 +100,12 @@ namespace Gamma.Models
 
         private void RefreshReadOnlyFields(bool isReadOnly)
         {
-            IsReadOnlyFields = /*!IsChecked ||*/ isReadOnly || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
+            IsReadOnlyFields = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied ;// || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
+            IsReadOnlyQuantity =  !IsChecked || isReadOnly || ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied;
+            IsReadOnlyDecisionApplied = !IsChecked || isReadOnly || !(Quantity > 0); 
         }
 
         private bool _isReadOnlyFields { get; set; }
-
         public bool IsReadOnlyFields
         {
             get { return _isReadOnlyFields; }
@@ -101,7 +114,29 @@ namespace Gamma.Models
                 _isReadOnlyFields = value;
                 RaisePropertyChanged("IsReadOnlyFields");
             }
-        } 
+        }
+
+        private bool _isReadOnlyQuantity = true;
+        public bool IsReadOnlyQuantity
+        {
+            get { return _isReadOnlyQuantity; }
+            set
+            {
+                _isReadOnlyQuantity = value;
+                RaisePropertyChanged("IsReadOnlyQuantity");
+            }
+        }
+        
+        private bool _isReadOnlyDecisionApplied = true;
+        public bool IsReadOnlyDecisionApplied
+        {
+            get { return _isReadOnlyDecisionApplied; }
+            set
+            {
+                _isReadOnlyDecisionApplied = value;
+                RaisePropertyChanged("IsReadOnlyDecisionApplied");
+            }
+        }
 
         public bool NomenclatureVisible { get; private set; }
 
@@ -111,6 +146,7 @@ namespace Gamma.Models
         {
             if (ExternalRefresh == false)
                 ParentModel.RefreshEditBrokeDecisionItem(ProductState);
+            RefreshReadOnlyFields(IsReadOnly);
         }
 
         private bool _isChecked { get; set; }
@@ -119,9 +155,12 @@ namespace Gamma.Models
             get { return _isChecked; }
             set
             {
-                if (_isChecked == value || (_isChecked && !value && ExternalRefresh == false && ParentModel.NeedsProductStates.Contains(ProductState))) return;
+                if (_isChecked == value 
+                    || (_isChecked && !value && ExternalRefresh == false 
+                        && (ParentModel.NeedsProductStates.Contains(ProductState)
+                            || DecisionApplied)))
+                    return;
                _isChecked = value;
-                RefreshReadOnlyFields(IsReadOnly);
                 RaisePropertyChanged("IsChecked");
                 RefreshEditBrokeDecisionItem();
             }
@@ -183,6 +222,7 @@ namespace Gamma.Models
             {
                 _decisionApplied = value;
                 RaisePropertyChanged("DecisionApplied");
+                RefreshEditBrokeDecisionItem();
             }
         }
 

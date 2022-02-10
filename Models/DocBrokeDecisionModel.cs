@@ -60,6 +60,7 @@ namespace Gamma.Models
                         editBrokeDecisionItem.Value.BrokeDecisionProduct = null;
                         editBrokeDecisionItem.Value.IsChecked = false;
                         editBrokeDecisionItem.Value.Quantity = 0;
+                        editBrokeDecisionItem.Value.Comment = String.Empty;
                         editBrokeDecisionItem.Value.IsReadOnly = true;
                         editBrokeDecisionItem.Value.DecisionApplied = false;
                         editBrokeDecisionItem.Value.DocWithdrawalID = null;
@@ -74,6 +75,7 @@ namespace Gamma.Models
                         decisionProduct.BrokeDecisionProduct = null;
                         decisionProduct.Quantity = product.Quantity;
                         decisionProduct.IsChecked = true;
+                        decisionProduct.Comment = product.Comment;
                         decisionProduct.DecisionApplied = product.DecisionApplied;
                         decisionProduct.DocWithdrawalID = product.DocWithdrawalID;
                         decisionProduct.IsReadOnly = GetReadOnlyForEditBrokeDecisionProduct(product.ProductState);
@@ -86,6 +88,7 @@ namespace Gamma.Models
                         editBrokeDecisionItem.Value.BrokeDecisionProduct = null;
                         editBrokeDecisionItem.Value.IsChecked = false;
                         editBrokeDecisionItem.Value.Quantity = 0;
+                        editBrokeDecisionItem.Value.Comment = String.Empty;
                         editBrokeDecisionItem.Value.IsReadOnly = GetReadOnlyForEditBrokeDecisionProduct(editBrokeDecisionItem.Value.ProductState);
                         editBrokeDecisionItem.Value.DecisionApplied = false;
                         editBrokeDecisionItem.Value.DocWithdrawalID = null;
@@ -346,7 +349,7 @@ namespace Gamma.Models
             }
             SetExternalRefreshInEditBrokeDecisionItems(false);
 
-            foreach (var editItem in EditBrokeDecisionItems)
+            foreach (var editItem in EditBrokeDecisionItems.OrderByDescending(d => d.Value.IsChecked))
             {
                 editItem.Value.MinQuantity = editItem.Value.IsChecked && NeedsProductStates.Contains(editItem.Key) ? (decimal)0.001 : 0;
                 editItem.Value.MaxQuantity = editItem.Value.Quantity + ( productQuantity - sumQuantityDecisionItem);
@@ -356,6 +359,11 @@ namespace Gamma.Models
                     if (brokeDecisionProduct != null)
                     {
                         brokeDecisionProduct.Quantity = editItem.Value.Quantity;
+                        brokeDecisionProduct.Comment = editItem.Value.Comment;
+                        brokeDecisionProduct.NomenclatureId = editItem.Value.NomenclatureID;
+                        brokeDecisionProduct.CharacteristicId = editItem.Value.CharacteristicID;
+                        brokeDecisionProduct.DecisionApplied = editItem.Value.DecisionApplied;
+                        brokeDecisionProduct.DocWithdrawalID = editItem.Value.DocWithdrawalID;
                     }
                     else
                     {
@@ -371,6 +379,11 @@ namespace Gamma.Models
                                 editItem.Value.Quantity
                             )
                         {
+                            Comment = editItem.Value.Comment,
+                            NomenclatureId = editItem.Value.NomenclatureID,
+                            CharacteristicId = editItem.Value.CharacteristicID,
+                            DecisionApplied = editItem.Value.DecisionApplied,
+                            DocWithdrawalID = editItem.Value.DocWithdrawalID,
                             DecisionDate = SelectedBrokeDecisionProduct.DecisionDate,
                             DecisionPlaceId = SelectedBrokeDecisionProduct.DecisionPlaceId,
                             DecisionPlaceName = SelectedBrokeDecisionProduct.DecisionPlaceName
