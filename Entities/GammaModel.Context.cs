@@ -1700,5 +1700,26 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetNomenclatureAnalogs_Result>("[GammaEntities].[GetNomenclatureAnalogs](@Date)", dateParameter);
         }
+    
+        public virtual ObjectResult<Nullable<bool>> GetDocBrokeDecisionEditable(Nullable<System.Guid> userID, Nullable<int> shiftID, Nullable<System.Guid> docID, Nullable<System.Guid> productID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(System.Guid));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            var docIDParameter = docID.HasValue ?
+                new ObjectParameter("DocID", docID) :
+                new ObjectParameter("DocID", typeof(System.Guid));
+    
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("GetDocBrokeDecisionEditable", userIDParameter, shiftIDParameter, docIDParameter, productIDParameter);
+        }
     }
 }

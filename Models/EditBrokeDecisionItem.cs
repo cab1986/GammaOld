@@ -6,25 +6,34 @@ using System.Linq;
 using Gamma.Common;
 using Gamma.ViewModels;
 using DevExpress.Mvvm;
+using Gamma.DialogViewModels;
+using System.ComponentModel;
+using System.Windows;
+using Gamma.Controllers;
 
 namespace Gamma.Models
 {
     public class EditBrokeDecisionItem: DbEditItemWithNomenclatureViewModel
     {
         public EditBrokeDecisionItem(string name, ProductState productState, 
-            DocBrokeDecisionModel parentModel, bool canChooseNomenclature = false)
+            DocBrokeDecisionViewModel parentModel, bool canChooseNomenclature = false)
         {
             Name = name;
             ParentModel = parentModel;
             ProductState = productState;
             NomenclatureVisible = canChooseNomenclature;
-            OpenWithdrawalCommand = new DelegateCommand(OpenWithdrawal, () => DocWithdrawalID != null);
+            //OpenWithdrawalCommand = new DelegateCommand<Guid>(OpenWithdrawal); //, () => DocWithdrawals?.Count != 0);
+            CreateWithdrawalCommand = new DelegateCommand(CreateWithdrawal, ()=> DB.HaveWriteAccess("DocWithdrawalProducts"));
         }
 
-        private DocBrokeDecisionModel ParentModel { get; }
+        private DocBrokeDecisionViewModel ParentModel { get; }
 
-        public DelegateCommand OpenWithdrawalCommand { get; private set; }
-                
+        private readonly DocumentController documentController = new DocumentController();
+        private readonly ProductController productController = new ProductController();
+
+        //public DelegateCommand<Guid> OpenWithdrawalCommand { get; private set; }
+        public DelegateCommand CreateWithdrawalCommand { get; private set; }
+
         private decimal _quantity;
         public decimal Quantity
         {
@@ -86,6 +95,20 @@ namespace Gamma.Models
             }
         }
 
+        public void Init()
+        {
+            if (ProductState == ProductState.Good)
+                Name = "Годная";
+            IsReadOnly = false;
+            IsReadOnlyDecisionApplied = false;
+            IsReadOnlyFields = false;
+            IsReadOnlyIsChecked = false;
+            IsReadOnlyQuantity = false;
+            IsExistForConversionOrRepackItem = false;
+            IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = false;
+            IsExistMoreTwoCheckedItem = false;
+        }
+
         private bool _isReadOnly = true;
         public bool IsReadOnly
         {
@@ -94,15 +117,36 @@ namespace Gamma.Models
             {
                 _isReadOnly = value;
                 RefreshReadOnlyFields(value);
+                RefreshReadOnlyIsChecked(value);
                 RaisePropertyChanged("IsReadOnly");
             }
         }
 
+        private bool _isReadOnlyIsChecked { get; set; }
+        public bool IsReadOnlyIsChecked
+        {
+            get { return _isReadOnlyIsChecked; }
+            set
+            {
+                _isReadOnlyIsChecked = value;
+                RaisePropertyChanged("IsReadOnlyIsChecked");
+            }
+        }
+
+        private void RefreshReadOnlyIsChecked(bool isReadOnly)
+        {
+            IsReadOnlyIsChecked = isReadOnly || MaxQuantity == 0 //|| MinQuantity > 0 
+                || IsExistMoreTwoCheckedItem 
+                || ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
+            || (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
+            RefreshReadOnlyFields(isReadOnly);
+        }
+
         private void RefreshReadOnlyFields(bool isReadOnly)
         {
-            IsReadOnlyFields = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied ;// || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
-            IsReadOnlyQuantity =  !IsChecked || isReadOnly || ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied;
-            IsReadOnlyDecisionApplied = !IsChecked || isReadOnly || !(Quantity > 0); 
+            IsReadOnlyFields = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied || IsReadOnlyIsChecked;// || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
+            IsReadOnlyQuantity =  !IsChecked || isReadOnly || ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied || IsReadOnlyIsChecked;
+            IsReadOnlyDecisionApplied = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied;
         }
 
         private bool _isReadOnlyFields { get; set; }
@@ -157,8 +201,8 @@ namespace Gamma.Models
             {
                 if (_isChecked == value 
                     || (_isChecked && !value && ExternalRefresh == false 
-                        && (ParentModel.NeedsProductStates.Contains(ProductState)
-                            || DecisionApplied)))
+                        && //((ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied)
+                            DocWithdrawalSum > 0))
                     return;
                _isChecked = value;
                 RaisePropertyChanged("IsChecked");
@@ -166,22 +210,29 @@ namespace Gamma.Models
             }
         }
 
-        public string Name { get; set; }
+        private string _name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                RaisePropertyChanged("Name");
+            }
+        }
 
         private ProductState _productState { get; set; }
-
         public ProductState ProductState
         {
             get { return _productState; }
             private set
             {
                 _productState = value;
-                IsDecisionAppliedVisible = (value == ProductState.Broke) || (value == ProductState.ForConversion);
+                IsDecisionAppliedVisible = (value == ProductState.Broke) || (value == ProductState.ForConversion) || (value == ProductState.Repack);
             }
         }
         
         private BrokeDecisionProduct _brokeDecisionProduct;
-
         public BrokeDecisionProduct BrokeDecisionProduct
         {
             get { return _brokeDecisionProduct; }
@@ -202,7 +253,6 @@ namespace Gamma.Models
         }
         
         private bool _isDecisionAppliedVisible;
-
         public bool IsDecisionAppliedVisible
         {
             get { return _isDecisionAppliedVisible; }
@@ -214,7 +264,6 @@ namespace Gamma.Models
         }
 
         private bool _decisionApplied;
-
         public bool DecisionApplied
         {
             get { return _decisionApplied; }
@@ -226,12 +275,141 @@ namespace Gamma.Models
             }
         }
 
-        public Guid? DocWithdrawalID { get; set; }
-
-        private void OpenWithdrawal()
+/*        private bool _isExistWithdrawalSum;
+        public bool IsExistWithdrawalSum
         {
-            if (DocWithdrawalID == null ) return;
-            MessageManager.OpenDocWithdrawal((Guid)DocWithdrawalID);
+            get { return _isExistWithdrawalSum; }
+            set
+            {
+                _isExistWithdrawalSum = value;
+                RaisePropertyChanged("IsExistWithdrawalSum");
+                RefreshReadOnlyIsChecked(IsReadOnly);
+            }
+        }
+*/
+        private bool _isExistMoreTwoCheckedItem;
+        public bool IsExistMoreTwoCheckedItem
+        {
+            get { return _isExistMoreTwoCheckedItem; }
+            set
+            {
+                _isExistMoreTwoCheckedItem = value;
+                RaisePropertyChanged("IsExistMoreTwoCheckedItem");
+                RefreshReadOnlyIsChecked(IsReadOnly);
+            }
+        }
+
+        private bool _isExistForConversionOrRepackItem;
+        public bool IsExistForConversionOrRepackItem
+        {
+            get { return _isExistForConversionOrRepackItem; }
+            set
+            {
+                _isExistForConversionOrRepackItem = value;
+                RaisePropertyChanged("IsExistForConversionOrRepackItem");
+                RefreshReadOnlyIsChecked(IsReadOnly);
+            }
+        }
+
+        private bool _isExistForConversionOrRepackItemWithDecisionAppliedSumMore0;
+        public bool IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0
+        {
+            get { return _isExistForConversionOrRepackItemWithDecisionAppliedSumMore0; }
+            set
+            {
+                _isExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = value;
+                RaisePropertyChanged("IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0");
+                RefreshReadOnlyIsChecked(IsReadOnly);
+            }
+        }
+
+        private bool _isExistGoodItem = false;
+        public bool IsExistGoodItem
+        {
+            get { return _isExistGoodItem; }
+            set
+            {
+                _isExistGoodItem = value;
+                RaisePropertyChanged("IsExistGoodItem");
+                RefreshReadOnlyIsChecked(IsReadOnly);
+            }
+        }
+
+        private List<KeyValuePair<Guid, String>> _docWithdrawals { get; set; } = new List<KeyValuePair<Guid, string>>();
+        public List<KeyValuePair<Guid, String>> DocWithdrawals
+        {
+            get { return _docWithdrawals; }
+            set
+            {
+                _docWithdrawals = value;
+                RaisePropertyChanged("DocWithdrawals");
+            }
+        }
+
+        private decimal _docWithdrawalSum { get; set; }
+        public decimal DocWithdrawalSum
+        {
+            get { return _docWithdrawalSum; }
+            set
+            {
+                _docWithdrawalSum = value;
+                DecisionAppliedLabel = "Выполнено на " + (value > 0 ? value.ToString() : "" );
+                DecisionApplied = value > 0 && value >= Quantity;
+                RaisePropertyChanged("DocWithdrawalSum");
+            }
+        }
+
+        private string _decisionAppliedLabel { get; set; } = "Выполнено";
+        public string DecisionAppliedLabel
+        {
+            get { return _decisionAppliedLabel; }
+            set
+            {
+                _decisionAppliedLabel = value;
+                RaisePropertyChanged("DecisionAppliedLabel");
+            }
+        }
+
+        private Guid? _docWithdrawal { get; set; }
+        public Guid? DocWithdrawal
+        {
+            get { return _docWithdrawal; }
+            set
+            {
+                //_docWithdrawal = value;
+                RaisePropertyChanged("DocWithdrawal");
+                if (value != null)
+                    switch (DocWithdrawals?.FirstOrDefault(d => d.Key == (Guid)value).Value.Substring(0, 7))
+                    {
+                        case "Списани":
+                            MessageManager.OpenDocWithdrawal((Guid)value);
+                            break;
+                        case "Продукт":
+                            MessageManager.OpenDocProduct((ProductKind)ParentModel.ProductKind, (Guid)value);
+                            break;
+                    }
+
+            }
+        }
+
+        private Guid? ProductId => BrokeDecisionProduct?.ProductId;
+        private void CreateWithdrawal()
+        {
+            if (!ParentModel.SaveBrokeDecisionProductsToModel(ProductId))
+                MessageBox.Show("Ошибка при сохранении решения", " Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            else
+            {
+                var productionQuantity = ParentModel.ProductQuantity;// GammaBase.DocProductionProducts.FirstOrDefault(p => p.ProductID == ProductId).Quantity;
+                var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
+                var docWithdrawalId =
+                    ProductState == ProductState.Broke ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - (BrokeDecisionProduct?.DocWithdrawalSum ?? 0), productionQuantity)
+                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? null : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - (BrokeDecisionProduct?.DocWithdrawalSum ?? 0), productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber))
+                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - (BrokeDecisionProduct?.DocWithdrawalSum ?? 0), productionQuantity, (Guid)productSpool?.C1CNomenclatureID, (Guid)productSpool?.C1CCharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber)
+                    : null;
+                if (docWithdrawalId != null)
+                    if (BrokeDecisionProduct.DocWithdrawalSum > MinQuantity)
+                        MinQuantity = BrokeDecisionProduct.DocWithdrawalSum > Quantity ? Quantity : BrokeDecisionProduct.DocWithdrawalSum;
+            }
         }
 
         private decimal _maxQuantity { get; set; }
@@ -241,6 +419,7 @@ namespace Gamma.Models
             set
             {
                 _maxQuantity = value;
+                RefreshReadOnlyIsChecked(IsReadOnly);
                 RaisePropertyChanged("MaxQuantity");
             }
         }
@@ -252,6 +431,7 @@ namespace Gamma.Models
             set
             {
                 _minQuantity = value;
+                RefreshReadOnlyIsChecked(IsReadOnly);
                 RaisePropertyChanged("MinQuantity");
             }
         }

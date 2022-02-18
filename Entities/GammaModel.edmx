@@ -6382,6 +6382,12 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
         <Function Name="GetDiameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="GetDocBrokeDecisionEditable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
+          <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="GetDocBrokeEditable" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="docDate" Type="datetime" Mode="In" />
           <Parameter Name="docUserID" Type="uniqueidentifier" Mode="In" />
@@ -10946,6 +10952,12 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="C1CRejectionReasons" EntitySet="C1CRejectionReasons" />
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
           </AssociationSet>
+          <FunctionImport Name="GetDocBrokeDecisionEditable" ReturnType="Collection(Boolean)">
+            <Parameter Name="UserID" Mode="In" Type="Guid" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
+            <Parameter Name="DocID" Mode="In" Type="Guid" />
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -20641,6 +20653,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDocBrokeDecisionEditable" FunctionName="GammaDBModel.GetDocBrokeDecisionEditable" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

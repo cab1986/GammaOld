@@ -5,13 +5,16 @@ using System.ComponentModel;
 using DevExpress.Mvvm;
 using Gamma.Common;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Gamma.Models
 {
     public class BrokeDecisionProduct : ViewModelBase
     {
-        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, ProductState state, string nomenclatureName, 
-            string measureUnit, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false, Guid? docWithdrawalID = null, DateTime? decisionDate = null, int? decisionPlaceId = null)
+        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, string nomenclatureName, 
+            string measureUnit, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false,
+            List<KeyValuePair<Guid, String>> docWithdrawals = null, //Guid? docWithdrawalID = null, 
+            DateTime? decisionDate = null, int? decisionPlaceId = null)
         {
             Quantity = quantity;
             ProductId = productId;
@@ -22,20 +25,24 @@ namespace Gamma.Models
             NomenclatureOldId = nomenclatureOldId;
             CharacteristicOldId = characteristicOldId;
             ProductKind = productKind;
+            ProductQuantity = productQuantity;
             DecisionApplied = decisionApplied;
-            DocWithdrawalID = docWithdrawalID;
+            //DocWithdrawalID = docWithdrawalID;
+            DocWithdrawals = docWithdrawals ?? new List<KeyValuePair<Guid, string>>();
             DecisionDate = decisionDate;
             DecisionPlaceId = decisionPlaceId;
         }
 
-        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, ProductState state, 
+        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, 
             string nomenclatureName,
             string measureUnit, Guid nomenclatureOldId, Guid? characteristicOldId, DateTime? decisionDate, int? decisionPlaceId)
-                : this(productId, productKind, number, state, nomenclatureName, 
+                : this(productId, productKind, number, productQuantity, state, nomenclatureName, 
                 measureUnit, nomenclatureOldId, characteristicOldId, 0, false, null, decisionDate, decisionPlaceId)
         { }
 
         public Guid ProductId { get; set; }
+        public Guid DocId { get; set; }
+        public decimal ProductQuantity { get; set; }
 
         private ProductState _productState;
         public ProductState ProductState
@@ -73,7 +80,7 @@ namespace Gamma.Models
         }
         public string Comment { get; set; }
         public string Number { get; set; }
-        public string Decision { get; private set; }
+        public string Decision { get; set; }
         public ProductKind ProductKind { get; set; }
         public string NumberAndNomenclature => Number.PadRight(14) + "  |  " + NomenclatureName;
         public string DecisionDateAndPlace => (DecisionDate == null ? "" : ((DateTime)DecisionDate).ToString("dd.MM.yyyy HH:mm:ss")).PadRight(19) + (DecisionPlaceName?.Length > 0 ? "  |  " + DecisionPlaceName : "");
@@ -166,6 +173,63 @@ namespace Gamma.Models
 
         }
 
-        public Guid? DocWithdrawalID { get; set; }
+        //public Guid? DocWithdrawalID { get; set; }
+        private List<KeyValuePair<Guid, String>> _docWithdrawals { get; set; } = new List<KeyValuePair<Guid, string>>();
+        public List<KeyValuePair<Guid, String>> DocWithdrawals
+        {
+            get { return _docWithdrawals; }
+            set
+            {
+                _docWithdrawals = value;
+                RaisePropertyChanged("DocWithdrawals");
+            }
+        }
+        
+        private decimal _docWithdrawalSum { get; set; }
+        public decimal DocWithdrawalSum
+        {
+            get { return _docWithdrawalSum; }
+            set
+            {
+                _docWithdrawalSum = value;
+                DecisionAppliedLabel = "Выполнено на " + value.ToString();
+                DecisionApplied = value >= Quantity;
+                RaisePropertyChanged("DocWithdrawalSum");
+            }
+        }
+
+        private string _decisionAppliedLabel { get; set; } = "Выполнено";
+        public string DecisionAppliedLabel
+        {
+            get { return _decisionAppliedLabel; }
+            set
+            {
+                _decisionAppliedLabel = value;
+                RaisePropertyChanged("DecisionAppliedLabel");
+            }
+        }
+        /*
+        private Guid? _docWithdrawal { get; set; }
+        public Guid? DocWithdrawal
+        {
+            get { return _docWithdrawal; }
+            set
+            {
+                //_docWithdrawal = value;
+                RaisePropertyChanged("DocWithdrawal");
+                if (value != null)
+                    switch (DocWithdrawals?.FirstOrDefault(d => d.Key == (Guid)value).Value.Substring(0,7))
+                    {
+                        case "Списани":
+                            MessageManager.OpenDocWithdrawal((Guid)value);
+                            break;
+                        case "Продукт":
+                            MessageManager.OpenDocProduct(ProductKind,(Guid)value);
+                            break;
+                    }
+                    
+            }
+        }*/
+
     }
 }

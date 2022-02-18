@@ -988,7 +988,7 @@
       <DependentUpon>GammaModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IProduct.cs" />
-    <Compile Include="Models\DocBrokeDecisionModel.cs" />
+    <Compile Include="Models\CreateWithdrawalResult.cs" />
     <Compile Include="Models\PlaceAuxiliaryMaterial.cs" />
     <Compile Include="Models\DowntimeTemplate.cs" />
     <Compile Include="Models\EquipmentNode.cs" />
@@ -1115,6 +1115,7 @@
     <Compile Include="Models\BrokeProduct.cs" />
     <Compile Include="ViewModels\ComplectedPalletsViewModel.cs" />
     <Compile Include="ViewModels\ComPortSettingsViewModel.cs" />
+    <Compile Include="ViewModels\DocBrokeDecisionViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeListItem.cs" />
     <Compile Include="ViewModels\DocBrokeListViewModel.cs" />
     <Compile Include="ViewModels\DocBrokeViewModel.cs" />
@@ -1208,6 +1209,9 @@
     </Compile>
     <Compile Include="Views\ComPortSettingsView.xaml.cs">
       <DependentUpon>ComPortSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DocBrokeDecisionView.xaml.cs">
+      <DependentUpon>DocBrokeDecisionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DocBrokeListView.xaml.cs">
       <DependentUpon>DocBrokeListView.xaml</DependentUpon>
@@ -1499,6 +1503,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ComPortSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocBrokeDecisionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1934,7 +1942,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

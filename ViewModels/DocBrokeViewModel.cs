@@ -17,6 +17,7 @@ using Gamma.Entities;
 using Gamma.DialogViewModels;
 using System.ComponentModel;
 using System.Diagnostics;
+using Gamma.Controllers;
 
 namespace Gamma.ViewModels
 {
@@ -97,7 +98,7 @@ namespace Gamma.ViewModels
                 InFuturePeriodList.Add(false, "25к - I передел");
                 InFuturePeriodList.Add(true, "10к - II передел");
                 BrokeProducts = new ItemsChangeObservableCollection<BrokeProduct>();
-                DocBrokeDecision = new DocBrokeDecisionModel(this);
+                DocBrokeDecision = new DocBrokeDecisionViewModel(DocId);// this);
                 if (doc != null)
                 {
                     DocNumber = doc.Number;
@@ -212,7 +213,8 @@ namespace Gamma.ViewModels
                     MessageBoxImage.Asterisk);
                 return;
             }
-            SaveToModel();
+            if(CanSaveExecute())
+                SaveToModel();
             ReportManager.PrintReport(msg.ReportID, DocId);
         }
 
@@ -270,7 +272,8 @@ namespace Gamma.ViewModels
                 brokeProducts.Add(brokeProduct);
 #endregion AddBrokeProduct
 #region AddBrokeDecisionProduct
-                var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
+                DocBrokeDecision.AddBrokeDecisionProduct(productId, docId, Date, brokeProduct.Quantity);
+                /*var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
                 if (docBrokeDecisionProducts.Count == 0)
                 {
                     brokeDecisionProducts.Add(new BrokeDecisionProduct(
@@ -284,14 +287,40 @@ namespace Gamma.ViewModels
                         product.C1CCharacteristicID,
                         product.BaseMeasureUnitQuantity ?? 0
                         )
+                    { DocId = this.DocId}
                     );
                 }
                 else
                 {
-                    foreach (var decisionProduct in docBrokeDecisionProducts)
+                    foreach (var decisionProduct in docBrokeDecisionProducts.OrderBy(d =>d.DocID).OrderBy(d => d.ProductID).OrderByDescending(d => d.StateID == (byte)ProductState.ForConversion || d.StateID == (byte)ProductState.Repack))
                     {
-                        var docWithdrawalID = decisionProduct.DocBrokeDecisionProductWithdrawalProducts?.FirstOrDefault();
-                        brokeDecisionProducts.Add(new BrokeDecisionProduct(
+                        List<KeyValuePair<Guid, String>> docWithdrawals = new List<KeyValuePair<Guid, string>>();
+                        decimal docWithdrawalSum = 0;
+                        foreach (var item in decisionProduct.DocBrokeDecisionProductWithdrawalProducts)
+                        {
+                            var productionProduct = item.DocWithdrawal.DocProduction.FirstOrDefault()?.DocProductionProducts.FirstOrDefault();
+                            Guid? itemID = null;
+                            string itemName = "";
+                            decimal? itemSum = null;
+                            if (decisionProduct.StateID == (byte)ProductState.Broke)
+                            {
+                                itemID = item.DocWithdrawalID;
+                                itemSum = item.DocWithdrawal.DocWithdrawalProducts.Where(d => d.ProductID == decisionProduct.ProductID).Sum(d => d.Quantity);
+                                itemName = "Списание " + item.DocWithdrawal.Docs.Number + " от " + item.DocWithdrawal.Docs.Date.ToString("dd.MM.yyyy HH.mm") + " на " + itemSum;
+                            }
+                            else if (productionProduct != null && (decisionProduct.StateID == (byte)ProductState.ForConversion || decisionProduct.StateID == (byte)ProductState.Repack))
+                            {
+                                itemID = productionProduct.ProductID;
+                                itemSum = productionProduct.Quantity;
+                                itemName = "Продукт " + productionProduct.Products.Number + " на " + itemSum;
+                            }
+                            if (itemID != null && itemID != Guid.Empty)
+                            {
+                                docWithdrawals.Add(new KeyValuePair<Guid, string>((Guid)itemID, itemName));
+                                docWithdrawalSum += (decimal)itemSum;
+                            } 
+                        }
+                        var addItem = new BrokeDecisionProduct(
                                 decisionProduct.ProductID,
                                 (ProductKind)product.ProductKindID,
                                 product.Number,
@@ -302,19 +331,31 @@ namespace Gamma.ViewModels
                                 product.C1CCharacteristicID,
                                 decisionProduct.Quantity ?? 0,
                                 decisionProduct.DecisionApplied,
-                                (docWithdrawalID?.DocWithdrawalID == Guid.Empty ? null : docWithdrawalID?.DocWithdrawalID),
+                                //(docWithdrawalID?.DocWithdrawalID == Guid.Empty ? null : docWithdrawalID?.DocWithdrawalID),
+                                docWithdrawals,
                                 decisionProduct.DecisionDate,
                                 decisionProduct.DecisionPlaceID
                             )
                         {
+                            DocId = decisionProduct.DocID,
                             Comment = decisionProduct.Comment,
                             NomenclatureId = decisionProduct.C1CNomenclatureID,
                             CharacteristicId = decisionProduct.C1CCharacteristicID,
                             ProductKind = (ProductKind)product.ProductKindID,
-                            DecisionPlaceName = gammaBase.Places.FirstOrDefault(p => p.PlaceID == decisionProduct.DecisionPlaceID)?.Name
-                        });
+                            DecisionPlaceName = gammaBase.Places.FirstOrDefault(p => p.PlaceID == decisionProduct.DecisionPlaceID)?.Name,
+                            DocWithdrawalSum = docWithdrawalSum
+                        };
+                        var brokeRepackOrConv = brokeDecisionProducts.FirstOrDefault(p => p.DocId == addItem.DocId && p.ProductId == addItem.ProductId && (p.ProductState == ProductState.ForConversion || p.ProductState == ProductState.Repack));
+                        if (addItem.ProductState == ProductState.Good && brokeRepackOrConv != null && brokeRepackOrConv?.DocWithdrawalSum == addItem.Quantity)
+                        {
+                            if (brokeRepackOrConv.ProductState == ProductState.ForConversion)
+                                addItem.Decision = "Переделано";
+                            else if (brokeRepackOrConv.ProductState == ProductState.Repack)
+                                addItem.Decision = "Переупаковано";
+                        }
+                        brokeDecisionProducts.Add(addItem);
                     }
-                }
+                }*/
 #endregion AddBrokeDecisionProduct
                 RefreshRejectionReasonsList();
                 RefreshProductStateList();
@@ -395,6 +436,8 @@ namespace Gamma.ViewModels
             get { return _selectedTabIndex; }
             set
             {
+                if (_selectedTabIndex == 0 && value == 1 && CanSaveExecute())
+                    SaveToModel();
                 _selectedTabIndex = value;
                 IsVisibleSetRejectionReasonForAllProduct = (value == 0);
                 IsVisibleSetDecisionForAllProduct = (value == 1);
@@ -590,14 +633,14 @@ namespace Gamma.ViewModels
             }
         }
 
-        private Guid DocId { get; }
+        public Guid DocId { get; private set; }
 
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
 
         public Guid? VMID { get; } = Guid.NewGuid();
 
         public bool IsReadOnly { get; }
-
+        
         public bool IsEditable { get; }
 
         private void OpenProduct()
@@ -738,7 +781,7 @@ namespace Gamma.ViewModels
 
         public BrokeProduct SelectedBrokeProduct { get; set; }
 
-        public DocBrokeDecisionModel DocBrokeDecision { get; set; }
+        public DocBrokeDecisionViewModel DocBrokeDecision { get; set; }
 
         /*
         public EditBrokeDecisionItem InternalUsageProduct { get; set; }
@@ -845,7 +888,10 @@ namespace Gamma.ViewModels
                     }*/
                     doc.DocBroke.DocBrokeProducts.Add(brokeProduct);
                 }
+                gammaBase.SaveChanges();
 #region Сохранение решений по продукции
+                DocBrokeDecision.SaveToModel();
+                /*
                 if (doc.DocBroke.DocBrokeDecisionProducts == null)
                     doc.DocBroke.DocBrokeDecisionProducts = new List<DocBrokeDecisionProducts>();
                 else
@@ -865,14 +911,17 @@ namespace Gamma.ViewModels
                         DecisionDate = decisionProduct.DecisionDate,
                         DecisionPlaceID = decisionProduct.DecisionPlaceId
                     });
-                }
+                }*/
 #endregion
-                gammaBase.SaveChanges();
+                
             }
             if (WorkSession.IsUploadDocBrokeTo1CWhenSave)
                 DB.UploadDocBrokeTo1C(DocId);
             Messenger.Default.Send(new RefreshBrokeListMessage { });
             return true;
         }
+
+        public IDialogService GetService(string dialogName) => GetService<IDialogService>("SetQuantityDialog");
+        
     }
 }
