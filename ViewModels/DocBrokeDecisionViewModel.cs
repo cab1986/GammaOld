@@ -70,7 +70,7 @@ namespace Gamma.ViewModels
 
         public Dictionary<ProductState, EditBrokeDecisionItem> EditBrokeDecisionItems { get; set; } = new Dictionary<ProductState, EditBrokeDecisionItem>();
 
-        public void AddBrokeDecisionProduct(Guid productId, Guid docId, DateTime date, decimal productQuantity)
+        public void AddBrokeDecisionProduct(Guid productId, Guid docId, DateTime date, decimal productQuantity, Guid? rejectionReasonID, int? brokePlaceID)
         {
             using (var gammaBase = DB.GammaDb)
             {
@@ -89,6 +89,8 @@ namespace Gamma.ViewModels
                         ProductState.NeedsDecision,
                         DB.GetProductNomenclatureNameBeforeDate(product.ProductID, date),
                         product.BaseMeasureUnit,
+                        rejectionReasonID,
+                        brokePlaceID,
                         product.C1CNomenclatureID,
                         product.C1CCharacteristicID,
                         product.BaseMeasureUnitQuantity ?? 0
@@ -134,7 +136,9 @@ namespace Gamma.ViewModels
                                 (ProductState)decisionProduct.StateID,
                                 DB.GetProductNomenclatureNameBeforeDate(product.ProductID, date),
                                 product.BaseMeasureUnit,
-                                product.C1CNomenclatureID,
+                                rejectionReasonID,
+                        brokePlaceID,
+                        product.C1CNomenclatureID,
                                 product.C1CCharacteristicID,
                                 decisionProduct.Quantity ?? 0,
                                 decisionProduct.DecisionApplied,
@@ -242,9 +246,11 @@ namespace Gamma.ViewModels
                 DecisionDate = value?.DecisionDate;
                 DecisionPlaceId = value?.DecisionPlaceId;
                 ProductQuantity = value?.ProductQuantity ?? 0;
+                RejectionReasonID = value?.RejectionReasonID;
+                BrokePlaceID = value?.BrokePlaceID;
                 IsUpdatedBrokeDecisionProductItems = true;
                 if (ProductID != null)
-                {                    
+                {
                     //var sumQuantityDecisionItem = EditBrokeDecisionItems.Where(d => !NeedsProductStates.Contains(d.Key) && d.Value.Name != "Уже переделано" && d.Value.Name != "Уже переупаковано")
                     //    .Sum(d => d.Value.Quantity);
                     var sumQuantityNeedsDecisionItem = EditBrokeDecisionItems.Where(d => NeedsProductStates.Contains(d.Key))
@@ -260,58 +266,59 @@ namespace Gamma.ViewModels
                         editItem.Value.MinQuantity = 0;// editItem.Value.IsChecked && NeedsProductStates.Contains(editItem.Key) ? (decimal)0.001 : 0;
                         editItem.Value.MaxQuantity = (NeedsProductStates.Contains(editItem.Key) ? sumQuantityNeedsDecisionItem
                             : editItem.Value.Quantity + sumQuantityNeedsDecisionItem - sumWithdrawalSumNeedsDecisionItem);
-                            //? 0//(editItem.Value.DocWithdrawalSum > 0 ? editItem.Value.DocWithdrawalSum : 0) :
-                            // editItem.Value.Quantity + editItem.Value.DocWithdrawalSum + 
-                            //(ProductQuantity - sumQuantityDecisionItem - sumWithdrawalSum);
-                            //editItem.Value.IsExistMoreTwoCheckedItem = isExistMoreTwoCheckedItem;
+                        //? 0//(editItem.Value.DocWithdrawalSum > 0 ? editItem.Value.DocWithdrawalSum : 0) :
+                        // editItem.Value.Quantity + editItem.Value.DocWithdrawalSum + 
+                        //(ProductQuantity - sumQuantityDecisionItem - sumWithdrawalSum);
+                        //editItem.Value.IsExistMoreTwoCheckedItem = isExistMoreTwoCheckedItem;
                         editItem.Value.IsExistMoreTwoCheckedItem = editItem.Value.IsChecked ? false : isExistMoreTwoCheckedItem;
                         if ((editItem.Key == ProductState.ForConversion || editItem.Key == ProductState.Repack))
                         {
                             editItem.Value.IsExistGoodItem = editItem.Value.IsChecked ? false : isExistGoodCheckedItem;
                         }
                     }
-                }
-                List<KeyValuePair<Guid, String>> docWithdrawals = new List<KeyValuePair<Guid, string>>();
-                var decisionProducts = BrokeDecisionProducts.Where(p => p.ProductId == value.ProductId).OrderByDescending(p => NeedsProductStates.Contains(p.ProductState)).ToList();
-                foreach (var product in decisionProducts)
-                {
-                    foreach (var docWithdrawalItem in product.DocWithdrawals)
+
+                    List<KeyValuePair<Guid, String>> docWithdrawals = new List<KeyValuePair<Guid, string>>();
+                    var decisionProducts = BrokeDecisionProducts.Where(p => p.ProductId == value.ProductId).OrderByDescending(p => NeedsProductStates.Contains(p.ProductState)).ToList();
+                    foreach (var product in decisionProducts)
                     {
-                        if (!(docWithdrawals.IndexOf(docWithdrawalItem) >= 0))
-                            docWithdrawals.Add(docWithdrawalItem);
-                        if (product.DocWithdrawalSum > EditBrokeDecisionItems[product.ProductState].MinQuantity)
+                        foreach (var docWithdrawalItem in product.DocWithdrawals)
                         {
-                            if (product.DocWithdrawalSum < EditBrokeDecisionItems[product.ProductState].MaxQuantity)
-                                EditBrokeDecisionItems[product.ProductState].MinQuantity = product.DocWithdrawalSum;
-                        }
-                    }
-                    /*foreach (var editItem in EditBrokeDecisionItems.Where(d => d.Value.DocWithdrawals?.Count > 0))
-                    {
-                        foreach(var docWithdrawalItem in editItem.Value.DocWithdrawals)
                             if (!(docWithdrawals.IndexOf(docWithdrawalItem) >= 0))
-                                    docWithdrawals.Add(docWithdrawalItem);
+                                docWithdrawals.Add(docWithdrawalItem);
+                            if (product.DocWithdrawalSum > EditBrokeDecisionItems[product.ProductState].MinQuantity)
+                            {
+                                if (product.DocWithdrawalSum < EditBrokeDecisionItems[product.ProductState].MaxQuantity)
+                                    EditBrokeDecisionItems[product.ProductState].MinQuantity = product.DocWithdrawalSum;
+                            }
+                        }
+                        /*foreach (var editItem in EditBrokeDecisionItems.Where(d => d.Value.DocWithdrawals?.Count > 0))
+                        {
+                            foreach(var docWithdrawalItem in editItem.Value.DocWithdrawals)
+                                if (!(docWithdrawals.IndexOf(docWithdrawalItem) >= 0))
+                                        docWithdrawals.Add(docWithdrawalItem);
+                        }
+                        */
                     }
-                    */
-                }
-                var forConversionOrRepackItem = EditBrokeDecisionItems.FirstOrDefault(d => (d.Key == ProductState.ForConversion || d.Key == ProductState.Repack) && d.Value.IsChecked);
-                if (forConversionOrRepackItem.Value != null)
-                {
-                    if (forConversionOrRepackItem.Value.MinQuantity > 0)
+                    var forConversionOrRepackItem = EditBrokeDecisionItems.FirstOrDefault(d => (d.Key == ProductState.ForConversion || d.Key == ProductState.Repack) && d.Value.IsChecked);
+                    if (forConversionOrRepackItem.Value != null)
                     {
-                        EditBrokeDecisionItems[ProductState.Good].Name = forConversionOrRepackItem.Key == ProductState.ForConversion ? "Уже переделано" : forConversionOrRepackItem.Key == ProductState.Repack ? "Уже переупаковано" : "Годная";
-                        EditBrokeDecisionItems[ProductState.Good].Quantity = forConversionOrRepackItem.Value.MinQuantity;
-                        EditBrokeDecisionItems[ProductState.Good].MaxQuantity = forConversionOrRepackItem.Value.MinQuantity;
-                        EditBrokeDecisionItems[ProductState.Good].IsChecked = true;
-                        EditBrokeDecisionItems[ProductState.NeedsDecision].IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = true;
-                        EditBrokeDecisionItems[ProductState.ForConversion].IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = true;
-                        EditBrokeDecisionItems[ProductState.Repack].IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = true;
+                        if (forConversionOrRepackItem.Value.MinQuantity > 0)
+                        {
+                            EditBrokeDecisionItems[ProductState.Good].Name = forConversionOrRepackItem.Key == ProductState.ForConversion ? "Уже переделано" : forConversionOrRepackItem.Key == ProductState.Repack ? "Уже переупаковано" : "Годная";
+                            EditBrokeDecisionItems[ProductState.Good].Quantity = forConversionOrRepackItem.Value.MinQuantity;
+                            EditBrokeDecisionItems[ProductState.Good].MaxQuantity = forConversionOrRepackItem.Value.MinQuantity;
+                            EditBrokeDecisionItems[ProductState.Good].IsChecked = true;
+                            EditBrokeDecisionItems[ProductState.NeedsDecision].IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = true;
+                            EditBrokeDecisionItems[ProductState.ForConversion].IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = true;
+                            EditBrokeDecisionItems[ProductState.Repack].IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = true;
+                        }
+                        EditBrokeDecisionItems[ProductState.Good].IsExistForConversionOrRepackItem = true;
+                        EditBrokeDecisionItems[ProductState.InternalUsage].IsExistForConversionOrRepackItem = true;
+                        EditBrokeDecisionItems[ProductState.Limited].IsExistForConversionOrRepackItem = true;
                     }
-                    EditBrokeDecisionItems[ProductState.Good].IsExistForConversionOrRepackItem = true;
-                    EditBrokeDecisionItems[ProductState.InternalUsage].IsExistForConversionOrRepackItem = true;
-                    EditBrokeDecisionItems[ProductState.Limited].IsExistForConversionOrRepackItem = true;
+                    DocWithdrawals = docWithdrawals;
+                    DocWithdrawal = null;
                 }
-                DocWithdrawals = docWithdrawals;
-                DocWithdrawal = null;
                 SetExternalRefreshInEditBrokeDecisionItems(false);
                 RaisePropertyChanged("SelectedBrokeDecisionProduct");
             }
@@ -321,6 +328,8 @@ namespace Gamma.ViewModels
         private Guid? DocBrokeID { get; set; }
         public ProductKind? ProductKind { get; private set; }
         public decimal ProductQuantity { get; private set; }
+        public Guid? RejectionReasonID { get; private set; }
+        public int? BrokePlaceID { get; private set; }
 
         private bool IsUpdatedBrokeDecisionProductItems { get; set; } = false;
 
@@ -332,7 +341,14 @@ namespace Gamma.ViewModels
             get { return _isEditableDecision; }
             set
             {
-                if (_isEditableDecision == true && value == false
+                if (_isEditableDecision == null && value != null
+                    && (RejectionReasonID == null || BrokePlaceID == null)
+                    )
+                {
+                    MessageBox.Show("Внимание! По продукции не указана причина брака или место актирования. Изменение решения запрещено.", "Вопрос", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                else if (_isEditableDecision == true && value == false
                     && MessageBox.Show("Внимание! При снятии галочки изменения в решении не будут сохранены!"+Environment.NewLine + "Вы уверены?", "Вопрос", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
                     return;
@@ -617,6 +633,8 @@ namespace Gamma.ViewModels
                     productState,
                     product.NomenclatureName,
                     product.MeasureUnit,
+                    product.RejectionReasonID,
+                    product.BrokePlaceID,
                     product.NomenclatureOldId,
                     product.CharacteristicOldId,
                     product.DecisionDate,
@@ -781,6 +799,8 @@ namespace Gamma.ViewModels
                                 editItem.Value.ProductState,
                                 SelectedBrokeDecisionProduct.NomenclatureName,
                                 SelectedBrokeDecisionProduct.MeasureUnit,
+                                SelectedBrokeDecisionProduct.RejectionReasonID,
+                                SelectedBrokeDecisionProduct.BrokePlaceID,
                                 SelectedBrokeDecisionProduct.NomenclatureOldId,
                                 SelectedBrokeDecisionProduct.CharacteristicOldId,
                                 editItem.Value.Quantity

@@ -43,6 +43,13 @@ namespace Gamma.DialogViewModels
             ShiftsFiltered = new List<RejectionReason>(RejectionReasons);         */
         }
 
+        public SetBrokePlaceDialogModel(int? placeID) : this()
+        {
+            if (placeID != null) PlaceID = (int)placeID;
+            IsVisibleShift = false;
+            IsVisibleComment = false;
+        }
+
         public SetBrokePlaceDialogModel(int? placeID, byte? shiftID, string comment):this()
         {
             if (placeID != null) PlaceID = (int)placeID;
@@ -55,7 +62,11 @@ namespace Gamma.DialogViewModels
         //public List<RejectionReason> Shifts { get; private set; }
         //public List<RejectionReason> ShiftsFiltered { get; private set; }
         public override bool IsValid => base.IsValid;
-        
+
+        public bool IsVisibleShift { get; private set; } = true;
+        public bool IsVisibleComment { get; private set; } = true;
+
+
         private int _placeID { get; set; }
         public int PlaceID
         {

@@ -20,11 +20,11 @@
         </Grid.RowDefinitions>
         <dxlc:LayoutControl Name="lcBrokePlace" Grid.Row="0"  Orientation="Vertical" >
             <!--<dxlc:LayoutGroup Header="Виновник" View="GroupBox" Orientation="Vertical" Margin="-12,-12,-12,0">-->
-                <dxlc:LayoutItem Label="Передел-виновник" LabelPosition="Top">
+                <dxlc:LayoutItem Label="Передел" LabelPosition="Top">
                     <dxe:ComboBoxEdit Name="EdtBrokePlace" ItemsSource="{Binding Places}" EditValue="{Binding PlaceID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMember="PlaceName" ValueMember="PlaceID" />
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Смена-виновник" LabelPosition="Top">
+            <dxlc:LayoutItem Label="Смена-виновник" LabelPosition="Top" Visibility="{Binding IsVisibleShift,Converter={StaticResource BooleanToVisibilityConverter}}">
                     <dxe:ComboBoxEdit Name="EdtShift"  ItemsSource="{Binding Shifts}" EditValue="{Binding ShiftID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMember="Value" ValueMember="Key"/>
                 </dxlc:LayoutItem>
@@ -32,7 +32,7 @@
         </dxlc:LayoutControl>
         <dxlc:LayoutControl Name="lcRejectionReasonComment" Grid.Row="1" >
         <dxlc:LayoutGroup Header="ФИО виновник" View="GroupBox" Margin="-12" Orientation="Vertical">-->
-            <dxlc:LayoutItem Label="ФИО-виновник" LabelPosition="Top">
+            <dxlc:LayoutItem Label="ФИО-виновник" LabelPosition="Top" Visibility="{Binding IsVisibleComment,Converter={StaticResource BooleanToVisibilityConverter}}">
                     <dxe:TextEdit Name="EdtComment" EditValue="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
         <!--</dxlc:LayoutGroup>-->

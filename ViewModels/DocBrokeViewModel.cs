@@ -152,6 +152,7 @@ namespace Gamma.ViewModels
                 DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly && SelectedBrokeProduct != null);
                 EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
                 EditBrokePlaceCommand = new DelegateCommand(EditBrokePlace, () => !IsReadOnly);
+                EditPlaceCommand = new DelegateCommand(EditPlace, () => !IsReadOnly);
                 OpenProductCommand = new DelegateCommand(OpenProduct);
                 UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => DocId != null);
                 UnpackGroupPackCommand = new DelegateCommand(ChooseGroupPackToUnpack, () => !IsReadOnly && SelectedBrokeProduct != null && SelectedBrokeProduct.ProductKind == ProductKind.ProductGroupPack);
@@ -273,7 +274,7 @@ namespace Gamma.ViewModels
                 brokeProducts.Add(brokeProduct);
 #endregion AddBrokeProduct
 #region AddBrokeDecisionProduct
-                DocBrokeDecision.AddBrokeDecisionProduct(productId, docId, Date, brokeProduct.Quantity);
+                DocBrokeDecision.AddBrokeDecisionProduct(productId, docId, Date, brokeProduct.Quantity, brokeProduct.RejectionReasonID, brokeProduct.PlaceId);
                 /*var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
                 if (docBrokeDecisionProducts.Count == 0)
                 {
@@ -520,6 +521,19 @@ namespace Gamma.ViewModels
                 if (_selectedTabIndex == 0 && value == 1 && IsChanged && CanSaveExecute())
                     if (!SaveToModel())
                         return ;
+                if (_selectedTabIndex == 1 && value == 0 && DocBrokeDecision?.SelectedBrokeDecisionProduct != null)
+                {
+                    DocBrokeDecision.SelectedBrokeDecisionProduct = null;
+                }
+
+                    /*foreach (var productItem in BrokeProducts)
+                    {
+                        foreach (var decisionItem in DocBrokeDecision?.BrokeDecisionProducts?.Where(d => d.ProductId == productItem.ProductId))
+                        {
+                            decisionItem.RejectionReasonID = productItem.RejectionReasonID;
+                            decisionItem.BrokePlaceID = productItem.PlaceId;
+                        }
+                    }*/
                 _selectedTabIndex = value;
                 IsVisibleSetRejectionReasonForAllProduct = (value == 0);
                 IsVisibleSetDecisionForAllProduct = (value == 1);
@@ -738,6 +752,7 @@ namespace Gamma.ViewModels
         public DelegateCommand OpenProductCommand { get; private set; }
         public DelegateCommand EditRejectionReasonsCommand { get; private set; }
         public DelegateCommand EditBrokePlaceCommand { get; private set; }
+        public DelegateCommand EditPlaceCommand { get; private set; }
         public DelegateCommand UploadTo1CCommand { get; private set; }
 
         public bool IsChanged { get; set; } = false;
@@ -801,7 +816,11 @@ namespace Gamma.ViewModels
                 SelectedBrokeProduct.RejectionReasonName = model.RejectionReasonName;
                 SelectedBrokeProduct.SecondRejectionReasonName = model.SecondRejectionReasonName;
             }
-
+            foreach (var decisionItem in DocBrokeDecision?.BrokeDecisionProducts?.Where(d => d.ProductId == SelectedBrokeProduct?.ProductId))
+            {
+                decisionItem.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
+                decisionItem.BrokePlaceID = SelectedBrokeProduct.PlaceId;
+            }
         }
 
         private void EditBrokePlace()
@@ -855,6 +874,59 @@ namespace Gamma.ViewModels
                 SelectedBrokeProduct.PrintName = model.Comment;
             }
 
+        }
+
+        private void EditPlace()
+        {
+            //if (SelectedBrokeProduct?.RejectionReasons == null) return;
+            //MessageManager.EditRejectionReasons(SelectedBrokeProduct);
+            if (SelectedBrokeProduct == null) return;
+            var model = new SetBrokePlaceDialogModel(SelectedBrokeProduct.PlaceId);
+            var deleteCommand = new UICommand()
+            {
+                Caption = "Удалить",
+                IsCancel = false,
+                IsDefault = false,
+                Command = new DelegateCommand<CancelEventArgs>(
+            x => DebugFunc(),
+            x => model.IsSaveEnabled),
+            };
+            var okCommand = new UICommand()
+            {
+                Caption = "Сохранить",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
+             x => DebugFunc(),
+             x => model.IsSaveEnabled),
+            };
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("SetBrokePlaceDialog");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { deleteCommand, okCommand, cancelCommand },
+                title: "Указание места актирования",
+                viewModel: model);
+            if (result == deleteCommand)
+            {
+                IsChanged = true;
+                SelectedBrokeProduct.PlaceId = null;
+            }
+            else if (result == okCommand)
+            {
+                IsChanged = true;
+                SelectedBrokeProduct.PlaceId = model.PlaceID;
+            }
+            foreach (var decisionItem in DocBrokeDecision?.BrokeDecisionProducts?.Where(d => d.ProductId == SelectedBrokeProduct?.ProductId))
+            {
+                decisionItem.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
+                decisionItem.BrokePlaceID = SelectedBrokeProduct.PlaceId;
+            }
         }
 
         private void UploadTo1C()

@@ -135,7 +135,7 @@ namespace Gamma.Models
 
         private void RefreshReadOnlyIsChecked(bool isReadOnly)
         {
-            IsReadOnlyIsChecked = isReadOnly || MaxQuantity == 0 //|| MinQuantity > 0 
+            IsReadOnlyIsChecked = isReadOnly //|| MaxQuantity == 0 || MinQuantity > 0 
                 ;//|| IsExistMoreTwoCheckedItem
                 //|| ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
             //|| (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
@@ -208,6 +208,13 @@ namespace Gamma.Models
                                 DocWithdrawalSum > 0)
                     {
                         MessageBox.Show("Нелья снять галочку, если уже есть продукция в Выполнено");
+                        return;
+                    }
+                    else if (!_isChecked && value
+                            && MaxQuantity == 0)
+                    {
+                        MessageBox.Show("Нелья поставить галочку, так как весь вес продукции рапределен в решении."+Environment.NewLine
+                            +"Сначала отмените уже выбранное решение.");
                         return;
                     }
                     else if (!_isChecked && value

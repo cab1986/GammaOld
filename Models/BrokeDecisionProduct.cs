@@ -12,7 +12,7 @@ namespace Gamma.Models
     public class BrokeDecisionProduct : ViewModelBase
     {
         public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, string nomenclatureName, 
-            string measureUnit, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false,
+            string measureUnit, Guid? rejectionReasonID, int? brokePlaceID, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false,
             List<KeyValuePair<Guid, String>> docWithdrawals = null, //Guid? docWithdrawalID = null, 
             DateTime? decisionDate = null, int? decisionPlaceId = null)
         {
@@ -22,6 +22,8 @@ namespace Gamma.Models
             ProductState = state;
             NomenclatureName = nomenclatureName;
             MeasureUnit = measureUnit;
+            RejectionReasonID = rejectionReasonID;
+            BrokePlaceID = brokePlaceID;
             NomenclatureOldId = nomenclatureOldId;
             CharacteristicOldId = characteristicOldId;
             ProductKind = productKind;
@@ -34,15 +36,18 @@ namespace Gamma.Models
         }
 
         public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, 
-            string nomenclatureName,
-            string measureUnit, Guid nomenclatureOldId, Guid? characteristicOldId, DateTime? decisionDate, int? decisionPlaceId)
+            string nomenclatureName, string measureUnit, Guid? rejectionReasonID, int? brokePlaceID,
+            Guid nomenclatureOldId, Guid? characteristicOldId, DateTime? decisionDate, int? decisionPlaceId)
                 : this(productId, productKind, number, productQuantity, state, nomenclatureName, 
-                measureUnit, nomenclatureOldId, characteristicOldId, 0, false, null, decisionDate, decisionPlaceId)
+                measureUnit, rejectionReasonID, brokePlaceID, nomenclatureOldId, characteristicOldId, 0, false, null, decisionDate, decisionPlaceId)
         { }
 
         public Guid ProductId { get; set; }
         public Guid DocId { get; set; }
         public decimal ProductQuantity { get; set; }
+        public Guid? RejectionReasonID { get; set; }
+        public int? BrokePlaceID { get; set; }
+
 
         private ProductState _productState;
         public ProductState ProductState
