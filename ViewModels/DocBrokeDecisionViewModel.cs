@@ -337,7 +337,7 @@ namespace Gamma.ViewModels
                 {
                     return;
                 }
-
+                
                     _isEditableDecision = value;
                     RaisePropertyChanged("IsEditableDecision");
                     RaisePropertyChanged("IsEnabledEditableDecision");
@@ -786,6 +786,7 @@ namespace Gamma.ViewModels
                                 editItem.Value.Quantity
                             )
                         {
+                            DocId = SelectedBrokeDecisionProduct.DocId,
                             Comment = editItem.Value.Comment,
                             NomenclatureId = editItem.Value.NomenclatureID,
                             CharacteristicId = editItem.Value.CharacteristicID,

@@ -136,9 +136,9 @@ namespace Gamma.Models
         private void RefreshReadOnlyIsChecked(bool isReadOnly)
         {
             IsReadOnlyIsChecked = isReadOnly || MaxQuantity == 0 //|| MinQuantity > 0 
-                || IsExistMoreTwoCheckedItem 
-                || ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
-            || (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
+                ;//|| IsExistMoreTwoCheckedItem
+                //|| ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
+            //|| (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
             RefreshReadOnlyFields(isReadOnly);
         }
 
@@ -199,12 +199,46 @@ namespace Gamma.Models
             get { return _isChecked; }
             set
             {
-                if (_isChecked == value 
-                    || (_isChecked && !value && ExternalRefresh == false 
-                        && //((ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied)
-                            DocWithdrawalSum > 0))
+                if (_isChecked == value)
                     return;
-               _isChecked = value;
+                else if (ExternalRefresh == false)
+                {
+                    if (_isChecked && !value
+                            && //((ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied)
+                                DocWithdrawalSum > 0)
+                    {
+                        MessageBox.Show("Нелья снять галочку, если уже есть продукция в Выполнено");
+                        return;
+                    }
+                    else if (!_isChecked && value
+                            && ParentModel.ProductKind == ProductKind.ProductGroupPack
+                            && (!ParentModel.NeedsProductStates.Contains(ProductState)))
+                    {
+                        MessageBox.Show("Нелья поставить галочку, так как это групповая упаковка. Сначала распакуйте ГУ.");
+                        return;
+                    }
+                    else if (IsExistMoreTwoCheckedItem)
+                    {
+                        MessageBox.Show("Нелья поставить галочку, так как уже выбрано 2 решения.");
+                        return;
+                    }
+                    else if (((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem))
+                    {
+                        MessageBox.Show("Нелья поставить галочку, так как уже выбрано На переупаковку или На переделку.");
+                        return;
+                    }
+                    else if (ParentModel.NeedsProductStates.Contains(ProductState) && IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0)
+                    {
+                        MessageBox.Show("Нелья поставить галочку, так как уже есть На переупаковку или На переделку с Выполнено больше 0.");
+                        return;
+                    }
+                    else if (ParentModel.NeedsProductStates.Contains(ProductState) && IsExistGoodItem)
+                    {
+                        MessageBox.Show("Нелья поставить галочку, так как уже выбран Годная");
+                        return;
+                    }
+                }
+                _isChecked = value;
                 RaisePropertyChanged("IsChecked");
                 RefreshEditBrokeDecisionItem();
             }
@@ -395,7 +429,12 @@ namespace Gamma.Models
         private Guid? ProductId => BrokeDecisionProduct?.ProductId;
         private void CreateWithdrawal()
         {
-            if (!ParentModel.SaveBrokeDecisionProductsToModel(ProductId))
+            if ( ParentModel.ProductKind == ProductKind.ProductGroupPack)
+            {
+                MessageBox.Show("Нелья нажать Выполнить, так как это групповая упаковка. Сначала распакуйте ГУ.");
+                
+            }
+            else if (!ParentModel.SaveBrokeDecisionProductsToModel(ProductId))
                 MessageBox.Show("Ошибка при сохранении решения", " Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             else
             {

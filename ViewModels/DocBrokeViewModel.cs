@@ -104,8 +104,8 @@ namespace Gamma.ViewModels
                     DocNumber = doc.Number;
                     DocComment = doc.Comment;
                     Date = doc.Date;
-                    PlaceDiscoverId = doc.DocBroke.PlaceDiscoverID;
-                    PlaceStoreId = doc.DocBroke.PlaceStoreID;
+                   // PlaceDiscoverId = doc.DocBroke.PlaceDiscoverID;
+                    //PlaceStoreId = doc.DocBroke.PlaceStoreID;
                     IsInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false;
                     //SelectedInFuturePeriod = doc.DocBroke.IsInFuturePeriod ?? false ? FuturePeriodDocBrokeType.NextPlace : FuturePeriodDocBrokeType.FirstPlace;
                     IsConfirmed = doc.IsConfirmed;
@@ -123,10 +123,10 @@ namespace Gamma.ViewModels
                     //SelectedInFuturePeriod = isInFuturePeriod ? FuturePeriodDocBrokeType.NextPlace : FuturePeriodDocBrokeType.FirstPlace;
                     UserID = WorkSession.UserID;
                     ShiftID = WorkSession.ShiftID;
-                    if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
-                    {
-                        PlaceDiscoverId = DiscoverPlaces.First(dp => dp.PlaceID == WorkSession.PlaceID).PlaceGuid;
-                    }
+                   // if (DiscoverPlaces.Select(dp => dp.PlaceID).Contains(WorkSession.PlaceID))
+                   // {
+                   //     PlaceDiscoverId = DiscoverPlaces.First(dp => dp.PlaceID == WorkSession.PlaceID).PlaceGuid;
+                   // }
                     /*var number =
                         gammaBase.Docs.Where(d => d.DocTypeID == (int)DocTypes.DocBroke && d.Number != null)
                             .OrderByDescending(d => d.Date)
@@ -149,11 +149,12 @@ namespace Gamma.ViewModels
                 RefreshProductStateList();
 
                 AddProductCommand = new DelegateCommand(ChooseProductToAdd, () => !IsReadOnly);
-                DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly);
+                DeleteProductCommand = new DelegateCommand(DeleteBrokeProduct, () => !IsReadOnly && SelectedBrokeProduct != null);
                 EditRejectionReasonsCommand = new DelegateCommand(EditRejectionReasons, () => !IsReadOnly);
                 EditBrokePlaceCommand = new DelegateCommand(EditBrokePlace, () => !IsReadOnly);
                 OpenProductCommand = new DelegateCommand(OpenProduct);
                 UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => DocId != null);
+                UnpackGroupPackCommand = new DelegateCommand(ChooseGroupPackToUnpack, () => !IsReadOnly && SelectedBrokeProduct != null && SelectedBrokeProduct.ProductKind == ProductKind.ProductGroupPack);
                 var IsEditableCollection = new ObservableCollection<bool?>
                 (
                     from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int?)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID, doc?.DocID)
@@ -370,6 +371,7 @@ namespace Gamma.ViewModels
 
         private void AddChoosenProduct(ChoosenProductMessage msg)
         {
+            IsChanged = true;
             if (msg.ProductIDs == null || msg.ProductIDs?.Count == 0)
                 AddProduct(msg.ProductID, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
             else
@@ -382,18 +384,97 @@ namespace Gamma.ViewModels
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
         }
 
+        private void ChooseGroupPackToUnpack()
+        {
+            if (SelectedBrokeProduct == null || SelectedBrokeProduct.ProductKind != ProductKind.ProductGroupPack) return;
+                if (!GammaBase.Rests.Any(r => r.ProductID == SelectedBrokeProduct.ProductId))
+                {
+                    MessageBox.Show("Данная упаковка не числится на остатках");
+                    return;
+                }
+                if (
+                    MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+            IsChanged = true;
+            UIServices.SetBusyState();
+                    var docProductionID = GammaBase.DocProductionProducts.FirstOrDefault(p => p.ProductID == SelectedBrokeProduct.ProductId)?.DocID;
+                    var groupPackProductIDs = GammaBase.DocWithdrawalProducts.Where(p => p.DocWithdrawal.DocProduction.Any(dp => dp.DocID == docProductionID)).Select(p => p.ProductID).ToList();
+                    GammaBase.UnpackGroupPack(SelectedBrokeProduct.ProductId, WorkSession.PrintName);
+                    //MessageBox.Show("Упаковка уничтожена, рулоны возвращены на остатки");
+
+            var selectedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == SelectedBrokeProduct.ProductId);
+            foreach (var product in groupPackProductIDs)
+            {
+                AddProduct(product, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
+                var addedBrokeProduct = BrokeProducts.FirstOrDefault(p => p.ProductId == product);
+                addedBrokeProduct.BrokePlaceId = SelectedBrokeProduct.BrokePlaceId;
+                addedBrokeProduct.BrokeShiftId = SelectedBrokeProduct.BrokeShiftId;
+                addedBrokeProduct.PrintName = SelectedBrokeProduct.PrintName;
+                addedBrokeProduct.PlaceId = SelectedBrokeProduct.PlaceId;
+                addedBrokeProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
+                addedBrokeProduct.SecondRejectionReasonID = SelectedBrokeProduct.SecondRejectionReasonID;
+                addedBrokeProduct.RejectionReasonComment = SelectedBrokeProduct.RejectionReasonComment;
+                //исходим из предположения, что по ГУ можно принять только одно решение, причем на весь обьем и только из блока Требует решения
+                var addedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == product);
+                addedBrokeDecisionProduct.ProductState = selectedBrokeDecisionProduct.ProductState;
+                addedBrokeDecisionProduct.Comment = selectedBrokeDecisionProduct.Comment;
+                addedBrokeDecisionProduct.Quantity = selectedBrokeDecisionProduct.ProductQuantity;
+                addedBrokeDecisionProduct.NomenclatureId = selectedBrokeDecisionProduct.NomenclatureId;
+                addedBrokeDecisionProduct.CharacteristicId = selectedBrokeDecisionProduct.CharacteristicId;
+            }
+
+            var decisionProductsToRemove =
+                DocBrokeDecision.BrokeDecisionProducts.Where(p => p.ProductId == SelectedBrokeProduct.ProductId).ToList();
+            foreach (var product in decisionProductsToRemove)
+            {
+                DocBrokeDecision.BrokeDecisionProducts.Remove(product);
+            }
+            BrokeProducts.Remove(SelectedBrokeProduct);
+            RefreshRejectionReasonsList();
+
+        }
+
+
         public List<Place> DiscoverPlaces { get; set; }
         public List<Place> StorePlaces { get; set; }
         public List<Place> BrokePlaces { get; set; }
         public Dictionary<bool, string> InFuturePeriodList { get; set; }
 
-        public bool IsConfirmed { get; set; }
+        private bool? _isConfirmed { get; set; }
+        public bool IsConfirmed
+        {
+            get
+            {
+                return _isConfirmed == true;
+            }
+            set
+            {
+                if (_isConfirmed != null)
+                    IsChanged = true;
+                _isConfirmed = value;
+                RaisePropertiesChanged("IsConfirmed");
+            }
+        }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public string DocNumber { get; set; }
 
+        private string _docComment { get; set; }
         [UIAuth(UIAuthLevel.ReadOnly)]
-        public string DocComment { get; set; }
+        public string DocComment
+        {
+            get { return _docComment; }
+            set
+            {
+                if (_docComment != null && value != null)
+                    IsChanged = true;
+                _docComment = value;
+                RaisePropertiesChanged("DocComment");
+            }
+        }
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public DateTime Date { get; set; }
@@ -404,13 +485,13 @@ namespace Gamma.ViewModels
         [UIAuth(UIAuthLevel.ReadOnly)]
         public byte? ShiftID { get; set; }
 
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        [Required(ErrorMessage = @"Место обнаружения не может быть пустым")]
-        public Guid? PlaceDiscoverId { get; set; }
+       // [UIAuth(UIAuthLevel.ReadOnly)]
+       // [Required(ErrorMessage = @"Место обнаружения не может быть пустым")]
+       // public Guid? PlaceDiscoverId { get; set; }
 
-        [UIAuth(UIAuthLevel.ReadOnly)]
-        [Required(ErrorMessage = @"Место хранения не может быть пустым")]
-        public Guid? PlaceStoreId { get; set; }
+        //[UIAuth(UIAuthLevel.ReadOnly)]
+        //[Required(ErrorMessage = @"Место хранения не может быть пустым")]
+        //public Guid? PlaceStoreId { get; set; }
 
         private ItemsChangeObservableCollection<BrokeProduct> _brokeProducts = new ItemsChangeObservableCollection<BrokeProduct>();
 
@@ -436,8 +517,9 @@ namespace Gamma.ViewModels
             get { return _selectedTabIndex; }
             set
             {
-                if (_selectedTabIndex == 0 && value == 1 && CanSaveExecute())
-                    SaveToModel();
+                if (_selectedTabIndex == 0 && value == 1 && IsChanged && CanSaveExecute())
+                    if (!SaveToModel())
+                        return ;
                 _selectedTabIndex = value;
                 IsVisibleSetRejectionReasonForAllProduct = (value == 0);
                 IsVisibleSetDecisionForAllProduct = (value == 1);
@@ -598,10 +680,12 @@ namespace Gamma.ViewModels
 
         public DelegateCommand AddProductCommand { get; private set; }
         public DelegateCommand DeleteProductCommand { get; private set; }
+        public DelegateCommand UnpackGroupPackCommand { get; private set; }
 
         private void DeleteBrokeProduct()
         {
             if (SelectedBrokeProduct == null) return;
+            IsChanged = true;
             var decisionProductsToRemove =
                 DocBrokeDecision.BrokeDecisionProducts.Where(p => p.ProductId == SelectedBrokeProduct.ProductId).ToList();
             foreach (var product in decisionProductsToRemove)
@@ -612,22 +696,24 @@ namespace Gamma.ViewModels
             RefreshRejectionReasonsList();
         }
 
-        private bool _isInFuturePeriod { get; set; }
+        private bool? _isInFuturePeriod { get; set; }
         public bool IsInFuturePeriod
         {
             get
             {
-                return _isInFuturePeriod;
+                return _isInFuturePeriod == true;
             }
             set
             {
-                if (_isInFuturePeriod && !value && BrokeProducts.Count > 0 &&
+                if (_isInFuturePeriod == true && !value && BrokeProducts.Count > 0 &&
                     BrokeProducts.Select(bp => bp.ProductionPlaceId).Distinct().Count() > 1)
                 {
                     MessageBox.Show("Нельзя изменить акт на '25к - I передел', так как в акте продукты других переделов", "Ошибка изменения",
                         MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return;
                 }
+                if (_isInFuturePeriod != null)
+                    IsChanged = true;
                 _isInFuturePeriod = value;
                 RaisePropertiesChanged("IsInFuturePeriod");
             }
@@ -654,6 +740,8 @@ namespace Gamma.ViewModels
         public DelegateCommand EditBrokePlaceCommand { get; private set; }
         public DelegateCommand UploadTo1CCommand { get; private set; }
 
+        public bool IsChanged { get; set; } = false;
+         
         private void DebugFunc()
         {
             Debug.Print("Кол-во задано");
@@ -697,6 +785,7 @@ namespace Gamma.ViewModels
                 viewModel: model);
             if (result == deleteCommand)
             {
+                IsChanged = true;
                 SelectedBrokeProduct.RejectionReasonID = null;
                 SelectedBrokeProduct.SecondRejectionReasonID = null;
                 SelectedBrokeProduct.RejectionReasonComment = null;
@@ -705,6 +794,7 @@ namespace Gamma.ViewModels
             }
             else if (result == okCommand)
             {
+                IsChanged = true;
                 SelectedBrokeProduct.RejectionReasonID = model.RejectionReasonID;
                 SelectedBrokeProduct.SecondRejectionReasonID = model.SecondRejectionReasonID;
                 SelectedBrokeProduct.RejectionReasonComment = model.Comment;
@@ -752,12 +842,14 @@ namespace Gamma.ViewModels
                 viewModel: model);
             if (result == deleteCommand)
             {
+                IsChanged = true;
                 SelectedBrokeProduct.BrokePlaceId = null;
                 SelectedBrokeProduct.BrokeShiftId = null;
                 SelectedBrokeProduct.PrintName = null;
             }
             else if (result == okCommand)
             {
+                IsChanged = true;
                 SelectedBrokeProduct.BrokePlaceId = model.PlaceID;
                 SelectedBrokeProduct.BrokeShiftId = model.ShiftID;
                 SelectedBrokeProduct.PrintName = model.Comment;
@@ -795,8 +887,8 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel()
         {
-            if (!DB.HaveWriteAccess("DocBroke")) return true;
-            if (
+            if (!DB.HaveWriteAccess("DocBroke")) return false;
+            /*if (
                 DocBrokeDecision.BrokeDecisionProducts.Any(
                     dp =>
                         dp.ProductState == ProductState.ForConversion &&
@@ -804,7 +896,7 @@ namespace Gamma.ViewModels
             {
                 MessageBox.Show("При решении \"на переделку\" необходимо указать номенклатуру и характеристику");
                 return false;
-            }
+            }*/
             if (
                 BrokeProducts.Any(
                     dp =>
@@ -845,12 +937,12 @@ namespace Gamma.ViewModels
                     doc.DocBroke = new DocBroke
                     {
                         DocID = DocId,
-                        PlaceDiscoverID = PlaceDiscoverId,
-                        PlaceStoreID = PlaceStoreId,
+                        //PlaceDiscoverID = PlaceDiscoverId,
+                        //PlaceStoreID = PlaceStoreId,
                         DocBrokeProducts = new List<DocBrokeProducts>(),
                     };
-                doc.DocBroke.PlaceDiscoverID = PlaceDiscoverId;
-                doc.DocBroke.PlaceStoreID = PlaceStoreId;
+                //doc.DocBroke.PlaceDiscoverID = PlaceDiscoverId;
+                //doc.DocBroke.PlaceStoreID = PlaceStoreId;
                 doc.DocBroke.IsInFuturePeriod = IsInFuturePeriod;
                 foreach (var docBrokeProduct in doc.DocBroke.DocBrokeProducts)
                 {
