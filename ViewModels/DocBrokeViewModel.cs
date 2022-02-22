@@ -274,7 +274,7 @@ namespace Gamma.ViewModels
                 brokeProducts.Add(brokeProduct);
 #endregion AddBrokeProduct
 #region AddBrokeDecisionProduct
-                DocBrokeDecision.AddBrokeDecisionProduct(productId, docId, Date, brokeProduct.Quantity, brokeProduct.RejectionReasonID, brokeProduct.PlaceId);
+                DocBrokeDecision.AddBrokeDecisionProduct(docId, productId, Date, brokeProduct.Quantity, brokeProduct.RejectionReasonID, brokeProduct.PlaceId);
                 /*var docBrokeDecisionProducts = gammaBase.DocBrokeDecisionProducts.Where(d => d.DocID == docId && d.ProductID == productId).ToList();
                 if (docBrokeDecisionProducts.Count == 0)
                 {
@@ -946,16 +946,6 @@ namespace Gamma.ViewModels
         public BrokeProduct SelectedBrokeProduct { get; set; }
 
         public DocBrokeDecisionViewModel DocBrokeDecision { get; set; }
-
-        /*
-        public EditBrokeDecisionItem InternalUsageProduct { get; set; }
-        public EditBrokeDecisionItem GoodProduct { get; set; }
-        public EditBrokeDecisionItem LimitedProduct { get; set; }
-        public EditBrokeDecisionItem BrokeProduct { get; set; }
-        public EditBrokeDecisionItem ForConversionProduct { get; set; }
-        public EditBrokeDecisionItem RepackProduct { get; set; }
-        public EditBrokeDecisionItem NeedsDecisionProduct { get; set; }
-        */
 
         public override bool SaveToModel()
         {

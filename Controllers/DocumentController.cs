@@ -149,15 +149,40 @@ namespace Gamma.Controllers
             return new CreateWithdrawalResult(docWithdrawal.DocID, docWithdrawal.Number, docWithdrawal.Date, quantity);
         }
 
+       /* public bool AddDocBrokeDecision(Docs docBrokeDecision, Guid? docBrokeID)
+        {
+            using (var context = DB.GammaDb)
+            {
+                if (!context.Docs.Any(p => p.DocID == docBrokeDecision.DocID))
+                    context.Docs.Add(new Docs
+                    {
+                        DocID = docBrokeDecision.DocID,
+                        DocBrokeDecision = new DocBrokeDecision
+                        {
+                            DocBrokeID = docBrokeID
+                        }
+                    });
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            }
+        }*/
 
         #region Private methods
 
-        public Docs ConstructDoc(Guid id, DocTypes type, bool isConfirmed, int? placeId = null, byte? shidtId = null)
+        public Docs ConstructDoc(Guid id, DocTypes type, bool isConfirmed, int? placeId = null, byte? shidtId = null, DateTime? date = null)
 		{
             var doc = new Docs
             {
                 DocID = id,
-                Date = DB.CurrentDateTime,
+                Date = date ?? DB.CurrentDateTime,
                 DocTypeID = (int)type,
                 PrintName = WorkSession.PrintName,
                 UserID = WorkSession.UserID,

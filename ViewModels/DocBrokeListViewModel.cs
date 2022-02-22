@@ -149,21 +149,23 @@ namespace Gamma.ViewModels
                 DocBrokeList = new List<DocBrokeListItem>(
                     from d in gammaBase.Docs.Where(d => d.DocTypeID == (int)DocTypes.DocBroke &&
                     (DateBegin == null || d.Date >= DateBegin) &&
-                    (DateEnd == null || d.Date <= DateEnd) &&
-                    (PlaceDiscoverId == null || d.DocBroke.PlaceDiscoverID == PlaceDiscoverId) &&
-                    (PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)).OrderByDescending(d => d.Date).Take(500)
-                    join pd in gammaBase.Places on d.DocBroke.PlaceDiscoverID equals pd.PlaceGuid
-                    into ds
-                    from x in ds.DefaultIfEmpty()
-                    join ps in gammaBase.Places on d.DocBroke.PlaceStoreID equals ps.PlaceGuid into dps
-                    from db in dps.DefaultIfEmpty()
+                    (DateEnd == null || d.Date <= DateEnd)
+                    ).OrderByDescending(d => d.Date).Take(500)
+                    //&&
+                                                              //(PlaceDiscoverId == null || d.DocBroke.PlaceDiscoverID == PlaceDiscoverId) &&
+                                                              //(PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)).OrderByDescending(d => d.Date).Take(500)
+                                                              //join pd in gammaBase.Places on d.DocBroke.PlaceDiscoverID equals pd.PlaceGuid
+                                                              //into ds
+                                                              //from x in ds.DefaultIfEmpty()
+                                                              //join ps in gammaBase.Places on d.DocBroke.PlaceStoreID equals ps.PlaceGuid into dps
+                                                              //from db in dps.DefaultIfEmpty()
                     select new DocBrokeListItem
                     {
                         Number = d.Number,
                         DocId = d.DocID,
                         Date = d.Date,
-                        PlaceStore = db.Name,
-                        PlaceDiscover = x.Name,
+                        //PlaceStore = db.Name,
+                        //PlaceDiscover = x.Name,
                         Comment = d.Comment,
                         IsConfirmed = d.IsConfirmed,
                         LastUploadedTo1C = d.LastUploadedTo1C

@@ -48,7 +48,7 @@ namespace Gamma.DialogViewModels
         public List<RejectionReason> RejectionReasons { get; private set; }
         //public List<RejectionReason> SecondRejectionReasons { get; private set; }
         //public List<RejectionReason> SecondRejectionReasonsFiltered { get; private set; }
-        public override bool IsValid => base.IsValid && RejectionReasonID != Guid.Empty;
+        public override bool IsValid => base.IsValid && RejectionReasonID != Guid.Empty && Comment?.Length > 3;
         
         private Guid _rejectionReasonID { get; set; }
         public Guid RejectionReasonID

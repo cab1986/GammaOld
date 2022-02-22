@@ -181,6 +181,7 @@ namespace Gamma.Entities
         public virtual DbSet<PlaceAuxiliaryMaterials> PlaceAuxiliaryMaterials { get; set; }
         public virtual DbSet<RobotProduct1CCharacteristic> RobotProduct1CCharacteristic { get; set; }
         public virtual DbSet<C1CEquipmentNodesPlaces> C1CEquipmentNodesPlaces { get; set; }
+        public virtual DbSet<DocBrokeDecision> DocBrokeDecision { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {

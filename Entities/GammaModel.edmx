@@ -540,6 +540,17 @@
           <Property Name="PlaceStoreID" Type="uniqueidentifier" />
           <Property Name="IsInFuturePeriod" Type="bit" />
         </EntityType>
+        <EntityType Name="DocBrokeDecision">
+          <Key>
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocBrokeID" Type="uniqueidentifier" />
+          <Property Name="IsActual" Type="bit" Nullable="false" />
+          <Property Name="DecisionDate" Type="datetime" />
+          <Property Name="DecisionPlaceID" Type="int" />
+          <Property Name="ProductID" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="DocBrokeDecisionProducts">
           <Key>
             <PropertyRef Name="DocID" />
@@ -3190,11 +3201,47 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocBrokeDecisionProducts_DocBroke">
-          <End Role="DocBroke" Type="Self.DocBroke" Multiplicity="1" />
-          <End Role="DocBrokeDecisionProducts" Type="Self.DocBrokeDecisionProducts" Multiplicity="*" />
+        <Association Name="FK_DocBrokeDecision_DocBroke">
+          <End Role="DocBroke" Type="Self.DocBroke" Multiplicity="0..1" />
+          <End Role="DocBrokeDecision" Type="Self.DocBrokeDecision" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DocBroke">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecision">
+              <PropertyRef Name="DocBrokeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecision_Docs">
+          <End Role="Docs" Type="Self.Docs" Multiplicity="1" />
+          <End Role="DocBrokeDecision" Type="Self.DocBrokeDecision" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecision">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecision_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="DocBrokeDecision" Type="Self.DocBrokeDecision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecision">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecisionProducts_DocBrokeDecision">
+          <End Role="DocBrokeDecision" Type="Self.DocBrokeDecision" Multiplicity="1" />
+          <End Role="DocBrokeDecisionProducts" Type="Self.DocBrokeDecisionProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocBrokeDecision">
               <PropertyRef Name="DocID" />
             </Principal>
             <Dependent Role="DocBrokeDecisionProducts">
@@ -3226,11 +3273,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBroke">
-          <End Role="DocBroke" Type="Self.DocBroke" Multiplicity="1" />
+        <Association Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision">
+          <End Role="DocBrokeDecision" Type="Self.DocBrokeDecision" Multiplicity="1" />
           <End Role="DocBrokeDecisionProductWithdrawalProducts" Type="Self.DocBrokeDecisionProductWithdrawalProducts" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="DocBroke">
+            <Principal Role="DocBrokeDecision">
               <PropertyRef Name="DocID" />
             </Principal>
             <Dependent Role="DocBrokeDecisionProductWithdrawalProducts">
@@ -6691,6 +6738,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Devices" EntityType="Self.Devices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBroke" EntityType="Self.DocBroke" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DocBrokeDecision" EntityType="Self.DocBrokeDecision" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBrokeDecisionProducts" EntityType="Self.DocBrokeDecisionProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBrokeDecisionProductWithdrawalProducts" EntityType="Self.DocBrokeDecisionProductWithdrawalProducts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocBrokeProductRejectionReasons" EntityType="Self.DocBrokeProductRejectionReasons" Schema="dbo" store:Type="Tables" />
@@ -7532,8 +7580,20 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="Docs" EntitySet="Docs" />
             <End Role="DocBroke" EntitySet="DocBroke" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocBrokeDecisionProducts_DocBroke" Association="Self.FK_DocBrokeDecisionProducts_DocBroke">
+          <AssociationSet Name="FK_DocBrokeDecision_DocBroke" Association="Self.FK_DocBrokeDecision_DocBroke">
             <End Role="DocBroke" EntitySet="DocBroke" />
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecision_Docs" Association="Self.FK_DocBrokeDecision_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecision_Products" Association="Self.FK_DocBrokeDecision_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecisionProducts_DocBrokeDecision" Association="Self.FK_DocBrokeDecisionProducts_DocBrokeDecision">
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
             <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_DocBrokeDecisionProducts_Products" Association="Self.FK_DocBrokeDecisionProducts_Products">
@@ -7544,8 +7604,8 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="ProductStates" EntitySet="ProductStates" />
             <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBroke" Association="Self.FK_DocBrokeDecisionProductWithdrawalProducts_DocBroke">
-            <End Role="DocBroke" EntitySet="DocBroke" />
+          <AssociationSet Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" Association="Self.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision">
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
             <End Role="DocBrokeDecisionProductWithdrawalProducts" EntitySet="DocBrokeDecisionProductWithdrawalProducts" />
           </AssociationSet>
           <AssociationSet Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecisionProducts" Association="Self.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecisionProducts">
@@ -10958,6 +11018,27 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <Parameter Name="DocID" Mode="In" Type="Guid" />
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="DocBrokeDecision" EntityType="GammaModel.DocBrokeDecision" />
+          <AssociationSet Name="FK_DocBrokeDecision_DocBroke" Association="GammaModel.FK_DocBrokeDecision_DocBroke">
+            <End Role="DocBroke" EntitySet="DocBroke" />
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecision_Docs" Association="GammaModel.FK_DocBrokeDecision_Docs">
+            <End Role="Docs" EntitySet="Docs" />
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecisionProducts_DocBrokeDecision" Association="GammaModel.FK_DocBrokeDecisionProducts_DocBrokeDecision">
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+            <End Role="DocBrokeDecisionProducts" EntitySet="DocBrokeDecisionProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision">
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+            <End Role="DocBrokeDecisionProductWithdrawalProducts" EntitySet="DocBrokeDecisionProductWithdrawalProducts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocBrokeDecision_Products" Association="GammaModel.FK_DocBrokeDecision_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -11800,6 +11881,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="DecisionApplied" Type="Boolean" Nullable="false" />
           <Property Name="DecisionDate" Type="DateTime" Precision="3" />
           <Property Name="DecisionPlaceID" Type="Int32" />
+          <NavigationProperty Name="DocBrokeDecision" Relationship="GammaModel.FK_DocBrokeDecisionProducts_DocBrokeDecision" FromRole="DocBrokeDecisionProducts" ToRole="DocBrokeDecision" />
         </EntityType>
         <Association Name="FK_DocBrokeDecisionProducts_ProductStates">
           <End Type="GammaModel.ProductStates" Role="ProductStates" Multiplicity="1" />
@@ -11891,6 +11973,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocBroke_Docs" FromRole="DocBroke" ToRole="Docs" />
           <NavigationProperty Name="DocBrokeProducts" Relationship="GammaModel.FK_DocBrokeProducts_DocBroke" FromRole="DocBroke" ToRole="DocBrokeProducts" />
           <NavigationProperty Name="DocBrokeDecisionProductWithdrawalProducts" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBroke" FromRole="DocBroke" ToRole="DocBrokeDecisionProductWithdrawalProducts" />
+          <NavigationProperty Name="DocBrokeDecision" Relationship="GammaModel.FK_DocBrokeDecision_DocBroke" FromRole="DocBroke" ToRole="DocBrokeDecision" />
         </EntityType>
         <Association Name="FK_DocBrokeDecisionProducts_DocBroke">
           <End Type="GammaModel.DocBroke" Role="DocBroke" Multiplicity="1" />
@@ -12227,6 +12310,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocCloseShiftAuxiliaryMaterials" Relationship="GammaModel.FK_DocCloseShiftAuxiliaryMaterials_Docs" FromRole="Docs" ToRole="DocCloseShiftAuxiliaryMaterials" />
           <NavigationProperty Name="DocCloseShiftDowntimes" Relationship="GammaModel.FK_DocCloseShiftDowntimes_Docs" FromRole="Docs" ToRole="DocCloseShiftDowntimes" />
           <Property Name="LastUploadedTo1C" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DocBrokeDecision" Relationship="GammaModel.FK_DocBrokeDecision_Docs" FromRole="Docs" ToRole="DocBrokeDecision" />
         </EntityType>
         <Association Name="FK_DocBroke_Docs">
           <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
@@ -13205,6 +13289,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocCloseShiftMovementProducts" Relationship="GammaModel.FK_DocCloseShiftMovementProducts_Products" FromRole="Products" ToRole="DocCloseShiftMovementProducts" />
           <NavigationProperty Name="DocCloseShiftUtilizationProducts" Relationship="GammaModel.FK_DocCloseShiftUtilizationProducts_Products" FromRole="Products" ToRole="DocCloseShiftUtilizationProducts" />
           <NavigationProperty Name="DocBrokeDecisionProductWithdrawalProducts" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_Products" FromRole="Products" ToRole="DocBrokeDecisionProductWithdrawalProducts" />
+          <NavigationProperty Name="DocBrokeDecision" Relationship="GammaModel.FK_DocBrokeDecision_Products" FromRole="Products" ToRole="DocBrokeDecision" />
         </EntityType>
         <Association Name="FK_Products_ProductKinds">
           <End Type="GammaModel.ProductKinds" Role="ProductKinds" Multiplicity="1" />
@@ -15506,6 +15591,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="DocWithdrawalProducts" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocWithdrawalProducts" FromRole="DocBrokeDecisionProductWithdrawalProducts" ToRole="DocWithdrawalProducts" />
           <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_Products" FromRole="DocBrokeDecisionProductWithdrawalProducts" ToRole="Products" />
           <NavigationProperty Name="ProductStates" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_ProductStates" FromRole="DocBrokeDecisionProductWithdrawalProducts" ToRole="ProductStates" />
+          <NavigationProperty Name="DocBrokeDecision" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" FromRole="DocBrokeDecisionProductWithdrawalProducts" ToRole="DocBrokeDecision" />
         </EntityType>
         <Association Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBroke">
           <End Type="GammaModel.DocBroke" Role="DocBroke" Multiplicity="1" />
@@ -17296,6 +17382,82 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Principal>
             <Dependent Role="DocBrokeProducts">
               <PropertyRef Name="C1CSecondRejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocBrokeDecision">
+          <Key>
+            <PropertyRef Name="DocID" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="DocBrokeID" Type="Guid" />
+          <NavigationProperty Name="DocBroke" Relationship="GammaModel.FK_DocBrokeDecision_DocBroke" FromRole="DocBrokeDecision" ToRole="DocBroke" />
+          <NavigationProperty Name="Docs" Relationship="GammaModel.FK_DocBrokeDecision_Docs" FromRole="DocBrokeDecision" ToRole="Docs" />
+          <Property Name="IsActual" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="DocBrokeDecisionProducts" Relationship="GammaModel.FK_DocBrokeDecisionProducts_DocBrokeDecision" FromRole="DocBrokeDecision" ToRole="DocBrokeDecisionProducts" />
+          <Property Name="DecisionDate" Type="DateTime" Precision="3" />
+          <Property Name="DecisionPlaceID" Type="Int32" />
+          <NavigationProperty Name="DocBrokeDecisionProductWithdrawalProducts" Relationship="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" FromRole="DocBrokeDecision" ToRole="DocBrokeDecisionProductWithdrawalProducts" />
+          <Property Name="ProductID" Type="Guid" />
+          <NavigationProperty Name="Products" Relationship="GammaModel.FK_DocBrokeDecision_Products" FromRole="DocBrokeDecision" ToRole="Products" />
+        </EntityType>
+        <Association Name="FK_DocBrokeDecision_DocBroke">
+          <End Type="GammaModel.DocBroke" Role="DocBroke" Multiplicity="0..1" />
+          <End Type="GammaModel.DocBrokeDecision" Role="DocBrokeDecision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocBroke">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecision">
+              <PropertyRef Name="DocBrokeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecision_Docs">
+          <End Type="GammaModel.Docs" Role="Docs" Multiplicity="1" />
+          <End Type="GammaModel.DocBrokeDecision" Role="DocBrokeDecision" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Docs">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecision">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecisionProducts_DocBrokeDecision">
+          <End Type="GammaModel.DocBrokeDecision" Role="DocBrokeDecision" Multiplicity="1" />
+          <End Type="GammaModel.DocBrokeDecisionProducts" Role="DocBrokeDecisionProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocBrokeDecision">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecisionProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision">
+          <End Type="GammaModel.DocBrokeDecision" Role="DocBrokeDecision" Multiplicity="1" />
+          <End Type="GammaModel.DocBrokeDecisionProductWithdrawalProducts" Role="DocBrokeDecisionProductWithdrawalProducts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocBrokeDecision">
+              <PropertyRef Name="DocID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecisionProductWithdrawalProducts">
+              <PropertyRef Name="DocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocBrokeDecision_Products">
+          <End Type="GammaModel.Products" Role="Products" Multiplicity="0..1" />
+          <End Type="GammaModel.DocBrokeDecision" Role="DocBrokeDecision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="DocBrokeDecision">
+              <PropertyRef Name="ProductID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -20654,6 +20816,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetDocBrokeDecisionEditable" FunctionName="GammaDBModel.GetDocBrokeDecisionEditable" />
+          <EntitySetMapping Name="DocBrokeDecision">
+            <EntityTypeMapping TypeName="GammaModel.DocBrokeDecision">
+              <MappingFragment StoreEntitySet="DocBrokeDecision">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DecisionPlaceID" ColumnName="DecisionPlaceID" />
+                <ScalarProperty Name="DecisionDate" ColumnName="DecisionDate" />
+                <ScalarProperty Name="IsActual" ColumnName="IsActual" />
+                <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

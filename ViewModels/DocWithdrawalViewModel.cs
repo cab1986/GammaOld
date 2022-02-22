@@ -70,7 +70,9 @@ namespace Gamma.ViewModels
                 var docProductionIDs = dW?.DocProduction?.Select(x => x.DocID).ToList();
                 ProductWithdrawals = docProductionIDs == null ? new ObservableCollection<Products>() : new ObservableCollection<Products>(
                     gammaBase.Products.Where(x => x.DocProductionProducts.Any(dpp => docProductionIDs.Contains(dpp.DocID))));
-                var groundDoc = dW?.DocComplectation?.FirstOrDefault()?.Docs ?? dW?.DocBrokeDecisionProductWithdrawalProducts?.FirstOrDefault()?.DocBroke?.Docs ?? dW?.DocRepackProducts?.FirstOrDefault()?.DocRepack?.Docs;
+                var groundDoc = dW?.DocComplectation?.FirstOrDefault()?.Docs 
+                                    ?? dW?.DocBrokeDecisionProductWithdrawalProducts?.FirstOrDefault()?.DocBrokeDecision?.DocBroke?.Docs 
+                                    ?? dW?.DocRepackProducts?.FirstOrDefault()?.DocRepack?.Docs;
                 if (groundDoc != null)
                 {
                     GroundDocId = groundDoc.DocID;

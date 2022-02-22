@@ -154,7 +154,9 @@ namespace Gamma
         [Description("Задание на производство")]
         ProductionTask,
         [Description("Акт на переупаковку")]
-        DocRepack
+        DocRepack,
+        [Description("Решение о браке")]
+        DocBrokeDecision
     }
     public enum PermissionMark
     {

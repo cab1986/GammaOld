@@ -457,6 +457,12 @@
         <EntityTypeShape EntityType="GammaModel.C1CEquipmentNodesPlaces" Width="1.5" PointX="18.375" PointY="0.75" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second" />
+        <EntityTypeShape EntityType="GammaModel.DocBrokeDecision" Width="1.5" PointX="20.5" PointY="73.125" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_DocBroke" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBrokeDecision" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_Products" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

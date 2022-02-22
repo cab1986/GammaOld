@@ -128,5 +128,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocCloseShiftAuxiliaryMaterials> DocCloseShiftAuxiliaryMaterials { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftDowntimes> DocCloseShiftDowntimes { get; set; }
+        public virtual DocBrokeDecision DocBrokeDecision { get; set; }
     }
 }

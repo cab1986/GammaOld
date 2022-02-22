@@ -204,8 +204,18 @@ namespace Gamma.Models
                 }
             }
         }
-        public string PlaceName { get; private set; }
-        
+
+        private string _placeName { get; set; }
+        public string PlaceName
+        {
+            get { return _placeName; }
+            set
+            {
+                _placeName = value;
+                RaisePropertyChanged("PlaceName");
+            }
+        }
+
         private void RefreshBrokePlaceName ()
         {
             using (var gammaBase = DB.GammaDb)

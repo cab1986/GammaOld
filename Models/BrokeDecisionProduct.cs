@@ -6,16 +6,21 @@ using DevExpress.Mvvm;
 using Gamma.Common;
 using System.Linq;
 using System.Collections.Generic;
+using Gamma.Entities;
 
 namespace Gamma.Models
 {
     public class BrokeDecisionProduct : ViewModelBase
     {
-        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, string nomenclatureName, 
+        public BrokeDecisionProduct()
+        { }
+
+        public BrokeDecisionProduct(Guid decisionDocId, Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, string nomenclatureName, 
             string measureUnit, Guid? rejectionReasonID, int? brokePlaceID, Guid nomenclatureOldId , Guid? characteristicOldId, decimal quantity = 0, bool decisionApplied = false,
             List<KeyValuePair<Guid, String>> docWithdrawals = null, //Guid? docWithdrawalID = null, 
             DateTime? decisionDate = null, int? decisionPlaceId = null)
         {
+            DecisionDocId = decisionDocId;
             Quantity = quantity;
             ProductId = productId;
             Number = number;
@@ -35,15 +40,15 @@ namespace Gamma.Models
             DecisionPlaceId = decisionPlaceId;
         }
 
-        public BrokeDecisionProduct(Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, 
+        public BrokeDecisionProduct(Guid decisionDocId, Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, 
             string nomenclatureName, string measureUnit, Guid? rejectionReasonID, int? brokePlaceID,
             Guid nomenclatureOldId, Guid? characteristicOldId, DateTime? decisionDate, int? decisionPlaceId)
-                : this(productId, productKind, number, productQuantity, state, nomenclatureName, 
+                : this(decisionDocId, productId, productKind, number, productQuantity, state, nomenclatureName, 
                 measureUnit, rejectionReasonID, brokePlaceID, nomenclatureOldId, characteristicOldId, 0, false, null, decisionDate, decisionPlaceId)
         { }
 
         public Guid ProductId { get; set; }
-        public Guid DocId { get; set; }
+        public Guid DecisionDocId { get; set; }
         public decimal ProductQuantity { get; set; }
         public Guid? RejectionReasonID { get; set; }
         public int? BrokePlaceID { get; set; }
@@ -89,8 +94,19 @@ namespace Gamma.Models
         public ProductKind ProductKind { get; set; }
         public string NumberAndNomenclature => Number.PadRight(14) + "  |  " + NomenclatureName;
         public string DecisionDateAndPlace => (DecisionDate == null ? "" : ((DateTime)DecisionDate).ToString("dd.MM.yyyy HH:mm:ss")).PadRight(19) + (DecisionPlaceName?.Length > 0 ? "  |  " + DecisionPlaceName : "");
-        public string DecisionPlaceName { get; set; }
-                
+
+        private string _decisionPlaceName { get; set; }
+        public string DecisionPlaceName
+        {
+            get { return _decisionPlaceName; }
+            set
+            {
+                _decisionPlaceName = value;
+                RaisePropertyChanged("DecisionPlaceName");
+                RaisePropertyChanged("DecisionDateAndPlace");
+            }
+        }
+
         private DateTime? _decisionDate { get; set; }
         public DateTime? DecisionDate
         {
@@ -99,7 +115,7 @@ namespace Gamma.Models
             {
                 _decisionDate = value;
                 RaisePropertyChanged("DecisionDate");
-
+                RaisePropertyChanged("DecisionDateAndPlace");
             }
         }
 
@@ -110,6 +126,7 @@ namespace Gamma.Models
             set
             {
                 _decisionPlaceId = value;
+                DecisionPlaceName = DB.GammaDb.Places.FirstOrDefault(p => p.PlaceID == value)?.Name;
                 RaisePropertyChanged("DecisionPlaceId");
 
             }

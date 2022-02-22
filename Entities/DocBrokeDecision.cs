@@ -12,30 +12,28 @@ namespace Gamma.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class DocBrokeDecisionProducts
+    public partial class DocBrokeDecision
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocBrokeDecisionProducts()
+        public DocBrokeDecision()
         {
+            this.DocBrokeDecisionProducts = new HashSet<DocBrokeDecisionProducts>();
             this.DocBrokeDecisionProductWithdrawalProducts = new HashSet<DocBrokeDecisionProductWithdrawalProducts>();
         }
     
         public System.Guid DocID { get; set; }
-        public System.Guid ProductID { get; set; }
-        public byte StateID { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
-        public string Comment { get; set; }
-        public Nullable<System.Guid> C1CNomenclatureID { get; set; }
-        public Nullable<System.Guid> C1CCharacteristicID { get; set; }
-        public bool DecisionApplied { get; set; }
+        public Nullable<System.Guid> DocBrokeID { get; set; }
+        public bool IsActual { get; set; }
         public Nullable<System.DateTime> DecisionDate { get; set; }
         public Nullable<int> DecisionPlaceID { get; set; }
+        public Nullable<System.Guid> ProductID { get; set; }
     
-        public virtual ProductStates ProductStates { get; set; }
         public virtual DocBroke DocBroke { get; set; }
-        public virtual Products Products { get; set; }
+        public virtual Docs Docs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
-        public virtual DocBrokeDecision DocBrokeDecision { get; set; }
+        public virtual Products Products { get; set; }
     }
 }

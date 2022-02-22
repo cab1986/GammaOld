@@ -25,5 +25,6 @@ namespace Gamma.Entities
         public virtual DocWithdrawalProducts DocWithdrawalProducts { get; set; }
         public virtual Products Products { get; set; }
         public virtual ProductStates ProductStates { get; set; }
+        public virtual DocBrokeDecision DocBrokeDecision { get; set; }
     }
 }
