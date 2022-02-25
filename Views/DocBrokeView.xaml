@@ -22,6 +22,7 @@
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModels:DocBrokeViewModel}}"
         common:WindowSettings.Save="True">
     <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:CurrentWindowService ClosingCommand="{Binding ClosingCommand}" />
         <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="AddRejectionReasonDialog">
             <dx:DialogService.ViewTemplate>
                 <DataTemplate>

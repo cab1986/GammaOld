@@ -18,6 +18,7 @@ using Gamma.DialogViewModels;
 using System.ComponentModel;
 using System.Diagnostics;
 using Gamma.Controllers;
+using System.Windows.Input;
 
 namespace Gamma.ViewModels
 {
@@ -25,6 +26,7 @@ namespace Gamma.ViewModels
     {
         public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false)
         {
+            ClosingCommand = new DelegateCommand<CancelEventArgs>(Closing);
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             DocId = docBrokeId;
@@ -174,6 +176,17 @@ namespace Gamma.ViewModels
             SetDecisionForAllProductCommand = new DelegateCommand(SetDecisionForAllProduct, () => !IsReadOnly && SelectedTabIndex != 0 && !DocBrokeDecision.BrokeDecisionProducts.Any(p => p.ProductState != ProductState.NeedsDecision));
         }
 
+        public ICommand ClosingCommand { get; private set; }
+
+        void Closing(CancelEventArgs e)
+        {
+            DocBrokeDecision?.SaveToModel();
+            //if (MessageBox.Show("Close?", "", System.Windows.MessageBoxButton.YesNo) == System.Windows.MessageBoxResult.No)
+            //{
+            //    e.Cancel = true;
+            //}
+        }
+        
         private void BarcodeReceived(BarcodeMessage msg)
         {
             switch (SelectedTabIndex)
