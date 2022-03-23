@@ -32,7 +32,9 @@ namespace Gamma
             {
                 try
                 {
-                    var context = GammaDbWithNoCheckConnection;
+                    //var context = GammaDbWithNoCheckConnection;
+                    var context = new GammaEntities(GammaSettings.ConnectionString);
+                    context.Database.CommandTimeout = 300;
                     context.CheckConnection();
                     return context;
                 }
@@ -48,12 +50,42 @@ namespace Gamma
         {
             get
             {
-                var context = new GammaEntities(GammaSettings.ConnectionString);
-                context.Database.CommandTimeout = 300;
-                return context;
+                try
+                {
+                    var context = new GammaEntities(GammaSettings.ConnectionString);
+                    context.Database.CommandTimeout = 300;
+                    return context;
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException.Message}");
+                    return null as GammaEntities;
+                }
             }
         }
+        
 
+        private static GammaEntities _logDbContext { get; set; }
+        public static GammaEntities LogDbContext
+        {
+            get
+            {
+                try
+                {
+                    if (_logDbContext == null)
+                    {
+                        _logDbContext = new GammaEntities(GammaSettings.ConnectionString);
+                        _logDbContext.Database.CommandTimeout = 300;
+                    }
+                    return _logDbContext;
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException.Message}");
+                    return null as GammaEntities;
+                }
+            }
+        }
 
         public static bool Initialize()
         {
@@ -65,7 +97,7 @@ namespace Gamma
                 var currentUser = CurrentUserID;
                 if (currentUser != Guid.Empty)
                 {
-                    WorkSession.UserID = CurrentUserID;
+                    WorkSession.UserID = currentUser;
                     return true;
                 }
                 else
@@ -115,29 +147,22 @@ namespace Gamma
                                                       || e.State == EntityState.Deleted);
                 }
         */
-        public static void AddLogMessageInformation(string log) => AddLogMessage(log, CriticalLogTypes.Information);
-        public static void AddLogMessageError(string log) => AddLogMessage(log, CriticalLogTypes.Error);
-        public static void AddLogMessageStartProgramInformation(string log) => AddLogMessage(log, CriticalLogTypes.Information);
-        public static void AddLogMessageInformationWithImage(string log, System.IO.MemoryStream image ) => AddLogMessage(log, CriticalLogTypes.Information, image);
+        public static void AddLogMessageInformation(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Information, technicalLog, docID, productID);
+        public static void AddLogMessageQuestion(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Question, technicalLog, docID, productID);
+        public static void AddLogMessageError(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Error, technicalLog, docID, productID);
+        public static void AddLogMessageStartProgramInformation(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Information, technicalLog, docID, productID);
+        public static void AddLogMessageInformationWithImage(string log, System.IO.MemoryStream image, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Information, image, technicalLog, docID, productID);
 
-        public static void AddLogMessage(string log, CriticalLogTypes logTypeID)
+        public static void AddLogMessage(string log, CriticalLogTypes logTypeID, string technicalLog = null, Guid? docID = null, Guid? productID = null)
         {
-
-            using (var gammaBase = DB.GammaDb)
-            {
-                gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = log });
-                gammaBase.SaveChanges();
-            }
+            LogDbContext.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = (log?.Length > 2000 ? log?.Substring(0,2000):log), DocID = docID, ProductID = productID, TechnicalLog = (technicalLog?.Length > 1000 ? technicalLog?.Substring(0, 1000) : technicalLog) });
+            LogDbContext.SaveChanges();
         }
 
-        public static void AddLogMessage(string log, CriticalLogTypes logTypeID, System.IO.MemoryStream image)
+        public static void AddLogMessage(string log, CriticalLogTypes logTypeID, System.IO.MemoryStream image, string technicalLog = null, Guid? docID = null, Guid? productID = null)
         {
-
-            using (var gammaBase = DB.GammaDb)
-            {
-                gammaBase.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogDate = DB.CurrentDateTime, LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = log, Image = image.ToArray() });
-                gammaBase.SaveChanges();
-            }
+            LogDbContext.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log), Image = image.ToArray(), DocID = docID, ProductID = productID, TechnicalLog = (technicalLog?.Length > 1000?technicalLog?.Substring(0, 1000): technicalLog) });
+            LogDbContext.SaveChanges();
         }
 
         public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid, GammaEntities gammaBase = null)
@@ -178,43 +203,43 @@ namespace Gamma
 
         public static string GetProductNomenclatureNameBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.GetProductNomenclatureNameBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<string>($"SELECT dbo.GetProductNomenclatureNameBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();
         }
 
         public static decimal CalculateSpoolWeightBeforeDate(Guid productId, DateTime date, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.CalculateSpoolWeightBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<decimal>($"SELECT dbo.CalculateSpoolWeightBeforeDate('{productId}', '{date.ToString("yyyy-MM-dd HH:mm:ss.fff")}')").AsEnumerable().FirstOrDefault();
         }
 
         public static string CheckSourceSpools(int placeID, Guid productionTaskID, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.CheckSourceSpools({placeID}, '{productionTaskID}')").AsEnumerable().FirstOrDefault();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<string>($"SELECT dbo.CheckSourceSpools({placeID}, '{productionTaskID}')").AsEnumerable().FirstOrDefault();
         }
 
-        public static DateTime CurrentDateTime => ((IObjectContextAdapter)GammaDb).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
+        public static DateTime CurrentDateTime => ((IObjectContextAdapter)GammaDbWithNoCheckConnection).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
 
-        public static Guid CurrentUserID => GammaDb == null ? Guid.Empty : GammaDb.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
+        public static Guid CurrentUserID => GammaDbWithNoCheckConnection == null ? Guid.Empty : GammaDbWithNoCheckConnection.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
 
         public static int GetLastFormat(int placeID, GammaEntities gammaBase = null)
         {
-            return (gammaBase??GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetLastFormat({placeID})").AsEnumerable().First();
+            return (gammaBase?? GammaDbWithNoCheckConnection).Database.SqlQuery<int>($"SELECT dbo.GetLastFormat({placeID})").AsEnumerable().First();
         }
 
         public static int GetUnwindersCount(int placeID, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetUnwindersCount({placeID})").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<int>($"SELECT dbo.GetUnwindersCount({placeID})").AsEnumerable().First();
         }
 
 
         public static decimal GetCoreWeight(Guid characteristicID, GammaEntities gammaBase = null)
         {
-            return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetCoreWeight('{characteristicID}')").AsEnumerable().First();
+            return (gammaBase?? GammaDbWithNoCheckConnection).Database.SqlQuery<decimal>($"SELECT dbo.GetCoreWeight('{characteristicID}')").AsEnumerable().First();
         }
 
         public static string GetCharacteristicNameForProductionTaskSGB(Guid characteristicId)
         {
             return
-                GammaDb.Database.SqlQuery<string>(
+                GammaDbWithNoCheckConnection.Database.SqlQuery<string>(
                     $"SELECT dbo.GetCharacteristicNameForProductionTaskSGB('{characteristicId}')")
                     .AsEnumerable()
                     .First();
@@ -222,18 +247,18 @@ namespace Gamma
 
         public static decimal GetSpoolCoreWeight(Guid productid, GammaEntities gammaBase = null)
         {
-            return (gammaBase?? GammaDb).Database.SqlQuery<decimal>($"SELECT dbo.GetSpoolCoreWeight('{productid}')").AsEnumerable().First();
+            return (gammaBase?? GammaDbWithNoCheckConnection).Database.SqlQuery<decimal>($"SELECT dbo.GetSpoolCoreWeight('{productid}')").AsEnumerable().First();
         }
 
         public static short GetSpoolDiameter(Guid productid, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetSpoolDiameter('{productid}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<short>($"SELECT dbo.GetSpoolDiameter('{productid}')").AsEnumerable().First();
         }
 
         public static bool AllowEditProduct(Guid productId, GammaEntities gammaBase = null)
         {
             return
-                (gammaBase ?? GammaDb).Database.SqlQuery<bool>($"SELECT dbo.AllowEditProduct('{productId}')")
+                (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<bool>($"SELECT dbo.AllowEditProduct('{productId}')")
                     .AsEnumerable()
                     .First();
         }
@@ -241,12 +266,12 @@ namespace Gamma
         public static bool AllowEditDoc(Guid docId, GammaEntities gammaBase = null)
         {
             return
-                (gammaBase ?? GammaDb).Database.SqlQuery<bool>($"SELECT dbo.AllowEditDoc('{docId}')")
+                (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<bool>($"SELECT dbo.AllowEditDoc('{docId}')")
                     .AsEnumerable()
                     .First();
         }
 
-        public static ObservableCollection<string> BaseTables => new ObservableCollection<string>(GammaDb.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
+        public static ObservableCollection<string> BaseTables => new ObservableCollection<string>(GammaDbWithNoCheckConnection.Database.SqlQuery<string>("SELECT TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME"));
 
         public static void UploadDocCloseShiftTo1C(Guid docId, GammaEntities gammaBase = null)
         {
@@ -410,52 +435,52 @@ namespace Gamma
 
         public static DateTime GetShiftBeginTimeFromDate(DateTime date)
         {
-            return GammaDb.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftBeginTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
+            return GammaDbWithNoCheckConnection.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftBeginTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
         }
         public static DateTime GetShiftEndTimeFromDate(DateTime date)
         {
-            return GammaDb.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftEndTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
+            return GammaDbWithNoCheckConnection.Database.SqlQuery<DateTime>($"SELECT dbo.GetShiftEndTime('{date.ToString("yyyyMMdd HH:mm:ss")}')").AsEnumerable().First();
         }
 
         public static Guid? GetDocMaterialInFromDocID(int placeID,int shiftID, DateTime date, string productionCharacteristicIDs)
         {
-            return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}','{productionCharacteristicIDs}')").AsEnumerable().First();
+            return GammaDbWithNoCheckConnection.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocID({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}','{productionCharacteristicIDs}')").AsEnumerable().First();
         }
 
         public static Guid? GetDocMaterialInFromDocIDconsideringComposition(int placeID, int shiftID, DateTime date, bool? isCompositionCalculationParameter, string productionCharacteristicIDs)
         {
             string comp = (isCompositionCalculationParameter == null ? "NULL" : (bool)isCompositionCalculationParameter ? "1" : "0");
-            return GammaDb.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocIDconsideringComposition({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}',{comp},'{productionCharacteristicIDs}')").AsEnumerable().First();
+            return GammaDbWithNoCheckConnection.Database.SqlQuery<Guid?>($"SELECT dbo.GetDocMaterialInFromDocIDconsideringComposition({placeID},{shiftID},'{date.ToString("yyyyMMdd HH:mm:ss")}',{comp},'{productionCharacteristicIDs}')").AsEnumerable().First();
         }
 
         public static short? GetPaperMachinePlace(int placeid, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<short>($"SELECT dbo.GetPaperMachinePlace('{placeid}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<short>($"SELECT dbo.GetPaperMachinePlace('{placeid}')").AsEnumerable().First();
         }
 
         public static int? GetAbilityChangeProductionTaskState(Guid productionTaskBatchID, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeProductionTaskState('{productionTaskBatchID}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeProductionTaskState('{productionTaskBatchID}')").AsEnumerable().First();
         }
 
         public static int? GetAbilityChangeDocShipmentOrder(Guid docShipmentOrderID, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocShipmentOrder('{docShipmentOrderID}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocShipmentOrder('{docShipmentOrderID}')").AsEnumerable().First();
         }
 
         public static int? GetAbilityChangeDocComplectation(Guid docCompletationID, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocComplectation('{docCompletationID}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<int>($"SELECT dbo.GetAbilityChangeDocComplectation('{docCompletationID}')").AsEnumerable().First();
         }
 
         public static string GetPlaceProperty(int placeID, string propertyName, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<string>($"SELECT dbo.GetPlaceProperty('{placeID}', '{propertyName}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<string>($"SELECT dbo.GetPlaceProperty('{placeID}', '{propertyName}')").AsEnumerable().First();
         }
 
         public static decimal? GetProductionTaskOEE(Guid productionTaskID, GammaEntities gammaBase = null)
         {
-            return (gammaBase ?? GammaDb).Database.SqlQuery<decimal?>($"SELECT dbo.GetProductionTaskOEE('{productionTaskID}')").AsEnumerable().First();
+            return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<decimal?>($"SELECT dbo.GetProductionTaskOEE('{productionTaskID}')").AsEnumerable().First();
         }
 
     }

@@ -261,7 +261,9 @@ namespace Gamma
         [Description("Информационное сообщение в процессе работы")]
         Information,
         [Description("Сообщение об ошибке")]
-        Error
+        Error,
+        [Description("Вопрос")]
+        Question
     }
 
     public enum WithdrawalTypes

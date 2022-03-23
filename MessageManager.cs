@@ -21,7 +21,10 @@ namespace Gamma
 
     public class RefreshMessage { }
 
-    public class RefreshBrokeListMessage { }
+    public class RefreshBrokeListMessage
+    {
+        public Guid DocID { get; set; } // id документа, который надо выбрать после обновления списка
+    }
 
     public class BaseReconnectedMessage { }
     public class OpenFilterDateMessage { }
