@@ -22,15 +22,15 @@
             <Button Content="Создать новый акт" Command="{Binding CreateNewDocBrokeCommand}"/>
         </ToolBar>
         <dxlc:LayoutControl Grid.Row="1">
-            <dxlc:LayoutItem Label="Место обнаружения:">
-                <dxe:ComboBoxEdit ItemsSource="{Binding PlacesList}" EditValue="{Binding PlaceDiscoverId}" DisplayMember="PlaceName" ValueMember="PlaceGuid"
+            <dxlc:LayoutItem Label="Место актирования:">
+                <dxe:ComboBoxEdit ItemsSource="{Binding PlacesList}" EditValue="{Binding PlaceDiscoverId}" DisplayMember="PlaceName" ValueMember="PlaceID"
                                   IsTextEditable="False" ClearSelectionOnBackspace="True" AutoComplete="True" AllowNullInput="True">
                 </dxe:ComboBoxEdit>
             </dxlc:LayoutItem>
-            <dxlc:LayoutItem Label="Место хранения:">
+            <!--<dxlc:LayoutItem Label="Место хранения:">
                 <dxe:ComboBoxEdit ItemsSource="{Binding PlacesList}" EditValue="{Binding PlaceStoreId}" DisplayMember="PlaceName" ValueMember="PlaceGuid"
                                   IsTextEditable="False" ClearSelectionOnBackspace="True" AutoComplete="True" AllowNullInput="True" />
-            </dxlc:LayoutItem>
+            </dxlc:LayoutItem>-->
             <dxlc:LayoutItem Label="Номер:">
                 <dxe:TextEdit EditValue="{Binding Number, UpdateSourceTrigger=PropertyChanged}" />
             </dxlc:LayoutItem>
@@ -46,16 +46,18 @@
                          AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" AllowLiveDataShaping="False" SelectedItem="{Binding SelectedDocBroke}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn Header="Номер" FieldName="Number" FixedWidth="True"/>
-                <dxg:GridColumn Header="Номер в 1С" FieldName="Comment" FixedWidth="True"/>
+                <dxg:GridColumn Header="Примечание" FieldName="Comment" FixedWidth="True"/>
                 <dxg:GridColumn Header="Дата" FieldName="Date" FixedWidth="True" Width="110" SortIndex="0" SortOrder="Descending">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="g" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
-                <dxg:GridColumn Header="Место обнаружения" FieldName="PlaceDiscover"/>
-                <dxg:GridColumn Header="Место хранения" FieldName="PlaceStore"/>
+                <dxg:GridColumn Header="Место актирования" FieldName="PlaceDiscover"/>
+                <!--<dxg:GridColumn Header="Место хранения" FieldName="PlaceStore"/>-->
+                <dxg:GridColumn Header="Акт" FieldName="IsInFuturePeriodName" FixedWidth="True" Width="100"/>
                 <dxg:GridColumn Header="Подтвержден" FieldName="IsConfirmed" FixedWidth="True" Width="100"/>
-                <dxg:GridColumn Visible="False" Header="Выгружен в 1С" FieldName="LastUploadedTo1C" Width="130">
+                <dxg:GridColumn Header="Автор" FieldName="UserCreate" Width="120"/>
+                <dxg:GridColumn Header="Выгружен в 1С" FieldName="LastUploadedTo1C" FixedWidth="True" Width="130">
                     <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings Mask="G" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>

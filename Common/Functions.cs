@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Deployment.Application;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 
 namespace Gamma.Common
 {
@@ -27,6 +28,19 @@ namespace Gamma.Common
             }
             return descs;
         }
+
+        public static string GetEnumDescription(Enum value)
+        {
+            // Get the Description attribute value for the enum value
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attributes.Length > 0)
+                return attributes[0].Description;
+            else
+                return value.ToString();
+        }
+
         public static Dictionary<byte,string> ToDictionary(this Enum en)
         {
             var type = en.GetType();
@@ -89,6 +103,19 @@ namespace Gamma.Common
                     }
                 return "Текущая версия приложения: " + version;
             }
+        }
+
+        public static void ShowMessageError(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
+        {
+            MessageBox.Show(message);
+            DB.AddLogMessageError(message, technicalMessage, docID, productID);
+        }
+
+        public static MessageBoxResult ShowMessageQuestion(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
+        {
+            var res = MessageBox.Show(message,"Вопрос", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            DB.AddLogMessageQuestion(message + " => Ответ: "+res, technicalMessage, docID, productID);
+            return res;
         }
     }
 

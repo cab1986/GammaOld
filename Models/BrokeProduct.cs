@@ -50,12 +50,27 @@ namespace Gamma.Models
             RejectionReasonCommentsString = FormRejectionReasonCommentsString(RejectionReasons);
         }
         */
-        public Guid ProductId { get; set; }
-        public ProductKind ProductKind { get; set; }
+        public Guid ProductId { get; set; }        
         public string NomenclatureName { get; set; }
         public string Number { get; set; }
         public string BaseMeasureUnit { get; set; }
         public decimal Quantity { get; set; }
+
+        public bool IsChanged { get; set; } = false;
+
+        public string ProductKindName { get; private set; }
+        private ProductKind _productKind { get; set; }
+        public ProductKind ProductKind
+        {
+            get { return _productKind; }
+            set
+            {
+                _productKind = value;
+                ProductKindName = Functions.GetEnumDescription(value);
+                RaisePropertyChanged("ProductKind");
+                RaisePropertyChanged("ProductKindName");
+            }
+        }
 
         private Guid? _rejectionReasonID;
         public Guid? RejectionReasonID
@@ -221,7 +236,7 @@ namespace Gamma.Models
             using (var gammaBase = DB.GammaDb)
             {
                 BrokePlaceName = (BrokePlaceId == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == BrokePlaceId)?.Name)
-                    + (BrokeShiftId == null ? string.Empty : ", Смена " + BrokeShiftId.ToString())
+                    + ((BrokeShiftId ?? 0) == 0  ? string.Empty : ", Смена " + BrokeShiftId.ToString())
                     + (PrintName == null ? string.Empty : ",  " + PrintName);
             }
         }

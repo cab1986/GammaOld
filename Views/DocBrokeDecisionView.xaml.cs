@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Gamma.Entities;
+using Gamma.Models;
+using Gamma.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +26,14 @@ namespace Gamma.Views
         {
             InitializeComponent();
         }
+        /*private void GridControl_CustomRowFilter(object sender, DevExpress.Xpf.Grid.RowFilterEventArgs e)
+        {
+            var row = ((BrokeDecisionProduct)grid.GetRow(grid.GetRowHandleByListIndex(e.ListSourceRowIndex)));
+            if (row != null)
+            {
+                e.Visible = row.IsVisibleRow; //row == null || !(row.DecisionApplied && (row.ProductState == ProductState.NeedsDecision || row.ProductState == ProductState.ForConversion || row.ProductState == ProductState.Repack));
+                e.Handled = !e.Visible ? true : false;
+            }
+        }*/
     }
 }

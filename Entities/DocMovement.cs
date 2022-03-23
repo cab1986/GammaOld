@@ -44,5 +44,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocMovementOrder> DocMovementOrder { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocCloseShiftMovementProducts> DocCloseShiftMovementProducts { get; set; }
+        public virtual C1CDocInternalOrders C1CDocInternalOrders { get; set; }
     }
 }

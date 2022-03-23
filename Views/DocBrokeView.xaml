@@ -86,7 +86,7 @@
                         <dxlc:LayoutItem Label="Номер">
                             <dxe:TextEdit EditValue="{Binding DocNumber, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"  />
                         </dxlc:LayoutItem>
-                        <dxlc:LayoutItem Label="Номер в 1С">
+                        <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding DocComment, UpdateSourceTrigger=PropertyChanged}" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Дата">
@@ -169,13 +169,14 @@
                                             <dxg:GridControlBand VisibleIndex="0">
                                                 <dxg:GridColumn FieldName="Number" VisibleIndex="1" Header="Номер" AllowEditing="False" Width="115" FixedWidth="True"/>
                                                 <dxg:GridColumn FieldName="Date" VisibleIndex="2" Header="Дата" Width="80" FixedWidth="True" AllowEditing="False"/>
-                                                <dxg:GridColumn FieldName="Quantity" VisibleIndex="3" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
+                                                <dxg:GridColumn FieldName="ProductKindName" VisibleIndex="3" Header="Вид" Width="80" FixedWidth="True" AllowEditing="False"/>
+                                                <dxg:GridColumn FieldName="Quantity" VisibleIndex="4" Header="Кол-во" Width="50" FixedWidth="True" AllowEditing="False">
                                                     <dxg:GridColumn.EditSettings>
                                                         <dxe:TextEditSettings MaskUseAsDisplayFormat="True" MaskType="Numeric"/>
                                                     </dxg:GridColumn.EditSettings>
                                                 </dxg:GridColumn>
-                                                <dxg:GridColumn FieldName="NomenclatureName" VisibleIndex="4" Header="Номенклатура" AllowEditing="False" AllowBestFit="True"/>
-                                                <dxg:GridColumn FieldName="RejectionReasonName" VisibleIndex="5" dxg:BandBase.GridRow="1" Header="Несоответствия, дефекты">
+                                                <dxg:GridColumn FieldName="NomenclatureName" VisibleIndex="5" Header="Номенклатура" AllowEditing="False" AllowBestFit="True"/>
+                                                <dxg:GridColumn FieldName="RejectionReasonName" VisibleIndex="6" dxg:BandBase.GridRow="1" Header="Несоответствия, дефекты">
                                                     <dxg:GridColumn.EditSettings>
                                                         <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">
                                                             <dxe:ButtonEditSettings.Buttons>
@@ -184,13 +185,13 @@
                                                         </dxe:ButtonEditSettings>
                                                     </dxg:GridColumn.EditSettings>
                                                 </dxg:GridColumn>
-                                                <dxg:GridColumn FieldName="RejectionReasonComment" VisibleIndex="6" dxg:BandBase.GridRow="1" Header="Причины" AllowEditing="False"/>
+                                                <dxg:GridColumn FieldName="RejectionReasonComment" VisibleIndex="7" dxg:BandBase.GridRow="1" Header="Причины" AllowEditing="False"/>
                                                 <!--<dxg:GridColumn FieldName="PlaceId" VisibleIndex="7" dxg:BandBase.GridRow="1" Header="Место актирования" ReadOnly="{Binding IsReadOnly}" Width="100">
                                                     <dxg:GridColumn.EditSettings>
                                                         <dxe:ComboBoxEditSettings ItemsSource="{Binding BrokePlaces}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
                                                     </dxg:GridColumn.EditSettings>
                                                 </dxg:GridColumn>-->
-                                                <dxg:GridColumn FieldName="PlaceName" VisibleIndex="7" dxg:BandBase.GridRow="1" Header="Место актирования" Width="100">
+                                                <dxg:GridColumn FieldName="PlaceName" VisibleIndex="8" dxg:BandBase.GridRow="1" Header="Место актирования" Width="100">
                                                     <dxg:GridColumn.EditSettings>
                                                         <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">
                                                             <dxe:ButtonEditSettings.Buttons>

@@ -21,7 +21,6 @@ namespace Gamma.Models
             }   
         }
         public Guid ProductID { get; set; }
-        public ProductKind ProductKind { get; set; }
         public string Number { get; set; }
         public DateTime? Date { get; set; }
         public string NomenclatureName { get; set; }
@@ -39,5 +38,19 @@ namespace Gamma.Models
         public string CurrentPlace { get; set; }
         public int Count { get; set; }
         public string ProductionTaskNumber { get; set; }
+
+        public string ProductKindName { get; private set; }
+        private ProductKind _productKind { get; set; }
+        public ProductKind ProductKind
+        {
+            get { return _productKind; }
+            set
+            {
+                _productKind = value;
+                ProductKindName = Common.Functions.GetEnumDescription(value);
+                RaisePropertyChanged("ProductKind");
+                RaisePropertyChanged("ProductKindName");
+            }
+        }
     }
 }

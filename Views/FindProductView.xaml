@@ -88,6 +88,7 @@
                             <dxe:DateEditSettings Mask="G" MaskUseAsDisplayFormat="True"/>
                         </dxg:GridColumn.EditSettings>
                     </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="ProductKindName" Header="Вид изделия" Width="120" FixedWidth="True"/>
                     <dxg:GridColumn FieldName="NomenclatureName" Header="Номенклатура" />
                     <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="50" FixedWidth="True">
                         <dxg:GridColumn.EditSettings>

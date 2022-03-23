@@ -19,7 +19,7 @@
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
     Title="{Binding Title}"
-    Height ="600" Width="1200" 
+    Height ="650" Width="1200" 
     d:DataContext="{d:DesignInstance Type=vm:DocProductViewModel, IsDesignTimeCreatable=False}"
     gc:WindowSettings.Save="True">
     <g:MvvmWindow.Resources>
@@ -37,6 +37,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:DocProductBaleViewModel}">
             <v:DocProductBaleView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DocBrokeDecisionViewModel}">
+            <v:DocBrokeDecisionView />
         </DataTemplate>
         <DataTemplate x:Key="BarTemplate" DataType="g:BarViewModel">
             <ContentControl>
@@ -56,6 +59,7 @@
         </DataTemplate>
     </g:MvvmWindow.Resources>
     <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:CurrentWindowService ClosingCommand="{Binding ClosingCommand}" />
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
     </dxmvvm:Interaction.Behaviors>
@@ -69,7 +73,7 @@
             <g:UIAuthBehavior />
         </dxmvvm:Interaction.Behaviors>
         <dxb:BarManager BarsSource="{Binding Bars}" BarTemplate="{StaticResource BarTemplate}"/>
-        <dx:DXTabControl Grid.Row="1">
+        <dx:DXTabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex, Mode=OneWayToSource}">
             <dx:DXTabItem Header="Информация о продукте">
                 <Grid Background="Transparent">
                     <dxlc:LayoutControl Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
@@ -94,10 +98,13 @@
                             <dxlc:LayoutItem Label="Принял" LabelPosition="Top">
                                 <dxe:TextEdit EditValue="{Binding PrintName}" IsReadOnly="True"/>
                             </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Текущий передел" LabelPosition="Top">
+                                <dxe:TextEdit EditValue="{Binding CurrentPlace}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
                             <dxlc:LayoutItem Label="Подтвержден:">
                                 <dxe:CheckEdit EditValue="{Binding IsConfirmed}" HorizontalAlignment="Left"/>
                             </dxlc:LayoutItem>
-                            <Label Content="{Binding State}" Visibility="{Binding AllowAddToBrokeAction, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Label Content="{Binding StateName}" /> <!--Visibility="{Binding AllowAddToBrokeAction, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
                             <Button Height="26" Content="Добавить в акт" Command="{Binding AddToDocBrokeCommand}" 
                                     Visibility="{Binding AllowAddToBrokeAction, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         </dxlc:LayoutGroup>
@@ -124,6 +131,10 @@
                         <dxg:TableView AutoWidth="True" ShowGroupPanel="True" AllowEditing="False"/>
                     </dxg:GridControl.View>
                 </dxg:GridControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem Header="Решение о браке" Visibility="{Binding IsVisibleBrokeTab, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ContentControl Content="{Binding DocBrokeDecision}" HorizontalAlignment="Left" 
+                                Margin="-12,-12,-12,-12"/>
             </dx:DXTabItem>
         </dx:DXTabControl>
         <Button Content="OK" Grid.Row="2" HorizontalAlignment="Right" Width="50" Height="30" Margin="0,8,115,8" Command="{Binding SaveAndCloseCommand}" />

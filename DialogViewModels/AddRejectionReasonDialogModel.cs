@@ -12,33 +12,21 @@ namespace Gamma.DialogViewModels
 {
     public partial class AddRejectionReasonDialogModel : ValidationViewModelBase
     {
-        public AddRejectionReasonDialogModel()
+        public AddRejectionReasonDialogModel(ProductKind? kind)
         {
             GammaBase = DB.GammaDb;
-            RejectionReasons = (from p in GammaBase.C1CRejectionReasons
-                                       where ((!p.IsMarked ?? true) && (!p.IsFolder ?? true))
-                                   select new
-                                   RejectionReason
-                                   {
-                                       Description = p.Description,
-                                       RejectionReasonID = p.C1CRejectionReasonID,
-                                       ParentID = p.ParentID
-                                   }
-                      ).ToList();
-            /*SecondRejectionReasons = (from p in GammaBase.C1CRejectionReasons
-                            where ((!p.IsMarked ?? true) && (!p.IsFolder ?? true))
-                            select new
-                           RejectionReason
-                           {
-                                Description = p.Description,
-                                RejectionReasonID = p.C1CRejectionReasonID,
-                                       ParentID = p.ParentID
-                            }
-                      ).ToList();
-            SecondRejectionReasonsFiltered = new List<RejectionReason>(RejectionReasons);         */
+            var IDs = GammaBase.C1CRejectionReasons.Where(r => r.IsMarked == false && r.ProductKinds.Any(p => kind == null || p.ProductKindID == (byte)kind)).Select(r => r.C1CRejectionReasonID).ToList();
+            RejectionReasons = GammaBase.C1CRejectionReasons.Where(r => r.IsMarked == false && r.IsFolder == false && (IDs.Contains((Guid)r.C1CRejectionReasonID) || IDs.Contains((Guid)r.ParentID)))
+                      .OrderBy(r => r.Description)
+                      .Select(r => new RejectionReason
+                      {
+                          Description = r.Description,
+                          RejectionReasonID = r.C1CRejectionReasonID,
+                          ParentID = r.ParentID
+                      }).ToList();
         }
 
-        public AddRejectionReasonDialogModel(Guid? rejectionReasonID, Guid? secondRejectionReasonID, string comment = null):this()
+        public AddRejectionReasonDialogModel(ProductKind kind, Guid? rejectionReasonID, Guid? secondRejectionReasonID, string comment = null):this(kind)
         {
             if (rejectionReasonID != null) this.RejectionReasonID = (Guid)rejectionReasonID;
             if (secondRejectionReasonID != null) SecondRejectionReasonID = (Guid)secondRejectionReasonID;
@@ -46,8 +34,6 @@ namespace Gamma.DialogViewModels
         }
 
         public List<RejectionReason> RejectionReasons { get; private set; }
-        //public List<RejectionReason> SecondRejectionReasons { get; private set; }
-        //public List<RejectionReason> SecondRejectionReasonsFiltered { get; private set; }
         public override bool IsValid => base.IsValid && RejectionReasonID != Guid.Empty && Comment?.Length > 3;
         
         private Guid _rejectionReasonID { get; set; }
@@ -58,8 +44,6 @@ namespace Gamma.DialogViewModels
             {
                 _rejectionReasonID = value;
                 RejectionReasonName = RejectionReasons.FirstOrDefault(r => r.RejectionReasonID == _rejectionReasonID).Description;
-                //SecondRejectionReasonsFiltered = new List<RejectionReason>(SecondRejectionReasons.FindAll(t => t.ParentID == value));
-                //RaisePropertyChanged("TypeDetailsFiltered");
             }
         }
         private Guid? _secondRejectionReasonID { get; set; }
@@ -70,8 +54,6 @@ namespace Gamma.DialogViewModels
             {
                 _secondRejectionReasonID = value;
                 SecondRejectionReasonName = RejectionReasons.FirstOrDefault(r => r.RejectionReasonID == _secondRejectionReasonID).Description;
-                //SecondRejectionReasonsFiltered = new List<RejectionReason>(SecondRejectionReasons.FindAll(t => t.ParentID == value));
-                //RaisePropertyChanged("TypeDetailsFiltered");
             }
         }
 
@@ -79,20 +61,5 @@ namespace Gamma.DialogViewModels
         public string RejectionReasonName { get; set; }
         public string SecondRejectionReasonName { get; set; }
         public bool IsSaveEnabled => IsValid; 
-                    //&& (Types.FirstOrDefault(t => t.RejectionReasonID == TypeID && (t.RejectionReasonKind == "Внеплановый" || t.RejectionReasonKind == "Недоступность")) == null || (Types.FirstOrDefault(t => t.RejectionReasonID == TypeID && (t.RejectionReasonKind == "Внеплановый" || t.RejectionReasonKind == "Недоступность")) != null && Comment?.Length > 0))
-                    //&& (TypeDetailsFiltered?.Count() == 0 || (TypeDetailsFiltered?.Count() > 0 && TypeDetailID != null))
-                    //&& (EquipmentNodeDetailsFiltered?.Count() == 0 || (EquipmentNodeDetailsFiltered?.Count() > 0 && EquipmentNodeDetailID != null));
-        /*        public List<Place> Places { get; set; }
-                private int? _placeID;
-                public int? PlaceID
-                {
-                    get { return _placeID; }
-                    set
-                    {
-                        _placeID = value;
-                        //RaisePropertyChanged("PlaceID");
-                    }
-                }
-                */
     }
 }

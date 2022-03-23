@@ -18,7 +18,7 @@ namespace Gamma.Controllers
 		public bool WithdrawProduct(Guid productId, Guid docId, bool isConfirmed, GammaEntities currentContext = null )
 		{
             var quantity = (currentContext ?? DB.GammaDb).vProductsInfo.First(p => p.ProductID == productId).Quantity ?? 0;
-            return WithdrawProductQuantity(productId, docId, isConfirmed, quantity, currentContext);
+            return WithdrawProductQuantity(productId, docId, isConfirmed, quantity, null, currentContext);
 			/*using (var context = currentContext ?? DB.GammaDb)
 			{
 				var docWithdrawal = context.Docs.Include(d => d.DocWithdrawal)
@@ -66,7 +66,7 @@ namespace Gamma.Controllers
 		/// <param name="productId"></param>
 		/// <param name="docId">DocWithdrawalId, if null new document</param>
 		/// <returns>True if success</returns>
-		public bool WithdrawProductQuantity(Guid productId, Guid docId, bool isConfirmed, decimal quantity, GammaEntities currentContext = null)
+		public bool WithdrawProductQuantity(Guid productId, Guid docId, bool isConfirmed, decimal quantity, int? placeID = null , GammaEntities currentContext = null)
         {
             using (var context = currentContext ?? DB.GammaDb)
             {
@@ -75,7 +75,7 @@ namespace Gamma.Controllers
                     .FirstOrDefault(d => d.DocID == docId);
                 if (docWithdrawal == null)
                 {
-                    docWithdrawal = ConstructDoc(docId, DocTypes.DocWithdrawal, isConfirmed, WorkSession.PlaceID);
+                    docWithdrawal = ConstructDoc(docId, DocTypes.DocWithdrawal, isConfirmed, placeID ?? WorkSession.PlaceID);
                     context.Docs.Add(docWithdrawal);
                 }
                 if (docWithdrawal.DocWithdrawal == null)
@@ -116,12 +116,12 @@ namespace Gamma.Controllers
         /// <param name="productId"></param>
         /// <param name="docId">DocWithdrawalId, if null new document</param>
         /// <returns>True if success</returns>
-        public CreateWithdrawalResult WithdrawProductQuantityFromDocBroke(Guid docBrokeId, Guid productId, byte stateId, Guid docId, bool isConfirmed, decimal quantity, GammaEntities currentContext = null)
+        public CreateWithdrawalResult WithdrawProductQuantityFromDocBroke(Guid docBrokeId, Guid productId, byte stateId, Guid docId, bool isConfirmed, decimal quantity, int? placeID = null, GammaEntities currentContext = null)
         {
             Docs docWithdrawal = null;
             using (var context = currentContext ?? DB.GammaDb)
             {
-                if (WithdrawProductQuantity(productId, docId, isConfirmed, quantity))
+                if (WithdrawProductQuantity(productId, docId, isConfirmed, quantity, placeID))
                 {
                     docWithdrawal = context.Docs.Include(d => d.DocWithdrawal)
                     //.Include(d => d.DocWithdrawal.DocBrokeDecisionProductWithdrawalProducts)

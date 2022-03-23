@@ -91,7 +91,7 @@ namespace Gamma.ViewModels
             MovementProducts.CollectionChanged += MovementProductsOnCollectionChanged;
             ShowProductCommand = new DelegateCommand(ShowProduct, SelectedProduct != null);
             DeleteProductCommand = new DelegateCommand(DeleteProduct, () => !DenyEditOut && SelectedProduct != null);
-            var canUploadTo1CCommand = DocOrderId == null;
+            var canUploadTo1CCommand = DocOrderId == null || (DocOrderId != null && (OutPlaceId == 49 || OutPlaceId == 111));
             UploadTo1CCommand = new DelegateCommand(UploadTo1C,() => canUploadTo1CCommand);
             Bars.Add(ReportManager.GetReportBar("DocMovement", VMID));
             //IsInitialize = false;
@@ -128,7 +128,8 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            if (DocOrderId == null && MessageBox.Show("Документ будет подтвержден, сохранен и выгружен в 1С. Продолжить?", "Выгрузка в 1С",
+            if ((DocOrderId == null || (DocOrderId != null && (OutPlaceId == 49 || OutPlaceId == 111)))
+                && MessageBox.Show("Документ будет подтвержден, сохранен и выгружен в 1С. Продолжить?", "Выгрузка в 1С",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)// || dateInit != Date)
             {
                 IsConfirmed = true;

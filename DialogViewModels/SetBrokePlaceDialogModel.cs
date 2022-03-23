@@ -29,7 +29,7 @@ namespace Gamma.DialogViewModels
             {
                 Shifts.Add(new KeyValuePair<byte, string>(shiftItem.ShiftID, shiftItem.Name));
             }
-
+            Shifts.Add(new KeyValuePair<byte, string>(0, "Не сменный"));
             /*Shifts = (from p in GammaBase.C1CRejectionReasons
                             where ((!p.IsMarked ?? true) && (!p.IsFolder ?? true))
                             select new
@@ -53,7 +53,8 @@ namespace Gamma.DialogViewModels
         public SetBrokePlaceDialogModel(int? placeID, byte? shiftID, string comment):this()
         {
             if (placeID != null) PlaceID = (int)placeID;
-            if (shiftID != null) ShiftID = (byte)shiftID;
+            if (shiftID != null || (placeID != null && shiftID == null))
+                ShiftID = placeID != null && shiftID == null ? (byte)0 : (byte)shiftID;
             if (comment != null) Comment = comment;
         }
 

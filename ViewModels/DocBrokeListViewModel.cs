@@ -72,9 +72,9 @@ namespace Gamma.ViewModels
             }
         }
 
-        private Guid? _placeDiscoverId;
+        private int? _placeDiscoverId;
 
-        public Guid? PlaceDiscoverId
+        public int? PlaceDiscoverId
         {
             get { return _placeDiscoverId; }
             set
@@ -138,6 +138,7 @@ namespace Gamma.ViewModels
         private void Find(RefreshBrokeListMessage msg)
         {
             Find();
+            SelectedDocBroke = DocBrokeList.FirstOrDefault(d => d.DocId == msg.DocID);
             Messenger.Default.Unregister<RefreshBrokeListMessage>(this, Find);
         }
 
@@ -146,11 +147,18 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {
+                var number = Number ?? "";
+                var dateBegin = DateBegin ?? DateTime.MinValue;
+                var dateEnd = DateEnd ?? DateTime.MaxValue;
+                var place = PlacesList.FirstOrDefault(p => p.PlaceID == PlaceDiscoverId)?.PlaceName ?? "";
+
                 DocBrokeList = new List<DocBrokeListItem>(
-                    from d in gammaBase.Docs.Where(d => d.DocTypeID == (int)DocTypes.DocBroke &&
-                    (DateBegin == null || d.Date >= DateBegin) &&
-                    (DateEnd == null || d.Date <= DateEnd)
-                    ).OrderByDescending(d => d.Date).Take(500)
+                    from d in gammaBase.vDocBroke
+                    .Where(d => d.DocTypeID == (int)DocTypes.DocBroke 
+                        && d.Number.Contains(number)
+                        && d.Date >= dateBegin
+                        && d.Date <= dateEnd
+                        && d.Places.Contains(place)).OrderByDescending(d => d.Date).Take(500)
                     //&&
                                                               //(PlaceDiscoverId == null || d.DocBroke.PlaceDiscoverID == PlaceDiscoverId) &&
                                                               //(PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)).OrderByDescending(d => d.Date).Take(500)
@@ -165,10 +173,12 @@ namespace Gamma.ViewModels
                         DocId = d.DocID,
                         Date = d.Date,
                         //PlaceStore = db.Name,
-                        //PlaceDiscover = x.Name,
+                        PlaceDiscover = d.Places,
                         Comment = d.Comment,
                         IsConfirmed = d.IsConfirmed,
-                        LastUploadedTo1C = d.LastUploadedTo1C
+                        LastUploadedTo1C = d.LastUploadedTo1C,
+                        IsInFuturePeriodName = d.IsInFuturePeriodName,
+                        UserCreate = d.UserCreate
                     });
             }
                 

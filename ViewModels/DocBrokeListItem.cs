@@ -4,7 +4,8 @@ using System;
 
 namespace Gamma.ViewModels
 {
-    public class DocBrokeListItem{
+    public class DocBrokeListItem
+    {
         public Guid DocId { get; set; }
         public string Number { get; set; }
         public DateTime Date { get; set; }
@@ -13,5 +14,7 @@ namespace Gamma.ViewModels
         public string Comment { get; set; }
         public bool IsConfirmed { get; set; }
         public DateTime? LastUploadedTo1C { get; set; }
+        public string IsInFuturePeriodName { get; set; }
+        public string UserCreate { get; set; }
     }
 }

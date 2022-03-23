@@ -260,7 +260,7 @@ namespace Gamma.ViewModels
                     switch (dialog.ChangeState)
                     {
                         case SpoolChangeState.WithBroke:
-                            BrokeProduct((Guid)productID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.ToString());
+                            BrokeProduct((Guid)productID, dialog.Weight, dialog.RejectionReasonID, dialog.BrokeComment.EditValue.ToString());
                             break;
                         case SpoolChangeState.WithRemainder:
                             CreateRemainderSpool((Guid)productID, dialog.Weight);

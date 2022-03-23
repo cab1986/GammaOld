@@ -31,6 +31,14 @@ namespace Gamma.Models
         private readonly DocumentController documentController = new DocumentController();
         private readonly ProductController productController = new ProductController();
 
+        public bool IsVisibilityExtendedField =>
+#if (DEBUG)
+    true;
+#else
+            WorkSession.DBAdmin;
+#endif
+
+
         //public DelegateCommand<Guid> OpenWithdrawalCommand { get; private set; }
         public DelegateCommand CreateWithdrawalCommand { get; private set; }
 
@@ -43,6 +51,7 @@ namespace Gamma.Models
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
                 RefreshEditBrokeDecisionItem();
+                RefreshDecisionApplied();
             }
         }
 
@@ -107,6 +116,8 @@ namespace Gamma.Models
             IsExistForConversionOrRepackItem = false;
             IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = false;
             IsExistMoreTwoCheckedItem = false;
+            IsNotNeedToSave = false;
+            IsVisibleRow = true;
         }
 
         private bool _isReadOnly = true;
@@ -144,8 +155,11 @@ namespace Gamma.Models
 
         private void RefreshReadOnlyFields(bool isReadOnly)
         {
-            IsReadOnlyFields = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied || IsReadOnlyIsChecked;// || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
-            IsReadOnlyQuantity =  !IsChecked || isReadOnly || ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied || IsReadOnlyIsChecked;
+            var isReadOnlyIsChecked = IsReadOnlyIsChecked || IsExistMoreTwoCheckedItem
+                     || ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
+                     || (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
+            IsReadOnlyFields = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied || isReadOnlyIsChecked;// || (!isReadOnly && (ProductState == ProductState.NeedsDecision || ProductState == ProductState.Repack || ProductState == ProductState.ForConversion));
+            IsReadOnlyQuantity =  !IsChecked || isReadOnly || ParentModel.NeedsProductStates.Contains(ProductState) || !(!DecisionApplied || IsExistNeedDecisionMore0) || isReadOnlyIsChecked;
             IsReadOnlyDecisionApplied = !IsChecked || isReadOnly || !(Quantity > 0) || DecisionApplied;
         }
 
@@ -203,6 +217,12 @@ namespace Gamma.Models
                     return;
                 else if (ExternalRefresh == false)
                 {
+                    if (_isChecked && !value
+                            && ParentModel.NeedsProductStates.Contains(ProductState))
+                    {
+                        MessageBox.Show("Нелья снять галочку в строке Требует Решения");
+                        return;
+                    }
                     if (_isChecked && !value
                             && //((ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied)
                                 DocWithdrawalSum > 0)
@@ -312,6 +332,7 @@ namespace Gamma.Models
             {
                 _decisionApplied = value;
                 RaisePropertyChanged("DecisionApplied");
+                IsVisibleRow = !(value && ParentModel.NeedsProductStates.Contains(ProductState));
                 RefreshEditBrokeDecisionItem();
             }
         }
@@ -376,6 +397,18 @@ namespace Gamma.Models
             }
         }
 
+        private bool _isExistNeedDecisionMore0 = false;
+        public bool IsExistNeedDecisionMore0
+        {
+            get { return _isExistNeedDecisionMore0; }
+            set
+            {
+                _isExistNeedDecisionMore0 = value;
+                RaisePropertyChanged("IsExistNeedDecisionMore0");
+                RefreshReadOnlyIsChecked(IsReadOnly);
+            }
+        }
+
         private List<KeyValuePair<Guid, String>> _docWithdrawals { get; set; } = new List<KeyValuePair<Guid, string>>();
         public List<KeyValuePair<Guid, String>> DocWithdrawals
         {
@@ -394,10 +427,15 @@ namespace Gamma.Models
             set
             {
                 _docWithdrawalSum = value;
-                DecisionAppliedLabel = "Выполнено на " + (value > 0 ? value.ToString() : "" );
-                DecisionApplied = value > 0 && value >= Quantity;
+                RefreshDecisionApplied();
                 RaisePropertyChanged("DocWithdrawalSum");
             }
+        }
+
+        private void RefreshDecisionApplied()
+        {
+            DecisionApplied = DocWithdrawalSum > 0 && DocWithdrawalSum >= Quantity;
+            DecisionAppliedLabel = "Выполнено на " + (DocWithdrawalSum > 0 ? DocWithdrawalSum.ToString() : "");
         }
 
         private string _decisionAppliedLabel { get; set; } = "Выполнено";
@@ -437,24 +475,25 @@ namespace Gamma.Models
         private void CreateWithdrawal()
         {
             if ( ParentModel.ProductKind == ProductKind.ProductGroupPack)
-            {
-                MessageBox.Show("Нелья нажать Выполнить, так как это групповая упаковка. Сначала распакуйте ГУ.");
-                
-            }
-            else if (!ParentModel.SaveBrokeDecisionProductsToModel(ProductId))
-                MessageBox.Show("Ошибка при сохранении решения", " Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Нельзя нажать Выполнить, так как это групповая упаковка. Сначала распакуйте ГУ.", "ERROR CreateWithdrawal (Product is GroupPack)", null, ProductId);
+            else if (ProductId == null)
+                Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Нельзя нажать Выполнить, так как не определен продукт", "ERROR CreateWithdrawal (ProductId is NULL)", null, ProductId);
+            else if (!ParentModel.SaveBrokeDecisionProductsToModel((Guid)ProductId))
+                Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Ошибка при сохранении решения", "ERROR CreateWithdrawal (error save)", null, ProductId);
             else
             {
                 var productionQuantity = ParentModel.ProductQuantity;// GammaBase.DocProductionProducts.FirstOrDefault(p => p.ProductID == ProductId).Quantity;
                 var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
                 var docWithdrawalId =
-                    ProductState == ProductState.Broke ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - (BrokeDecisionProduct?.DocWithdrawalSum ?? 0), productionQuantity)
-                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? null : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - (BrokeDecisionProduct?.DocWithdrawalSum ?? 0), productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber))
-                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - (BrokeDecisionProduct?.DocWithdrawalSum ?? 0), productionQuantity, (Guid)productSpool?.C1CNomenclatureID, (Guid)productSpool?.C1CCharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber)
+                    ProductState == ProductState.Broke ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity)
+                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? null : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber))
+                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)productSpool?.C1CNomenclatureID, (Guid)productSpool?.C1CCharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber)
                     : null;
                 if (docWithdrawalId != null)
-                    if (BrokeDecisionProduct.DocWithdrawalSum > MinQuantity)
-                        MinQuantity = BrokeDecisionProduct.DocWithdrawalSum > Quantity ? Quantity : BrokeDecisionProduct.DocWithdrawalSum;
+                    if (DocWithdrawalSum > MinQuantity)
+                        MinQuantity = DocWithdrawalSum > Quantity ? Quantity : DocWithdrawalSum;
+                if (!ParentModel.SaveBrokeDecisionProductsToModel((Guid)ProductId))
+                    Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Ошибка при сохранении решения", "ERROR CreateWithdrawal (error save)", null, ProductId);
             }
         }
 
@@ -479,6 +518,28 @@ namespace Gamma.Models
                 _minQuantity = value;
                 RefreshReadOnlyIsChecked(IsReadOnly);
                 RaisePropertyChanged("MinQuantity");
+            }
+        }
+
+        private bool _isNotNeedToSave { get; set; } = false;
+        public bool IsNotNeedToSave
+        {
+            get { return _isNotNeedToSave; }
+            set
+            {
+                _isNotNeedToSave = value;
+                RaisePropertyChanged("IsNotNeedToSave");
+            }
+        }
+        
+        private bool _isVisibleRow { get; set; } = true;
+        public bool IsVisibleRow
+        {
+            get { return _isVisibleRow; }
+            set
+            {
+                _isVisibleRow = value;
+                RaisePropertyChanged("IsVisibleRow");
             }
         }
     }

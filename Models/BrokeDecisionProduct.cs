@@ -13,6 +13,7 @@ namespace Gamma.Models
     public class BrokeDecisionProduct : ViewModelBase
     {
         public BrokeDecisionProduct()
+                : this(SqlGuidUtil.NewSequentialid(), SqlGuidUtil.NewSequentialid(), ProductKind.ProductBale, "", 0, ProductState.NeedsDecision, "", "", null, null, SqlGuidUtil.NewSequentialid(), null, 0, false, null, null, null)
         { }
 
         public BrokeDecisionProduct(Guid decisionDocId, Guid productId, ProductKind productKind, string number, decimal productQuantity, ProductState state, string nomenclatureName, 
@@ -53,6 +54,7 @@ namespace Gamma.Models
         public Guid? RejectionReasonID { get; set; }
         public int? BrokePlaceID { get; set; }
 
+        public bool IsChanged { get; set; } = true;
 
         private ProductState _productState;
         public ProductState ProductState
@@ -230,6 +232,10 @@ namespace Gamma.Models
                 RaisePropertyChanged("DecisionAppliedLabel");
             }
         }
+
+        public bool IsNotNeedToSave { get; set; } = false;
+        public bool IsVisibleRow { get; set; } = true;
+
         /*
         private Guid? _docWithdrawal { get; set; }
         public Guid? DocWithdrawal

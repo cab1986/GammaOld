@@ -505,6 +505,9 @@
           <Property Name="HostName" Type="varchar" MaxLength="150" />
           <Property Name="LogTypeID" Type="int" />
           <Property Name="Image" Type="varbinary(max)" />
+          <Property Name="DocID" Type="uniqueidentifier" />
+          <Property Name="ProductID" Type="uniqueidentifier" />
+          <Property Name="TechnicalLog" Type="varchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="CurrentPlaceUsers">
           <Key>
@@ -1904,6 +1907,29 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vCharacteristicSGBProperties' doe
           <Property Name="Buyer" Type="varchar" MaxLength="100" />
           <Property Name="TypeKind" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="TypeTransition" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNewTemp.dbo.vDocBroke' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vDocBroke">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="DocTypeName" />
+            <PropertyRef Name="IsConfirmed" />
+            <PropertyRef Name="IsInFuturePeriodName" />
+          </Key>
+          <Property Name="DocID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Number" Type="varchar" MaxLength="50" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="DocTypeID" Type="int" />
+          <Property Name="DocTypeName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="8000" />
+          <Property Name="IsConfirmed" Type="bit" Nullable="false" />
+          <Property Name="LastUploadedTo1C" Type="datetime" />
+          <Property Name="IsInFuturePeriod" Type="bit" />
+          <Property Name="IsInFuturePeriodName" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="UserCreate" Type="varchar" MaxLength="458" />
+          <Property Name="Places" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNewTemp.dbo.vDocCloseShiftMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -4290,6 +4316,18 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Principal>
             <Dependent Role="DocMaterialTanks">
               <PropertyRef Name="DocMaterialTankGroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocMovement_1CDocInternalOrders">
+          <End Role="1CDocInternalOrders" Type="Self.1CDocInternalOrders" Multiplicity="0..1" />
+          <End Role="DocMovement" Type="Self.DocMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="1CDocInternalOrders">
+              <PropertyRef Name="1CDocInternalOrderID" />
+            </Principal>
+            <Dependent Role="DocMovement">
+              <PropertyRef Name="DocOrderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -6969,6 +7007,22 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
     [vCharacteristicSGBProperties].[TypeTransition] AS [TypeTransition]
     FROM [dbo].[vCharacteristicSGBProperties] AS [vCharacteristicSGBProperties]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="vDocBroke" EntityType="Self.vDocBroke" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vDocBroke].[DocID] AS [DocID], 
+    [vDocBroke].[Number] AS [Number], 
+    [vDocBroke].[Date] AS [Date], 
+    [vDocBroke].[DocTypeID] AS [DocTypeID], 
+    [vDocBroke].[DocTypeName] AS [DocTypeName], 
+    [vDocBroke].[Comment] AS [Comment], 
+    [vDocBroke].[IsConfirmed] AS [IsConfirmed], 
+    [vDocBroke].[LastUploadedTo1C] AS [LastUploadedTo1C], 
+    [vDocBroke].[IsInFuturePeriod] AS [IsInFuturePeriod], 
+    [vDocBroke].[IsInFuturePeriodName] AS [IsInFuturePeriodName], 
+    [vDocBroke].[UserCreate] AS [UserCreate], 
+    [vDocBroke].[Places] AS [Places]
+    FROM [dbo].[vDocBroke] AS [vDocBroke]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vDocCloseShiftMaterials" EntityType="Self.vDocCloseShiftMaterials" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vDocCloseShiftMaterials].[DocID] AS [DocID], 
@@ -7939,6 +7993,10 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <AssociationSet Name="FK_DocMaterialTanks_DocMaterialTankGroups" Association="Self.FK_DocMaterialTanks_DocMaterialTankGroups">
             <End Role="DocMaterialTankGroups" EntitySet="DocMaterialTankGroups" />
             <End Role="DocMaterialTanks" EntitySet="DocMaterialTanks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocMovement_1CDocInternalOrders" Association="Self.FK_DocMovement_1CDocInternalOrders">
+            <End Role="1CDocInternalOrders" EntitySet="1CDocInternalOrders" />
+            <End Role="DocMovement" EntitySet="DocMovement" />
           </AssociationSet>
           <AssociationSet Name="FK_DocMovement_Docs" Association="Self.FK_DocMovement_Docs">
             <End Role="Docs" EntitySet="Docs" />
@@ -11039,6 +11097,11 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="Products" EntitySet="Products" />
             <End Role="DocBrokeDecision" EntitySet="DocBrokeDecision" />
           </AssociationSet>
+          <AssociationSet Name="FK_DocMovement_1CDocInternalOrders" Association="GammaModel.FK_DocMovement_1CDocInternalOrders">
+            <End Role="C1CDocInternalOrders" EntitySet="C1CDocInternalOrders" />
+            <End Role="DocMovement" EntitySet="DocMovement" />
+          </AssociationSet>
+          <EntitySet Name="vDocBroke" EntityType="GammaModel.vDocBroke" />
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -12171,6 +12234,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <NavigationProperty Name="OutPlaces" Relationship="GammaModel.FK_DocMovement_Places1" FromRole="DocMovement" ToRole="Places" />
           <NavigationProperty Name="DocMovementOrder" Relationship="GammaModel.DocMovementOrderDocs" FromRole="DocMovement" ToRole="DocMovementOrder" />
           <NavigationProperty Name="DocCloseShiftMovementProducts" Relationship="GammaModel.FK_DocCloseShiftMovementProducts_DocMovement" FromRole="DocMovement" ToRole="DocCloseShiftMovementProducts" />
+          <NavigationProperty Name="C1CDocInternalOrders" Relationship="GammaModel.FK_DocMovement_1CDocInternalOrders" FromRole="DocMovement" ToRole="C1CDocInternalOrders" />
         </EntityType>
         <EntityType Name="vDocMovementGoods">
           <Key>
@@ -12227,6 +12291,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="C1CWarehouseUnloadID" Type="Guid" />
           <NavigationProperty Name="C1CWarehouses" Relationship="GammaModel.FK_1CDocInternalOrders_1CWarehouses" FromRole="C1CDocInternalOrders" ToRole="C1CWarehouses" />
           <NavigationProperty Name="C1CWarehouses1" Relationship="GammaModel.FK_1CDocInternalOrders_1CWarehouses1" FromRole="C1CDocInternalOrders" ToRole="C1CWarehouses" />
+          <NavigationProperty Name="DocMovement" Relationship="GammaModel.FK_DocMovement_1CDocInternalOrders" FromRole="C1CDocInternalOrders" ToRole="DocMovement" />
         </EntityType>
         <Association Name="FK_1CDocInternalOrders_1CWarehouses">
           <End Type="GammaModel.C1CWarehouses" Role="C1CWarehouses" Multiplicity="0..1" />
@@ -15829,6 +15894,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Property Name="HostName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="LogTypeID" Type="Int32" />
           <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="DocID" Type="Guid" />
+          <Property Name="ProductID" Type="Guid" />
+          <Property Name="TechnicalLog" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="vDocCloseShiftMaterials">
           <Key>
@@ -17461,6 +17529,39 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DocMovement_1CDocInternalOrders">
+          <End Type="GammaModel.C1CDocInternalOrders" Role="C1CDocInternalOrders" Multiplicity="0..1" />
+          <End Type="GammaModel.DocMovement" Role="DocMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C1CDocInternalOrders">
+              <PropertyRef Name="C1CDocInternalOrderID" />
+            </Principal>
+            <Dependent Role="DocMovement">
+              <PropertyRef Name="DocOrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vDocBroke">
+          <Key>
+            <PropertyRef Name="DocID" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="DocTypeName" />
+            <PropertyRef Name="IsConfirmed" />
+            <PropertyRef Name="IsInFuturePeriodName" />
+          </Key>
+          <Property Name="DocID" Type="Guid" Nullable="false" />
+          <Property Name="Number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DocTypeID" Type="Int32" />
+          <Property Name="DocTypeName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="IsConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="LastUploadedTo1C" Type="DateTime" Precision="3" />
+          <Property Name="IsInFuturePeriod" Type="Boolean" />
+          <Property Name="IsInFuturePeriodName" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UserCreate" Type="String" MaxLength="458" FixedLength="false" Unicode="false" />
+          <Property Name="Places" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -19969,6 +20070,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <EntitySetMapping Name="CriticalLogs">
             <EntityTypeMapping TypeName="GammaModel.CriticalLogs">
               <MappingFragment StoreEntitySet="CriticalLogs">
+                <ScalarProperty Name="TechnicalLog" ColumnName="TechnicalLog" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
                 <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="LogTypeID" ColumnName="LogTypeID" />
                 <ScalarProperty Name="HostName" ColumnName="HostName" />
@@ -20824,6 +20928,24 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
                 <ScalarProperty Name="DecisionDate" ColumnName="DecisionDate" />
                 <ScalarProperty Name="IsActual" ColumnName="IsActual" />
                 <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
+                <ScalarProperty Name="DocID" ColumnName="DocID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vDocBroke">
+            <EntityTypeMapping TypeName="GammaModel.vDocBroke">
+              <MappingFragment StoreEntitySet="vDocBroke">
+                <ScalarProperty Name="Places" ColumnName="Places" />
+                <ScalarProperty Name="UserCreate" ColumnName="UserCreate" />
+                <ScalarProperty Name="IsInFuturePeriodName" ColumnName="IsInFuturePeriodName" />
+                <ScalarProperty Name="IsInFuturePeriod" ColumnName="IsInFuturePeriod" />
+                <ScalarProperty Name="LastUploadedTo1C" ColumnName="LastUploadedTo1C" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="DocTypeName" ColumnName="DocTypeName" />
+                <ScalarProperty Name="DocTypeID" ColumnName="DocTypeID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="DocID" ColumnName="DocID" />
               </MappingFragment>
             </EntityTypeMapping>

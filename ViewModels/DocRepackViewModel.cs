@@ -225,7 +225,7 @@ namespace Gamma.ViewModels
                     ProductKind = (ProductKind)product.ProductKindID
                 };
 
-                if ((ProductState)product.StateID == ProductState.Broke || (ProductState)product.StateID == ProductState.NeedsDecision)
+                if ((ProductState)product.StateID == ProductState.Broke || (ProductState)product.StateID == ProductState.NeedsDecision || (ProductState)product.StateID == ProductState.ForConversion || (ProductState)product.StateID == ProductState.Repack)
                 {
                     var model = new SetQuantityDialogModel("Укажите кол-во бракованных рулончиков (или пачек для салфеток) в паллете №"+ product.Number, "Брак", 0, (int)product.Quantity);
                     var okCommand = new UICommand()

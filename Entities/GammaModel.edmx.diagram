@@ -463,6 +463,8 @@
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBrokeDecision" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_Products" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_1CDocInternalOrders" />
+        <EntityTypeShape EntityType="GammaModel.vDocBroke" Width="1.5" PointX="11.375" PointY="19.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

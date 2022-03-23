@@ -14,6 +14,12 @@ namespace Gamma.Entities
     
     public partial class C1CDocInternalOrders
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public C1CDocInternalOrders()
+        {
+            this.DocMovement = new HashSet<DocMovement>();
+        }
+    
         public System.Guid C1CDocInternalOrderID { get; set; }
         public Nullable<bool> Marked { get; set; }
         public Nullable<bool> Posted { get; set; }
@@ -30,5 +36,7 @@ namespace Gamma.Entities
     
         public virtual C1CWarehouses C1CWarehouses { get; set; }
         public virtual C1CWarehouses C1CWarehouses1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocMovement> DocMovement { get; set; }
     }
 }
