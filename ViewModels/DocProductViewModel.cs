@@ -134,34 +134,39 @@ namespace Gamma.ViewModels
                 AllowEditDoc = DB.AllowEditDoc(Doc.DocID);
             }
             DocID = Doc.DocID;
-            if (product != null)
+            if (product == null)
+            {
+                if (IsNewDoc) State = ProductState.Good;
+            }
+            else
+            {
                 ProductID = product.ProductID;
 
-            var rest = GammaBase.Rests.FirstOrDefault(r => r.ProductID == product.ProductID);
-            if (rest != null)
-                CurrentPlace = GammaBase.Places.FirstOrDefault(p => p.PlaceID == rest.PlaceID)?.Name;
-            State = rest != null || (rest == null && IsNewDoc)
-                ? (ProductState)(product.StateID ?? 0) : (ProductState?)null;
-            StateName = State != null
-                ? Functions.GetEnumDescription((ProductState)State)
-                : "Списан";
-            if (State == ProductState.Broke || State == ProductState.ForConversion || State == ProductState.NeedsDecision || State == ProductState.Repack)
-            {
-                var docBroke = GammaBase.Docs.Join(GammaBase.DocBrokeProducts.Where(p => p.ProductID == product.ProductID)
-                    , d => d.DocID, p => p.DocID, (d, p) => new
-                    {
-                        DocID = d.DocID,
-                        Number = d.Number,
-                        Date = d.Date,
-                        Quantity = p.Quantity,
-                        RejectionReasonID = p.C1CRejectionReasonID,
-                        PlaceID = p.PlaceID
-                    }).OrderBy(d => d.Date).FirstOrDefault();
-                if (docBroke != null && docBroke.DocID != Guid.Empty)
+                var rest = GammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID);
+                //if (rest != null) CurrentPlace = GammaBase.Places.FirstOrDefault(p => p.PlaceID == rest.PlaceID)?.Name;
+                State = rest != null || (rest == null && IsNewDoc)
+                    ? (ProductState)(product.StateID ?? 0) : (ProductState?)null;
+                StateName = State != null
+                    ? Functions.GetEnumDescription((ProductState)State)
+                    : "Списан";
+                if (State == ProductState.Broke || State == ProductState.ForConversion || State == ProductState.NeedsDecision || State == ProductState.Repack)
                 {
-                    DocBrokeDecision = new DocBrokeDecisionViewModel(docBroke.DocID);
-                    DocBrokeDecision.AddBrokeDecisionProduct(docBroke.DocID, product.ProductID, docBroke.Date, docBroke.Quantity ?? 0, docBroke.RejectionReasonID, docBroke.PlaceID, false);
-                    IsVisibleBrokeTab = true;
+                    var docBroke = GammaBase.Docs.Join(GammaBase.DocBrokeProducts.Where(p => p.ProductID == product.ProductID)
+                        , d => d.DocID, p => p.DocID, (d, p) => new
+                        {
+                            DocID = d.DocID,
+                            Number = d.Number,
+                            Date = d.Date,
+                            Quantity = p.Quantity,
+                            RejectionReasonID = p.C1CRejectionReasonID,
+                            PlaceID = p.PlaceID
+                        }).OrderBy(d => d.Date).FirstOrDefault();
+                    if (docBroke != null && docBroke.DocID != Guid.Empty)
+                    {
+                        DocBrokeDecision = new DocBrokeDecisionViewModel(docBroke.DocID);
+                        DocBrokeDecision.AddBrokeDecisionProduct(docBroke.DocID, product.ProductID, docBroke.Date, docBroke.Quantity ?? 0, docBroke.RejectionReasonID, docBroke.PlaceID, false);
+                        IsVisibleBrokeTab = true;
+                    }
                 }
             }
 
