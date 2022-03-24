@@ -13,6 +13,7 @@ using System.Data.Entity;
 using Gamma.Common;
 using Gamma.Entities;
 using System.ComponentModel;
+using System.Windows.Input;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -29,6 +30,7 @@ namespace Gamma.ViewModels
         /// <param name="msg">Сообщение, содержащее параметры</param>
         public DocProductViewModel(OpenDocProductMessage msg)
         {
+            ClosingCommand = new DelegateCommand<CancelEventArgs>(Closing);
             Products product = null;
             if (msg.IsNewProduct)
             {
@@ -128,38 +130,41 @@ namespace Gamma.ViewModels
                     }
                     GammaBase.Entry(product).Reload();
                     GetProductRelations(product.ProductID);
-
-                    var rest = GammaBase.Rests.FirstOrDefault(r => r.ProductID == product.ProductID);
-                    if (rest != null)
-                        CurrentPlace = GammaBase.Places.FirstOrDefault(p => p.PlaceID == rest.PlaceID)?.Name;
-
-                    State = rest != null
-                        ? (ProductState)(product.StateID ?? 0) : (ProductState?)null;
-                    StateName = State != null
-                        ? Functions.GetEnumDescription((ProductState)State)
-                        : "Списан";
-                    if (State == ProductState.Broke || State == ProductState.ForConversion || State == ProductState.NeedsDecision || State == ProductState.Repack)
-                    {
-                        var docBroke = GammaBase.Docs.Join(GammaBase.DocBrokeProducts.Where(p => p.ProductID == product.ProductID)
-                            , d => d.DocID, p => p.DocID, (d, p) => new
-                            {
-                                DocID = d.DocID,
-                                Number = d.Number,
-                                Date = d.Date,
-                                Quantity = p.Quantity,
-                                RejectionReasonID = p.C1CRejectionReasonID,
-                                PlaceID = p.PlaceID
-                            }).OrderBy(d => d.Date).FirstOrDefault();
-                        if (docBroke != null && docBroke.DocID != Guid.Empty)
-                        {
-                            DocBrokeDecision = new DocBrokeDecisionViewModel(docBroke.DocID);
-                            DocBrokeDecision.AddBrokeDecisionProduct(docBroke.DocID, product.ProductID, docBroke.Date, docBroke.Quantity ?? 0, docBroke.RejectionReasonID, docBroke.PlaceID, false);
-                            IsVisibleBrokeTab = true;
-                        }
-                    }
                 }
                 AllowEditDoc = DB.AllowEditDoc(Doc.DocID);
             }
+            DocID = Doc.DocID;
+            if (product != null)
+                ProductID = product.ProductID;
+
+            var rest = GammaBase.Rests.FirstOrDefault(r => r.ProductID == product.ProductID);
+            if (rest != null)
+                CurrentPlace = GammaBase.Places.FirstOrDefault(p => p.PlaceID == rest.PlaceID)?.Name;
+            State = rest != null || (rest == null && IsNewDoc)
+                ? (ProductState)(product.StateID ?? 0) : (ProductState?)null;
+            StateName = State != null
+                ? Functions.GetEnumDescription((ProductState)State)
+                : "Списан";
+            if (State == ProductState.Broke || State == ProductState.ForConversion || State == ProductState.NeedsDecision || State == ProductState.Repack)
+            {
+                var docBroke = GammaBase.Docs.Join(GammaBase.DocBrokeProducts.Where(p => p.ProductID == product.ProductID)
+                    , d => d.DocID, p => p.DocID, (d, p) => new
+                    {
+                        DocID = d.DocID,
+                        Number = d.Number,
+                        Date = d.Date,
+                        Quantity = p.Quantity,
+                        RejectionReasonID = p.C1CRejectionReasonID,
+                        PlaceID = p.PlaceID
+                    }).OrderBy(d => d.Date).FirstOrDefault();
+                if (docBroke != null && docBroke.DocID != Guid.Empty)
+                {
+                    DocBrokeDecision = new DocBrokeDecisionViewModel(docBroke.DocID);
+                    DocBrokeDecision.AddBrokeDecisionProduct(docBroke.DocID, product.ProductID, docBroke.Date, docBroke.Quantity ?? 0, docBroke.RejectionReasonID, docBroke.PlaceID, false);
+                    IsVisibleBrokeTab = true;
+                }
+            }
+
             // Создаем дочернюю viewmodel в зависимости от типа изделия
             switch (msg.DocProductKind)
             {
@@ -168,44 +173,44 @@ namespace Gamma.ViewModels
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke") && State == ProductState.Good ;
-                    CurrentViewModel = new DocProductSpoolViewModel(product.ProductID);
+                    CurrentViewModel = new DocProductSpoolViewModel(ProductID);
                     break;
                 case DocProductKinds.DocProductUnload:
                     Title = "Съем";
                     Number = Doc.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = false;
-                    CurrentViewModel = new DocProductUnloadViewModel(Doc.DocID, IsNewDoc);
+                    CurrentViewModel = new DocProductUnloadViewModel(DocID, IsNewDoc);
                     break;
                 case DocProductKinds.DocProductGroupPack:
                     Title = "Групповая упаковка";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke") && State == ProductState.Good;
-                    CurrentViewModel = new DocProductGroupPackViewModel(Doc.DocID);                   
+                    CurrentViewModel = new DocProductGroupPackViewModel(DocID);                   
                     break;
                 case DocProductKinds.DocProductPallet:
                     Title = "Паллета";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke") && State == ProductState.Good;
-                    //CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
-                    CurrentViewModel = new DocProductPalletViewModel(product.ProductID);
+                    //CurrentViewModel = new DocProductPalletViewModel(DocID);
+                    CurrentViewModel = new DocProductPalletViewModel(ProductID);
                     break;
                 case DocProductKinds.DocProductPalletR:
                     Title = "Неполная паллета";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = DB.HaveWriteAccess("DocBroke") && State == ProductState.Good;
-                    //CurrentViewModel = new DocProductPalletViewModel(Doc.DocID);
-                    CurrentViewModel = new DocProductPalletViewModel(product.ProductID);
+                    //CurrentViewModel = new DocProductPalletViewModel(DocID);
+                    CurrentViewModel = new DocProductPalletViewModel(ProductID);
                     break;
                 case DocProductKinds.DocProductBale:
                     Title = "Кипа";
                     Number = product?.Number;
                     Title = $"{Title} № {Number}";
                     AllowAddToBrokeAction = false;
-                    CurrentViewModel = new DocProductBaleViewModel(product.ProductID);
+                    CurrentViewModel = new DocProductBaleViewModel(ProductID);
                     break;
                 default:
                     MessageBox.Show("Действие не предусмотрено програмой");
@@ -309,7 +314,8 @@ namespace Gamma.ViewModels
             }
         }
 
-
+        public Guid DocID { get; set; }
+        public Guid ProductID { get; set; }
         public ProductState? State { get; set; }
         public string StateName { get; set; }
         public string PrintName { get; set; }
@@ -648,12 +654,21 @@ namespace Gamma.ViewModels
             get { return _selectedTabIndex; }
             set
             {
+                if (_selectedTabIndex != 2 && value == 2)
+                {
+                    if (DocBrokeDecision != null && DocBrokeDecision.GetService_SetBrokePlaceDialog == null)
+                    {
+                        var dialogService = GetService<IDialogService>("SetBrokePlaceDialog");
+                        DocBrokeDecision.GetService_SetBrokePlaceDialog = dialogService;
+                    }
+                }
                 if (_selectedTabIndex == 2 && value != 2)
                 {
                     if (DocBrokeDecision?.SelectedBrokeDecisionProduct != null)
                     {
                         DocBrokeDecision.SelectedBrokeDecisionProduct = null;
                     }
+                    GetProductRelations(ProductID);
                 }
                 _selectedTabIndex = value;
 
@@ -667,6 +682,8 @@ namespace Gamma.ViewModels
             (CurrentViewModel as IDisposable)?.Dispose();
             CurrentViewModel = null;
         }
+
+        public ICommand ClosingCommand { get; private set; }
 
         void Closing(CancelEventArgs e)
         {

@@ -6711,7 +6711,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="IsPreviousDocClose" Type="bit" Mode="In" />
         </Function>
-        <Function Name="UtilizationProductInDocBroke" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="UtilizationProductWithRepackInDocBroke" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="QuantityBroke" Type="decimal" Mode="In" />
         </Function>
@@ -10893,7 +10893,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
             <End Role="DocRepackProducts" EntitySet="DocRepackProducts" />
             <End Role="DocWithdrawal" EntitySet="DocWithdrawal" />
           </AssociationSet>
-          <FunctionImport Name="UtilizationProductInDocBroke" ReturnType="Collection(GammaModel.UtilizationProductInDocBroke_Result)">
+          <FunctionImport Name="UtilizationProductWithRepackInDocBroke" ReturnType="Collection(GammaModel.UtilizationProductWithRepackInDocBroke_Result)">
             <Parameter Name="ProductID" Mode="In" Type="Guid" />
             <Parameter Name="QuantityBroke" Mode="In" Type="Decimal" />
           </FunctionImport>
@@ -16804,7 +16804,7 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
           <End Type="GammaModel.DocRepackProducts" Role="DocRepackProducts" Multiplicity="*" />
           <End Type="GammaModel.DocWithdrawal" Role="DocWithdrawal" Multiplicity="*" />
         </Association>
-        <ComplexType Name="UtilizationProductInDocBroke_Result">
+        <ComplexType Name="UtilizationProductWithRepackInDocBroke_Result">
           <Property Type="Guid" Name="DocBrokeID" Nullable="true" />
           <Property Type="String" Name="DocBrokeNumber" Nullable="true" MaxLength="100" />
           <Property Type="Decimal" Name="QuantityBroke" Nullable="true" Precision="10" Scale="3" />
@@ -20667,9 +20667,9 @@ warning 6002: The table/view 'GammaNewTemp.dbo.vRobotNomenclatures' does not hav
               <ScalarProperty Name="DocRepackProductID" ColumnName="DocRepackProductID" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="UtilizationProductInDocBroke" FunctionName="GammaDBModel.UtilizationProductInDocBroke">
+          <FunctionImportMapping FunctionImportName="UtilizationProductWithRepackInDocBroke" FunctionName="GammaDBModel.UtilizationProductWithRepackInDocBroke">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GammaModel.UtilizationProductInDocBroke_Result">
+              <ComplexTypeMapping TypeName="GammaModel.UtilizationProductWithRepackInDocBroke_Result">
                 <ScalarProperty Name="DocBrokeID" ColumnName="DocBrokeID" />
                 <ScalarProperty Name="DocBrokeNumber" ColumnName="DocBrokeNumber" />
                 <ScalarProperty Name="QuantityBroke" ColumnName="QuantityBroke" />

@@ -590,7 +590,7 @@ namespace Gamma.ViewModels
             Debug.Print("Кол-во задано");
         }
 
-        public CreateWithdrawalResult CreateWithdrawal(Guid productID, ProductKind productKind, byte stateID, decimal quantity, decimal? productionQuantity, Guid? nomenclatureId = null, Guid? characteristicId = null, int? diameter = null, byte? breakNumber = null)
+        public CreateWithdrawalResult CreateWithdrawal(Guid productID, ProductKind productKind, byte stateID, decimal quantity, decimal? productionQuantity, Guid? nomenclatureId = null, Guid? characteristicId = null, int? diameter = null, byte? breakNumber = null, decimal? length = null, int? realFormat = null)
         {
             int koeff = productKind != Gamma.ProductKind.ProductSpool ? 1 : 1000;
             int quantityMax = (int)(quantity * koeff);
@@ -665,7 +665,8 @@ namespace Gamma.ViewModels
                             {
                                 Guid productId = SqlGuidUtil.NewSequentialid();
                                 int newDiameter = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)Math.Sqrt((double)((diameter * diameter) * newQuantity / productionQuantity));
-                                var product = productController.AddNewProductToDocProduction(docProduction, docWithdrawalId, productKind, (Guid)nomenclatureId, (Guid)characteristicId, newQuantity, newDiameter, breakNumber);
+                                int newLength = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)(length * (newQuantity / productionQuantity));
+                                var product = productController.AddNewProductToDocProduction(docProduction, docWithdrawalId, productKind, (Guid)nomenclatureId, (Guid)characteristicId, newQuantity, newDiameter, breakNumber, newLength, realFormat);
                                 withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity);
 
                             }
@@ -686,11 +687,11 @@ namespace Gamma.ViewModels
             return withdrawalResult;
         }
 
-        public CreateWithdrawalResult CreateWithdrawal(byte stateID, decimal quantity, decimal? productionQuantity, Guid? nomenclatureId = null, Guid? characteristicId = null, int? diameter = null, byte? breakNumber = null)
+        public CreateWithdrawalResult CreateWithdrawal(byte stateID, decimal quantity, decimal? productionQuantity, Guid? nomenclatureId = null, Guid? characteristicId = null, int? diameter = null, byte? breakNumber = null, decimal? length = null, int? realFormat = null)
         {
             var docWithdrawalResult =
                 stateID == (byte)ProductState.Broke ? CreateWithdrawal((Guid)ProductID, (ProductKind)ProductKind, stateID, quantity, productionQuantity)
-                : stateID == (byte)ProductState.ForConversion || stateID == (byte)ProductState.Repack ? CreateWithdrawal((Guid)ProductID, (ProductKind)ProductKind, stateID, quantity, productionQuantity, (Guid)nomenclatureId, (Guid)characteristicId, diameter, breakNumber)
+                : stateID == (byte)ProductState.ForConversion || stateID == (byte)ProductState.Repack ? CreateWithdrawal((Guid)ProductID, (ProductKind)ProductKind, stateID, quantity, productionQuantity, (Guid)nomenclatureId, (Guid)characteristicId, diameter, breakNumber, length, realFormat)
                 : null;
             if (docWithdrawalResult != null)
             {

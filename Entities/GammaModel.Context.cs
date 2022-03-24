@@ -1574,7 +1574,7 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchRepackProducts_Result>("GetBatchRepackProducts", productionTaskBatchIDParameter, intervalIDParameter);
         }
     
-        public virtual ObjectResult<UtilizationProductInDocBroke_Result> UtilizationProductInDocBroke(Nullable<System.Guid> productID, Nullable<decimal> quantityBroke)
+        public virtual ObjectResult<UtilizationProductWithRepackInDocBroke_Result> UtilizationProductWithRepackInDocBroke(Nullable<System.Guid> productID, Nullable<decimal> quantityBroke, Nullable<int> shiftID)
         {
             var productIDParameter = productID.HasValue ?
                 new ObjectParameter("ProductID", productID) :
@@ -1583,8 +1583,12 @@ namespace Gamma.Entities
             var quantityBrokeParameter = quantityBroke.HasValue ?
                 new ObjectParameter("QuantityBroke", quantityBroke) :
                 new ObjectParameter("QuantityBroke", typeof(decimal));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductInDocBroke_Result>("UtilizationProductInDocBroke", productIDParameter, quantityBrokeParameter);
+            
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductWithRepackInDocBroke_Result>("UtilizationProductWithRepackInDocBroke", productIDParameter, quantityBrokeParameter, shiftIDParameter);
         }
     
         public virtual ObjectResult<FillDocCloseShiftConvertingAuxiliaryMaterials_Result> FillDocCloseShiftConvertingAuxiliaryMaterials(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)

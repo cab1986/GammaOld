@@ -251,7 +251,7 @@ namespace Gamma.ViewModels
                         viewModel: model);
                     if (result != okCommand)
                         return;
-                    var res = gammaBase.UtilizationProductInDocBroke(product.ProductID, model.Quantity).FirstOrDefault();
+                    var res = gammaBase.UtilizationProductWithRepackInDocBroke(product.ProductID, model.Quantity, WorkSession.ShiftID).FirstOrDefault();
                     if (res != null)
                     {
                         if (res.Quantity != null) repackProduct.Quantity = (decimal)res.Quantity;

@@ -16,6 +16,7 @@
     xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
     xmlns:dynamic="clr-namespace:System.Dynamic;assembly=System.Core"
     xmlns:models="clr-namespace:Gamma.Models"
+    xmlns:dialogs="clr-namespace:Gamma.Dialogs"
     x:Class="Gamma.Views.DocProductView" 
     mc:Ignorable="d ignore" 
     Title="{Binding Title}"
@@ -62,6 +63,19 @@
         <dxmvvm:CurrentWindowService ClosingCommand="{Binding ClosingCommand}" />
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
+        <dx:DialogService DialogWindowStartupLocation="CenterOwner" Name="SetBrokePlaceDialog">
+            <dx:DialogService.ViewTemplate>
+                <DataTemplate>
+                    <dialogs:SetBrokePlaceDialog/>
+                </DataTemplate>
+            </dx:DialogService.ViewTemplate>
+            <dx:DialogService.DialogStyle>
+                <Style TargetType="dx:DXDialogWindow">
+                    <Setter Property="Width" Value="360"/>
+                    <Setter Property="Height" Value="270"/>
+                </Style>
+            </dx:DialogService.DialogStyle>
+        </dx:DialogService>
     </dxmvvm:Interaction.Behaviors>
     <Grid>
         <Grid.RowDefinitions>

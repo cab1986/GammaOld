@@ -11,7 +11,7 @@ namespace Gamma.Entities
 {
     using System;
     
-    public partial class UtilizationProductInDocBroke_Result
+    public partial class UtilizationProductWithRepackInDocBroke_Result
     {
         public Nullable<System.Guid> DocBrokeID { get; set; }
         public string DocBrokeNumber { get; set; }

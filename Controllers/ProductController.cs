@@ -142,7 +142,7 @@ namespace Gamma.Controllers
         /// Create spool with one nomenclature item
         /// and add to existing document
         /// </summary>
-        public Product AddNewProductToDocProduction(Docs docProduction, Guid? docWithdrawalId, ProductKind productKind, Guid nomenclatureId, Guid characteristicId, decimal quantity, int? diameter, byte? breakNumber, Guid? placeZoneID = null)
+        public Product AddNewProductToDocProduction(Docs docProduction, Guid? docWithdrawalId, ProductKind productKind, Guid nomenclatureId, Guid characteristicId, decimal quantity, int? diameter, byte? breakNumber, decimal? length, int? realFormat, Guid? placeZoneID = null)
         {
             using (var context = DB.GammaDb)
             {
@@ -155,7 +155,7 @@ namespace Gamma.Controllers
                     });
                 context.SaveChanges();
             }
-            return AddNewProductToDocProduction(docProduction.DocID, docWithdrawalId, productKind, nomenclatureId, characteristicId, quantity, diameter, breakNumber, null, placeZoneID);
+            return AddNewProductToDocProduction(docProduction.DocID, docWithdrawalId, productKind, nomenclatureId, characteristicId, quantity, diameter, breakNumber, length, realFormat, placeZoneID);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Gamma.Controllers
         /// Create spool with one nomenclature item
         /// and add to existing document
         /// </summary>
-        public Product AddNewProductToDocProduction(Guid docProductionId, Guid? docWithdrawalId, ProductKind productKind, Guid nomenclatureId, Guid characteristicId, decimal quantity, int? diameter, byte? breakNumber, decimal? length, Guid? placeZoneID = null)
+        public Product AddNewProductToDocProduction(Guid docProductionId, Guid? docWithdrawalId, ProductKind productKind, Guid nomenclatureId, Guid characteristicId, decimal quantity, int? diameter, byte? breakNumber, decimal? length, int? realFormat, Guid? placeZoneID = null)
         {
             using (var context = DB.GammaDb)
             {
@@ -198,6 +198,7 @@ namespace Gamma.Controllers
                             C1CCharacteristicID = characteristicId,
                             DecimalWeight = decimalWeight,
                             Diameter = (int)diameter,
+                            RealFormat = realFormat,
                             Length = length,
                             BreakNumber = breakNumber
                         }

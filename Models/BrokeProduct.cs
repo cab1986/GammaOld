@@ -79,7 +79,7 @@ namespace Gamma.Models
             set
             {
                 _rejectionReasonID = value;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                    RejectionReasonName = gammaBase.C1CRejectionReasons.FirstOrDefault(
                                 r => r.C1CRejectionReasonID == _rejectionReasonID)?.Description;
@@ -95,7 +95,7 @@ namespace Gamma.Models
             set
             {
                 _secondRejectionReasonID = value;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     SecondRejectionReasonName = gammaBase.C1CRejectionReasons.FirstOrDefault(
                                  r => r.C1CRejectionReasonID == _secondRejectionReasonID)?.Description;
@@ -213,7 +213,7 @@ namespace Gamma.Models
             set
             {
                 _placeId = value;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     PlaceName = value == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == value).Name;
                 }
@@ -233,7 +233,7 @@ namespace Gamma.Models
 
         private void RefreshBrokePlaceName ()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 BrokePlaceName = (BrokePlaceId == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == BrokePlaceId)?.Name)
                     + ((BrokeShiftId ?? 0) == 0  ? string.Empty : ", Смена " + BrokeShiftId.ToString())

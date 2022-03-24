@@ -486,8 +486,8 @@ namespace Gamma.Models
                 var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
                 var docWithdrawalId =
                     ProductState == ProductState.Broke ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity)
-                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? null : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber))
-                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)productSpool?.C1CNomenclatureID, (Guid)productSpool?.C1CCharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber)
+                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? null : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber, productSpool?.Length, productSpool?.RealFormat))
+                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)productSpool?.C1CNomenclatureID, (Guid)productSpool?.C1CCharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber, productSpool?.Length, productSpool?.RealFormat)
                     : null;
                 if (docWithdrawalId != null)
                     if (DocWithdrawalSum > MinQuantity)
