@@ -665,7 +665,7 @@ namespace Gamma.ViewModels
                             {
                                 Guid productId = SqlGuidUtil.NewSequentialid();
                                 int newDiameter = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)Math.Sqrt((double)((diameter * diameter) * newQuantity / productionQuantity));
-                                int newLength = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)(length * (newQuantity / productionQuantity));
+                                int newLength = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)((length ?? 0) * (newQuantity / productionQuantity));
                                 var product = productController.AddNewProductToDocProduction(docProduction, docWithdrawalId, productKind, (Guid)nomenclatureId, (Guid)characteristicId, newQuantity, newDiameter, breakNumber, newLength, realFormat);
                                 withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity);
 
