@@ -745,19 +745,24 @@ namespace Gamma.ViewModels
             switch (productState)
             {
                 case ProductState.InternalUsage:
-                    return WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                    return //WorkSession.PlaceGroup != PlaceGroup.Other || 
+                        IsReadOnly;
                 case ProductState.Good:
                     return IsReadOnly;
                 case ProductState.Limited:
-                    return WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                    return //WorkSession.PlaceGroup != PlaceGroup.Other || 
+                        IsReadOnly;
                 case ProductState.Broke:
                     return IsReadOnly;
                 case ProductState.ForConversion:
-                    return WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                    return //WorkSession.PlaceGroup != PlaceGroup.Other || 
+                        IsReadOnly;
                 case ProductState.Repack:
-                    return WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                    return //WorkSession.PlaceGroup != PlaceGroup.Other || 
+                        IsReadOnly;
                 case ProductState.NeedsDecision:
-                    return WorkSession.PlaceGroup != PlaceGroup.Other || IsReadOnly;
+                    return //WorkSession.PlaceGroup != PlaceGroup.Other || 
+                        IsReadOnly;
                 default:
                     return true;
             }
