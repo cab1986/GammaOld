@@ -176,16 +176,23 @@ namespace Gamma.ViewModels
             }
             var places = GammaBase.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
             PlaceProducts = new ObservableCollection<PlaceProduct>();
-            foreach (var place in places)
+            if (places == null)
             {
-                PlaceProducts.Add(
-                    new PlaceProduct
-                    {
-                        Place = place.Name,
-                        PlaceID = place.PlaceID,
-                        Command = OpenPlaceProductsCommand
-                    }
-                    );
+                DB.AddLogMessageError("Пустой список при загрузке списка производственных переделов","Empty list PlaceProductions with open MainWindow" );
+            }
+            else
+            {
+                foreach (var place in places)
+                {
+                    PlaceProducts.Add(
+                        new PlaceProduct
+                        {
+                            Place = place.Name,
+                            PlaceID = place.PlaceID,
+                            Command = OpenPlaceProductsCommand
+                        }
+                        );
+                }
             }
             Reports = new List<ReportItem>(
                                            (from rep in GammaBase.Reports
