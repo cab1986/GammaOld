@@ -97,7 +97,12 @@ namespace Gamma
                 var currentUser = CurrentUserID;
                 if (currentUser != Guid.Empty)
                 {
-                    WorkSession.UserID = currentUser;
+                    if (!WorkSession.SetUser(currentUser))
+                    {
+                        MessageBox.Show("Не удалось получить информацию о пользователе");
+                        DB.AddLogMessageError("Не удалось получить информацию о пользователе","Error SetUser in DB.Initialize");
+                        return false;
+                    }
                     return true;
                 }
                 else
