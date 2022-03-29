@@ -22,6 +22,7 @@ namespace Gamma.ViewModels
     {
         private PlaceProductsViewModel()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             FindCommand = new DelegateCommand(Find);
             OpenDocProductCommand = new DelegateCommand(OpenDocProduct, () => SelectedProduct != null);
             CreateNewProductCommand = new DelegateCommand(CreateNewProduct, () => PlaceGroup == PlaceGroup.Wr && WorkSession.PlaceGroup == PlaceGroup);
@@ -97,6 +98,7 @@ namespace Gamma.ViewModels
 
         private void DeleteProduct()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             if (SelectedProduct == null) return;
             switch (SelectedProduct.PlaceGroup)
             {
@@ -196,6 +198,7 @@ namespace Gamma.ViewModels
 
         private void CreateNewProduct()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             switch (PlaceGroup)
             {
                 case PlaceGroup.Wr:
@@ -224,6 +227,7 @@ namespace Gamma.ViewModels
 
         private void OpenDocProduct()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             switch (SelectedProduct.ProductKind)
             {
                 case ProductKind.ProductSpool:
@@ -254,6 +258,7 @@ namespace Gamma.ViewModels
 
         private void Find()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {

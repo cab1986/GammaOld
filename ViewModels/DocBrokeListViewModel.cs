@@ -126,6 +126,7 @@ namespace Gamma.ViewModels
 
         private void OpenDocBroke(Guid? docId = null)
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             Messenger.Default.Register<RefreshBrokeListMessage>(this, Find);
             if (docId == null)
                 MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid());
@@ -144,6 +145,7 @@ namespace Gamma.ViewModels
 
         private void Find()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {

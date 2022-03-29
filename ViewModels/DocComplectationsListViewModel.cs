@@ -80,7 +80,7 @@ namespace Gamma.ViewModels
 
         private void CreateDocComplectation()
         {
-
+            WorkSession.CheckExistNewVersionOfProgram();
             /*var docId = SqlGuidUtil.NewSequentialid();
             var doc = documentController.ConstructDoc((Guid)docId, DocTypes.DocComplectation, WorkSession.PlaceID);
             doc.DocComplectation = new DocComplectation
@@ -102,7 +102,8 @@ namespace Gamma.ViewModels
 
         private void OpenDocComplectation(DocComplectationListItem selectedDocComplectation)
 		{
-			if (selectedDocComplectation == null)
+            WorkSession.CheckExistNewVersionOfProgram();
+            if (selectedDocComplectation == null)
 			{
 				return;
 			}
@@ -129,7 +130,8 @@ namespace Gamma.ViewModels
 		/// </summary>
 		private void Find(bool isSource1C)
 		{
-			UIServices.SetBusyState();
+            WorkSession.CheckExistNewVersionOfProgram();
+            UIServices.SetBusyState();
 			SelectedDocComplectation = null;
 			using (var gammaBase = DB.GammaDb)
 			{

@@ -53,6 +53,7 @@ namespace Gamma.ViewModels
 
         private void DeleteProductionTask()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             if (SelectedProductionTaskSGI == null) return;
             //DB.GammaDb.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID);
             var delResult = GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
@@ -66,6 +67,7 @@ namespace Gamma.ViewModels
 
         private void GetProductionTasks()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             ProductionTasks = new ObservableCollection<ProductionTaskSGI>(
                 from pt in DB.GammaDb.GetProductionTasksOnState((int) BatchKinds.SGI, ProductionTaskStateID)
@@ -87,16 +89,19 @@ namespace Gamma.ViewModels
 
         private void EditItem()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             MessageManager.OpenProductionTask(BatchKinds.SGI, SelectedProductionTaskSGI.ProductionTaskBatchID, WorkSession.PlaceGroup == PlaceGroup.Other);
         }
 
         private void NewProductionTask()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             MessageManager.NewProductionTask(BatchKinds.SGI);
         }
 
         private void CopyProductionTask()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             //Create new Task from selected Task
             using (var gammaBase = DB.GammaDb)
             {

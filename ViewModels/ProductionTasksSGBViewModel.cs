@@ -36,11 +36,13 @@ namespace Gamma.ViewModels
         public DelegateCommand CopyProductionTaskCommand { get; private set; }
         private void NewItem()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             MessageManager.NewProductionTask(BatchKinds.SGB);
         }
 
         private void EditItem()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             MessageManager.OpenProductionTask(
                         BatchKinds.SGB,
                         SelectedProductionTaskBatch.ProductionTaskBatchID
@@ -48,6 +50,7 @@ namespace Gamma.ViewModels
         }
         private void DeleteItem()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             if (SelectedProductionTaskBatch == null) return;
             var delResult = GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskBatch.ProductionTaskBatchID).First();
             if (string.IsNullOrEmpty(delResult)) return;
@@ -56,6 +59,7 @@ namespace Gamma.ViewModels
 
         private void CopyProductionTask()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             //Create new Task from selected Task
             using (var gammaBase = DB.GammaDb)
             {
@@ -121,6 +125,7 @@ namespace Gamma.ViewModels
         
         private void GetProductionTasks()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             ProductionTaskBatchesSGB = new ObservableCollection<ProductionTaskBatchSGB>();
             var tempCollection = new ObservableCollection<ProductionTaskBatchSGB>

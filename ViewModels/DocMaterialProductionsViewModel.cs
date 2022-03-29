@@ -51,6 +51,7 @@ namespace Gamma.ViewModels
 
         public void Find()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             SelectedDocMaterialProduction = null;
             using (var gammaBase = DB.GammaDb)
@@ -156,6 +157,7 @@ namespace Gamma.ViewModels
 
         private void OpenDocMaterialProduction(Guid? docID = null)
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             Messenger.Default.Register<RefreshMessage>(this, Find);
             if (docID == null)
@@ -174,6 +176,7 @@ namespace Gamma.ViewModels
 
         private void DeleteItem()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             if (SelectedDocMaterialProduction == null) return;
             var deleteItem = GammaBase.Docs.FirstOrDefault(d => d.DocID == SelectedDocMaterialProduction.DocID);
             if (deleteItem != null)

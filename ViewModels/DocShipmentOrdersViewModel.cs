@@ -38,6 +38,7 @@ namespace Gamma.ViewModels
 
         private void OpenDocShipmentOrder()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             if (SelectedDocShipmentOrder == null) return;
             var docShipmentOrderId = SelectedDocShipmentOrder.DocShipmentOrderId; //(row as DocShipmentOrder)?.DocShipmentOrderId;
@@ -128,6 +129,7 @@ namespace Gamma.ViewModels
 
         private void Find()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             SelectedDocShipmentOrder = null;
             using (var gammaBase = DB.GammaDb)

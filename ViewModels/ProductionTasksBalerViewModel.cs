@@ -46,6 +46,7 @@ namespace Gamma.ViewModels
 
         private void Refresh()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
             {
@@ -57,6 +58,7 @@ namespace Gamma.ViewModels
 
         private void NewProductionTask()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             MessageManager.NewProductionTask(BatchKinds.Baler);
         }
 

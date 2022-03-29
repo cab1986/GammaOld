@@ -20,7 +20,7 @@ namespace Gamma.ViewModels
         {
             Intervals = new List<string> { "Активные", "Закрытые", "Последние 500", "Поиск" };
             RefreshCommand = new DelegateCommand(Find);
-            EditItemCommand = new DelegateCommand(() => MessageManager.OpenDocMovement(SelectedDocMovement.DocId), SelectedDocMovement != null);
+            EditItemCommand = new DelegateCommand(OpenDocMovement, SelectedDocMovement != null);
             DateBegin = DateTime.Now.AddMonths(-6);
             IntervalId = 3;
             Find();
@@ -80,8 +80,17 @@ namespace Gamma.ViewModels
 
         public List<string> Intervals { get; private set; }
 
+        private void OpenDocMovement()
+        {
+            WorkSession.CheckExistNewVersionOfProgram();
+            UIServices.SetBusyState();
+            if (SelectedDocMovement == null) return;
+            MessageManager.OpenDocMovement(SelectedDocMovement.DocId);
+        }
+
         private void Find()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             SelectedDocMovement = null;
             using (var gammaBase = DB.GammaDb)

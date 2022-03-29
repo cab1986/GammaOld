@@ -89,6 +89,7 @@ namespace Gamma.ViewModels
 
         public void Find()
         {
+            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             SelectedStockRemainder = null;
             var charId = SelectedCharacteristic?.CharacteristicID ?? new Guid();
