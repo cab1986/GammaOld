@@ -552,7 +552,10 @@ namespace Gamma.ViewModels
         public override bool CanSaveExecute()
         {
             //return IsValid && DB.HaveWriteAccess("DocBroke");
-            return IsValid && DB.HaveWriteAccess("DocBroke") && IsEditable;
+            return (SelectedTabIndex == 1) 
+                ? !(DocBrokeDecision != null && DocBrokeDecision.IsReadOnly)
+                : IsValid && !IsReadOnly;//DB.HaveWriteAccess("DocBroke") && IsEditable 
+                 
         }
 
         private int _selectedTabIndex { get; set; }
@@ -1025,109 +1028,11 @@ namespace Gamma.ViewModels
         public override bool SaveToModel()
         {
             DB.AddLogMessageInformation("Сохранение Акт о браке DocID", "DocBroke.SaveToModel", DocId);
-            if (!DB.HaveWriteAccess("DocBroke"))
-            {
-                DB.AddLogMessageError("Ошибка при сохранении Акт о браке DocID: нет прав на запись", "Error DocBroke.SaveToModel", DocId);
-                return false;
-            }
-            /*if (
-                DocBrokeDecision.BrokeDecisionProducts.Any(
-                    dp =>
-                        dp.ProductState == ProductState.ForConversion &&
-                        (dp.NomenclatureId == null || dp.CharacteristicId == null)))
-            {
-                MessageBox.Show("При решении \"на переделку\" необходимо указать номенклатуру и характеристику");
-                return false;
-            }*/
-            if (
-                BrokeProducts.Any(
-                    dp =>
-                        (dp.RejectionReasonID == null 
-                        || dp.RejectionReasonComment == null || dp.RejectionReasonComment.Length == 0)))
-                        //(dp.RejectionReasonsString == null || dp.RejectionReasonsString.Length == 0
-                        //|| dp.RejectionReasonCommentsString == null || dp.RejectionReasonCommentsString.Length == 0)))
-            {
-                Functions.ShowMessageError("Ошибка при сохранении Акт о браке: " + Environment.NewLine + "Обязательно требуется заполнить поле Дефекты и Причины несоответствия во всех продуктах", "Error DocBroke.SaveToModel", DocId);
-                return false;
-            }
-            using (var gammaBase = DB.GammaDb)
-            {
-                var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)
-                    .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons)).FirstOrDefault(d => d.DocID == DocId && d.DocTypeID == (int)DocTypes.DocBroke);
-                if (doc == null)
-                {
-                    doc = new Docs
-                    {
-                        DocID = DocId,
-                        DocTypeID = (int)DocTypes.DocBroke,
-                        Date = Date,
-                        PlaceID = WorkSession.PlaceID,
-                        ShiftID = WorkSession.ShiftID,
-                        UserID = WorkSession.UserID,
-                        PrintName = WorkSession.PrintName
-                    };
-                    gammaBase.Docs.Add(doc);
-                    gammaBase.SaveChanges();
-                    doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)
-                        .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons)).FirstOrDefault(d => d.DocID == DocId && d.DocTypeID == (int)DocTypes.DocBroke);
-                    DocNumber = doc.Number;
-                }
-                //doc.Number = DocNumber;
-                doc.Comment = DocComment;
-                doc.IsConfirmed = IsConfirmed;
-                if (doc.DocBroke == null)
-                    doc.DocBroke = new DocBroke
-                    {
-                        DocID = DocId,
-                        //PlaceDiscoverID = PlaceDiscoverId,
-                        //PlaceStoreID = PlaceStoreId,
-                        DocBrokeProducts = new List<DocBrokeProducts>(),
-                    };
-                //doc.DocBroke.PlaceDiscoverID = PlaceDiscoverId;
-                //doc.DocBroke.PlaceStoreID = PlaceStoreId;
-                doc.DocBroke.IsInFuturePeriod = IsInFuturePeriod;
-                foreach (var docBrokeProduct in doc.DocBroke.DocBrokeProducts)
-                {
-                    if (docBrokeProduct.DocBrokeProductRejectionReasons.Count > 0)
-                    {
-                        docBrokeProduct.DocBrokeProductRejectionReasons.Clear();
-                    }
-                }
-                doc.DocBroke.DocBrokeProducts.Clear();
-                foreach (var docBrokeProduct in BrokeProducts)
-                {
-                    var brokeProduct = new DocBrokeProducts
-                    {
-                        ProductID = docBrokeProduct.ProductId,
-                        DocID = doc.DocID,
-                        Quantity = docBrokeProduct.Quantity,
-                        BrokePlaceID = docBrokeProduct.BrokePlaceId,
-                        BrokeShiftID = docBrokeProduct.BrokeShiftId,
-                        BrokePrintName = docBrokeProduct.PrintName,
-                        PlaceID = docBrokeProduct.PlaceId,
-                        DocBrokeProductRejectionReasons = new List<DocBrokeProductRejectionReasons>(),
-                        C1CRejectionReasonID = docBrokeProduct.RejectionReasonID,
-                        C1CSecondRejectionReasonID = docBrokeProduct.SecondRejectionReasonID,
-                        RejectionReasonComment = docBrokeProduct.RejectionReasonComment
-                    };
-                    /*foreach (var reason in docBrokeProduct.RejectionReasons)
-                    {
-                        brokeProduct.DocBrokeProductRejectionReasons.Add(new DocBrokeProductRejectionReasons
-                        {
-                            ProductID = brokeProduct.ProductID,
-                            DocID = brokeProduct.DocID,
-                            C1CRejectionReasonID = reason.RejectionReasonID,
-                            Comment = reason.Comment
-                        });
-                    }*/
-                    doc.DocBroke.DocBrokeProducts.Add(brokeProduct);
-                    docBrokeProduct.IsChanged = false;
-                }
-                gammaBase.SaveChanges();
-                DB.AddLogMessageInformation("закончено сохранение Акт о браке DocID", "DocBroke.SaveToModel", DocId);
 
+            if (SelectedTabIndex == 1)
+            {
                 #region Сохранение решений по продукции
-                DocBrokeDecision.SaveToModel();
+                DocBrokeDecision?.SaveToModel();
                 /*
                 if (doc.DocBroke.DocBrokeDecisionProducts == null)
                     doc.DocBroke.DocBrokeDecisionProducts = new List<DocBrokeDecisionProducts>();
@@ -1149,11 +1054,139 @@ namespace Gamma.ViewModels
                         DecisionPlaceID = decisionProduct.DecisionPlaceId
                     });
                 }*/
-#endregion
-                
+                #endregion
             }
-            IsChanged = false;
-
+            else
+            {
+                if (!DB.HaveWriteAccess("DocBroke"))
+                {
+                    DB.AddLogMessageError("Ошибка при сохранении Акт о браке DocID: нет прав на запись", "Error DocBroke.SaveToModel", DocId);
+                    return false;
+                }
+                /*if (
+                    DocBrokeDecision.BrokeDecisionProducts.Any(
+                        dp =>
+                            dp.ProductState == ProductState.ForConversion &&
+                            (dp.NomenclatureId == null || dp.CharacteristicId == null)))
+                {
+                    MessageBox.Show("При решении \"на переделку\" необходимо указать номенклатуру и характеристику");
+                    return false;
+                }*/
+                if (
+                    BrokeProducts.Any(
+                        dp =>
+                            (dp.RejectionReasonID == null
+                            || dp.RejectionReasonComment == null || dp.RejectionReasonComment.Length == 0)))
+                //(dp.RejectionReasonsString == null || dp.RejectionReasonsString.Length == 0
+                //|| dp.RejectionReasonCommentsString == null || dp.RejectionReasonCommentsString.Length == 0)))
+                {
+                    Functions.ShowMessageError("Ошибка при сохранении Акт о браке: " + Environment.NewLine + "Обязательно требуется заполнить поле Дефекты и Причины несоответствия во всех продуктах", "Error DocBroke.SaveToModel", DocId);
+                    return false;
+                }
+                using (var gammaBase = DB.GammaDb)
+                {
+                    var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)
+                        .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons)).FirstOrDefault(d => d.DocID == DocId && d.DocTypeID == (int)DocTypes.DocBroke);
+                    if (doc == null)
+                    {
+                        doc = new Docs
+                        {
+                            DocID = DocId,
+                            DocTypeID = (int)DocTypes.DocBroke,
+                            Date = Date,
+                            PlaceID = WorkSession.PlaceID,
+                            ShiftID = WorkSession.ShiftID,
+                            UserID = WorkSession.UserID,
+                            PrintName = WorkSession.PrintName
+                        };
+                        gammaBase.Docs.Add(doc);
+                        gammaBase.SaveChanges();
+                        doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)
+                            .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons)).FirstOrDefault(d => d.DocID == DocId && d.DocTypeID == (int)DocTypes.DocBroke);
+                        DocNumber = doc.Number;
+                    }
+                    //doc.Number = DocNumber;
+                    doc.Comment = DocComment;
+                    doc.IsConfirmed = IsConfirmed;
+                    if (doc.DocBroke == null)
+                        doc.DocBroke = new DocBroke
+                        {
+                            DocID = DocId,
+                            //PlaceDiscoverID = PlaceDiscoverId,
+                            //PlaceStoreID = PlaceStoreId,
+                            DocBrokeProducts = new List<DocBrokeProducts>(),
+                        };
+                    //doc.DocBroke.PlaceDiscoverID = PlaceDiscoverId;
+                    //doc.DocBroke.PlaceStoreID = PlaceStoreId;
+                    doc.DocBroke.IsInFuturePeriod = IsInFuturePeriod;
+                    foreach (var docBrokeProduct in doc.DocBroke.DocBrokeProducts)
+                    {
+                        if (docBrokeProduct.DocBrokeProductRejectionReasons.Count > 0)
+                        {
+                            docBrokeProduct.DocBrokeProductRejectionReasons.Clear();
+                        }
+                    }
+                    doc.DocBroke.DocBrokeProducts.Clear();
+                    foreach (var docBrokeProduct in BrokeProducts)
+                    {
+                        var brokeProduct = new DocBrokeProducts
+                        {
+                            ProductID = docBrokeProduct.ProductId,
+                            DocID = doc.DocID,
+                            Quantity = docBrokeProduct.Quantity,
+                            BrokePlaceID = docBrokeProduct.BrokePlaceId,
+                            BrokeShiftID = docBrokeProduct.BrokeShiftId,
+                            BrokePrintName = docBrokeProduct.PrintName,
+                            PlaceID = docBrokeProduct.PlaceId,
+                            DocBrokeProductRejectionReasons = new List<DocBrokeProductRejectionReasons>(),
+                            C1CRejectionReasonID = docBrokeProduct.RejectionReasonID,
+                            C1CSecondRejectionReasonID = docBrokeProduct.SecondRejectionReasonID,
+                            RejectionReasonComment = docBrokeProduct.RejectionReasonComment
+                        };
+                        /*foreach (var reason in docBrokeProduct.RejectionReasons)
+                        {
+                            brokeProduct.DocBrokeProductRejectionReasons.Add(new DocBrokeProductRejectionReasons
+                            {
+                                ProductID = brokeProduct.ProductID,
+                                DocID = brokeProduct.DocID,
+                                C1CRejectionReasonID = reason.RejectionReasonID,
+                                Comment = reason.Comment
+                            });
+                        }*/
+                        doc.DocBroke.DocBrokeProducts.Add(brokeProduct);
+                        docBrokeProduct.IsChanged = false;
+                    }
+                    gammaBase.SaveChanges();
+                    DB.AddLogMessageInformation("Закончено сохранение Акт о браке DocID", "DocBroke.SaveToModel", DocId);
+                    
+                    #region Сохранение решений по продукции
+                    DocBrokeDecision?.SaveToModel();
+                    /*
+                    if (doc.DocBroke.DocBrokeDecisionProducts == null)
+                        doc.DocBroke.DocBrokeDecisionProducts = new List<DocBrokeDecisionProducts>();
+                    else
+                        doc.DocBroke.DocBrokeDecisionProducts.Clear();
+                    foreach (var decisionProduct in DocBrokeDecision.BrokeDecisionProducts)
+                    {
+                        doc.DocBroke.DocBrokeDecisionProducts.Add(new DocBrokeDecisionProducts
+                        {
+                            C1CCharacteristicID = decisionProduct.CharacteristicId,
+                            C1CNomenclatureID = decisionProduct.NomenclatureId,
+                            Quantity = decisionProduct.Quantity,
+                            ProductID = decisionProduct.ProductId,
+                            DocID = DocId,
+                            StateID = (byte)decisionProduct.ProductState,
+                            Comment = decisionProduct.Comment,
+                            DecisionApplied = decisionProduct.DecisionApplied,
+                            DecisionDate = decisionProduct.DecisionDate,
+                            DecisionPlaceID = decisionProduct.DecisionPlaceId
+                        });
+                    }*/
+                    #endregion
+                }
+                IsChanged = false;
+            }
+            
             if (WorkSession.IsUploadDocBrokeTo1CWhenSave)
                 DB.UploadDocBrokeTo1C(DocId);
             else
