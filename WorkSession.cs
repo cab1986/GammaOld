@@ -128,7 +128,7 @@ namespace Gamma
 
         public static bool IsUsedInOneDocMaterialDirectCalcAndComposition { get; private set; }
 
-        private static int PeriodRefreshUserInfo { get; set; } = 30;
+        private static int RefreshUserInfoPeriod { get; set; } = 30;
         private static bool _isExistNewVersionOfProgram { get; set; } = false;
         public static bool CheckExistNewVersionOfProgram()
         {
@@ -139,7 +139,7 @@ namespace Gamma
 
         private static void RefreshUserInfoAndExistNewVersion()
         {
-            if (lastSuccesRecivedUserInfo == null || (DateTime.Now - lastSuccesRecivedUserInfo).Minutes > PeriodRefreshUserInfo)
+            if (lastSuccesRecivedUserInfo == null || (DateTime.Now - lastSuccesRecivedUserInfo).Minutes > RefreshUserInfoPeriod)
             {
                 GetUserInfo();
 
