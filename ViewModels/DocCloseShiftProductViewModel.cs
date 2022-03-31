@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
-
+            PlaceGroupID = GammaBase.Places.First(p => p.PlaceID == PlaceID).PlaceGroupID;
         }
 
         public DocCloseShiftProductViewModel(Guid docId, bool isConfirmed, GammaEntities gammaDb = null):this()
@@ -87,8 +87,9 @@ namespace Gamma.ViewModels
                 PlaceID = (int)doc.PlaceID;
                 ShiftID = doc.ShiftID ?? 0;
                 CloseDate = doc.Date;
+                PlaceGroupID = doc.Places.PlaceGroupID;
                 //IsConfirmed = doc.IsConfirmed;
-                
+
                 BeginProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.DocCloseShiftRemainders
                     //.Include(dr => dr.DocCloseShifts)
                     .Where(d => d.DocID == docId && !(d.IsMaterial ?? false) && (d.RemainderTypes.RemainderTypeID == 1 || d.RemainderTypes.RemainderTypeID == 3))
@@ -208,6 +209,7 @@ namespace Gamma.ViewModels
         private int PlaceID { get; set; }
         private int ShiftID { get; set; }
         private DateTime CloseDate { get; set; }
+        private short PlaceGroupID { get; set; }
 
         public string HeaderQuantityField => @"Кол-во, кг/рул/пач";
 
@@ -461,17 +463,20 @@ namespace Gamma.ViewModels
                 {
                     EndProducts?.Clear();
 
-                    EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                        .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsInfo.Where(v => ((v.ProductKindID == (byte)ProductKind.ProductSpool || v.ProductKindID == (byte)ProductKind.ProductGroupPack) && (gammaBase.Places.Any(pl => pl.PlaceID == PlaceID && pl.PlaceGroupID == (short)PlaceGroup.PM && pl.PlaceID == v.CurrentPlaceID))) || ((v.ProductKindID == (byte)ProductKind.ProductPallet || v.ProductKindID == (byte)ProductKind.ProductPalletR) && (gammaBase.Places.Any(pl => pl.PlaceID == PlaceID && pl.PlaceGroupID == (short)PlaceGroup.Convertings && pl.PlaceID == v.CurrentPlaceID)))), d => d.ProductID, p => p.ProductID
-                        , (d, p) => new DocCloseShiftRemainder
+                    EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(
+                        gammaBase.vProductsInfo
+                            .Where(p => p.CurrentPlaceID == PlaceID && 
+                                        ((PlaceGroupID == (short)PlaceGroup.PM && (p.ProductKindID == (byte)ProductKind.ProductSpool || p.ProductKindID == (byte)ProductKind.ProductGroupPack))
+                                            || (PlaceGroupID == (short)PlaceGroup.Convertings && (p.ProductKindID == (byte)ProductKind.ProductPallet || p.ProductKindID == (byte)ProductKind.ProductPalletR))))
+                        .Select(p => new DocCloseShiftRemainder
                         {
-                            ProductID = (Guid)d.ProductID,
+                            ProductID = (Guid)p.ProductID,
                             StateID = p.StateID,
                             Quantity = (p.Quantity ?? 0) * (p.ProductKindID == (byte)ProductKind.ProductSpool || p.ProductKindID == (byte)ProductKind.ProductGroupPack ? 1000 : 1),
                             RemainderTypeID = 2,
-                            ProductKind = d.Products == null ? new ProductKind() : (ProductKind)d.Products.ProductKindID
+                            ProductKind = (ProductKind)p.ProductKindID
                         }));
-
+                    
                     //убираем из остатков тамбур, который утилизирован в этой смене
                     if (UtilizationProducts != null)
                     {

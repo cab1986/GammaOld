@@ -205,10 +205,15 @@ namespace Gamma
 
     public enum RemainderType
     {
+        [Description("Переходящий следующей смене")]
+        NextShift,
         [Description("На начало периода")]
         Begin,
         [Description("на конец периода")]
-        End
+        End,
+        [Description("Переходящий от предыдущей смены")]
+        PreviousShift
+
     }
     /// <summary>
     /// Тип возвращаемых данных из com порта
