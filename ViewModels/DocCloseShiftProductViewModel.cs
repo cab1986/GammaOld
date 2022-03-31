@@ -462,7 +462,7 @@ namespace Gamma.ViewModels
                     EndProducts?.Clear();
 
                     EndProducts = new ItemsChangeObservableCollection<DocCloseShiftRemainder>(gammaBase.Rests
-                        .Where(d => d.PlaceID == PlaceID && WorkSession.BranchID != 2).Join(gammaBase.vProductsInfo.Where(v => ((v.ProductKindID == (byte)ProductKind.ProductSpool || v.ProductKindID == (byte)ProductKind.ProductGroupPack) && (gammaBase.Places.Any(pl => pl.PlaceID == PlaceID && pl.PlaceGroupID == (short)PlaceGroup.PM && pl.PlaceID == v.CurrentPlaceID))) || ((v.ProductKindID == (byte)ProductKind.ProductPallet || v.ProductKindID == (byte)ProductKind.ProductPalletR) && (gammaBase.Places.Any(pl => pl.PlaceID == PlaceID && pl.PlaceGroupID == (short)PlaceGroup.Convertings && pl.PlaceID == v.CurrentPlaceID)))), d => d.ProductID, p => p.ProductID
+                        .Where(d => d.PlaceID == PlaceID).Join(gammaBase.vProductsInfo.Where(v => ((v.ProductKindID == (byte)ProductKind.ProductSpool || v.ProductKindID == (byte)ProductKind.ProductGroupPack) && (gammaBase.Places.Any(pl => pl.PlaceID == PlaceID && pl.PlaceGroupID == (short)PlaceGroup.PM && pl.PlaceID == v.CurrentPlaceID))) || ((v.ProductKindID == (byte)ProductKind.ProductPallet || v.ProductKindID == (byte)ProductKind.ProductPalletR) && (gammaBase.Places.Any(pl => pl.PlaceID == PlaceID && pl.PlaceGroupID == (short)PlaceGroup.Convertings && pl.PlaceID == v.CurrentPlaceID)))), d => d.ProductID, p => p.ProductID
                         , (d, p) => new DocCloseShiftRemainder
                         {
                             ProductID = (Guid)d.ProductID,
