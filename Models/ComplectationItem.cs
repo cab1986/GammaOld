@@ -29,7 +29,7 @@ namespace Gamma.Models
 			OldCharacteristicId = oldCharacteristicId;
 			NewCharacteristicId = newCharacteristicId;
 			QualityId = qualityId;
-			using (var context = DB.GammaDb)
+			using (var context = DB.GammaDbWithNoCheckConnection)
 			{
 				var nomInfo = context.C1CCharacteristics.Where(c =>
 						(c.C1CCharacteristicID == OldCharacteristicId || c.C1CCharacteristicID == NewCharacteristicId)

@@ -37,7 +37,7 @@ namespace Gamma.Models
         {
             AvailableNomenclatures = new List<NomenclatureAnalog>();
             
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 if (NomenclatureID == null)
                     System.Windows.MessageBox.Show("null");
@@ -283,7 +283,7 @@ namespace Gamma.Models
                 var n = AvailableNomenclatures?.Select(x => x.NomenclatureID).ToList();
                 if (n != null)
                 {
-                    AvailableProductionProducts = DB.GammaDb.vProductionMaterials.Where(x => _productionProducts.Contains((Guid)x.ProductCharacteristicID) && x.ProductPlaceID == PlaceID && n.Contains((Guid)x.NomenclatureID)).Select(x => new ProductionProducts()
+                    AvailableProductionProducts = DB.GammaDbWithNoCheckConnection.vProductionMaterials.Where(x => _productionProducts.Contains((Guid)x.ProductCharacteristicID) && x.ProductPlaceID == PlaceID && n.Contains((Guid)x.NomenclatureID)).Select(x => new ProductionProducts()
                     {
                         NomenclatureID = x.ProductNomenclatureID,
                         CharacteristicID = (Guid)x.ProductCharacteristicID,
@@ -292,7 +292,7 @@ namespace Gamma.Models
                 }
                 if (AvailableProductionProducts == null || AvailableProductionProducts?.Count == 0)
                 {
-                    AvailableProductionProducts = DB.GammaDb.C1CCharacteristics.Where(x => (x.C1CDeleted ?? false) &&  _productionProducts.Contains(x.C1CCharacteristicID)).Select(x => new ProductionProducts()
+                    AvailableProductionProducts = DB.GammaDbWithNoCheckConnection.C1CCharacteristics.Where(x => (x.C1CDeleted ?? false) &&  _productionProducts.Contains(x.C1CCharacteristicID)).Select(x => new ProductionProducts()
                     {
                         NomenclatureID = x.C1CNomenclatureID,
                         CharacteristicID = x.C1CCharacteristicID,

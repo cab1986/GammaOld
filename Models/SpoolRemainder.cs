@@ -15,7 +15,7 @@ namespace Gamma.Models
     {
         public SpoolRemainder(DateTime docDate, byte? shiftID, Guid? productId, bool isSourceProduct, Guid? docWithdrawalId)
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             DocDate = docDate;
             DocShiftID = shiftID;
             IsSourceProduct = isSourceProduct;
@@ -40,7 +40,7 @@ namespace Gamma.Models
             {
                 _productid = value;
                 if (value == null) return;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     var date = (DocWithdrawalId == null || DocWithdrawalId == Guid.Empty) 
                         ? DB.CurrentDateTime 

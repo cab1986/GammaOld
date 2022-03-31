@@ -18,7 +18,7 @@ namespace Gamma.Models
     {
         public DocMaterialProduction(int placeID, int shiftID, DateTime closeDate, DocMaterialTankGroupContainer tankGroupContainer)
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -175,7 +175,7 @@ namespace Gamma.Models
         private void FillEndProducts(bool IsFillEnd = true)
         {
             if (IsFillEnd)
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                 }
         }

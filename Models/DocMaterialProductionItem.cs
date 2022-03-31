@@ -29,7 +29,7 @@ namespace Gamma.Models
             set
             {
                 if (_placeID != value)
-                    using (var gammaBase = DB.GammaDb)
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                     {
                         PlaceName = gammaBase.Places.FirstOrDefault(p => p.PlaceID == value).Name;
                     }
@@ -106,7 +106,7 @@ namespace Gamma.Models
         private void RefreshAvilableNomenclatures()
         {
             AvailableNomenclatures = new List<NomenclatureAnalog>();
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var nomenclatureInfo =
                     gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage).First(n => n.C1CNomenclatureID == _nomenclatureID);

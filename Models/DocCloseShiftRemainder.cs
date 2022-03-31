@@ -5,6 +5,7 @@ using System.Linq;
 using DevExpress.Mvvm;
 using Gamma.Entities;
 using Gamma.Interfaces;
+using Gamma.Common;
 
 namespace Gamma.Models
 {
@@ -12,7 +13,7 @@ namespace Gamma.Models
     {
         public DocCloseShiftRemainder()
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
         }
 
         private GammaEntities GammaBase { get; }
@@ -61,7 +62,7 @@ namespace Gamma.Models
 
         private void GetProductSpoolNomenclature(Guid? productId)
         {
-            var product = GammaBase.vProductsInfo.Where(p => p.ProductID == productId).FirstOrDefault();
+            var product = GammaBase.vProductsInfo.Where(p => p.ProductID == productId).Select(p => new { p.Number, p.NomenclatureName}). FirstOrDefault();
             if (product == null)
             {
                 Number = "";
@@ -76,16 +77,12 @@ namespace Gamma.Models
 
         private void GetProductBrokeStateName(int? stateId)
         {
-            var state = stateId == null ? null : GammaBase.ProductStates.Where(p => p.StateID == stateId).First();
-            StateName = state == null ? "" : state.Name ;
-            
+            StateName = (stateId != null && Enum.IsDefined(typeof(ProductState), stateId)) ? Functions.GetEnumDescription((ProductState)((int)stateId)) : "";
         }
 
         private void GetRemainderTypeName(int? remainderTypeId)
         {
-            var remainderType = remainderTypeId == null ? null : GammaBase.RemainderTypes.Where(p => p.RemainderTypeID == remainderTypeId).First();
-            RemainderTypeName = remainderType == null ? "" : remainderType.Name;
-
+            RemainderTypeName = (remainderTypeId != null && Enum.IsDefined(typeof(RemainderType), remainderTypeId)) ? Functions.GetEnumDescription((RemainderType)((int)remainderTypeId)) : "";
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Gamma.Models
 
         public DocMaterialTankGroupContainer(Guid docID, int placeID, GammaEntities gammaBase = null):this(placeID)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
+            gammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             var tankRemainders = gammaBase.DocMaterialTankRemainders.Where(dr => dr.DocID == docID).ToList();
             if (tankRemainders != null)
                 foreach (var tankRemainder in tankRemainders)
@@ -261,7 +261,7 @@ namespace Gamma.Models
 
         public void Fill(int placeID)
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 if (TankGroups.Count > 0)
                     Clear();

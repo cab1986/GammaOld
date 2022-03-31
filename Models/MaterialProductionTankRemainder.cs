@@ -16,7 +16,7 @@ namespace Gamma.Models
     {
         public MaterialProductionTankRemainder(int docMaterialTankID, string name, int volume, int? docMaterialProductionTypeID)
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             DocMaterialTankID = docMaterialTankID;
             Volume = volume;
             Name = name + " V="+Volume+"м3";

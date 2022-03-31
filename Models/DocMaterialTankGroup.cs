@@ -10,7 +10,7 @@ namespace Gamma.Models
     {
         public DocMaterialTankGroup(int docMaterialTankGroupID)
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             DocMaterialTankGroupID = docMaterialTankGroupID;
             var tankGroup = GammaBase.DocMaterialTankGroups.Where(t => t.DocMaterialTankGroupID == docMaterialTankGroupID).FirstOrDefault();
             if (tankGroup != null)

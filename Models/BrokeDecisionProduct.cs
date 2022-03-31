@@ -128,7 +128,7 @@ namespace Gamma.Models
             set
             {
                 _decisionPlaceId = value;
-                DecisionPlaceName = DB.GammaDb.Places.FirstOrDefault(p => p.PlaceID == value)?.Name;
+                DecisionPlaceName = DB.GammaDbWithNoCheckConnection.Places.FirstOrDefault(p => p.PlaceID == value)?.Name;
                 RaisePropertyChanged("DecisionPlaceId");
 
             }

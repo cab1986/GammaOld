@@ -21,7 +21,7 @@ namespace Gamma.Models
             {
                 _nomenclatureID = value;
                 if (_nomenclatureID == null) return;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     var nomInfo =
                         gammaBase.C1CNomenclature.Include(n => n.C1CCharacteristics)
@@ -62,7 +62,7 @@ namespace Gamma.Models
             set
             {
                 _characteristicID = value;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     if (_characteristicID != null)
                         BaseFormat =

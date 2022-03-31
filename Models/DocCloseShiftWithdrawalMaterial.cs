@@ -18,7 +18,7 @@ namespace Gamma.Models
     {
         public DocCloseShiftWithdrawalMaterial(int placeID, int shiftID, DateTime closeDate)
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -305,7 +305,7 @@ namespace Gamma.Models
         private void FillEndProducts(bool IsFillEnd = true)
         {
             if (IsFillEnd)
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     EndProducts?.Clear();
 

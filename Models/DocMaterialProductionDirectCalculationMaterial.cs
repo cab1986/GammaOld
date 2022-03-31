@@ -15,7 +15,7 @@ namespace Gamma.Models
     {
         public DocMaterialProductionDirectCalculationMaterial(int placeID, int shiftID, DateTime closeDate)
         {
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;

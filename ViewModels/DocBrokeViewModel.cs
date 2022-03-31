@@ -1016,7 +1016,11 @@ namespace Gamma.ViewModels
                 return;
             }
             if (CanSaveExecute())
+            {
                 SaveToModel();
+                if (!WorkSession.IsUploadDocBrokeTo1CWhenSave)
+                    DB.UploadDocBrokeTo1C(DocId);
+            }
             else
                 DB.UploadDocBrokeTo1C(DocId);
         }
