@@ -194,6 +194,8 @@ namespace Gamma
                 BranchID = userInfo.BranchID;
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
+                RoleName = userInfo.RoleName;
+                UnwindersCount = userInfo.UnwindersCount ?? 0;
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
                 IsMaterialProductionPlace = userInfo.IsMaterialProductionPlace ?? false;
                 IsShipmentWarehouse = userInfo.IsShipmentWarehouse ?? false;
@@ -202,8 +204,15 @@ namespace Gamma
                 BranchIds = userInfo.Places.Select(p => p.BranchID).Distinct().ToList();
                 IsRemotePrinting = userInfo.IsRemotePrinting ?? false;
                 UseApplicator = userInfo.UseApplicator ?? false;
-                EndpointAddressOnMailService = (from u in gammaBase.LocalSettings
-                                                select u.MailServiceAddress).FirstOrDefault();
+                var localSettings = (from u in gammaBase.LocalSettings
+                                    select new { u.MailServiceAddress, u.LabelPath, u.IsUploadDocBrokeTo1CWhenSave, u.IsUsedInOneDocMaterialDirectCalcAndComposition }).FirstOrDefault();
+                if (localSettings != null)
+                {
+                    EndpointAddressOnMailService = localSettings.MailServiceAddress;
+                    LabelPath = localSettings.LabelPath;
+                    IsUploadDocBrokeTo1CWhenSave = localSettings.IsUploadDocBrokeTo1CWhenSave ?? false;
+                    IsUsedInOneDocMaterialDirectCalcAndComposition = localSettings.IsUsedInOneDocMaterialDirectCalcAndComposition ?? true;
+                }
                 EndpointAddressOnGroupPackService = (from u in gammaBase.PlaceRemotePrinters
                                                      where u.PlaceID == _placeID && u.IsEnabled == true && (u.RemotePrinters.RemotePrinterLabelID == 2 || u.RemotePrinters.RemotePrinterLabelID == 3)
                                                      select u.ModbusDevices.ServiceAddress).FirstOrDefault();
@@ -214,14 +223,6 @@ namespace Gamma
                 //                EndpointAddressOnMailService = "http://localhost:8735/PrinterService";
                 //                EndpointAddressOnTransportPackService = "http://localhost:8735/PrinterService";
                 //#endif
-                LabelPath = (from u in gammaBase.LocalSettings
-                             select u.LabelPath).FirstOrDefault();
-                RoleName = userInfo.RoleName;
-                UnwindersCount = userInfo.UnwindersCount ?? 0;
-                IsUploadDocBrokeTo1CWhenSave = (from u in gammaBase.LocalSettings
-                                                select u.IsUploadDocBrokeTo1CWhenSave).FirstOrDefault() ?? false;
-                IsUsedInOneDocMaterialDirectCalcAndComposition = (from u in gammaBase.LocalSettings
-                                                                  select u.IsUsedInOneDocMaterialDirectCalcAndComposition).FirstOrDefault() ?? true;
                 lastSuccesRecivedUserInfo = DateTime.Now;
             }
 
