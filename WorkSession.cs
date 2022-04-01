@@ -195,6 +195,7 @@ namespace Gamma
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
                 RoleName = userInfo.RoleName;
+                ProgramAdmin = (userInfo.programAdmin ?? false);
                 UnwindersCount = userInfo.UnwindersCount ?? 0;
                 IsProductionPlace = userInfo.IsProductionPlace ?? false;
                 IsMaterialProductionPlace = userInfo.IsMaterialProductionPlace ?? false;
