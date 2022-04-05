@@ -21,6 +21,7 @@ namespace Gamma.ViewModels
         public DocBrokeDecisionViewModel(Guid docBrokeID)// DocBrokeViewModel parentViewModel)
         {
             DB.AddLogMessageInformation("Открытие Решений по акту о браке DocID", "Open DocBrokeDecisionViewModel (docBrokeID = '" + docBrokeID + "')",docBrokeID);
+            OpenProductCommand = new DelegateCommand(OpenProduct);
             //ParentViewModel = parentViewModel;
             //NeedsDecisionProduct =
             EditBrokeDecisionItems.Add(ProductState.NeedsDecision, new EditBrokeDecisionItem("Требует решения", ProductState.NeedsDecision, this));
@@ -71,6 +72,8 @@ namespace Gamma.ViewModels
 #else
             WorkSession.DBAdmin;
 #endif
+
+        public DelegateCommand OpenProductCommand { get; private set; }
 
         public List<Place> BrokePlaces { get; set; }
 
@@ -821,6 +824,7 @@ namespace Gamma.ViewModels
                     brokeDecisionProduct.ProductState = (ProductState)forAllProductsProkeDecision.ProductStateID.Key;
                     brokeDecisionProduct.Comment = forAllProductsProkeDecision.Comment;
                     brokeDecisionProduct.Quantity = brokeDecisionProduct.ProductQuantity;
+                    brokeDecisionProduct.IsChanged = true;
                     //brokeDecisionProduct.Quantity = ParentViewModel.BrokeProducts.Where(p => p.ProductId == brokeDecisionProduct.ProductId).Select(p => p.Quantity).First();
                     if (forAllProductsProkeDecision.ProductStateID.Key == (int)ProductState.ForConversion)
                     {
@@ -1403,5 +1407,12 @@ namespace Gamma.ViewModels
 
                 //DB.AddLogMessageInformation("Изменение места актирования ProductID в Акт о браке DocID" + Environment.NewLine + "Передел='" + model.Places.FirstOrDefault(p => p.PlaceID == model.PlaceID)?.PlaceName + "'", "SetPlace (PlaceID='" + model.PlaceID + "')", DocId, SelectedBrokeProduct?.ProductId);
         }
+
+        private void OpenProduct()
+        {
+            if (SelectedBrokeDecisionProduct == null) return;
+            MessageManager.OpenDocProduct(SelectedBrokeDecisionProduct.ProductKind, SelectedBrokeDecisionProduct.ProductId);
+        }
+
     }
 }

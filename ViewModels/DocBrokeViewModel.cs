@@ -255,20 +255,20 @@ namespace Gamma.ViewModels
         /// <param name="docId">ID документа акта о браке</param>
         /// <param name="brokeProducts">Список продукции</param>
         /// <param name="brokeDecisionProducts">Список решений по продукции</param>
-        private void AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ItemsChangeObservableCollection<BrokeDecisionProduct> brokeDecisionProducts, bool isChanged = true)
+        private bool AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ItemsChangeObservableCollection<BrokeDecisionProduct> brokeDecisionProducts, bool isChanged = true)
         {
             DB.AddLogMessageInformation("Добавление продукта ProductID в Акт о браке DocID", "AddProduct (docId = '" + docId + "', productId='" + productId+"')", docId, productId);
             using (var gammaBase = DB.GammaDb)
             {
-                if (BrokeProducts.Select(bp => bp.ProductId).Contains(productId)) return;
+                if (BrokeProducts.Select(bp => bp.ProductId).Contains(productId)) return false;
                 var product = gammaBase.vProductsInfo
                     .FirstOrDefault(p => p.ProductID == productId);
-                if (product == null) return;
+                if (product == null) return false;
                 if (!IsInFuturePeriod && BrokeProducts.Count > 0 &&
                     BrokeProducts.Select(bp => bp.ProductionPlaceId).First() != product.PlaceID)
                 {
                     Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Нельзя добавлять продукт другого передела в акт '25к - I передел'", "AddProduct (docId = '" + docId + ", ProductId='" + productId + "')", docId, productId);
-                    return;
+                    return false;
                 }
 #region AddBrokeProduct
                 var docBrokeProductInfo =
@@ -390,6 +390,7 @@ namespace Gamma.ViewModels
                 RefreshRejectionReasonsList();
                 RefreshProductStateList();
             }
+            return true;
         }
 
         private void ChooseProductToAdd()
@@ -422,14 +423,19 @@ namespace Gamma.ViewModels
         {
             DB.AddLogMessageInformation("Распаковка ГУ ProductID в Акте о браке DocID","ChooseGroupPackToUnpack (docId='" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId+"')",DocId, SelectedBrokeProduct?.ProductId);
             if (SelectedBrokeProduct == null || SelectedBrokeProduct.ProductKind != ProductKind.ProductGroupPack) return;
-                if (!GammaBase.Rests.Any(r => r.ProductID == SelectedBrokeProduct.ProductId))
-                {
-                    Functions.ShowMessageError("Распаковка ГУ в Акт о браке: "+Environment.NewLine+"Данная упаковка не числится на остатках", "ERROR ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId);
+            if (!GammaBase.Rests.Any(r => r.ProductID == SelectedBrokeProduct.ProductId))
+            {
+                Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Данная упаковка не числится на остатках", "ERROR ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId);
                 return;
-                }
-                if (Functions.ShowMessageQuestion("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Вы уверены, что хотите распаковать данную упаковку?", "QUEST ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId)
-                        //MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка", MessageBoxButton.YesNo, MessageBoxImage.Question) 
-                    != MessageBoxResult.Yes)
+            }
+            if (!IsInFuturePeriod)
+            {
+                Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Невозможно распаковать, так как акт '25к - I передел'. Требуется поменять на '10к - II передел'", "ERROR ChooseGroupPackToUnpack (InFuturePeriod) docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId);
+                return;
+            }
+            if (Functions.ShowMessageQuestion("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Вы уверены, что хотите распаковать данную упаковку?", "QUEST ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId)
+                //MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка", MessageBoxButton.YesNo, MessageBoxImage.Question) 
+                != MessageBoxResult.Yes)
             {
                 return;
             }
@@ -444,24 +450,26 @@ namespace Gamma.ViewModels
             foreach (var product in groupPackProductIDs)
             {
                 SetProductIsChanged(product,true);
-                AddProduct(product, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
-                var addedBrokeProduct = BrokeProducts.FirstOrDefault(p => p.ProductId == product);
-                addedBrokeProduct.BrokePlaceId = SelectedBrokeProduct.BrokePlaceId;
-                addedBrokeProduct.BrokeShiftId = SelectedBrokeProduct.BrokeShiftId;
-                addedBrokeProduct.PrintName = SelectedBrokeProduct.PrintName;
-                addedBrokeProduct.PlaceId = SelectedBrokeProduct.PlaceId;
-                addedBrokeProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
-                addedBrokeProduct.SecondRejectionReasonID = SelectedBrokeProduct.SecondRejectionReasonID;
-                addedBrokeProduct.RejectionReasonComment = SelectedBrokeProduct.RejectionReasonComment;
-                //исходим из предположения, что по ГУ можно принять только одно решение, причем на весь обьем и только из блока Требует решения
-                var addedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == product);
-                addedBrokeDecisionProduct.ProductState = selectedBrokeDecisionProduct.ProductState;
-                addedBrokeDecisionProduct.Comment = selectedBrokeDecisionProduct.Comment;
-                addedBrokeDecisionProduct.Quantity = selectedBrokeDecisionProduct.ProductQuantity;
-                addedBrokeDecisionProduct.NomenclatureId = selectedBrokeDecisionProduct.NomenclatureId;
-                addedBrokeDecisionProduct.CharacteristicId = selectedBrokeDecisionProduct.CharacteristicId;
-                addedBrokeDecisionProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
-                addedBrokeDecisionProduct.BrokePlaceID = SelectedBrokeProduct.PlaceId;
+                if (AddProduct(product, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts))
+                {
+                    var addedBrokeProduct = BrokeProducts.FirstOrDefault(p => p.ProductId == product);
+                    addedBrokeProduct.BrokePlaceId = SelectedBrokeProduct.BrokePlaceId;
+                    addedBrokeProduct.BrokeShiftId = SelectedBrokeProduct.BrokeShiftId;
+                    addedBrokeProduct.PrintName = SelectedBrokeProduct.PrintName;
+                    addedBrokeProduct.PlaceId = SelectedBrokeProduct.PlaceId;
+                    addedBrokeProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
+                    addedBrokeProduct.SecondRejectionReasonID = SelectedBrokeProduct.SecondRejectionReasonID;
+                    addedBrokeProduct.RejectionReasonComment = SelectedBrokeProduct.RejectionReasonComment;
+                    //исходим из предположения, что по ГУ можно принять только одно решение, причем на весь обьем и только из блока Требует решения
+                    var addedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == product);
+                    addedBrokeDecisionProduct.ProductState = selectedBrokeDecisionProduct.ProductState;
+                    addedBrokeDecisionProduct.Comment = selectedBrokeDecisionProduct.Comment;
+                    addedBrokeDecisionProduct.Quantity = selectedBrokeDecisionProduct.ProductQuantity;
+                    addedBrokeDecisionProduct.NomenclatureId = selectedBrokeDecisionProduct.NomenclatureId;
+                    addedBrokeDecisionProduct.CharacteristicId = selectedBrokeDecisionProduct.CharacteristicId;
+                    addedBrokeDecisionProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
+                    addedBrokeDecisionProduct.BrokePlaceID = SelectedBrokeProduct.PlaceId;
+                }
                 //var decisionDate = addedBrokeDecisionProduct?.DecisionDate;
                 //var curDate = DB.CurrentDateTime;
                 //if (decisionDate != null && curDate != null 
@@ -469,6 +477,9 @@ namespace Gamma.ViewModels
                 //    && (1001 - (int)((DateTime)decisionDate - (DateTime)curDate).TotalMilliseconds) <=1000)
                 //    Thread.Sleep(1001 - (int)((DateTime)decisionDate - curDate).TotalMilliseconds);
             }
+
+            if (DocBrokeDecision?.SelectedBrokeDecisionProduct != null)
+                DocBrokeDecision.SelectedBrokeDecisionProduct = null;
 
             var decisionProductsToRemove =
                 DocBrokeDecision.BrokeDecisionProducts.Where(p => p.ProductId == SelectedBrokeProduct.ProductId).ToList();
@@ -763,6 +774,11 @@ namespace Gamma.ViewModels
         {
             if (SelectedBrokeProduct == null) return;
             DB.AddLogMessageInformation("Удаление продукта ProductID в Акт о браке DocID", "DeleteBrokeProduct (docId = '" + DocId + "', productId='" + SelectedBrokeProduct?.ProductId + "')", DocId, SelectedBrokeProduct?.ProductId);
+            if (DocBrokeDecision.BrokeDecisionProducts.Any(p => p.ProductId == SelectedBrokeProduct.ProductId && p.DocWithdrawals.Count > 0))
+            {
+                Functions.ShowMessageError("Ошибка при удалении продукта в Акте о браке"+ Environment.NewLine + "Невозможно удалить, так как уже проведена переупаковка, или переделка, или утилизация." , "ERROR DeleteBrokeProduct (docId = '" + DocId + "', productId='" + SelectedBrokeProduct?.ProductId + "')", DocId, SelectedBrokeProduct?.ProductId);
+                return;
+            }
             IsChanged = true;
             var decisionProductsToRemove =
                 DocBrokeDecision.BrokeDecisionProducts.Where(p => p.ProductId == SelectedBrokeProduct.ProductId).ToList();

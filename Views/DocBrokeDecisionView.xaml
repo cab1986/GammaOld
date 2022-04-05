@@ -101,6 +101,9 @@
                 <dxg:GridControl Name="grid" ItemsSource="{Binding BrokeDecisionProducts}" SelectedItem="{Binding SelectedBrokeDecisionProduct}" dxlc:LayoutControl.UseDesiredHeightAsMaxHeight="True"
                                                  DesignTimeDataObjectType="{x:Type models:BrokeDecisionProduct}">
                     <!--CustomRowFilter="GridControl_CustomRowFilter">-->
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="MouseDoubleClick" Command="{Binding OpenProductCommand}"/>
+                    </dxmvvm:Interaction.Behaviors>
                     <dxg:GridControl.View>
                         <dxg:TableView AllowEditing="False" AutoWidth="True" ShowGroupPanel="False" BestFitMode="Smart"/>
                     </dxg:GridControl.View>
