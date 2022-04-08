@@ -483,11 +483,12 @@ namespace Gamma.Models
             else
             {
                 var productionQuantity = ParentModel.ProductQuantity;// GammaBase.DocProductionProducts.FirstOrDefault(p => p.ProductID == ProductId).Quantity;
-                var productSpool = GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
+                var productSpool = ParentModel.ProductKind != ProductKind.ProductSpool ? null : GammaBase.ProductSpools.FirstOrDefault(p => p.ProductID == ProductId);
+                var productItem = ParentModel.ProductKind != ProductKind.ProductPallet && ParentModel.ProductKind != ProductKind.ProductPalletR ? null : GammaBase.ProductItems.FirstOrDefault(p => p.ProductID == ProductId);
                 var docWithdrawalId =
                     ProductState == ProductState.Broke ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity)
-                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? null : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber, productSpool?.Length, productSpool?.RealFormat))
-                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)productSpool?.C1CNomenclatureID, (Guid)productSpool?.C1CCharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber, productSpool?.Length, productSpool?.RealFormat)
+                    : ProductState == ProductState.ForConversion ? (NomenclatureID == null || CharacteristicID == null ? (Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Нельзя нажать Выполнить, так как не указана номенклатура или характеристика.", "ERROR CreateWithdrawal (NomenclatureID is NULL OR CharacteristicID is NULL)", null, ProductId) ? (CreateWithdrawalResult)null : (CreateWithdrawalResult)null) : ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)NomenclatureID, (Guid)CharacteristicID, productSpool?.Diameter, productSpool?.BreakNumber, productSpool?.Length, productSpool?.RealFormat))
+                    : ProductState == ProductState.Repack ? ParentModel.CreateWithdrawal((byte)ProductState, Quantity - DocWithdrawalSum, productionQuantity, (Guid)(productSpool?.C1CNomenclatureID ?? productItem?.C1CNomenclatureID), (Guid)(productSpool?.C1CCharacteristicID ?? productItem?.C1CCharacteristicID), productSpool?.Diameter, productSpool?.BreakNumber, productSpool?.Length, productSpool?.RealFormat)
                     : null;
                 if (docWithdrawalId != null)
                     if (DocWithdrawalSum > MinQuantity)

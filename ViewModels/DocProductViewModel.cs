@@ -143,7 +143,8 @@ namespace Gamma.ViewModels
                 ProductID = product.ProductID;
 
                 var rest = GammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID);
-                //if (rest != null) CurrentPlace = GammaBase.Places.FirstOrDefault(p => p.PlaceID == rest.PlaceID)?.Name;
+                if (rest != null)
+                    CurrentPlace = rest.Places.Name;
                 State = rest != null || (rest == null && IsNewDoc)
                     ? (ProductState)(product.StateID ?? 0) : (ProductState?)null;
                 StateName = State != null
@@ -617,6 +618,9 @@ namespace Gamma.ViewModels
                     break;
                 case DocTypes.DocSpecificstionQuantity:
                     MessageManager.OpenDocWithdrawal(SelectedRelation.DocID);
+                    break;
+                case DocTypes.DocRepack:
+                    MessageManager.OpenDocRepack(SelectedRelation.DocID);
                     break;
                 default:
                     switch (SelectedRelation.ProductKindID)

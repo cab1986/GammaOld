@@ -648,7 +648,10 @@ namespace Gamma.ViewModels
                     }
                     else
                     {
-                        var getPlaceID = GetPlace(DecisionPlaceId, messageInvariant);
+                        var currentPlaceID = GammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID)?.PlaceID;
+                        if (currentPlaceID == null)
+                            return null;
+                        var getPlaceID = GetPlace(currentPlaceID, messageInvariant);
                         if (getPlaceID == null)
                             return null;
                         placeID = (int)getPlaceID;
@@ -670,8 +673,7 @@ namespace Gamma.ViewModels
                                 int newDiameter = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)Math.Sqrt((double)((diameter * diameter) * newQuantity / productionQuantity));
                                 int newLength = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)((length ?? 0) * (newQuantity / productionQuantity));
                                 var product = productController.AddNewProductToDocProduction(docProduction, docWithdrawalId, productKind, (Guid)nomenclatureId, (Guid)characteristicId, newQuantity, newDiameter, breakNumber, newLength, realFormat);
-                                withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity);
-
+                                withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity, docWithdrawalId, withdrawalResult.PlaceID) ;
                             }
                         }
                     }
@@ -707,8 +709,8 @@ namespace Gamma.ViewModels
                         new List<KeyValuePair<Guid, string>>()
                         { new KeyValuePair<Guid, string>
                             (
-                            stateID == 2 ? docWithdrawalResult.DocID : docWithdrawalResult.ProductID,
-                            (stateID == 2 ? "Списание " : "Продукт " ) + docWithdrawalResult.Number + " от " + docWithdrawalResult.Date.ToString("dd.MM.yyyy HH.mm") + " на " + docWithdrawalResult.Quantity
+                            stateID == (byte)ProductState.Broke ? docWithdrawalResult.DocID : docWithdrawalResult.ProductID,
+                            (stateID == (byte)ProductState.Broke ? "Списание " : "Продукт " ) + docWithdrawalResult.Number + " от " + docWithdrawalResult.Date.ToString("dd.MM.yyyy HH.mm") + " на " + docWithdrawalResult.Quantity
                             )
                         };
                     /*var brokeDecisionItem = BrokeDecisionProducts.FirstOrDefault(d => d.ProductId == ProductID && d.ProductState == (ProductState)stateID);
@@ -730,14 +732,61 @@ namespace Gamma.ViewModels
                         new List<KeyValuePair<Guid, string>>()
                         { new KeyValuePair<Guid, string>
                             (
-                            stateID == 2 ? docWithdrawalResult.DocID : docWithdrawalResult.ProductID,
-                            (stateID == 2 ? "Списание " : "Продукт " ) + docWithdrawalResult.Number + " от " + docWithdrawalResult.Date.ToString("dd.MM.yyyy HH.mm") + " на " + docWithdrawalResult.Quantity
+                            stateID == (byte)ProductState.Broke ? docWithdrawalResult.DocID : docWithdrawalResult.ProductID,
+                            (stateID == (byte)ProductState.Broke ? "Списание " : "Продукт " ) + docWithdrawalResult.Number + " от " + docWithdrawalResult.Date.ToString("dd.MM.yyyy HH.mm") + " на " + docWithdrawalResult.Quantity
                             )
                         };
                     foreach (var docItem in DocWithdrawals)
                         if (!(docWithdrawals.IndexOf(docItem) >= 0))
                             docWithdrawals.Add(docItem);
                     DocWithdrawals = docWithdrawals;
+
+                    if ((ProductID ?? Guid.Empty) != Guid.Empty && docWithdrawalResult.DocID != Guid.Empty
+                        && (stateID == (byte)ProductState.ForConversion || stateID == (byte)ProductState.Broke)
+                        && (EditBrokeDecisionItems[ProductState.ForConversion].Quantity > 0 && EditBrokeDecisionItems[ProductState.ForConversion].Quantity == EditBrokeDecisionItems[ProductState.ForConversion].DocWithdrawalSum)
+                        && (EditBrokeDecisionItems[ProductState.Broke].Quantity == 0 || (EditBrokeDecisionItems[ProductState.Broke].Quantity > 0 && EditBrokeDecisionItems[ProductState.Broke].Quantity == EditBrokeDecisionItems[ProductState.Broke].DocWithdrawalSum)))
+                    {
+                        var docRepackProduct = gammaBase.DocRepackProducts.FirstOrDefault(r => r.ProductID == ProductID && r.DocBrokeID == DocBrokeID);
+                        if (docRepackProduct == null)
+                        {
+                            Guid docRepackId = SqlGuidUtil.NewSequentialid();
+                            //Guid? docBrokeId;
+                            var docRepack = documentController.ConstructDoc(docRepackId, DocTypes.DocRepack, true, docWithdrawalResult.PlaceID);
+                            if (docRepack != null && DocBrokeID != null)// (docBrokeId = GammaBase.DocBrokeDecision.FirstOrDefault(b => b.DocID == docBrokeDecisionId)?.DocBrokeID) != null)
+                            {
+                                docRepack.DocRepack = new DocRepack
+                                {
+                                    DocID = docRepackId,
+                                    DocRepackProducts = new List<DocRepackProducts>
+                                                {
+                                                    new DocRepackProducts
+                                                    {
+                                                        DocRepackProductID = SqlGuidUtil.NewSequentialid(),
+                                                        DocID = docRepackId,
+                                                        ProductID = (Guid)ProductID,
+                                                        DocBrokeID = DocBrokeID,
+                                                        //IsConfirmed = true,
+                                                        Date = docRepack.Date,
+                                                        //StateID = stateId,
+                                                        QuantityGood = EditBrokeDecisionItems[ProductState.ForConversion].Quantity,
+                                                        QuantityBroke = EditBrokeDecisionItems[ProductState.Broke]?.Quantity,
+                                                        Quantity = EditBrokeDecisionItems[ProductState.ForConversion].Quantity + (EditBrokeDecisionItems[ProductState.Broke]?.Quantity ?? 0),
+                                                        DocWithdrawal = new List<DocWithdrawal> { gammaBase.Docs.FirstOrDefault(d => d.DocID == docWithdrawalResult.DocID)?.DocWithdrawal}
+                                                    }
+                                                }
+                                };
+                                gammaBase.Docs.Add(docRepack);
+                            }
+                        }
+                        else
+                        {
+                            docRepackProduct.QuantityGood = EditBrokeDecisionItems[ProductState.ForConversion].Quantity;
+                            docRepackProduct.QuantityBroke = EditBrokeDecisionItems[ProductState.Broke]?.Quantity;
+                            docRepackProduct.Quantity = EditBrokeDecisionItems[ProductState.ForConversion].Quantity + (EditBrokeDecisionItems[ProductState.Broke]?.Quantity ?? 0);
+                            docRepackProduct.DocWithdrawal.Add(gammaBase.Docs.FirstOrDefault(d => d.DocID == docWithdrawalResult.DocID)?.DocWithdrawal);
+                        }
+                    }
+                    gammaBase.SaveChanges();
                 }
             };
             return docWithdrawalResult;

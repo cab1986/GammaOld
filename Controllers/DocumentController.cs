@@ -112,28 +112,30 @@ namespace Gamma.Controllers
         /// <summary>
         /// Withdraw one product quantity
         /// </summary>
-        /// <param name="docBrokeId"></param>
+        /// <param name="docBrokeDecisionId"></param>
         /// <param name="productId"></param>
         /// <param name="docId">DocWithdrawalId, if null new document</param>
         /// <returns>True if success</returns>
-        public CreateWithdrawalResult WithdrawProductQuantityFromDocBroke(Guid docBrokeId, Guid productId, byte stateId, Guid docId, bool isConfirmed, decimal quantity, int? placeID = null, GammaEntities currentContext = null)
+        public CreateWithdrawalResult WithdrawProductQuantityFromDocBroke(Guid docBrokeDecisionId, Guid productId, byte stateId, Guid docId, bool isConfirmed, decimal quantity, int? placeID = null, GammaEntities currentContext = null)
         {
             Docs docWithdrawal = null;
             using (var context = currentContext ?? DB.GammaDb)
             {
-                if (WithdrawProductQuantity(productId, docId, (stateId == 2 ? DocTypes.DocUtilization : DocTypes.DocWithdrawal), isConfirmed, quantity, placeID))
+                if (WithdrawProductQuantity(productId, docId, (stateId == (int) ProductState.Broke ? DocTypes.DocUtilization : DocTypes.DocWithdrawal), isConfirmed, quantity, placeID))
                 {
                     docWithdrawal = context.Docs.Include(d => d.DocWithdrawal)
                     //.Include(d => d.DocWithdrawal.DocBrokeDecisionProductWithdrawalProducts)
                     .FirstOrDefault(d => d.DocID == docId);
                     if (docWithdrawal != null)
+                    {
                         docWithdrawal.DocWithdrawal.DocBrokeDecisionProductWithdrawalProducts.Add(new DocBrokeDecisionProductWithdrawalProducts
                         {
-                            DocID = docBrokeId,
+                            DocID = docBrokeDecisionId,
                             DocWithdrawalID = docId,
                             ProductID = productId,
                             StateID = stateId
                         });
+                    }
                 }
                 else
                     return null;
@@ -177,7 +179,7 @@ namespace Gamma.Controllers
 
         #region Private methods
 
-        public Docs ConstructDoc(Guid id, DocTypes type, bool isConfirmed, int? placeId = null, byte? shidtId = null, DateTime? date = null)
+        public Docs ConstructDoc(Guid id, DocTypes type, bool isConfirmed, int? placeId = null, byte? shiftId = null, DateTime? date = null)
 		{
             var doc = new Docs
             {
@@ -187,7 +189,7 @@ namespace Gamma.Controllers
                 PrintName = WorkSession.PrintName,
                 UserID = WorkSession.UserID,
                 PlaceID = placeId?? WorkSession.PlaceID,
-                ShiftID = WorkSession.ShiftID,
+                ShiftID = shiftId ?? WorkSession.ShiftID,
                 IsConfirmed = isConfirmed
 			};
 			return doc;

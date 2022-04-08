@@ -14,13 +14,15 @@ namespace Gamma.Models
             Date = date;
             Quantity = quantity;
         }
-        public CreateWithdrawalResult(Guid productID, string number, DateTime date, ProductKind productKind, decimal quantity)
+        public CreateWithdrawalResult(Guid productID, string number, DateTime date, ProductKind productKind, decimal quantity, Guid docWithdrawalID, int placeID)
         {
             ProductID = productID;
             Number = number;
             Date = date;
             ProductKind = productKind;
             Quantity = quantity;
+            DocID = docWithdrawalID;
+            PlaceID = placeID;
         }
         public Guid DocID { get; set; }
         public string Number { get; set; }
@@ -28,5 +30,6 @@ namespace Gamma.Models
         public Guid ProductID { get; set; }
         public ProductKind ProductKind { get; set; }
         public decimal Quantity { get; set; }
+        public int PlaceID { get; set; }
     }
 }

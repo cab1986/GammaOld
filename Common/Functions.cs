@@ -105,10 +105,11 @@ namespace Gamma.Common
             }
         }
 
-        public static void ShowMessageError(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
+        public static bool ShowMessageError(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
         {
             MessageBox.Show(message);
             DB.AddLogMessageError(message, technicalMessage, docID, productID);
+            return true;
         }
 
         public static MessageBoxResult ShowMessageQuestion(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
