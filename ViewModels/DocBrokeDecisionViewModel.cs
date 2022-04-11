@@ -618,20 +618,12 @@ namespace Gamma.ViewModels
             };
             UICommand result = null;
             model.Quantity = quantityMax;
-            if (stateID == (byte)ProductState.Repack)
-            {
-                result = okCommand;
-                model.Quantity = quantityMax;
-            }
-            else
-            {
-                var dialogService = GetService<IDialogService>("SetQuantityDialog");
-                result = dialogService.ShowDialog(
+            var dialogService = GetService<IDialogService>("SetQuantityDialog");
+            result = dialogService.ShowDialog(
                     dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
                     title: "Кол-во " + messageInvariant,
                     viewModel: model);
                 //quantity = model.Quantity * (int)(item.NewPalletCoefficient / item.NewGroupPacksInPallet);
-            }
             CreateWithdrawalResult withdrawalResult = null;
             if (result == okCommand)
             {
