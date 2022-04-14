@@ -183,7 +183,7 @@ namespace Gamma.ViewModels
         {
             if (SelectedTabIndex == 1)
                 DocBrokeDecision?.SaveToModel();
-            else if (SelectedTabIndex == 0 && IsChanged)
+            else if (SelectedTabIndex == 0 && IsChanged && CanSaveExecute())
             {
                 if (Functions.ShowMessageQuestion("Закрытие Акта о браке: " + Environment.NewLine + "Есть несохраненные данные! Нажмите Да, чтобы сохранить, или Нет, чтобы закрыть без сохранения?", "QUEST ClosingDocBroke docId = '" + DocId + "'", DocId)
                     == MessageBoxResult.Yes)
