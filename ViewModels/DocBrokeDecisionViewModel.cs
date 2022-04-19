@@ -83,8 +83,7 @@ namespace Gamma.ViewModels
 
         public void AddBrokeDecisionProduct(Guid docBrokeId, Guid productId, DateTime date, decimal productQuantity, Guid? rejectionReasonID, int? brokePlaceID, bool isChanged = true)
         {
-            DB.AddLogMessageInformation("Добавление решения по продукту ProductID в Решения по акту о браке DocID", "AddBrokeDecisionProduct (docBrokeId = '" + docBrokeId + "', productId='" + productId + "')", docBrokeId, productId);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var product = gammaBase.vProductsInfo
                     .FirstOrDefault(p => p.ProductID == productId);
@@ -97,6 +96,7 @@ namespace Gamma.ViewModels
                         d.ProductID == productId && d.DocBrokeDecision.IsActual).ToList();
                 if (docBrokeDecisionProducts.Count == 0)
                 {
+                    DB.AddLogMessageInformation("Добавление 'Требует решения' по продукту ProductID в Решения по Акту о браке DocID", "NeedsDecision AddBrokeDecisionProduct (docBrokeId = '" + docBrokeId + "', productId='" + productId + "')", docBrokeId, productId);
                     var curDate = DB.CurrentDateTime;
                     BrokeDecisionProducts.Add(new BrokeDecisionProduct(
                         SqlGuidUtil.NewSequentialid(),
@@ -122,6 +122,7 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
+                    DB.AddLogMessageInformation("Загрузка решения по продукту ProductID в Решения по Акту о браке DocID", "AddBrokeDecisionProduct (docBrokeId = '" + docBrokeId + "', productId='" + productId + "')", docBrokeId, productId);
                     foreach (var decisionProduct in docBrokeDecisionProducts//.OrderBy(d => d.DocID).OrderBy(d => d.ProductID)
                         .OrderByDescending(d => d.StateID == (byte)ProductState.ForConversion || d.StateID == (byte)ProductState.Repack))
                     {
@@ -478,7 +479,7 @@ namespace Gamma.ViewModels
                             DecisionDate = DateTime.Now;
                         if (DecisionPlaceId == null && SelectedBrokeDecisionProduct != null)
                         {
-                            using (var gammaBase = DB.GammaDb)
+                            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                             {
                                 DecisionPlaceId = gammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID)?.PlaceID;
                             }
@@ -526,7 +527,7 @@ namespace Gamma.ViewModels
                 string decisionPlaceName = "";
                 if (IsUpdatedBrokeDecisionProductItems)
                 {
-                    using (var gammaBase = DB.GammaDb)
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                     {
                         decisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == value)?.Name;
                     }
@@ -694,7 +695,7 @@ namespace Gamma.ViewModels
             {
                 if (docWithdrawalResult.ProductID != Guid.Empty)
                     MessageManager.OpenDocProduct(docWithdrawalResult.ProductKind, (Guid)docWithdrawalResult.ProductID);
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     //var number = gammaBase.Docs.FirstOrDefault(d => d.DocID == docWithdrawalResult.DocID)?.Number;
                     List<KeyValuePair<Guid, String>> itemDocWithdrawals =

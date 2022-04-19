@@ -27,7 +27,7 @@ namespace Gamma.ViewModels
         public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false)
         {
             ClosingCommand = new DelegateCommand<CancelEventArgs>(Closing);
-            DB.AddLogMessageInformation("Открытие Акта о браке DocID", "Open DocBrokeViewModel (docBrokeId = '" + docBrokeId+"', productId='"+ productId+ "', isInFuturePeriod='" + isInFuturePeriod+"')",docBrokeId);
+            DB.AddLogMessageInformation("Открытие Акта о браке DocID", "Open DocBrokeViewModel (docBrokeId = '" + docBrokeId+"', productId='"+ productId+ "', isInFuturePeriod='" + isInFuturePeriod+"')",docBrokeId,productId);
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             DocId = docBrokeId;
@@ -116,6 +116,7 @@ namespace Gamma.ViewModels
                     ShiftID = doc.ShiftID;
                     foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
                     {
+                        DB.AddLogMessageInformation("Открытие Акта о браке DocID: загрузка продукта ProductID", "AddProduct with Open doc (DocID = '" + DocId + "', ProductID='" + productId + "')", DocId, brokeProduct.ProductID);
                         AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts, false);
                     }
                 }
@@ -145,6 +146,7 @@ namespace Gamma.ViewModels
                 }
                 if (productId != null)
                 {
+                    DB.AddLogMessageInformation("Открытие Акта о браке DocID: добавление нового продукта ProductID", "new AddProduct with Open doc (docId = '" + DocId + "', productId='" + productId + "')", DocId, productId);
                     AddProduct((Guid)productId, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
                 }
 
@@ -175,6 +177,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && SelectedTabIndex != 1 && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
             SetDecisionForAllProductCommand = new DelegateCommand(SetDecisionForAllProduct, () => !IsReadOnly && SelectedTabIndex != 0 && !DocBrokeDecision.BrokeDecisionProducts.Any(p => p.ProductState != ProductState.NeedsDecision));
+            DB.AddLogMessageInformation("Открыт Акта о браке DocID", "Opened DocBrokeViewModel (docBrokeId = '" + docBrokeId + "', productId='" + productId + "', isInFuturePeriod='" + isInFuturePeriod + "')", docBrokeId, productId);
         }
 
         public ICommand ClosingCommand { get; private set; }
@@ -257,8 +260,7 @@ namespace Gamma.ViewModels
         /// <param name="brokeDecisionProducts">Список решений по продукции</param>
         private bool AddProduct(Guid productId, Guid docId, ICollection<BrokeProduct> brokeProducts, ItemsChangeObservableCollection<BrokeDecisionProduct> brokeDecisionProducts, bool isChanged = true)
         {
-            DB.AddLogMessageInformation("Добавление продукта ProductID в Акт о браке DocID", "AddProduct (docId = '" + docId + "', productId='" + productId+"')", docId, productId);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 if (BrokeProducts.Select(bp => bp.ProductId).Contains(productId)) return false;
                 var product = gammaBase.vProductsInfo
@@ -406,6 +408,7 @@ namespace Gamma.ViewModels
             if (msg.ProductIDs == null || msg.ProductIDs?.Count == 0)
             {
                 SetProductIsChanged(msg.ProductID,true);
+                DB.AddLogMessageInformation("Добавление нового продукта ProductID в Акт о браке DocID", "AddProduct (docId = '" + DocId + "', productId='" + msg.ProductID + "')", DocId, msg.ProductID);
                 AddProduct(msg.ProductID, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
             }
             else
@@ -413,6 +416,7 @@ namespace Gamma.ViewModels
                 foreach (var product in msg.ProductIDs)
                 {
                     SetProductIsChanged(product,true);
+                    DB.AddLogMessageInformation("Добавление нового продукта ProductID в Акт о браке DocID", "AddProduct (docId = '" + DocId + "', productId='" + product + "')", DocId, product);
                     AddProduct(product, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
                 }
             }
@@ -450,6 +454,7 @@ namespace Gamma.ViewModels
             foreach (var product in groupPackProductIDs)
             {
                 SetProductIsChanged(product,true);
+                DB.AddLogMessageInformation("Добавление продукта ProductID при распаковке ГУ в Акт о браке DocID", "AddProduct with UnpackGroupPack (docId = '" + DocId + "', productId='" + product + "')", DocId, product);
                 if (AddProduct(product, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts))
                 {
                     var addedBrokeProduct = BrokeProducts.FirstOrDefault(p => p.ProductId == product);
@@ -470,6 +475,9 @@ namespace Gamma.ViewModels
                     addedBrokeDecisionProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
                     addedBrokeDecisionProduct.BrokePlaceID = SelectedBrokeProduct.PlaceId;
                 }
+                else
+                    DB.AddLogMessageInformation("Ошибка при добавление продукта ProductID при распаковке ГУ в Акт о браке DocID", "ERROR AddProduct with UnpackGroupPack (docId = '" + DocId + "', productId='" + product + "')", DocId, product);
+
                 //var decisionDate = addedBrokeDecisionProduct?.DecisionDate;
                 //var curDate = DB.CurrentDateTime;
                 //if (decisionDate != null && curDate != null 
