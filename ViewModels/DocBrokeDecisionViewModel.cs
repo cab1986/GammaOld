@@ -38,7 +38,7 @@ namespace Gamma.ViewModels
             //BrokeProduct = 
             EditBrokeDecisionItems.Add(ProductState.Broke, new EditBrokeDecisionItem("На утилизацию", ProductState.Broke, this));
             BrokeDecisionProducts.CollectionChanged += DecisionProductsChanged;
-            BrokePlaces = GammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
+            BrokePlaces = WorkSession.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
                .Select(p => new Place
                {
                    PlaceGuid = p.PlaceGuid,
@@ -527,10 +527,7 @@ namespace Gamma.ViewModels
                 string decisionPlaceName = "";
                 if (IsUpdatedBrokeDecisionProductItems)
                 {
-                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
-                    {
-                        decisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == value)?.Name;
-                    }
+                    decisionPlaceName = WorkSession.Places.FirstOrDefault(r => r.PlaceID == value)?.Name;
                     foreach (var editItem in BrokeDecisionProducts.Where(p => p.ProductId == ProductID))
                     {
                         editItem.DecisionPlaceId = value;
@@ -1190,7 +1187,7 @@ namespace Gamma.ViewModels
         public bool SaveBrokeDecisionProductsToModel(Guid productID, bool onlySaveToModel = true)
         {
             DB.AddLogMessageInformation("Сохранение решения по продукту ProductID в Акт о браке DocID", "DocBrokeDecision.SaveBrokeDecisionProductsToModel (onlySaveToModel='"+ onlySaveToModel + "'", DocBrokeID, productID);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 if (!onlySaveToModel)
                 {

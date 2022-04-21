@@ -94,7 +94,26 @@ namespace Gamma
         public static string UserName { get; private set; } = "";
         public static Guid? PersonID { get; set; }
         public static string RoleName { get; private set; }
+        public static List<Entities.Places> Places { get; private set; }
+        public static List<Entities.Shifts> Shifts { get; private set; }
 
+        private static List<Entities.C1CRejectionReasons> _c1CRejectionReasons { get; set; }
+        public static List<Entities.C1CRejectionReasons> C1CRejectionReasons 
+        {
+            get
+            {
+                if (_c1CRejectionReasons == null)
+                {
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
+                    {
+                        _c1CRejectionReasons = gammaBase.C1CRejectionReasons.Include("ProductKinds")
+                            .ToList();
+                    }
+                }
+                return _c1CRejectionReasons;
+            }
+        }
+        
         public static string EndpointConfigurationName = "BasicHttpBinding_IPrinterService";
 
         /// <summary>
@@ -130,11 +149,14 @@ namespace Gamma
 
         private static int RefreshUserInfoPeriod { get; set; } = 30;
         private static bool _isExistNewVersionOfProgram { get; set; } = false;
+        private static bool _isBlockedExecutionProgramThereIsNewVersion { get; set; } = false;
         public static bool CheckExistNewVersionOfProgram()
         {
             if (_isExistNewVersionOfProgram)
-                MessageBox.Show("Внимание! Обнаружена новая версия программы!" + Environment.NewLine + "Требуется перезапустить и обновить программу!");
-            return _isExistNewVersionOfProgram;
+                MessageBox.Show("Внимание! Обнаружена новая версия программы!"
+                    + (_isBlockedExecutionProgramThereIsNewVersion ? Environment.NewLine + "Дальнейшая работа невозможна!" : "")
+                    + Environment.NewLine + "Требуется перезапустить и обновить программу!");
+            return _isBlockedExecutionProgramThereIsNewVersion;
         }
 
         private static void RefreshUserInfoAndExistNewVersion()
@@ -145,9 +167,10 @@ namespace Gamma
 
                 var checkResult = DB.CheckCurrentVersion();
                 var resultMessage = checkResult?.ResultMessage;
-                if (checkResult != null && !(string.IsNullOrWhiteSpace(resultMessage) && !checkResult.BlockCreation))
+                if (checkResult != null && !(string.IsNullOrWhiteSpace(resultMessage) ))
                 {
                     _isExistNewVersionOfProgram = true;
+                    _isBlockedExecutionProgramThereIsNewVersion = checkResult.BlockCreation;
                 }
             }
         }
@@ -224,6 +247,9 @@ namespace Gamma
                 //                EndpointAddressOnMailService = "http://localhost:8735/PrinterService";
                 //                EndpointAddressOnTransportPackService = "http://localhost:8735/PrinterService";
                 //#endif
+
+                Places = gammaBase.Places.ToList();
+                Shifts = gammaBase.Shifts.ToList();
                 lastSuccesRecivedUserInfo = DateTime.Now;
             }
 

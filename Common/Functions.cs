@@ -41,6 +41,13 @@ namespace Gamma.Common
                 return value.ToString();
         }
 
+        public static Dictionary<int, string> EnumToDictionary(this Type type)
+        {
+            var list = EnumDescriptionsToList(type);
+            if (list.Count == 0) list = new List<string>(Enum.GetNames(type));
+            return list.Select((s, i) => new { s, i }).ToDictionary(t => (int)t.i, t => t.s);
+        }
+
         public static Dictionary<byte,string> ToDictionary(this Enum en)
         {
             var type = en.GetType();

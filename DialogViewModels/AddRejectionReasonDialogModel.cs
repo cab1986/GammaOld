@@ -14,9 +14,12 @@ namespace Gamma.DialogViewModels
     {
         public AddRejectionReasonDialogModel(ProductKind? kind)
         {
-            GammaBase = DB.GammaDb;
-            var IDs = GammaBase.C1CRejectionReasons.Where(r => r.IsMarked == false && r.ProductKinds.Any(p => kind == null || p.ProductKindID == (byte)kind)).Select(r => r.C1CRejectionReasonID).ToList();
-            RejectionReasons = GammaBase.C1CRejectionReasons.Where(r => r.IsMarked == false && r.IsFolder == false && (IDs.Contains((Guid)r.C1CRejectionReasonID) || IDs.Contains((Guid)r.ParentID)))
+            var IDs = WorkSession.C1CRejectionReasons.Where(r => r.IsMarked == false 
+                        && r.ProductKinds.Any(p => kind == null || p.ProductKindID == (byte)kind))
+                    .Select(r => r.C1CRejectionReasonID).ToList();
+            RejectionReasons = WorkSession.C1CRejectionReasons.Where(r => r.IsMarked == false && r.IsFolder == false
+                && (IDs.Contains((Guid)r.C1CRejectionReasonID) || 
+                (r.ParentID != null && IDs.Contains((Guid)r.ParentID))))
                       .OrderBy(r => r.Description)
                       .Select(r => new RejectionReason
                       {

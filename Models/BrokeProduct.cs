@@ -79,11 +79,8 @@ namespace Gamma.Models
             set
             {
                 _rejectionReasonID = value;
-                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
-                {
-                   RejectionReasonName = gammaBase.C1CRejectionReasons.FirstOrDefault(
+                RejectionReasonName = WorkSession.C1CRejectionReasons.FirstOrDefault(
                                 r => r.C1CRejectionReasonID == _rejectionReasonID)?.Description;
-                }
                 RaisePropertyChanged("RejectionReasonID");
             }
         }
@@ -95,11 +92,8 @@ namespace Gamma.Models
             set
             {
                 _secondRejectionReasonID = value;
-                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
-                {
-                    SecondRejectionReasonName = gammaBase.C1CRejectionReasons.FirstOrDefault(
+                SecondRejectionReasonName = WorkSession.C1CRejectionReasons.FirstOrDefault(
                                  r => r.C1CRejectionReasonID == _secondRejectionReasonID)?.Description;
-                }
                 RaisePropertyChanged("SecondRejectionReasonID");
             }
         }
@@ -213,10 +207,7 @@ namespace Gamma.Models
             set
             {
                 _placeId = value;
-                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
-                {
-                    PlaceName = value == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == value).Name;
-                }
+                PlaceName = value == null ? string.Empty : WorkSession.Places.FirstOrDefault(p => p.PlaceID == value).Name;
             }
         }
 
@@ -233,55 +224,9 @@ namespace Gamma.Models
 
         private void RefreshBrokePlaceName ()
         {
-            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
-            {
-                BrokePlaceName = (BrokePlaceId == null ? string.Empty : gammaBase.Places.FirstOrDefault(p => p.PlaceID == BrokePlaceId)?.Name)
+            BrokePlaceName = (BrokePlaceId == null ? string.Empty : WorkSession.Places.FirstOrDefault(p => p.PlaceID == BrokePlaceId)?.Name)
                     + ((BrokeShiftId ?? 0) == 0  ? string.Empty : ", Смена " + BrokeShiftId.ToString())
                     + (PrintName == null ? string.Empty : ",  " + PrintName);
-            }
-        }
-
-        //private byte? _stateId { get; set; }
-        //public byte? StateId
-        //{
-        //    get { return _stateId; }
-        //    set
-        //    {
-        //        _stateId = value;
-        //        RaisePropertyChanged("StateId");
-        //    }
-        //}
-        /*
-        public ItemsChangeObservableCollection<RejectionReason> RejectionReasons { get; }
-
-        private string FormRejectionReasonsString(IEnumerable<RejectionReason> list, GammaEntities gammaDb = null)
-        {
-            var sbuilderReason = new StringBuilder(); 
-            using (var gammaBase = DB.GammaDb)
-            {
-                foreach (var reason in list)
-                {
-                    var description =
-                        gammaBase.C1CRejectionReasons.FirstOrDefault(
-                            r => r.C1CRejectionReasonID == reason.RejectionReasonID)?.Description;
-                    if (description == null) continue;
-                    sbuilderReason.Append(description);
-                    sbuilderReason.Append(Environment.NewLine);
-                }
-            }
-                
-            return sbuilderReason.ToString();
-        }
-
-        private string FormRejectionReasonCommentsString(IEnumerable<RejectionReason> list)
-        {
-            var sbuilderReason = new StringBuilder();
-            foreach (var reason in list.Where(reason => reason.Comment != null).Distinct())
-                {
-                    sbuilderReason.Append(reason.Comment);
-                    sbuilderReason.Append(Environment.NewLine);
-                }
-            return sbuilderReason.ToString();
-        }*/
+        }        
     }
 }

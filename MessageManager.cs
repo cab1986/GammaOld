@@ -601,7 +601,10 @@ namespace Gamma
 
         public static void OpenDocBroke(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
-            Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
+            if (!WorkSession.CheckExistNewVersionOfProgram())
+            {
+                Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
+            }
         }
 
         public static void OpenReportList()

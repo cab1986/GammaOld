@@ -72,13 +72,11 @@ namespace Gamma.Models
                 ProductStateList = new List<KeyValuePair<int, string>>();
             if (ProductStateList?.Count == 0)
             {
-                var productStateList = GammaBase.ProductStates
-                    .Where(r => r.StateID != (int)ProductState.NeedsDecision && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.StateID != (int)ProductState.InternalUsage && r.StateID != (int)ProductState.Limited && r.StateID != (int)ProductState.ForConversion)))
-                    .OrderBy(r => r.StateID);
-                foreach (var item in productStateList)
-                {
-                    ProductStateList.Add(new KeyValuePair<int, string>(item.StateID, item.Name));
-                }
+                ProductStateList = Functions.EnumToDictionary(typeof(ProductState))
+                    .Where(r => r.Key != (int)ProductState.NeedsDecision
+                            && (WorkSession.PlaceGroup == PlaceGroup.Other || (WorkSession.PlaceGroup != PlaceGroup.Other && r.Key != (int)ProductState.InternalUsage && r.Key != (int)ProductState.Limited && r.Key != (int)ProductState.ForConversion)))
+                    .OrderBy(r => r.Key)
+                    .ToList();
             }
         }
 

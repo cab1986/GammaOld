@@ -31,67 +31,12 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             DocId = docBrokeId;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
-                DiscoverPlaces = gammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
-                .Select(p => new Place
-                {
-                    PlaceGuid = p.PlaceGuid,
-                    PlaceID = p.PlaceID,
-                    PlaceName = p.Name
-                }).ToList();
-
-                BrokePlaces = gammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
-                .Select(p => new Place
-                {
-                    PlaceGuid = p.PlaceGuid,
-                    PlaceID = p.PlaceID,
-                    PlaceName = p.Name
-                })
-                .ToList();
-
-                var brokePlaces = gammaBase.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && !WorkSession.BranchIds.Contains(p.BranchID))
-                .Join(gammaBase.Branches, p => p.BranchID, b => b.BranchID, (p, b)
-                 => new Place
-                 {
-                     PlaceGuid = p.PlaceGuid,
-                     PlaceID = p.PlaceID,
-                     PlaceName = (WorkSession.BranchIds.Contains(p.BranchID) ? p.Name : b.Name + "#" + p.Name)
-                 })
-                .ToList();
-                foreach (var place in brokePlaces)
-                {
-                    BrokePlaces.Add(place);
-                }
-
-                StorePlaces = gammaBase.Places.Where(p => (p.IsWarehouse ?? false) && WorkSession.BranchIds.Contains(p.BranchID))
-                    .Select(p => new Place
-                    {
-                        PlaceGuid = p.PlaceGuid,
-                        PlaceID = p.PlaceID,
-                        PlaceName = p.Name
-                    }).ToList();
-                var storePlaces = gammaBase.Places.Where(p => (p.IsWarehouse ?? false) && !WorkSession.BranchIds.Contains(p.BranchID))
-                .Join(gammaBase.Branches, p => p.BranchID, b => b.BranchID, (p, b)
-                 => new Place
-                 {
-                     PlaceGuid = p.PlaceGuid,
-                     PlaceID = p.PlaceID,
-                     PlaceName = (WorkSession.BranchIds.Contains(p.BranchID) ? p.Name : b.Name + "#" + p.Name)
-                 })
-                .ToList();
-                foreach (var place in storePlaces)
-                {
-                    StorePlaces.Add(place);
-                }
-
-                var needsDecisionStateList = GammaBase.ProductStates
-                        .Where(r => r.C1CQualityID == new Guid("fe253c85-4e67-11eb-832e-00155d00f107"))
-                        .OrderBy(r => r.StateID);
-                foreach (var item in needsDecisionStateList)
-                {
-                    NeedsDecisionStateList.Add(new KeyValuePair<byte, string>(item.StateID, item.Name));
-                }                
+                NeedsDecisionStateList = Functions.EnumToDictionary(typeof(ProductState))
+                    .Where(r => r.Key == (int)ProductState.NeedsDecision || r.Key == (int)ProductState.ForConversion || r.Key == (int)ProductState.Repack)
+                    .OrderBy(r => r.Key)
+                    .ToList();
 
                 var doc = gammaBase.Docs.Include(d => d.DocBroke)
                     .Include(d => d.DocBroke.DocBrokeProducts)
@@ -501,9 +446,6 @@ namespace Gamma.ViewModels
         }
 
 
-        public List<Place> DiscoverPlaces { get; set; }
-        public List<Place> StorePlaces { get; set; }
-        public List<Place> BrokePlaces { get; set; }
         public Dictionary<bool, string> InFuturePeriodList { get; set; }
 
         private bool? _isConfirmed { get; set; }
@@ -627,7 +569,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        public List<KeyValuePair<byte, string>> NeedsDecisionStateList { get; private set; } = new List<KeyValuePair<byte, string>>();
+        public List<KeyValuePair<int, string>> NeedsDecisionStateList { get; private set; } = new List<KeyValuePair<int, string>>();
 
         public bool IsVisibleSetRejectionReasonForAllProduct { get; private set; }
         public bool IsVisibleSetDecisionForAllProduct { get; private set; }
@@ -658,9 +600,12 @@ namespace Gamma.ViewModels
                     if ((RejectionReasonsList == null || RejectionReasonsList?.Count == 0))
                     {
                         var productKind = (int)BrokeProducts.Select(p => p.ProductKind).FirstOrDefault();
-                        RejectionReasonsList = new List<RejectionReason>(GammaBase.C1CRejectionReasons
-                            .Where(r => (!r.IsFolder ?? true) && (!r.IsMarked ?? true) && (r.ParentID == null || (r.ParentID != null
-                            && GammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == productKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))))
+                        var IDs = WorkSession.C1CRejectionReasons.Where(r => r.IsMarked == false && r.ProductKinds.Any(p => p.ProductKindID == productKind))
+                            .Select(r => r.C1CRejectionReasonID).ToList();
+                        RejectionReasonsList = new List<RejectionReason>(WorkSession.C1CRejectionReasons
+                            .Where(r => (!r.IsFolder ?? true) && (!r.IsMarked ?? true)
+                            && (IDs.Contains((Guid)r.C1CRejectionReasonID) ||
+                                (r.ParentID == null || (r.ParentID != null && IDs.Contains((Guid)r.ParentID)))))
                             .Select(r => new RejectionReason
                             {
                                 RejectionReasonID = r.C1CRejectionReasonID,
@@ -1111,7 +1056,7 @@ namespace Gamma.ViewModels
                     Functions.ShowMessageError("Ошибка при сохранении Акт о браке: " + Environment.NewLine + "Обязательно требуется заполнить поле Дефекты и Причины несоответствия во всех продуктах", "Error DocBroke.SaveToModel", DocId);
                     return false;
                 }
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     var doc = gammaBase.Docs.Include(d => d.DocBroke).Include(d => d.DocBroke.DocBrokeProducts)
                         .Include(d => d.DocBroke.DocBrokeProducts.Select(dp => dp.DocBrokeProductRejectionReasons)).FirstOrDefault(d => d.DocID == DocId && d.DocTypeID == (int)DocTypes.DocBroke);

@@ -19,15 +19,12 @@ namespace Gamma.ViewModels
             FindCommand = new DelegateCommand(Find);
             CreateNewDocBrokeCommand = new DelegateCommand(() => OpenDocBroke());
             OpenDocBrokeCommand = new DelegateCommand(() => OpenDocBroke(SelectedDocBroke.DocId), () => SelectedDocBroke != null);
-            using (var gammaBase = DB.GammaDb)
-            {
-                PlacesList = new List<Place>(gammaBase.Places.Where(p => p.PlaceGuid != null).Select(p => new Place
+            PlacesList = new List<Place>(WorkSession.Places.Where(p => p.PlaceGuid != null).Select(p => new Place
                 {
                     PlaceID = p.PlaceID,
                     PlaceGuid = p.PlaceGuid,
                     PlaceName = p.Name
                 }));
-            }
             Find();
             RefreshCommand = FindCommand;
             NewItemCommand = CreateNewDocBrokeCommand;
@@ -126,7 +123,6 @@ namespace Gamma.ViewModels
 
         private void OpenDocBroke(Guid? docId = null)
         {
-            WorkSession.CheckExistNewVersionOfProgram();
             Messenger.Default.Register<RefreshBrokeListMessage>(this, Find);
             if (docId == null)
                 MessageManager.OpenDocBroke(SqlGuidUtil.NewSequentialid());
@@ -145,45 +141,46 @@ namespace Gamma.ViewModels
 
         private void Find()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
-            UIServices.SetBusyState();
-            using (var gammaBase = DB.GammaDb)
+            if (!WorkSession.CheckExistNewVersionOfProgram())
             {
-                var number = Number ?? "";
-                var dateBegin = DateBegin ?? DateTime.MinValue;
-                var dateEnd = DateEnd ?? DateTime.MaxValue;
-                var place = PlacesList.FirstOrDefault(p => p.PlaceID == PlaceDiscoverId)?.PlaceName ?? "";
+                UIServices.SetBusyState();
+                using (var gammaBase = DB.GammaDb)
+                {
+                    var number = Number ?? "";
+                    var dateBegin = DateBegin ?? DateTime.MinValue;
+                    var dateEnd = DateEnd ?? DateTime.MaxValue;
+                    var place = PlacesList.FirstOrDefault(p => p.PlaceID == PlaceDiscoverId)?.PlaceName ?? "";
 
-                DocBrokeList = new List<DocBrokeListItem>(
-                    from d in gammaBase.vDocBroke
-                    .Where(d => d.DocTypeID == (int)DocTypes.DocBroke 
-                        && d.Number.Contains(number)
-                        && d.Date >= dateBegin
-                        && d.Date <= dateEnd
-                        && d.Places.Contains(place)).OrderByDescending(d => d.Date).Take(500)
-                    //&&
-                                                              //(PlaceDiscoverId == null || d.DocBroke.PlaceDiscoverID == PlaceDiscoverId) &&
-                                                              //(PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)).OrderByDescending(d => d.Date).Take(500)
-                                                              //join pd in gammaBase.Places on d.DocBroke.PlaceDiscoverID equals pd.PlaceGuid
-                                                              //into ds
-                                                              //from x in ds.DefaultIfEmpty()
-                                                              //join ps in gammaBase.Places on d.DocBroke.PlaceStoreID equals ps.PlaceGuid into dps
-                                                              //from db in dps.DefaultIfEmpty()
+                    DocBrokeList = new List<DocBrokeListItem>(
+                        from d in gammaBase.vDocBroke
+                        .Where(d => d.DocTypeID == (int)DocTypes.DocBroke
+                            && d.Number.Contains(number)
+                            && d.Date >= dateBegin
+                            && d.Date <= dateEnd
+                            && d.Places.Contains(place)).OrderByDescending(d => d.Date).Take(500)
+                            //&&
+                            //(PlaceDiscoverId == null || d.DocBroke.PlaceDiscoverID == PlaceDiscoverId) &&
+                            //(PlaceStoreId == null || d.DocBroke.PlaceStoreID == PlaceStoreId)).OrderByDescending(d => d.Date).Take(500)
+                            //join pd in gammaBase.Places on d.DocBroke.PlaceDiscoverID equals pd.PlaceGuid
+                            //into ds
+                            //from x in ds.DefaultIfEmpty()
+                            //join ps in gammaBase.Places on d.DocBroke.PlaceStoreID equals ps.PlaceGuid into dps
+                            //from db in dps.DefaultIfEmpty()
                     select new DocBrokeListItem
-                    {
-                        Number = d.Number,
-                        DocId = d.DocID,
-                        Date = d.Date,
+                        {
+                            Number = d.Number,
+                            DocId = d.DocID,
+                            Date = d.Date,
                         //PlaceStore = db.Name,
                         PlaceDiscover = d.Places,
-                        Comment = d.Comment,
-                        IsConfirmed = d.IsConfirmed,
-                        LastUploadedTo1C = d.LastUploadedTo1C,
-                        IsInFuturePeriodName = d.IsInFuturePeriodName,
-                        UserCreate = d.UserCreate
-                    });
-            }
-                
+                            Comment = d.Comment,
+                            IsConfirmed = d.IsConfirmed,
+                            LastUploadedTo1C = d.LastUploadedTo1C,
+                            IsInFuturePeriodName = d.IsInFuturePeriodName,
+                            UserCreate = d.UserCreate
+                        });
+                }
+            }    
         }
 
         public DelegateCommand NewItemCommand { get; }

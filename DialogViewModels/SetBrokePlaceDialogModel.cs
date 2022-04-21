@@ -15,7 +15,7 @@ namespace Gamma.DialogViewModels
         public SetBrokePlaceDialogModel()
         {
             GammaBase = DB.GammaDb;
-            Places = (from p in GammaBase.Places
+            Places = (from p in WorkSession.Places
                                        //where ((!p.IsMarked ?? true) && (!p.IsFolder ?? true))
                                    select new
                                    Place
@@ -25,7 +25,7 @@ namespace Gamma.DialogViewModels
                                    }
                       ).ToList();
 
-            foreach (var shiftItem in GammaBase.Shifts)
+            foreach (var shiftItem in WorkSession.Shifts)
             {
                 Shifts.Add(new KeyValuePair<byte, string>(shiftItem.ShiftID, shiftItem.Name));
             }
