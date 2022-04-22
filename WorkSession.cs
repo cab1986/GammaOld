@@ -106,14 +106,65 @@ namespace Gamma
                 {
                     using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                     {
-                        _c1CRejectionReasons = gammaBase.C1CRejectionReasons.Include("ProductKinds")
-                            .ToList();
+                        _c1CRejectionReasons = gammaBase.C1CRejectionReasons.Include("ProductKinds").ToList();
                     }
                 }
                 return _c1CRejectionReasons;
             }
         }
-        
+
+        private static List<Entities.DocMaterialTanks> _docMaterialTanks { get; set; }
+        public static List<Entities.DocMaterialTanks> DocMaterialTanks
+        {
+            get
+            {
+                if (_docMaterialTanks == null)
+                {
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
+                    {
+                        _docMaterialTanks = gammaBase.DocMaterialTanks.Include("DocMaterialTankGroups").ToList();
+                    }
+                }
+                return _docMaterialTanks;
+            }
+        }
+
+        private static List<Entities.DocMaterialTankGroups> _docMaterialTankGroups { get; set; }
+        public static List<Entities.DocMaterialTankGroups> DocMaterialTankGroups
+        {
+            get
+            {
+                if (_docMaterialTankGroups == null)
+                {
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
+                    {
+                        _docMaterialTankGroups = gammaBase.DocMaterialTankGroups.Include("C1CNomenclature").ToList();
+                    }
+                }
+                return _docMaterialTankGroups;
+            }
+        }
+
+        private static List<Entities.Reports> _reports { get; set; }
+        public static List<Entities.Reports> Reports
+        {
+            get
+            {
+                //if (_reports == null)
+                //{
+                //    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
+                //    {
+                //        _reports = gammaBase.Reports.ToList();
+                //    }
+                //}
+                return _reports;
+            }
+            set
+            {
+                _reports = value;
+            }
+        }
+
         public static string EndpointConfigurationName = "BasicHttpBinding_IPrinterService";
 
         /// <summary>
@@ -248,8 +299,9 @@ namespace Gamma
                 //                EndpointAddressOnTransportPackService = "http://localhost:8735/PrinterService";
                 //#endif
 
-                Places = gammaBase.Places.ToList();
+                Places = gammaBase.Places.Include("Places1CWarehouses").ToList();
                 Shifts = gammaBase.Shifts.ToList();
+                Reports = gammaBase.Reports.ToList();
                 lastSuccesRecivedUserInfo = DateTime.Now;
             }
 

@@ -42,7 +42,7 @@ namespace Gamma.ViewModels
                 if (pinfo == null) return;
                 NomenclatureID = pinfo.C1CNomenclatureID;
                 CharacteristicID = pinfo.C1CCharacteristicID;
-                PlaceGroup = (PlaceGroup)gammaBase.Places.First(p => p.PlaceID == WorkSession.PlaceID).PlaceGroupID;
+                PlaceGroup = (PlaceGroup)WorkSession.Places.First(p => p.PlaceID == WorkSession.PlaceID).PlaceGroupID;
             }
             Coefficient = GetCoefficient(PlaceGroup, (Guid)CharacteristicID);
         }
@@ -66,7 +66,7 @@ namespace Gamma.ViewModels
                 if (pinfo == null) return;
                 NomenclatureID = pinfo.C1CNomenclatureID;
                 CharacteristicID = pinfo.C1CCharacteristicID;
-                PlaceGroup = (PlaceGroup)gammaBase.Places.First(p => p.PlaceID == DocCloseShiftRemainder.DocCloseShifts.PlaceID).PlaceGroupID;
+                PlaceGroup = (PlaceGroup)WorkSession.Places.First(p => p.PlaceID == DocCloseShiftRemainder.DocCloseShifts.PlaceID).PlaceGroupID;
                 Coefficient = GetCoefficient(PlaceGroup, (Guid) CharacteristicID);
                 Quantity = DocCloseShiftRemainder.Quantity / Coefficient;
             }

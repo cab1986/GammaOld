@@ -448,14 +448,22 @@ namespace Gamma
 
     public static class MessageManager
     {
+        private static void MessengerDefaultSendWithCheckExistNewVersionOfProgram<T>(T message)
+        {
+            if (!WorkSession.CheckExistNewVersionOfProgram())
+            {
+                Messenger.Default.Send(message);
+            }
+        }
+
         public static void NomenclatureEdit(Guid nomenclatureId)
         {
-            Messenger.Default.Send(new NomenclatureEditMessage(nomenclatureId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<NomenclatureEditMessage>(new NomenclatureEditMessage(nomenclatureId));
         }
 
         public static void OpenDocWithdrawal(Guid docId)
         {
-            Messenger.Default.Send(new OpenDocWithdrawalMessage(docId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocWithdrawalMessage>(new OpenDocWithdrawalMessage(docId));
         }
 
         public static void SpoolWithdrawed()
@@ -465,33 +473,33 @@ namespace Gamma
 
         public static void EditUser(GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new UserEditMessage(gammaBase));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<UserEditMessage>(new UserEditMessage(gammaBase));
         }
         public static void EditUser(Guid userId, GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new UserEditMessage (userId, gammaBase));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<UserEditMessage>(new UserEditMessage (userId, gammaBase));
         }
         public static void EditPermit(GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new PermitEditMessage(gammaBase));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<PermitEditMessage>(new PermitEditMessage(gammaBase));
         }
         public static void EditPermit(Guid permitId, GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new PermitEditMessage(permitId, gammaBase));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<PermitEditMessage>(new PermitEditMessage(permitId, gammaBase));
         }
         public static void EditRole(GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new RoleEditMessage(gammaBase));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<RoleEditMessage>(new RoleEditMessage(gammaBase));
         }
         public static void EditRole(Guid roleID, GammaEntities gammaBase = null)
         {
-            Messenger.Default.Send(new RoleEditMessage(roleID, gammaBase));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<RoleEditMessage>(new RoleEditMessage(roleID, gammaBase));
         }
 
         public static void OpenDocShipmentOrder(Guid docShipmentOrderId)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenDocShipmentOrderMessage(docShipmentOrderId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocShipmentOrderMessage>(new OpenDocShipmentOrderMessage(docShipmentOrderId));
         }
 
         public static void ProductChanged(Guid productId)
@@ -511,12 +519,12 @@ namespace Gamma
 
         public static void OpenQualityReportPM()
         {
-            Messenger.Default.Send(new OpenQualityReportPMMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenQualityReportPMMessage>(new OpenQualityReportPMMessage());
         }
 
         public static void EditRejectionReasons(BrokeProduct product)
         {
-            Messenger.Default.Send(new EditRejectionReasonsMessage(product));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<EditRejectionReasonsMessage>(new EditRejectionReasonsMessage(product));
         }
 
         public static void ProductionTaskRwDateBeginChanged(Guid productionTaskBatchID, DateTime dateBegin)
@@ -525,33 +533,33 @@ namespace Gamma
         }
         public static void OpenManageUsers()
         {
-            Messenger.Default.Send(new OpenManageUsersMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenManageUsersMessage>(new OpenManageUsersMessage());
         }
         public static void OpenMain()
         {
-            Messenger.Default.Send(new OpenMainMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenMainMessage>(new OpenMainMessage());
         }
 
         public static void FindNomenclature(int? placeGroupID, bool nomenclatureEdit = false)
         {
-            Messenger.Default.Send(new OpenNomenclatureMessage(placeGroupID, nomenclatureEdit));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenNomenclatureMessage>(new OpenNomenclatureMessage(placeGroupID, nomenclatureEdit));
         }
 
         public static void FindNomenclature(MaterialType materialType, bool nomenclatureEdit = false)
         {
-            Messenger.Default.Send(new OpenNomenclatureMessage(materialType, nomenclatureEdit));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenNomenclatureMessage>(new OpenNomenclatureMessage(materialType, nomenclatureEdit));
         }
 
         public static void OpenProductionTask(BatchKinds batchKind, Guid productionTaskBatchId, bool isWindow = true)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenProductionTaskBatchMessage(batchKind, productionTaskBatchId, isWindow));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenProductionTaskBatchMessage>(new OpenProductionTaskBatchMessage(batchKind, productionTaskBatchId, isWindow));
         }
 
         public static void NewProductionTask(BatchKinds batchKind)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenProductionTaskBatchMessage(batchKind));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenProductionTaskBatchMessage>(new OpenProductionTaskBatchMessage(batchKind));
         }
 
         public static void OpenDocProduct(ProductKind productKind, Guid productId)
@@ -576,7 +584,7 @@ namespace Gamma
         public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenDocProductMessage(
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocProductMessage>(new OpenDocProductMessage(
                     docProductKind,
                     false,
                     id)
@@ -601,25 +609,22 @@ namespace Gamma
 
         public static void OpenDocBroke(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
-            if (!WorkSession.CheckExistNewVersionOfProgram())
-            {
-                Messenger.Default.Send(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
-            }
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocBrokeMessage>(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
         }
 
         public static void OpenReportList()
         {
-            Messenger.Default.Send(new OpenReportListMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenReportListMessage>(new OpenReportListMessage());
         }
         
         public static void PrintReport(PrintReportMessage msg)
         {
-            Messenger.Default.Send(msg);
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<PrintReportMessage>(msg);
         }
 
         public static void OpenFindProduct()
         {
-            Messenger.Default.Send(new FindProductMessage
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<FindProductMessage>(new FindProductMessage
             {
                     ChooseProduct = false
             });
@@ -627,27 +632,27 @@ namespace Gamma
 
         public static void OpenDocMovementOrder(Guid? docId = null)
         {
-            Messenger.Default.Send(new EditDocMovementOrderMessage(docId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<EditDocMovementOrderMessage>(new EditDocMovementOrderMessage(docId));
         }
 
         public static void OpenDocMovement(Guid docId)
         {
-            Messenger.Default.Send(new EditDocMovementMessage(docId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<EditDocMovementMessage>(new EditDocMovementMessage(docId));
         }
 
         public static void OpenDocRepack(Guid? docId)
         {
-            Messenger.Default.Send(new EditDocRepackMessage(docId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<EditDocRepackMessage>(new EditDocRepackMessage(docId));
         }
 
         public static void OpenDocComplectation(Guid docId)
 	    {
-		    Messenger.Default.Send(new EditDocComplectationMessage(docId));
+		    MessengerDefaultSendWithCheckExistNewVersionOfProgram<EditDocComplectationMessage>(new EditDocComplectationMessage(docId));
 	    }
         
         public static void OpenFindProduct(ProductKind productKind, bool chooseProduct = false, List<int> currentPlaces = null, bool allowChangeCurrentPlaces = true, bool allowChangeProductKind = false, bool allowChooseOneValueOnly = true )
         {
-            Messenger.Default.Send(new FindProductMessage
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<FindProductMessage>(new FindProductMessage
             {
                     ProductKind = productKind,
                     ChooseProduct = chooseProduct,
@@ -659,7 +664,7 @@ namespace Gamma
         }
         public static void OpenFindProduct(BatchKinds batchKind, bool chooseProduct = false, List<int> currentPlaces = null, bool allowChangeCurrentPlaces = true, bool allowChangeProductKind = false, bool allowChooseOneValueOnly = true)
         {
-            Messenger.Default.Send(new FindProductMessage
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<FindProductMessage>(new FindProductMessage
             {
                 BatchKind = batchKind,
                 ChooseProduct = chooseProduct,
@@ -671,79 +676,79 @@ namespace Gamma
         }
         public static void OpenDocCloseShift(Guid docID)
         {
-            Messenger.Default.Send(new OpenDocCloseShiftMessage {DocID = docID});
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage {DocID = docID});
         }
         public static void OpenDocCloseShift(int placeID, DateTime closeDate, byte shiftID)
         {
-            Messenger.Default.Send(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID });
         }
         public static void OpenDocCloseShift(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
         {
-            Messenger.Default.Send(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocCloseShiftMessage>(new OpenDocCloseShiftMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
         }
 
         public static void OpenDocCloseShifts(PlaceGroup placeGroup)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenDocCloseShiftsMessage { PlaceGroup = placeGroup });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocCloseShiftsMessage>(new OpenDocCloseShiftsMessage { PlaceGroup = placeGroup });
         }
 
         public static void OpenDocUnwinderRemainders(PlaceGroup placeGroup)
         {
             UIServices.SetBusyState();
-            Messenger.Default.Send(new OpenDocUnwinderRemaindersMessage { PlaceGroup = placeGroup });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocUnwinderRemaindersMessage>(new OpenDocUnwinderRemaindersMessage { PlaceGroup = placeGroup });
         }
 
         public static void OpenDocUnwinderRemainder(Guid docID)
         {
-            Messenger.Default.Send(new OpenDocUnwinderRemainderMessage { DocID = docID });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocUnwinderRemainderMessage>(new OpenDocUnwinderRemainderMessage { DocID = docID });
         }
         public static void OpenDocUnwinderRemainder(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
         {
-            Messenger.Default.Send(new OpenDocUnwinderRemainderMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocUnwinderRemainderMessage>(new OpenDocUnwinderRemainderMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
         }
         
         public static void ConfigureComPort()
         {
-            Messenger.Default.Send(new ConfigureComPortMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<ConfigureComPortMessage>(new ConfigureComPortMessage());
         }
         public static void FindProductionTaskBatch(BatchKinds batchKind)
         {
-            Messenger.Default.Send(new FindProductionTaskBatchMessage { BatchKind =  batchKind});
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<FindProductionTaskBatchMessage>(new FindProductionTaskBatchMessage { BatchKind =  batchKind});
         }
         public static void OpenPlaceGroupsNomenclature()
         {
-            Messenger.Default.Send(new OpenPlaceGroupsNomenclatureMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenPlaceGroupsNomenclatureMessage>(new OpenPlaceGroupsNomenclatureMessage());
         }
 
         public static void OpenMaterialTypesNomenclature()
         {
-            Messenger.Default.Send(new OpenMaterialTypesNomenclatureMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenMaterialTypesNomenclatureMessage>(new OpenMaterialTypesNomenclatureMessage());
         }
 
         public static void OpenWarehousePersons()
         {
-            Messenger.Default.Send(new OpenWarehousePersonsMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenWarehousePersonsMessage>(new OpenWarehousePersonsMessage());
         }
 
         public static void OpenDowntimeTemplates()
         {
-            Messenger.Default.Send(new OpenDowntimeTemplatesMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDowntimeTemplatesMessage>(new OpenDowntimeTemplatesMessage());
         }
 
         public static void OpenPlaceAuxiliaryMaterials()
         {
-            Messenger.Default.Send(new OpenPlaceAuxiliaryMaterialsMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenPlaceAuxiliaryMaterialsMessage>(new OpenPlaceAuxiliaryMaterialsMessage());
         }
 
         public static void OpenImportOldProducts()
         {
-            Messenger.Default.Send(new OpenImportOldProductsMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenImportOldProductsMessage>(new OpenImportOldProductsMessage());
         }
 
         public static void CreateNewProduct(DocProductKinds docProductKind, Guid? id = null, SourceSpoolsCheckResult checkResult = SourceSpoolsCheckResult.Correct)
         {
-            Messenger.Default.Send(new OpenDocProductMessage(
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocProductMessage>(new OpenDocProductMessage(
                 docProductKind,
                 true, id,
                 checkResult));
@@ -751,17 +756,17 @@ namespace Gamma
 
         public static void OpenPlaceZones()
         {
-            Messenger.Default.Send(new OpenPlaceZonesMessage());
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenPlaceZonesMessage>(new OpenPlaceZonesMessage());
         }
 
         internal static void OpenDocInventarisation(Guid docId)
         {
-            Messenger.Default.Send(new OpenDocInventarisationMessage(docId));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocInventarisationMessage>(new OpenDocInventarisationMessage(docId));
         }
 
         public static void OpenLogEvent(Guid eventID, Guid? parentEventID)
         {
-            Messenger.Default.Send(new OpenLogEventMessage(eventID, parentEventID));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenLogEventMessage>(new OpenLogEventMessage(eventID, parentEventID));
         }
 
         public static void RecalcQuantityEndFromUnwinderReaminderEvent(Guid? productID, Guid? nomenclatureID, Guid? characteristicID, decimal quantity, decimal? delta)
@@ -791,11 +796,11 @@ namespace Gamma
 
         public static void OpenDocMaterialProduction(Guid docID)
         {
-            Messenger.Default.Send(new OpenDocMaterialProductionMessage { DocID = docID });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocMaterialProductionMessage>(new OpenDocMaterialProductionMessage { DocID = docID });
         }
 /*        public static void OpenDocMaterialProduction(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
         {
-            Messenger.Default.Send(new OpenDocMaterialProductionMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram< >(new OpenDocMaterialProductionMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
         }
 */
     }

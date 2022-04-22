@@ -22,7 +22,7 @@ namespace Gamma
 	{
 		static ReportManager()
 		{
-			GammaBase = DB.GammaDb;
+			GammaBase = DB.GammaDbWithNoCheckConnection;
 			_reportSettings.CustomSaveReport += SaveReport;
 			_reportSettings.PreviewSettings.Buttons = PreviewButtons.Print | PreviewButtons.Save;
 			_reportSettings.PreviewSettings.ShowInTaskbar = true;
@@ -32,18 +32,20 @@ namespace Gamma
 
         public static BarViewModel GetReportBar(string reportObject, Guid? vmid = null)
 		{
-			if (!GammaBase.Reports.Any(rep => rep.Name == reportObject) && DB.HaveWriteAccess("Reports"))
+			if (!WorkSession.Reports.Any(rep => rep.Name == reportObject) && DB.HaveWriteAccess("Reports"))
 			{
-				GammaBase.Reports.Add(new Reports
-				{
-					ReportID = SqlGuidUtil.NewSequentialid(),
-					IsReport = false,
-					Name = reportObject
-				});
+                var newRep = new Reports
+                {
+                    ReportID = SqlGuidUtil.NewSequentialid(),
+                    IsReport = false,
+                    Name = reportObject
+                };
+                GammaBase.Reports.Add(newRep);
 				GammaBase.SaveChanges();
-			}
-			var reports = from rep in GammaBase.Reports
-				join parrep in GammaBase.Reports on rep.ParentID equals parrep.ReportID
+                WorkSession.Reports.Add(newRep);
+            }
+			var reports = from rep in WorkSession.Reports
+				join parrep in WorkSession.Reports on rep.ParentID equals parrep.ReportID
 				where parrep.Name == reportObject
 				orderby rep.Name
 				select rep;
@@ -190,8 +192,8 @@ namespace Gamma
 		public static void PrintReport(string reportName, string reportFolder = null, Guid? paramID = null,
 			bool showPreview = true, int numCopies = 1)
 		{
-			var parentId = GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
-			var reports = GammaBase.Reports.Where(r => r.Name == reportName && (parentId == null || r.ParentID == parentId))
+			var parentId = WorkSession.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
+			var reports = WorkSession.Reports.Where(r => r.Name == reportName && (parentId == null || r.ParentID == parentId))
 				.Select(r => r.ReportID)
 				.ToList();
 			if (reports.Count == 1)
@@ -201,8 +203,8 @@ namespace Gamma
         public static void PrintReport(string reportName, string reportFolder, ReportParameters reportParameters,
             bool showPreview = true, int numCopies = 1)
         {
-            var parentId = reportFolder == null || reportFolder == "" || reportFolder == String.Empty ? (Guid?)null : GammaBase.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
-            var reports = GammaBase.Reports.Where(r => r.Name == reportName && (parentId == null || r.ParentID == parentId))
+            var parentId = reportFolder == null || reportFolder == "" || reportFolder == String.Empty ? (Guid?)null : WorkSession.Reports.Where(r => r.Name == reportFolder).Select(r => r.ReportID).FirstOrDefault();
+            var reports = WorkSession.Reports.Where(r => r.Name == reportName && (parentId == null || r.ParentID == parentId))
                 .Select(r => r.ReportID)
                 .ToList();
             if (reports.Count == 1)

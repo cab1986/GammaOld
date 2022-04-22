@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             PlaceGroupID = (int)PlaceGroup.Baler;
-            Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Baler).
+            Places = new ObservableCollection<Place>(WorkSession.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Baler).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID,

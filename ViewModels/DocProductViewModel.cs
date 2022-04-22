@@ -230,7 +230,7 @@ namespace Gamma.ViewModels
             IsConfirmed = Doc.IsConfirmed || !AllowEditDoc;
             PrintName = Doc.PrintName;
             ShiftID = Doc.ShiftID.ToString();
-            Place = GammaBase.Places.FirstOrDefault(p => p.PlaceID == Doc.PlaceID)?.Name;
+            Place = WorkSession.Places.FirstOrDefault(p => p.PlaceID == Doc.PlaceID)?.Name;
             Bars = ((IBarImplemented) CurrentViewModel).Bars;
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
 //            Messenger.Default.Register<ParentSaveMessage>(this, SaveToModel);
@@ -265,7 +265,7 @@ namespace Gamma.ViewModels
                 productId = ((DocProductPalletViewModel)CurrentViewModel).ProductId;
             }
             if (productId == null) return;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 if (!gammaBase.Rests.Any(r => r.ProductID == productId && r.Quantity > 0))
                 {
@@ -305,7 +305,7 @@ namespace Gamma.ViewModels
                 */
                 var docBrokeId = new ObservableCollection<Guid>
                 (
-                    from pt in GammaBase.GetDocBrokeID((int)WorkSession.PlaceID, WorkSession.UserID, (int)WorkSession.ShiftID, (int)docProduction.PlaceID, (bool)WorkSession.IsProductionPlace)
+                    from pt in gammaBase.GetDocBrokeID((int)WorkSession.PlaceID, WorkSession.UserID, (int)WorkSession.ShiftID, (int)docProduction.PlaceID, (bool)WorkSession.IsProductionPlace)
                     select new Guid(pt.ToString())
                 );
                 if (docBrokeId.Count > 0)
@@ -523,9 +523,9 @@ namespace Gamma.ViewModels
                 return;
             }
             if (!SaveToModel()) return;
-            var reportName = GammaBase.Reports.Where(r => r.ReportID == msg.ReportID).Select(r => r.Name).FirstOrDefault();
-            var parentId = GammaBase.Reports.Where(r => r.ReportID == msg.ReportID).Select(r => r.ParentID).FirstOrDefault();
-            var parentName = GammaBase.Reports.Where(r => r.ReportID == parentId).Select(r => r.Name).FirstOrDefault();
+            var reportName = WorkSession.Reports.Where(r => r.ReportID == msg.ReportID).Select(r => r.Name).FirstOrDefault();
+            var parentId = WorkSession.Reports.Where(r => r.ReportID == msg.ReportID).Select(r => r.ParentID).FirstOrDefault();
+            var parentName = WorkSession.Reports.Where(r => r.ReportID == parentId).Select(r => r.Name).FirstOrDefault();
             if (reportName != null && parentName != null)
                 if (reportName == "Амбалаж" && parentName == "GroupPacks")
                 {

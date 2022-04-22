@@ -39,50 +39,21 @@ namespace Gamma.ViewModels
                 CloseWindow();
                 return;
             }
-            //PersonsOut = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1COutSubdivisionID).BranchID).ToList();
-            //PersonsIn = GammaBase.Persons.Where(p => p.BranchID == GammaBase.Branches.FirstOrDefault(b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID).ToList();
-            PlacesIn =
-                GammaBase.Places.Where(
-                    p => GammaBase.Places1CWarehouses
-                .Where(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseLoadID)
-                .Select(w => w.PlaceID).ToList().Contains(p.PlaceID)
-                )
+            var pp = GammaBase.Places.Where(pl => GammaBase.Places1CWarehouses
+            .Where(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseLoadID)
+            .Select(w => w.PlaceID).ToList().Contains(pl.PlaceID)).ToList();
+            PlacesIn = WorkSession.Places.Where(p => p.Places1CWarehouses.Any(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseLoadID))
                 .Select(p => new Place
                 {
                     PlaceID = p.PlaceID,
                     PlaceGuid = p.PlaceGuid,
                     PlaceName = p.Name
                 }).ToList();
-            /*GammaBase.Places.Where(
-                p =>
-                    p.BranchID ==
-                    GammaBase.Branches.FirstOrDefault(
-                        b => b.C1CSubdivisionID == docShipmentOrderInfo.C1CInSubdivisionID).BranchID
-                    && ((p.IsWarehouse??false) || (p.IsProductionPlace ?? false)))
-                .Select(p => new Place
-                {
-                    PlaceID = p.PlaceID,
-                    PlaceGuid = p.PlaceGuid,
-                    PlaceName = p.Name
-                }).ToList();
-        PlacesOut = GammaBase.Places.Where(
-                p =>
-                    p.BranchID ==
-                    GammaBase.Branches.FirstOrDefault(
-                        b => b.C1CSubdivisionID == docShipmentOrderInfo.C1COutSubdivisionID).BranchID 
-                    && ((p.IsWarehouse ?? false) || (p.IsProductionPlace ?? false))) //&& (p.IsShipmentWarehouse??false))
-                .Select(p => new Place
-                {
-                    PlaceID = p.PlaceID,
-                    PlaceGuid = p.PlaceGuid,
-                    PlaceName = p.Name
-                }).ToList();*/
-            PlacesOut =
-            GammaBase.Places.Where(
+            var po = GammaBase.Places.Where(
                 p => GammaBase.Places1CWarehouses
             .Where(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseUnloadID)
-            .Select(w => w.PlaceID).ToList().Contains(p.PlaceID)
-            )
+            .Select(w => w.PlaceID).ToList().Contains(p.PlaceID)).ToList();
+            PlacesOut = WorkSession.Places.Where(p => p.Places1CWarehouses.Any(w => w.C1CWarehouseID == docShipmentOrderInfo.C1CWarehouseUnloadID))
             .Select(p => new Place
             {
                 PlaceID = p.PlaceID,
@@ -210,7 +181,7 @@ namespace Gamma.ViewModels
                     PersonsOut = GammaBase.Persons.Take(0).ToList(); //пустой список
                 else
                 {
-                    var rootPlaces = GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
+                    var rootPlaces = WorkSession.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
                     var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.UserID).ToList();
                     var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.RootUserID).ToList();
                     PersonsOut = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();
@@ -232,7 +203,7 @@ namespace Gamma.ViewModels
                     PersonsIn = GammaBase.Persons.Take(0).ToList(); //пустой список
                 else
                 {
-                    var rootPlaces = GammaBase.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
+                    var rootPlaces = WorkSession.Places.Where(p => p.PlaceID == value).Select(p => p.RootPlaceID).ToList();
                     var users = GammaBase.Users.Where(u => u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.UserID).ToList();
                     var rootUsers = GammaBase.Users.Where(u => u.RootUserID != null && u.Places.Any(p => p.PlaceID == value || rootPlaces.Contains(p.PlaceID))).Select(u => u.RootUserID).ToList();
                     PersonsIn = GammaBase.Persons.Where(p => (users.Contains(p.Users.UserID) || rootUsers.Contains(p.Users.UserID))).OrderBy(p => p.Name).ToList();

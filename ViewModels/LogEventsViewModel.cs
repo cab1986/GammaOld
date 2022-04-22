@@ -22,7 +22,7 @@ namespace Gamma.ViewModels
             DeleteItemCommand = new DelegateCommand(DeleteItem);
             using (var gammaBase = DB.GammaDb)
             {
-                Places = gammaBase.Places.Where(
+                Places = WorkSession.Places.Where(
                     p => WorkSession.BranchIds.Contains(p.BranchID))
                     .Select(p => new Place()
                     {

@@ -73,7 +73,7 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
-                var placeGroupID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
+                var placeGroupID = WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
                 if (placeGroupID == 0)
                     CurrentMaterialType = MaterialType.MaterialsSGB;
                 else if (placeGroupID == 2)

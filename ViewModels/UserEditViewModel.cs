@@ -57,7 +57,7 @@ namespace Gamma.ViewModels
                 .Select(p => new PlaceID() { Value = p.PlaceID }).FirstOrDefault()), 
                 () => Places.Any(p => !UserPlaces.Select(up => up.Value).Contains(p.PlaceID)));
             DeletePlaceCommand = new DelegateCommand(() => UserPlaces.Remove(SelectedPlaceID), () => SelectedPlaceID != null);
-            Places = new ObservableCollection<Places>(GammaBase.Places);
+            Places = new ObservableCollection<Places>(WorkSession.Places);
             Roles = new ObservableCollection<Roles>(GammaBase.Roles);
             Departments = new ObservableCollection<Departments>(GammaBase.Departments);
         }

@@ -26,14 +26,17 @@ namespace Gamma.Models
                 Concentration = 100;
                 Level = 100;
             };
-            var docMaterialTank = GammaBase.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
+            var docMaterialTank = WorkSession.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
             if (docMaterialTank != null)
             {
                 DocMaterialTankGroupID = docMaterialTank.DocMaterialTankGroupID;
-                NomenclatureID = docMaterialTank.DocMaterialTankGroups.C1CNomenclature.Select(t => t.C1CNomenclatureID).ToList();
+                var groups = WorkSession.DocMaterialTankGroups.Where(t => t.DocMaterialTankGroupID == docMaterialTank.DocMaterialTankGroups.DocMaterialTankGroupID).ToList();
+                foreach (var group in groups)
+                    foreach(var nomenclature in group.C1CNomenclature)
+                        NomenclatureID.Add(nomenclature.C1CNomenclatureID);
                 if (NomenclatureID != null && NomenclatureID?.Count > 0)
                 {
-                    var exceptTankGroupIDs = GammaBase.DocMaterialTankGroups.Where(t => t.PlaceID == docMaterialTank.DocMaterialTankGroups.PlaceID && t.DocMaterialProductionTypeID == docMaterialTank.DocMaterialTankGroups.DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
+                    var exceptTankGroupIDs = WorkSession.DocMaterialTankGroups.Where(t => t.PlaceID == docMaterialTank.DocMaterialTankGroups.PlaceID && t.DocMaterialProductionTypeID == docMaterialTank.DocMaterialTankGroups.DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
                     if (exceptTankGroupIDs != null && exceptTankGroupIDs?.Count > 0)
                     {
                         foreach (var item in exceptTankGroupIDs)
@@ -46,34 +49,6 @@ namespace Gamma.Models
             //NomenclatureID = GammaBase.DocMaterialTankGroups.Where(t => t.DocMaterialTankGroupID == msg.DocMaterialTankGroupID);
             //ExceptNomenclatureID { get; private set; }
         }
-        /*
-        public MaterialProductionTankRemainder(int docMaterialTankID, string name, int volume, decimal concentration, decimal level, int? docMaterialProductionTypeID)
-        {
-            GammaBase = DB.GammaDb;
-            DocMaterialTankID = docMaterialTankID;
-            Volume = volume;
-            Concentration = concentration;
-            Level = level;
-            Name = name;
-            IsNotRemainderAtEnd = docMaterialProductionTypeID == (int)DocMaterialProductionTypes.InToCompositionTank;
-            var docMaterialTank = GammaBase.DocMaterialTanks.Where(t => t.DocMaterialTankID == docMaterialTankID).FirstOrDefault();
-            if (docMaterialTank != null)
-            {
-                DocMaterialTankGroupID = docMaterialTank.DocMaterialTankGroupID;
-                NomenclatureID = docMaterialTank.DocMaterialTankGroups.C1CNomenclature.Select(t => t.C1CNomenclatureID).ToList();
-                if (NomenclatureID != null && NomenclatureID?.Count > 0)
-                {
-                    var exceptTankGroupIDs = GammaBase.DocMaterialTankGroups.Where(t => t.PlaceID == docMaterialTank.DocMaterialTankGroups.PlaceID && t.DocMaterialProductionTypeID == docMaterialTank.DocMaterialTankGroups.DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
-                    if (exceptTankGroupIDs != null && exceptTankGroupIDs?.Count > 0)
-                    {
-                        foreach (var item in exceptTankGroupIDs)
-                        {
-                            ExceptNomenclatureID.AddRange(item.Select(i => i.C1CNomenclatureID).ToList());
-                        }
-                    }
-                }
-            }
-        }*/
 
         private int _docMaterialTankID { get; set; }
         public int DocMaterialTankID

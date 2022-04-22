@@ -62,7 +62,7 @@ namespace Gamma.ViewModels
             CloseDate = closeDate;
 
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
-            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
+            PlaceWithdrawalMaterialTypeID = WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
         }
 
         public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this()
@@ -77,7 +77,7 @@ namespace Gamma.ViewModels
 
             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
             DocCloseShiftWithdrawalMaterials.LoadWithdrawalMaterials(docID, productionProductCharacteristicIDs);
-            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
+            PlaceWithdrawalMaterialTypeID = WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
         }
 
         private MaterialType CurrentMaterialType;
@@ -89,7 +89,7 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
-                var placeGroupID =  GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First();
+                var placeGroupID = WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First();
                 if (placeGroupID == 0)
                 {
                     CurrentMaterialType = MaterialType.MaterialsSGB;
@@ -343,7 +343,7 @@ namespace Gamma.ViewModels
             if (IsReadOnly) return true;
             using (var gammaBase = DB.GammaDb)
             {
-                if (gammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First() == 0 && PlaceWithdrawalMaterialTypeID == 2 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
+                if (WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First() == 0 && PlaceWithdrawalMaterialTypeID == 2 && DocCloseShiftWithdrawalMaterials.WithdrawalMaterials?.Where(x => x.ProductionProductCharacteristicID == null || x.ProductionProductCharacteristicID == Guid.Empty).Count() > 0)
                 {
                     MessageBox.Show("Внимание! Есть использованные материалы, которые не распределены на произведенную за смену продукцию!", "Ошибка сохранения",
                             MessageBoxButton.OK, MessageBoxImage.Asterisk);

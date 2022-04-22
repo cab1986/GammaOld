@@ -18,7 +18,7 @@ namespace Gamma.ViewModels
         protected RootViewModel()
         {
             if (GammaSettings.IsConnectionStringSetted)
-                GammaBase = DB.GammaDb;
+                GammaBase = DB.GammaDbWithNoCheckConnection;
             CloseCommand = new DelegateCommand(CloseWindow);
         }
 

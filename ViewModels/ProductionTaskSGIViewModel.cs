@@ -34,7 +34,7 @@ namespace Gamma.ViewModels
         {
             GammaBase = gammaBase ?? DB.GammaDb;
             PlaceGroupID = (int)PlaceGroup.Convertings;
-            Places = new ObservableCollection<Place>(GammaBase.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings && p.BranchID == WorkSession.BranchID).
+            Places = new ObservableCollection<Place>(WorkSession.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings && p.BranchID == WorkSession.BranchID).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID, PlaceName = p.Name
@@ -89,7 +89,7 @@ namespace Gamma.ViewModels
                     ActualStartDate = productionTask.ActualStartDate;
                     ActualEndDate = productionTask.ActualEndDate;
                     if (!Places.Any(p => p.PlaceID == PlaceID))
-                        foreach (var place in GammaBase.Places.Where(p => p.PlaceID == PlaceID).
+                        foreach (var place in WorkSession.Places.Where(p => p.PlaceID == PlaceID).
                                                 Select(p => new Place()
                                                 {
                                                     PlaceID = p.PlaceID,
@@ -506,10 +506,8 @@ namespace Gamma.ViewModels
         /// </summary>
         private void PlaceChanged(int PlaceID)
         {
-            using (var gammaBase = DB.GammaDb)
-            {
-                var IsRobot =
-                gammaBase.Places.Where(p => p.PlaceID == PlaceID)
+            var IsRobot =
+                WorkSession.Places.Where(p => p.PlaceID == PlaceID)
                     .Select(p => p.IsRobot)
                     .FirstOrDefault();
                 if (IsRobot == true)
@@ -531,7 +529,6 @@ namespace Gamma.ViewModels
                     RobotNomenclatureVisible = Visibility.Collapsed;
                     RobotNomenclatures = null;
                 }
-            }
             RobotProductNumber = GammaBase.RobotProduct1CCharacteristic.Where(p => p.C1CNomenclatureID == NomenclatureID && p.C1CCharacteristicID == CharacteristicID && p.PlaceID == PlaceID)
         .Select(p => p.ProdNumber)
         .FirstOrDefault();
@@ -640,7 +637,7 @@ namespace Gamma.ViewModels
                 productionTask.C1CSpecificationID = ProductionTaskSpecificationViewModel.SpecificationID;// SelectedSpecification.Key;
             
             var placeIsRobot =
-                GammaBase.Places.Where(p => p.PlaceID == PlaceID)
+                WorkSession.Places.Where(p => p.PlaceID == PlaceID)
                         .Select(p => p.IsRobot)
                         .FirstOrDefault();
             if (placeIsRobot == true)

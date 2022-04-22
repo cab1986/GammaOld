@@ -44,7 +44,7 @@ namespace Gamma.ViewModels
             IsVisibilityUnwinderRemainder = false;
             //IsVisibilityRemainder = false;
 
-            var place = GammaBase.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
+            var place = WorkSession.Places.Where(p => p.PlaceID == PlaceID).FirstOrDefault();
             switch (place?.PlaceGroupID)
             {
                 case (short)PlaceGroup.PM:

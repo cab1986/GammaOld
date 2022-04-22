@@ -68,7 +68,7 @@ namespace Gamma.ViewModels
                 IsConfirmed = DocCloseShift.IsConfirmed;
                 DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate, msg.DocID, IsConfirmed);
             }          
-            var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+            var place = WorkSession.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
             IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
             ShowSpoolCommand = new DelegateCommand(() =>
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, SelectedSpool.ProductID),

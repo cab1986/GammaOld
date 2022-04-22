@@ -18,8 +18,7 @@ namespace Gamma.Dialogs
         public FilterDateReportDialog()
         {
             InitializeComponent();
-            GammaBase = DB.GammaDb;
-            EdtPlace.ItemsSource = (from p in GammaBase.Places
+            EdtPlace.ItemsSource = (from p in WorkSession.Places
                           //where (p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
                       select new
                       Place

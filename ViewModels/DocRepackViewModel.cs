@@ -489,10 +489,7 @@ namespace Gamma.ViewModels
             {
                 _placeId = value;
                 if (_placeId == null) return;
-                using (var gammaBase = DB.GammaDb)
-                {
-                    Place = gammaBase.Places.FirstOrDefault(p => p.PlaceID == _placeId)?.Name;
-                }
+                Place = WorkSession.Places.FirstOrDefault(p => p.PlaceID == _placeId)?.Name;
             }
         }
         public string Place { get; set; }

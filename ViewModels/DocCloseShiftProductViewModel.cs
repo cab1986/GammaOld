@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
-            PlaceGroupID = GammaBase.Places.First(p => p.PlaceID == PlaceID).PlaceGroupID;
+            PlaceGroupID = WorkSession.Places.First(p => p.PlaceID == PlaceID).PlaceGroupID;
         }
 
         public DocCloseShiftProductViewModel(Guid docId, bool isConfirmed, GammaEntities gammaDb = null):this()

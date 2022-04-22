@@ -29,10 +29,7 @@ namespace Gamma.Models
             set
             {
                 if (_placeID != value)
-                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
-                    {
-                        PlaceName = gammaBase.Places.FirstOrDefault(p => p.PlaceID == value).Name;
-                    }
+                    PlaceName = WorkSession.Places.FirstOrDefault(p => p.PlaceID == value).Name;
                 _placeID = value;
             }
         }

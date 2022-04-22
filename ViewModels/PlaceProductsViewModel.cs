@@ -41,7 +41,7 @@ namespace Gamma.ViewModels
                 Intervalid = 1;
             }
             PlaceID = placeID;
-            PlaceGroup = (PlaceGroup)(GammaBase.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault());
+            PlaceGroup = (PlaceGroup)(WorkSession.Places.Where(p => p.PlaceID == placeID).Select(p => p.PlaceGroupID).FirstOrDefault());
             switch (PlaceGroup)
             {
                 case PlaceGroup.PM:

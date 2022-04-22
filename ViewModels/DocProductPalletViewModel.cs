@@ -34,7 +34,7 @@ namespace Gamma.ViewModels
         //public DocProductPalletViewModel(Guid docId, GammaEntities gammaBase = null) : this()
         public DocProductPalletViewModel(Guid productId, GammaEntities gammaBase = null) : this()
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
+            gammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             ProductId = productId;
             DocId = gammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
                 SqlGuidUtil.NewSequentialid();
@@ -189,7 +189,7 @@ namespace Gamma.ViewModels
                 return;
             }
             string nomenclatureName;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 nomenclatureName = gammaBase.C1CNomenclature.FirstOrDefault(
                     n => n.C1CNomenclatureID == model.NomenclatureID)?.Name

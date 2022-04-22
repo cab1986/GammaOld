@@ -33,7 +33,7 @@ namespace Gamma.ViewModels
                     }
                 }
             });
-            Places = (from p in GammaBase.Places
+            Places = (from p in WorkSession.Places
                       where (p.IsProductionPlace ?? false)
                       select new
                       Place

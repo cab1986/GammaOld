@@ -17,7 +17,7 @@ namespace Gamma.DialogViewModels
 
         public AddNomenclatureToPalletDialogModel(string barcode) : this()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var nomInfo =
                     gammaBase.Products.FirstOrDefault(p => (p.BarCode == barcode || p.Number == barcode))?
@@ -38,7 +38,7 @@ namespace Gamma.DialogViewModels
             {
                 base.CharacteristicID = value;
                 if (value == null) return;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     MeasureUnitCoefficient =
                         gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == CharacteristicID)?

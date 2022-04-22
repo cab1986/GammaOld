@@ -174,7 +174,7 @@ namespace Gamma.ViewModels
                     break;
 
             }
-            var places = GammaBase.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
+            var places = WorkSession.Places.Where(p => p.IsProductionPlace == true && WorkSession.BranchIds.Contains(p.BranchID));
             PlaceProducts = new ObservableCollection<PlaceProduct>();
             if (places == null)
             {

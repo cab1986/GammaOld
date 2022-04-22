@@ -20,9 +20,7 @@ namespace Gamma.ViewModels
             NewItemCommand = new DelegateCommand(() => OpenDocMaterialProduction());
             EditItemCommand = new DelegateCommand(() => OpenDocMaterialProduction(SelectedDocMaterialProduction.DocID), SelectedDocMaterialProduction != null);
             DeleteItemCommand = new DelegateCommand(DeleteItem);
-            using (var gammaBase = DB.GammaDb)
-            {
-                Places = gammaBase.Places.Where(
+            Places = WorkSession.Places.Where(
                     p => WorkSession.BranchIds.Contains(p.BranchID) && ((p.IsMaterialProductionPlace ?? false) || (p.PlaceGroupID == (int)PlaceGroup.PM)))
                     .Select(p => new Place()
                     {
@@ -30,7 +28,6 @@ namespace Gamma.ViewModels
                         PlaceGuid = p.PlaceGuid,
                         PlaceName = p.Name
                     }).ToList();
-            }
             Places.Insert(0, new Place() { PlaceName = "Все" });
             PlaceId = 0;
             IntervalId = 1;

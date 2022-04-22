@@ -58,7 +58,7 @@ namespace Gamma.ViewModels
             CloseDate = closeDate;
 
             DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate);
-            var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+            var place = WorkSession.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
             IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
             IsWithdrawalMaterial = place?.PlaceWithdrawalMaterialTypeID != 0 ;
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
@@ -94,7 +94,7 @@ namespace Gamma.ViewModels
                     CharacteristicID = x.CharacteristicID
                 })).ToList();
                 DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate, docId, IsConfirmed);
-                var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+                var place = WorkSession.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
                 IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
                 IsWithdrawalMaterial = place?.PlaceWithdrawalMaterialTypeID != 0;
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate, DocId, spools, IsConfirmed, productionProductCharacteristicIDs);

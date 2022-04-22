@@ -38,11 +38,11 @@ namespace Gamma.ViewModels
             ShiftID = shiftID ?? WorkSession.ShiftID;
             CloseDate = closeDate;
 
-            IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+            IsWithdrawalMaterial = WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
             WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
             DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(PlaceID, ShiftID, CloseDate);
             DowntimesGrid = new DocCloseShiftDowntimesViewModel(PlaceID, ShiftID, CloseDate);
-            var place = GammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+            var place = WorkSession.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
             IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
             IsEnabledAuxiliaryMaterials = place?.IsEnabledAuxiliaryMaterialsInDocCloseShift ?? false;
             IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
                 IsConfirmed = doc.IsConfirmed;
                 DocId = docId;
                 spoolUnwinderRemainders = _spoolUnwinderRemainders;
-                var place = gammaBase.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
+                var place = WorkSession.Places.Where(x => x.PlaceID == PlaceID).FirstOrDefault();
                 IsWithdrawalMaterial = (place?.PlaceWithdrawalMaterialTypeID != 0) ;
                 WithdrawalMaterialsGrid = new DocCloseShiftWithdrawalMaterialViewModel(PlaceID, ShiftID, CloseDate);
                 DocCloseShiftProductsGrid = new DocCloseShiftProductViewModel(docId,IsConfirmed);
@@ -77,7 +77,7 @@ namespace Gamma.ViewModels
                     CharacteristicID = d.CharacteristicID,
                     Number = d.Number
                 }));
-                IsWithdrawalMaterial = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
+                IsWithdrawalMaterial = WorkSession.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID != 0).First();
                 var pallets = new List<DocCloseShiftWithdrawalMaterial.Product>(Pallets.Select(x => new DocCloseShiftWithdrawalMaterial.Product()
                 {
                     ProductID = x.ProductID,

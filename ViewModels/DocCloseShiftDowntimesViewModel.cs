@@ -100,7 +100,7 @@ namespace Gamma.ViewModels
             set
             {
                 _placeID = value;
-                IsAllowEditingDowntimesInDocCloseShift = GammaBase.Places.FirstOrDefault(p => p.PlaceID == value)?.IsAllowEditingDowntimesInDocCloseShift ?? false;
+                IsAllowEditingDowntimesInDocCloseShift = WorkSession.Places.FirstOrDefault(p => p.PlaceID == value)?.IsAllowEditingDowntimesInDocCloseShift ?? false;
                 /*var placeGroupID =  GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceGroupID).First();
                 if (placeGroupID == 0)
                 {

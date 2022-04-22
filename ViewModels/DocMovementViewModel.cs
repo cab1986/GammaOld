@@ -238,10 +238,7 @@ namespace Gamma.ViewModels
             {
                 _outPlaceId = value;
                 if (_outPlaceId == null) return;
-                using (var gammaBase = DB.GammaDb)
-                {
-                    OutPlace = gammaBase.Places.FirstOrDefault(p => p.PlaceID == _outPlaceId)?.Name;
-                }
+                OutPlace = WorkSession.Places.FirstOrDefault(p => p.PlaceID == _outPlaceId)?.Name;
             }
         }
         public string OutPlace { get; set; }
@@ -254,10 +251,7 @@ namespace Gamma.ViewModels
             {
                 _inPlaceId = value;
                 if (_inPlaceId == null) return;
-                using (var gammaBase = DB.GammaDb)
-                {
-                    InPlace = gammaBase.Places.FirstOrDefault(p => p.PlaceID == _inPlaceId)?.Name;
-                }
+                InPlace = WorkSession.Places.FirstOrDefault(p => p.PlaceID == _inPlaceId)?.Name;
             }
         }
 

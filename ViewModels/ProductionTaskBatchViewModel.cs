@@ -649,7 +649,7 @@ namespace Gamma.ViewModels
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
             var place = (productionTaskBatch?.ProductionTasks.Where(p => p.PlaceID == WorkSession.PlaceID).FirstOrDefault()?.Places)
-                     ?? (productionTaskBatch != null && productionTaskBatch.ProductionTasks.Any(p => (p.PlaceID == null) && (p.PlaceGroupID == (int?)WorkSession.PlaceGroup)) ? GammaBase.Places.FirstOrDefault(pl => pl.PlaceID == WorkSession.PlaceID) : (Places) null);
+                     ?? (productionTaskBatch != null && productionTaskBatch.ProductionTasks.Any(p => (p.PlaceID == null) && (p.PlaceGroupID == (int?)WorkSession.PlaceGroup)) ? WorkSession.Places.FirstOrDefault(pl => pl.PlaceID == WorkSession.PlaceID) : (Places) null);
             IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
             IsEnabledRepack = place?.IsEnabledRepackInProductionTask ?? true;
             IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;

@@ -25,9 +25,8 @@ namespace Gamma.ViewModels
         /// 
         public DocCloseShiftsViewModel(GammaEntities gammaBase = null)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();
-            Places = (from p in GammaBase.Places where (p.IsProductionPlace ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
+            Places = (from p in WorkSession.Places where (p.IsProductionPlace ?? false) || (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)
                       select new
                       Place
                       {
@@ -41,9 +40,8 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftsViewModel(PlaceGroup placeGroup, GammaEntities gammaBase = null)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
             Initialize();
-            Places = (from p in GammaBase.Places
+            Places = (from p in WorkSession.Places
                       where p.PlaceGroupID == (byte)placeGroup && ((placeGroup != PlaceGroup.Warehouses && (p.IsProductionPlace ?? false)) || (placeGroup == PlaceGroup.Warehouses && ((p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false))))
                       select new
                       Place

@@ -25,8 +25,8 @@ namespace Gamma.Models
             TankGroupContainer = tankGroupContainer;
             //Messenger.Default.Register<RecalcQuantityFromTankReaminderMessage>(this, RecalcQuantityFromTankReaminder);
             Messenger.Default.Register<RecalcMaterialProductionQuantityEndFromTankReaminderMessage>(this, RecalcQuantityEndFromTankReaminder);
-            IsVisibleColumnQunatityIn = GammaBase.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && (t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.In || t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.InToCompositionTank));
-            IsVisibleColumnQuantityGRVAtEnd = GammaBase.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && t.Name.Contains("ГРВ"));
+            IsVisibleColumnQunatityIn = WorkSession.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && (t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.In || t.DocMaterialProductionTypeID == (int)DocMaterialProductionTypes.InToCompositionTank));
+            IsVisibleColumnQuantityGRVAtEnd = WorkSession.DocMaterialTankGroups.Any(t => t.PlaceID == placeID && t.Name.Contains("ГРВ"));
         }
 
         private int PlaceID;

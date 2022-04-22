@@ -17,9 +17,12 @@ namespace Gamma.ViewModels
             //WithdrawalMaterials = brokeProduct.RejectionReasons;
             using (var gammaBase = DB.GammaDb)
             {
-                WithdrawalMaterialsList = new List<WithdrawalMaterial>(gammaBase.C1CRejectionReasons
-                    .Where(r => (!r.IsFolder??true) && (!r.IsMarked??true) && (r.ParentID == null || (r.ParentID != null
-                    && gammaBase.ProductKinds.FirstOrDefault(pk => pk.ProductKindID == (int)brokeProduct.ProductKind).C1CRejectionReasons.Select(rr => rr.C1CRejectionReasonID).Contains((Guid)r.ParentID))))
+                var IDs = WorkSession.C1CRejectionReasons.Where(r => r.IsMarked == false && r.ProductKinds.Any(p => p.ProductKindID == (int)brokeProduct.ProductKind))
+                            .Select(r => r.C1CRejectionReasonID).ToList();
+                WithdrawalMaterialsList = new List<WithdrawalMaterial>(WorkSession.C1CRejectionReasons
+                    .Where(r => (!r.IsFolder ?? true) && (!r.IsMarked ?? true)
+                    && (IDs.Contains((Guid)r.C1CRejectionReasonID) ||
+                        (r.ParentID == null || (r.ParentID != null && IDs.Contains((Guid)r.ParentID)))))
                     .Select(r => new WithdrawalMaterial
                     {
                    /* RejectionReasonID = r.C1CRejectionReasonID,

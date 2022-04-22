@@ -89,18 +89,16 @@ namespace Gamma.ViewModels
             GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsReadOnly);
             SetWeightCommand = new DelegateCommand(SetWeight, () => RestWeight > 0 && ( WorkSession.RoleName == "Dispetcher" || WorkSession.RoleName == "WarehouseOperator"));
 
-            using (var gammaBase = DB.GammaDb)
+            var permissionOnChooseNomenclatureAndCharacteristic = GammaBase.CheckPermissionOnChooseNomenclatureAndCharacteristic((int)ProductKind.ProductSpool, doc.PlaceID, WorkSession.UserID).FirstOrDefault();
+            if (permissionOnChooseNomenclatureAndCharacteristic != null)
             {
-                var permissionOnChooseNomenclatureAndCharacteristic = gammaBase.CheckPermissionOnChooseNomenclatureAndCharacteristic((int)ProductKind.ProductSpool, doc.PlaceID, WorkSession.UserID).FirstOrDefault();
-                if (permissionOnChooseNomenclatureAndCharacteristic != null)
-                {
-                    GrantPermissionOnChooseNomenclatureAndCharacteristic = (bool)permissionOnChooseNomenclatureAndCharacteristic;
-                }
-                else
-                {
-                    GrantPermissionOnChooseNomenclatureAndCharacteristic = false;
-                }
+                GrantPermissionOnChooseNomenclatureAndCharacteristic = (bool)permissionOnChooseNomenclatureAndCharacteristic;
             }
+            else
+            {
+                GrantPermissionOnChooseNomenclatureAndCharacteristic = false;
+            }
+            
         }
 
         public bool IsReadOnlyCharacteristic = true;
@@ -370,16 +368,16 @@ namespace Gamma.ViewModels
                     }
                 };
             }
-            
+
             if (AllowEditProduct)
             {
                 product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
                 product.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
-                product.ProductSpools.DecimalWeight = Weight/1000;
+                product.ProductSpools.DecimalWeight = Weight / 1000;
                 var docProductionProduct = product.DocProductionProducts.FirstOrDefault();
                 if (docProductionProduct != null)
                 {
-                    docProductionProduct.Quantity = Weight/1000;
+                    docProductionProduct.Quantity = Weight / 1000;
                     docProductionProduct.C1CNomenclatureID = (Guid)NomenclatureID;
                     docProductionProduct.C1CCharacteristicID = (Guid)CharacteristicID;
                 }
@@ -389,9 +387,10 @@ namespace Gamma.ViewModels
             product.ProductSpools.BreakNumber = BreakNumber;
             product.ProductSpools.Diameter = Diameter;
             product.ProductSpools.Length = Length;
-            
+
             product.ProductSpools.ToughnessKindID = ToughnessKindID;
             GammaBase.SaveChanges();
+
             return true;
         }
 

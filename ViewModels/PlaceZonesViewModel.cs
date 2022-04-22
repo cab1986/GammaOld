@@ -18,7 +18,7 @@ namespace Gamma.ViewModels
         {
             Bars.Add(ReportManager.GetReportBar("PlaceZones", VMID));
 
-            Places = GammaBase.Places.Where(p => WorkSession.BranchIds.Contains(p.BranchID) && (p.IsWarehouse ?? false))
+            Places = WorkSession.Places.Where(p => WorkSession.BranchIds.Contains(p.BranchID) && (p.IsWarehouse ?? false))
                 .Select(p => new Place()
                 {
                     PlaceID = p.PlaceID,

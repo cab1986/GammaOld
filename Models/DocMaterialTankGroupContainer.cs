@@ -13,15 +13,15 @@ namespace Gamma.Models
         {
             Messenger.Default.Register<RecalcQuantityFromTankGroupReaminderMessage>(this, RecalcQuantityFromTankGroupReaminder);
             Messenger.Default.Register<DeleteNomenclatureInCompositionFromTankGroupMessage>(this, DeleteNomenclatureInCompositionFromTankGroup);
-           
+
         }
 
-        public DocMaterialTankGroupContainer(int placeID, GammaEntities gammaBase = null):this()
+        public DocMaterialTankGroupContainer(int placeID, GammaEntities gammaBase = null) : this()
         {
             Fill(placeID);
         }
 
-        public DocMaterialTankGroupContainer(Guid docID, int placeID, GammaEntities gammaBase = null):this(placeID)
+        public DocMaterialTankGroupContainer(Guid docID, int placeID, GammaEntities gammaBase = null) : this(placeID)
         {
             gammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             var tankRemainders = gammaBase.DocMaterialTankRemainders.Where(dr => dr.DocID == docID).ToList();
@@ -36,7 +36,7 @@ namespace Gamma.Models
                         {
                             tank.Concentration = tankRemainder.Concentration;
                             tank.Level = tankRemainder.Level;
-                        }          
+                        }
                     };
                 };
         }
@@ -95,7 +95,7 @@ namespace Gamma.Models
                 {
                     foreach (KeyValuePair<Guid, decimal> item in childComposition)
                     {
-                       if (item.Key == nomenclatureID)
+                        if (item.Key == nomenclatureID)
                             quantity = quantity + item.Value;
                     }
                 }
@@ -120,7 +120,7 @@ namespace Gamma.Models
             //сначала для дочерних хранилищ
             foreach (var tankGroup in TankGroups.Where(p => (p.DocMaterialProductionTypeID != null && p.DocMaterialProductionTypeID != (int)DocMaterialProductionTypes.Send) && (p.NomenclatureID.Count == 0 || (p.NomenclatureID.Count > 0 && p.NomenclatureID.Contains(parentID ?? Guid.Empty)))
                 && !p.ExceptNomenclatureID.Contains(parentID ?? Guid.Empty)))
-                
+
             {
                 if (isNotSendNomenclature == true)
                 {
@@ -138,20 +138,20 @@ namespace Gamma.Models
                     AddComposition(nomenclatureID, parentID, quantityDismiss, quantityIn);
                 else
                     if (tankGroup.DocMaterialProductionTypeID != null)
+                {
+                    switch (tankGroup.DocMaterialProductionTypeID)
                     {
-                        switch (tankGroup.DocMaterialProductionTypeID)
-                        {
-                            case ((int)DocMaterialProductionTypes.Dismiss):
-                                tankGroup.Composition[nomenclatureID] = quantityDismiss ?? 0;
-                                break;
-                            case ((int)DocMaterialProductionTypes.In):
+                        case ((int)DocMaterialProductionTypes.Dismiss):
+                            tankGroup.Composition[nomenclatureID] = quantityDismiss ?? 0;
+                            break;
+                        case ((int)DocMaterialProductionTypes.In):
                             tankGroup.Composition[nomenclatureID] = quantityIn ?? 0;
                             break;
                         case ((int)DocMaterialProductionTypes.InToCompositionTank):
                             tankGroup.Composition[nomenclatureID] = quantityIn ?? 0;
-                                break;
-                        }
+                            break;
                     }
+                }
             }
             //затем для хранилищ с итоговой композицией
             decimal quantity = 0;
@@ -198,16 +198,16 @@ namespace Gamma.Models
 
         public void RecalcNomenclatureInComposition(Guid nomenclatureID, bool isRecalcMaterialProduction)
         {
-                decimal quantity = 0;
-                foreach (var tankG in TankGroups)
-                {
-                    if (tankG.Composition.Sum(c => c.Value) > 0)
-                        quantity = quantity + Math.Round(((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * (tankG.Tanks.Sum(t => t.Quantity) - tankG.NotSendNomenclature.Sum(n => n.Value)),0);
-                }
+            decimal quantity = 0;
+            foreach (var tankG in TankGroups)
+            {
+                if (tankG.Composition.Sum(c => c.Value) > 0)
+                    quantity = quantity + Math.Round(((tankG.Composition.FirstOrDefault(c => c.Key == nomenclatureID).Value) / tankG.Composition.Sum(c => c.Value)) * (tankG.Tanks.Sum(t => t.Quantity) - tankG.NotSendNomenclature.Sum(n => n.Value)), 0);
+            }
             //quantity = Math.Round(quantity, 0);
             if (isRecalcMaterialProduction)
                 MessageManager.RecalcMaterialProductionQuantityEndFromTankReaminderEvent(nomenclatureID, quantity);
-            
+
         }
 
         public void RecalcAllNomenclatureInComposition(bool isRecalcMaterialProduction)
@@ -261,33 +261,31 @@ namespace Gamma.Models
 
         public void Fill(int placeID)
         {
-            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
+            if (TankGroups.Count > 0)
+                Clear();
+            var tanks = WorkSession.DocMaterialTanks.Where(dr => dr.DocMaterialTankGroups.PlaceID == placeID).ToList();
+            var groupNumber = 0;
+            foreach (var groupID in tanks.Select(r => r.DocMaterialTankGroupID).Distinct())
             {
-                if (TankGroups.Count > 0)
-                    Clear();
-                var tanks = gammaBase.DocMaterialTanks.Where(dr => dr.DocMaterialTankGroups.PlaceID == placeID).ToList();
-                var groupNumber = 0;
-                foreach (var groupID in tanks.Select(r => r.DocMaterialTankGroupID).Distinct())
+                DocMaterialTankGroup tankGroup = new DocMaterialTankGroup(groupID);
+                foreach (var tank in tanks.Where(r => r.DocMaterialTankGroupID == groupID).Select(remainder => new MaterialProductionTankRemainder(remainder.DocMaterialTankID, remainder.Name, remainder.Volume, tankGroup?.DocMaterialProductionTypeID)
+                { }))
                 {
-                    DocMaterialTankGroup tankGroup = new DocMaterialTankGroup(groupID);
-                    foreach (var tank in tanks.Where(r => r.DocMaterialTankGroupID == groupID).Select(remainder => new MaterialProductionTankRemainder(remainder.DocMaterialTankID, remainder.Name, remainder.Volume, tankGroup?.DocMaterialProductionTypeID)
-                    { }))
-                    {
-                        tankGroup.Tanks.Add(tank);
-                    };
-                    tankGroup.Name = tankGroup.Name + " V=" + tankGroup.Tanks.Sum(t => t.Volume) + "м3";
-                    TankGroups.Add(tankGroup);
-                    groupNumber += 1;
-                }
-                foreach (var tankGroup in TankGroups)
-                {
-                    tankGroup.FillExpectNomenclatureID(placeID);
-                }
-                for (int i = TankGroups.Count(); i < 4; i++)
-                {
-                    TankGroups.Add(new DocMaterialTankGroup(0));
-                }
+                    tankGroup.Tanks.Add(tank);
+                };
+                tankGroup.Name = tankGroup.Name + " V=" + tankGroup.Tanks.Sum(t => t.Volume) + "м3";
+                TankGroups.Add(tankGroup);
+                groupNumber += 1;
+            }
+            foreach (var tankGroup in TankGroups)
+            {
+                tankGroup.FillExpectNomenclatureID(placeID);
+            }
+            for (int i = TankGroups.Count(); i < 4; i++)
+            {
+                TankGroups.Add(new DocMaterialTankGroup(0));
             }
         }
+
     }
 }

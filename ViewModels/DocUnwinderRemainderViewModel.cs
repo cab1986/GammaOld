@@ -29,7 +29,7 @@ namespace Gamma.ViewModels
                     UserName = WorkSession.UserName;
                     UserID = WorkSession.UserID;
                     PersonID = WorkSession.PersonID.ToString() == "00000000-0000-0000-0000-000000000000" ? null : WorkSession.PersonID;
-                    Place = msg.PlaceID == null ? "" : (from d in GammaBase.Places where d.PlaceID == msg.PlaceID select d.Name).FirstOrDefault();
+                    Place = msg.PlaceID == null ? "" : (from d in WorkSession.Places where d.PlaceID == msg.PlaceID select d.Name).FirstOrDefault();
                 }
                 else
                 {

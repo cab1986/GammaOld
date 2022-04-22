@@ -25,7 +25,7 @@ namespace Gamma.ViewModels
             Bars.Add(ReportManager.GetReportBar("LogEvent", VMID));
             using (var gammaBase = DB.GammaDb)
             {
-                Places = gammaBase.Places
+                Places = WorkSession.Places
                 .Where(p => WorkSession.BranchIds.Contains(p.BranchID))
                 .Select(p => new Place
                 {

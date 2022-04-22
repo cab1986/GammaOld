@@ -42,7 +42,7 @@ namespace Gamma.ViewModels
             ActivatedCommand = new DelegateCommand(() => IsActive = true);
             DeactivatedCommand = new DelegateCommand(() => IsActive = false);
             OpenProductCommand = new DelegateCommand(OpenProduct, () => SelectedProduct != null);
-            PlacesList = (from p in GammaBase.Places
+            PlacesList = (from p in WorkSession.Places
                           select new
                           Place
                           {

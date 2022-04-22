@@ -12,7 +12,7 @@ namespace Gamma.Models
         {
             GammaBase = DB.GammaDbWithNoCheckConnection;
             DocMaterialTankGroupID = docMaterialTankGroupID;
-            var tankGroup = GammaBase.DocMaterialTankGroups.Where(t => t.DocMaterialTankGroupID == docMaterialTankGroupID).FirstOrDefault();
+            var tankGroup = WorkSession.DocMaterialTankGroups.Where(t => t.DocMaterialTankGroupID == docMaterialTankGroupID).FirstOrDefault();
             if (tankGroup != null)
             {
                 Name = tankGroup.Name;
@@ -55,7 +55,7 @@ namespace Gamma.Models
             //Если в какой то из групп бассейнов есть заполненная разрешенная группа номенклатур (C1CNomenclature), то во всех остальных группах бассейнов данная группа номенклатур должна быть исключена из композиции
             if (DocMaterialProductionTypeID != null)
             {
-                var exceptTankGroupIDs = GammaBase.DocMaterialTankGroups.Where(t => t.PlaceID == placeID && t.DocMaterialProductionTypeID == DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
+                var exceptTankGroupIDs = WorkSession.DocMaterialTankGroups.Where(t => t.PlaceID == placeID && t.DocMaterialProductionTypeID == DocMaterialProductionTypeID && t.DocMaterialTankGroupID != DocMaterialTankGroupID).Select(t => t.C1CNomenclature).ToList();
                 if (exceptTankGroupIDs != null && exceptTankGroupIDs?.Count > 0)
                 {
                     foreach (var item in exceptTankGroupIDs)

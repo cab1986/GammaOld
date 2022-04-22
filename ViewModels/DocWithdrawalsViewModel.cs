@@ -16,9 +16,7 @@ namespace Gamma.ViewModels
             RefreshCommand = new DelegateCommand(Find);
             EditItemCommand = new DelegateCommand(OpenDocWithdrawal, () => SelectedDocWithdrawal != null);
             Find();
-            using (var gammaBase = DB.GammaDb)
-            {
-                Places = gammaBase.Places.Where(
+            Places = WorkSession.Places.Where(
                     p => p.BranchID == WorkSession.BranchID && (p.IsProductionPlace ?? false))
                     .Select(p => new Place()
                     {
@@ -26,7 +24,6 @@ namespace Gamma.ViewModels
                         PlaceGuid = p.PlaceGuid,
                         PlaceName = p.Name
                     }).ToList();
-            }
         }
 
         private void OpenDocWithdrawal()

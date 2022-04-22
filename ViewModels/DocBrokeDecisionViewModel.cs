@@ -181,8 +181,6 @@ namespace Gamma.ViewModels
                             Comment = decisionProduct.Comment,
                             NomenclatureId = decisionProduct.C1CNomenclatureID,
                             CharacteristicId = decisionProduct.C1CCharacteristicID,
-                            //ProductKind = (ProductKind)product.ProductKindID,
-                            //DecisionPlaceName = gammaBase.Places.FirstOrDefault(p => p.PlaceID == decisionProduct.DocBrokeDecision.DecisionPlaceID)?.Name,
                             DocWithdrawalSum = docWithdrawalSum,
                             IsVisibleRow = !(decisionProduct.DecisionApplied && NeedsProductStates.Contains((ProductState)decisionProduct.StateID)),
                             IsChanged = isChanged
@@ -994,7 +992,6 @@ namespace Gamma.ViewModels
                         brokeDecisionProduct.IsNotNeedToSave = editItem.Value.IsNotNeedToSave;
                         brokeDecisionProduct.IsVisibleRow = editItem.Value.IsVisibleRow;
                         brokeDecisionProduct.Decision = editItem.Value.Name;
-                        //brokeDecisionProduct.DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == DecisionPlaceId)?.Name;
                     }
                     else
                     {
@@ -1029,7 +1026,6 @@ namespace Gamma.ViewModels
                                     IsNotNeedToSave = editItem.Value.IsNotNeedToSave,
                                     IsVisibleRow = editItem.Value.IsVisibleRow,
                                     Decision = editItem.Value.Name
-                                    //DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == DecisionPlaceId)?.Name
                                 };
                             else
                             {
@@ -1065,7 +1061,6 @@ namespace Gamma.ViewModels
                                 IsNotNeedToSave = editItem.Value.IsNotNeedToSave,
                                 IsVisibleRow = editItem.Value.IsVisibleRow,
                                 Decision = editItem.Value.Name
-                                //DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == DecisionPlaceId)?.Name
                             };
                         }
                         BrokeDecisionProducts.Add(brokeDecisionProduct);
@@ -1210,7 +1205,6 @@ namespace Gamma.ViewModels
                                 brokeDecisionProduct.IsNotNeedToSave = editItem.Value.IsNotNeedToSave;
                                 brokeDecisionProduct.IsVisibleRow = editItem.Value.IsVisibleRow;
                                 brokeDecisionProduct.Decision = editItem.Value.Name;
-                                //brokeDecisionProduct.DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == DecisionPlaceId)?.Name;
                             }
                             else
                             {
@@ -1245,7 +1239,6 @@ namespace Gamma.ViewModels
                                             IsNotNeedToSave = editItem.Value.IsNotNeedToSave,
                                             IsVisibleRow = editItem.Value.IsVisibleRow,
                                             Decision = editItem.Value.Name
-                                    //DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == DecisionPlaceId)?.Name
                                 };
                                     else
                                     {
@@ -1281,7 +1274,6 @@ namespace Gamma.ViewModels
                                         IsNotNeedToSave = editItem.Value.IsNotNeedToSave,
                                         IsVisibleRow = editItem.Value.IsVisibleRow,
                                         Decision = editItem.Value.Name
-                                        //DecisionPlaceName = gammaBase.Places.FirstOrDefault(r => r.PlaceID == DecisionPlaceId)?.Name
                                     };
                                 }
                                 BrokeDecisionProducts.Add(brokeDecisionProduct);

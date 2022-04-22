@@ -31,9 +31,7 @@ namespace Gamma.ViewModels
             ShowProductCommand = new DelegateCommand(() =>
                     MessageManager.OpenDocProduct(SelectedStockRemainder.ProductKind, SelectedStockRemainder.ProductID),
                     () => SelectedStockRemainder?.ProductID != null && SelectedStockRemainder?.ProductID != Guid.Empty);
-            using (var gammaBase = DB.GammaDb)
-            {
-                Places = gammaBase.Places.Where(
+            Places = WorkSession.Places.Where(
                     p => WorkSession.BranchIds.Contains(p.BranchID) && ( (p.IsShipmentWarehouse ?? false) || (p.IsTransitWarehouse ?? false)))
                     .Select(p => new Place()
                     {
@@ -41,7 +39,6 @@ namespace Gamma.ViewModels
                         PlaceGuid = p.PlaceGuid,
                         PlaceName = p.Name
                     }).ToList();
-            }
             Places.Insert(0, new Place() { PlaceName = "Все" });
             var places = Places.Select(pl => pl.PlaceID).ToList();
             using (var gammaBase = DB.GammaDb)
@@ -366,7 +363,7 @@ namespace Gamma.ViewModels
 
         public void Print()
         {
-            var reportId = GammaBase.Reports.Where(r => r.Name == "Остатки на переделе" && r.ParentID == GammaBase.Reports.Where(p => p.Name == "StockRemainders").Select(p => p.ReportID).FirstOrDefault()).Select(r => r.ReportID).FirstOrDefault();
+            var reportId = WorkSession.Reports.Where(r => r.Name == "Остатки на переделе" && r.ParentID == WorkSession.Reports.Where(p => p.Name == "StockRemainders").Select(p => p.ReportID).FirstOrDefault()).Select(r => r.ReportID).FirstOrDefault();
             //ReportManager.GetReportBar("StockRemainders", VMID);
             //Guid VMID = new Guid("533C8625-981D-EB11-8A10-28565A070C02");
             ReportManager.PrintReport("Остатки на переделе","StockRemainders", new ReportParameters() { BeginDate = DateBegin, EndDate = DateEnd, PlaceID = PlaceId, PlaceZoneID = PlaceZoneId, ProductKindID = SelectedProductKindIndex == ProductKindsList.Count - 1 ? (int?)null : SelectedProductKindIndex, StateID = SelectedStateIndex == States.Count - 1 ? (int?)null : SelectedStateIndex, NomenclatureID = NomenclatureID, CharacteristicID = SelectedCharacteristic?.CharacteristicID, IsVisibleDetailBand = false, NomenclatureKindValue = SelectedNomenclatureKindIndex == 0 ? String.Empty : NomenclatureKindsList[SelectedNomenclatureKindIndex] });
