@@ -48,9 +48,10 @@ namespace Gamma.Models
             get { return _quantity; }
             set
             {
+                var updatedMainFields = !(_quantity == value);
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
-                RefreshEditBrokeDecisionItem();
+                RefreshEditBrokeDecisionItem(updatedMainFields);
                 RefreshDecisionApplied();
             }
         }
@@ -63,7 +64,7 @@ namespace Gamma.Models
             {
                 _comment = value;
                 RaisePropertyChanged("Comment");
-                RefreshEditBrokeDecisionItem();
+                RefreshEditBrokeDecisionItem(false);
             }
         }
 
@@ -72,6 +73,7 @@ namespace Gamma.Models
             get { return base.NomenclatureID; }
             set
             {
+                var updatedMainFields = !(base.NomenclatureID == value);
                 base.NomenclatureID = value;
                 if (BrokeDecisionProduct != null)
                 {
@@ -79,7 +81,7 @@ namespace Gamma.Models
                         BrokeDecisionProduct.NomenclatureId = NomenclatureID;
                 }
                 RaisePropertyChanged("NomenclatureID");
-                RefreshEditBrokeDecisionItem();
+                RefreshEditBrokeDecisionItem(updatedMainFields);
             }
         }
 
@@ -93,6 +95,7 @@ namespace Gamma.Models
             get { return base.CharacteristicID; }
             set
             {
+                var updatedMainFields = !(base.CharacteristicID == value);
                 base.CharacteristicID = value;
                 if (BrokeDecisionProduct != null)
                 {
@@ -100,7 +103,7 @@ namespace Gamma.Models
                         BrokeDecisionProduct.CharacteristicId = CharacteristicID;
                 }
                 RaisePropertyChanged("CharacteristicID");
-                RefreshEditBrokeDecisionItem();
+                RefreshEditBrokeDecisionItem(updatedMainFields);
             }
         }
 
@@ -200,10 +203,10 @@ namespace Gamma.Models
 
         public bool? ExternalRefresh { get; set; } = false;
 
-        public void RefreshEditBrokeDecisionItem()
+        public void RefreshEditBrokeDecisionItem(bool updatedMainFields)
         {
             if (ExternalRefresh == false)
-                ParentModel.RefreshEditBrokeDecisionItem(ProductState);
+                ParentModel.RefreshEditBrokeDecisionItem(ProductState, updatedMainFields);
             RefreshReadOnlyFields(IsReadOnly);
         }
 
@@ -213,6 +216,7 @@ namespace Gamma.Models
             get { return _isChecked; }
             set
             {
+                var updatedMainFields = !(_isChecked == value);
                 if (_isChecked == value)
                     return;
                 else if (ExternalRefresh == false)
@@ -267,7 +271,7 @@ namespace Gamma.Models
                 }
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
-                RefreshEditBrokeDecisionItem();
+                RefreshEditBrokeDecisionItem(updatedMainFields);
             }
         }
 
@@ -333,7 +337,7 @@ namespace Gamma.Models
                 _decisionApplied = value;
                 RaisePropertyChanged("DecisionApplied");
                 IsVisibleRow = !(value && ParentModel.NeedsProductStates.Contains(ProductState));
-                RefreshEditBrokeDecisionItem();
+                RefreshEditBrokeDecisionItem(false);
             }
         }
 

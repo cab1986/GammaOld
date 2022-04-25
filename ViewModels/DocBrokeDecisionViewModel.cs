@@ -269,6 +269,7 @@ namespace Gamma.ViewModels
                     Functions.ShowMessageError("Ошибка при сохранении решения в Акте о браке", "ERROR SaveBrokeDecisionProductsToModel (prevProductID = '" + prevProductID + "', DecisionDocID = '" + DecisionDocID + "')", DocBrokeID, prevProductID);
                 prevBrokeDecisionProduct = BrokeDecisionProducts.Where(p => p.ProductId == value?.ProductId).ToList();
                 SetExternalRefreshInEditBrokeDecisionItems(true);
+                IsChangedDecisionDateRefreshEditBrokeDecisionItem = false;
                 foreach (var editBrokeDecisionItem in EditBrokeDecisionItems)
                 {
                     editBrokeDecisionItem.Value.Init();
@@ -420,7 +421,11 @@ namespace Gamma.ViewModels
         public int? BrokePlaceID { get; private set; }
 
         private bool IsUpdatedBrokeDecisionProductItems { get; set; } = false;
-
+        
+        /// <summary>
+        /// Дата решения уже изменена (чтобы повторно не обновлять при обновлении каждого состояния в решении)
+        /// </summary>
+        private bool IsChangedDecisionDateRefreshEditBrokeDecisionItem { get; set; } = false;
         public bool IsEnabledEditableDecision => IsEditableDecision == true;
 
         private bool? _isEditableDecision { get; set; }
@@ -496,20 +501,20 @@ namespace Gamma.ViewModels
             {
                 _decisionDate = value;
                 RaisePropertyChanged("DecisionDate");
-                DB.AddLogMessageInformation("Установлена дата решения "+value?.ToString("dd.MM.yyyy HH:mm:ss")+" по продукту ProductID в Решениях по акту о браке DocID", "SET DecisionDocDate (value = '" + value?.ToString("dd.MM.yyyy HH:mm:ss") + "', DecisionDocID='" + DecisionDocID  + "')", DocBrokeID, ProductID);
+                DB.AddLogMessageInformation("Установлена дата решения " + value?.ToString("dd.MM.yyyy HH:mm:ss") + " по продукту ProductID в Решениях по акту о браке DocID", "SET DecisionDocDate (value = '" + value?.ToString("dd.MM.yyyy HH:mm:ss") + "', DecisionDocID='" + DecisionDocID + "')", DocBrokeID, ProductID);
                 if (IsUpdatedBrokeDecisionProductItems)
-            {
-                var newId = SqlGuidUtil.NewSequentialid();
-                DecisionDocID = newId;
-                foreach (var editItem in BrokeDecisionProducts.Where(p => p.ProductId == ProductID))
                 {
-                    editItem.DecisionDocId = newId;
-                    editItem.DecisionDate = value;
+                    var newId = SqlGuidUtil.NewSequentialid();
+                    DecisionDocID = newId;
+                    foreach (var editItem in BrokeDecisionProducts.Where(p => p.ProductId == ProductID))
+                    {
+                        editItem.DecisionDocId = newId;
+                        editItem.DecisionDate = value;
+                    }
+                    var item = new BrokeDecisionProduct();
+                    BrokeDecisionProducts.Add(item);
+                    BrokeDecisionProducts.Remove(item);
                 }
-                var item = new BrokeDecisionProduct();
-                BrokeDecisionProducts.Add(item);
-                BrokeDecisionProducts.Remove(item);
-            }
             }
         }
 
@@ -638,10 +643,15 @@ namespace Gamma.ViewModels
                     {
                         var currentPlaceID = GammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID)?.PlaceID;
                         if (currentPlaceID == null)
-                            return null;
+                            if (Functions.ShowMessageQuestion(messageInvariant+": " + Environment.NewLine + "Продукт отсутствует на остатках! Нажмите Да, чтобы продолжить, или Нет, чтобы выйти?", "QUEST SetCreateWithdrawalQuantity docBrokeID = '" + DocBrokeID + "', productID = '" + productID + "'", DocBrokeID, productID)
+                            != MessageBoxResult.Yes)
+                                return null;
                         var getPlaceID = GetPlace(currentPlaceID, messageInvariant);
                         if (getPlaceID == null)
+                        {
+                            DB.AddLogMessageInformation("Не выбран передел списания " + messageInvariant + " продукта ProductID в Акт о браке DocID", "NOT SELECTED Place IN SetCreateWithdrawalQuantity docBrokeID = '" + DocBrokeID + "', productID = '" + productID + "'", DocBrokeID, productID);
                             return null;
+                        }
                         placeID = (int)getPlaceID;
                     }
                     if (stateID == (byte)ProductState.Broke)
@@ -661,7 +671,7 @@ namespace Gamma.ViewModels
                                 int newDiameter = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)Math.Sqrt((double)((diameter * diameter) * newQuantity / productionQuantity));
                                 int newLength = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)((length ?? 0) * (newQuantity / productionQuantity));
                                 var product = productController.AddNewProductToDocProduction(docProduction, docWithdrawalId, productKind, (Guid)nomenclatureId, (Guid)characteristicId, newQuantity, newDiameter, breakNumber, newLength, realFormat);
-                                withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity, docWithdrawalId, withdrawalResult.PlaceID) ;
+                                withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity, docWithdrawalId, placeID) ;
                             }
                         }
                     }
@@ -882,7 +892,7 @@ namespace Gamma.ViewModels
                 editItem.Value.ExternalRefresh = externalRefresh;
         }
 
-        public void RefreshEditBrokeDecisionItem(ProductState productState)
+        public void RefreshEditBrokeDecisionItem(ProductState productState, bool updatedMainFields)
         {
             SetExternalRefreshInEditBrokeDecisionItems(true);
             var prevEditNeedsBrokeDecisionItem = EditBrokeDecisionItems.FirstOrDefault(d => d.Value.IsChecked && d.Key != productState && NeedsProductStates.Contains(d.Key));
@@ -891,6 +901,17 @@ namespace Gamma.ViewModels
             foreach (var item in EditBrokeDecisionItems.Where( i => i.Key != productState))
             {
                 DB.AddLogMessageInformation("Начато обновление остальных решений (при изменении) по продукту ProductID в Решениях по акту о браке DocID", "RefreshEditBrokeDecisionItem (DecisionDocID = '" + DecisionDocID + "', ProductState='" + productState + "', IsChecked='" + item.Value.IsChecked + "', Quantity='" + item.Value.Quantity + "', MinQuantity='" + item.Value.MinQuantity + "', MaxQuantity='" + item.Value.MaxQuantity + "', Name='" + item.Value.Name + "', DecisionAppliedLabel='" + item.Value.DecisionAppliedLabel + "', DecisionApplied='" + item.Value.DecisionApplied + "', IsReadOnly='" + item.Value.IsReadOnly + "', IsReadOnlyDecisionApplied='" + item.Value.IsReadOnlyDecisionApplied + "', IsReadOnlyFields='" + item.Value.IsReadOnlyFields + "', IsReadOnlyIsChecked='" + item.Value.IsReadOnlyIsChecked + "', IsReadOnlyQuantity='" + item.Value.IsReadOnlyQuantity + "', IsValid='" + item.Value.IsValid + "', NomenclatureID='" + item.Value.NomenclatureID + "', CharacteristicID='" + item.Value.CharacteristicID + "', Comment='" + item.Value.Comment + "')", DocBrokeID, ProductID);
+            }
+            if (updatedMainFields && !IsChangedDecisionDateRefreshEditBrokeDecisionItem)
+            {
+                IsUpdatedBrokeDecisionProductItems = false;
+                DecisionDate = DateTime.Now;
+                DecisionDocID = SqlGuidUtil.NewSequentialid();
+                var currentPlaceID = GammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID)?.PlaceID;
+                if (currentPlaceID != null)
+                    DecisionPlaceId = currentPlaceID;
+                IsChangedDecisionDateRefreshEditBrokeDecisionItem = true;
+                IsUpdatedBrokeDecisionProductItems = true;
             }
             bool IsChecked = currentEditBrokeDecisionItem?.IsChecked ?? false;
             //сумма принятых решений
