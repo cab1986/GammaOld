@@ -15,7 +15,7 @@ namespace Gamma.Models
 {
     public class EditBrokeDecisionItem: DbEditItemWithNomenclatureViewModel
     {
-        public EditBrokeDecisionItem(string name, ProductState productState, 
+        public EditBrokeDecisionItem(string name, ProductState productState,
             DocBrokeDecisionViewModel parentModel, bool canChooseNomenclature = false)
         {
             Name = name;
@@ -51,8 +51,8 @@ namespace Gamma.Models
                 var updatedMainFields = !(_quantity == value);
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
-                RefreshEditBrokeDecisionItem(updatedMainFields);
-                RefreshDecisionApplied();
+                if (!IsStopRefreshFields) RefreshEditBrokeDecisionItem(updatedMainFields);
+                if (!IsStopRefreshFields) RefreshDecisionApplied();
             }
         }
 
@@ -64,7 +64,7 @@ namespace Gamma.Models
             {
                 _comment = value;
                 RaisePropertyChanged("Comment");
-                RefreshEditBrokeDecisionItem(false);
+                if (!IsStopRefreshFields) RefreshEditBrokeDecisionItem(false);
             }
         }
 
@@ -81,7 +81,7 @@ namespace Gamma.Models
                         BrokeDecisionProduct.NomenclatureId = NomenclatureID;
                 }
                 RaisePropertyChanged("NomenclatureID");
-                RefreshEditBrokeDecisionItem(updatedMainFields);
+                if (!IsStopRefreshFields) RefreshEditBrokeDecisionItem(updatedMainFields);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Gamma.Models
                         BrokeDecisionProduct.CharacteristicId = CharacteristicID;
                 }
                 RaisePropertyChanged("CharacteristicID");
-                RefreshEditBrokeDecisionItem(updatedMainFields);
+                if (!IsStopRefreshFields) RefreshEditBrokeDecisionItem(updatedMainFields);
             }
         }
 
@@ -130,8 +130,8 @@ namespace Gamma.Models
             set
             {
                 _isReadOnly = value;
-                RefreshReadOnlyFields(value);
-                RefreshReadOnlyIsChecked(value);
+                //if (!IsStopRefreshFields) RefreshReadOnlyFields(value);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(value);
                 RaisePropertyChanged("IsReadOnly");
             }
         }
@@ -151,9 +151,9 @@ namespace Gamma.Models
         {
             IsReadOnlyIsChecked = isReadOnly //|| MaxQuantity == 0 || MinQuantity > 0 
                 ;//|| IsExistMoreTwoCheckedItem
-                //|| ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
-            //|| (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
-            RefreshReadOnlyFields(isReadOnly);
+                 //|| ((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem)
+                 //|| (ParentModel.NeedsProductStates.Contains(ProductState) && (IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 || IsExistGoodItem));
+            if (!IsStopRefreshFields) RefreshReadOnlyFields(isReadOnly);
         }
 
         private void RefreshReadOnlyFields(bool isReadOnly)
@@ -187,7 +187,7 @@ namespace Gamma.Models
                 RaisePropertyChanged("IsReadOnlyQuantity");
             }
         }
-        
+
         private bool _isReadOnlyDecisionApplied = true;
         public bool IsReadOnlyDecisionApplied
         {
@@ -207,7 +207,7 @@ namespace Gamma.Models
         {
             if (ExternalRefresh == false)
                 ParentModel.RefreshEditBrokeDecisionItem(ProductState, updatedMainFields);
-            RefreshReadOnlyFields(IsReadOnly);
+            if (!IsStopRefreshFields) RefreshReadOnlyFields(IsReadOnly);
         }
 
         private bool _isChecked { get; set; }
@@ -224,20 +224,20 @@ namespace Gamma.Models
                     if (_isChecked && !value
                             && ParentModel.NeedsProductStates.Contains(ProductState))
                     {
-                        MessageBox.Show("Нелья снять галочку в строке Требует Решения");
+                        MessageBox.Show("Нельзя снять галочку в строке Требует Решения");
                         return;
                     }
                     if (_isChecked && !value
                             && //((ParentModel.NeedsProductStates.Contains(ProductState) || DecisionApplied)
                                 DocWithdrawalSum > 0)
                     {
-                        MessageBox.Show("Нелья снять галочку, если уже есть продукция в Выполнено");
+                        MessageBox.Show("Нельзя снять галочку, если уже есть продукция в Выполнено");
                         return;
                     }
                     else if (!_isChecked && value
                             && MaxQuantity == 0)
                     {
-                        MessageBox.Show("Нелья поставить галочку, так как весь вес продукции рапределен в решении."+Environment.NewLine
+                        MessageBox.Show("Нельзя поставить галочку, так как весь вес продукции рапределен в решении." + Environment.NewLine
                             +"Сначала отмените уже выбранное решение.");
                         return;
                     }
@@ -245,33 +245,33 @@ namespace Gamma.Models
                             && ParentModel.ProductKind == ProductKind.ProductGroupPack
                             && (!ParentModel.NeedsProductStates.Contains(ProductState)))
                     {
-                        MessageBox.Show("Нелья поставить галочку, так как это групповая упаковка. Сначала распакуйте ГУ.");
+                        MessageBox.Show("Нельзя поставить галочку, так как это групповая упаковка. Сначала распакуйте ГУ.");
                         return;
                     }
                     else if (IsExistMoreTwoCheckedItem)
                     {
-                        MessageBox.Show("Нелья поставить галочку, так как уже выбрано 2 решения.");
+                        MessageBox.Show("Нельзя поставить галочку, так как уже выбрано 2 решения.");
                         return;
                     }
                     else if (((ProductState == ProductState.Good || ProductState == ProductState.InternalUsage || ProductState == ProductState.Limited) && IsExistForConversionOrRepackItem))
                     {
-                        MessageBox.Show("Нелья поставить галочку, так как уже выбрано На переупаковку или На переделку.");
+                        MessageBox.Show("Нельзя поставить галочку, так как уже выбрано На переупаковку или На переделку.");
                         return;
                     }
                     else if (ParentModel.NeedsProductStates.Contains(ProductState) && IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0)
                     {
-                        MessageBox.Show("Нелья поставить галочку, так как уже есть На переупаковку или На переделку с Выполнено больше 0.");
+                        MessageBox.Show("Нельзя поставить галочку, так как уже есть На переупаковку или На переделку с Выполнено больше 0.");
                         return;
                     }
                     else if (ParentModel.NeedsProductStates.Contains(ProductState) && IsExistGoodItem)
                     {
-                        MessageBox.Show("Нелья поставить галочку, так как уже выбран Годная");
+                        MessageBox.Show("Нельзя поставить галочку, так как уже выбран Годная");
                         return;
                     }
                 }
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
-                RefreshEditBrokeDecisionItem(updatedMainFields);
+                if (!IsStopRefreshFields) RefreshEditBrokeDecisionItem(updatedMainFields);
             }
         }
 
@@ -296,7 +296,7 @@ namespace Gamma.Models
                 IsDecisionAppliedVisible = (value == ProductState.Broke) || (value == ProductState.ForConversion) || (value == ProductState.Repack);
             }
         }
-        
+
         private BrokeDecisionProduct _brokeDecisionProduct;
         public BrokeDecisionProduct BrokeDecisionProduct
         {
@@ -304,19 +304,24 @@ namespace Gamma.Models
             set
             {
                 _brokeDecisionProduct = value;
-                if (_brokeDecisionProduct != null)
+                if (_brokeDecisionProduct != null && _brokeDecisionProduct.ProductState == ProductState.ForConversion)
                 {
-                    if (_brokeDecisionProduct.ProductState == ProductState.ForConversion)
+                    //if (_brokeDecisionProduct.ProductState == ProductState.ForConversion)
                     {
                         var characteristicID = _brokeDecisionProduct.CharacteristicId;
                         NomenclatureID = _brokeDecisionProduct.NomenclatureId;
                         CharacteristicID = characteristicID;
                     }
                 }
+                else
+                {
+                    NomenclatureID = null;
+                    CharacteristicID = null;
+                }
                 RaisePropertyChanged("BrokeDecisionProduct");
             }
         }
-        
+
         private bool _isDecisionAppliedVisible;
         public bool IsDecisionAppliedVisible
         {
@@ -337,22 +342,22 @@ namespace Gamma.Models
                 _decisionApplied = value;
                 RaisePropertyChanged("DecisionApplied");
                 IsVisibleRow = !(value && ParentModel.NeedsProductStates.Contains(ProductState));
-                RefreshEditBrokeDecisionItem(false);
+                if (!IsStopRefreshFields) RefreshEditBrokeDecisionItem(false);
             }
         }
 
-/*        private bool _isExistWithdrawalSum;
-        public bool IsExistWithdrawalSum
-        {
-            get { return _isExistWithdrawalSum; }
-            set
-            {
-                _isExistWithdrawalSum = value;
-                RaisePropertyChanged("IsExistWithdrawalSum");
-                RefreshReadOnlyIsChecked(IsReadOnly);
-            }
-        }
-*/
+        /*        private bool _isExistWithdrawalSum;
+                public bool IsExistWithdrawalSum
+                {
+                    get { return _isExistWithdrawalSum; }
+                    set
+                    {
+                        _isExistWithdrawalSum = value;
+                        RaisePropertyChanged("IsExistWithdrawalSum");
+                        if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
+                    }
+                }
+        */
         private bool _isExistMoreTwoCheckedItem;
         public bool IsExistMoreTwoCheckedItem
         {
@@ -361,7 +366,7 @@ namespace Gamma.Models
             {
                 _isExistMoreTwoCheckedItem = value;
                 RaisePropertyChanged("IsExistMoreTwoCheckedItem");
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
             }
         }
 
@@ -373,7 +378,7 @@ namespace Gamma.Models
             {
                 _isExistForConversionOrRepackItem = value;
                 RaisePropertyChanged("IsExistForConversionOrRepackItem");
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
             }
         }
 
@@ -385,7 +390,7 @@ namespace Gamma.Models
             {
                 _isExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = value;
                 RaisePropertyChanged("IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0");
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
             }
         }
 
@@ -397,7 +402,7 @@ namespace Gamma.Models
             {
                 _isExistGoodItem = value;
                 RaisePropertyChanged("IsExistGoodItem");
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
             }
         }
 
@@ -409,7 +414,7 @@ namespace Gamma.Models
             {
                 _isExistNeedDecisionMore0 = value;
                 RaisePropertyChanged("IsExistNeedDecisionMore0");
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
             }
         }
 
@@ -431,7 +436,7 @@ namespace Gamma.Models
             set
             {
                 _docWithdrawalSum = value;
-                RefreshDecisionApplied();
+                if (!IsStopRefreshFields) RefreshDecisionApplied();
                 RaisePropertyChanged("DocWithdrawalSum");
             }
         }
@@ -509,7 +514,7 @@ namespace Gamma.Models
             set
             {
                 _maxQuantity = value;
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
                 RaisePropertyChanged("MaxQuantity");
             }
         }
@@ -521,7 +526,7 @@ namespace Gamma.Models
             set
             {
                 _minQuantity = value;
-                RefreshReadOnlyIsChecked(IsReadOnly);
+                if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
                 RaisePropertyChanged("MinQuantity");
             }
         }
@@ -536,7 +541,7 @@ namespace Gamma.Models
                 RaisePropertyChanged("IsNotNeedToSave");
             }
         }
-        
+
         private bool _isVisibleRow { get; set; } = true;
         public bool IsVisibleRow
         {
@@ -546,6 +551,57 @@ namespace Gamma.Models
                 _isVisibleRow = value;
                 RaisePropertyChanged("IsVisibleRow");
             }
+        }
+
+        private bool _isStopRefreshFields { get; set; } = false;
+        private bool IsStopRefreshFields
+        {
+            get { return _isStopRefreshFields; }
+            set
+            {
+                _isStopRefreshFields = value;
+                if (!value)
+                {
+                    RefreshEditBrokeDecisionItem(true);
+                    RefreshDecisionApplied();
+                }
+            }
+        }
+
+        public void Update(BrokeDecisionProduct brokeDecisionProduct, bool isChecked, decimal quantity, string comment, bool isReadOnly, bool decisionApplied, decimal docWithdrawalSum, List<KeyValuePair<Guid, String>> docWithdrawals, bool? isNotNeedToSave = null, bool? isVisibleRow = null)
+        {
+            IsStopRefreshFields = true;
+            Quantity = quantity;
+            Comment = comment;
+            IsReadOnly = isReadOnly;
+            DecisionApplied = decisionApplied;
+            DocWithdrawalSum = docWithdrawalSum;
+            DocWithdrawals = docWithdrawals;
+            if (isNotNeedToSave != null) IsNotNeedToSave = (bool)isNotNeedToSave;
+            if (isVisibleRow != null) IsVisibleRow = (bool)isVisibleRow;
+            IsChecked = isChecked;
+            BrokeDecisionProduct = brokeDecisionProduct;
+            IsStopRefreshFields = false;
+        }
+
+        public void Update(string name, bool isChecked, decimal quantity, decimal maxQuantity, bool? isNotNeedToSave = null, bool? isVisibleRow = null)
+        {
+            IsStopRefreshFields = true;
+            Name = name;
+            Quantity = quantity;
+            MaxQuantity = maxQuantity;
+            if (isNotNeedToSave != null) IsNotNeedToSave = (bool)isNotNeedToSave;
+            if (isVisibleRow != null) IsVisibleRow = (bool)isVisibleRow;
+            IsChecked = isChecked;
+            IsStopRefreshFields = false;
+        }
+
+        public void Update(bool isChecked, decimal quantity)
+        {
+            IsStopRefreshFields = true;
+            Quantity = quantity;
+            IsChecked = isChecked;
+            IsStopRefreshFields = false;
         }
     }
 }

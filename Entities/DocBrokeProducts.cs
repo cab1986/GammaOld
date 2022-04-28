@@ -41,5 +41,6 @@ namespace Gamma.Entities
         public virtual ICollection<DocRepackProducts> DocRepackProducts { get; set; }
         public virtual C1CRejectionReasons C1CRejectionReasons { get; set; }
         public virtual C1CRejectionReasons C1CRejectionReasons1 { get; set; }
+        public virtual Places Places1 { get; set; }
     }
 }

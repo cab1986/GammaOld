@@ -181,6 +181,7 @@ namespace Gamma.Entities
         public virtual DbSet<PlaceAuxiliaryMaterials> PlaceAuxiliaryMaterials { get; set; }
         public virtual DbSet<RobotProduct1CCharacteristic> RobotProduct1CCharacteristic { get; set; }
         public virtual DbSet<C1CEquipmentNodesPlaces> C1CEquipmentNodesPlaces { get; set; }
+        public virtual DbSet<vProductsBaseInfo> vProductsBaseInfo { get; set; }
         public virtual DbSet<DocBrokeDecision> DocBrokeDecision { get; set; }
         public virtual DbSet<vDocBroke> vDocBroke { get; set; }
     
@@ -1574,23 +1575,6 @@ namespace Gamma.Entities
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetBatchRepackProducts_Result>("GetBatchRepackProducts", productionTaskBatchIDParameter, intervalIDParameter);
         }
     
-        public virtual ObjectResult<UtilizationProductWithRepackInDocBroke_Result> UtilizationProductWithRepackInDocBroke(Nullable<System.Guid> productID, Nullable<decimal> quantityBroke, Nullable<int> shiftID)
-        {
-            var productIDParameter = productID.HasValue ?
-                new ObjectParameter("ProductID", productID) :
-                new ObjectParameter("ProductID", typeof(System.Guid));
-    
-            var quantityBrokeParameter = quantityBroke.HasValue ?
-                new ObjectParameter("QuantityBroke", quantityBroke) :
-                new ObjectParameter("QuantityBroke", typeof(decimal));
-            
-            var shiftIDParameter = shiftID.HasValue ?
-                new ObjectParameter("ShiftID", shiftID) :
-                new ObjectParameter("ShiftID", typeof(int));
-
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductWithRepackInDocBroke_Result>("UtilizationProductWithRepackInDocBroke", productIDParameter, quantityBrokeParameter, shiftIDParameter);
-        }
-    
         public virtual ObjectResult<FillDocCloseShiftConvertingAuxiliaryMaterials_Result> FillDocCloseShiftConvertingAuxiliaryMaterials(Nullable<int> placeID, Nullable<int> shiftID, Nullable<System.DateTime> closeDate)
         {
             var placeIDParameter = placeID.HasValue ?
@@ -1726,6 +1710,23 @@ namespace Gamma.Entities
                 new ObjectParameter("ProductID", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<bool>>("GetDocBrokeDecisionEditable", userIDParameter, shiftIDParameter, docIDParameter, productIDParameter);
+        }
+    
+        public virtual ObjectResult<UtilizationProductWithRepackInDocBroke_Result> UtilizationProductWithRepackInDocBroke(Nullable<System.Guid> productID, Nullable<decimal> quantityBroke, Nullable<int> shiftID)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var quantityBrokeParameter = quantityBroke.HasValue ?
+                new ObjectParameter("QuantityBroke", quantityBroke) :
+                new ObjectParameter("QuantityBroke", typeof(decimal));
+    
+            var shiftIDParameter = shiftID.HasValue ?
+                new ObjectParameter("ShiftID", shiftID) :
+                new ObjectParameter("ShiftID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductWithRepackInDocBroke_Result>("UtilizationProductWithRepackInDocBroke", productIDParameter, quantityBrokeParameter, shiftIDParameter);
         }
     }
 }

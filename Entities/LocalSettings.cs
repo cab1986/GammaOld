@@ -24,5 +24,7 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> LastExecGet1CNomenclature { get; set; }
         public Nullable<bool> IsUploadDocBrokeTo1CWhenSave { get; set; }
         public Nullable<bool> IsUsedInOneDocMaterialDirectCalcAndComposition { get; set; }
+        public Nullable<System.DateTime> LastSuccessCompletedGet1CNomenclature { get; set; }
+        public Nullable<System.DateTime> LastSuccessCompletedImportCellulose { get; set; }
     }
 }

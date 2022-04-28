@@ -457,14 +457,16 @@
         <EntityTypeShape EntityType="GammaModel.C1CEquipmentNodesPlaces" Width="1.5" PointX="18.375" PointY="0.75" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second" />
-        <EntityTypeShape EntityType="GammaModel.DocBrokeDecision" Width="1.5" PointX="20.5" PointY="73.125" />
+        <AssociationConnector Association="GammaModel.FK_DocMovement_1CDocInternalOrders" />
+        <EntityTypeShape EntityType="GammaModel.vProductsBaseInfo" Width="1.5" PointX="19.375" PointY="14.75" />
+        <EntityTypeShape EntityType="GammaModel.DocBrokeDecision" Width="1.5" PointX="34.5" PointY="46.25" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_DocBroke" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_Docs" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_Products" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProducts_DocBrokeDecision" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" />
-        <AssociationConnector Association="GammaModel.FK_DocBrokeDecision_Products" />
-        <AssociationConnector Association="GammaModel.FK_DocMovement_1CDocInternalOrders" />
         <EntityTypeShape EntityType="GammaModel.vDocBroke" Width="1.5" PointX="11.375" PointY="19.75" />
+        <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_Places1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -22,18 +22,18 @@ namespace Gamma.Entities
         }
     
         public System.Guid DocID { get; set; }
+        public System.Guid ProductID { get; set; }
         public Nullable<System.Guid> DocBrokeID { get; set; }
         public bool IsActual { get; set; }
         public Nullable<System.DateTime> DecisionDate { get; set; }
         public Nullable<int> DecisionPlaceID { get; set; }
-        public Nullable<System.Guid> ProductID { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
         public virtual Docs Docs { get; set; }
+        public virtual Products Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeDecisionProducts> DocBrokeDecisionProducts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocBrokeDecisionProductWithdrawalProducts> DocBrokeDecisionProductWithdrawalProducts { get; set; }
-        public virtual Products Products { get; set; }
     }
 }
