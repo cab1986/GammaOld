@@ -71,6 +71,7 @@
         </DataTemplate>
     </Window.Resources>
     <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:CurrentWindowService ClosingCommand="{Binding ClosingCommand}" />
         <dxmvvm:EventToCommand EventName="Activated" Command="{Binding ActivatedCommand}"/>
         <dxmvvm:EventToCommand EventName="Deactivated" Command="{Binding DeactivatedCommand}"/>
     </dxmvvm:Interaction.Behaviors>

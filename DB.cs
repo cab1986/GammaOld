@@ -11,6 +11,8 @@ using System.Linq;
 using System.Windows;
 using Gamma.Entities;
 using Gamma.Models;
+using System.ComponentModel.DataAnnotations;
+using Gamma.Common;
 
 namespace Gamma
 {
@@ -64,29 +66,6 @@ namespace Gamma
             }
         }
         
-
-        private static GammaEntities _logDbContext { get; set; }
-        public static GammaEntities LogDbContext
-        {
-            get
-            {
-                try
-                {
-                    if (_logDbContext == null)
-                    {
-                        _logDbContext = new GammaEntities(GammaSettings.ConnectionString);
-                        _logDbContext.Database.CommandTimeout = 300;
-                    }
-                    return _logDbContext;
-                }
-                catch (Exception e)
-                {
-                    //MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException.Message}");
-                    return null as GammaEntities;
-                }
-            }
-        }
-
         public static bool Initialize()
         {
 //            GammaBase = new GammaEntities(GammaSettings.ConnectionString);
@@ -94,13 +73,16 @@ namespace Gamma
             try
             {
                 //                GammaBase.Database.Connection.Open();
+                if (DB.TimerForUploadLogToServer == null)
+                {
+                    Functions.ShowMessageError(@"Внимание! Не запущена автоматическая выгрузка логов на сервер.", "Error start TimerForUploadLogToServer");
+                }
                 var currentUser = CurrentUserID;
                 if (currentUser != Guid.Empty)
                 {
                     if (!WorkSession.SetUser(currentUser))
                     {
-                        MessageBox.Show("Не удалось получить информацию о пользователе");
-                        DB.AddLogMessageError("Не удалось получить информацию о пользователе","Error SetUser in DB.Initialize");
+                        Functions.ShowMessageError("Не удалось получить информацию о пользователе","Error SetUser in DB.Initialize");
                         return false;
                     }
                     return true;
@@ -152,6 +134,242 @@ namespace Gamma
                                                       || e.State == EntityState.Deleted);
                 }
         */
+        #region Log
+
+        
+        private static System.Threading.Timer _timerForUploadLogToServer { get; set; }
+        public static System.Threading.Timer TimerForUploadLogToServer
+        {
+            get
+            {
+                if (_timerForUploadLogToServer == null)
+                {
+                    int num = 0;
+                    System.Threading.TimerCallback tm = new System.Threading.TimerCallback(UploadLogToServerFromTimer);
+                    // создаем таймер
+                    _timerForUploadLogToServer = new System.Threading.Timer(tm, num, 0, WorkSession.TimerPeriodForUploadLogToServer);
+                }
+                return _timerForUploadLogToServer;
+            }
+
+        }
+
+        private static bool _uploadLogToServerRunning;
+        private static bool _stopUploadLogToServerRun;
+        public static object lockerForUploadLogToServer = new object();
+        private static bool _uploadLogToServerFromTimerRunning;
+
+        public static void UploadLogToServerFromTimer(object obj)
+        {
+#if (DEBUG)
+            var n = DateTime.Now.ToString();
+            System.Diagnostics.Debug.Write(n + " !!!!!UploadLogToServerFromTimer(" + _uploadLogToServerFromTimerRunning.ToString() + ")!" + Environment.NewLine);
+#endif
+            if (_uploadLogToServerFromTimerRunning || CriticalLogList?.Count == 0) return;
+            lock (lockerForUploadLogToServer)
+            {
+                _uploadLogToServerFromTimerRunning = true;
+#if (DEBUG)
+                System.Diagnostics.Debug.Write(n + " !!!!!DB.UploadLogToServer(" + _uploadLogToServerFromTimerRunning.ToString() + ")!" + Environment.NewLine);
+#endif
+                DB.UploadLogToServer(false);
+            }
+            _uploadLogToServerFromTimerRunning = false;
+        }
+
+        public static bool UploadLogToServer(bool isFirst)
+        {
+            bool ret = true;
+            if (!_uploadLogToServerRunning && !_stopUploadLogToServerRun)
+            {
+                _uploadLogToServerRunning = true;
+                using (var gammaDb = GammaDbWithNoCheckConnection)
+                {
+                    var addedLogIds = new List<Guid>();
+                    var criticalLogList = new List<CriticalLog>(CriticalLogList);
+#if (DEBUG)
+                    System.Diagnostics.Debug.Write(DateTime.Now.ToString() + " !!!!!UploadLogToServer(date)!" + Environment.NewLine);
+#endif
+                    foreach (var log in criticalLogList)
+                    {
+                        if (_stopUploadLogToServerRun)
+                            break;
+                        var addCriticalLog = new CriticalLogs()
+                        {
+                            LogID = log.LogID,
+                            LogDate = log.LogDate,
+                            LogUserID = log.LogUserID,
+                            HostName = log.HostName,
+                            LogTypeID = log.LogTypeID,
+                            Log = log.Log,
+                            Image = log.Image,
+                            DocID = log.DocID,
+                            ProductID = log.ProductID,
+                            TechnicalLog = log.TechnicalLog
+                        };
+                        try
+                        {
+                            gammaDb.CriticalLogs.Add(addCriticalLog);
+#if (DEBUG)
+                            System.Diagnostics.Debug.Write(DateTime.Now.ToString() + " !!!!!UploadLogToServer: LogID = " + log.LogID + Environment.NewLine);
+#endif
+                            gammaDb.SaveChanges();
+                            addedLogIds.Add(log.LogID);
+                        }
+                        catch (Exception e)
+                        {
+                            if (e.InnerException?.InnerException is SqlException)
+                            {
+                                SqlException sex = e.InnerException?.InnerException as SqlException;
+                                if (sex?.Number == 2627)
+                                {
+                                    gammaDb.CriticalLogs.Remove(addCriticalLog);
+                                    addedLogIds.Add(log.LogID);
+                                }
+                                else
+                                    ret = false;
+                            }
+                            else
+                                ret = false;
+                        }
+
+                    }
+                    CriticalLogList.RemoveAll(r => addedLogIds.Contains(r.LogID));
+                    if (addedLogIds?.Count > 0)
+                    try
+                    {
+                        using (var gammaLogDb = LogDbContext)
+                        {
+                            var criticalLogs = gammaLogDb.CriticalLogs.Where(r => addedLogIds.Contains(r.LogID));
+                            if (criticalLogs != null)
+                            //foreach (var logDel in criticalLogs)
+                            {
+                                gammaLogDb.CriticalLogs.RemoveRange(criticalLogs);
+                                //gammaLogDb.CriticalLogs.Remove(logDel);
+                                gammaLogDb.SaveChanges();
+                            }
+                        }
+                    }
+                    catch (Exception e) { }
+                }
+                _uploadLogToServerRunning = false;
+            }
+            return ret;
+        }
+                
+        public class CompactDBContext : DbContext
+        {
+            public CompactDBContext()
+                : base(GetConnectionString())
+            {   
+                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CompactDBContext>());
+                //Database.SetInitializer(new DropCreateDatabaseAlways<LocalDBContext>());
+            }
+            public DbSet<CriticalLog> CriticalLogs { get; set; }
+
+            public static string GetConnectionString()
+            {
+                var conStr = System.Configuration.ConfigurationManager.ConnectionStrings["CompactDBContext"].ConnectionString;
+                return conStr.Replace("|APPDATA|",
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            }
+        }
+
+        public partial class CriticalLog
+        {
+            [Key]
+            public System.Guid LogID { get; set; }
+            public string Log { get; set; }
+            public Nullable<System.DateTime> LogDate { get; set; }
+            public string LogUserID { get; set; }
+            public string HostName { get; set; }
+            public Nullable<int> LogTypeID { get; set; }
+            public byte[] Image { get; set; }
+            public Nullable<System.Guid> DocID { get; set; }
+            public Nullable<System.Guid> ProductID { get; set; }
+            public string TechnicalLog { get; set; }
+        }
+
+        
+
+
+        private static CompactDBContext _logDbContext { get; set; }
+        public static CompactDBContext LogDbContext
+        {
+            get
+            {
+                try
+                {
+                    //if (_logDbContext == null)
+                    {
+                        _logDbContext = new CompactDBContext();
+                        //_logDbContext.Database.CommandTimeout = 300;
+                        //_logDbContext.Database.ExecuteSqlCommand(@"DROP TABLE IF EXISTS CriticalLogs");
+                        //_logDbContext.Database.ExecuteSqlCommand(
+                        //@"CREATE TABLE IF NOT EXISTS CriticalLogs(LogID TEXT PRIMARY KEY,Log TEXT NULL,LogDate TEXT NULL,LogUserID TEXT NULL,HostName TEXT NULL,LogTypeID INTEGER NULL,Image BLOB NULL,DocID TEXT NULL,ProductID TEXT NULL,TechnicalLog TEXT NULL)"
+                        /*  @"
+                      CREATE TABLE [CriticalLogs](
+                          [LogID] [uniqueidentifier] NOT NULL,
+                          [Log] [varchar](2000) NULL,
+                          [LogDate] [datetime] NULL,
+                          [LogUserID] [varchar](150) NULL,
+                          [HostName] [varchar](150) NULL,
+                          [LogTypeID] [int] NULL,
+                          [Image] [varbinary](max) NULL,
+                          [DocID] [uniqueidentifier] NULL,
+                          [ProductID] [uniqueidentifier] NULL,
+                          [TechnicalLog] [varchar](1000) NULL
+                          )"
+                      );*/
+                    }
+                    return _logDbContext;
+                }
+                catch (Exception e)
+                {
+                    //MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException.Message}");
+                    return null as CompactDBContext;
+                }
+            }
+        }
+
+        private static List<CriticalLog> _criticalLogList { get; set; }
+        private static List<CriticalLog> CriticalLogList
+        {
+            get
+            {
+                if (_criticalLogList == null)
+                {
+                    using (var gammaLogDb = LogDbContext)
+                    {
+                        _criticalLogList = new List<CriticalLog>();
+                        if (gammaLogDb.CriticalLogs.Count() > 0)
+                            try
+                            {
+                                foreach(var log in gammaLogDb.CriticalLogs)
+                                {
+                                    _criticalLogList.Add(new CriticalLog()
+                                    {
+                                        LogID = log.LogID,
+                                        LogDate = log.LogDate,
+                                        LogUserID = log.LogUserID,
+                                        HostName = log.HostName,
+                                        LogTypeID = log.LogTypeID,
+                                        Log = log.Log,
+                                        Image = log.Image,
+                                        DocID = log.DocID,
+                                        ProductID = log.ProductID,
+                                        TechnicalLog = log.TechnicalLog
+                                    });
+                                }
+                                AddLogMessageStartProgramInformation("Невыгруженные записи в лог предыдущего сеанса (кол-во = "+ gammaLogDb.CriticalLogs.Count() + ")", "Download logs from LocalLogDb with starting program (count = " + gammaLogDb.CriticalLogs.Count() + ")");
+                            }
+                            catch { }
+                    }
+                }
+                return _criticalLogList;
+            }
+        }
+
         public static void AddLogMessageInformation(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Information, technicalLog, docID, productID);
         public static void AddLogMessageQuestion(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Question, technicalLog, docID, productID);
         public static void AddLogMessageError(string log, string technicalLog = null, Guid? docID = null, Guid? productID = null) => AddLogMessage(log, CriticalLogTypes.Error, technicalLog, docID, productID);
@@ -160,15 +378,106 @@ namespace Gamma
 
         public static void AddLogMessage(string log, CriticalLogTypes logTypeID, string technicalLog = null, Guid? docID = null, Guid? productID = null)
         {
-            LogDbContext.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = (log?.Length > 2000 ? log?.Substring(0,2000):log), DocID = docID, ProductID = productID, TechnicalLog = (technicalLog?.Length > 1000 ? technicalLog?.Substring(0, 1000) : technicalLog) });
-            LogDbContext.SaveChanges();
+            CriticalLogList.Add(new CriticalLog
+             {
+                 LogID = SqlGuidUtil.NewSequentialid(),
+                 LogDate = DateTime.Now,
+                 LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""),
+                 HostName = GammaSettings.LocalHostName,
+                 LogTypeID = (int)logTypeID,
+                 Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log),
+                 DocID = docID,
+                 ProductID = productID,
+                 TechnicalLog = (technicalLog?.Length > 1000 ? technicalLog?.Substring(0, 1000) : technicalLog)
+             });
         }
-
+        
         public static void AddLogMessage(string log, CriticalLogTypes logTypeID, System.IO.MemoryStream image, string technicalLog = null, Guid? docID = null, Guid? productID = null)
         {
-            LogDbContext.CriticalLogs.Add(new CriticalLogs { LogID = SqlGuidUtil.NewSequentialid(), LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""), HostName = GammaSettings.LocalHostName, LogTypeID = (int)logTypeID, Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log), Image = image.ToArray(), DocID = docID, ProductID = productID, TechnicalLog = (technicalLog?.Length > 1000?technicalLog?.Substring(0, 1000): technicalLog) });
-            LogDbContext.SaveChanges();
+            CriticalLogList.Add(new CriticalLog
+            {
+                LogID = SqlGuidUtil.NewSequentialid(),
+                LogDate = DateTime.Now,
+                LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""),
+                HostName = GammaSettings.LocalHostName,
+                LogTypeID = (int)logTypeID,
+                Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log),
+                Image = image.ToArray(),
+                DocID = docID,
+                ProductID = productID,
+                TechnicalLog = (technicalLog?.Length > 1000 ? technicalLog?.Substring(0, 1000) : technicalLog)
+            });
         }
+
+        public static void SaveLogToLocalServer()
+        {
+            if (CriticalLogList?.Count > 0)
+            {
+                if (UploadLogToServer(false))
+                {
+                    int countCriticalLogList = CriticalLogList?.Count ?? 0;
+                    if (countCriticalLogList > 0)
+                    {
+                        byte countSecondSleep = 10;
+                        byte maxSecondWaiting = 60;
+                        System.Threading.Thread.Sleep(countSecondSleep * 1000);
+                        if (DB.UploadLogToServer(false))
+                        {
+                            var countUploadedLogToServer = (countCriticalLogList - (CriticalLogList?.Count ?? 0));
+                            if (countUploadedLogToServer != 0 && ((CriticalLogList?.Count ?? 0) * (countSecondSleep / countUploadedLogToServer) <= maxSecondWaiting))
+                            {
+                                byte t = 0;
+                                while (CriticalLogList?.Count > 0 && t < maxSecondWaiting / countSecondSleep)
+                                {
+                                    if (CriticalLogList?.Count > 0)
+                                        System.Threading.Thread.Sleep(countSecondSleep);
+                                    UploadLogToServerFromTimer(false);
+                                    t++;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (CriticalLogList?.Count > 0)
+                {
+                    _stopUploadLogToServerRun = true;
+                    _uploadLogToServerFromTimerRunning = true;
+                    _uploadLogToServerRunning = true;
+                    try
+                    {
+                        using (var logDB = LogDbContext)
+                        {
+                            var logDBCriticalLogList = logDB.CriticalLogs.Select(l => l.LogID).ToList();
+                            foreach (var log in CriticalLogList.Where(l => !logDBCriticalLogList.Contains(l.LogID)))
+                            {
+                                logDB.CriticalLogs.Add(new CriticalLog
+                                {
+                                    LogID = log.LogID,
+                                    LogDate = log.LogDate,
+                                    LogUserID = log.LogUserID,
+                                    HostName = log.HostName,
+                                    LogTypeID = log.LogTypeID,
+                                    Log = log.Log,
+                                    DocID = log.DocID,
+                                    ProductID = log.ProductID,
+                                    TechnicalLog = log.TechnicalLog,
+                                    Image = log.Image
+                                });
+                            }
+                            logDB.SaveChanges();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    _stopUploadLogToServerRun = false;
+                    _uploadLogToServerFromTimerRunning = false;
+                    _uploadLogToServerRunning = false;
+                }
+            }
+        }
+        #endregion
 
         public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid, GammaEntities gammaBase = null)
         {

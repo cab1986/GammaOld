@@ -15,6 +15,8 @@ using System.Diagnostics;
 using Gamma.Entities;
 using System.Data.Entity.SqlServer;
 using System.Net;
+using System.Windows.Input;
+using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -28,7 +30,8 @@ namespace Gamma.ViewModels
         /// </summary>
         public MainViewModel()
         {
-            Messenger.Default.Register<CloseMessage>(this, msg => CloseSignal = true);
+            //Messenger.Default.Register<CloseMessage>(this, CloseApp);// msg => CloseSignal = true);
+            ClosingCommand = new DelegateCommand<CancelEventArgs>(CloseApp);
             Messenger.Default.Register<OpenProductionTaskBatchMessage>(this, OpenProductionTaskBatch);
             Messenger.Default.Register<EditDocComplectationMessage>(this, OpenDocComplectation);
             ViewsManager.Initialize();
@@ -75,9 +78,9 @@ namespace Gamma.ViewModels
                 DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version + ", Device " + Environment.MachineName + ", CurrentDate " + DateTime.Now.ToString() + ", IP " + myIP);
                 DB.AddLogMessageStartProgramInformation(StatusText);
             }
-            catch
+            catch (Exception e)
             {
-                DB.AddLogMessageError("Ошибка добавления в лог информации о запуске программы");
+                //DB.AddLogMessageError("Ошибка добавления в лог информации о запуске программы");
             }
             
             if (IsInDesignMode)
@@ -234,6 +237,16 @@ namespace Gamma.ViewModels
             CurrentView = new ProductionTaskBatchViewModel(msg);
             ActivatedCommand = ((ProductionTaskBatchViewModel) CurrentView).ActivatedCommand;
             DeactivatedCommand = ((ProductionTaskBatchViewModel) CurrentView).DeactivatedCommand;
+        }
+
+        public ICommand ClosingCommand { get; private set; }
+                
+        public void CloseApp(CancelEventArgs e)
+        {
+            if (MessageBox.Show("Хотите закончить работу с программой?", "Завершение работы", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                e.Cancel = true;
+            else
+                DB.SaveLogToLocalServer();
         }
 
         private DelegateCommand _activatedCommand;

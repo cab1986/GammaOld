@@ -911,9 +911,9 @@ namespace Gamma.ViewModels
             if (updatedMainFields && !IsChangedDecisionDateRefreshEditBrokeDecisionItem)
             {
                
-                IsUpdatedBrokeDecisionProductItems = false;
+                //IsUpdatedBrokeDecisionProductItems = false;
                 DecisionDate = DateTime.Now;
-                DecisionDocID = SqlGuidUtil.NewSequentialid();
+                //DecisionDocID = SqlGuidUtil.NewSequentialid();
                 var currentPlaceID = GammaBase.Rests.FirstOrDefault(r => r.ProductID == ProductID)?.PlaceID;
                 if (currentPlaceID != null)
                 {
@@ -925,7 +925,7 @@ namespace Gamma.ViewModels
                     DB.AddLogMessageInformation("Изменена дата решения ProductID в Решениях по акту о браке DocID", "Edit DecisionDate in RefreshEditBrokeDecisionItem (DecisionDocID = '" + DecisionDocID + "', ProductState='" + productState + "', IsChecked='" + currentEditBrokeDecisionItem?.IsChecked + "', Quantity='" + currentEditBrokeDecisionItem?.Quantity + "', MinQuantity='" + currentEditBrokeDecisionItem?.MinQuantity + "', MaxQuantity='" + currentEditBrokeDecisionItem?.MaxQuantity + "', Name='" + currentEditBrokeDecisionItem?.Name + "', DecisionAppliedLabel='" + currentEditBrokeDecisionItem?.DecisionAppliedLabel + "', DecisionApplied='" + currentEditBrokeDecisionItem?.DecisionApplied + "', IsReadOnly='" + currentEditBrokeDecisionItem?.IsReadOnly + "', IsReadOnlyDecisionApplied='" + currentEditBrokeDecisionItem?.IsReadOnlyDecisionApplied + "', IsReadOnlyFields='" + currentEditBrokeDecisionItem?.IsReadOnlyFields + "', IsReadOnlyIsChecked='" + currentEditBrokeDecisionItem?.IsReadOnlyIsChecked + "', IsReadOnlyQuantity='" + currentEditBrokeDecisionItem?.IsReadOnlyQuantity + "', IsValid='" + currentEditBrokeDecisionItem?.IsValid + "', NomenclatureID='" + currentEditBrokeDecisionItem?.NomenclatureID + "', CharacteristicID='" + currentEditBrokeDecisionItem?.CharacteristicID + "', Comment='" + currentEditBrokeDecisionItem?.Comment + "')", DocBrokeID, ProductID);
                 }
                 IsChangedDecisionDateRefreshEditBrokeDecisionItem = true;
-                IsUpdatedBrokeDecisionProductItems = true;
+                //IsUpdatedBrokeDecisionProductItems = true;
             }
             bool IsChecked = currentEditBrokeDecisionItem?.IsChecked ?? false;
             //сумма принятых решений

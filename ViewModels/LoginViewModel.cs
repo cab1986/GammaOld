@@ -59,7 +59,7 @@ namespace Gamma.ViewModels
 
         
         public LoginViewModel()
-        {
+        {            
             var appSettings = GammaSettings.Get();
             Hosts = appSettings.Hosts;
             if (Hosts.Count > 0 && !Hosts.Contains(appSettings.HostName)) Host = Hosts.First();

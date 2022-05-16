@@ -198,6 +198,8 @@ namespace Gamma
 
         public static bool IsUsedInOneDocMaterialDirectCalcAndComposition { get; private set; }
 
+        public static int TimerPeriodForUploadLogToServer { get; private set; } = 300000;
+
         private static int RefreshUserInfoPeriod { get; set; } = 30;
         private static bool _isExistNewVersionOfProgram { get; set; } = false;
         private static bool _isBlockedExecutionProgramThereIsNewVersion { get; set; } = false;
