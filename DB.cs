@@ -13,6 +13,8 @@ using Gamma.Entities;
 using Gamma.Models;
 using System.ComponentModel.DataAnnotations;
 using Gamma.Common;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace Gamma
 {
@@ -154,6 +156,7 @@ namespace Gamma
 
         }
 
+        private static string _criticalLogLocalDbFileName => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GammaLogDB.xml");
         private static bool _uploadLogToServerRunning;
         private static bool _stopUploadLogToServerRun;
         public static object lockerForUploadLogToServer = new object();
@@ -235,46 +238,12 @@ namespace Gamma
 
                     }
                     CriticalLogList.RemoveAll(r => addedLogIds.Contains(r.LogID));
-                    if (addedLogIds?.Count > 0)
-                    try
-                    {
-                        using (var gammaLogDb = LogDbContext)
-                        {
-                            var criticalLogs = gammaLogDb.CriticalLogs.Where(r => addedLogIds.Contains(r.LogID));
-                            if (criticalLogs != null)
-                            //foreach (var logDel in criticalLogs)
-                            {
-                                gammaLogDb.CriticalLogs.RemoveRange(criticalLogs);
-                                //gammaLogDb.CriticalLogs.Remove(logDel);
-                                gammaLogDb.SaveChanges();
-                            }
-                        }
-                    }
-                    catch (Exception e) { }
                 }
                 _uploadLogToServerRunning = false;
             }
             return ret;
         }
                 
-        public class CompactDBContext : DbContext
-        {
-            public CompactDBContext()
-                : base(GetConnectionString())
-            {   
-                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CompactDBContext>());
-                //Database.SetInitializer(new DropCreateDatabaseAlways<LocalDBContext>());
-            }
-            public DbSet<CriticalLog> CriticalLogs { get; set; }
-
-            public static string GetConnectionString()
-            {
-                var conStr = System.Configuration.ConfigurationManager.ConnectionStrings["CompactDBContext"].ConnectionString;
-                return conStr.Replace("|APPDATA|",
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
-            }
-        }
-
         public partial class CriticalLog
         {
             [Key]
@@ -290,48 +259,6 @@ namespace Gamma
             public string TechnicalLog { get; set; }
         }
 
-        
-
-
-        private static CompactDBContext _logDbContext { get; set; }
-        public static CompactDBContext LogDbContext
-        {
-            get
-            {
-                try
-                {
-                    //if (_logDbContext == null)
-                    {
-                        _logDbContext = new CompactDBContext();
-                        //_logDbContext.Database.CommandTimeout = 300;
-                        //_logDbContext.Database.ExecuteSqlCommand(@"DROP TABLE IF EXISTS CriticalLogs");
-                        //_logDbContext.Database.ExecuteSqlCommand(
-                        //@"CREATE TABLE IF NOT EXISTS CriticalLogs(LogID TEXT PRIMARY KEY,Log TEXT NULL,LogDate TEXT NULL,LogUserID TEXT NULL,HostName TEXT NULL,LogTypeID INTEGER NULL,Image BLOB NULL,DocID TEXT NULL,ProductID TEXT NULL,TechnicalLog TEXT NULL)"
-                        /*  @"
-                      CREATE TABLE [CriticalLogs](
-                          [LogID] [uniqueidentifier] NOT NULL,
-                          [Log] [varchar](2000) NULL,
-                          [LogDate] [datetime] NULL,
-                          [LogUserID] [varchar](150) NULL,
-                          [HostName] [varchar](150) NULL,
-                          [LogTypeID] [int] NULL,
-                          [Image] [varbinary](max) NULL,
-                          [DocID] [uniqueidentifier] NULL,
-                          [ProductID] [uniqueidentifier] NULL,
-                          [TechnicalLog] [varchar](1000) NULL
-                          )"
-                      );*/
-                    }
-                    return _logDbContext;
-                }
-                catch (Exception e)
-                {
-                    //MessageBox.Show($"Message:{e.Message} InnerMessage:{e.InnerException.Message}");
-                    return null as CompactDBContext;
-                }
-            }
-        }
-
         private static List<CriticalLog> _criticalLogList { get; set; }
         private static List<CriticalLog> CriticalLogList
         {
@@ -339,32 +266,31 @@ namespace Gamma
             {
                 if (_criticalLogList == null)
                 {
-                    using (var gammaLogDb = LogDbContext)
+                    _criticalLogList = new List<CriticalLog>();
+                    if (File.Exists(_criticalLogLocalDbFileName))
                     {
-                        _criticalLogList = new List<CriticalLog>();
-                        if (gammaLogDb.CriticalLogs.Count() > 0)
+                        bool succesLoadFile = false;
+                        try
+                        {
+                            XmlSerializer xmlCriticalLog = new XmlSerializer(CriticalLogList.GetType());
+                            using (FileStream logDb = new FileStream(_criticalLogLocalDbFileName, FileMode.Open, FileAccess.Read))
+                            {
+                                _criticalLogList = xmlCriticalLog.Deserialize(logDb) as List<CriticalLog>;
+                            }
+                            succesLoadFile = true;
+                        }
+                        catch { }
+                        if (succesLoadFile)
                             try
                             {
-                                foreach(var log in gammaLogDb.CriticalLogs)
-                                {
-                                    _criticalLogList.Add(new CriticalLog()
-                                    {
-                                        LogID = log.LogID,
-                                        LogDate = log.LogDate,
-                                        LogUserID = log.LogUserID,
-                                        HostName = log.HostName,
-                                        LogTypeID = log.LogTypeID,
-                                        Log = log.Log,
-                                        Image = log.Image,
-                                        DocID = log.DocID,
-                                        ProductID = log.ProductID,
-                                        TechnicalLog = log.TechnicalLog
-                                    });
-                                }
-                                AddLogMessageStartProgramInformation("Невыгруженные записи в лог предыдущего сеанса (кол-во = "+ gammaLogDb.CriticalLogs.Count() + ")", "Download logs from LocalLogDb with starting program (count = " + gammaLogDb.CriticalLogs.Count() + ")");
+                                File.Delete(_criticalLogLocalDbFileName);
                             }
-                            catch { }
+                            catch
+                            {
+                                AddLogMessageStartProgramInformation("Ошибка при удалении файла " + _criticalLogLocalDbFileName, "Error delete file " + _criticalLogLocalDbFileName);
+                            }
                     }
+                    AddLogMessageStartProgramInformation("Невыгруженные на сервер логи предыдущего сеанса (кол-во = " + _criticalLogList.Count() + ")", "Download logs from LocalLogDb with starting program (count = " + _criticalLogList.Count() + ")");
                 }
                 return _criticalLogList;
             }
@@ -441,36 +367,19 @@ namespace Gamma
                 if (CriticalLogList?.Count > 0)
                 {
                     _stopUploadLogToServerRun = true;
+                    if (_uploadLogToServerRunning)
+                        System.Threading.Thread.Sleep(5 * 1000);
                     _uploadLogToServerFromTimerRunning = true;
                     _uploadLogToServerRunning = true;
                     try
                     {
-                        using (var logDB = LogDbContext)
+                        XmlSerializer xmlCriticalLog = new XmlSerializer(CriticalLogList.GetType());
+                        using (FileStream logDb = new FileStream(_criticalLogLocalDbFileName,FileMode.CreateNew,FileAccess.Write))
                         {
-                            var logDBCriticalLogList = logDB.CriticalLogs.Select(l => l.LogID).ToList();
-                            foreach (var log in CriticalLogList.Where(l => !logDBCriticalLogList.Contains(l.LogID)))
-                            {
-                                logDB.CriticalLogs.Add(new CriticalLog
-                                {
-                                    LogID = log.LogID,
-                                    LogDate = log.LogDate,
-                                    LogUserID = log.LogUserID,
-                                    HostName = log.HostName,
-                                    LogTypeID = log.LogTypeID,
-                                    Log = log.Log,
-                                    DocID = log.DocID,
-                                    ProductID = log.ProductID,
-                                    TechnicalLog = log.TechnicalLog,
-                                    Image = log.Image
-                                });
-                            }
-                            logDB.SaveChanges();
+                            xmlCriticalLog.Serialize(logDb, CriticalLogList);
                         }
                     }
-                    catch (Exception e)
-                    {
-
-                    }
+                    catch (Exception e) { }
                     _stopUploadLogToServerRun = false;
                     _uploadLogToServerFromTimerRunning = false;
                     _uploadLogToServerRunning = false;
