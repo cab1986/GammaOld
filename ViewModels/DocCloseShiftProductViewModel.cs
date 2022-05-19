@@ -55,7 +55,7 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftProductViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null) : this()
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
+            GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -64,7 +64,7 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftProductViewModel(Guid docId, bool isConfirmed, GammaEntities gammaDb = null):this()
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
+            GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
 
             IsConfirmed = isConfirmed;
 
@@ -316,7 +316,7 @@ namespace Gamma.ViewModels
         {
             UIServices.SetBusyState();
             Clear(IsFillEnd);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 DocCloseDocIds = gammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
@@ -459,7 +459,7 @@ namespace Gamma.ViewModels
         private void FillEndProducts(bool IsFillEnd = true)
         {
             if (IsFillEnd)
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     EndProducts?.Clear();
 
@@ -507,7 +507,7 @@ namespace Gamma.ViewModels
         private Dictionary<Guid, string> GetSampleMeasureUnits(Guid nomenclatureId, Guid? characteristicId)
         {
             var dict = new Dictionary<Guid, string>();
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var unit =
                     gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)?
@@ -538,7 +538,7 @@ namespace Gamma.ViewModels
         private void AddProductSelected(ChoosenProductMessage msg)
         {
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var isWrittenOff = gammaBase.vProductsInfo.Where(p => p.ProductID == msg.ProductID).Select(p => p.IsWrittenOff).FirstOrDefault();
                 if (isWrittenOff ?? false && CurrentAddProductRemainder == RemainderType.End)
@@ -596,7 +596,7 @@ namespace Gamma.ViewModels
         private void AddUtilizationProductSelected(ChoosenProductMessage msg)
         {
             Messenger.Default.Unregister<ChoosenProductMessage>(this);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var productBroke = gammaBase.DocBrokeDecisionProducts.Where(p => p.ProductID == msg.ProductID && p.StateID == 2).OrderByDescending(p => p.DocBroke.Docs.Date).Take(1).FirstOrDefault();
                 if (productBroke?.Quantity == null)

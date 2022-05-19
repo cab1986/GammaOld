@@ -121,7 +121,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             Messenger.Default.Register<ProductChangedMessage>(this, ProductChanged);
 
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var permissionOnCreateNewProduct = gammaBase.CheckPermissionOnCreateNewProduct(ProductionTaskBatchID, WorkSession.UserID).FirstOrDefault();
                 if (permissionOnCreateNewProduct != null)
@@ -262,7 +262,7 @@ namespace Gamma.ViewModels
         {
             var product = ProductionTaskProducts.FirstOrDefault(p => p.ProductID == msg.ProductID);
             if (product == null) return;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var info = gammaBase.vProductsInfo.FirstOrDefault(p => p.ProductID == product.ProductID);
                 if (info == null) return;
@@ -634,7 +634,7 @@ namespace Gamma.ViewModels
 
         private void GetProductionTaskInfo(Guid productionTaskBatchID)
         {
-            var productionTaskBatch = (from pt in DB.GammaDb.ProductionTaskBatches.Include(pt => pt.ProductionTaskStates)
+            var productionTaskBatch = (from pt in DB.GammaDbWithNoCheckConnection.ProductionTaskBatches.Include(pt => pt.ProductionTaskStates)
                                   where pt.ProductionTaskBatchID == productionTaskBatchID
                                   select pt).FirstOrDefault();
 //            ProductionTaskBatchID = productionTaskBatchID;
@@ -737,7 +737,7 @@ namespace Gamma.ViewModels
 
         private bool CheckProductionTaskActiveForPlace()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var productionTask =
                     gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
@@ -752,7 +752,7 @@ namespace Gamma.ViewModels
 
         private void MakeProductionTaskActiveForPlace()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
 	            var productionTask =
@@ -1551,7 +1551,7 @@ namespace Gamma.ViewModels
 
         private SourceSpoolsCheckResult SourceSpoolsCorrect(int placeId, Guid productionTaskId)
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var sourceSpools = gammaBase.GetActiveSourceSpools(placeId).ToList();
                 if (sourceSpools.Count == 0)

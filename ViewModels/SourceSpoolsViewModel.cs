@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
                 SourceSpoolsVisible = Visibility.Collapsed;
                 return;
             }
-            GammaBase = DB.GammaDb;
+            GammaBase = DB.GammaDbWithNoCheckConnection;
             
                 if (WorkSession.RoleName == "OperatorRW" || WorkSession.RoleName == "OperatorConverting") SourceSpoolsVisible = Visibility.Visible;
                 else SourceSpoolsVisible = Visibility.Collapsed;
@@ -482,7 +482,7 @@ namespace Gamma.ViewModels
 
         private void CheckSourceSpools()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var productionTaskID =
                     gammaBase.ActiveProductionTasks.FirstOrDefault(pt => pt.PlaceID == PlaceID)?

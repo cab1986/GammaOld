@@ -94,7 +94,7 @@ namespace Gamma.ViewModels
             if (Specifications == null)
                 Specifications = new List<KeyValuePair<Guid, string>>();
 
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 /*var specifications = gammaBase.v1CWorkingSpecifications
                         .Where(s => s.C1CNomenclatureID == NomenclatureID && ((CharacteristicID != null && s.C1CCharacteristicID == CharacteristicID) || (CharacteristicID == null && s.C1CCharacteristicID == null))

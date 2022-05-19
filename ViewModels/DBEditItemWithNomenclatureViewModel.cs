@@ -53,7 +53,7 @@ namespace Gamma.ViewModels
         private string GetMeasureUnit(Guid? nomenclatureId)
         {
             if (nomenclatureId == null) return "";
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var measureUnit =
                     gammaBase.C1CNomenclature.Where(n => n.C1CNomenclatureID == nomenclatureId)
@@ -106,7 +106,7 @@ namespace Gamma.ViewModels
                 NomenclatureName = null;
                 return;
             }
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 NomenclatureName = (from nom in gammaBase.C1CNomenclature
                                     where nom.C1CNomenclatureID == nomenclatureid

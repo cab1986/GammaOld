@@ -114,7 +114,7 @@ namespace Gamma.ViewModels
             {
                 base.CharacteristicID = value;
                 if (value == null) return;
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     CoreDiameter =
                         gammaBase.vCharacteristicSGBProperties.FirstOrDefault(
@@ -476,7 +476,7 @@ namespace Gamma.ViewModels
             {
                 if (model.Quantity < RestWeight)
                 {
-                    using (var gammaBase = DB.GammaDb)
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                     {
                         var currentDateTime = DB.CurrentDateTime;
                         var docWithdrawalid = SqlGuidUtil.NewSequentialid();

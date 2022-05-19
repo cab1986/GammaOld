@@ -56,7 +56,7 @@ namespace Gamma.ViewModels
         }
         public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null):this()
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
+            GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -67,7 +67,7 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftWithdrawalMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this()
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
+            GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -311,7 +311,7 @@ namespace Gamma.ViewModels
                 return;
             }
 
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var nomenclatureInfo =
                 gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)

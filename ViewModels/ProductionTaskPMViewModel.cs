@@ -27,7 +27,7 @@ namespace Gamma.ViewModels
         /// </summary>        
         public ProductionTaskPMViewModel()
         {
-            Places = new ObservableCollection<Place>(DB.GammaDb.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.PM).
+            Places = new ObservableCollection<Place>(WorkSession.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.PM).
                 Select(p => new Place()
                 {
                     PlaceID = p.PlaceID,
@@ -44,7 +44,7 @@ namespace Gamma.ViewModels
             IsForRw = isForRw;
             if (isForRw)
             {
-                var productionTaskRw = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Rw).FirstOrDefault();
+                var productionTaskRw = DB.GammaDbWithNoCheckConnection.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Rw).FirstOrDefault();
                 if (productionTaskRw != null)
                 {
                     var nomenclatures =
@@ -83,7 +83,7 @@ namespace Gamma.ViewModels
                     
                 }
             }
-            var productionTask = DB.GammaDb.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.PM).FirstOrDefault();
+            var productionTask = DB.GammaDbWithNoCheckConnection.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.PM).FirstOrDefault();
             if (productionTask != null)
             {
                 PlaceID = productionTask.PlaceID ?? PlaceID;
@@ -198,7 +198,7 @@ namespace Gamma.ViewModels
                     if (nomenclature != null)
                     {
                         var specificationNomenclature = new ObservableCollection<Nomenclature>(
-                            DB.GammaDb.GetSpecificationInputNomenclature(nomenclature.NomenclatureID, nomenclature.CharacteristicID, (byte)PlaceGroup.PM)
+                            DB.GammaDbWithNoCheckConnection.GetSpecificationInputNomenclature(nomenclature.NomenclatureID, nomenclature.CharacteristicID, (byte)PlaceGroup.PM)
                                 .Select(n => new Nomenclature()
                                 {
                                     NomenclatureID = (Guid)n.C1CNomenclatureID,
@@ -296,7 +296,7 @@ namespace Gamma.ViewModels
 
             }
             else characteristics = DB.GetCharacteristics(NomenclatureID);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var charIds = characteristics.Select(c => c.CharacteristicID).ToList();
                 Characteristics = new ObservableCollection<Characteristic>(
@@ -433,7 +433,7 @@ namespace Gamma.ViewModels
 
         private void GetLimitParamters(int placeId)
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var placeProperties = gammaBase.vPlacePropertiesValues.FirstOrDefault(pv => pv.PlaceID == placeId);
                 if (placeProperties != null)

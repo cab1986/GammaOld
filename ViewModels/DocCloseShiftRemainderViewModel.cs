@@ -27,8 +27,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public DocCloseShiftRemainderViewModel(GammaEntities gammaDb = null)
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var lastProductionProduct =
                     gammaBase.Docs.Where(
@@ -49,8 +48,7 @@ namespace Gamma.ViewModels
 
         public DocCloseShiftRemainderViewModel(Guid docID, GammaEntities gammaDb = null)
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 DocCloseShiftRemainder = gammaBase.DocCloseShiftRemainders.Include(dr => dr.DocCloseShifts).Where(d => d.DocID == docID && (d.RemainderTypeID ?? 0) == 0 && (!(d.IsSourceProduct ?? true))).
                 Select(d => d).FirstOrDefault();
@@ -84,7 +82,7 @@ namespace Gamma.ViewModels
                     break;
                 case PlaceGroup.Convertings:
 
-                    using (var gammaBase = DB.GammaDb)
+                    using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                     {
                         var charCoefficient =
                         gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)

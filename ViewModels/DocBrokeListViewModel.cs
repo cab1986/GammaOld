@@ -144,7 +144,7 @@ namespace Gamma.ViewModels
             if (!WorkSession.CheckExistNewVersionOfProgram())
             {
                 UIServices.SetBusyState();
-                using (var gammaBase = DB.GammaDb)
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
                     var number = Number ?? "";
                     var dateBegin = DateBegin ?? DateTime.MinValue;

@@ -55,7 +55,7 @@ namespace Gamma.ViewModels
         //</Summary>
         public DocCloseShiftUnwinderRemainderViewModel(Guid docID, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
+            gammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             ShowProductCommand = new DelegateCommand<int>(ShowProduct);
             var doc = gammaBase.Docs.Where(d => d.DocID == docID).Select(d => new { d.IsConfirmed, d.PlaceID, d.ShiftID, d.Date, d.DocID }).First();
             IsConfirmed = doc.IsConfirmed;
@@ -332,7 +332,7 @@ namespace Gamma.ViewModels
             var dlgResult = MessageBox.Show("Последняя паллета(или тамбур) в вашу смену произведена и больше продукции выпускаться не будет?. Вы уверены?", "Обновить тамбура на раскате", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
             if (dlgResult != MessageBoxResult.Yes)
                 return;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var date = DB.CurrentDateTime;
                 //ClearGrid();

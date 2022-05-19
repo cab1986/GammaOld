@@ -48,41 +48,64 @@ namespace Gamma.ViewModels
 
         public void Find()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
-            UIServices.SetBusyState();
-            SelectedDocMaterialProduction = null;
-            using (var gammaBase = DB.GammaDb)
+            if (!WorkSession.CheckExistNewVersionOfProgram())
             {
-                var placeIDs = Places?.Select(p => p.PlaceID).ToList();
-                switch (IntervalId)
+                UIServices.SetBusyState();
+                SelectedDocMaterialProduction = null;
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
-                    case 0:
-                        DocMaterialProductionsList = gammaBase.Docs
-                        .Where( d =>  d.DocTypeID == (byte)DocTypes.DocMaterialProduction &&
-                        //(d.PlaceID == WorkSession.PlaceID) &&
-                        (d.ShiftID == WorkSession.ShiftID) &&
-                        (d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))) &&
-                        (d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(DB.CurrentDateTime))))
-                        .OrderByDescending( d => d.Date)
-                        .Take(120)
-                        .Select( d => new Doc
-                        {
-                            DocID = d.DocID,
-                            Number = d.Number,
-                            Date = d.Date,
-                            ShiftID = d.ShiftID ?? 0,
-                            Place = d.Places.Name,
-                            User = d.Users.Name,
-                            Person = d.Persons.Name,
-                            IsConfirmed = d.IsConfirmed,
-                            Comment = d.Comment
-                        }).ToList();
-                        break;
-                    case 1:
-                        DocMaterialProductionsList = gammaBase.Docs
-                            .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction
-                            // && (PlaceId == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceId == d.PlaceID)
-                            )
+                    var placeIDs = Places?.Select(p => p.PlaceID).ToList();
+                    switch (IntervalId)
+                    {
+                        case 0:
+                            DocMaterialProductionsList = gammaBase.Docs
+                            .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction &&
+                           //(d.PlaceID == WorkSession.PlaceID) &&
+                           (d.ShiftID == WorkSession.ShiftID) &&
+                           (d.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))) &&
+                           (d.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime(DB.CurrentDateTime))))
+                            .OrderByDescending(d => d.Date)
+                            .Take(120)
+                            .Select(d => new Doc
+                            {
+                                DocID = d.DocID,
+                                Number = d.Number,
+                                Date = d.Date,
+                                ShiftID = d.ShiftID ?? 0,
+                                Place = d.Places.Name,
+                                User = d.Users.Name,
+                                Person = d.Persons.Name,
+                                IsConfirmed = d.IsConfirmed,
+                                Comment = d.Comment
+                            }).ToList();
+                            break;
+                        case 1:
+                            DocMaterialProductionsList = gammaBase.Docs
+                                .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction
+                                // && (PlaceId == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceId == d.PlaceID)
+                                )
+                                .OrderByDescending(d => d.Date)
+                                .Take(500)
+                                .Select(d => new Doc
+                                {
+                                    DocID = d.DocID,
+                                    Number = d.Number,
+                                    Date = d.Date,
+                                    ShiftID = d.ShiftID ?? 0,
+                                    Place = d.Places.Name,
+                                    User = d.Users.Name,
+                                    Person = d.Persons.Name,
+                                    IsConfirmed = d.IsConfirmed,
+                                    Comment = d.Comment
+                                }).ToList();
+                            break;
+                        case 2:
+                            DocMaterialProductionsList = gammaBase.Docs
+                            .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction &&
+                           (string.IsNullOrEmpty(Number) || Number == d.Number) &&
+                           (PlaceId == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceId == d.PlaceID) &&
+                           (DateBegin == null || d.Date >= DateBegin) &&
+                           (DateEnd == null || d.Date <= DateEnd))
                             .OrderByDescending(d => d.Date)
                             .Take(500)
                             .Select(d => new Doc
@@ -97,29 +120,8 @@ namespace Gamma.ViewModels
                                 IsConfirmed = d.IsConfirmed,
                                 Comment = d.Comment
                             }).ToList();
-                        break;
-                    case 2:
-                        DocMaterialProductionsList = gammaBase.Docs
-                        .Where(d => d.DocTypeID == (byte)DocTypes.DocMaterialProduction &&
-                       (string.IsNullOrEmpty(Number) || Number == d.Number) &&
-                       (PlaceId == 0 ? placeIDs.Contains(d.PlaceID ?? 0) : PlaceId == d.PlaceID) &&
-                       (DateBegin == null || d.Date >= DateBegin) &&
-                       (DateEnd == null || d.Date <= DateEnd))
-                        .OrderByDescending(d => d.Date)
-                        .Take(500)
-                        .Select(d => new Doc
-                        {
-                            DocID = d.DocID,
-                            Number = d.Number,
-                            Date = d.Date,
-                            ShiftID = d.ShiftID ?? 0,
-                            Place = d.Places.Name,
-                            User = d.Users.Name,
-                            Person = d.Persons.Name,
-                            IsConfirmed = d.IsConfirmed,
-                            Comment = d.Comment
-                        }).ToList();
-                        break;
+                            break;
+                    }
                 }
             }
         }

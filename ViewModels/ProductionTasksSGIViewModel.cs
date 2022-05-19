@@ -53,38 +53,41 @@ namespace Gamma.ViewModels
 
         private void DeleteProductionTask()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
-            if (SelectedProductionTaskSGI == null) return;
-            //DB.GammaDb.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID);
-            var delResult = GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
-            if (delResult != "")
+            if (!WorkSession.CheckExistNewVersionOfProgram())
             {
-                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                if (SelectedProductionTaskSGI == null) return;
+                //DB.GammaDb.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID);
+                var delResult = GammaBase.DeleteProductionTaskBatch(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
+                if (delResult != "")
+                {
+                    MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                }
+                else
+                    ProductionTasks.Remove(SelectedProductionTaskSGI);
             }
-            else
-                ProductionTasks.Remove(SelectedProductionTaskSGI);
         }
 
         private void GetProductionTasks()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
-            UIServices.SetBusyState();
-            ProductionTasks = new ObservableCollection<ProductionTaskSGI>(
-                from pt in DB.GammaDb.GetProductionTasksOnState((int) BatchKinds.SGI, ProductionTaskStateID)
-                select new ProductionTaskSGI()
-                {
-                    ProductionTaskBatchID = pt.ProductionTaskBatchID,
-                    Quantity = pt.Quantity,
-                    DateBegin = pt.DateBegin,
-                    Nomenclature = pt.Nomenclature + "\r\n" + pt.Characteristic,
-                    Place = pt.Place,
-                    Number = pt.Number,
-                    MadeQuantity = pt.MadeQuantity,
-                    EnumColor = (byte?)pt.EnumColor ?? 0 // Если 3, то как на СГБ розовым цветить будем(активные задания)
-                }
-                );
-            
+            if (!WorkSession.CheckExistNewVersionOfProgram())
+            {
+                UIServices.SetBusyState();
+                ProductionTasks = new ObservableCollection<ProductionTaskSGI>(
+                    from pt in DB.GammaDbWithNoCheckConnection.GetProductionTasksOnState((int)BatchKinds.SGI, ProductionTaskStateID)
+                    select new ProductionTaskSGI()
+                    {
+                        ProductionTaskBatchID = pt.ProductionTaskBatchID,
+                        Quantity = pt.Quantity,
+                        DateBegin = pt.DateBegin,
+                        Nomenclature = pt.Nomenclature + "\r\n" + pt.Characteristic,
+                        Place = pt.Place,
+                        Number = pt.Number,
+                        MadeQuantity = pt.MadeQuantity,
+                        EnumColor = (byte?)pt.EnumColor ?? 0 // Если 3, то как на СГБ розовым цветить будем(активные задания)
+                    }
+                    );
 
+            }
         }
 
         private void EditItem()
@@ -101,19 +104,21 @@ namespace Gamma.ViewModels
 
         private void CopyProductionTask()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
-            //Create new Task from selected Task
-            using (var gammaBase = DB.GammaDb)
+            if (!WorkSession.CheckExistNewVersionOfProgram())
             {
-                Guid? newProductionTaskBatchID = gammaBase.CreateNewTaskBatchOneBased(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
-
-                if (newProductionTaskBatchID != null && newProductionTaskBatchID != Guid.Empty)
-                    MessageManager.OpenProductionTask(BatchKinds.SGI, (Guid)newProductionTaskBatchID, WorkSession.PlaceGroup == PlaceGroup.Other);
-                else
+                //Create new Task from selected Task
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
-                    string errorText = "Ошибка при копировании задания. Новое задание не создано.";
-                    MessageBox.Show(errorText,"Ошибка",MessageBoxButton.OK,MessageBoxImage.Error);
-                    DB.AddLogMessageError(errorText);
+                    Guid? newProductionTaskBatchID = gammaBase.CreateNewTaskBatchOneBased(SelectedProductionTaskSGI.ProductionTaskBatchID).FirstOrDefault();
+
+                    if (newProductionTaskBatchID != null && newProductionTaskBatchID != Guid.Empty)
+                        MessageManager.OpenProductionTask(BatchKinds.SGI, (Guid)newProductionTaskBatchID, WorkSession.PlaceGroup == PlaceGroup.Other);
+                    else
+                    {
+                        string errorText = "Ошибка при копировании задания. Новое задание не создано.";
+                        MessageBox.Show(errorText, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        DB.AddLogMessageError(errorText);
+                    }
                 }
             }
         }

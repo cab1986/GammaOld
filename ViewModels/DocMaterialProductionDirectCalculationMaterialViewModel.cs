@@ -33,7 +33,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public DocMaterialProductionDirectCalculationMaterialViewModel(int placeID, int shiftID, DateTime closeDate, GammaEntities gammaDb = null)
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
+            GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -48,7 +48,7 @@ namespace Gamma.ViewModels
 
         public DocMaterialProductionDirectCalculationMaterialViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null)
         {
-            GammaBase = gammaDb ?? DB.GammaDb;
+            GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             ShiftID = shiftID;
             CloseDate = closeDate;
@@ -169,7 +169,7 @@ namespace Gamma.ViewModels
                 return;
             }
 
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var nomenclatureInfo =
                 gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)

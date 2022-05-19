@@ -32,7 +32,7 @@ namespace Gamma.ViewModels
         /// </summary>
         public ProductionTaskSGIViewModel(GammaEntities gammaBase = null)
         {
-            GammaBase = gammaBase ?? DB.GammaDb;
+            GammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             PlaceGroupID = (int)PlaceGroup.Convertings;
             Places = new ObservableCollection<Place>(WorkSession.Places.Where(p => p.PlaceGroupID == (short)PlaceGroup.Convertings && p.BranchID == WorkSession.BranchID).
                 Select(p => new Place()
@@ -72,7 +72,7 @@ namespace Gamma.ViewModels
         /// <param name="productionTaskBatchID">id пакета заданий(для СГИ одно задание)</param>
         public ProductionTaskSGIViewModel(Guid productionTaskBatchID) : this()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var productionTask = gammaBase.GetProductionTaskByBatchID(productionTaskBatchID, (short)PlaceGroup.Convertings).FirstOrDefault();
                 if (productionTask != null)
@@ -208,7 +208,7 @@ namespace Gamma.ViewModels
 
         public void UpdateGroupPackageLabelImage(Guid productionTaskId)
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var png = gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTaskId)
                                 .Select(p => p.GroupPackLabelPNG)
@@ -236,7 +236,7 @@ namespace Gamma.ViewModels
 
         public void UpdateTransportPackageLabelImage(Guid productionTaskId)
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var png = gammaBase.ProductionTaskConverting.Where(p => p.ProductionTaskID == productionTaskId)
                                 .Select(p => p.TransportPackLabelPNG)
@@ -379,7 +379,7 @@ namespace Gamma.ViewModels
                 {
                     try
                     {
-                        using (var gammaBase = DB.GammaDb)
+                        using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                         {
                             var oldCharacteristicID = gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == CharacteristicID)?.C1COldCharacteristicID;
                             var typeTransportLabel = gammaBase.C1CCharacteristicProperties.FirstOrDefault(pr => pr.C1CPropertyID == new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6") && pr.C1CCharacteristicID == oldCharacteristicID);
@@ -437,7 +437,7 @@ namespace Gamma.ViewModels
                 {
                     try
                     {
-                        using (var gammaBase = DB.GammaDb)
+                        using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                         {
                             var productionTaskConverting =
                                 gammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == ProductionTaskID).ProductionTaskConverting;

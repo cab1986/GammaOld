@@ -21,7 +21,7 @@ namespace Gamma.ViewModels
         /// <param name="gammaBase">Контекст базы данных</param>
         public DocMaterialTankRemaindersViewModel(int placeID, bool isConfirmed, DocMaterialTankGroupContainer tankGroupContainer, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? DB.GammaDb;
+            gammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             PlaceID = placeID;
             IsConfirmed = isConfirmed;
             //FillGrid();
@@ -120,7 +120,7 @@ namespace Gamma.ViewModels
         public void FillGrid()
         {
             DB.AddLogMessageInformation("Fill DocMaterialTankRemainders @PlaceID=" + PlaceID + " @ShiftID=" + ShiftID + " @IsReadOnly=" + IsReadOnly);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 //    ClearGrid();
                 if (TankGroupContainer.TankGroups[0].Tanks?.Count > 0)

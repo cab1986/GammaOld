@@ -49,7 +49,7 @@ namespace Gamma.ViewModels
 		private void UpdateSpools()
 		{
 			UsedSpools.Clear();
-			using (var context = DB.GammaDb)
+			using (var context = DB.GammaDbWithNoCheckConnection)
 			{
 				UsedSpools.AddRange(context.DocWithdrawalProducts.Where(dw => dw.DocWithdrawal.Docs.ShiftID == WorkSession.ShiftID
 				&& dw.DocWithdrawal.Docs.Date >= DB.GetShiftBeginTime(DateTime.Now) && dw.DocWithdrawal.Docs.Date <= DB.GetShiftEndTime(DateTime.Now)

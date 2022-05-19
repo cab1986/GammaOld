@@ -75,10 +75,12 @@ namespace Gamma
             try
             {
                 //                GammaBase.Database.Connection.Open();
+#if (!DEBUG)
                 if (DB.TimerForUploadLogToServer == null)
                 {
                     Functions.ShowMessageError(@"Внимание! Не запущена автоматическая выгрузка логов на сервер.", "Error start TimerForUploadLogToServer");
                 }
+#endif
                 var currentUser = CurrentUserID;
                 if (currentUser != Guid.Empty)
                 {
@@ -136,7 +138,7 @@ namespace Gamma
                                                       || e.State == EntityState.Deleted);
                 }
         */
-        #region Log
+#region Log
 
         
         private static System.Threading.Timer _timerForUploadLogToServer { get; set; }
@@ -386,11 +388,11 @@ namespace Gamma
                 }
             }
         }
-        #endregion
+#endregion
 
         public static ObservableCollection<Characteristic> GetCharacteristics(Guid? nomenclatureid, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? GammaDb;
+            gammaBase = gammaBase ?? GammaDbWithNoCheckConnection;
             if (nomenclatureid == null) return new ObservableCollection<Characteristic>();
             return new ObservableCollection<Characteristic>
                 (
@@ -528,7 +530,7 @@ namespace Gamma
 
         public static bool UploadDocTo1C(string sql, Guid docId, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? GammaDb;
+            gammaBase = gammaBase ?? GammaDbWithNoCheckConnection;
             var ret = false;
             try
             {
@@ -556,7 +558,7 @@ namespace Gamma
         
         public static void ChangeUserPassword(Guid userid,string password, GammaEntities gammaBase = null)
         {
-            gammaBase = gammaBase ?? GammaDb;
+            gammaBase = gammaBase ?? GammaDbWithNoCheckConnection;
             var login = gammaBase.Users.Where(u => u.UserID == userid).Select(u => u.Login).FirstOrDefault();
             try
             {
@@ -578,14 +580,14 @@ namespace Gamma
             };
             var parameters = parameterList.ToArray();
             // ReSharper disable once CoVariantArrayConversion
-            (gammaBase ?? GammaDb).Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
+            (gammaBase ?? GammaDbWithNoCheckConnection).Database.ExecuteSqlCommand("exec dbo.RecreateUser @UserID, @Password", parameters);
         }
         public static void RecreateRolePermits(Guid roleID, GammaEntities gammaBase = null)
         {
             var parameterList = new List<SqlParameter> {new SqlParameter("RoleID", roleID)};
             var parameters = parameterList.ToArray();
             // ReSharper disable once CoVariantArrayConversion
-            (gammaBase ?? GammaDb).Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
+            (gammaBase ?? GammaDbWithNoCheckConnection).Database.ExecuteSqlCommand("exec dbo.mxp_RecreateRolePermits @RoleID", parameters);
         }
         private class TablePermission
         {
@@ -605,7 +607,7 @@ namespace Gamma
             if (WorkSession.DBAdmin) return true;
             var permit = GetCachedPermission(tableName);
             if (permit != null) return permit > 0;
-            permit = (gammaBase ?? GammaDb).UserPermit(tableName).FirstOrDefault();
+            permit = (gammaBase ?? GammaDbWithNoCheckConnection).UserPermit(tableName).FirstOrDefault();
             if (permit == null)
             {
                 _tablePermissions.Add(new TablePermission

@@ -43,7 +43,7 @@ namespace Gamma.ViewModels
         }
         public DocCloseShiftDowntimesViewModel(int placeID, int shiftID, DateTime closeDate, Guid? docID = null, bool isConfirmed = false, GammaEntities gammaDb = null):this()
         {
-            using (var gammaBase = gammaDb ?? DB.GammaDb)
+            using (var gammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection)
             {
                 PlaceID = placeID;
                 ShiftID = shiftID;
@@ -76,21 +76,21 @@ namespace Gamma.ViewModels
             }
         }
 
-       /* public DocCloseShiftDowntimesViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this()
-        {
-            GammaBase = gammaDb ?? DB.GammaDb;
-            PlaceID = placeID;
-            ShiftID = shiftID;
-            CloseDate = closeDate;
+        /* public DocCloseShiftDowntimesViewModel(int placeID, int shiftID, DateTime closeDate, Guid docID, List<DocCloseShiftWithdrawalMaterial.Product> products, bool isConfirmed, List<Guid> productionProductCharacteristicIDs, GammaEntities gammaDb = null):this()
+         {
+             GammaBase = gammaDb ?? DB.GammaDbWithNoCheckConnection;
+             PlaceID = placeID;
+             ShiftID = shiftID;
+             CloseDate = closeDate;
 
-            ProductionProducts = products;
-            IsConfirmed = isConfirmed;
+             ProductionProducts = products;
+             IsConfirmed = isConfirmed;
 
-            DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
-            DocCloseShiftWithdrawalMaterials.LoadWithdrawalMaterials(docID, productionProductCharacteristicIDs);
-            PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
-        }*/
-        
+             DocCloseShiftWithdrawalMaterials = new DocCloseShiftWithdrawalMaterial(PlaceID, ShiftID, CloseDate);
+             DocCloseShiftWithdrawalMaterials.LoadWithdrawalMaterials(docID, productionProductCharacteristicIDs);
+             PlaceWithdrawalMaterialTypeID = GammaBase.Places.Where(x => x.PlaceID == PlaceID).Select(x => x.PlaceWithdrawalMaterialTypeID).First();
+         }*/
+
         //private MaterialType CurrentMaterialType;
 
         private int _placeID;
@@ -230,7 +230,7 @@ namespace Gamma.ViewModels
             //ClearGrid();
             Clear();
 
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 //if (IsEnabledDowntimes)
                 {

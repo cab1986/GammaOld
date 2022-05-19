@@ -49,7 +49,7 @@ namespace Gamma.ViewModels
         }
         public DocCloseShiftConvertingGridViewModel(Guid docId, DocCloseShiftUnwinderRemainderViewModel _spoolUnwinderRemainders) : this()
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var doc = gammaBase.Docs.Include(d => d.DocCloseShiftDocs).First(d => d.DocID == docId);
                 DocCloseDocIds = doc.DocCloseShiftDocs.Select(dc => dc.DocID).ToList();
@@ -220,7 +220,7 @@ namespace Gamma.ViewModels
         private void AuxiliaryMaterialNomenclature(Nomenclature1CMessage msg)
         {
             Messenger.Default.Unregister<Nomenclature1CMessage>(this);
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var nomenclatureInfo =
                 gammaBase.C1CNomenclature.Include(n => n.C1CMeasureUnitStorage)
@@ -326,7 +326,7 @@ namespace Gamma.ViewModels
             Pallets?.Clear();
             DocCloseDocIds?.Clear();
 
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 DocCloseDocIds = gammaBase.Docs.
                 Where(d => d.PlaceID == PlaceID && d.ShiftID == ShiftID && d.IsConfirmed &&
@@ -450,7 +450,7 @@ namespace Gamma.ViewModels
         private Dictionary<Guid, string> GetWasteMeasureUnits(Guid nomenclatureId, Guid? measureUnitId)
         {
             Dictionary<Guid, string> dict;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 //dict = gammaBase.C1CMeasureUnits.Where(mu => mu.C1CNomenclatureID == nomenclatureId).OrderBy(mu => mu.Coefficient).ToDictionary(x => x.C1CMeasureUnitID, v => v.Name);                
                 var NomenclatureMeasureUnitID = gammaBase.C1CNomenclature.FirstOrDefault(n => n.C1CNomenclatureID == nomenclatureId).C1CMeaureUnitStorage;
@@ -475,7 +475,7 @@ namespace Gamma.ViewModels
         private Dictionary<Guid, string> GetSampleMeasureUnits(Guid nomenclatureId, Guid? characteristicId)
         {
             var dict = new Dictionary<Guid, string>();
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var unit =
                 //    gammaBase.C1CCharacteristics.FirstOrDefault(c => c.C1CCharacteristicID == characteristicId)?
