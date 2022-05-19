@@ -79,10 +79,15 @@
                                 </dxg:GridColumn.EditSettings>
                             </dxg:GridColumn>
                             <dxg:GridColumn FieldName="Number" Header="Номер" SortOrder="Ascending" SortIndex="0" AllowEditing="False"/>
-                            <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60" AllowEditing="False"/>
-                            <dxg:GridColumn AllowEditing="False" FieldName="IsShipped" Header="Отправлено"/>
-                            <dxg:GridColumn FieldName="IsAccepted" Header="Получено" AllowEditing="False" Visible="{Binding IsInVisible}"/>
-                            <dxg:GridColumn FieldName="IsConfirmed" Header="Принято" AllowEditing="True" Visible="{Binding IsInVisible}">
+                                <dxg:GridColumn Header="Время перемещения" FieldName="OutDate" Width="140" FixedWidth="True">
+                                    <dxg:GridColumn.EditSettings>
+                                        <dxe:DateEditSettings Mask="G"  MaskUseAsDisplayFormat="True" />
+                                    </dxg:GridColumn.EditSettings>
+                                </dxg:GridColumn>
+                                <dxg:GridColumn FieldName="Quantity" Header="Кол-во" Width="60" AllowEditing="False"/>
+                                <dxg:GridColumn AllowEditing="False" FieldName="IsShipped" Header="Отправлено" Width="60" />
+                                <dxg:GridColumn FieldName="IsAccepted" Header="Получено" AllowEditing="False" Visible="{Binding IsInVisible}" Width="60" />
+                                <dxg:GridColumn FieldName="IsConfirmed" Header="Принято" AllowEditing="True" Visible="{Binding IsInVisible}" Width="60" >
                                 <dxg:GridColumn.HeaderCustomizationAreaTemplate>
                                     <DataTemplate>
                                         <dxe:CheckEdit EditValue="{Binding Path=CheckAll}" 

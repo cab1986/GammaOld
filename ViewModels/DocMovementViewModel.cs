@@ -21,7 +21,7 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             DocMovementId = docMovementId;
             //IsInitialize = true;
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 /*
                 Warehouses = gammaBase.Places.Where(p => p.IsWarehouse ?? false).Select(p => new Place
@@ -84,7 +84,9 @@ namespace Gamma.ViewModels
                         NomenclatureName = dp.NomenclatureName,
                         IsShipped = dp.IsShipped ?? false,
                         IsAccepted = dp.IsAccepted ?? false,
-                        ProductKind = (ProductKind) dp.ProductKindID
+                        ProductKind = (ProductKind) dp.ProductKindID,
+                        InDate = dp.InDate,
+                        OutDate = dp.OutDate
                     }));
             }
             OpendDocOrderCommand = new DelegateCommand(OpenDocOrder, () => DocOrderId != null);

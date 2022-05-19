@@ -82,109 +82,110 @@ namespace Gamma.ViewModels
 
         private void OpenDocMovement()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             if (SelectedDocMovement == null) return;
-            MessageManager.OpenDocMovement(SelectedDocMovement.DocId);
+            MessageManager.OpenDocMovement(SelectedDocMovement.DocId);            
         }
 
         private void Find()
         {
-            WorkSession.CheckExistNewVersionOfProgram();
-            UIServices.SetBusyState();
-            SelectedDocMovement = null;
-            using (var gammaBase = DB.GammaDb)
+            if (!WorkSession.CheckExistNewVersionOfProgram())
             {
-                switch (IntervalId)
+                UIServices.SetBusyState();
+                SelectedDocMovement = null;
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
-                    case 0:
-                        DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Where(d => !d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(200)
-                            .Select(d => new MovementItem
-                            {
-                                DocId = d.DocID,
-                                Number = d.Docs.Number,
-                                Date = d.Docs.Date,
-                                PlaceFrom = d.OutPlaces.Name,
-                                PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name,
-                                ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name,
-                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
-                            }).ToList();
-                        break;
-                    case 1:
-                        DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Where(d => d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(200)
-                            .Select(d => new MovementItem
-                            {
-                                DocId = d.DocID,
-                                Number = d.Docs.Number,
-                                Date = d.Docs.Date,
-                                PlaceFrom = d.OutPlaces.Name,
-                                PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name,
-                                ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name,
-                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
-                            }).ToList();
-                        break;
-                    case 2:
-                        DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .OrderByDescending(d => d.Docs.Date)
-                            .Take(500)
-                            .Select(d => new MovementItem
-                            {
-                                DocId = d.DocID,
-                                Number = d.Docs.Number,
-                                Date = d.Docs.Date,
-                                PlaceFrom = d.OutPlaces.Name,
-                                PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name,
-                                ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name,
-                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
-                            }).ToList();
-                        break;
-                    case 3:
-                        {
-                            var number = Number ?? "";
-                            var dateBegin = DateBegin ?? DateTime.MinValue;
-                            var dateEnd = DateEnd ?? DateTime.MaxValue;
-                            
+                    switch (IntervalId)
+                    {
+                        case 0:
                             DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
-                            .Where(d => (d.Docs.Number.Contains(number))
-                                && (d.Docs.Date >= dateBegin)
-                                && (d.Docs.Date <= dateEnd)
-                            )
-                            .OrderByDescending(d => d.Docs.Date)
-                            .Take(500)
-                            .Select(d => new MovementItem
-                            {
-                                DocId = d.DocID,
-                                Number = d.Docs.Number,
-                                Date = d.Docs.Date,
-                                PlaceFrom = d.OutPlaces.Name,
-                                PlaceTo = d.InPlaces.Name,
-                                IsConfirmed = d.Docs.IsConfirmed,
-                                Person = d.Docs.Persons.Name,
-                                ShiftID = d.Docs.ShiftID,
-                                PlacePerson = d.Docs.Persons.Places.Name,
-                                LastUploadedTo1C = d.Docs.LastUploadedTo1C
-                            }).ToList();
+                                .Where(d => !d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(200)
+                                .Select(d => new MovementItem
+                                {
+                                    DocId = d.DocID,
+                                    Number = d.Docs.Number,
+                                    Date = d.Docs.Date,
+                                    PlaceFrom = d.OutPlaces.Name,
+                                    PlaceTo = d.InPlaces.Name,
+                                    IsConfirmed = d.Docs.IsConfirmed,
+                                    Person = d.Docs.Persons.Name,
+                                    ShiftID = d.Docs.ShiftID,
+                                    PlacePerson = d.Docs.Persons.Places.Name,
+                                    LastUploadedTo1C = d.Docs.LastUploadedTo1C
+                                }).ToList();
                             break;
-                        }
+                        case 1:
+                            DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
+                                .Where(d => d.Docs.IsConfirmed).OrderByDescending(d => d.Docs.Date).Take(200)
+                                .Select(d => new MovementItem
+                                {
+                                    DocId = d.DocID,
+                                    Number = d.Docs.Number,
+                                    Date = d.Docs.Date,
+                                    PlaceFrom = d.OutPlaces.Name,
+                                    PlaceTo = d.InPlaces.Name,
+                                    IsConfirmed = d.Docs.IsConfirmed,
+                                    Person = d.Docs.Persons.Name,
+                                    ShiftID = d.Docs.ShiftID,
+                                    PlacePerson = d.Docs.Persons.Places.Name,
+                                    LastUploadedTo1C = d.Docs.LastUploadedTo1C
+                                }).ToList();
+                            break;
+                        case 2:
+                            DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
+                                .OrderByDescending(d => d.Docs.Date)
+                                .Take(500)
+                                .Select(d => new MovementItem
+                                {
+                                    DocId = d.DocID,
+                                    Number = d.Docs.Number,
+                                    Date = d.Docs.Date,
+                                    PlaceFrom = d.OutPlaces.Name,
+                                    PlaceTo = d.InPlaces.Name,
+                                    IsConfirmed = d.Docs.IsConfirmed,
+                                    Person = d.Docs.Persons.Name,
+                                    ShiftID = d.Docs.ShiftID,
+                                    PlacePerson = d.Docs.Persons.Places.Name,
+                                    LastUploadedTo1C = d.Docs.LastUploadedTo1C
+                                }).ToList();
+                            break;
+                        case 3:
+                            {
+                                var number = Number ?? "";
+                                var dateBegin = DateBegin ?? DateTime.MinValue;
+                                var dateEnd = DateEnd ?? DateTime.MaxValue;
+
+                                DocMovements = gammaBase.DocMovement.Include(dm => dm.Docs).Include(dm => dm.OutPlaces).Include(dm => dm.InPlaces)
+                                .Where(d => (d.Docs.Number.Contains(number))
+                                    && (d.Docs.Date >= dateBegin)
+                                    && (d.Docs.Date <= dateEnd)
+                                )
+                                .OrderByDescending(d => d.Docs.Date)
+                                .Take(500)
+                                .Select(d => new MovementItem
+                                {
+                                    DocId = d.DocID,
+                                    Number = d.Docs.Number,
+                                    Date = d.Docs.Date,
+                                    PlaceFrom = d.OutPlaces.Name,
+                                    PlaceTo = d.InPlaces.Name,
+                                    IsConfirmed = d.Docs.IsConfirmed,
+                                    Person = d.Docs.Persons.Name,
+                                    ShiftID = d.Docs.ShiftID,
+                                    PlacePerson = d.Docs.Persons.Places.Name,
+                                    LastUploadedTo1C = d.Docs.LastUploadedTo1C
+                                }).ToList();
+                                break;
+                            }
+                    }
                 }
+                //FillDocMovement(DocMovements);
             }
-            //FillDocMovement(DocMovements);
         }
 
         private void FillDocMovement(List<MovementItem> docMovements)
         {
-            using (var gammaBase = DB.GammaDb)
+            using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 var movementIds = docMovements.Select(d => d.DocId).ToList();
                 var movementGoods = gammaBase.vDocMovementGoods.Where(d => movementIds.Contains(d.DocMovementID))
