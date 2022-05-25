@@ -74,6 +74,19 @@ namespace Gamma
             return _gammaSettings;
         }
 
+        private static string _appID { get; set; }
+        public static string AppID
+        {
+            get
+            {
+                if (_appID == null)
+                {
+                    _appID = "(" + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString() + ")";
+                }
+                return _appID;
+            }
+        }
+
         private static string _version { get; set; }
         public static string Version
         {
@@ -83,11 +96,11 @@ namespace Gamma
                 {
                     try
                     {
-                        _version = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+                        _version = System.Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString() + " " + AppID;
                     }
                     catch
                     {
-                        _version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                        _version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " " + AppID;
                     }
                 }
                 return _version;
@@ -123,7 +136,7 @@ namespace Gamma
             sqlBuilder.ApplicationName = "Gamma v" + Version;
             sqlBuilder.PersistSecurityInfo = true;
             sqlBuilder.MultipleActiveResultSets = true;
-            sqlBuilder.ConnectTimeout = 300;
+            sqlBuilder.ConnectTimeout = 30;
 
             var entityConnectionStringBuilder = new EntityConnectionStringBuilder();
             entityConnectionStringBuilder.Provider = "System.Data.SqlClient";

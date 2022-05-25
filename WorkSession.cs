@@ -14,7 +14,10 @@ namespace Gamma
         private static Guid _userid;
         public static bool SetUser(Guid userid)
         {
-            _userid = userid;
+            _userid = userid;            
+            var ret = GetUserInfo();
+            if (ret)
+                RefreshLocalVsServerDateDiff();
             return GetUserInfo();
         }
         public static Guid UserID
@@ -191,12 +194,25 @@ namespace Gamma
         /// </summary>
         public static int UnwindersCount { get; private set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static bool IsUploadDocBrokeTo1CWhenSave { get; private set; }
 
         public static bool IsUsedInOneDocMaterialDirectCalcAndComposition { get; private set; }
+
+        public static DateTime? LastActualLocalVsServerDateDiff { get; private set; }
+        private static double? _localVsServerDateDiff;
+        public static double? LocalVsServerDateDiff=> _localVsServerDateDiff ?? RefreshLocalVsServerDateDiff();
+
+        private static double? RefreshLocalVsServerDateDiff()
+        {
+            var diff = (DB.CurrentDateTimeServer - DateTime.Now);
+            if (diff != null)
+            {
+                _localVsServerDateDiff = ((TimeSpan)diff).Milliseconds;
+                LastActualLocalVsServerDateDiff = DateTime.Now;
+                DB.AddLogMessageInformation("Разница между локальным временем и временем сервера = " + _localVsServerDateDiff.ToString() + " (мс)", "SET LocalVsServerDateDiff = " + _localVsServerDateDiff.ToString() + " (ms)");
+            }
+            return _localVsServerDateDiff;
+        }
 
         public static int TimerPeriodForUploadLogToServer { get; private set; } = 300000;
 
@@ -214,17 +230,26 @@ namespace Gamma
 
         private static void RefreshUserInfoAndExistNewVersion()
         {
-            if (lastSuccesRecivedUserInfo == null || (DateTime.Now - lastSuccesRecivedUserInfo).Minutes > RefreshUserInfoPeriod)
+            try
             {
-                GetUserInfo();
-
-                var checkResult = DB.CheckCurrentVersion();
-                var resultMessage = checkResult?.ResultMessage;
-                if (checkResult != null && !(string.IsNullOrWhiteSpace(resultMessage) ))
+                if (lastSuccesRecivedUserInfo == null || (DateTime.Now - lastSuccesRecivedUserInfo).Minutes > RefreshUserInfoPeriod)
                 {
-                    _isExistNewVersionOfProgram = true;
-                    _isBlockedExecutionProgramThereIsNewVersion = checkResult.BlockCreation;
+                    GetUserInfo();
+
+                    var checkResult = DB.CheckCurrentVersion();
+                    var resultMessage = checkResult?.ResultMessage;
+                    if (checkResult != null && !(string.IsNullOrWhiteSpace(resultMessage)))
+                    {
+                        _isExistNewVersionOfProgram = true;
+                        _isBlockedExecutionProgramThereIsNewVersion = checkResult.BlockCreation;
+                    }
+
+                    RefreshLocalVsServerDateDiff();
                 }
+            }
+            catch
+            {
+                DB.AddLogMessageError("Ошибка при обновлении пользовательских данных", "Error RefreshUserInfoAndExistNewVersion");
             }
         }
 

@@ -67,7 +67,7 @@ namespace Gamma
                 }
             }
         }
-        
+
         public static bool Initialize()
         {
 //            GammaBase = new GammaEntities(GammaSettings.ConnectionString);
@@ -203,6 +203,7 @@ namespace Gamma
                         {
                             LogID = log.LogID,
                             LogDate = log.LogDate,
+                            IsServerTime = log.IsServerTime,
                             LogUserID = log.LogUserID,
                             HostName = log.HostName,
                             LogTypeID = log.LogTypeID,
@@ -252,6 +253,7 @@ namespace Gamma
             public System.Guid LogID { get; set; }
             public string Log { get; set; }
             public Nullable<System.DateTime> LogDate { get; set; }
+            public bool IsServerTime { get; set; }
             public string LogUserID { get; set; }
             public string HostName { get; set; }
             public Nullable<int> LogTypeID { get; set; }
@@ -306,28 +308,33 @@ namespace Gamma
 
         public static void AddLogMessage(string log, CriticalLogTypes logTypeID, string technicalLog = null, Guid? docID = null, Guid? productID = null)
         {
+            DateTime? t;
             CriticalLogList.Add(new CriticalLog
-             {
-                 LogID = SqlGuidUtil.NewSequentialid(),
-                 LogDate = DateTime.Now,
-                 LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""),
-                 HostName = GammaSettings.LocalHostName,
-                 LogTypeID = (int)logTypeID,
-                 Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log),
-                 DocID = docID,
-                 ProductID = productID,
-                 TechnicalLog = (technicalLog?.Length > 1000 ? technicalLog?.Substring(0, 1000) : technicalLog)
-             });
+            {
+
+                LogID = SqlGuidUtil.NewSequentialid(),
+                LogDate = (t = WorkSession.LastActualLocalVsServerDateDiff) != null ? DB.CurrentDateTime : DateTime.Now,
+                IsServerTime = (t != null),
+                LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""),
+                HostName = GammaSettings.LocalHostName + " " + GammaSettings.AppID,
+                LogTypeID = (int)logTypeID,
+                Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log),
+                DocID = docID,
+                ProductID = productID,
+                TechnicalLog = (technicalLog?.Length > 1000 ? technicalLog?.Substring(0, 1000) : technicalLog)
+            });
         }
         
         public static void AddLogMessage(string log, CriticalLogTypes logTypeID, System.IO.MemoryStream image, string technicalLog = null, Guid? docID = null, Guid? productID = null)
         {
+            DateTime? t;
             CriticalLogList.Add(new CriticalLog
             {
                 LogID = SqlGuidUtil.NewSequentialid(),
-                LogDate = DateTime.Now,
+                LogDate = (t = WorkSession.LastActualLocalVsServerDateDiff) != null ? DB.CurrentDateTime : DateTime.Now,
+                IsServerTime = (t != null),
                 LogUserID = WorkSession.UserName + (WorkSession.PrintName != String.Empty ? " (" + WorkSession.PrintName + ")" : ""),
-                HostName = GammaSettings.LocalHostName,
+                HostName = GammaSettings.LocalHostName + " " + GammaSettings.AppID,
                 LogTypeID = (int)logTypeID,
                 Log = (log?.Length > 2000 ? log?.Substring(0, 2000) : log),
                 Image = image.ToArray(),
@@ -441,7 +448,22 @@ namespace Gamma
             return (gammaBase ?? GammaDbWithNoCheckConnection).Database.SqlQuery<string>($"SELECT dbo.CheckSourceSpools({placeID}, '{productionTaskID}')").AsEnumerable().FirstOrDefault();
         }
 
-        public static DateTime CurrentDateTime => ((IObjectContextAdapter)GammaDbWithNoCheckConnection).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
+        public static DateTime? CurrentDateTimeServer
+        {
+            get
+            {
+                try
+                {
+                    return ((IObjectContextAdapter)GammaDbWithNoCheckConnection).ObjectContext.CreateQuery<DateTime>("CurrentDateTime()").AsEnumerable().First();
+                }
+                catch (Exception e)
+                {
+                    AddLogMessageError("Ошибка при получении времени сервера", "Error GET Server CurrentDateTime");
+                    return null;
+                }
+            }
+        }
+        public static DateTime CurrentDateTime => DateTime.Now.AddMilliseconds((double)(WorkSession.LocalVsServerDateDiff ?? 0));
 
         public static Guid CurrentUserID => GammaDbWithNoCheckConnection == null ? Guid.Empty : GammaDbWithNoCheckConnection.Database.SqlQuery<Guid>("SELECT dbo.CurrentUserID()").FirstOrDefault();
 

@@ -86,32 +86,8 @@ namespace Gamma.Common
             return (decimal)(weight/volume);
         }
 
-        public static string CurrentVersion
-        {
-            get
-            {
-                string version;
-                try
-                {
-                    version = ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
-                }
-                catch
-                {
-                    version = "Ошибка";
-                }
-                if (version == "Ошибка")
-                    try
-                    {
-                        version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    }
-                    catch
-                    {
-                        version = "------";
-                    }
-                return "Текущая версия приложения: " + version;
-            }
-        }
-
+        public static string CurrentVersion => "Текущая версия приложения: " + GammaSettings.Version;
+            
         public static bool ShowMessageError(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
         {
             MessageBox.Show(message);

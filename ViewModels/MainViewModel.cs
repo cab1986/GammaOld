@@ -74,7 +74,6 @@ namespace Gamma.ViewModels
             try
             {
                 string myIP = Dns.GetHostByName(GammaSettings.LocalHostName).AddressList[0].ToString();
-                DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version);
                 DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version + ", Device " + Environment.MachineName + ", CurrentDate " + DateTime.Now.ToString() + ", IP " + myIP);
                 DB.AddLogMessageStartProgramInformation(StatusText);
             }

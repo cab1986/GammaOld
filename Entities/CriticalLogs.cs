@@ -24,5 +24,6 @@ namespace Gamma.Entities
         public Nullable<System.Guid> DocID { get; set; }
         public Nullable<System.Guid> ProductID { get; set; }
         public string TechnicalLog { get; set; }
+        public Nullable<bool> IsServerTime { get; set; }
     }
 }
