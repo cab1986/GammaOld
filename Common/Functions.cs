@@ -101,6 +101,13 @@ namespace Gamma.Common
             DB.AddLogMessageQuestion(message + " => Ответ: "+res, technicalMessage, docID, productID);
             return res;
         }
+
+        public static bool ShowMessageInformation(string message, string technicalMessage, Guid? docID = null, Guid? productID = null)
+        {
+            MessageBox.Show(message);
+            DB.AddLogMessageInformation(message, technicalMessage, docID, productID);
+            return true;
+        }
     }
 
 

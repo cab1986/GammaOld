@@ -98,6 +98,7 @@ namespace Gamma.ViewModels
 
         private void DeleteProduct()
         {
+            DB.AddLogMessageInformation("Выбор меню: Удалить продукт", "Delete product in PlaceProductViewModel", SelectedProduct?.DocID, SelectedProduct?.ProductID);
             WorkSession.CheckExistNewVersionOfProgram();
             if (SelectedProduct == null) return;
             switch (SelectedProduct.PlaceGroup)
@@ -198,6 +199,7 @@ namespace Gamma.ViewModels
 
         private void CreateNewProduct()
         {
+            DB.AddLogMessageInformation("Выбор меню: Добавление новой групповой упаковки", "Selected CreateNewProduct (GroupPack) in PlaceProductViewModel");
             WorkSession.CheckExistNewVersionOfProgram();
             switch (PlaceGroup)
             {
@@ -215,7 +217,7 @@ namespace Gamma.ViewModels
                         var docProductionProduct = lastGroupPack.DocProduction.DocProductionProducts.FirstOrDefault();
                         if (docProductionProduct != null)
                         {
-                            MessageBox.Show("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", MessageBoxButton.OK, MessageBoxImage.Information);
+                            Functions.ShowMessageQuestion("Предыдущая упаковка не подтверждена. Она будет открыта для редактирования", "Предыдущая упаковка", docProductionProduct.DocID, docProductionProduct.ProductID);
                             MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, docProductionProduct.ProductID);
                         }
                     }
@@ -227,6 +229,7 @@ namespace Gamma.ViewModels
 
         private void OpenDocProduct()
         {
+            DB.AddLogMessageInformation("Выбор меню: Открыть продукт", "Selected OpenDocProduct in PlaceProductViewModel", SelectedProduct?.DocID, SelectedProduct?.ProductID);
             WorkSession.CheckExistNewVersionOfProgram();
             switch (SelectedProduct.ProductKind)
             {
@@ -258,6 +261,7 @@ namespace Gamma.ViewModels
 
         private void Find()
         {
+            DB.AddLogMessageInformation("Обновление списка произведенной продукции", "Refresh products in PlaceProductViewModel");
             WorkSession.CheckExistNewVersionOfProgram();
             UIServices.SetBusyState();
             using (var gammaBase = DB.GammaDb)
