@@ -20,6 +20,7 @@ namespace Gamma.ViewModels
             if (GammaSettings.IsConnectionStringSetted)
                 GammaBase = DB.GammaDbWithNoCheckConnection;
             CloseCommand = new DelegateCommand(CloseWindow);
+            DB.AddLogMessageInformation("Открытие окна " + this.GetType(), "Open "+ this.GetType());
         }
 
         /*
@@ -43,7 +44,7 @@ namespace Gamma.ViewModels
         {
             get { return _closeSignal; }
             protected set
-            { 
+            {
                 _closeSignal = value;
                 RaisePropertyChanged("CloseSignal");
             }
@@ -53,6 +54,7 @@ namespace Gamma.ViewModels
 
         private void Cleanup()
         {
+            DB.AddLogMessageInformation("Закрытие окна " + this.GetType(), "Close " + this.GetType());
             Messenger.Default.Unregister(this);
 //            GammaBase?.Dispose();
             CloseCommand = null;

@@ -452,6 +452,7 @@ namespace Gamma
         {
             if (!WorkSession.CheckExistNewVersionOfProgram())
             {
+                DB.AddLogMessageInformation("Отправлено сообщение " + message.GetType(), "Messenger.Default.Send ("+message.GetType()+")");
                 Messenger.Default.Send(message);
             }
         }
@@ -798,10 +799,10 @@ namespace Gamma
         {
             MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocMaterialProductionMessage>(new OpenDocMaterialProductionMessage { DocID = docID });
         }
-/*        public static void OpenDocMaterialProduction(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
-        {
-            MessengerDefaultSendWithCheckExistNewVersionOfProgram< >(new OpenDocMaterialProductionMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
-        }
-*/
+        /*        public static void OpenDocMaterialProduction(int placeID, DateTime closeDate, byte shiftID, Guid? personID)
+                {
+                    MessengerDefaultSendWithCheckExistNewVersionOfProgram< >(new OpenDocMaterialProductionMessage { PlaceID = placeID, CloseDate = closeDate, ShiftID = shiftID, PersonID = personID });
+                }
+        */
     }
 }

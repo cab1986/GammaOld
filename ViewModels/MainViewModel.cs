@@ -105,11 +105,7 @@ namespace Gamma.ViewModels
                 FindProductCommand = new DelegateCommand(MessageManager.OpenFindProduct);
                 ManageUsersCommand = new DelegateCommand(MessageManager.OpenManageUsers, () => WorkSession.DBAdmin);
                 CloseShiftCommand = new DelegateCommand(CloseShift, IsVisibleCloseShiftButton);
-                BackCommand = new DelegateCommand(() =>
-                {
-                    CurrentView = PreviousView;
-                    PreviousView = null;
-                }, () => PreviousView != null);
+                BackCommand = new DelegateCommand(Back, () => PreviousView != null);
                 OpenDocCloseShiftsCommand = new DelegateCommand<PlaceGroup>(MessageManager.OpenDocCloseShifts);
                 OpenDocUnwinderRemaindersCommand = new DelegateCommand<PlaceGroup>(MessageManager.OpenDocUnwinderRemainders);
                 ConfigureComPortCommand = new DelegateCommand(MessageManager.ConfigureComPort, () => WorkSession.DBAdmin || WorkSession.ProgramAdmin);
@@ -343,6 +339,13 @@ namespace Gamma.ViewModels
                 MessageManager.FindProductionTaskBatch(BatchKinds.SGI);
             else if (CurrentView is ProductionTasksBalerViewModel) 
                 MessageManager.FindProductionTaskBatch(BatchKinds.Baler);
+        }
+
+        private void Back()
+        {
+            DB.AddLogMessageInformation("Возврат в предыдущее окно "+ PreviousView.GetType() + " из " + CurrentView.GetType(), "Back to " + PreviousView.GetType() + " from " + CurrentView.GetType());
+            CurrentView = PreviousView;
+            PreviousView = null;
         }
 
         private void CloseShift()
