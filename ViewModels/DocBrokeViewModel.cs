@@ -331,11 +331,13 @@ namespace Gamma.ViewModels
                     var addedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == product);
                     addedBrokeDecisionProduct.ProductState = selectedBrokeDecisionProduct.ProductState;
                     addedBrokeDecisionProduct.Comment = selectedBrokeDecisionProduct.Comment;
-                    addedBrokeDecisionProduct.Quantity = selectedBrokeDecisionProduct.ProductQuantity;
+                    //addedBrokeDecisionProduct.Quantity = selectedBrokeDecisionProduct.Quantity;
                     addedBrokeDecisionProduct.NomenclatureId = selectedBrokeDecisionProduct.NomenclatureId;
                     addedBrokeDecisionProduct.CharacteristicId = selectedBrokeDecisionProduct.CharacteristicId;
-                    addedBrokeDecisionProduct.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
-                    addedBrokeDecisionProduct.BrokePlaceID = SelectedBrokeProduct.PlaceId;
+                    addedBrokeDecisionProduct.RejectionReasonID = addedBrokeProduct.RejectionReasonID;
+                    addedBrokeDecisionProduct.BrokePlaceID = addedBrokeProduct.PlaceId;
+                    addedBrokeDecisionProduct.DecisionDate = selectedBrokeDecisionProduct.DecisionDate;
+                    addedBrokeDecisionProduct.DecisionPlaceId = selectedBrokeDecisionProduct.DecisionPlaceId;
                 }
                 else
                     DB.AddLogMessageInformation("Ошибка при добавление продукта ProductID при распаковке ГУ в Акт о браке DocID", "ERROR AddProduct with UnpackGroupPack (docId = '" + DocId + "', productId='" + product + "')", DocId, product);
