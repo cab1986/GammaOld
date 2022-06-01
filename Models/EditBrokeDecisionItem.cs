@@ -48,6 +48,13 @@ namespace Gamma.Models
             get { return _quantity; }
             set
             {
+                if (ParentModel.ProductKind == ProductKind.ProductGroupPack
+                            && ProductState == ProductState.Broke
+                            && _quantity != 0 && value != _quantity)
+                {
+                    MessageBox.Show("Нельзя изменить кол-во, так как это групповая упаковка. Сначала распакуйте ГУ.");
+                    return;
+                }
                 var updatedMainFields = !(_quantity == value);
                 _quantity = value;
                 RaisePropertyChanged("Quantity");
@@ -243,7 +250,7 @@ namespace Gamma.Models
                     }
                     else if (!_isChecked && value
                             && ParentModel.ProductKind == ProductKind.ProductGroupPack
-                            && (!ParentModel.NeedsProductStates.Contains(ProductState)))
+                            && (!ParentModel.NeedsProductStates.Contains(ProductState) && ProductState != ProductState.Broke))
                     {
                         MessageBox.Show("Нельзя поставить галочку, так как это групповая упаковка. Сначала распакуйте ГУ.");
                         return;
@@ -268,6 +275,17 @@ namespace Gamma.Models
                         MessageBox.Show("Нельзя поставить галочку, так как уже выбран Годная");
                         return;
                     }
+                }
+                if (_isChecked && !value)
+                {
+                    Quantity = 0;
+                }
+                else if (!_isChecked && value
+                            && ParentModel.ProductKind == ProductKind.ProductGroupPack
+                            && ProductState == ProductState.Broke
+                            && Quantity == 0)
+                {
+                    Quantity = MaxQuantity;
                 }
                 _isChecked = value;
                 RaisePropertyChanged("IsChecked");
@@ -483,7 +501,7 @@ namespace Gamma.Models
         private Guid? ProductId => BrokeDecisionProduct?.ProductId;
         private void CreateWithdrawal()
         {
-            if ( ParentModel.ProductKind == ProductKind.ProductGroupPack)
+            if ( ParentModel.ProductKind == ProductKind.ProductGroupPack && Quantity != ParentModel.ProductQuantity)
                 Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Нельзя нажать Выполнить, так как это групповая упаковка. Сначала распакуйте ГУ.", "ERROR CreateWithdrawal (Product is GroupPack)", null, ProductId);
             else if (ProductId == null)
                 Functions.ShowMessageError("Нажатие Выполнить в Акт о браке: " + Environment.NewLine + "Нельзя нажать Выполнить, так как не определен продукт", "ERROR CreateWithdrawal (ProductId is NULL)", null, ProductId);

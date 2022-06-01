@@ -602,44 +602,54 @@ namespace Gamma.ViewModels
 
         public CreateWithdrawalResult CreateWithdrawal(Guid productID, ProductKind productKind, byte stateID, decimal quantity, decimal? productionQuantity, Guid? nomenclatureId = null, Guid? characteristicId = null, int? diameter = null, byte? breakNumber = null, decimal? length = null, int? realFormat = null)
         {
-            int koeff = productKind != Gamma.ProductKind.ProductSpool ? 1 : 1000;
-            int quantityMax = (int)(quantity * koeff);
-            string messageInvariant = (stateID == 2 ? " для утилизации " : " для нового продукта ");
-            string message = "Укажите количество " + messageInvariant + Environment.NewLine + "максимальное кол-во - " + quantityMax.ToString();
-            var model = new SetQuantityDialogModel(message, "Кол-во, кг/шт/пачка", 1, quantityMax);
-            var okCommand = new UICommand()
-            {
-                Caption = "OK",
-                IsCancel = false,
-                IsDefault = true,
-                Command = new DelegateCommand<CancelEventArgs>(
-            x => DebugFunc(),
-            x => model.Quantity >= 1 && model.Quantity <= quantityMax),
-            };
-            var cancelCommand = new UICommand()
-            {
-                Id = MessageBoxResult.Cancel,
-                Caption = "Отмена",
-                IsCancel = true,
-                IsDefault = false,
-            };
+            int koeff = productKind != Gamma.ProductKind.ProductSpool && productKind != Gamma.ProductKind.ProductGroupPack ? 1 : 1000;
             UICommand result = null;
-            model.Quantity = quantityMax;
-            var dialogService = GetService<IDialogService>("SetQuantityDialog");
-            result = dialogService.ShowDialog(
-                    dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
-                    title: "Кол-во " + messageInvariant,
-                    viewModel: model);
-            //quantity = model.Quantity * (int)(item.NewPalletCoefficient / item.NewGroupPacksInPallet);
+            UICommand okCommand = null;
+            decimal newQuantity;
+            string messageInvariant = (stateID == 2 ? " для утилизации " : " для нового продукта ");
+            if (productKind == Gamma.ProductKind.ProductGroupPack)
+            {
+                result = okCommand;
+                newQuantity = quantity;
+                    }
+            else
+            {
+                int quantityMax = (int)(quantity * koeff);
+                string message = "Укажите количество " + messageInvariant + Environment.NewLine + "максимальное кол-во - " + quantityMax.ToString();
+                var model = new SetQuantityDialogModel(message, "Кол-во, кг/шт/пачка", 1, quantityMax);
+                okCommand = new UICommand()
+                {
+                    Caption = "OK",
+                    IsCancel = false,
+                    IsDefault = true,
+                    Command = new DelegateCommand<CancelEventArgs>(
+                x => DebugFunc(),
+                x => model.Quantity >= 1 && model.Quantity <= quantityMax),
+                };
+                var cancelCommand = new UICommand()
+                {
+                    Id = MessageBoxResult.Cancel,
+                    Caption = "Отмена",
+                    IsCancel = true,
+                    IsDefault = false,
+                };
+                model.Quantity = quantityMax;
+                var dialogService = GetService<IDialogService>("SetQuantityDialog");
+                result = dialogService.ShowDialog(
+                        dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                        title: "Кол-во " + messageInvariant,
+                        viewModel: model);
+                //quantity = model.Quantity * (int)(item.NewPalletCoefficient / item.NewGroupPacksInPallet);
+                newQuantity = ((decimal)model.Quantity / koeff);
+            }
             CreateWithdrawalResult withdrawalResult = null;
             if (result == okCommand)
             {
-                DB.AddLogMessageInformation("Ввод пользователем кол-ва " + model.Quantity + messageInvariant + " продукта ProductID в Акт о браке DocID", "SetCreateWithdrawalQuantity (Quantity='" + model.Quantity + "', DecisionDocID='" + DecisionDocID + "', stateId='" + stateID + "', quantity='" + quantity + "', productionQuantity='" + productionQuantity + "', nomenclatureId='" + nomenclatureId + "', characteristicId='" + characteristicId + "', diameter='" + diameter + "', breakNumber='" + breakNumber + "')", DocBrokeID, productID);
+                DB.AddLogMessageInformation("Ввод пользователем кол-ва " + (newQuantity.ToString() ?? "NULL") + messageInvariant + " продукта ProductID в Акт о браке DocID", "SetCreateWithdrawalQuantity (Quantity='" + (newQuantity.ToString() ?? "NULL") + "', DecisionDocID='" + DecisionDocID + "', stateId='" + stateID + "', quantity='" + quantity + "', productionQuantity='" + productionQuantity + "', nomenclatureId='" + nomenclatureId + "', characteristicId='" + characteristicId + "', diameter='" + diameter + "', breakNumber='" + breakNumber + "')", DocBrokeID, productID);
                 //var docBrokeDecision = documentController.ConstructDoc((Guid)DecisionDocID, DocTypes.DocBrokeDecision, true);
                 //if (docBrokeDecision != null && documentController.AddDocBrokeDecision(docBrokeDecision, DocBrokeID))
                 {
                     Guid newId = SqlGuidUtil.NewSequentialid();
-                    decimal newQuantity = ((decimal)model.Quantity / koeff);
                     int placeID = 0;
                     if (WorkSession.ShiftID > 0)
                     {
@@ -674,8 +684,8 @@ namespace Gamma.ViewModels
                             if (withdrawalResult != null)
                             {
                                 Guid productId = SqlGuidUtil.NewSequentialid();
-                                int newDiameter = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)Math.Sqrt((double)((diameter * diameter) * newQuantity / productionQuantity));
-                                int newLength = productKind != Gamma.ProductKind.ProductSpool ? 0 : (int)((length ?? 0) * (newQuantity / productionQuantity));
+                                int newDiameter = koeff == 1 ? 0 : (int)Math.Sqrt((double)((diameter * diameter) * newQuantity / productionQuantity));
+                                int newLength = koeff == 1 ? 0 : (int)((length ?? 0) * (newQuantity / productionQuantity));
                                 var product = productController.AddNewProductToDocProduction(docProduction, docWithdrawalId, productKind, (Guid)nomenclatureId, (Guid)characteristicId, newQuantity, newDiameter, breakNumber, newLength, realFormat);
                                 withdrawalResult = product == null ? null : new CreateWithdrawalResult(product.ProductID, product.Number, docProduction.Date, product.ProductKind, product.Quantity, docWithdrawalId, placeID) ;
                             }
@@ -684,13 +694,13 @@ namespace Gamma.ViewModels
                 }
                 if (withdrawalResult == null)
                 {
-                    Functions.ShowMessageError("Списание в Акт о браке: " + Environment.NewLine + "Ошибка! Операция не проведена!", "ERROR CreateWithdrawal (Quantity='" + model.Quantity + "', DecisionDocID='" + DecisionDocID + "', stateId='" + stateID + "', quantity='" + quantity + "', productionQuantity='" + productionQuantity + "', nomenclatureId='" + nomenclatureId + "', characteristicId='" + characteristicId + "', diameter='" + diameter + "', breakNumber='" + breakNumber + "')", DocBrokeID, productID);
+                    Functions.ShowMessageError("Списание в Акт о браке: " + Environment.NewLine + "Ошибка! Операция не проведена!", "ERROR CreateWithdrawal (Quantity='" + (newQuantity.ToString() ?? "NULL") + "', DecisionDocID='" + DecisionDocID + "', stateId='" + stateID + "', quantity='" + quantity + "', productionQuantity='" + productionQuantity + "', nomenclatureId='" + nomenclatureId + "', characteristicId='" + characteristicId + "', diameter='" + diameter + "', breakNumber='" + breakNumber + "')", DocBrokeID, productID);
                     return null;
                 }
             }
             else
             {
-                DB.AddLogMessageInformation("Отмена ввода пользователем кол-ва " + model.Quantity + messageInvariant + " продукта ProductID в Акт о браке DocID", "SetCreateWithdrawalQuantity (Quantity='" + model.Quantity + "', DecisionDocID='" + DecisionDocID + "', stateId='" + stateID + "', quantity='" + quantity + "', productionQuantity='" + productionQuantity + "', nomenclatureId='" + nomenclatureId + "', characteristicId='" + characteristicId + "', diameter='" + diameter + "', breakNumber='" + breakNumber + "')", DocBrokeID, productID);
+                DB.AddLogMessageInformation("Отмена ввода пользователем кол-ва " + (newQuantity.ToString() ?? "NULL") + messageInvariant + " продукта ProductID в Акт о браке DocID", "SetCreateWithdrawalQuantity (Quantity='" + (newQuantity.ToString() ?? "NULL") + "', DecisionDocID='" + DecisionDocID + "', stateId='" + stateID + "', quantity='" + quantity + "', productionQuantity='" + productionQuantity + "', nomenclatureId='" + nomenclatureId + "', characteristicId='" + characteristicId + "', diameter='" + diameter + "', breakNumber='" + breakNumber + "')", DocBrokeID, productID);
                 return null;
             }
             return withdrawalResult;
@@ -956,7 +966,7 @@ namespace Gamma.ViewModels
             }
             else
             {
-                if (!IsChecked && currentEditBrokeDecisionItem.Quantity != 0)
+                if (!IsChecked && currentEditBrokeDecisionItem.Quantity != 0 && currentEditBrokeDecisionItem.ProductState != ProductState.Broke)
                 {
                     sumQuantityDecisionItem = sumQuantityDecisionItem - currentEditBrokeDecisionItem.Quantity;
                     currentEditBrokeDecisionItem.Quantity = 0;
