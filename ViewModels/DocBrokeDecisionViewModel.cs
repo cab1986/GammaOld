@@ -966,11 +966,11 @@ namespace Gamma.ViewModels
             }
             else
             {
-                if (!IsChecked && currentEditBrokeDecisionItem.Quantity != 0 && currentEditBrokeDecisionItem.ProductState != ProductState.Broke)
+                /*if (!IsChecked && currentEditBrokeDecisionItem.Quantity != 0 && currentEditBrokeDecisionItem.ProductState != ProductState.Broke)
                 {
                     sumQuantityDecisionItem = sumQuantityDecisionItem - currentEditBrokeDecisionItem.Quantity;
                     currentEditBrokeDecisionItem.Quantity = 0;
-                }
+                }*/
                 if ((ProductQuantity - sumQuantityDecisionItem) > 0)
                 {
                     if (prevEditNeedsBrokeDecisionItem.Value != null)
