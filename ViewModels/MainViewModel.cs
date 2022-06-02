@@ -74,7 +74,7 @@ namespace Gamma.ViewModels
             try
             {
                 string myIP = Dns.GetHostByName(GammaSettings.LocalHostName).AddressList[0].ToString();
-                DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version + ", Device " + Environment.MachineName + ", CurrentDate " + DateTime.Now.ToString() + ", IP " + myIP);
+                DB.AddLogMessageStartProgramInformation("Запуск Gamma v" + GammaSettings.Version + ", Device " + Environment.MachineName + ", CurrentDate " + DateTime.Now.ToString() + ", IP " + myIP, "Start Gamma v" + GammaSettings.Version + ", Device " + Environment.MachineName + ", CurrentDate " + DateTime.Now.ToString() + ", IP " + myIP);
                 DB.AddLogMessageStartProgramInformation(StatusText);
             }
             catch (Exception e)
@@ -241,7 +241,10 @@ namespace Gamma.ViewModels
             if (MessageBox.Show("Хотите закончить работу с программой?", "Завершение работы", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 e.Cancel = true;
             else
+            {
+                DB.AddLogMessageInformation("Закрытие Gamma v" + GammaSettings.Version, "Closing Gamma v" + GammaSettings.Version);
                 DB.SaveLogToLocalServer();
+            }
         }
 
         private DelegateCommand _activatedCommand;
