@@ -20,5 +20,6 @@ namespace Gamma.Entities
         public string MeasureUnit { get; set; }
         public Nullable<decimal> Quantity { get; set; }
         public string NomenclatureName { get; set; }
+        public Nullable<bool> QuantityIsReadOnly { get; set; }
     }
 }

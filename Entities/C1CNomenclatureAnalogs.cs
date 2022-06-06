@@ -29,6 +29,7 @@ namespace Gamma.Entities
         public Nullable<decimal> AmountAnalog { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
+        public Nullable<System.Guid> C1CNomenclatureAnalogsDocID { get; set; }
     
         public virtual C1CSpecifications C1CSpecifications { get; set; }
         public virtual C1CMeasureUnits C1CMeasureUnits { get; set; }

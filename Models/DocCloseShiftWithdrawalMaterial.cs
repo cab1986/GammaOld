@@ -371,7 +371,7 @@ namespace Gamma.Models
                                 NomenclatureID = (Guid)m.NomenclatureID,
                                 CharacteristicID = m.CharacteristicID,
                                 NomenclatureName = m.NomenclatureName,
-                                QuantityIsReadOnly = false, //!m.WithdrawByFact ?? true,
+                                QuantityIsReadOnly = m.QuantityIsReadOnly ?? false, //false, //!m.WithdrawByFact ?? true,
                                 Quantity = m.Quantity ?? 0,
                                 BaseQuantity = m.Quantity ?? 0,
                                 //DocWithdrawalMaterialID = SqlGuidUtil.NewSequentialid(),
