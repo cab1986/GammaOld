@@ -184,6 +184,7 @@ namespace Gamma.Entities
         public virtual DbSet<vProductsBaseInfo> vProductsBaseInfo { get; set; }
         public virtual DbSet<DocBrokeDecision> DocBrokeDecision { get; set; }
         public virtual DbSet<vDocBroke> vDocBroke { get; set; }
+        public virtual DbSet<vNomenclatureSGBProperties> vNomenclatureSGBProperties { get; set; }
     
         public virtual ObjectResult<string> DeleteGroupPack(Nullable<System.Guid> productID)
         {
@@ -1727,6 +1728,48 @@ namespace Gamma.Entities
                 new ObjectParameter("ShiftID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<UtilizationProductWithRepackInDocBroke_Result>("UtilizationProductWithRepackInDocBroke", productIDParameter, quantityBrokeParameter, shiftIDParameter);
+        }
+    
+        public virtual int UnpackGroupPackOnPlace(Nullable<System.Guid> productID, Nullable<int> placeID, string printName)
+        {
+            var productIDParameter = productID.HasValue ?
+                new ObjectParameter("ProductID", productID) :
+                new ObjectParameter("ProductID", typeof(System.Guid));
+    
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var printNameParameter = printName != null ?
+                new ObjectParameter("PrintName", printName) :
+                new ObjectParameter("PrintName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UnpackGroupPackOnPlace", productIDParameter, placeIDParameter, printNameParameter);
+        }
+    
+        public virtual ObjectResult<string> ValidateSpoolBeforeSave(Nullable<System.Guid> nomenclatureID, Nullable<System.Guid> characteristicID, Nullable<decimal> diameter, Nullable<decimal> weight, Nullable<int> format)
+        {
+            var nomenclatureIDParameter = nomenclatureID.HasValue ?
+                new ObjectParameter("NomenclatureID", nomenclatureID) :
+                new ObjectParameter("NomenclatureID", typeof(System.Guid));
+    
+            var characteristicIDParameter = characteristicID.HasValue ?
+                new ObjectParameter("CharacteristicID", characteristicID) :
+                new ObjectParameter("CharacteristicID", typeof(System.Guid));
+    
+            var diameterParameter = diameter.HasValue ?
+                new ObjectParameter("Diameter", diameter) :
+                new ObjectParameter("Diameter", typeof(decimal));
+    
+            var weightParameter = weight.HasValue ?
+                new ObjectParameter("Weight", weight) :
+                new ObjectParameter("Weight", typeof(decimal));
+    
+            var formatParameter = format.HasValue ?
+                new ObjectParameter("Format", format) :
+                new ObjectParameter("Format", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateSpoolBeforeSave", nomenclatureIDParameter, characteristicIDParameter, diameterParameter, weightParameter, formatParameter);
         }
     }
 }

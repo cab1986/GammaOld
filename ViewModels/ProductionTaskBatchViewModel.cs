@@ -179,15 +179,15 @@ namespace Gamma.ViewModels
         private void DeleteProduct()
         {
             if (SelectedProductionTaskProduct == null) return;
+            DB.AddLogMessageInformation("Выбран пункт Удалить продукт ProductID", "DeleteProduct in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
             if (WorkSession.ShiftID != 0 && (SelectedProductionTaskProduct.PlaceID != WorkSession.PlaceID || SelectedProductionTaskProduct.ShiftID != WorkSession.ShiftID))
             {
-                MessageBox.Show("Вы не можете удалить продукцию другой смены или другого передела");
+                Functions.ShowMessageInformation("Вы не можете удалить продукцию другой смены или другого передела", "Not DeleteProduct in ProductionTaskBatchViewModel: can't delete products from another shift or place", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
                 return;
             }
-            if (MessageBox.Show(
+            if (Functions.ShowMessageQuestion(
                 "Вы уверены, что хотите удалить продукт № " + SelectedProductionTaskProduct.Number + "?",
-                "Удаление продукта", MessageBoxButton.YesNo, MessageBoxImage.Question,
-                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+                "QUEST DeleteProduct in ProductionTaskBatchViewModel: you are sure", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID) != MessageBoxResult.Yes)
             {
                 return;
             };
@@ -201,7 +201,7 @@ namespace Gamma.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Не достаточно прав для удаления тамбура");
+                        delResult = "Недостаточно прав для удаления тамбура";
                     }
                     break;
                 case ProductKind.ProductGroupPack:
@@ -211,7 +211,7 @@ namespace Gamma.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Не достаточно прав для удаления групповой упаковки");
+                        delResult = "Недостаточно прав для удаления групповой упаковки";
                     }
                     break;
                 case ProductKind.ProductPallet:
@@ -221,7 +221,7 @@ namespace Gamma.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Не достаточно прав для удаления паллеты");
+                        delResult = "Недостаточно прав для удаления паллеты";
                     }
                     break;
                 case ProductKind.ProductPalletR:
@@ -231,13 +231,13 @@ namespace Gamma.ViewModels
                     }
                     else
                     {
-                        MessageBox.Show("Не достаточно прав для удаления неполной паллеты");
+                        delResult = "Недостаточно прав для удаления неполной паллеты";
                     }
                     break;                    
             }
             if (delResult != "")
             {
-                MessageBox.Show(delResult, "Удалить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                Functions.ShowMessageInformation(delResult, "Not DeleteProduct in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
             }
             else
                 ProductionTaskProducts.Remove(SelectedProductionTaskProduct);
@@ -248,6 +248,7 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
+            DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
             if (CurrentView != null && ProductionTaskBatchID != null)
             {
                 DB.UploadProductionTaskBatchTo1C(ProductionTaskBatchID, GammaBase);
@@ -260,6 +261,7 @@ namespace Gamma.ViewModels
 
         private void ProductChanged(ProductChangedMessage msg)
         {
+            DB.AddLogMessageInformation("Обновление информации в списке после изменения продукта ProductID в задании на производство", "Start ProductChanged in ProductionTaskBatchViewModel", ProductionTaskBatchID, msg.ProductID);
             var product = ProductionTaskProducts.FirstOrDefault(p => p.ProductID == msg.ProductID);
             if (product == null) return;
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
@@ -289,6 +291,7 @@ namespace Gamma.ViewModels
         private void BarcodeReceived(BarcodeMessage msg)
         {
             if (!IsActive) return;
+            DB.AddLogMessageInformation("Отсканирован штрих-код " + msg.Barcode, "Start BarcodeReceived in ProductionTaskBatchViewModel: barcode - " + msg.Barcode, ProductionTaskBatchID);
             var docProductionProducts = GammaBase.DocProductionProducts.Include(dp => dp.DocProduction.Docs).Include(dp => dp.Products)
                 .FirstOrDefault(
                     dp => dp.Products.BarCode == msg.Barcode);
@@ -312,7 +315,7 @@ namespace Gamma.ViewModels
                     break;
             }
             GammaBase.SaveChanges();
-            MessageBox.Show(message, "Подтверждение", MessageBoxButton.OK, MessageBoxImage.Information);
+            Functions.ShowMessageInformation(message, "BarcodeReceived in ProductionTaskBatchViewModel: confirmed", ProductionTaskBatchID, docProductionProducts.Products.ProductID);
             var productionTaskProduct =
                 ProductionTaskProducts.FirstOrDefault(ptp => ptp.ProductID == docProductionProducts.ProductID);
             if (productionTaskProduct != null) productionTaskProduct.IsConfirmed = true;
@@ -695,7 +698,12 @@ namespace Gamma.ViewModels
 
         public override bool SaveToModel()
         {
-            if (!DB.HaveWriteAccess("ProductionTaskBatches")) return true;
+            DB.AddLogMessageInformation("Начало сохранения задания по производству " + Number, "Start SaveToModel in ProductionTaskBatchViewModel", ProductionTaskBatchID);
+            if (!DB.HaveWriteAccess("ProductionTaskBatches"))
+            {
+                DB.AddLogMessageInformation("Успешный выход без сохранения задания по производству " + Number, "Quit successed from  SaveToModel in ProductionTaskBatchViewModel: DB.HaveWriteAccess(ProductionTaskBatches) = false", ProductionTaskBatchID);
+                return true;
+            }
             using (var gammaBase = DB.GammaDb)
             {
                 var productionTaskBatch = gammaBase.ProductionTaskBatches.FirstOrDefault(p => p.ProductionTaskBatchID == ProductionTaskBatchID);
@@ -721,6 +729,7 @@ namespace Gamma.ViewModels
             CurrentView?.SaveToModel(ProductionTaskBatchID);
             if (ProductionTaskStateID == (byte)ProductionTaskStates.InProduction || ProductionTaskStateID == (byte)ProductionTaskStates.Completed)
                 UploadTo1C();
+            DB.AddLogMessageInformation("Успешное окончание сохранения задания по производству " + Number, "End SaveToModel in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
             return true;
         }
 
@@ -739,19 +748,20 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
-                var productionTask =
+                /*var productionTask =
                     gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
                         p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
                 GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null);
                 if (productionTask == null)
-                    return false;
+                    return false;*/
                 return false; // Всегда ложь для того, чтобы активировать задание надо было каждый раз вручную (productionTask.ActiveProductionTasks != null);
             }
         }
 
         private void MakeProductionTaskActiveForPlace()
         {
+            DB.AddLogMessageInformation("Выбран пункт Сделать активным задание по производству " + Number, "Start MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
@@ -761,7 +771,8 @@ namespace Gamma.ViewModels
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
 	            if (productionTask == null)
                 {
-		            return;
+                    DB.AddLogMessageInformation("Не найдено задание по производству " + Number + " для передела", "Error MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel: productionTask == null", ProductionTaskBatchID);
+                    return;
 	            }
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
@@ -774,9 +785,7 @@ namespace Gamma.ViewModels
                         {
                             if (!(bool)client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
                             {
-                                MessageBox.Show("Не удалось сменить амбалаж для аппликатора", "Аппликатор",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Warning);
+                                Functions.ShowMessageError("Не удалось сменить амбалаж для аппликатора", "Error MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel: Could not change the label for the applicator", ProductionTaskBatchID);
                             }
                             /*
                             bool? res = client.ChangePrinterStatus(WorkSession.PlaceID, 2);
@@ -804,9 +813,7 @@ namespace Gamma.ViewModels
                     }
                     catch
                     {
-                        MessageBox.Show("Техническая проблема при смене амбалажа для аппликатора: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Аппликатор",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Warning);
+                        Functions.ShowMessageError("Техническая проблема при смене амбалажа для аппликатора: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Error MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel: service unavailable", ProductionTaskBatchID);
                     }
                 }
             }
@@ -814,8 +821,8 @@ namespace Gamma.ViewModels
 
         private void CreateNewProductR()
         {
-            var dialogResult = MessageBox.Show("Создание транспортной этикетки неполной паллеты! Вы уверены?", "Внимание!",MessageBoxButton.YesNo,MessageBoxImage.Warning);
-            if (dialogResult == MessageBoxResult.Yes)
+            if (Functions.ShowMessageQuestion("Создание транспортной этикетки неполной паллеты! Вы уверены?", "QUEST CreateNewProductR in ProductionTaskBatchViewModel: are you sure", ProductionTaskBatchID)
+                == MessageBoxResult.Yes)
             {
                 var productionTaskID = GammaBase.ProductionTaskBatches.Where(p => p.ProductionTaskBatchID == ProductionTaskBatchID).
                         Select(p => p.ProductionTasks.FirstOrDefault(pt => pt.PlaceGroupID == (byte)WorkSession.PlaceGroup).ProductionTaskID).
@@ -866,6 +873,7 @@ namespace Gamma.ViewModels
         //Создание нового продукта
         private void CreateNewProduct(int? baseQuantity )
         {
+            DB.AddLogMessageInformation("Начато создание нового продукта: кол-во - " + baseQuantity.ToString(), "Start CreateNewProduct in ProductionTaskBatchViewModel: baseQuantity - " + baseQuantity.ToString(), ProductionTaskBatchID);
             using (var gammaBase = DB.GammaDb)
             {
                 var docProductKind = new DocProductKinds();
@@ -913,6 +921,7 @@ namespace Gamma.ViewModels
                                     }
                                     gammaBase.SaveChanges();
                                     gammaBase.GenerateNewNumbersForDoc(docProduction.DocID); //Генерация номера документа
+                                    DB.AddLogMessageInformation("Переходной тамбур. Он будет открыт для редактирования", "CreateNewProduct in ProductionTaskBatchViewModel: transitional spool", ProductionTaskBatchID);
                                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
                                 }
@@ -929,7 +938,7 @@ namespace Gamma.ViewModels
                                      {
                                          break;
                                      }
-                                    MessageBox.Show("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования");
+                                    Functions.ShowMessageInformation("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования", "CreateNewProduct in ProductionTaskBatchViewModel: previous spool is not confirmed", ProductionTaskBatchID);
                                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
                                 }
@@ -941,29 +950,37 @@ namespace Gamma.ViewModels
                                 && d.DocTypeID == (byte)DocTypes.DocProduction).OrderByDescending(d => d.Date).FirstOrDefault();
                                 if (notConfirmedDocUnload != null && !notConfirmedDocUnload.IsConfirmed)
                                 {
-                                    MessageBox.Show("Предыдущий съем не подтвержден. Он будет открыт для редактирования");
+                                    Functions.ShowMessageInformation("Предыдущий съём не подтвержден. Он будет открыт для редактирования", "CreateNewProduct in ProductionTaskBatchViewModel: previous unload is not confirmed", ProductionTaskBatchID);
                                     MessageManager.OpenDocProduct(DocProductKinds.DocProductUnload, notConfirmedDocUnload.DocID);
                                     return;
                                 }
                                 checkResult = SourceSpoolsCorrect(WorkSession.PlaceID, productionTaskID);
                                 break;
                         }
-                        if (checkResult == SourceSpoolsCheckResult.Block) return;
+                        if (checkResult == SourceSpoolsCheckResult.Block)
+                        {
+                            DB.AddLogMessageInformation("Активные раскаты не соответствуют спецификации задания", "End failed CreateNewProduct in ProductionTaskBatchViewModel: SourceSpoolsCorrect is not checked", ProductionTaskBatchID);
+                            return;
+                        }
                         var sourceIds = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
                         if (
                             gammaBase.Products.Where(p => sourceIds.Contains(p.ProductID))
                                 .Any(p => p.StateID == (int) ProductState.Limited))
                         {
-                            MessageBox.Show(
-                                @"Исходные тамбура ограниченно годны. Возможно потребуется принятие решения по выпущенной продукции.",
-                                @"Ограниченно годны", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            Functions.ShowMessageInformation(
+                                "Исходные тамбура ограниченно годны. Возможно потребуется принятие решения по выпущенной продукции.",
+                                "CreateNewProduct in ProductionTaskBatchViewModel: source spool(s) is limited edition", ProductionTaskBatchID);
                         }
                         MessageManager.CreateNewProduct(docProductKind, productionTaskID, checkResult);
                         break;
                     // Действия для конвертингов
                     case BatchKinds.SGI:
                         checkResult = SourceSpoolsCorrect(WorkSession.PlaceID, productionTaskID);
-                        if (checkResult == SourceSpoolsCheckResult.Block) return;
+                        if (checkResult == SourceSpoolsCheckResult.Block)
+                        {
+                            DB.AddLogMessageInformation("Активные раскаты не соответствуют спецификации задания", "End failed CreateNewProduct in ProductionTaskBatchViewModel: SourceSpoolsCorrect is not checked", ProductionTaskBatchID);
+                            return;
+                        }
                         var currentDateTime = DB.CurrentDateTime;
                         var productionTask =
                             gammaBase.GetProductionTaskByBatchID(ProductionTaskBatchID,
@@ -991,6 +1008,7 @@ namespace Gamma.ViewModels
                         Products product;
                         if (doc != null && doc.ShiftID == null)
                         {
+                            DB.AddLogMessageInformation("Переходной паллета. Устанавливаем недостающие свойства и открываем для редактирования", "CreateNewProduct in ProductionTaskBatchViewModel: transitional pallet", ProductionTaskBatchID);
                             productId =
                                 gammaBase.DocProductionProducts.First(dp => dp.DocID == doc.DocID)
                                     .ProductID;
@@ -1079,6 +1097,7 @@ namespace Gamma.ViewModels
                         }
                         else
                         {
+                            DB.AddLogMessageInformation("Новая паллета", "CreateNewProduct in ProductionTaskBatchViewModel: new pallet", ProductionTaskBatchID);
                             product = new Products()
                             {
                                 ProductID = productId,
@@ -1174,10 +1193,10 @@ namespace Gamma.ViewModels
                                 docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
                             }
                         gammaBase.SaveChanges();
-
-//#if (!DEBUG)
+                        DB.AddLogMessageInformation("Успешно создан новый продукт ProductID", "End CreateNewProduct in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID, product.ProductID);
+#if (!DEBUG)
                         ReportManager.PrintReport(reportName, "Pallet", doc.DocID, false, 1);
-//#endif
+#endif
                         RefreshProduction();
                         break;
                 }
@@ -1212,9 +1231,9 @@ namespace Gamma.ViewModels
             catch
             {
                 StatusApplicator = null;
-                MessageBox.Show("Не удалось получить состояние принтера групповых этикеток", "Принтер групповых этикеток",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                Functions.ShowMessageError("Не удалось получить состояние принтера групповых этикеток",
+                          "Error GetStatusApplicator in ProductionTaskBatchViewModel: Unable to retrieve the status of the group label printer", ProductionTaskBatchID);
+
             }
         }
 
@@ -1234,9 +1253,8 @@ namespace Gamma.ViewModels
                             StatusApplicator = client.ChangePrinterStatus(WorkSession.PlaceID, 2);
                             if (StatusApplicator == null)
                             {
-                                MessageBox.Show("Не удалось сменить состояние принтера групповых этикеток", "Принтер групповых этикеток",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Warning);
+                                Functions.ShowMessageError("Не удалось сменить состояние принтера групповых этикеток",
+                                          "Error GetStatusApplicator in ProductionTaskBatchViewModel: could not change the status of the group label printer", ProductionTaskBatchID);
                             }
                         }
                     }
@@ -1245,9 +1263,8 @@ namespace Gamma.ViewModels
             catch
             {
                 StatusApplicator = null;
-                MessageBox.Show("Не удалось изменить состояние принтера групповых этикеток", "Принтер групповых этикеток",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                Functions.ShowMessageError("Не удалось изменить состояние принтера групповых этикеток",
+                          "Error GetStatusApplicator in ProductionTaskBatchViewModel: Failed to modify the status of the group label printer", ProductionTaskBatchID);
             }
         }
 
@@ -1262,9 +1279,8 @@ namespace Gamma.ViewModels
                         bool? res = client.PrintLabel(WorkSession.PlaceID, 2, null);
                         if (!res ?? true)
                         {
-                            MessageBox.Show("Не удалось распечатать групповую этикетку", "Принтер групповых этикеток",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Warning);
+                            Functions.ShowMessageError("Не удалось распечатать групповую этикетку",
+                                "Error GetStatusApplicator in ProductionTaskBatchViewModel: Unable to print the group label", ProductionTaskBatchID);
                         }
                         //else
                         //{
@@ -1278,9 +1294,8 @@ namespace Gamma.ViewModels
             catch
             {
                 StatusApplicator = null;
-                MessageBox.Show("Не удалось распечатать групповую этикетку", "Принтер групповых этикеток",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                Functions.ShowMessageError("Не удалось распечатать групповую этикетку",
+                          "Error GetStatusApplicator in ProductionTaskBatchViewModel: error printing group label", ProductionTaskBatchID);
             }
         }
 
@@ -1400,6 +1415,8 @@ namespace Gamma.ViewModels
             }
         private void ShowProduct(Guid productID)
         {
+            DB.AddLogMessageInformation("Выбран пункт Открыть продукт ProductID",
+                          "Start ShowProduct in ProductionTaskBatchViewModel", ProductionTaskBatchID, productID);
             //var productKind = (ProductionTaskProducts != null ? ProductionTaskProducts.FirstOrDefault(p => p.ProductID == productID)?.ProductKind : (ProductKind?)null) ?? (Repacks != null ? Repacks.FirstOrDefault(p => p.ProductID == productID)?.ProductKind : (ProductKind?)null);
             var productKind = Repacks.FirstOrDefault(p => p.ProductID == productID)?.ProductKind ?? ProductionTaskProducts?.FirstOrDefault(p => p.ProductID == productID)?.ProductKind;
             switch (productKind)
@@ -1479,6 +1496,8 @@ namespace Gamma.ViewModels
             }
             set
             {
+                DB.AddLogMessageInformation("Начато изменение состояния в задании на производство " + Number,
+                          "Edit ProductionTaskStateID in ProductionTaskBatchViewModel: value = " + value.ToString(), ProductionTaskBatchID);
                 if (_productionTaskStateID == null)
                 {
                     _productionTaskStateID = value;
@@ -1491,7 +1510,8 @@ namespace Gamma.ViewModels
                     {
                         var res = DB.GetAbilityChangeProductionTaskState(ProductionTaskBatchID);
                         if (res == null)
-                            MessageBox.Show("Ошибка при получении данных из 1С");
+                            DB.AddLogMessageInformation("Ошибка при получении данных из 1С",
+                                "Edit ProductionTaskStateID in ProductionTaskBatchViewModel: error receive datea from 1C", ProductionTaskBatchID);
                         else
                         {
                             if ((int)res == 1)
@@ -1516,7 +1536,11 @@ namespace Gamma.ViewModels
             get { return _isEditingComment; }
             set
             {
-                if (_isEditingComment == value) return;
+                if (_isEditingComment == value)
+                    return;
+                else
+                    DB.AddLogMessageInformation("Начато изменение комментария",
+                          "Edit IsEditingComment in ProductionTaskBatchViewModel: value = " + value.ToString(), ProductionTaskBatchID);
                 _isEditingComment = value;
                 if (CurrentView is IProductionTaskBatch)
                 {
@@ -1556,7 +1580,7 @@ namespace Gamma.ViewModels
                 var sourceSpools = gammaBase.GetActiveSourceSpools(placeId).ToList();
                 if (sourceSpools.Count == 0)
                 {
-                    MessageBox.Show("Нет активных раскатов");
+                    Functions.ShowMessageError("Нет активных раскатов", "Error GetActiveSourceSpools in ProductionTaskBatchViewModel: not active source spools", ProductionTaskBatchID);
                     return SourceSpoolsCheckResult.Block;
                 }
                 /*
@@ -1572,11 +1596,10 @@ namespace Gamma.ViewModels
                     return SourceSpoolsCheckResult.Correct;
                 if (result.BlockCreation)
                 {
-                    MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                    DB.AddLogMessageError(resultMessage, "Error CheckProductionTaskSourceSpools in ProductionTaskBatchViewModel", ProductionTaskBatchID);
                     return SourceSpoolsCheckResult.Block;
                 }
-                var dialogResult = MessageBox.Show(resultMessage, "Проверка исходных тамбуров", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var dialogResult = Functions.ShowMessageQuestion(resultMessage, "QUEST CheckProductionTaskSourceSpools in ProductionTaskBatchViewModel", ProductionTaskBatchID);
                 return dialogResult == MessageBoxResult.Yes ? SourceSpoolsCheckResult.Warning : SourceSpoolsCheckResult.Block;
             }
         }
@@ -1597,9 +1620,8 @@ namespace Gamma.ViewModels
                             if (!result.Item1)
                             {
                                 //MessageBox.Show("Не удалось обновить этикетку групповой упаковки в задании", "Аппликатор",
-                                MessageBox.Show(result.Item2, "Аппликатор",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Warning);
+                                Functions.ShowMessageError(result.Item2,
+                                    "Error UpdateGroupPackLabelInProductionTask in ProductionTaskBatchViewModel", ProductionTaskBatchID);
                             }
                         }
                     }
@@ -1608,9 +1630,8 @@ namespace Gamma.ViewModels
             }
             catch
             {
-                MessageBox.Show("Техническая проблема при обновлении этикетки упаковки в задании: сервис недоступен. Обратитесь в техподдержку Гаммы.", "Аппликатор",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                Functions.ShowMessageError("Техническая проблема при обновлении этикетки упаковки в задании: сервис недоступен. Обратитесь в техподдержку Гаммы.",
+                                    "Error UpdateGroupPackLabelInProductionTask in ProductionTaskBatchViewModel: Unable to service of the label", ProductionTaskBatchID);
             }
         }
 
@@ -1684,6 +1705,7 @@ namespace Gamma.ViewModels
 
         private void AddSample()
         {
+            DB.AddLogMessageError("Выбран пункт Добавить в Отобранные образцы", "Start AddSample in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             var model = new SetQuantityDialogModel("Укажите кол-во в рулончиках (или пачках для салфеток)", "Отобранные образцы", 1, 1000);
             var okCommand = new UICommand()
             {
@@ -1715,15 +1737,18 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Недостаточно прав для добавления!");
+                    addResult = "Недостаточно прав для добавления!";
                 }
 
                 if (addResult != "")
                 {
-                    MessageBox.Show(addResult, "Добавить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    Functions.ShowMessageError(addResult, "Error AddSample in ProductionTaskBatchViewModel", ProductionTaskBatchID);
                 }
                 else
+                {
+                    DB.AddLogMessageError("Успешно добавлен в Отобранные образцы", "End AddSample in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
                     RefreshSample();
+                }
             }
         }
 
@@ -1732,13 +1757,12 @@ namespace Gamma.ViewModels
             if (SelectedSample == null) return;
             if (WorkSession.ShiftID != 0 && (SelectedSample.ShiftID != WorkSession.ShiftID))
             {
-                MessageBox.Show("Вы не можете удалить отобранные образцы другой смены");
+                Functions.ShowMessageError("Вы не можете удалить отобранные образцы другой смены", "Error DeleteSample in ProductionTaskBatchViewModel: sample is other shift", ProductionTaskBatchID);
                 return;
             }
-            if (MessageBox.Show(
+            if (Functions.ShowMessageQuestion(
                 "Вы уверены, что хотите удалить отобранные образцы от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "?",
-                "Удаление отобранных образцов", MessageBoxButton.YesNo, MessageBoxImage.Question,
-                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+                "QUEST DeleteSample in ProductionTaskBatchViewModel", ProductionTaskBatchID) != MessageBoxResult.Yes)
             {
                 return;
             };
@@ -1749,14 +1773,18 @@ namespace Gamma.ViewModels
             }
             else
             {
-                MessageBox.Show("Недостаточно прав для удаления!");
+                delResult = "Недостаточно прав для удаления!";
             }
 
             if (delResult != "")
             {
-                MessageBox.Show(delResult, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                Functions.ShowMessageError(delResult, "Error DeleteSample in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             }
-            RefreshSample();
+            else
+            {
+                DB.AddLogMessageError("Успешно добавлен в Отобранные образцы", "End AddSample in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
+                RefreshSample();
+            }
         }
 
         public DelegateCommand AddRepackCommand { get; private set; }
@@ -1838,6 +1866,7 @@ namespace Gamma.ViewModels
 
         private void AddRepack()
         {
+            DB.AddLogMessageError("Выбран пункт Добавить переупаковку в Задании на производство "+ Number, "Start AddRepack in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             MessageManager.OpenDocRepack(ProductionTaskBatchID);
             RefreshRepack();
         }
@@ -1950,6 +1979,7 @@ namespace Gamma.ViewModels
 
         private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null)
         {
+            DB.AddLogMessageError("Выбран пункт Добавить простой в Задании на производство " + Number, "Start AddDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             var model = new AddDowntimeDialogModel(PlaceID ?? WorkSession.PlaceID,downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
             var setCurrentTimeEndAndOkCommand = new UICommand()
             {
@@ -1990,19 +2020,21 @@ namespace Gamma.ViewModels
                 if (DB.HaveWriteAccess("ProductionTaskDowntimes"))
                 {
                     addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, model.TypeID, model.TypeDetailID, model.DateBegin, result == setCurrentTimeEndAndOkCommand ? DateTime.Now : model.DateEnd, model.Comment, model.EquipmentNodeID, model.EquipmentNodeDetailID).FirstOrDefault();
-                    //addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, dialog.TypeID, dialog.TypeDetailID, dialog.DateBegin, dialog.DateEnd, dialog.Comment).FirstOrDefault();
                 }
                 else
                 {
-                    MessageBox.Show("Недостаточно прав для добавления!");
+                    addResult = "Недостаточно прав для добавления!";
                 }
 
                 if (addResult != "")
                 {
-                    MessageBox.Show(addResult, "Добавить не удалось", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    Functions.ShowMessageError(addResult, "Error AddDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID);
                 }
                 else
+                {
+                    DB.AddLogMessageError("Успешно добавлен простой в Задании на производство " + Number, "End AddDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
                     RefreshDowntime();
+                }
             }
         }
 
@@ -2011,13 +2043,12 @@ namespace Gamma.ViewModels
             if (SelectedDowntime == null) return;
             if (WorkSession.ShiftID != 0 && (SelectedDowntime.ShiftID != WorkSession.ShiftID || SelectedDowntime.PlaceGroupID != (int)WorkSession.PlaceGroup ))
             {
-                MessageBox.Show("Вы не можете удалить простой другой смены");
+                Functions.ShowMessageError("Вы не можете удалить простой другой смены", "Error DeleteDowntime in ProductionTaskBatchViewModel: sample is other shift", ProductionTaskBatchID);
                 return;
             }
-            if (MessageBox.Show(
-                "Вы уверены, что хотите удалить простой от " + SelectedDowntime.Date + " смена " + SelectedDowntime.ShiftID + "?",
-                "Удаление простоев", MessageBoxButton.YesNo, MessageBoxImage.Question,
-                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+            if (Functions.ShowMessageQuestion(
+                "Вы уверены, что хотите удалить простой от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "?",
+                "QUEST DeleteDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID) != MessageBoxResult.Yes)
             {
                 return;
             };
@@ -2028,14 +2059,18 @@ namespace Gamma.ViewModels
             }
             else
             {
-                MessageBox.Show("Недостаточно прав для удаления!");
+                delResult = "Недостаточно прав для удаления!";
             }
 
             if (delResult != "")
             {
-                MessageBox.Show(delResult, "Внимание!", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                Functions.ShowMessageError(delResult, "Error DeleteDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             }
-            RefreshDowntime();
+            else
+            {
+                DB.AddLogMessageError("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
+                RefreshDowntime();
+            }
         }
 
     }

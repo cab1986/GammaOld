@@ -13,6 +13,7 @@ namespace Gamma.Models
     public class Cutting : ViewModelBase
     {
         public int BaseFormat { get; set; }
+        public decimal BasisWeight { get; set; }
         private Guid? _nomenclatureID;
         public Guid? NomenclatureID
         {
@@ -50,6 +51,14 @@ namespace Gamma.Models
             set
             {
                 _nomenclatureName = value;
+                using (var gammaBase = DB.GammaDbWithNoCheckConnection)
+                {
+                    if (_nomenclatureID != null)
+                        BasisWeight =
+                            gammaBase.vNomenclatureSGBProperties.FirstOrDefault(
+                                p => p.C1CNomenclatureID == _nomenclatureID)?.BasisWeightNumeric ?? 0;
+                    else BaseFormat = 0;
+                }
                 RaisePropertyChanged("NomenclatureName");
             }
         }

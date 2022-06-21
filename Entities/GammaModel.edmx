@@ -2144,6 +2144,26 @@ warning 6002: The table/view 'GammaNew.dbo.vGroupPackSpools' does not have a pri
           <Property Name="Quantity" Type="decimal" Precision="15" Scale="5" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'GammaNew.dbo.vNomenclatureSGBProperties' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vNomenclatureSGBProperties">
+          <Key>
+            <PropertyRef Name="1CNomenclatureID" />
+            <PropertyRef Name="CodeComposition" />
+          </Key>
+          <Property Name="1CNomenclatureID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Kind" Type="varchar(max)" />
+          <Property Name="BasisWeight" Type="varchar" MaxLength="100" />
+          <Property Name="BasisWeightNumeric" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="ColorGroup" Type="varchar" MaxLength="100" />
+          <Property Name="Composition" Type="varchar" MaxLength="100" />
+          <Property Name="Purpose" Type="varchar(max)" />
+          <Property Name="RawMaterial" Type="varchar" MaxLength="100" />
+          <Property Name="SortValue" Type="varchar" MaxLength="100" />
+          <Property Name="LayerNumber" Type="varchar" MaxLength="100" />
+          <Property Name="LayerNumberNumeric" Type="int" />
+          <Property Name="CodeComposition" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'GammaNew.dbo.vPlacePropertiesValues' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vPlacePropertiesValues">
           <Key>
@@ -6707,6 +6727,11 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="UnpackGroupPackOnPlace" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="PlaceID" Type="int" Mode="In" />
+          <Parameter Name="PrintName" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="UploadDocCloseShiftReportTo1C" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DocID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="IsPreviousDocClose" Type="bit" Mode="In" />
@@ -6723,6 +6748,13 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="Weight" Type="decimal" Mode="In" />
           <Parameter Name="CountRolls" Type="int" Mode="In" />
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="ValidateSpoolBeforeSave" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Diameter" Type="decimal" Mode="In" />
+          <Parameter Name="Weight" Type="decimal" Mode="In" />
+          <Parameter Name="Format" Type="int" Mode="In" />
         </Function>
         <Function Name="ValidateSpoolBeforeSaveInGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Weight" Type="decimal" Mode="In" />
@@ -7196,6 +7228,22 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
     [vGroupPackSpools].[BreakNumber] AS [BreakNumber], 
     [vGroupPackSpools].[Quantity] AS [Quantity]
     FROM [dbo].[vGroupPackSpools] AS [vGroupPackSpools]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vNomenclatureSGBProperties" EntityType="Self.vNomenclatureSGBProperties" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vNomenclatureSGBProperties].[1CNomenclatureID] AS [1CNomenclatureID], 
+    [vNomenclatureSGBProperties].[Kind] AS [Kind], 
+    [vNomenclatureSGBProperties].[BasisWeight] AS [BasisWeight], 
+    [vNomenclatureSGBProperties].[BasisWeightNumeric] AS [BasisWeightNumeric], 
+    [vNomenclatureSGBProperties].[ColorGroup] AS [ColorGroup], 
+    [vNomenclatureSGBProperties].[Composition] AS [Composition], 
+    [vNomenclatureSGBProperties].[Purpose] AS [Purpose], 
+    [vNomenclatureSGBProperties].[RawMaterial] AS [RawMaterial], 
+    [vNomenclatureSGBProperties].[SortValue] AS [SortValue], 
+    [vNomenclatureSGBProperties].[LayerNumber] AS [LayerNumber], 
+    [vNomenclatureSGBProperties].[LayerNumberNumeric] AS [LayerNumberNumeric], 
+    [vNomenclatureSGBProperties].[CodeComposition] AS [CodeComposition]
+    FROM [dbo].[vNomenclatureSGBProperties] AS [vNomenclatureSGBProperties]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vPlacePropertiesValues" EntityType="Self.vPlacePropertiesValues" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -11118,6 +11166,19 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="Places" EntitySet="Places" />
             <End Role="DocBrokeProducts" EntitySet="DocBrokeProducts" />
           </AssociationSet>
+          <FunctionImport Name="UnpackGroupPackOnPlace">
+            <Parameter Name="ProductID" Mode="In" Type="Guid" />
+            <Parameter Name="PlaceID" Mode="In" Type="Int32" />
+            <Parameter Name="PrintName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="vNomenclatureSGBProperties" EntityType="GammaModel.vNomenclatureSGBProperties" />
+          <FunctionImport Name="ValidateSpoolBeforeSave" ReturnType="Collection(String)">
+            <Parameter Name="NomenclatureID" Mode="In" Type="Guid" />
+            <Parameter Name="CharacteristicID" Mode="In" Type="Guid" />
+            <Parameter Name="Diameter" Mode="In" Type="Decimal" />
+            <Parameter Name="Weight" Mode="In" Type="Decimal" />
+            <Parameter Name="Format" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -17615,6 +17676,24 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="vNomenclatureSGBProperties">
+          <Key>
+            <PropertyRef Name="C1CNomenclatureID" />
+            <PropertyRef Name="CodeComposition" />
+          </Key>
+          <Property Name="C1CNomenclatureID" Type="Guid" Nullable="false" />
+          <Property Name="Kind" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="BasisWeight" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BasisWeightNumeric" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="ColorGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Composition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Purpose" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RawMaterial" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SortValue" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LayerNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LayerNumberNumeric" Type="Int32" />
+          <Property Name="CodeComposition" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -21025,6 +21104,26 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UnpackGroupPackOnPlace" FunctionName="GammaDBModel.UnpackGroupPackOnPlace" />
+          <EntitySetMapping Name="vNomenclatureSGBProperties">
+            <EntityTypeMapping TypeName="GammaModel.vNomenclatureSGBProperties">
+              <MappingFragment StoreEntitySet="vNomenclatureSGBProperties">
+                <ScalarProperty Name="CodeComposition" ColumnName="CodeComposition" />
+                <ScalarProperty Name="LayerNumberNumeric" ColumnName="LayerNumberNumeric" />
+                <ScalarProperty Name="LayerNumber" ColumnName="LayerNumber" />
+                <ScalarProperty Name="SortValue" ColumnName="SortValue" />
+                <ScalarProperty Name="RawMaterial" ColumnName="RawMaterial" />
+                <ScalarProperty Name="Purpose" ColumnName="Purpose" />
+                <ScalarProperty Name="Composition" ColumnName="Composition" />
+                <ScalarProperty Name="ColorGroup" ColumnName="ColorGroup" />
+                <ScalarProperty Name="BasisWeightNumeric" ColumnName="BasisWeightNumeric" />
+                <ScalarProperty Name="BasisWeight" ColumnName="BasisWeight" />
+                <ScalarProperty Name="Kind" ColumnName="Kind" />
+                <ScalarProperty Name="C1CNomenclatureID" ColumnName="1CNomenclatureID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ValidateSpoolBeforeSave" FunctionName="GammaDBModel.ValidateSpoolBeforeSave" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

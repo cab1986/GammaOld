@@ -467,6 +467,7 @@
         <AssociationConnector Association="GammaModel.FK_DocBrokeDecisionProductWithdrawalProducts_DocBrokeDecision" />
         <EntityTypeShape EntityType="GammaModel.vDocBroke" Width="1.5" PointX="11.375" PointY="19.75" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_Places1" />
+        <EntityTypeShape EntityType="GammaModel.vNomenclatureSGBProperties" Width="1.5" PointX="19.375" PointY="18.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

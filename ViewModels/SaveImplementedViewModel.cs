@@ -63,5 +63,19 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             SaveToModel();
         }
+
+        public virtual bool IsChanged { get; private set; }
+        public virtual void SetIsChanged(bool value) => IsChanged = value;
+
+        public virtual bool _isReadOnly { get; set; }
+        public virtual bool IsReadOnly
+        {
+            get { return _isReadOnly; }
+            set
+            {
+                _isReadOnly = value;
+                //RaisePropertiesChanged("IsReadOnly");
+            }
+        }
     }
 }

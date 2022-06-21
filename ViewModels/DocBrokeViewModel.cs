@@ -24,10 +24,10 @@ namespace Gamma.ViewModels
 {
     public class DocBrokeViewModel : SaveImplementedViewModel, IBarImplemented, ICheckedAccess
     {
-        public DocBrokeViewModel(Guid docBrokeId, Guid? productId = null, bool isInFuturePeriod = false)
+        public DocBrokeViewModel(Guid docBrokeId, List<Guid?> productIDs, bool isInFuturePeriod)
         {
             ClosingCommand = new DelegateCommand<CancelEventArgs>(Closing);
-            DB.AddLogMessageInformation("Открытие Акта о браке DocID", "Open DocBrokeViewModel (docBrokeId = '" + docBrokeId+"', productId='"+ productId+ "', isInFuturePeriod='" + isInFuturePeriod+"')",docBrokeId,productId);
+            DB.AddLogMessageInformation("Открытие Акта о браке DocID", "Open DocBrokeViewModel (docBrokeId = '" + docBrokeId+"', productId='"+ productIDs.ToString()+ "', isInFuturePeriod='" + isInFuturePeriod+"')",docBrokeId);
             Bars.Add(ReportManager.GetReportBar("DocBroke", VMID));
             Messenger.Default.Register<BarcodeMessage>(this, BarcodeReceived);
             DocId = docBrokeId;
@@ -61,7 +61,7 @@ namespace Gamma.ViewModels
                     ShiftID = doc.ShiftID;
                     foreach (var brokeProduct in doc.DocBroke.DocBrokeProducts)
                     {
-                        DB.AddLogMessageInformation("Открытие Акта о браке DocID: загрузка продукта ProductID", "AddProduct with Open doc (DocID = '" + DocId + "', ProductID='" + productId + "')", DocId, brokeProduct.ProductID);
+                        DB.AddLogMessageInformation("Открытие Акта о браке DocID: загрузка продукта ProductID", "AddProduct with Open doc (DocID = '" + DocId + "', ProductID='" + productIDs.ToString() + "')", DocId, brokeProduct.ProductID);
                         AddProduct(brokeProduct.ProductID, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts, false);
                     }
                 }
@@ -89,10 +89,13 @@ namespace Gamma.ViewModels
                         DocNumber = "1";
                     }*/
                 }
-                if (productId != null)
+                foreach (var productId in productIDs)
                 {
-                    DB.AddLogMessageInformation("Открытие Акта о браке DocID: добавление нового продукта ProductID", "new AddProduct with Open doc (docId = '" + DocId + "', productId='" + productId + "')", DocId, productId);
-                    AddProduct((Guid)productId, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
+                    if (productId != null)
+                    {
+                        DB.AddLogMessageInformation("Открытие Акта о браке DocID: добавление нового продукта ProductID", "new AddProduct with Open doc (docId = '" + DocId + "', productId='" + productId + "')", DocId, productId);
+                        AddProduct((Guid)productId, DocId, BrokeProducts, DocBrokeDecision.BrokeDecisionProducts);
+                    }
                 }
 
                 RefreshRejectionReasonsList();
@@ -122,9 +125,9 @@ namespace Gamma.ViewModels
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
             SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && SelectedTabIndex != 1 && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
             SetDecisionForAllProductCommand = new DelegateCommand(SetDecisionForAllProduct, () => !IsReadOnly && SelectedTabIndex != 0 && !DocBrokeDecision.BrokeDecisionProducts.Any(p => p.ProductState != ProductState.NeedsDecision));
-            DB.AddLogMessageInformation("Открыт Акта о браке DocID", "Opened DocBrokeViewModel (docBrokeId = '" + docBrokeId + "', productId='" + productId + "', isInFuturePeriod='" + isInFuturePeriod + "')", docBrokeId, productId);
+            DB.AddLogMessageInformation("Открыт Акта о браке DocID", "Opened DocBrokeViewModel (docBrokeId = '" + docBrokeId + "', productId='" + productIDs.ToString() + "', isInFuturePeriod='" + isInFuturePeriod + "')", docBrokeId);
         }
-
+        
         public ICommand ClosingCommand { get; private set; }
 
         void Closing(CancelEventArgs e)
@@ -289,7 +292,8 @@ namespace Gamma.ViewModels
         {
             DB.AddLogMessageInformation("Распаковка ГУ ProductID в Акте о браке DocID","ChooseGroupPackToUnpack (docId='" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId+"')",DocId, SelectedBrokeProduct?.ProductId);
             if (SelectedBrokeProduct == null || SelectedBrokeProduct.ProductKind != ProductKind.ProductGroupPack) return;
-            if (!GammaBase.Rests.Any(r => r.ProductID == SelectedBrokeProduct.ProductId))
+            var currentPlaceID = GammaBase.Rests.FirstOrDefault(r => r.ProductID == SelectedBrokeProduct.ProductId)?.PlaceID;
+            if (currentPlaceID == null)
             {
                 Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Данная упаковка не числится на остатках", "ERROR ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId);
                 return;
@@ -309,7 +313,7 @@ namespace Gamma.ViewModels
             UIServices.SetBusyState();
             var docProductionID = GammaBase.DocProductionProducts.FirstOrDefault(p => p.ProductID == SelectedBrokeProduct.ProductId)?.DocID;
             var groupPackProductIDs = GammaBase.DocWithdrawalProducts.Where(p => p.DocWithdrawal.DocProduction.Any(dp => dp.DocID == docProductionID)).Select(p => p.ProductID).ToList();
-            GammaBase.UnpackGroupPack(SelectedBrokeProduct.ProductId, WorkSession.PrintName);
+            GammaBase.UnpackGroupPackOnPlace(SelectedBrokeProduct.ProductId, currentPlaceID, WorkSession.PrintName);
             DB.AddLogMessageInformation("Групповая упаковка ProductID уничтожена, рулоны возвращены на остатки", "ChooseGroupPackToUnpack.UnpackGroupPack (docId='" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "')", DocId, SelectedBrokeProduct?.ProductId);
 
             var selectedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == SelectedBrokeProduct.ProductId);
@@ -548,7 +552,7 @@ namespace Gamma.ViewModels
         {
             if (BrokeProducts != null)
             {
-                DB.AddLogMessageInformation("Установлен для всех дефект '" + ForAllProductRejectionReasonID.Description+"' и причина '"+ ForAllProductRejectionReasonComment + "' в Акте о браке DocID", "SetRejectionReasonForAllProduct (RejectionReasonID='" + ForAllProductRejectionReasonID.RejectionReasonID + "', RejectionReasonComment" + ForAllProductRejectionReasonComment + "')", DocId);
+                DB.AddLogMessageInformation("Изменен для всех дефект '" + ForAllProductRejectionReasonID.Description+"' и причина '"+ ForAllProductRejectionReasonComment + "' в Акте о браке DocID", "SetRejectionReasonForAllProduct (RejectionReasonID='" + ForAllProductRejectionReasonID.RejectionReasonID + "', RejectionReasonComment" + ForAllProductRejectionReasonComment + "')", DocId);
                 foreach (var brokeProduct in BrokeProducts)
                 {
                     /*brokeProduct.RejectionReasons.Clear();

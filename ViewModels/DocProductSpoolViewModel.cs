@@ -23,21 +23,41 @@ namespace Gamma.ViewModels
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public sealed class DocProductSpoolViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess
+    public sealed class DocProductSpoolViewModel : DbEditItemWithNomenclatureViewModel, IBarImplemented, ICheckedAccess, IProductValidate
     {
         /// <summary>
         /// Инициализация информации о тамбуре
         /// </summary>
         /// <param name="productId">ID продукта</param>
-        public DocProductSpoolViewModel(Guid productId)
+        public DocProductSpoolViewModel(Guid productId, Guid docId, bool docIsReadOnly, Guid? productionTaskID = null, int? docPlaceID = null)
         {
-            ProductId = productId;
             ShowCreateGroupPack = (WorkSession.PlaceID == 21 || WorkSession.PlaceID == 30);
-            DocID = GammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
-                            SqlGuidUtil.NewSequentialid();
-            var doc = GammaBase.Docs.Include(d => d.DocProduction).First(d => d.DocID == DocID);
-//            States = new ProductState().ToDictionary();
             ToughnessKinds = new ToughnessKinds().ToDictionary();
+            Messenger.Default.Register<DocChangedMessage>(this, DocChanged);
+            Bars.Add(ReportManager.GetReportBar("Spool", VMID));
+            CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
+            GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsReadOnly);
+            SetWeightCommand = new DelegateCommand(SetWeight, () => RestWeight > 0 && (WorkSession.RoleName == "Dispetcher" || WorkSession.RoleName == "WarehouseOperator"));
+            var permissionOnChooseNomenclatureAndCharacteristic = GammaBase.CheckPermissionOnChooseNomenclatureAndCharacteristic((int)ProductKind.ProductSpool, docPlaceID, WorkSession.UserID).FirstOrDefault();
+            if (permissionOnChooseNomenclatureAndCharacteristic != null)
+            {
+                GrantPermissionOnChooseNomenclatureAndCharacteristic = (bool)permissionOnChooseNomenclatureAndCharacteristic;
+            }
+            else
+            {
+                GrantPermissionOnChooseNomenclatureAndCharacteristic = false;
+            }
+            UpdateViewModel(productId, docId, docIsReadOnly, productionTaskID, docPlaceID);
+        }
+
+        public void UpdateViewModel(Guid productId, Guid docId, bool docIsReadOnly, Guid? productionTaskID = null, int? docPlaceID = null)
+        {
+            StartInitialization();
+            ProductId = productId;
+            DocID = docId; //GammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
+                            //SqlGuidUtil.NewSequentialid();
+            //var doc = GammaBase.Docs.Include(d => d.DocProduction).FirstOrDefault(d => d.DocID == DocID);
+            //            States = new ProductState().ToDictionary();
             /*
             RejectionReasons = new ObservableCollection<RejectionReason>
                 (from r in GammaBase.GetSpoolRejectionReasons()
@@ -52,9 +72,12 @@ namespace Gamma.ViewModels
                 .FirstOrDefault(p => p.ProductID == ProductId);
             if (productSpool == null)
             {
+                DB.AddLogMessageInformation("Загрузка данных: новый продукт тамбур",
+                        "UpdateViewModel in DocProductSpoolViewModel: productSpool == null", docId, productId);
                 var productionTask =
                     GammaBase.ProductionTasks.FirstOrDefault(
-                        pt => pt.ProductionTaskID == doc.DocProduction.ProductionTaskID);
+                        //pt => pt.ProductionTaskID == doc.DocProduction.ProductionTaskID);
+                        pt => pt.ProductionTaskID == productionTaskID);
                 if (productionTask != null)
                 {
                     NomenclatureID = productionTask.C1CNomenclatureID;
@@ -62,12 +85,16 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Не удалось получить информацию о задании, выбирите номенклатуру вручную");
+                    Functions.ShowMessageInformation("Не удалось получить информацию о задании, выберите номенклатуру вручную",
+                        "Open DocProductSpoolViewModel: Job information could not be retrieved", docId, productId);
                 }
                 RealFormat = DB.GetLastFormat(WorkSession.PlaceID);
+                SetIsChanged(true);
             }
             else
             {
+                DB.AddLogMessageInformation("Загрузка данных: существующий продукт тамбур",
+                        "UpdateViewModel in DocProductSpoolViewModel: productSpool == null", docId, productId);
                 NomenclatureID = productSpool.C1CNomenclatureID;
                 CharacteristicID = productSpool.C1CCharacteristicID;
                 RealFormat = productSpool.RealFormat;
@@ -81,24 +108,24 @@ namespace Gamma.ViewModels
                 Weight = productionQuantity*1000; // перевод в кг
                 RestWeight = productSpool.DecimalWeight*1000;
                 ToughnessKindID = productSpool.ToughnessKindID ?? 1;
-            }          
-            Bars.Add(ReportManager.GetReportBar("Spool", VMID));
-            IsConfirmed = doc.IsConfirmed && IsValid;
-            AllowEditProduct = DB.AllowEditProduct(ProductId, GammaBase);
-            CreateGroupPackCommand = new DelegateCommand(CreateGroupPack, () => IsValid);
-            GetWeightCommand = new DelegateCommand(GetWeight, () => Scales.IsReady && !IsReadOnly);
-            SetWeightCommand = new DelegateCommand(SetWeight, () => RestWeight > 0 && ( WorkSession.RoleName == "Dispetcher" || WorkSession.RoleName == "WarehouseOperator"));
+            }
+            //IsConfirmed = docIsConfirmed && IsValid;
+            CalculateIsReadOnly(docIsReadOnly);
+            //AllowEditProduct = DB.AllowEditProduct(ProductId, GammaBase);
 
-            var permissionOnChooseNomenclatureAndCharacteristic = GammaBase.CheckPermissionOnChooseNomenclatureAndCharacteristic((int)ProductKind.ProductSpool, doc.PlaceID, WorkSession.UserID).FirstOrDefault();
-            if (permissionOnChooseNomenclatureAndCharacteristic != null)
-            {
-                GrantPermissionOnChooseNomenclatureAndCharacteristic = (bool)permissionOnChooseNomenclatureAndCharacteristic;
-            }
-            else
-            {
-                GrantPermissionOnChooseNomenclatureAndCharacteristic = false;
-            }
-            
+            EndInitialization();
+        }
+
+        private void CalculateIsReadOnly(bool isReadOnly)
+        {
+            IsReadOnly = isReadOnly || !DB.HaveWriteAccess("ProductSpools") || !DB.AllowEditProduct(ProductId, GammaBase);
+            RaisePropertiesChanged("IsReadOnly");
+        }
+
+        private void DocChanged(DocChangedMessage msg)
+        {
+            if (DocID != msg.DocId) return;
+            CalculateIsReadOnly(msg.IsConfirmed);
         }
 
         public bool IsReadOnlyCharacteristic = true;
@@ -113,6 +140,12 @@ namespace Gamma.ViewModels
             set
             {
                 base.CharacteristicID = value;
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Выбрана характеристика " + value.ToString(),
+                        "SET CharacteristicID in DocProductSpoolViewModel: Selected characteristic" + value.ToString(), DocID, ProductId);
+                }
                 if (value == null) return;
                 using (var gammaBase = DB.GammaDbWithNoCheckConnection)
                 {
@@ -129,6 +162,12 @@ namespace Gamma.ViewModels
             set
             {
                 _density = value;
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменена Плотность рулона " + value.ToString(),
+                        "SET Density in DocProductSpoolViewModel: set value " + value.ToString(), DocID, ProductId);
+                }
                 RaisePropertyChanged("Density");
             }
         }
@@ -139,6 +178,12 @@ namespace Gamma.ViewModels
             set
             {
                 _currentLength = value;
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменена Текущая длина " + value.ToString(),
+                        "SET CurrentLength in DocProductSpoolViewModel: set value " + value.ToString(), DocID, ProductId);
+                }
                 RaisePropertyChanged("CurrentLength");
             }
         }
@@ -146,6 +191,8 @@ namespace Gamma.ViewModels
         
 
         public bool ShowCreateGroupPack { get; private set; }
+
+        private bool DiameterIsChanged = false;
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         [Range(1,5000,ErrorMessage = @"Необходимо указать диаметр")]
@@ -161,6 +208,13 @@ namespace Gamma.ViewModels
                 _diameter = value;
                 GetDensity(Weight, CoreDiameter, Diameter, RealFormat);
                 RaisePropertyChanged("Diameter");
+                if (!GetInitialization)
+                {
+                    DiameterIsChanged = true;
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен диаметр " + value.ToString() + " в ProductID",
+                        "SET Diameter in DocProductSpoolViewModel: Set value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
 
@@ -170,9 +224,17 @@ namespace Gamma.ViewModels
             set
             {
                 _currentDiameter = value;
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменена текущая длина " + value.ToString() + " в ProductID",
+                            "SET CurrentDiameter in DocProductSpoolViewModel: Set value = " + value.ToString(), DocID, ProductId);
+                }
                 RaisePropertyChanged("CurrentDiameter");
             }
         }
+
+        private bool LengthIsChanged = false;
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public decimal? Length
@@ -185,6 +247,13 @@ namespace Gamma.ViewModels
             {
                 _length = value;
                 RaisePropertyChanged("Length");
+                if (!GetInitialization)
+                {
+                    LengthIsChanged = true;
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменена длина " + value.ToString() + " в ProductID",
+                            "SET Length in DocProductSpoolViewModel: Set value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
 
@@ -194,22 +263,26 @@ namespace Gamma.ViewModels
         public DelegateCommand CreateGroupPackCommand { get; private set; }
 
         private void CreateGroupPack()
-        {            
+        {
+            DB.AddLogMessageInformation("Нажатие кнопки Cоздать упаковку в продукте ProductID",
+                "Start CreateGroupPack in DocProductSpoolViewModel", DocID, ProductId);
             SaveToModel(DocID);
             var groupPackId = GammaBase.CreateGroupPackWithSpool(ProductId, WorkSession.PrintName).FirstOrDefault();
             if (groupPackId != null)
                 MessageManager.OpenDocProduct(DocProductKinds.DocProductGroupPack, (Guid) groupPackId);
             else
             {
-                MessageBox.Show("Вы пытаетесь создать упаковку из тамбура, который уже переработан");
+                Functions.ShowMessageError("Ошибка! Вы пытаетесь создать упаковку из тамбура, который уже переработан",
+                    "Error CreateGroupPack in DocProductSpoolViewModel: Spool is worked", DocID, ProductId);
             }
         }
 
-        private Guid DocID { get; }
+        private Guid DocID { get; set; }
 
         protected override void NomenclatureChanged(Nomenclature1CMessage msg)
         {
             base.NomenclatureChanged(msg);
+            SetIsChanged(true);
             Characteristics = DB.GetCharacteristics(NomenclatureID);
         }
         private decimal? _realBasisWeight;
@@ -221,6 +294,12 @@ namespace Gamma.ViewModels
             {
                 _realBasisWeight = value;
                 RaisePropertyChanged("RealBasisWeight");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменена масса фактич " + value.ToString() + " в ProductID",
+                            "SET RealBasisWeight in DocProductSpoolViewModel: Set value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
         private int? _realFormat;
@@ -237,6 +316,12 @@ namespace Gamma.ViewModels
                 _realFormat = value;
                 GetDensity(Weight, CoreDiameter, Diameter, RealFormat);
                 RaisePropertyChanged("RealFormat");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен фактич. формат " + value.ToString() + " в ProductID",
+                            "SET RealFormat in DocProductSpoolViewModel: Set value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
         private byte? _breakNumber;
@@ -252,9 +337,30 @@ namespace Gamma.ViewModels
             {
                 _breakNumber = value;
                 RaisePropertyChanged("BreakNumber");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменено кол-во обрывов " + value.ToString() + " в ProductID",
+                            "SET BreakNumber in DocProductSpoolViewModel: value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
-        private bool IsConfirmed { get; set; }
+
+        /*private bool _isConfirmed { get; set; }
+        private bool IsConfirmed
+        {
+            get
+            {
+                return _isConfirmed;
+            }
+            set
+            {
+                _isConfirmed = value;
+                RaisePropertyChanged("IsConfirmed");
+                RaisePropertyChanged("IsReadOnly");
+                //RaisePropertyChanged("CannotChooseCharacteristic");
+            }
+        }*/
         private decimal _weight;   
         [Range(1,10000,ErrorMessage=@"Укажите вес тамбура")]
         [UIAuth(UIAuthLevel.ReadOnly)]
@@ -269,6 +375,12 @@ namespace Gamma.ViewModels
                 _weight = value;
                 GetDensity(Weight, CoreDiameter, Diameter, RealFormat);
                 RaisePropertyChanged("Weight");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен вес " + value.ToString() + " в ProductID",
+                            "SET Weight in DocProductSpoolViewModel: value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
 
@@ -297,6 +409,12 @@ namespace Gamma.ViewModels
             {
                 _restWeight = value;
                 RaisePropertyChanged("RestWeight");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен Остаточный вес тамбура (текущий) " + value.ToString() + " в ProductID",
+                            "SET RestWeight in DocProductSpoolViewModel: value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
 
@@ -316,24 +434,53 @@ namespace Gamma.ViewModels
             }
         }
 
-        private bool AllowEditProduct { get; set; }
+        //private bool AllowEditProduct { get; set; }
 
 //        public bool WeightReadOnly => !AllowEditProduct || IsReadOnly;
 
         public Guid? VMID { get; } = Guid.NewGuid();
 
-//        private DocProductionProducts DocProductionProduct { get; set; }
+        //        private DocProductionProducts DocProductionProduct { get; set; }
+
         /// <summary>
         /// ID продукта, используется для печати амбалажа
         /// </summary>
         public Guid ProductId { get; private set; }
+
+        public bool IsValidProduct => ValidateProduct();
+
+        public bool ValidateProduct()
+        {
+            if (Weight > 1)
+            {
+                var result = GammaBase.ValidateSpoolBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight, RealFormat).FirstOrDefault();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    Functions.ShowMessageInformation(result, "ValidateSpoolBeforeSave return false: result is not null", DocID, ProductId);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// Сохранение в базу
         /// </summary>
         /// <param name="itemID">ID документа</param>
         public override bool SaveToModel(Guid itemID)
         {
-            if (!DB.HaveWriteAccess("ProductSpools")) return true;
+            DB.AddLogMessageInformation("Начало сохранения продукта тамбур",
+                "Start SaveToModel in DocProductSpoolViewModel", DocID, ProductId);
+            if (!IsChanged)
+            {
+                DB.AddLogMessageInformation("Успешный выход без сохранения продукта тамбур", "Quit successed from SaveToModel in DocProductSpoolViewModel: IsChanged = " + IsChanged.ToString(), DocID);
+                return true;
+            }
+            if (!IsValidProduct)
+            {
+                DB.AddLogMessageInformation("Ошибочный выход без сохранения продукта тамбур", "Quit failed from SaveToModel in DocProductSpoolViewModel: IsValidProduct = " + IsValidProduct.ToString(), DocID);
+                return false;
+            }
             var product =
                 GammaBase.Products.Include(p => p.ProductSpools).Include(p => p.DocProductionProducts)
                     .FirstOrDefault(p => p.ProductID == ProductId);
@@ -369,7 +516,7 @@ namespace Gamma.ViewModels
                 };
             }
 
-            if (AllowEditProduct)
+            //if (AllowEditProduct)
             {
                 product.ProductSpools.C1CNomenclatureID = (Guid)NomenclatureID;
                 product.ProductSpools.C1CCharacteristicID = (Guid)CharacteristicID;
@@ -387,28 +534,28 @@ namespace Gamma.ViewModels
             product.ProductSpools.BreakNumber = BreakNumber;
             product.ProductSpools.Diameter = Diameter;
             product.ProductSpools.Length = Length;
+            if (DiameterIsChanged) product.ProductSpools.CurrentDiameter = Diameter;
+            if (LengthIsChanged) product.ProductSpools.CurrentLength = Length;
 
             product.ProductSpools.ToughnessKindID = ToughnessKindID;
             GammaBase.SaveChanges();
-
+            SetIsChanged(false);
+            DB.AddLogMessageInformation("Успешное окончание сохранения продукта тамбур", "End SaveToModel in DocProductSpoolViewModel: success", DocID);
             return true;
         }
 
         public bool GrantPermissionOnChooseNomenclatureAndCharacteristic { get; set; }
 
-        public bool IsReadOnly => IsConfirmed || !DB.HaveWriteAccess("ProductSpools") || !AllowEditProduct;
+        //public bool IsReadOnly { get; set; } //=> DocIsReadOnly || !DB.HaveWriteAccess("ProductSpools") || !AllowEditProduct;
 
-        public override bool CanSaveExecute()
+        /*public override bool CanSaveExecute()
         {
-            return base.CanSaveExecute() && DB.HaveWriteAccess("ProductSpools");
+            return base.CanSaveExecute() && IsReadOnly;
         }
-
+        */
         public bool CannotChooseCharacteristic => IsReadOnly || !GrantPermissionOnChooseNomenclatureAndCharacteristic;
 
-        protected override bool CanChooseNomenclature()
-        {
-            return !IsReadOnly && !CannotChooseCharacteristic;
-        }
+        protected override bool CanChooseNomenclature() => !CannotChooseCharacteristic;
 
         //private byte? _stateid;
         /*
@@ -440,6 +587,12 @@ namespace Gamma.ViewModels
             {
                 _toughnessKindID = value;
                 RaisePropertiesChanged("ToughnessKindID");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменена Прочность " + value.ToString() + " в ProductID",
+                            "SET ToughnessKindID in DocProductSpoolViewModel: value = " + value.ToString(), DocID, ProductId);
+                }
             }
         }
         public Dictionary<byte, string> ToughnessKinds { get; set; }
@@ -450,6 +603,8 @@ namespace Gamma.ViewModels
 
         private void SetWeight()
         {
+            DB.AddLogMessageInformation("Нажатие кнопки Уменьшить вес в продукте ProductID",
+                "Start SetWeight in DocProductSpoolViewModel", DocID, ProductId);
             var model = new SetQuantityDialogModel("Укажите текущий вес тамбура в килограммах", "Текущий вес, кг", 0, (int)RestWeight);
             var okCommand = new UICommand()
             {
@@ -505,11 +660,16 @@ namespace Gamma.ViewModels
                         };
                         gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
                         gammaBase.SaveChanges();
+                        DB.AddLogMessageInformation("Уменьшен вес в продукте ProductID на " + model.Quantity + " кг.",
+                                "End successed SetWeight in DocProductSpoolViewModel: minus " + model.Quantity + " kg.", DocID, ProductId);
                     }
 
                 }
                 else
-                    MessageBox.Show("Не удалось уменьшить вес. Новый вес больше текущего.", "Ошибка уменьшения веса", MessageBoxButton.OK, MessageBoxImage.Error);
+                {
+                    Functions.ShowMessageError("Не удалось уменьшить вес. Новый вес больше текущего.",
+                        "Error SetWeight in DocProductSpoolViewModel: New weight is more than the current", DocID, ProductId);
+                }
             }
         }
 
@@ -520,15 +680,17 @@ namespace Gamma.ViewModels
 
         private void GetWeight()
         {
+            Functions.ShowMessageInformation("Нажатие кнопки Получить вес в продукте ProductID",
+                "Start GetWeight in DocProductSpoolViewModel", DocID, ProductId);
             if (!Scales.IsReady)
             {
-                MessageBox.Show("Не удалось соединиться с весами", "Ошибка весов", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                Functions.ShowMessageError("Не удалось соединиться с весами",
+                    "Error GetWeight in DocProductSpoolViewModel: Failed to connect to scales", DocID, ProductId);
                 //ManualWeightInput = true;
                 return;
             }
             UIServices.SetBusyState();
-            var startTime = DateTime.Now;
+            //var startTime = DateTime.Now;
             do
             {
                 Weight = (int)Scales.Weight;

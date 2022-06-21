@@ -507,7 +507,7 @@ namespace Gamma.ViewModels
             {
                 _decisionDate = value;
                 RaisePropertyChanged("DecisionDate");
-                DB.AddLogMessageInformation("Установлена дата решения " + value?.ToString("dd.MM.yyyy HH:mm:ss") + " по продукту ProductID в Решениях по акту о браке DocID", "SET DecisionDocDate (value = '" + value?.ToString("dd.MM.yyyy HH:mm:ss") + "', DecisionDocID='" + DecisionDocID + "')", DocBrokeID, ProductID);
+                DB.AddLogMessageInformation("Изменена дата решения " + value?.ToString("dd.MM.yyyy HH:mm:ss") + " по продукту ProductID в Решениях по акту о браке DocID", "SET DecisionDocDate (value = '" + value?.ToString("dd.MM.yyyy HH:mm:ss") + "', DecisionDocID='" + DecisionDocID + "')", DocBrokeID, ProductID);
                 if (IsUpdatedBrokeDecisionProductItems)
                 {
                     var newId = SqlGuidUtil.NewSequentialid();
@@ -532,7 +532,7 @@ namespace Gamma.ViewModels
             {
                 _decisionPlaceId = value;
                 RaisePropertyChanged("DecisionPlaceId");
-                DB.AddLogMessageInformation("Установлено место решения " + value + " по продукту ProductID в Решениях по акту о браке DocID", "SET DecisionPlaceId (value = '" + value + "', DecisionDocID='" + DecisionDocID + "')", DocBrokeID, ProductID);
+                DB.AddLogMessageInformation("Изменено место решения " + value + " по продукту ProductID в Решениях по акту о браке DocID", "SET DecisionPlaceId (value = '" + value + "', DecisionDocID='" + DecisionDocID + "')", DocBrokeID, ProductID);
                 string decisionPlaceName = "";
                 if (IsUpdatedBrokeDecisionProductItems)
                 {
@@ -879,7 +879,7 @@ namespace Gamma.ViewModels
         {
             if (BrokeDecisionProducts != null)
             {
-                DB.AddLogMessageInformation("Установлено для всех решение '" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', " + forAllProductsProkeDecision.NomenclatureName + "', комментарий '" + forAllProductsProkeDecision.Comment + "' в Акте о браке DocID", "SetDecisionForAllProduct (ProductState='" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', NomenclatureId='" + forAllProductsProkeDecision.NomenclatureID + "', CharacteristicID='" + forAllProductsProkeDecision.CharacteristicID + "', Comment='" + forAllProductsProkeDecision.Comment + "')", DocBrokeID);
+                DB.AddLogMessageInformation("Изменено для всех решение '" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', " + forAllProductsProkeDecision.NomenclatureName + "', комментарий '" + forAllProductsProkeDecision.Comment + "' в Акте о браке DocID", "SetDecisionForAllProduct (ProductState='" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', NomenclatureId='" + forAllProductsProkeDecision.NomenclatureID + "', CharacteristicID='" + forAllProductsProkeDecision.CharacteristicID + "', Comment='" + forAllProductsProkeDecision.Comment + "')", DocBrokeID);
                 var selectedBrokeDecisionProduct = SelectedBrokeDecisionProduct;
                 foreach (var brokeDecisionProduct in BrokeDecisionProducts)
                 {

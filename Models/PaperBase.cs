@@ -9,7 +9,7 @@ namespace Gamma.Models
     {
         public byte? BreakNumber { get; set; }
         public int? PlaceProductionid { get; set; }
-        public DateTime Date { get; set; }
+        //public DateTime Date { get; set; }
         /*public Guid DocID { get; set; }
         public Guid ProductID { get; set; }
         public Guid CharacteristicID { get; set; }
@@ -50,5 +50,7 @@ namespace Gamma.Models
         public decimal Length { get; set; }
         public Guid BaseMeasureUnitID { get; set; }
         public string BaseMeasureUnit { get; set; }
+        public int? RealFormat { get; set; }
+        public decimal? RealBasisWeight { get; set; }
     }
 }

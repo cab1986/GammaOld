@@ -17,7 +17,7 @@ using Gamma.Entities;
 
 namespace Gamma.ViewModels
 {
-    class DocProductGroupPackViewModel : SaveImplementedViewModel, ICheckedAccess, IBarImplemented
+    class DocProductGroupPackViewModel : SaveImplementedViewModel, ICheckedAccess, IBarImplemented, IProductValidate
     {
         public DocProductGroupPackViewModel()
         {
@@ -31,48 +31,31 @@ namespace Gamma.ViewModels
             Spools = new AsyncObservableCollection<PaperBase>();
             Bars.Add(ReportManager.GetReportBar("GroupPacks", VMID));
             Messenger.Default.Register<DocChangedMessage>(this, DocChanged);
+        }
+
+        public DocProductGroupPackViewModel(Guid docID, bool docIsReadOnly) : this()
+        {
+            UpdateViewModel(docID, docIsReadOnly);
+        }
+
+        public void UpdateViewModel(Guid docID, bool docIsReadOnly)
+        {
+            StartInitialization();
             ManualWeightInput = !Scales.IsReady;
-        }
-
-        private void DocChanged(DocChangedMessage msg)
-        {
-            if (DocId != msg.DocId) return;
-            IsConfirmed = msg.IsConfirmed;
-        }
-
-        private void Unpack()
-        {
-            if (ProductId == null) return;
-            if (!GammaBase.Rests.Any(r => r.ProductID == @ProductId))
-            {
-                MessageBox.Show("Данная упаковка не числится на остатках");
-                return;
-            }
-            if (
-                MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                UIServices.SetBusyState();
-                GammaBase.UnpackGroupPack(ProductId, WorkSession.PrintName);
-                MessageBox.Show("Упаковка уничтожена, рулоны возвращены на остатки");
-                IsUnpacked = true;
-            }
-        }
-
-        public DocProductGroupPackViewModel(Guid docID) : this()
-        {
+            CalculateIsReadOnly(docIsReadOnly);
             DocId = docID;
-            var doc = GammaBase.Docs.Include(d => d.DocProduction.DocProductionProducts).First(d => d.DocID == docID);
-            IsConfirmed = doc.IsConfirmed;
+            var doc = GammaBase.Docs.Include(d => d.DocProduction.DocProductionProducts).FirstOrDefault(d => d.DocID == docID);
+            //IsConfirmed = doc?.IsConfirmed ?? false;
             IsNewGroupPack = false;
-            if (doc.DocProduction.DocProductionProducts.Count > 0)
+            if (doc?.DocProduction.DocProductionProducts.Count > 0)
             {
                 ProductId = doc.DocProduction.DocProductionProducts.Select(d => d.ProductID).First();
                 var productGroupPack = GammaBase.ProductGroupPacks.FirstOrDefault(p => p.ProductID == ProductId);
                 Weight = Convert.ToInt32((productGroupPack?.Weight > 10 ? productGroupPack.Weight : productGroupPack?.Weight*1000));
                 GrossWeight = Convert.ToInt32((productGroupPack?.GrossWeight > 10 ? productGroupPack.GrossWeight : productGroupPack?.GrossWeight * 1000));
-                _manualWeightInput = IsConfirmed ? productGroupPack?.ManualWeightInput ?? false : !Scales.IsReady || (productGroupPack?.ManualWeightInput ?? false);
+                _manualWeightInput = IsReadOnly ? productGroupPack?.ManualWeightInput ?? false : !Scales.IsReady || (productGroupPack?.ManualWeightInput ?? false);
             }
+            Spools.Clear();
             var groupPackSpools = GammaBase.GroupPackSpools(docID).ToList();
             if (groupPackSpools.Count > 0)
             {
@@ -97,18 +80,53 @@ namespace Gamma.ViewModels
                 Diameter = DB.GetSpoolDiameter(Spools[0].ProductID);
                 CoreWeight = BaseCoreWeight * Spools.Count;
             }
+            EndInitialization();
         }
-/*
-        private int Format { get; set; }
-*/
+
+        private void CalculateIsReadOnly(bool isReadOnly)
+        {
+            IsReadOnly = isReadOnly || !DB.HaveWriteAccess("ProductGroupPacks");
+            RaisePropertiesChanged("IsReadOnly");
+        }
+
+        private void DocChanged(DocChangedMessage msg)
+        {
+            if (DocId != msg.DocId) return;
+            CalculateIsReadOnly(msg.IsConfirmed);
+        }
+
+        private void Unpack()
+        {
+            if (ProductId == null) return;
+            if (!GammaBase.Rests.Any(r => r.ProductID == @ProductId))
+            {
+                MessageBox.Show("Данная упаковка не числится на остатках");
+                return;
+            }
+            if (
+                MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                UIServices.SetBusyState();
+                GammaBase.UnpackGroupPack(ProductId, WorkSession.PrintName);
+                MessageBox.Show("Упаковка уничтожена, рулоны возвращены на остатки");
+                IsUnpacked = true;
+            }
+        }
+        
+        /*
+                private int Format { get; set; }
+        */
         private bool IsNewGroupPack { get; set; }
 
         private void GetWeight()
         {
+            DB.AddLogMessageInformation("Нажатие кнопки Получить вес в продукте ProductID",
+                "Start GetWeight in DocProductGroupPackViewModel", DocId, ProductId);
             if (!Scales.IsReady)
             {
-                MessageBox.Show("Не удалось соедениться с весами", "Ошибка весов", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                Functions.ShowMessageError("Не удалось соединиться с весами",
+                    "Error GetWeight in DocProductGroupPackViewModel: Failed to connect to scales", DocId, ProductId);
                 ManualWeightInput = true;
                 return;
             }
@@ -119,7 +137,8 @@ namespace Gamma.ViewModels
                 GrossWeight = (int)Scales.Weight;
                 Thread.Sleep(500);
                 if (!((DateTime.Now - startTime).TotalSeconds > 15)) continue;
-                MessageBox.Show("Вес не стабилизировался в течении 15 секунд");
+                Functions.ShowMessageError("Вес не стабилизировался в течении 15 секунд",
+                    "Error GetWeight in DocProductGroupPackViewModel: Weight did not stabilize within 15 seconds", DocId, ProductId);
                 ManualWeightInput = true;
                 break;
             } while (!Scales.IsStable);
@@ -141,7 +160,7 @@ namespace Gamma.ViewModels
 
         public bool IsAllowDelete = true;
 
-        public bool IsConfirmed
+        /*public bool IsConfirmed
         {
             get { return _isConfirmed; }
             set
@@ -149,7 +168,7 @@ namespace Gamma.ViewModels
                 _isConfirmed = value;
                 RaisePropertiesChanged("IsReadOnly", "WeightIsReadOnly"); // Нужно для реакции интерфейса
             }
-        }
+        }*/
 
         [UIAuth(UIAuthLevel.ReadOnly)]
         public bool ManualWeightInput
@@ -160,10 +179,16 @@ namespace Gamma.ViewModels
                 if (!value || _manualWeightInput) return;
                 _manualWeightInput = true;
                 RaisePropertiesChanged("ManualWeightInput", "WeightIsReadOnly");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен ручной ввод веса " + value.ToString() + " в ProductID",
+                        "SET ManualWeightInput in DocProductGroupPackViewModel: value = " + value.ToString(), DocId, ProductId);
+                }
             }
         }
 
-        public bool IsReadOnly => ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
+        //public bool IsReadOnly { get; set; } //=> ((!DB.HaveWriteAccess("ProductGroupPacks") || IsConfirmed) && IsValid);
 
         private readonly Guid? _vmid = Guid.NewGuid();
         public Guid? VMID
@@ -190,6 +215,12 @@ namespace Gamma.ViewModels
             {
             	_weight = value;
                 RaisePropertyChanged("Weight");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен вес нетто " + value.ToString() + " в ProductID",
+                        "SET Weight in DocProductGroupPackViewModel: value = " + value.ToString(), DocId, ProductId);
+                }
             }
         }
 
@@ -203,7 +234,13 @@ namespace Gamma.ViewModels
             set
             {
             	_grossWeight = value;
-                if (!IsConfirmed) Weight = GrossWeight - (int)Math.Ceiling(CoreWeight);
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен вес брутто " + value.ToString() + " в ProductID",
+                    "SET GrossWeight in DocProductGroupPackViewModel: value = " + value.ToString(), DocId, ProductId);
+                }
+                if (!IsReadOnly) Weight = GrossWeight - (int)Math.Ceiling(CoreWeight);
                 RaisePropertyChanged("GrossWeight");
             }
         }
@@ -220,6 +257,12 @@ namespace Gamma.ViewModels
             {
             	_diameter = value;
                 RaisePropertyChanged("Diameter");
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен диаметр " + value.ToString() + " в ProductID",
+                    "SET Diameter in DocProductGroupPackViewModel: value = " + value.ToString(), DocId, ProductId);
+                }
             }
         }
         private decimal _coreWeight;
@@ -232,7 +275,13 @@ namespace Gamma.ViewModels
             set
             {
             	_coreWeight = value;
-                if (!IsConfirmed) Weight = GrossWeight - (int) Math.Ceiling(CoreWeight);
+                if (!GetInitialization)
+                {
+                    SetIsChanged(true);
+                    DB.AddLogMessageInformation("Изменен вес гильзы " + value.ToString() + " в ProductID",
+                    "SET CoreWeight in DocProductGroupPackViewModel: value = " + value.ToString(), DocId, ProductId);
+                }
+                if (!IsReadOnly) Weight = GrossWeight - (int) Math.Ceiling(CoreWeight);
                 RaisePropertyChanged("CoreWeight");
             }
         }
@@ -247,13 +296,14 @@ namespace Gamma.ViewModels
 
         private void AddSpool()
         {
-            DB.AddLogMessageInformation("Выбор меню: Добавить тамбур", "Add product in DocProductGroupPackViewModel");
+            DB.AddLogMessageInformation("Выбор меню: Добавить тамбур в ГУ ProductID", "Add product in DocProductGroupPackViewModel", DocId, ProductId);
             MessageManager.OpenFindProduct(ProductKind.ProductSpool, true);
             Messenger.Default.Register<ChoosenProductMessage>(this, AddChoosenSpool);
         }
         private void DeleteSpool()
         {
-            DB.AddLogMessageInformation("Выбор меню: Удалить продукт", "Delete product in DocProductGroupPackViewModel", SelectedSpool?.DocID, SelectedSpool?.ProductID);
+            SetIsChanged(true);
+            DB.AddLogMessageInformation("Выбор меню: Удалить продукт в ГУ ProductID", "Delete product in DocProductGroupPackViewModel: SelectedSpool?.DocID = " + SelectedSpool?.DocID + ", SelectedSpool?.ProductID = " + SelectedSpool?.ProductID, DocId, ProductId);
             Spools.Remove(SelectedSpool);
             CoreWeight = BaseCoreWeight * Spools.Count;
         }
@@ -283,7 +333,7 @@ namespace Gamma.ViewModels
         /// <param name="barcode">штрих-код</param>
         public void AddSpool(string barcode)
         {
-            DB.AddLogMessageInformation("Добавление тамбура через сканирование ШК", "Add product with scan barcode in DocProductGroupPackViewModel: barcode = '"+barcode+"'");
+            DB.AddLogMessageInformation("Добавление тамбура через сканирование ШК в ГУ ProductID", "Add product with scan barcode in DocProductGroupPackViewModel: barcode = '"+barcode+"'", DocId, ProductId);
             var p = (from pinf in GammaBase.vProductsInfo
                          where pinf.BarCode == barcode
                          select pinf).FirstOrDefault();
@@ -306,7 +356,9 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Вы пытаететесь добавить списанный рулон");
+                    Functions.ShowMessageError("Вы пытаететесь добавить списанный рулон", 
+                        "Error add product with scan barcode in DocProductGroupPackViewModel: spool is worked", DocId, ProductId);
+
                     return;
                 }
             }
@@ -332,7 +384,7 @@ namespace Gamma.ViewModels
         /// <returns></returns>
         private bool UnpackGroupPack(Guid productId)
         {
-            DB.AddLogMessageInformation("Распаковка упаковки (если найденный рулон находится в ГУ)", "UnpackGroupPack in DocProductGroupPackViewModel", null, productId);
+            DB.AddLogMessageInformation("Распаковка упаковки (если найденный рулон находится в ГУ)", "UnpackGroupPack in DocProductGroupPackViewModel: productID = " + productId, DocId, ProductId);
             using (var gammaBase = DB.GammaDb)
             {
                 var groupPack = gammaBase.vGroupPackSpools.Where(gs => gs.ProductID == productId).Join(gammaBase.Products,
@@ -344,13 +396,13 @@ namespace Gamma.ViewModels
                             (p, r) => new { ProductId = r.ProductID, Number = p.Number }).FirstOrDefault();
                 if (groupPack == null)
                 {
-                    MessageBox.Show("Выбранный рулон в упаковке, но при поиске упаковки произошел сбой");
+                    Functions.ShowMessageError("Выбранный рулон в упаковке, но при поиске упаковки произошел сбой",
+                        "Error UnpackGroupPack in DocProductGroupPackViewModel: spool in group pack, but the search for the package failed - productId = " + productId, DocId, ProductId);
                     return false;
                 }
                 var dlgResult =
-                    MessageBox.Show(
-                        $"Выбранный тамбур находится в упаковке {groupPack.Number}. Данная упаковка будет распакована. Вы согласны?",
-                        "Распаковка", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                Functions.ShowMessageQuestion($"Выбранный тамбур находится в упаковке {groupPack.Number}. Данная упаковка будет распакована. Вы согласны?",
+                        "QUEST UnpackGroupPack in DocProductGroupPackViewModel: productId = " + groupPack.ProductId, DocId, ProductId);
                 if (dlgResult != MessageBoxResult.Yes) return false;
                 gammaBase.UnpackGroupPack(groupPack.ProductId, WorkSession.PrintName);
                 MessageBox.Show($"Упаковка {groupPack.Number} уничтожена");
@@ -363,7 +415,7 @@ namespace Gamma.ViewModels
             if (Spools.Count <= 0) return true;
             var result = GammaBase.CheckAddedGroupPackSpool(Spools.First().ProductID, productId).FirstOrDefault();
             if (string.IsNullOrEmpty(result)) return true;
-            Functions.ShowMessageError(result, "Error CheckAddedSpool", null, productId);
+            Functions.ShowMessageError(result, "Error CheckAddedSpool in DocProductGroupPackViewModel: productId = " + productId, DocId, ProductId);
             return false;
         }
 
@@ -371,6 +423,7 @@ namespace Gamma.ViewModels
 
         private void AddSpoolIfCorrect(PaperBase spool)
         {
+            SetIsChanged(true);
             if (Spools.Count == 0)
             {
                 PlaceProductionid = spool.PlaceProductionid;
@@ -388,17 +441,17 @@ namespace Gamma.ViewModels
                 if (spool.PlaceProductionid != PlaceProductionid)
                 {
                     Functions.ShowMessageError("Нельзя упаковывать рулоны с разных переделов",
-                        "Error AddSpoolIfCorrect (other place)", null, spool.ProductID);
+                        "Error AddSpoolIfCorrect in DocProductGroupPackViewModel: other place - productId = " + spool.ProductID, DocId, ProductId);
                 }
                 else if (spool.NomenclatureID != NomenclatureID || spool.CharacteristicID != CharacteristicID)
                 {
                     Functions.ShowMessageError("Номенклатура рулона не совпадает с номенклатурой ГУ",
-                        "Error AddSpoolIfCorrect (Spool nomenclature != GroupPack nomenclature)", null, spool.ProductID);
+                        "Error AddSpoolIfCorrect in DocProductGroupPackViewModel: Spool nomenclature != GroupPack nomenclature - productId = " + spool.ProductID, DocId, ProductId);
                 }
                 else if (Spools.Select(s => s.ProductID).Contains(spool.ProductID))
                 {
                     Functions.ShowMessageError("Данный рулон уже добавлен",
-                        "Error AddSpoolIfCorrect (this place has already been added)", null, spool.ProductID);
+                        "Error AddSpoolIfCorrect in DocProductGroupPackViewModel: this place has already been added - productId = " + spool.ProductID, DocId, ProductId);
                 }
                 else
                 {
@@ -426,6 +479,19 @@ namespace Gamma.ViewModels
             }
         }
 
+        public bool IsValidProduct => ValidateProduct();
+
+        public bool ValidateProduct()
+        {
+            var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight, Spools.Count, Spools.FirstOrDefault().ProductID).FirstOrDefault();
+            if (!string.IsNullOrEmpty(result))
+                {
+                    Functions.ShowMessageInformation(result, "ValidateGroupPackBeforeSave", DocId);
+                    return false;
+                }
+            return true;
+        }
+
         /// <summary>
         /// Сохранение в базу
         /// </summary>
@@ -433,13 +499,22 @@ namespace Gamma.ViewModels
         /// <param name="gammaBase">Контекст БД</param>
         public override bool SaveToModel(Guid itemID)
         {
-            DB.AddLogMessageInformation("Сохранение групповой упаковки", "SaveToModel GroupPack in DocProductGroupPackViewModel", null, itemID);
-            if (!DB.HaveWriteAccess("ProductGroupPacks") || !IsValid || IsUnpacked || IsReadOnly) return true;
-            DocId = itemID;
-           var result = GammaBase.ValidateGroupPackBeforeSave(NomenclatureID, CharacteristicID, Diameter, Weight, Spools.Count, Spools.FirstOrDefault().ProductID).FirstOrDefault();
-            if (!string.IsNullOrEmpty(result))
+            DB.AddLogMessageInformation("Начало сохранения продукта групповая упаковка", "Start SaveToModel in DocProductGroupPackViewModel", DocId, ProductId);
+            //if (!IsValid || IsUnpacked || IsReadOnly) return true;
+            if (!IsChanged)
             {
-                Functions.ShowMessageInformation(result, "ValidateGroupPackBeforeSave", DocId);
+                DB.AddLogMessageInformation("Успешный выход без сохранения продукта групповая упаковка", "Quit successed from SaveToModel in DocProductGroupPackViewModel: IsChanged = " + IsChanged.ToString(), DocId);
+                return true;
+            }
+            if (!IsValidProduct)
+            {
+                DB.AddLogMessageInformation("Ошибочный выход без сохранения продукта групповая упаковка", "Quit failed from SaveToModel in DocProductGroupPackViewModel: IsValidProduct = " + IsValidProduct.ToString(), DocId);
+                return false;
+            }
+            DocId = itemID;
+            if (Weight != Spools.Sum(s => s.Weight))
+            {
+                Functions.ShowMessageInformation("Внимание! Вес групповой упаковки не совпадает с общим весом катушек внутри!", "Sum Spools Weight != GroupPack Weight", DocId, ProductId);
                 return false;
             }
             var doc = GammaBase.Docs.Include(d => d.DocProduction).Include(d => d.DocProduction.DocWithdrawal).Include(d => d.DocProduction.DocProductionProducts)
@@ -535,7 +610,7 @@ namespace Gamma.ViewModels
                 var resultValidateUnweightedSpool = GammaBase.ValidateSpoolBeforeSaveInGroupPack(quantityLastUnweightedSpool, lastUnweightedSpool.ProductID).FirstOrDefault();
                 if (!string.IsNullOrEmpty(resultValidateUnweightedSpool))
                 {
-                    MessageBox.Show(resultValidateUnweightedSpool, "Проверка упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    Functions.ShowMessageInformation(resultValidateUnweightedSpool, "ValidateSpoolBeforeSaveInGroupPack", DocId, ProductId);
                     return false;
                 }
                 lastUnweightedSpool.Weight = (decimal)quantityLastUnweightedSpool;
@@ -544,7 +619,7 @@ namespace Gamma.ViewModels
                     resultValidateUnweightedSpool = GammaBase.ValidateSpoolBeforeSaveInGroupPack(quantityUnweightedSpool, Spools.Where(s => s.Weight == 1).FirstOrDefault().ProductID).FirstOrDefault();
                     if (!string.IsNullOrEmpty(resultValidateUnweightedSpool))
                     {
-                        MessageBox.Show(resultValidateUnweightedSpool, "Проверка упаковки", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                        Functions.ShowMessageInformation(resultValidateUnweightedSpool, "ValidateSpoolBeforeSaveInGroupPack", DocId, ProductId);
                         return false;
                     }
                     foreach (var spool in Spools.Where(s => s.Weight == 1))
@@ -561,16 +636,16 @@ namespace Gamma.ViewModels
                     CompleteWithdrawal = true
                 });
             }
-            if (Weight != Spools.Sum(s => s.Weight))
-                Functions.ShowMessageInformation("Внимание! Вес групповой упаковки не совпадает с общим весом катушек внутри!", "Sum Spools Weight != GroupPack Weight", DocId, product?.ProductID);
             GammaBase.SaveChanges();
+            SetIsChanged(false);
+            DB.AddLogMessageInformation("Успешное окончание сохранения групповая упаковка", "End SaveToModel in DocProductGroupPackViewModel: success", DocId, ProductId);
             return true;
         }
         // ReSharper disable once MemberCanBePrivate.Global
         public PaperBase SelectedSpool { get; set; }
 
         private ObservableCollection<BarViewModel> _bars = new ObservableCollection<BarViewModel>();
-        private bool _isConfirmed;
+        //private bool _isConfirmed;
         private bool _manualWeightInput;
 
         public ObservableCollection<BarViewModel> Bars

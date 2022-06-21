@@ -112,7 +112,7 @@ namespace Gamma.Common
 
         private void OpenDocBroke(OpenDocBrokeMessage msg)
         {
-            new DocBrokeView(msg.DocId, msg.ProductId, msg.IsInFuturePeriod).Show();
+            new DocBrokeView(msg.DocId, msg.ProductIDs, msg.IsInFuturePeriod).Show();
         }
 
         private void OpenImportOldProducts(OpenImportOldProductsMessage obj)

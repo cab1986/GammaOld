@@ -56,7 +56,8 @@ namespace Gamma.ViewModels
         {
             DB.AddLogMessageInformation("Закрытие окна " + this.GetType(), "Close " + this.GetType());
             Messenger.Default.Unregister(this);
-//            GammaBase?.Dispose();
+            //            GammaBase?.Dispose();
+            if (initialization) initialization = false;
             CloseCommand = null;
         }
 
@@ -71,5 +72,12 @@ namespace Gamma.ViewModels
         {
             Cleanup();
         }
+
+        private bool initialization { get; set; }
+
+        public void StartInitialization() => initialization = true;
+        public void EndInitialization() => initialization = false;
+        public bool GetInitialization => initialization;
+
     }
 }

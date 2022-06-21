@@ -37,27 +37,35 @@
             </dxlc:LayoutGroup>
             <dxlc:LayoutGroup View="Group" Height="50">
                 <dxlc:LayoutItem Label="Кол-во обрывов" LabelPosition="Top">
-                    <dxe:SpinEdit EditValue="{Binding BreakNumber, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Byte}" MinValue="0" MaxValue="100" />
+                    <dxe:SpinEdit EditValue="{Binding BreakNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Byte}" MinValue="0" MaxValue="100"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Диаметр, мм" LabelPosition="Top">
-                    <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Int32}"/>
+                    <dxe:PopupCalcEdit AllowDefaultButton="False" MaskType="RegEx" Mask="\d+" EditValue="{Binding Diameter, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" EditValueType="{x:Type sys:Int32}"/>
                 </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Длина, км" LabelPosition="Top">
                     <dxe:SpinEdit AllowDefaultButton="False" ValidateOnTextInput="False" MinValue="0" MaxValue="200"
                                            EditValue="{Binding Length, UpdateSourceTrigger=PropertyChanged}" 
                                            EditValueType="{x:Type sys:Decimal}" NullText="0"/>
                </dxlc:LayoutItem>
-               <Button Content="Создать рулоны" Command="{Binding CreateSpoolsCommand}" />
+                <!--<dxlc:LayoutItem Label="Масса фактич, г/м2" LabelPosition="Top">
+                    <dxe:SpinEdit EditValue="{Binding RealBasisWeight, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" EditValueType="{x:Type sys:Decimal}" MinValue="1" MaxValue="50" />
+                </dxlc:LayoutItem>-->
+                <Button Content="Создать рулоны" Command="{Binding CreateSpoolsCommand}" />
             </dxlc:LayoutGroup>
             <dxlc:LayoutItem Label="Рулоны" LabelPosition="Top">
                 <dxg:GridControl ItemsSource="{Binding UnloadSpools}" MaxHeight="1000" MinHeight="60" SelectedItem="{Binding SelectedUnloadSpool}" AllowLiveDataShaping="False" AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" IsFilterEnabled="False" ShowAllTableValuesInCheckedFilterPopup="False">
                     <dxg:GridControl.View>
-                        <dxg:TableView AllowEditing="False" ShowGroupPanel="False" AutoWidth="True" AllowFilterEditor="False" AllowGrouping="False"/>
+                        <dxg:TableView AllowEditing="True" ShowGroupPanel="False" AutoWidth="True" AllowFilterEditor="False" AllowGrouping="False" EnableImmediatePosting="True"/>
                     </dxg:GridControl.View>
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn FieldName="Number" Header="Номер" FixedWidth="True" Width="100"/>
-                        <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура"/>
-                        <dxg:GridColumn FieldName="Weight" Header="Вес, кг" FixedWidth="True" Width="60">
+                        <dxg:GridColumn FieldName="Number" Header="Номер" FixedWidth="True" Width="120" ReadOnly="True"/>
+                        <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" ReadOnly="True"/>
+                        <dxg:GridColumn FieldName="WeightWithChek" Header="Вес, кг" FixedWidth="True" Width="60" ReadOnly="{Binding IsReadOnly}">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn FieldName="RealFormatWithChek" Header="Факт. Формат, мм" FixedWidth="True" Width="110" ReadOnly="{Binding IsReadOnly}">
                             <dxg:GridColumn.EditSettings>
                                 <dxe:TextEditSettings Mask="d" MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                             </dxg:GridColumn.EditSettings>

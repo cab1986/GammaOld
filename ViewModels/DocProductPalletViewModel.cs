@@ -13,6 +13,7 @@ using DevExpress.Mvvm;
 using Gamma.DialogViewModels;
 using Gamma.Entities;
 using Gamma.Models;
+using Gamma.Common;
 
 namespace Gamma.ViewModels
 {
@@ -22,7 +23,7 @@ namespace Gamma.ViewModels
         {
             PalletItems = new ObservableCollection<ProductItem>();
             Bars.Add(ReportManager.GetReportBar("Pallet", VMID));
-            AddNomenclatureToPalletCommand = new DelegateCommand<string>(AddMomenclatureToPallet, (s) => !IsReadOnly );
+            AddNomenclatureToPalletCommand = new DelegateCommand<string>(AddNomenclatureToPallet, (s) => !IsReadOnly );
             DeleteNomenclatureFromPalletCommand = new DelegateCommand(DeleteNomenclatureFromPallet, () => !IsReadOnly);
         }
 
@@ -32,12 +33,12 @@ namespace Gamma.ViewModels
         /// <param name="docId">ID документа выработки</param>
         /// <param name="gammaBase">Контекст БД</param>
         //public DocProductPalletViewModel(Guid docId, GammaEntities gammaBase = null) : this()
-        public DocProductPalletViewModel(Guid productId, GammaEntities gammaBase = null) : this()
+        public DocProductPalletViewModel(Guid productId, Guid docId, bool docIsReadOnly, GammaEntities gammaBase = null) : this()
         {
             gammaBase = gammaBase ?? DB.GammaDbWithNoCheckConnection;
             ProductId = productId;
-            DocId = gammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
-                SqlGuidUtil.NewSequentialid();
+            DocId = docId;//gammaBase.DocProductionProducts.FirstOrDefault(d => d.ProductID == productId)?.DocID ??
+                //SqlGuidUtil.NewSequentialid();
             PalletItems = new ObservableCollection<ProductItem>(
                 from palItems in gammaBase.ProductItems
                 where palItems.ProductID == productId
@@ -50,7 +51,7 @@ namespace Gamma.ViewModels
                     ProductItemId = palItems.ProductItemID
                 } 
                 );
-            IsConfirmed = gammaBase.Docs.First(d => d.DocID == DocId).IsConfirmed;
+            IsReadOnly = true; //docIsReadOnly || !(WorkSession.DBAdmin || DB.HaveWriteAccess("ProductPallets")) ; /*IsConfirmed && IsValid*/ //на текущий момент номенклатура паллеты не должна меняться - только из задания
         }
 
         /// <summary>
@@ -65,22 +66,19 @@ namespace Gamma.ViewModels
             get;
             set;
         }
-        private bool IsConfirmed { get; set; }
+        //private bool IsConfirmed { get; set; }
         public ObservableCollection<BarViewModel> Bars { get; set; } = new ObservableCollection<BarViewModel>();
         public Guid? VMID { get; } = Guid.NewGuid();
-        public bool IsReadOnly => IsConfirmed && IsValid;
+        //public bool IsReadOnly { get; set; } //=> /*IsConfirmed && IsValid*/ true; //на текущий момент номенклатура паллеты не должна меняться - только из задания.
 
-        public override bool CanSaveExecute()
-        {
-            return base.CanSaveExecute() && PalletItems.Count > 0 && (WorkSession.DBAdmin || DB.HaveWriteAccess("ProductPallets"));
-        }
-        /// <summary>
+        // <summary>
         /// Сохранение в БД
         /// </summary>
         /// <param name="itemID">Id документа выработки</param>
         public override bool SaveToModel(Guid itemID)
         {
-            if (!CanSaveExecute()) return true;
+            DB.AddLogMessageInformation("Начало сохранения продукта паллета",
+                "Start SaveToModel in DocProductPalletViewModel", DocId, ProductId);
             using (var gammaBase = DB.GammaDb)
             {
                 var product =
@@ -158,8 +156,10 @@ namespace Gamma.ViewModels
         public DelegateCommand DeleteNomenclatureFromPalletCommand { get; private set; }
         public ProductItem SelectedProductItem { get; set; }
 
-        private void AddMomenclatureToPallet(string barcode  = null)
+        private void AddNomenclatureToPallet(string barcode  = null)
         {
+            DB.AddLogMessageInformation("Нажатие кнопки Добавить номенклатуру в продукте ProductID",
+                "Start AddNomenclatureToPallet in DocProductPalletViewModel", DocId, ProductId);
             var model = barcode == null ? new AddNomenclatureToPalletDialogModel() : new AddNomenclatureToPalletDialogModel(barcode);
             var okCommand = new UICommand()
             {
@@ -185,7 +185,8 @@ namespace Gamma.ViewModels
             if (result != okCommand) return;
             if (model.NomenclatureID == null || model.CharacteristicID == null || model.Quantity <= 0)
             {
-                MessageBox.Show("Не удалось добавить упаковки в паллету");
+                Functions.ShowMessageError("Не удалось добавить упаковки в паллету!",
+                    "Error AddMomenclatureToPallet in DocProductPalletViewModel: " + (model.NomenclatureID == null ? "model.NomenclatureID == null " : " ") + (model.CharacteristicID == null ? " model.CharacteristicID == null": " ") + (model.Quantity <= 0 ? " model.Quantity <= 0" : " "), DocId, ProductId);
                 return;
             }
             string nomenclatureName;
@@ -199,6 +200,8 @@ namespace Gamma.ViewModels
             }
             var item = new ProductItem((Guid)model.NomenclatureID, (Guid)model.CharacteristicID, (int)model.Quantity, model.NomenclatureName);
             PalletItems.Add(item);
+            DB.AddLogMessageInformation("Добавлена номенклатура " + item.NomenclatureName + " в паллету ProductID!",
+                "AddNomenclatureToPallet in DocProductPalletViewModel: NomenclatureID = " + item.NomenclatureId + ", CharacteristicID = " + item.CharacteristicId + "Quantity = " + item.Quantity, DocId, ProductId);
         }
 
         private void DebugFunc()
@@ -209,6 +212,8 @@ namespace Gamma.ViewModels
         private void DeleteNomenclatureFromPallet()
         {
             if (SelectedProductItem == null) return;
+            DB.AddLogMessageInformation("Удалена номенклатура " + SelectedProductItem.NomenclatureName + " из паллеты ProductID",
+                "DeleteNomenclatureToPallet in DocProductPalletViewModel: NomenclatureID = " + SelectedProductItem.NomenclatureId + ", CharacteristicID = " + SelectedProductItem.CharacteristicId + "Quantity = " + SelectedProductItem.Quantity, DocId, ProductId);
             PalletItems.Remove(SelectedProductItem);
         }
     }

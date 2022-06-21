@@ -136,15 +136,22 @@ namespace Gamma
 
     public class OpenDocBrokeMessage
     {
-        public OpenDocBrokeMessage(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
+        /*public OpenDocBrokeMessage(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
             DocId = docId;
-            ProductId = productId;
+            ProductIDs = new List<Guid?>() { productId };
+            IsInFuturePeriod = isInFuturePeriod;
+        }*/
+
+        public OpenDocBrokeMessage(Guid docId, List<Guid?> productIDs, bool isInFuturePeriod = false)
+        {
+            DocId = docId;
+            ProductIDs = productIDs;
             IsInFuturePeriod = isInFuturePeriod;
         }
 
         public Guid DocId { get; private set; }
-        public Guid? ProductId { get; private set; }
+        public List<Guid?> ProductIDs { get; private set; }
         public bool IsInFuturePeriod { get; private set; }
     }
 
@@ -194,13 +201,14 @@ namespace Gamma
     /// </summary>
     public class OpenDocProductMessage
     {
-        public OpenDocProductMessage(DocProductKinds docProductKind, bool isNewProduct = false, Guid? Id = null,
+        public OpenDocProductMessage(DocProductKinds docProductKind, bool isNewProduct = false, Guid? Id = null, bool allowEdit = false,
             SourceSpoolsCheckResult checkResult = SourceSpoolsCheckResult.Correct)
         {
             DocProductKind = docProductKind;
             ID = Id;
             IsNewProduct = isNewProduct;
             CheckResult = checkResult;
+            AllowEdit = allowEdit;
         }
         /// <summary>
         /// Вид продукции
@@ -216,6 +224,11 @@ namespace Gamma
         /// </summary>
         public bool IsNewProduct { get; private set; }
         public SourceSpoolsCheckResult CheckResult { get; private set; }
+
+        /// <summary>
+        /// Разрешение изменения продукта
+        /// </summary>
+        public bool AllowEdit { get; private set; }
     }
     public class OpenNomenclatureMessage  
     {
@@ -563,32 +576,33 @@ namespace Gamma
             MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenProductionTaskBatchMessage>(new OpenProductionTaskBatchMessage(batchKind));
         }
 
-        public static void OpenDocProduct(ProductKind productKind, Guid productId)
+        public static void OpenDocProduct(ProductKind productKind, Guid productId, bool allowEdit = true)
         {
             switch (productKind)
             {
                 case ProductKind.ProductSpool:
-                    OpenDocProduct(DocProductKinds.DocProductSpool, productId);
+                    OpenDocProduct(DocProductKinds.DocProductSpool, productId, allowEdit);
                     break;
                 case ProductKind.ProductGroupPack:
-                    OpenDocProduct(DocProductKinds.DocProductGroupPack, productId);
+                    OpenDocProduct(DocProductKinds.DocProductGroupPack, productId, allowEdit);
                     break;
                 case ProductKind.ProductPallet:
-                    OpenDocProduct(DocProductKinds.DocProductPallet, productId);
+                    OpenDocProduct(DocProductKinds.DocProductPallet, productId, allowEdit);
                     break;
                 case ProductKind.ProductPalletR:
-                    OpenDocProduct(DocProductKinds.DocProductPallet, productId);
+                    OpenDocProduct(DocProductKinds.DocProductPallet, productId, allowEdit);
                     break;
             }
         }
 
-        public static void OpenDocProduct(DocProductKinds docProductKind, Guid id)
+        public static void OpenDocProduct(DocProductKinds docProductKind, Guid id, bool allowEdit = true)
         {
             UIServices.SetBusyState();
             MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocProductMessage>(new OpenDocProductMessage(
                     docProductKind,
                     false,
-                    id)
+                    id,
+                    allowEdit)
                 );
         }
 
@@ -610,7 +624,12 @@ namespace Gamma
 
         public static void OpenDocBroke(Guid docId, Guid? productId = null, bool isInFuturePeriod = false)
         {
-            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocBrokeMessage>(new OpenDocBrokeMessage(docId, productId, isInFuturePeriod));
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocBrokeMessage>(new OpenDocBrokeMessage(docId, new List<Guid?>() { productId }, isInFuturePeriod));
+        }
+
+        public static void OpenDocBroke(Guid docId, List<Guid?> productIDs, bool isInFuturePeriod = false)
+        {
+            MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocBrokeMessage>(new OpenDocBrokeMessage(docId, productIDs, isInFuturePeriod));
         }
 
         public static void OpenReportList()
@@ -751,7 +770,7 @@ namespace Gamma
         {
             MessengerDefaultSendWithCheckExistNewVersionOfProgram<OpenDocProductMessage>(new OpenDocProductMessage(
                 docProductKind,
-                true, id,
+                true, id, true,
                 checkResult));
         }
 
