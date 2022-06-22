@@ -86,21 +86,23 @@ namespace Gamma.ViewModels
                 .Include(d => d.Products.ProductSpools.C1CNomenclature)
                 .Include(d => d.Products.ProductSpools.C1CCharacteristics).Where(dp => dp.DocID == docID));
                 //Products = new ObservableCollection<Products>(DocProductionProducts.Select(dp => dp.Products));
+                var checkedUnloadSpools = UnloadSpools?.Where(s => s.Checked).Select(s => s.ProductID).ToList();
                 UnloadSpools = new ObservableCollection<PaperBaseWithChekWeight>(from dp in DocProductionProducts
-                                                                   select new PaperBaseWithChekWeight(this)
-                                                                   {
-                                                             BreakNumber = dp.Products.ProductSpools.BreakNumber,
-                                                             ProductID = dp.Products.ProductSpools.ProductID,
-                                                             Number = dp.Products.Number,
-                                                             Nomenclature = dp.Products.ProductSpools.C1CNomenclature.Name + " " + dp.Products.ProductSpools.C1CCharacteristics.Name,
-                                                             CharacteristicID = (Guid)dp.Products.ProductSpools.C1CCharacteristicID,
-                                                             NomenclatureID = dp.Products.ProductSpools.C1CNomenclatureID,
-                                                             Weight = (dp.Quantity??0)*1000,
-                                                             Diameter = dp.Products.ProductSpools.Diameter,
-                                                             Length = dp.Products.ProductSpools.Length??0,
-                                                             RealFormat = dp.Products.ProductSpools.RealFormat
-                                                             //RealBasisWeight = dp.Products.ProductSpools.RealBasisWeight
-                                                         }
+                                                                                 select new PaperBaseWithChekWeight(this)
+                                                                                 {
+                                                                                     BreakNumber = dp.Products.ProductSpools.BreakNumber,
+                                                                                     ProductID = dp.Products.ProductSpools.ProductID,
+                                                                                     Number = dp.Products.Number,
+                                                                                     Nomenclature = dp.Products.ProductSpools.C1CNomenclature.Name + " " + dp.Products.ProductSpools.C1CCharacteristics.Name,
+                                                                                     CharacteristicID = (Guid)dp.Products.ProductSpools.C1CCharacteristicID,
+                                                                                     NomenclatureID = dp.Products.ProductSpools.C1CNomenclatureID,
+                                                                                     Weight = (dp.Quantity ?? 0) * 1000,
+                                                                                     Diameter = dp.Products.ProductSpools.Diameter,
+                                                                                     Length = dp.Products.ProductSpools.Length ?? 0,
+                                                                                     RealFormat = dp.Products.ProductSpools.RealFormat,
+                                                                                     Checked = checkedUnloadSpools.Contains(dp.Products.ProductSpools.ProductID)
+                                                                       //RealBasisWeight = dp.Products.ProductSpools.RealBasisWeight
+                                                                   }
                                     );
                 //ProductSpools = new ObservableCollection<ProductSpools>(DocProductionProducts.Select(dp => dp.Products.ProductSpools));
                 if (UnloadSpools.Count > 0)
@@ -539,6 +541,22 @@ namespace Gamma.ViewModels
 
             private DocProductUnloadViewModel ParentViewModel { get; set; }
 
+            private bool _checked { get; set; } = false;
+            public bool Checked
+            {
+                get
+                {
+                    return _checked;
+                }
+                set
+                {
+                    if (!_checked && value && Quantity <= 1)
+                        Functions.ShowMessageInformation("Выбор запрещен! Для добавления в Акт о браке требуется указать действительный вес.", "SET Checked filed in DocProductUnpackViewModel: Quntity <= 1", DocID, this.ProductID);
+                    else
+                        _checked = value;
+                }
+            }
+
             public decimal WeightWithChek
             {
                 get { return Weight; }
@@ -558,6 +576,8 @@ namespace Gamma.ViewModels
                         ParentViewModel.SetIsChanged(true);
                     }*/
                     Weight = value;
+                    if (value <= 1 && Checked)
+                        Checked = false;
                     ParentViewModel.SetIsChanged(true);
                 }
             }

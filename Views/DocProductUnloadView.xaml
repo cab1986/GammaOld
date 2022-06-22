@@ -58,7 +58,7 @@
                         <dxg:TableView AllowEditing="True" ShowGroupPanel="False" AutoWidth="True" AllowFilterEditor="False" AllowGrouping="False" EnableImmediatePosting="True"/>
                     </dxg:GridControl.View>
                     <dxg:GridControl.Columns>
-                        <dxg:GridColumn FieldName="Number" Header="Номер" FixedWidth="True" Width="120" ReadOnly="True"/>
+                        <dxg:GridColumn FieldName="Checked" Header=" " FixedWidth="True" Width="40" ReadOnly="{Binding IsReadOnly}"/>
                         <dxg:GridColumn FieldName="Nomenclature" Header="Номенклатура" ReadOnly="True"/>
                         <dxg:GridColumn FieldName="WeightWithChek" Header="Вес, кг" FixedWidth="True" Width="60" ReadOnly="{Binding IsReadOnly}">
                             <dxg:GridColumn.EditSettings>

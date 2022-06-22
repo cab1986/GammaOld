@@ -309,13 +309,13 @@ namespace Gamma.ViewModels
             }
             else if (CurrentViewModel is DocProductUnloadViewModel && ((DocProductUnloadViewModel)CurrentViewModel).UnloadSpools?.Count() > 0)
             {
-                if (((DocProductUnloadViewModel)CurrentViewModel).UnloadSpools.Any(s => s.Weight <= 1))
+                if (((DocProductUnloadViewModel)CurrentViewModel).UnloadSpools.Any(s => s.Checked && s.Weight <= 1))
                 {
                     Functions.ShowMessageInformation("Внимание, акт не создан! Требуется указать правильный вес для всех рулонов!", "Error AddToDocBroke in DocProductViewModel: exist spool with weight <= 1 ", DocID);
                 }
                 else
                 {
-                    foreach (var spool in ((DocProductUnloadViewModel)CurrentViewModel).UnloadSpools)
+                    foreach (var spool in ((DocProductUnloadViewModel)CurrentViewModel).UnloadSpools.Where(s => s.Checked))
                     {
                         productIDs.Add(spool.ProductID);
                     }
