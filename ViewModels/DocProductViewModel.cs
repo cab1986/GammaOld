@@ -286,7 +286,7 @@ namespace Gamma.ViewModels
 
         private void AddToDocBroke()
         {
-            Functions.ShowMessageInformation("Выбран пункт Добавить в акт", "AddToDocBroke in DocProductViewModel", DocID, ProductID);
+            DB.AddLogMessageInformation("Выбран пункт Добавить в акт", "AddToDocBroke in DocProductViewModel", DocID, ProductID);
             UIServices.SetBusyState();
             if (!SaveToModel(true))
             {

@@ -205,21 +205,24 @@ namespace Gamma.ViewModels
                         //var docProduction = GammaBase.Docs.FirstOrDefault(p => p.DocID == DocID);
                         foreach (var cut in Cuttings)
                         {
-                            var spool = new PaperBaseWithChekWeight(this)
+                            for (int countSpool = 1; countSpool <= cut.Quantity; countSpool++)
                             {
-                                BreakNumber = BreakNumber,
-                                ProductID = SqlGuidUtil.NewSequentialid(),
-                                Number = "",
-                                NomenclatureID = (Guid)cut.NomenclatureID,
-                                CharacteristicID = (Guid)cut.CharacteristicID,
-                                Nomenclature = cut.NomenclatureName,
-                                Weight = 1,
-                                Diameter = Diameter,
-                                Length = Length,
-                                RealFormat = cut.BaseFormat
-                                //RealBasisWeight = RealBasisWeight
-                            };
-                            UnloadSpools.Add(spool);
+                                var spool = new PaperBaseWithChekWeight(this)
+                                {
+                                    BreakNumber = BreakNumber,
+                                    ProductID = SqlGuidUtil.NewSequentialid(),
+                                    Number = "",
+                                    NomenclatureID = (Guid)cut.NomenclatureID,
+                                    CharacteristicID = (Guid)cut.CharacteristicID,
+                                    Nomenclature = cut.NomenclatureName,
+                                    Weight = 1,
+                                    Diameter = Diameter,
+                                    Length = Length,
+                                    RealFormat = cut.BaseFormat
+                                    //RealBasisWeight = RealBasisWeight
+                                };
+                                UnloadSpools.Add(spool);
+                            }
                         }
                     }
                 }
