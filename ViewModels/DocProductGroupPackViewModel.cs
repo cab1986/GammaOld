@@ -100,16 +100,18 @@ namespace Gamma.ViewModels
             if (ProductId == null) return;
             if (!GammaBase.Rests.Any(r => r.ProductID == @ProductId))
             {
-                MessageBox.Show("Данная упаковка не числится на остатках");
+                Functions.ShowMessageInformation("Данная упаковка не числится на остатках",
+                "Error Unpack in DocProductGroupPackViewModel: This package is not listed on the rests", DocId, ProductId);
                 return;
             }
             if (
-                MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                Functions.ShowMessageQuestion("Вы уверены, что хотите распаковать данную упаковку?", 
+                    "QUEST Unpack in DocProductGroupPackViewModel: you are sure", DocId, ProductId) == MessageBoxResult.Yes)
             {
                 UIServices.SetBusyState();
                 GammaBase.UnpackGroupPack(ProductId, WorkSession.PrintName);
-                MessageBox.Show("Упаковка уничтожена, рулоны возвращены на остатки");
+                Functions.ShowMessageInformation("Упаковка уничтожена, рулоны возвращены на остатки",
+                "End Unpack in DocProductGroupPackViewModel: successed", DocId, ProductId);
                 IsUnpacked = true;
             }
         }
@@ -405,7 +407,8 @@ namespace Gamma.ViewModels
                         "QUEST UnpackGroupPack in DocProductGroupPackViewModel: productId = " + groupPack.ProductId, DocId, ProductId);
                 if (dlgResult != MessageBoxResult.Yes) return false;
                 gammaBase.UnpackGroupPack(groupPack.ProductId, WorkSession.PrintName);
-                MessageBox.Show($"Упаковка {groupPack.Number} уничтожена");
+                Functions.ShowMessageInformation($"Упаковка {groupPack.Number} уничтожена",
+                    "End UnpackGroupPack in DocProductGroupPackViewModel: successed - productId = " + productId, DocId, ProductId);
                 return true;
             }
         }
@@ -512,7 +515,7 @@ namespace Gamma.ViewModels
                 return false;
             }
             DocId = itemID;
-            if (Weight != Spools.Sum(s => s.Weight))
+            if (!Spools.Any(s => s.Weight <= 1) && Weight != Spools.Sum(s => s.Weight))
             {
                 Functions.ShowMessageInformation("Внимание! Вес групповой упаковки не совпадает с общим весом катушек внутри!", "Sum Spools Weight != GroupPack Weight", DocId, ProductId);
                 return false;
