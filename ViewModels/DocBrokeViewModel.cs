@@ -49,6 +49,7 @@ namespace Gamma.ViewModels
                 DocBrokeDecision = new DocBrokeDecisionViewModel(DocId);// this);
                 if (doc != null)
                 {
+                    IsChanged = false;
                     DocNumber = doc.Number;
                     DocComment = doc.Comment;
                     Date = doc.Date;
@@ -67,6 +68,7 @@ namespace Gamma.ViewModels
                 }
                 else
                 {
+                    IsChanged = true;
                     Date = DB.CurrentDateTime;
                     IsInFuturePeriod = isInFuturePeriod;
                     //SelectedInFuturePeriod = isInFuturePeriod ? FuturePeriodDocBrokeType.NextPlace : FuturePeriodDocBrokeType.FirstPlace;
@@ -108,7 +110,7 @@ namespace Gamma.ViewModels
                 EditPlaceCommand = new DelegateCommand(EditPlace, () => !IsReadOnly);
                 OpenProductCommand = new DelegateCommand(OpenProduct);
                 UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => DocId != null);
-                UnpackGroupPackCommand = new DelegateCommand(ChooseGroupPackToUnpack, () => !IsReadOnly && SelectedBrokeProduct != null && SelectedBrokeProduct.ProductKind == ProductKind.ProductGroupPack);
+                UnpackGroupPackCommand = new DelegateCommand(ChooseGroupPackToUnpack, () => DB.HaveWriteAccess("DocBroke") && SelectedBrokeProduct != null && SelectedBrokeProduct.ProductKind == ProductKind.ProductGroupPack);
                 var IsEditableCollection = new ObservableCollection<bool?>
                 (
                     from pt in GammaBase.GetDocBrokeEditable(Date, UserID, (int?)ShiftID, (bool)(doc?.IsConfirmed ?? false), WorkSession.UserID, (int)WorkSession.ShiftID, doc?.DocID)
@@ -127,7 +129,9 @@ namespace Gamma.ViewModels
             SetDecisionForAllProductCommand = new DelegateCommand(SetDecisionForAllProduct, () => !IsReadOnly && SelectedTabIndex != 0 && !DocBrokeDecision.BrokeDecisionProducts.Any(p => p.ProductState != ProductState.NeedsDecision));
             DB.AddLogMessageInformation("Открыт Акта о браке DocID", "Opened DocBrokeViewModel (docBrokeId = '" + docBrokeId + "', productId='" + productIDs.ToString() + "', isInFuturePeriod='" + isInFuturePeriod + "')", docBrokeId);
         }
-        
+
+        private List<int> RWPlaces = new List<int>() { 3, 4, 5, 22, 23 };
+
         public ICommand ClosingCommand { get; private set; }
 
         void Closing(CancelEventArgs e)
@@ -215,7 +219,8 @@ namespace Gamma.ViewModels
                     .FirstOrDefault(p => p.ProductID == productId);
                 if (product == null) return false;
                 if (!IsInFuturePeriod && BrokeProducts.Count > 0 &&
-                    BrokeProducts.Select(bp => bp.ProductionPlaceId).First() != product.PlaceID)
+                    !(BrokeProducts.Select(bp => bp.ProductionPlaceId).First() == product.PlaceID
+                    || (RWPlaces.Contains(BrokeProducts.Select(bp => bp.ProductionPlaceId).First()) && RWPlaces.Contains((int)product.PlaceID))))
                 {
                     Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Нельзя добавлять продукт другого передела в акт '25к - I передел'", "AddProduct (docId = '" + docId + ", ProductId='" + productId + "')", docId, productId);
                     return false;
@@ -245,7 +250,7 @@ namespace Gamma.ViewModels
                     ProductKind = (ProductKind)product.ProductKindID,
                     Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity ?? 0 : docBrokeProductInfo.Quantity ?? 0,
                     PlaceId = docBrokeProductInfo == null ? product.CurrentPlaceID : docBrokeProductInfo.PlaceID,
-                    IsChanged = IsChanged
+                    IsChanged = isChanged
                 };
                 if (brokeProduct.BrokePlaceId == brokeProduct.ProductionPlaceId && brokeProduct.PrintName == null)
                     brokeProduct.PrintName = brokeProduct.ProductionPrintName;
@@ -257,6 +262,7 @@ namespace Gamma.ViewModels
                 RefreshRejectionReasonsList();
                 RefreshProductStateList();
             }
+            RaisePropertyChanged("IsEnabledDecisionTab");
             return true;
         }
 
@@ -298,12 +304,12 @@ namespace Gamma.ViewModels
                 Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Данная упаковка не числится на остатках", "ERROR ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId);
                 return;
             }
-            if (!IsInFuturePeriod)
+            if (!IsInFuturePeriod && !RWPlaces.Contains((int)SelectedBrokeProduct.PlaceId))
             {
                 Functions.ShowMessageError("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Невозможно распаковать, так как акт '25к - I передел'. Требуется поменять на '10к - II передел'", "ERROR ChooseGroupPackToUnpack (InFuturePeriod) docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId);
                 return;
             }
-            if (Functions.ShowMessageQuestion("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Вы уверены, что хотите распаковать данную упаковку?", "QUEST ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId)
+            if (Functions.ShowMessageQuestion("Распаковка ГУ в Акт о браке: " + Environment.NewLine + "Вы уверены, что хотите распаковать данную упаковку?" + Environment.NewLine + "", "QUEST ChooseGroupPackToUnpack docId = '" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "'", DocId, SelectedBrokeProduct?.ProductId)
                 //MessageBox.Show("Вы уверены, что хотите распаковать данную упаковку?", "Распаковка", MessageBoxButton.YesNo, MessageBoxImage.Question) 
                 != MessageBoxResult.Yes)
             {
@@ -316,7 +322,7 @@ namespace Gamma.ViewModels
             GammaBase.UnpackGroupPackOnPlace(SelectedBrokeProduct.ProductId, currentPlaceID, WorkSession.PrintName);
             DB.AddLogMessageInformation("Групповая упаковка ProductID уничтожена, рулоны возвращены на остатки", "ChooseGroupPackToUnpack.UnpackGroupPack (docId='" + DocId + ", ProductId='" + SelectedBrokeProduct?.ProductId + "')", DocId, SelectedBrokeProduct?.ProductId);
 
-            var selectedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == SelectedBrokeProduct.ProductId);
+            var selectedBrokeDecisionProduct = DocBrokeDecision.BrokeDecisionProducts.FirstOrDefault(p => p.ProductId == SelectedBrokeProduct.ProductId && p.Quantity > 0);
             foreach (var product in groupPackProductIDs)
             {
                 SetProductIsChanged(product,true);
@@ -364,6 +370,7 @@ namespace Gamma.ViewModels
                 DocBrokeDecision.BrokeDecisionProducts.Remove(product);
             }
             BrokeProducts.Remove(SelectedBrokeProduct);
+            SaveToModel(true);
             RefreshRejectionReasonsList();
 
         }
@@ -441,7 +448,12 @@ namespace Gamma.ViewModels
                 : IsValid && !IsReadOnly;//DB.HaveWriteAccess("DocBroke") && IsEditable 
                  
         }
-
+        
+        public bool IsEnabledDecisionTab => !(BrokeProducts.Any(
+                        dp =>
+                            (dp.RejectionReasonID == null
+                            || dp.RejectionReasonComment == null || dp.RejectionReasonComment.Length == 0)));
+        
         private int _selectedTabIndex { get; set; }
         public int SelectedTabIndex
         {
@@ -483,7 +495,7 @@ namespace Gamma.ViewModels
                 RaisePropertyChanged("RejectionReasonsList");
 
                 DB.AddLogMessageInformation("Выбрана вкладка "+(value == 0 ? "Продукция": value == 1 ? "Решение":"") +" в Акте о браке DocID", "SET SelectedTabIndex ='" + value + "')", DocId);
-                               
+
 
                 //Это неправильно, но меняется только здесь
                 RaisePropertyChanged("IsVisibleSetRejectionReasonForAllProduct");
@@ -788,6 +800,7 @@ namespace Gamma.ViewModels
                 decisionItem.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
                 decisionItem.BrokePlaceID = SelectedBrokeProduct.PlaceId;
             }
+            RaisePropertyChanged("IsEnabledDecisionTab");
         }
 
         private void EditBrokePlace()
@@ -842,6 +855,7 @@ namespace Gamma.ViewModels
                 SelectedBrokeProduct.BrokeShiftId = model.ShiftID;
                 SelectedBrokeProduct.PrintName = model.Comment;
             }
+            RaisePropertyChanged("IsEnabledDecisionTab");
         }
 
         private void EditPlace()
@@ -897,6 +911,7 @@ namespace Gamma.ViewModels
                 decisionItem.RejectionReasonID = SelectedBrokeProduct.RejectionReasonID;
                 decisionItem.BrokePlaceID = SelectedBrokeProduct.PlaceId;
             }
+            RaisePropertyChanged("IsEnabledDecisionTab");
         }
 
         private void UploadTo1C()
@@ -922,6 +937,11 @@ namespace Gamma.ViewModels
         public DocBrokeDecisionViewModel DocBrokeDecision { get; set; }
 
         public override bool SaveToModel()
+        {
+            return SaveToModel(false);
+        }
+
+        private bool SaveToModel(bool isNotUploadTo1C)
         {
             DB.AddLogMessageInformation("Сохранение Акт о браке DocID", "DocBroke.SaveToModel", DocId);
 
@@ -1082,11 +1102,14 @@ namespace Gamma.ViewModels
                 }
                 IsChanged = false;
             }
-            
-            if (WorkSession.IsUploadDocBrokeTo1CWhenSave)
-                DB.UploadDocBrokeTo1C(DocId);
-            else
-                DB.AddLogMessageError("Выгрузка в 1С Акт о браке: " + Environment.NewLine + "Документ не выгружен", "DocBroke.SaveToModel NOT UploadTo1C because IsUploadDocBrokeTo1CWhenSave=false", DocId);
+
+            if (!isNotUploadTo1C)
+            {
+                if (WorkSession.IsUploadDocBrokeTo1CWhenSave)
+                    DB.UploadDocBrokeTo1C(DocId);
+                else
+                    DB.AddLogMessageError("Выгрузка в 1С Акт о браке: " + Environment.NewLine + "Документ не выгружен", "DocBroke.SaveToModel NOT UploadTo1C because IsUploadDocBrokeTo1CWhenSave=false", DocId);
+            }
             Messenger.Default.Send(new RefreshBrokeListMessage { DocID = DocId });
             return true;
         }

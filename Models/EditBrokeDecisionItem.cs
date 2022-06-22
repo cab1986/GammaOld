@@ -23,7 +23,7 @@ namespace Gamma.Models
             ProductState = productState;
             NomenclatureVisible = canChooseNomenclature;
             //OpenWithdrawalCommand = new DelegateCommand<Guid>(OpenWithdrawal); //, () => DocWithdrawals?.Count != 0);
-            CreateWithdrawalCommand = new DelegateCommand(CreateWithdrawal, ()=> DB.HaveWriteAccess("DocWithdrawalProducts"));
+            CreateWithdrawalCommand = new DelegateCommand(CreateWithdrawal, ()=> DB.HaveWriteAccess("DocWithdrawalProducts") && !(ParentModel.ProductKind == ProductKind.ProductGroupPack && ParentModel.NeedsProductStates.Contains(ProductState)));
         }
 
         private DocBrokeDecisionViewModel ParentModel { get; }
@@ -49,8 +49,8 @@ namespace Gamma.Models
             set
             {
                 if (ParentModel.ProductKind == ProductKind.ProductGroupPack
-                            && ProductState == ProductState.Broke
-                            && _quantity != 0 && value != _quantity)
+                            && !ParentModel.NeedsProductStates.Contains(ProductState)
+                            && _quantity != 0 && value != _quantity && value != 0)
                 {
                     MessageBox.Show("Нельзя изменить кол-во, так как это групповая упаковка. Сначала распакуйте ГУ.");
                     return;
@@ -125,7 +125,8 @@ namespace Gamma.Models
             IsReadOnlyQuantity = false;
             IsExistForConversionOrRepackItem = false;
             IsExistForConversionOrRepackItemWithDecisionAppliedSumMore0 = false;
-            IsExistMoreTwoCheckedItem = false;
+            //IsExistMoreTwoCheckedItem = false;
+            CountCheckedDecisionItem = null;
             IsNotNeedToSave = false;
             IsVisibleRow = true;
         }
@@ -244,15 +245,16 @@ namespace Gamma.Models
                     else if (!_isChecked && value
                             && MaxQuantity == 0)
                     {
-                        MessageBox.Show("Нельзя поставить галочку, так как весь вес продукции рапределен в решении." + Environment.NewLine
+                        MessageBox.Show("Нельзя поставить галочку, так как весь вес продукции распределен в решении." + Environment.NewLine
                             +"Сначала отмените уже выбранное решение.");
                         return;
                     }
                     else if (!_isChecked && value
                             && ParentModel.ProductKind == ProductKind.ProductGroupPack
-                            && (!ParentModel.NeedsProductStates.Contains(ProductState) && ProductState != ProductState.Broke))
+                            && (!ParentModel.NeedsProductStates.Contains(ProductState) 
+                                && IsExistCheckedItem))
                     {
-                        MessageBox.Show("Нельзя поставить галочку, так как это групповая упаковка. Сначала распакуйте ГУ.");
+                        MessageBox.Show("Нельзя поставить галочку, так как для групповой упаковки может быть только одно решение. Сначала распакуйте ГУ.");
                         return;
                     }
                     else if (IsExistMoreTwoCheckedItem)
@@ -282,7 +284,7 @@ namespace Gamma.Models
                 }
                 else if (!_isChecked && value
                             && ParentModel.ProductKind == ProductKind.ProductGroupPack
-                            && ProductState == ProductState.Broke
+                            && !ParentModel.NeedsProductStates.Contains(ProductState)
                             && Quantity == 0)
                 {
                     Quantity = MaxQuantity;
@@ -376,18 +378,21 @@ namespace Gamma.Models
                     }
                 }
         */
-        private bool _isExistMoreTwoCheckedItem;
-        public bool IsExistMoreTwoCheckedItem
+
+        private byte? _countCheckedDecisionItem;
+        public byte? CountCheckedDecisionItem
         {
-            get { return _isExistMoreTwoCheckedItem; }
+            get { return _countCheckedDecisionItem; }
             set
             {
-                _isExistMoreTwoCheckedItem = value;
+                _countCheckedDecisionItem = value;
                 RaisePropertyChanged("IsExistMoreTwoCheckedItem");
                 if (!IsStopRefreshFields) RefreshReadOnlyIsChecked(IsReadOnly);
             }
         }
-
+        public bool IsExistMoreTwoCheckedItem => CountCheckedDecisionItem >= 2;
+        public bool IsExistCheckedItem => CountCheckedDecisionItem >= 1;
+        
         private bool _isExistForConversionOrRepackItem;
         public bool IsExistForConversionOrRepackItem
         {

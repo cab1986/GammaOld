@@ -221,7 +221,7 @@
                             </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                     </dx:DXTabItem>
-                    <dx:DXTabItem Header="Решение">
+                    <dx:DXTabItem Header="Решение" IsEnabled="{Binding IsEnabledDecisionTab}">
                         <ContentControl Content="{Binding DocBrokeDecision}" HorizontalAlignment="Left" />
                         <!--<dxlc:LayoutControl Orientation="Vertical">
                             <dxlc:LayoutItem Label="Продукция" LabelPosition="Top" VerticalAlignment="Stretch">

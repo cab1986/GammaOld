@@ -64,8 +64,6 @@ namespace Gamma.ViewModels
 
         //private DocBrokeViewModel ParentViewModel { get; set; }
 
-        public bool IsReadOnly { get; } = false;
-
         public bool IsVisibilityExtendedField =>
 #if (DEBUG)
     true;
@@ -346,7 +344,8 @@ namespace Gamma.ViewModels
                     //    .Sum(d => d.Value.DocWithdrawalSum);
                     var sumWithdrawalSumNeedsDecisionItem = EditBrokeDecisionItems.Where(d => NeedsProductStates.Contains(d.Key))
                         .Sum(d => d.Value.DocWithdrawalSum);
-                    var isExistMoreTwoCheckedItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && !NeedsProductStates.Contains(d.Key)) >= 2;
+                    //var isExistMoreTwoCheckedItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && !NeedsProductStates.Contains(d.Key)) >= 2;
+                    var countCheckedDecisionItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && !NeedsProductStates.Contains(d.Key));
                     var isExistGoodCheckedItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && (d.Key == ProductState.Good || d.Key == ProductState.InternalUsage || d.Key == ProductState.Limited)) > 0;
                     foreach (var editItem in EditBrokeDecisionItems)
                     {
@@ -357,7 +356,8 @@ namespace Gamma.ViewModels
                         // editItem.Value.Quantity + editItem.Value.DocWithdrawalSum + 
                         //(ProductQuantity - sumQuantityDecisionItem - sumWithdrawalSum);
                         //editItem.Value.IsExistMoreTwoCheckedItem = isExistMoreTwoCheckedItem;
-                        editItem.Value.IsExistMoreTwoCheckedItem = editItem.Value.IsChecked ? false : isExistMoreTwoCheckedItem;
+                        //editItem.Value.IsExistMoreTwoCheckedItem = editItem.Value.IsChecked ? false : isExistMoreTwoCheckedItem;
+                        editItem.Value.CountCheckedDecisionItem = editItem.Value.IsChecked ? null : (byte?)countCheckedDecisionItem;
                         if ((editItem.Key == ProductState.ForConversion || editItem.Key == ProductState.Repack))
                         {
                             editItem.Value.IsExistGoodItem = editItem.Value.IsChecked ? false : isExistGoodCheckedItem;
@@ -605,13 +605,18 @@ namespace Gamma.ViewModels
             int koeff = productKind != Gamma.ProductKind.ProductSpool && productKind != Gamma.ProductKind.ProductGroupPack ? 1 : 1000;
             UICommand result = null;
             UICommand okCommand = null;
-            decimal newQuantity;
+            decimal newQuantity = 0;
             string messageInvariant = (stateID == 2 ? " для утилизации " : " для нового продукта ");
             if (productKind == Gamma.ProductKind.ProductGroupPack)
             {
-                result = okCommand;
-                newQuantity = quantity;
-                    }
+                if (Functions.ShowMessageQuestion($"Групповая упаковка будет списана полностью ({(quantity * koeff).ToString()} кг.)! Вы уверены?"
+                    , "QUEST in CreateWithdrawal : GroupPack will be disposed of completely. docBrokeID = '" + DocBrokeID + "', productID = '" + productID + "'", DocBrokeID, productID)
+                    == MessageBoxResult.Yes)
+                {
+                    result = okCommand;
+                    newQuantity = quantity;
+                }
+            }
             else
             {
                 int quantityMax = (int)(quantity * koeff);
@@ -1169,10 +1174,12 @@ namespace Gamma.ViewModels
                                     }
                                 }*/
             }
-            var isExistMoreTwoCheckedItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && !NeedsProductStates.Contains(d.Key)) >= 2;
+            //var isExistMoreTwoCheckedItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && !NeedsProductStates.Contains(d.Key)) >= 2;
+            var countCheckedDecisionItem = EditBrokeDecisionItems.Count(d => d.Value.IsChecked && !NeedsProductStates.Contains(d.Key));
             foreach (var editItem in EditBrokeDecisionItems)
             {
-                editItem.Value.IsExistMoreTwoCheckedItem = editItem.Value.IsChecked ? false : isExistMoreTwoCheckedItem;
+                //editItem.Value.IsExistMoreTwoCheckedItem = editItem.Value.IsChecked ? false : isExistMoreTwoCheckedItem;
+                editItem.Value.CountCheckedDecisionItem = editItem.Value.IsChecked ? null : (byte?)countCheckedDecisionItem;
                 if ((productState == ProductState.Good || productState == ProductState.InternalUsage || productState == ProductState.Limited)
                     && (editItem.Key == ProductState.ForConversion || editItem.Key == ProductState.Repack))
                 {
