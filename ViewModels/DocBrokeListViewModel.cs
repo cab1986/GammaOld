@@ -135,7 +135,6 @@ namespace Gamma.ViewModels
         private void Find(RefreshBrokeListMessage msg)
         {
             Find();
-            SelectedDocBroke = DocBrokeList.FirstOrDefault(d => d.DocId == msg.DocID);
             Messenger.Default.Unregister<RefreshBrokeListMessage>(this, Find);
         }
 
@@ -180,6 +179,7 @@ namespace Gamma.ViewModels
                             UserCreate = d.UserCreate
                         });
                 }
+                SelectedDocBroke = DocBrokeList.FirstOrDefault(d => d.DocId == SelectedDocBroke?.DocId);            
             }    
         }
 
