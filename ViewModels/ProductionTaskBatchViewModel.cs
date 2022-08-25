@@ -248,7 +248,7 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
+            //DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
             if (CurrentView != null && ProductionTaskBatchID != null)
             {
                 DB.UploadProductionTaskBatchTo1C(ProductionTaskBatchID, GammaBase);
@@ -748,24 +748,24 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
-                /*var productionTask =
+                var productionTask =
                     gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
                         p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
                 GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null);
                 if (productionTask == null)
-                    return false;*/
+                    return false;
                 return false; // Всегда ложь для того, чтобы активировать задание надо было каждый раз вручную (productionTask.ActiveProductionTasks != null);
             }
         }
-
+        
         private void MakeProductionTaskActiveForPlace()
         {
             DB.AddLogMessageInformation("Выбран пункт Сделать активным задание по производству " + Number, "Start MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
                 gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
-	            var productionTask =
+                var productionTask =
 		            gammaBase.ProductionTasks.FirstOrDefault(
 			            p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
@@ -2046,10 +2046,13 @@ namespace Gamma.ViewModels
                 Functions.ShowMessageError("Вы не можете удалить простой другой смены", "Error DeleteDowntime in ProductionTaskBatchViewModel: sample is other shift", ProductionTaskBatchID);
                 return;
             }
-            if (Functions.ShowMessageQuestion(
-                "Вы уверены, что хотите удалить простой от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "?",
-                "QUEST DeleteDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID) != MessageBoxResult.Yes)
+            if (MessageBox.Show(
+                "Вы уверены, что хотите удалить простой от " + SelectedDowntime.Date + " смена " + SelectedDowntime.ShiftID + "?",
+                "Удаление простоев", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.Yes) != MessageBoxResult.Yes)
             {
+                //DB.AddLogMessageQuestion("Вы уверены, что хотите удалить простой от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "? : Ответ - Нет",
+                //"QUEST DeleteDowntime in ProductionTaskBatchViewModel: result != MessageBoxResult.Yes", ProductionTaskBatchID);
                 return;
             };
             string delResult = "";
