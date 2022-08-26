@@ -1771,5 +1771,22 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("ValidateSpoolBeforeSave", nomenclatureIDParameter, characteristicIDParameter, diameterParameter, weightParameter, formatParameter);
         }
+    
+        public virtual int MakeProductionTaskActive(Nullable<int> placeID, Nullable<System.Guid> productionTaskID, Nullable<System.DateTime> date)
+        {
+            var placeIDParameter = placeID.HasValue ?
+                new ObjectParameter("PlaceID", placeID) :
+                new ObjectParameter("PlaceID", typeof(int));
+    
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MakeProductionTaskActive", placeIDParameter, productionTaskIDParameter, dateParameter);
+        }
     }
 }

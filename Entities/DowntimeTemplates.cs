@@ -22,6 +22,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CEquipmentNodeID { get; set; }
         public Nullable<System.Guid> C1CEquipmentNodeDetailID { get; set; }
         public Nullable<int> Duration { get; set; }
+        public string Name { get; set; }
     
         public virtual C1CDowntimeTypeDetails C1CDowntimeTypeDetails { get; set; }
         public virtual C1CDowntimeTypes C1CDowntimeTypes { get; set; }

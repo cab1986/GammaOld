@@ -16,6 +16,7 @@ namespace Gamma.Entities
     {
         public int PlaceID { get; set; }
         public Nullable<System.Guid> ProductionTaskID { get; set; }
+        public Nullable<System.DateTime> StartDate { get; set; }
     
         public virtual ProductionTasks ProductionTasks { get; set; }
         public virtual Places Places { get; set; }

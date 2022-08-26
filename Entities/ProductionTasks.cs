@@ -24,6 +24,7 @@ namespace Gamma.Entities
             this.ProductionTaskConvertingSamples = new HashSet<ProductionTaskConvertingSamples>();
             this.DocRepack = new HashSet<DocRepack>();
             this.ProductionTaskDowntimes = new HashSet<ProductionTaskDowntimes>();
+            this.ProductionTasks1 = new HashSet<ProductionTasks>();
         }
     
         public System.Guid ProductionTaskID { get; set; }
@@ -39,6 +40,7 @@ namespace Gamma.Entities
         public Nullable<System.DateTime> ActualStartDate { get; set; }
         public Nullable<System.DateTime> ActualEndDate { get; set; }
         public Nullable<byte> ProductionTaskStateID { get; set; }
+        public Nullable<System.Guid> PreviousProductionTaskID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskRWCutting> ProductionTaskRWCutting { get; set; }
@@ -60,5 +62,8 @@ namespace Gamma.Entities
         public virtual ICollection<DocRepack> DocRepack { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProductionTaskDowntimes> ProductionTaskDowntimes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProductionTasks> ProductionTasks1 { get; set; }
+        public virtual ProductionTasks ProductionTasks2 { get; set; }
     }
 }

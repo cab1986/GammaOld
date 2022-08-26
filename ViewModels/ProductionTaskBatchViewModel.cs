@@ -42,7 +42,7 @@ namespace Gamma.ViewModels
             ShowProductCommand = new DelegateCommand<Guid>(ShowProduct);//, () => SelectedProductionTaskProduct != null);
             DeleteProdutCommand = new DelegateCommand(DeleteProduct, () => SelectedProductionTaskProduct != null);
             UploadTo1CCommand = new DelegateCommand(UploadTo1C, () => ProductionTaskStateID == (byte)ProductionTaskStates.InProduction);
-            Intervals = new List<string> { "Все", "За мою смену", "За последние сутки"};
+            Intervals = new List<string> { "Все", "За мою смену", "За последние сутки" };
             if (WorkSession.IsProductionPlace)
             {
                 Intervalid = 1;
@@ -153,7 +153,7 @@ namespace Gamma.ViewModels
                 var command = new BarCommand<object>(dnt => AddDowntime((AddDowntimeParameter)dnt))
                 {
                     Caption = template.C1CDowntimeTypes.Description.Substring(0, Math.Min(7, template.C1CDowntimeTypes.Description.Length))
-                                + (template.C1CDowntimeTypeDetails != null ? "__" + template.C1CDowntimeTypeDetails.Description.Substring(0,Math.Min(5, template.C1CDowntimeTypeDetails.Description.Length)) : "")
+                                + (template.C1CDowntimeTypeDetails != null ? "__" + template.C1CDowntimeTypeDetails.Description.Substring(0, Math.Min(5, template.C1CDowntimeTypeDetails.Description.Length)) : "")
                                 + (template.C1CEquipmentNodes != null ? "#" + template.C1CEquipmentNodes.Description.Substring(0, Math.Min(7, template.C1CEquipmentNodes.Description.Length)) : "")
                                 + (template.C1CEquipmentNodeDetails != null ? "__" + template.C1CEquipmentNodeDetails.Description.Substring(0, Math.Min(5, template.C1CEquipmentNodeDetails.Description.Length)) : "")
                                 + (template.Duration != null ? "#" + template.Duration.ToString() : "") + "  |",
@@ -233,7 +233,7 @@ namespace Gamma.ViewModels
                     {
                         delResult = "Недостаточно прав для удаления неполной паллеты";
                     }
-                    break;                    
+                    break;
             }
             if (delResult != "")
             {
@@ -248,7 +248,7 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            //DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
+            DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             if (CurrentView != null && ProductionTaskBatchID != null)
             {
                 DB.UploadProductionTaskBatchTo1C(ProductionTaskBatchID, GammaBase);
@@ -409,7 +409,7 @@ namespace Gamma.ViewModels
             }
         }
 
-        
+
         private bool _isProductionTaskActiveForPlace;
         public bool IsProductionTaskActiveForPlace
         {
@@ -449,8 +449,8 @@ namespace Gamma.ViewModels
         public SaveImplementedViewModel CurrentView
         {
             get { return _currentView; }
-            private set 
-            { 
+            private set
+            {
                 _currentView = value;
                 RaisePropertyChanged("CurrentView");
             }
@@ -460,8 +460,8 @@ namespace Gamma.ViewModels
         public DateTime? Date
         {
             get { return _date; }
-            set 
-            { 
+            set
+            {
                 _date = value;
                 RaisePropertyChanged("Date");
             }
@@ -504,8 +504,8 @@ namespace Gamma.ViewModels
         public string Number
         {
             get { return _number; }
-            set 
-            { 
+            set
+            {
                 _number = value;
                 RaisePropertyChanged("Number");
             }
@@ -562,24 +562,24 @@ namespace Gamma.ViewModels
 
         private BatchKinds _batchKind;
 
- /*       public ObservableCollection<Place> Places
-        {
-            get
-            {
-                return _places;
-            }
-            set
-            {
-                _places = value;
-                RaisePropertyChanged("Places");
-            }
-        }
-  * */
+        /*       public ObservableCollection<Place> Places
+               {
+                   get
+                   {
+                       return _places;
+                   }
+                   set
+                   {
+                       _places = value;
+                       RaisePropertyChanged("Places");
+                   }
+               }
+         * */
         public BatchKinds BatchKind
         {
             get { return _batchKind; }
-            set 
-            { 
+            set
+            {
                 _batchKind = value;
                 ChangeCurrentView(_batchKind);
             }
@@ -610,7 +610,7 @@ namespace Gamma.ViewModels
             }
             set
             {
-            	_partyControl = value;
+                _partyControl = value;
                 RaisePropertyChanged("PartyControl");
             }
         }
@@ -638,12 +638,12 @@ namespace Gamma.ViewModels
         private void GetProductionTaskInfo(Guid productionTaskBatchID)
         {
             var productionTaskBatch = (from pt in DB.GammaDbWithNoCheckConnection.ProductionTaskBatches.Include(pt => pt.ProductionTaskStates)
-                                  where pt.ProductionTaskBatchID == productionTaskBatchID
-                                  select pt).FirstOrDefault();
-//            ProductionTaskBatchID = productionTaskBatchID;
+                                       where pt.ProductionTaskBatchID == productionTaskBatchID
+                                       select pt).FirstOrDefault();
+            //            ProductionTaskBatchID = productionTaskBatchID;
             PartyControl = productionTaskBatch?.PartyControl ?? false;
             Number = productionTaskBatch?.Number;
-            Date = productionTaskBatch?.Date;         
+            Date = productionTaskBatch?.Date;
             Comment = productionTaskBatch?.Comment;
             ProductionTaskStateID = productionTaskBatch?.ProductionTaskStateID;
             //IsInProduction = ProductionTaskStateID != (byte) ProductionTaskStates.NeedsDecision;
@@ -652,7 +652,7 @@ namespace Gamma.ViewModels
             if (productionTaskBatch?.ProductionTaskStates != null)
                 IsActual = productionTaskBatch.ProductionTaskStates.IsActual;
             var place = (productionTaskBatch?.ProductionTasks.Where(p => p.PlaceID == WorkSession.PlaceID).FirstOrDefault()?.Places)
-                     ?? (productionTaskBatch != null && productionTaskBatch.ProductionTasks.Any(p => (p.PlaceID == null) && (p.PlaceGroupID == (int?)WorkSession.PlaceGroup)) ? WorkSession.Places.FirstOrDefault(pl => pl.PlaceID == WorkSession.PlaceID) : (Places) null);
+                     ?? (productionTaskBatch != null && productionTaskBatch.ProductionTasks.Any(p => (p.PlaceID == null) && (p.PlaceGroupID == (int?)WorkSession.PlaceGroup)) ? WorkSession.Places.FirstOrDefault(pl => pl.PlaceID == WorkSession.PlaceID) : (Places)null);
             IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
             IsEnabledRepack = place?.IsEnabledRepackInProductionTask ?? true;
             IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
@@ -685,7 +685,7 @@ namespace Gamma.ViewModels
                 if (currentView?.ProductionTaskId != null && currentView?.ProductionTaskId != Guid.Empty)
                 {
                     if ((WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService) == null)
-                        CheckGroupAndTransportPackLabel((Guid)currentView?.ProductionTaskId, WorkSession.EndpointAddressOnMailService); 
+                        CheckGroupAndTransportPackLabel((Guid)currentView?.ProductionTaskId, WorkSession.EndpointAddressOnMailService);
                     else
                         CheckGroupAndTransportPackLabel((Guid)currentView?.ProductionTaskId, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService);
 
@@ -758,7 +758,7 @@ namespace Gamma.ViewModels
                 return false; // Всегда ложь для того, чтобы активировать задание надо было каждый раз вручную (productionTask.ActiveProductionTasks != null);
             }
         }
-        
+
         private void MakeProductionTaskActiveForPlace()
         {
             DB.AddLogMessageInformation("Выбран пункт Сделать активным задание по производству " + Number, "Start MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel", ProductionTaskBatchID);
@@ -766,14 +766,14 @@ namespace Gamma.ViewModels
             {
                 gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
                 var productionTask =
-		            gammaBase.ProductionTasks.FirstOrDefault(
-			            p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
+                    gammaBase.ProductionTasks.FirstOrDefault(
+                        p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
-	            if (productionTask == null)
+                if (productionTask == null)
                 {
                     DB.AddLogMessageInformation("Не найдено задание по производству " + Number + " для передела", "Error MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel: productionTask == null", ProductionTaskBatchID);
                     return;
-	            }
+                }
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
                 CheckGroupAndTransportPackLabel(productionTask.ProductionTaskID, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService);
@@ -781,7 +781,7 @@ namespace Gamma.ViewModels
                 {
                     try
                     {
-                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddressOnGroupPackService))
+                        using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnGroupPackService))
                         {
                             if (!(bool)client.ActivateProductionTask(productionTask.ProductionTaskID, WorkSession.PlaceID, 2))
                             {
@@ -831,7 +831,7 @@ namespace Gamma.ViewModels
                                 c => c.C1CCharacteristicID == GammaBase.ProductionTasks.Where(p => p.ProductionTaskID == productionTaskID).Select(p => p.C1CCharacteristicID).FirstOrDefault())
                                 .Select(c => c.C1CMeasureUnitsPallet.Coefficient).First() ?? 9999);
 
-                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете","Кол-во, рул/пачка", 1, baseQuantity);
+                var model = new SetQuantityDialogModel("Укажите количество рулончиков или пачек(для салфеток) в неполной паллете", "Кол-во, рул/пачка", 1, baseQuantity);
                 var okCommand = new UICommand()
                 {
                     Caption = "OK",
@@ -871,7 +871,7 @@ namespace Gamma.ViewModels
         }
 
         //Создание нового продукта
-        private void CreateNewProduct(int? baseQuantity )
+        private void CreateNewProduct(int? baseQuantity)
         {
             DB.AddLogMessageInformation("Начато создание нового продукта: кол-во - " + baseQuantity.ToString(), "Start CreateNewProduct in ProductionTaskBatchViewModel: baseQuantity - " + baseQuantity.ToString(), ProductionTaskBatchID);
             using (var gammaBase = DB.GammaDb)
@@ -929,15 +929,15 @@ namespace Gamma.ViewModels
                                 if (docProduction != null && docProduction.ShiftID == WorkSession.ShiftID && !docProduction.IsConfirmed)
                                 {
                                     var firstOrDefault = gammaBase.DocProductionProducts.FirstOrDefault(d => d.DocID == docProduction.DocID);
-                                     if (firstOrDefault !=
-                                            null)
-                                            productId =
-                                                firstOrDefault
-                                                    .ProductID;
-                                     else
-                                     {
-                                         break;
-                                     }
+                                    if (firstOrDefault !=
+                                           null)
+                                        productId =
+                                            firstOrDefault
+                                                .ProductID;
+                                    else
+                                    {
+                                        break;
+                                    }
                                     Functions.ShowMessageInformation("Предыдущий тамбур не подтвержден. Он будет открыт для редактирования", "CreateNewProduct in ProductionTaskBatchViewModel: previous spool is not confirmed", ProductionTaskBatchID);
                                     MessageManager.OpenDocProduct(DocProductKinds.DocProductSpool, productId);
                                     return;
@@ -965,7 +965,7 @@ namespace Gamma.ViewModels
                         var sourceIds = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
                         if (
                             gammaBase.Products.Where(p => sourceIds.Contains(p.ProductID))
-                                .Any(p => p.StateID == (int) ProductState.Limited))
+                                .Any(p => p.StateID == (int)ProductState.Limited))
                         {
                             Functions.ShowMessageInformation(
                                 "Исходные тамбура ограниченно годны. Возможно потребуется принятие решения по выпущенной продукции.",
@@ -1075,8 +1075,8 @@ namespace Gamma.ViewModels
                             else
                             {
                                 var productItem = product.ProductPallets.ProductItems.First();
-                                productItem.C1CNomenclatureID = (Guid) productionTask.C1CNomenclatureID;
-                                productItem.C1CCharacteristicID = (Guid) productionTask.C1CCharacteristicID;
+                                productItem.C1CNomenclatureID = (Guid)productionTask.C1CNomenclatureID;
+                                productItem.C1CCharacteristicID = (Guid)productionTask.C1CCharacteristicID;
                                 productItem.Quantity = baseQuantity;
                             }
                             doc.ShiftID = WorkSession.ShiftID;
@@ -1153,45 +1153,45 @@ namespace Gamma.ViewModels
                         }
                         var sourceSpools = gammaBase.GetActiveSourceSpools(WorkSession.PlaceID).ToList();
                         foreach (var spoolId in sourceSpools.Where(s => s != null))
+                        {
+                            var docWithdrawalProduct =
+                                gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal).Include(d => d.DocWithdrawal.Docs)
+                                .Include(d => d.DocWithdrawal.DocProduction)
+                                .FirstOrDefault(d => d.ProductID == spoolId
+                                                    && ((d.Quantity == null && (d.CompleteWithdrawal == null || d.CompleteWithdrawal == false))
+                                                        || (d.Quantity != null
+                                                            && gammaBase.DocCloseShiftRemainders.Any(r => r.ProductID == spoolId && (r.IsSourceProduct ?? false) && r.DocWithdrawalID == d.DocID && r.DocCloseShifts.PlaceID == WorkSession.PlaceID && r.DocCloseShifts.ShiftID == WorkSession.ShiftID
+                                                                    && r.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime)))
+                                                                    && r.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime)))))));
+                            if (docWithdrawalProduct == null)
                             {
-                                var docWithdrawalProduct =
-                                    gammaBase.DocWithdrawalProducts.Include(d => d.DocWithdrawal).Include(d => d.DocWithdrawal.Docs)
-                                    .Include(d => d.DocWithdrawal.DocProduction)
-                                    .FirstOrDefault(d => d.ProductID == spoolId
-                                                        && ((d.Quantity == null && (d.CompleteWithdrawal == null || d.CompleteWithdrawal == false)) 
-                                                            || (d.Quantity != null 
-                                                                && gammaBase.DocCloseShiftRemainders.Any(r => r.ProductID == spoolId && (r.IsSourceProduct ?? false) && r.DocWithdrawalID == d.DocID && r.DocCloseShifts.PlaceID == WorkSession.PlaceID && r.DocCloseShifts.ShiftID == WorkSession.ShiftID 
-                                                                        && r.DocCloseShifts.Date >= SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime))) 
-                                                                        && r.DocCloseShifts.Date <= SqlFunctions.DateAdd("hh", 1, DB.GetShiftEndTime((DateTime)SqlFunctions.DateAdd("hh", -1, DB.CurrentDateTime)))))));
-                                if (docWithdrawalProduct == null)
+                                var docWithdrawalid = SqlGuidUtil.NewSequentialid();
+                                docWithdrawalProduct = new DocWithdrawalProducts
                                 {
-                                    var docWithdrawalid = SqlGuidUtil.NewSequentialid();
-                                    docWithdrawalProduct = new DocWithdrawalProducts
+                                    DocID = docWithdrawalid,
+                                    ProductID = (Guid)spoolId,
+                                    DocWithdrawal = new DocWithdrawal
                                     {
                                         DocID = docWithdrawalid,
-                                        ProductID = (Guid)spoolId,
-                                        DocWithdrawal = new DocWithdrawal
+                                        OutPlaceID = WorkSession.PlaceID,
+                                        Docs = new Docs()
                                         {
-                                            DocID =  docWithdrawalid,
-                                            OutPlaceID = WorkSession.PlaceID,
-                                            Docs = new Docs()
-                                            {
-                                                DocID = docWithdrawalid,
-                                                Date = currentDateTime,
-                                                DocTypeID = (int)DocTypes.DocWithdrawal,
-                                                PlaceID = WorkSession.PlaceID,
-                                                UserID = WorkSession.UserID,
-                                                ShiftID = WorkSession.ShiftID,
-                                                PrintName = WorkSession.PrintName,
-                                                IsConfirmed = false
-                                            }
+                                            DocID = docWithdrawalid,
+                                            Date = currentDateTime,
+                                            DocTypeID = (int)DocTypes.DocWithdrawal,
+                                            PlaceID = WorkSession.PlaceID,
+                                            UserID = WorkSession.UserID,
+                                            ShiftID = WorkSession.ShiftID,
+                                            PrintName = WorkSession.PrintName,
+                                            IsConfirmed = false
                                         }
-                                    };
-                                    gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
-                                }
-                                if (docWithdrawalProduct.DocWithdrawal.DocProduction == null) docWithdrawalProduct.DocWithdrawal.DocProduction = new List<DocProduction>();
-                                docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
+                                    }
+                                };
+                                gammaBase.DocWithdrawalProducts.Add(docWithdrawalProduct);
                             }
+                            if (docWithdrawalProduct.DocWithdrawal.DocProduction == null) docWithdrawalProduct.DocWithdrawal.DocProduction = new List<DocProduction>();
+                            docWithdrawalProduct.DocWithdrawal.DocProduction.Add(doc.DocProduction);
+                        }
                         gammaBase.SaveChanges();
                         DB.AddLogMessageInformation("Успешно создан новый продукт ProductID", "End CreateNewProduct in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID, product.ProductID);
 #if (!DEBUG)
@@ -1203,10 +1203,10 @@ namespace Gamma.ViewModels
             }
         }
         private bool? _statusApplicator;
-        public bool? StatusApplicator 
+        public bool? StatusApplicator
         {
             get { return _statusApplicator; }
-            private set 
+            private set
             {
                 _statusApplicator = value;
                 ChangeStatusApplicatorText = WorkSession.UseApplicator ? (value != null) ? (bool)value ? "Остановить печать ГЭ" : "Запустить печать ГЭ" : "Обновить статус принтера ГЭ" : "";
@@ -1220,7 +1220,7 @@ namespace Gamma.ViewModels
             {
                 if (WorkSession.UseApplicator && WorkSession.EndpointAddressOnGroupPackService != null)
                 {
-                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName,WorkSession.EndpointAddressOnGroupPackService))
+                    using (var client = new GammaService.PrinterServiceClient(WorkSession.EndpointConfigurationName, WorkSession.EndpointAddressOnGroupPackService))
                     {
                         StatusApplicator = client.GetPrinterStatus(WorkSession.PlaceID, 2);
                     }
@@ -1311,7 +1311,7 @@ namespace Gamma.ViewModels
         {
             get
             {
-            	return _selectedProductionTaskProduct;
+                return _selectedProductionTaskProduct;
             }
             set
             {
@@ -1349,7 +1349,7 @@ namespace Gamma.ViewModels
                 case 1:
                     ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                               where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= dBCurrentDateTime.AddHours(-10)//SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
+                                                                                              where taskProducts.ShiftID == WorkSession.ShiftID && taskProducts.Date >= dBCurrentDateTime.AddHours(-10)//SqlFunctions.DateAdd("hh", -1, DB.GetShiftBeginTime(DB.CurrentDateTime))
                                                                                               select new ProductInfo
                                                                                               {
                                                                                                   DocID = taskProducts.DocID,
@@ -1371,7 +1371,7 @@ namespace Gamma.ViewModels
                 case 2:
                     ProductionTaskProducts = new ItemsChangeObservableCollection<ProductInfo>(from taskProducts in
                                                                                GammaBase.GetBatchProducts(ProductionTaskBatchID)
-                                                                               where taskProducts.Date >= dBCurrentDateTime.AddHours(-24)//DateTime.Now.AddHours(-24)
+                                                                                              where taskProducts.Date >= dBCurrentDateTime.AddHours(-24)//DateTime.Now.AddHours(-24)
                                                                                               select new ProductInfo
                                                                                               {
                                                                                                   DocID = taskProducts.DocID,
@@ -1412,7 +1412,7 @@ namespace Gamma.ViewModels
                                                                                               });
                     break;
             }
-            }
+        }
         private void ShowProduct(Guid productID)
         {
             DB.AddLogMessageInformation("Выбран пункт Открыть продукт ProductID",
@@ -1455,7 +1455,7 @@ namespace Gamma.ViewModels
                 if (view != null)
                 {
                     view.MadeQuantity =
-                        _productionTaskProducts.Where(p => p.IsConfirmed).Sum(p => p.Quantity??0);
+                        _productionTaskProducts.Where(p => p.IsConfirmed).Sum(p => p.Quantity ?? 0);
                 }
                 RaisePropertyChanged("ProductionTaskProducts");
             }
@@ -1504,7 +1504,7 @@ namespace Gamma.ViewModels
                     IsEditingComment = (!IsReadOnly) || ProductionTaskStateID == (byte)ProductionTaskStates.OnEditing;
                 }
                 else
-                    if (!(_productionTaskStateID == (byte)ProductionTaskStates.OnEditing && value == (byte)ProductionTaskStates.InProduction) && !(_productionTaskStateID == (byte)ProductionTaskStates.InProduction && value == (byte)ProductionTaskStates.OnEditing) && ((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && (_productionTaskStateID != value && value != (byte) ProductionTaskStates.Completed)))
+                    if (!(_productionTaskStateID == (byte)ProductionTaskStates.OnEditing && value == (byte)ProductionTaskStates.InProduction) && !(_productionTaskStateID == (byte)ProductionTaskStates.InProduction && value == (byte)ProductionTaskStates.OnEditing) && ((_productionTaskStateID == (byte)ProductionTaskStates.InProduction || _productionTaskStateID == (byte)ProductionTaskStates.Completed) && (_productionTaskStateID != value && value != (byte)ProductionTaskStates.Completed)))
                 {
                     if (value != null) //для того, чтобы при нажатии кнопки Назад (когда окно открытовнутри основного окна, а не отдельно) не переходило в этот блок. Падает при MessageBox, так как окна уже не существует.
                     {
@@ -1552,7 +1552,7 @@ namespace Gamma.ViewModels
                 }
                 RaisePropertyChanged("IsEditingComment");
             }
-        }           
+        }
 
         public Dictionary<byte, string> TaskStates { get; set; }
         public Dictionary<byte, string> ProcessModels { get; set; }
@@ -1685,18 +1685,18 @@ namespace Gamma.ViewModels
         {
             Samples = new ItemsChangeObservableCollection<Sample>
                 (from sample in GammaBase.GetBatchSamples(ProductionTaskBatchID, SampleIntervalid)
-                    select new Sample
-                    {
-                        ProductionTaskConvertingSampleID = sample.ProductionTaskConvertingSampleID,
-                        NomenclatureID = sample.C1CNomenclatureID,
-                        CharacteristicID = sample.C1CCharacteristicID,
-                        Date = sample.Date,
-                        ShiftID = sample.ShiftID,
-                        NomenclatureName = sample.NomenclatureName,
-                        Quantity = sample.Quantity,
-                        MeasureUnitId = sample.C1CMeasureUnitID,
-                        MeasureUnit = sample.MeasureUnitName
-                    });
+                 select new Sample
+                 {
+                     ProductionTaskConvertingSampleID = sample.ProductionTaskConvertingSampleID,
+                     NomenclatureID = sample.C1CNomenclatureID,
+                     CharacteristicID = sample.C1CCharacteristicID,
+                     Date = sample.Date,
+                     ShiftID = sample.ShiftID,
+                     NomenclatureName = sample.NomenclatureName,
+                     Quantity = sample.Quantity,
+                     MeasureUnitId = sample.C1CMeasureUnitID,
+                     MeasureUnit = sample.MeasureUnitName
+                 });
         }
         private void ShowSample()
         {
@@ -1856,7 +1856,7 @@ namespace Gamma.ViewModels
                      DocBrokeID = Repack.DocBrokeID,
                      DocBrokeNumber = Repack.DocBrokeNumber,
                      ProductKind = (ProductKind)Repack.ProductKindID
-        });            
+                 });
         }
         private void ShowRepack()
         {
@@ -1866,7 +1866,7 @@ namespace Gamma.ViewModels
 
         private void AddRepack()
         {
-            DB.AddLogMessageError("Выбран пункт Добавить переупаковку в Задании на производство "+ Number, "Start AddRepack in ProductionTaskBatchViewModel", ProductionTaskBatchID);
+            DB.AddLogMessageError("Выбран пункт Добавить переупаковку в Задании на производство " + Number, "Start AddRepack in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             MessageManager.OpenDocRepack(ProductionTaskBatchID);
             RefreshRepack();
         }
@@ -1974,13 +1974,13 @@ namespace Gamma.ViewModels
 
         private void AddDowntime()
         {
-            AddDowntime(null,null);
+            AddDowntime(null, null);
         }
 
         private void AddDowntime(Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null)
         {
             DB.AddLogMessageError("Выбран пункт Добавить простой в Задании на производство " + Number, "Start AddDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID);
-            var model = new AddDowntimeDialogModel(PlaceID ?? WorkSession.PlaceID,downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
+            var model = new AddDowntimeDialogModel(PlaceID ?? WorkSession.PlaceID, downtimeTypeID, downtimeTypeDetailID, equipmentNodeID, equipmentNodeDetailID, duration, comment);
             var setCurrentTimeEndAndOkCommand = new UICommand()
             {
                 Caption = "Сохранить текущим временем окончания",
@@ -1991,27 +1991,27 @@ namespace Gamma.ViewModels
             x => model.IsSaveEnabled && (model.DateEnd - model.DateBegin).TotalMinutes == 0),
             };
             var okCommand = new UICommand()
-             {
-                 Caption = "Сохранить",
-                 IsCancel = false,
-                 IsDefault = true,
-                 Command = new DelegateCommand<CancelEventArgs>(
+            {
+                Caption = "Сохранить",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
              x => DebugFunc(),
              x => model.IsSaveEnabled && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14 * 60),
-             };
-             var cancelCommand = new UICommand()
-             {
-                 Id = MessageBoxResult.Cancel,
-                 Caption = "Отмена",
-                 IsCancel = true,
-                 IsDefault = false,
-             };
-             var dialogService = GetService<IDialogService>("AddDowntimeDialog");
-             var result = dialogService.ShowDialog(
-                 dialogCommands: new List<UICommand>() { setCurrentTimeEndAndOkCommand, okCommand, cancelCommand },
-                 title: "Добавление простоя",
-                 viewModel: model);
-             if (result == okCommand || result == setCurrentTimeEndAndOkCommand)
+            };
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("AddDowntimeDialog");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { setCurrentTimeEndAndOkCommand, okCommand, cancelCommand },
+                title: "Добавление простоя",
+                viewModel: model);
+            if (result == okCommand || result == setCurrentTimeEndAndOkCommand)
             //var dialog = new AddDowntimeDialog();
             //dialog.ShowDialog();
             //if (dialog.DialogResult == true)
@@ -2041,18 +2041,15 @@ namespace Gamma.ViewModels
         private void DeleteDowntime()
         {
             if (SelectedDowntime == null) return;
-            if (WorkSession.ShiftID != 0 && (SelectedDowntime.ShiftID != WorkSession.ShiftID || SelectedDowntime.PlaceGroupID != (int)WorkSession.PlaceGroup ))
+            if (WorkSession.ShiftID != 0 && (SelectedDowntime.ShiftID != WorkSession.ShiftID || SelectedDowntime.PlaceGroupID != (int)WorkSession.PlaceGroup))
             {
                 Functions.ShowMessageError("Вы не можете удалить простой другой смены", "Error DeleteDowntime in ProductionTaskBatchViewModel: sample is other shift", ProductionTaskBatchID);
                 return;
             }
-            if (MessageBox.Show(
+            if (Functions.ShowMessageQuestion(
                 "Вы уверены, что хотите удалить простой от " + SelectedDowntime.Date + " смена " + SelectedDowntime.ShiftID + "?",
-                "Удаление простоев", MessageBoxButton.YesNo, MessageBoxImage.Question,
-                MessageBoxResult.Yes) != MessageBoxResult.Yes)
+                "QUEST DeleteDowntime in ProductionTaskBatchViewModel", ProductionTaskBatchID) != MessageBoxResult.Yes)
             {
-                //DB.AddLogMessageQuestion("Вы уверены, что хотите удалить простой от " + SelectedSample.Date + " смена " + SelectedSample.ShiftID + "? : Ответ - Нет",
-                //"QUEST DeleteDowntime in ProductionTaskBatchViewModel: result != MessageBoxResult.Yes", ProductionTaskBatchID);
                 return;
             };
             string delResult = "";
@@ -2071,7 +2068,7 @@ namespace Gamma.ViewModels
             }
             else
             {
-                DB.AddLogMessageError("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
+                DB.AddLogMessageInformation("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
                 RefreshDowntime();
             }
         }

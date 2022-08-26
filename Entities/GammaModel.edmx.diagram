@@ -468,6 +468,7 @@
         <EntityTypeShape EntityType="GammaModel.vDocBroke" Width="1.5" PointX="11.375" PointY="19.75" />
         <AssociationConnector Association="GammaModel.FK_DocBrokeProducts_Places1" />
         <EntityTypeShape EntityType="GammaModel.vNomenclatureSGBProperties" Width="1.5" PointX="19.375" PointY="18.75" />
+        <AssociationConnector Association="GammaModel.FK_PeviousProductionTasks_ProductionTasks" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
