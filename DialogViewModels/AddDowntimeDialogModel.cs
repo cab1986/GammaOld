@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using Gamma.Models;
 using System.Linq;
-
+using System.Windows;
 
 namespace Gamma.DialogViewModels
 {
@@ -17,7 +17,7 @@ namespace Gamma.DialogViewModels
             var curDate = DateTime.Now;
             DateBegin = curDate;//new DateTime(curDate.Year, curDate.Month, 1).AddMonths(-1);
             DateEnd = curDate;//new DateTime(curDate.Year, curDate.Month, 1).AddSeconds(-1);
-
+            Name = "1";
             GammaBase = DB.GammaDb;
             Types = (from p in GammaBase.C1CDowntimeTypes
                                        where ((!p.C1CDeleted ?? true) && (!p.Folder ?? true))
@@ -73,6 +73,75 @@ namespace Gamma.DialogViewModels
             if (comment != null) Comment = comment;
             if (duration != null) DateEnd = DateBegin.AddMinutes((int)duration);
         }
+
+        public AddDowntimeDialogModel(Guid? DowntimeTemplateID, int? placeID, Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string name = null, string comment = null) : this(placeID)
+        {
+            if (placeID != null) PlaceID = placeID;
+            if (downtimeTypeID != null) TypeID = (Guid)downtimeTypeID;
+            if (downtimeTypeDetailID != null) TypeDetailID = (Guid)downtimeTypeDetailID;
+            if (equipmentNodeID != null) EquipmentNodeID = (Guid)equipmentNodeID;
+            if (equipmentNodeDetailID != null) EquipmentNodeDetailID = (Guid)equipmentNodeDetailID;
+            if (duration != null) Duration = duration;
+            if (name != null) Name = name;
+            if (comment != null) Comment = comment;
+            Places = (from p in WorkSession.Places
+                      where (p.IsProductionPlace ?? false)
+                      select new
+                      Place
+                      {
+                          PlaceName = p.Name,
+                          PlaceID = p.PlaceID
+                      }
+                    ).ToList();
+            VisiblityChangeDT = Visibility.Visible;
+            VisiblityAddDT = Visibility.Collapsed;
+            EnabledChangeDuration = true;
+        }
+        [Required(ErrorMessage = @"Поле Наименование не может быть пустым")]
+        public string Name { get; set; }
+        public List<Place> Places { get; set; }
+        private int? _placeID;
+
+        public int? PlaceID
+        {
+            get { return _placeID; }
+            set
+            {
+                _placeID = value;
+                RaisePropertyChanged("PlaceID");
+            }
+        }
+        private Visibility _visiblityChangeDT = Visibility.Collapsed;
+        public Visibility VisiblityChangeDT
+        {
+            get { return _visiblityChangeDT; }
+            set
+            {
+                _visiblityChangeDT = value;
+                RaisePropertyChanged("VisiblityChangeDT");
+            }
+        }
+        private Visibility _visiblityAddDT = Visibility.Visible;
+        public Visibility VisiblityAddDT
+        {
+            get { return _visiblityAddDT; }
+            set
+            {
+                _visiblityAddDT = value;
+                RaisePropertyChanged("VisiblityAddDT");
+            }
+        }
+        public bool EnabledChangeDuration
+        {
+            get { return _enabledChangeDuration; }
+            set
+            {
+                _enabledChangeDuration = value;
+                RaisePropertyChanged("EnabledChangeDuration");
+            }
+        }
+        private bool _enabledChangeDuration = false;
+
 
         public List<DowntimeType> Types { get; private set; }
         public List<DowntimeType> TypeDetails { get; private set; }

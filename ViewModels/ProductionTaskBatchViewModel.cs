@@ -152,11 +152,7 @@ namespace Gamma.ViewModels
             {
                 var command = new BarCommand<object>(dnt => AddDowntime((AddDowntimeParameter)dnt))
                 {
-                    Caption = template.C1CDowntimeTypes.Description.Substring(0, Math.Min(7, template.C1CDowntimeTypes.Description.Length))
-                                + (template.C1CDowntimeTypeDetails != null ? "__" + template.C1CDowntimeTypeDetails.Description.Substring(0, Math.Min(5, template.C1CDowntimeTypeDetails.Description.Length)) : "")
-                                + (template.C1CEquipmentNodes != null ? "#" + template.C1CEquipmentNodes.Description.Substring(0, Math.Min(7, template.C1CEquipmentNodes.Description.Length)) : "")
-                                + (template.C1CEquipmentNodeDetails != null ? "__" + template.C1CEquipmentNodeDetails.Description.Substring(0, Math.Min(5, template.C1CEquipmentNodeDetails.Description.Length)) : "")
-                                + (template.Duration != null ? "#" + template.Duration.ToString() : "") + "  |",
+                    Caption = template.Name + "  |",
                     CommandParameter = new AddDowntimeParameter
                     {
                         DowntimeTypeID = template.C1CDowntimeTypeID,

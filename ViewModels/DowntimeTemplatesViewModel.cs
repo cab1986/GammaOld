@@ -8,6 +8,9 @@ using DevExpress.Mvvm;
 using Gamma.Entities;
 using Gamma.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Gamma.DialogViewModels;
+using System.ComponentModel;
 
 namespace Gamma.ViewModels
 {
@@ -19,6 +22,7 @@ namespace Gamma.ViewModels
         public DowntimeTemplatesViewModel()
         {
             AddDowntimeTemplateCommand = new DelegateCommand(AddDowntimeTemplate, () => DowntimeTypeID != null);
+            ChangeDowntimeTemplateCommand = new DelegateCommand(ChangeDowntimeTemplate, () => SelectedDowntimeTemplate != null);
             DeleteDowntimeTemplateCommand = new DelegateCommand(DeleteDowntimeTemplate, () => SelectedDowntimeTemplate != null);
             RefreshDowntimeTemplates();
             Bars.Add(ReportManager.GetReportBar("DowntimeTemplatesList", VMID));
@@ -95,19 +99,75 @@ namespace Gamma.ViewModels
 
         private void AddDowntimeTemplate()
         {
-            var DowntimeTemplate = new DowntimeTemplates()
+            if (Name != null)
             {
-                DowntimeTemplateID = SqlGuidUtil.NewSequentialid(),
-                PlaceID = (int)PlaceID,
-                C1CDowntimeTypeID = DowntimeTypeID,
-                C1CDowntimeTypeDetailID = DowntimeTypeDetailID,
-                C1CEquipmentNodeID = EquipmentNodeID,
-                C1CEquipmentNodeDetailID = EquipmentNodeDetailID,
-                Comment = Comment,
-                Duration = Duration
+                var DowntimeTemplate = new DowntimeTemplates()
+                {
+                    DowntimeTemplateID = SqlGuidUtil.NewSequentialid(),
+                    Name = Name,
+                    PlaceID = (int)PlaceID,
+                    C1CDowntimeTypeID = DowntimeTypeID,
+                    C1CDowntimeTypeDetailID = DowntimeTypeDetailID,
+                    C1CEquipmentNodeID = EquipmentNodeID,
+                    C1CEquipmentNodeDetailID = EquipmentNodeDetailID,
+                    Comment = Comment,
+                    Duration = Duration
+                };
+                GammaBase.DowntimeTemplates.Add(DowntimeTemplate);
+                GammaBase.SaveChanges();
+                RefreshDowntimeTemplates();
+            }
+            else MessageBox.Show("Поле наименование не должно быть пустым");
+        }
+
+        private void DebugFunc()
+        {
+            Debug.Print("Кол-во задано");
+        }
+
+        private void ChangeDowntimeTemplate()
+        {
+            //MessageBox.Show("Выбрано" + SelectedDowntimeTemplate.DowntimeTemplateID.ToString(), SelectedDowntimeTemplate.Name);
+            if (SelectedDowntimeTemplate == null) return;
+            var model = new AddDowntimeDialogModel(SelectedDowntimeTemplate.DowntimeTemplateID, SelectedDowntimeTemplate.PlaceID, SelectedDowntimeTemplate.DowntimeTypeID, SelectedDowntimeTemplate.DowntimeTypeDetailID, SelectedDowntimeTemplate.EquipmentNodeID, SelectedDowntimeTemplate.EquipmentNodeDetailID, SelectedDowntimeTemplate.Duration, SelectedDowntimeTemplate.Name, SelectedDowntimeTemplate.Comment);
+            var okCommand = new UICommand()
+            {
+                Caption = "Сохранить",
+                IsCancel = false,
+                IsDefault = true,
+                Command = new DelegateCommand<CancelEventArgs>(
+                    x => DebugFunc(),
+             x => model.IsSaveEnabled),
             };
-            GammaBase.DowntimeTemplates.Add(DowntimeTemplate);
-            GammaBase.SaveChanges();
+            var cancelCommand = new UICommand()
+            {
+                Id = MessageBoxResult.Cancel,
+                Caption = "Отмена",
+                IsCancel = true,
+                IsDefault = false,
+            };
+            var dialogService = GetService<IDialogService>("AddDowntimeDialog");
+            var result = dialogService.ShowDialog(
+                dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                title: "Изменение простоя",
+                viewModel: model);
+            if (result == okCommand)
+            {
+
+                var DowntimeTemplate = GammaBase.DowntimeTemplates.Find(SelectedDowntimeTemplate.DowntimeTemplateID);
+
+                DowntimeTemplate.Name = model.Name;
+                DowntimeTemplate.PlaceID = (int)model.PlaceID;
+                DowntimeTemplate.C1CDowntimeTypeID = model.TypeID;
+                DowntimeTemplate.C1CDowntimeTypeDetailID = model.TypeDetailID;
+                DowntimeTemplate.C1CEquipmentNodeID = model.EquipmentNodeID;
+                DowntimeTemplate.C1CEquipmentNodeDetailID = model.EquipmentNodeDetailID;
+                DowntimeTemplate.Comment = model.Comment;
+                DowntimeTemplate.Duration = model.Duration;
+
+                GammaBase.SaveChanges();
+            }
+
             RefreshDowntimeTemplates();
         }
 
@@ -134,6 +194,7 @@ namespace Gamma.ViewModels
                 .Select(p => new DowntimeTemplate
                 {
                     DowntimeTemplateID = p.DowntimeTemplateID,
+                    Name = p.Name,
                     PlaceID = p.PlaceID,
                     PlaceName = p.Places.Name,
                     DowntimeTypeID = p.C1CDowntimeTypeID,
@@ -153,6 +214,8 @@ namespace Gamma.ViewModels
 
         public string Comment { get; set; }
 
+        public string Name { get; set; }
+
         public int? Duration { get; set; }
 
         public List<Place> Places { get; set; }
@@ -165,6 +228,7 @@ namespace Gamma.ViewModels
         public List<EquipmentNode> EquipmentNodeDetailsFiltered { get; private set; }
 
         public DelegateCommand AddDowntimeTemplateCommand { get; set; }
+        public DelegateCommand ChangeDowntimeTemplateCommand { get; set; }
         public DelegateCommand DeleteDowntimeTemplateCommand { get; private set; }
 
         private int? _placeID;

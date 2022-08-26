@@ -9,7 +9,7 @@
              xmlns:dialogViewModels="clr-namespace:Gamma.DialogViewModels"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="400"
+             d:DesignHeight="480" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance Type=dialogViewModels:AddDowntimeDialogModel, IsDesignTimeCreatable=False}">
 
     <Grid>
@@ -17,10 +17,16 @@
             <RowDefinition Height="86"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="70"/>
-            <RowDefinition Height="32"/>
+            <!--<RowDefinition Height="32"/>-->
         </Grid.RowDefinitions>
         <dxlc:LayoutControl Name="lcDate" Grid.Row="0" Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
             <dxlc:LayoutGroup Header="Период простоя" View="GroupBox" Margin="-12">
+                <dxlc:LayoutItem Label="Наименование" LabelPosition="Top" Visibility="{Binding VisiblityChangeDT}">
+                    <dxe:TextEdit Name="EdtName" EditValue="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Visibility="{Binding VisiblityChangeDT}">
+                    <dxe:ComboBoxEdit Name="EdtPlaces" ItemsSource="{Binding Places}" EditValue="{Binding PlaceID, UpdateSourceTrigger=PropertyChanged}" DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                </dxlc:LayoutItem>
                 <dxlc:LayoutItem Label="Начало" LabelPosition="Top" >
                     <dxe:DateEdit Name="EdtDateBegin" EditValue="{Binding DateBegin, UpdateSourceTrigger=PropertyChanged}" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm"/>
@@ -29,7 +35,7 @@
                     <dxe:DateEdit Name="EdtDateEnd" EditValue="{Binding DateEnd, UpdateSourceTrigger=PropertyChanged}"  MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm" />
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Длит-сть (мин)"  LabelPosition="Top" Width="90" IsEnabled="False">
+                <dxlc:LayoutItem Label="Длит-сть (мин)"  LabelPosition="Top" Width="90" IsEnabled="{Binding EnabledChangeDuration}">
                     <dxe:TextEdit Name="EdtDuration" EditValue="{Binding Duration}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
