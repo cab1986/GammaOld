@@ -152,11 +152,7 @@ namespace Gamma.ViewModels
             {
                 var command = new BarCommand<object>(dnt => AddDowntime((AddDowntimeParameter)dnt))
                 {
-                    Caption = template.C1CDowntimeTypes.Description.Substring(0, Math.Min(7, template.C1CDowntimeTypes.Description.Length))
-                                + (template.C1CDowntimeTypeDetails != null ? "__" + template.C1CDowntimeTypeDetails.Description.Substring(0, Math.Min(5, template.C1CDowntimeTypeDetails.Description.Length)) : "")
-                                + (template.C1CEquipmentNodes != null ? "#" + template.C1CEquipmentNodes.Description.Substring(0, Math.Min(7, template.C1CEquipmentNodes.Description.Length)) : "")
-                                + (template.C1CEquipmentNodeDetails != null ? "__" + template.C1CEquipmentNodeDetails.Description.Substring(0, Math.Min(5, template.C1CEquipmentNodeDetails.Description.Length)) : "")
-                                + (template.Duration != null ? "#" + template.Duration.ToString() : "") + "  |",
+                    Caption = template.Name + "  |",
                     CommandParameter = new AddDowntimeParameter
                     {
                         DowntimeTypeID = template.C1CDowntimeTypeID,
@@ -248,7 +244,7 @@ namespace Gamma.ViewModels
         private void UploadTo1C()
         {
             UIServices.SetBusyState();
-            DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID);
+            //DB.AddLogMessageInformation("Выбран пункт Выгрузить в 1С", "Start UploadTo1C in ProductionTaskBatchViewModel", ProductionTaskBatchID, SelectedProductionTaskProduct.ProductID);
             if (CurrentView != null && ProductionTaskBatchID != null)
             {
                 DB.UploadProductionTaskBatchTo1C(ProductionTaskBatchID, GammaBase);
@@ -748,13 +744,13 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
-                var productionTask =
+                /*var productionTask =
                     gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
                         p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
                 GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null);
                 if (productionTask == null)
-                    return false;
+                    return false;*/
                 return false; // Всегда ложь для того, чтобы активировать задание надо было каждый раз вручную (productionTask.ActiveProductionTasks != null);
             }
         }
@@ -2068,7 +2064,7 @@ namespace Gamma.ViewModels
             }
             else
             {
-                DB.AddLogMessageInformation("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
+                DB.AddLogMessageError("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
                 RefreshDowntime();
             }
         }
