@@ -17,22 +17,29 @@
             <RowDefinition Height="86"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="70"/>
-            <RowDefinition Height="32"/>
+            <!--<RowDefinition Height="32"/>-->
         </Grid.RowDefinitions>
         <dxlc:LayoutControl Name="lcDate" Grid.Row="0" Header="Header" Orientation="Horizontal" UseLayoutRounding="True">
-            <dxlc:LayoutGroup Header="Период простоя" View="GroupBox" Margin="-12">
-                <dxlc:LayoutItem Label="Начало" LabelPosition="Top" >
+            <dxlc:LayoutGroup Header="Период простоя" View="GroupBox" Margin="-12" Name="PeriodGroup">
+                <dxlc:LayoutItem Label="Наименование" LabelPosition="Top" Visibility="{Binding VisiblityChangeDT}">
+                    <dxe:TextEdit Name="EdtName" EditValue="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Передел" LabelPosition="Top" Visibility="{Binding VisiblityChangeDT}">
+                    <dxe:ComboBoxEdit Name="EdtPlaces" ItemsSource="{Binding Places}" EditValue="{Binding PlaceID, UpdateSourceTrigger=PropertyChanged}" DisplayMember="PlaceName" ValueMember="PlaceID"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Начало" LabelPosition="Top" Visibility="{Binding VisiblityAddDT}">
                     <dxe:DateEdit Name="EdtDateBegin" EditValue="{Binding DateBegin, UpdateSourceTrigger=PropertyChanged}" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm"/>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Окончание" LabelPosition="Top">
+                <dxlc:LayoutItem Label="Окончание" LabelPosition="Top" Visibility="{Binding VisiblityAddDT}">
                     <dxe:DateEdit Name="EdtDateEnd" EditValue="{Binding DateEnd, UpdateSourceTrigger=PropertyChanged}"  MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm" />
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="Длит-сть (мин)"  LabelPosition="Top" Width="90" IsEnabled="False">
+                <dxlc:LayoutItem Label="Длит-сть (мин)"  LabelPosition="Top" Width="90" IsEnabled="{Binding EnabledChangeDuration}">
                     <dxe:TextEdit Name="EdtDuration" EditValue="{Binding Duration}"/>
                 </dxlc:LayoutItem>
             </dxlc:LayoutGroup>
+
         </dxlc:LayoutControl>
         <dxlc:LayoutControl Name="lcDowntimeType" Grid.Row="1"  Orientation="Vertical" >
             <dxlc:LayoutGroup Header="Виды простоя" View="GroupBox" Orientation="Vertical" Margin="-12,-12,-12,0">
@@ -57,11 +64,11 @@
             </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <dxlc:LayoutControl Name="lcDowntimeComment" Grid.Row="2" >
-        <dxlc:LayoutGroup Header="Причина и мероприятия по устранению(для внеплан. и недоступ.)" View="GroupBox" Margin="-12" Orientation="Vertical">
-            <dxlc:LayoutItem LabelPosition="Top">
+            <dxlc:LayoutGroup Header="Причина и мероприятия по устранению(для внеплан. и недоступ.)" View="GroupBox" Margin="-12" Orientation="Vertical">
+                <dxlc:LayoutItem LabelPosition="Top">
                     <dxe:TextEdit Name="EdtComment" EditValue="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
-            </dxlc:LayoutItem>
-        </dxlc:LayoutGroup>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
         </dxlc:LayoutControl>
         <!--<Button Content="OK" Name="BtnOk" Grid.Row="3" HorizontalAlignment="Right" Margin="0,0,115,0" Width="50" IsDefault="True" Click="BtnOK_Click"/>
         <Button Content="Отмена" IsCancel="True" Name="BtnCancel"  Grid.Row="3"  Width="100" HorizontalAlignment="Right" Margin="0,0,10,0" />-->
