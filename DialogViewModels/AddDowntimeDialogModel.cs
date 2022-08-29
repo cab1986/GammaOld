@@ -75,7 +75,7 @@ namespace Gamma.DialogViewModels
         }
 
         public AddDowntimeDialogModel(Guid? DowntimeTemplateID, int? placeID, Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string name = null, string comment = null) : this(placeID)
-        {
+        { 
             if (placeID != null) PlaceID = placeID;
             if (downtimeTypeID != null) TypeID = (Guid)downtimeTypeID;
             if (downtimeTypeDetailID != null) TypeDetailID = (Guid)downtimeTypeDetailID;

@@ -5,7 +5,7 @@ using DevExpress.Mvvm;
 namespace Gamma.Models
 {
     public class DowntimeTemplate : ViewModelBase
-    {
+    { 
         public Guid? DowntimeTemplateID { get; set; }
         public Guid DowntimeTypeID { get; set; }
         public Guid? DowntimeTypeDetailID { get; set; }

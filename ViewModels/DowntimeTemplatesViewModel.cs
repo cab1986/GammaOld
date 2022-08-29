@@ -126,7 +126,7 @@ namespace Gamma.ViewModels
         }
 
         private void ChangeDowntimeTemplate()
-        {
+        { 
             //MessageBox.Show("Выбрано" + SelectedDowntimeTemplate.DowntimeTemplateID.ToString(), SelectedDowntimeTemplate.Name);
             if (SelectedDowntimeTemplate == null) return;
             var model = new AddDowntimeDialogModel(SelectedDowntimeTemplate.DowntimeTemplateID, SelectedDowntimeTemplate.PlaceID, SelectedDowntimeTemplate.DowntimeTypeID, SelectedDowntimeTemplate.DowntimeTypeDetailID, SelectedDowntimeTemplate.EquipmentNodeID, SelectedDowntimeTemplate.EquipmentNodeDetailID, SelectedDowntimeTemplate.Duration, SelectedDowntimeTemplate.Name, SelectedDowntimeTemplate.Comment);

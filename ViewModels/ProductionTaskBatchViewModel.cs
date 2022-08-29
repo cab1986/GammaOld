@@ -149,7 +149,7 @@ namespace Gamma.ViewModels
             var templates = GammaBase.DowntimeTemplates.Where(t => t.PlaceID == PlaceID).ToList();
             var bar = new BarViewModel();
             foreach (var template in templates)
-            {
+            { 
                 var command = new BarCommand<object>(dnt => AddDowntime((AddDowntimeParameter)dnt))
                 {
                     Caption = template.Name + "  |",

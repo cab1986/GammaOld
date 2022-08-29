@@ -12,7 +12,7 @@
              d:DesignHeight="480" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance Type=dialogViewModels:AddDowntimeDialogModel, IsDesignTimeCreatable=False}">
 
-    <Grid>
+    <Grid> 
         <Grid.RowDefinitions>
             <RowDefinition Height="86"/>
             <RowDefinition Height="*"/>

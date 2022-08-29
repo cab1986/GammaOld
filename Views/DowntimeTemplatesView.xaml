@@ -91,7 +91,7 @@
                 <dxe:TextEdit EditValue="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
             </dxlc:LayoutItem>
             <Button Content="Добавить" Command="{Binding AddDowntimeTemplateCommand}"  Height="22" VerticalAlignment="Center" HorizontalAlignment="Right" Width="79" Margin="0,18,0,0"/>
-        </dxlc:LayoutControl>
+        </dxlc:LayoutControl> 
         <dxg:GridControl Grid.Row="2" ItemsSource="{Binding DowntimeTemplates}" SelectedItem="{Binding SelectedDowntimeTemplate}">
             <dxg:GridControl.Columns>
                 <dxg:GridColumn FieldName="Name" Header="Наименование" />
