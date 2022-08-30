@@ -3,21 +3,26 @@
 using System.ComponentModel.DataAnnotations;
 using Gamma.ViewModels;
 using System;
+using Gamma.Common;
 
 namespace Gamma.DialogViewModels
 {
     public class SetDateDialogViewModel : ValidationViewModelBase
     {
-        public SetDateDialogViewModel(string message, string label, bool isVisibleStartDate = false, DateTime? defaultStartDate = null, string labelStartDate = null, bool isVisibleEndDate = false, DateTime? defaultEndDate = null, string labelEndDate = null)
+        public SetDateDialogViewModel(string message, string label, DateParam startDate, DateParam endDate = null)
         {
             Message = message;
             Label = Label;
-            IsVisibleStartDate = isVisibleStartDate;
-            IsVisibleEndDate = isVisibleEndDate;
-            StartDate = defaultStartDate;
-            EndDate = defaultEndDate;
-            LabelStartDate = labelStartDate;
-            LabelEndDate = labelEndDate;
+            IsVisibleStartDate = startDate != null;
+            IsVisibleEndDate = endDate != null;
+            StartDate = startDate?.DefaultDate;
+            EndDate = endDate?.DefaultDate;
+            LabelStartDate = startDate ?.Label;
+            LabelEndDate = endDate?.Label;
+            MinStartDate = startDate?.MinDate;
+            MaxStartDate = startDate?.MaxDate;
+            MinEndDate = endDate?.MinDate;
+            MaxEndDate = endDate?.MaxDate;
         }
 
         public string Message { get; set; }
@@ -25,8 +30,40 @@ namespace Gamma.DialogViewModels
         public string LabelStartDate { get; set; }
         public string LabelEndDate { get; set; }
 
+        private string _errorStartDate { get; set; }
+        public string ErrorStartDate
+        {
+            get
+            {
+                return _errorStartDate;
+            }
+            set
+            {
+                _errorStartDate = value;
+                RaisePropertiesChanged("ErrorStartDate");
+            }
+        }
+        public string _errorEndDate { get; set; }
+        public string ErrorEndDate
+        {
+            get
+            {
+                return _errorEndDate;
+            }
+            set
+            {
+                _errorEndDate = value;
+                RaisePropertiesChanged("ErrorEndDate");
+            }
+        }
+
         public bool IsVisibleStartDate { get; set; }
         public bool IsVisibleEndDate { get; set; }
+
+        public DateTime? MinStartDate { get; set; }
+        public DateTime? MaxStartDate { get; set; }
+        public DateTime? MinEndDate { get; set; }
+        public DateTime? MaxEndDate { get; set; }
 
         private DateTime? _startDate { get; set; }
         public DateTime? StartDate
@@ -34,15 +71,23 @@ namespace Gamma.DialogViewModels
             get { return _startDate; }
             set
             {
-                //if (value < MinQuantity)
-                //{
-                //    ErrorText = "Ошибка! Значение должно быть больше минимального - " + MinQuantity.ToString();
-                //}
-                //else
-                //{
+                if (value >= EndDate)
+                {
+                    ErrorStartDate = "Ошибка! Дата начала должна быть меньше даты окончания";
+                }
+                else if (value < MinStartDate)
+                {
+                    ErrorStartDate = "Ошибка! Дата начала должна быть больше минимального - " + MinStartDate.ToString();
+                }
+                else if (value > MaxStartDate)
+                {
+                    ErrorStartDate = "Ошибка! Дата начала должна быть меньше максимального - " + MaxStartDate.ToString();
+                }
+                else
+                {
                     _startDate = value;
-                //    ErrorText = "";
-                //}
+                    ErrorStartDate = "";
+                }
             }
         }
 
@@ -52,15 +97,23 @@ namespace Gamma.DialogViewModels
             get { return _endDate; }
             set
             {
-                //if (value < MinQuantity)
-                //{
-                //    ErrorText = "Ошибка! Значение должно быть больше минимального - " + MinQuantity.ToString();
-                //}
-                //else
-                //{
-                _endDate = value;
-                //    ErrorText = "";
-                //}
+                if (value <= StartDate)
+                {
+                    ErrorEndDate = "Ошибка! Дата окончания должна быть больше даты начала";
+                }
+                else if (value < MinEndDate)
+                {
+                    ErrorEndDate = "Ошибка! Дата окончания должна быть больше минимального - " + MinEndDate.ToString();
+                }
+                else if (value > MaxEndDate)
+                {
+                    ErrorEndDate = "Ошибка! Дата окончания должна быть меньше максимального - " + MaxEndDate.ToString();
+                }
+                else
+                {
+                    _endDate = value;
+                    ErrorEndDate = "";
+                }
             }
         }
 

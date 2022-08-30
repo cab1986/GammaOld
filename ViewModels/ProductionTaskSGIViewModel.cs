@@ -128,6 +128,8 @@ namespace Gamma.ViewModels
                     TypeTransportLabelID = gammaBase.C1CCharacteristicProperties.FirstOrDefault(pr => pr.C1CPropertyID == new Guid("4CA4FA70-EE6C-11E9-B660-002590EBA5B6") && pr.C1CCharacteristicID == oldCharacteristicID)?.C1CPropertyValueID;
                     UpdateGroupPackageLabelImage(productionTask.ProductionTaskID);
                     ProductionTaskSpecificationViewModel = new ProductionTaskSpecificationViewModel(productionTask.C1CSpecificationID, NomenclatureID, CharacteristicID, PlaceID, IsReadOnly);
+                    PreviousTaskNumber = gammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == gammaBase.ProductionTasks.FirstOrDefault(pt => pt.ProductionTaskID == ProductionTaskID).PreviousProductionTaskID)?.Number;
+                    NextTaskNumber = gammaBase.ProductionTasks.FirstOrDefault(pt => pt.PreviousProductionTaskID == ProductionTaskID)?.Number;
                 }
                 else
                 {
@@ -139,7 +141,6 @@ namespace Gamma.ViewModels
                         .Select(p => p.ProductionTaskStateID)
                         .FirstOrDefault();
                 IsConfirmed = ProductionTaskStateID > 0; // Если статус задания в производстве или выполнено, то считаем его подтвержденным
-                
             }
         }
 
@@ -159,6 +160,33 @@ namespace Gamma.ViewModels
             }
         }
 
+        private string _previousTaskNumber { get; set; }
+        public string PreviousTaskNumber
+        {
+            get
+            {
+                return _previousTaskNumber;
+            }
+            set
+            {
+                _previousTaskNumber = value;
+                RaisePropertyChanged("PreviousTaskNumber");
+            }
+        }
+
+        private string _nextTaskNumber { get; set; }
+        public string NextTaskNumber
+        {
+            get
+            {
+                return _nextTaskNumber;
+            }
+            set
+            {
+                _nextTaskNumber = value;
+                RaisePropertyChanged("NextTaskNumber");
+            }
+        }
 
         public event Func<bool> PrintExampleEvent;
 
@@ -813,9 +841,22 @@ namespace Gamma.ViewModels
 
         public void SetActualDate()
         {
+            string addResult = "";
             if (DB.HaveWriteAccess("ProductionTasks") || DB.HaveWriteAccess("ActiveProductionTasks"))
             {
-                var model = new SetDateDialogViewModel("Укажите дату/время начала и окончания производства", "Период производства", true, ActualStartDate, "Начало", true, ActualEndDate, "Окончание");
+                var previousTask = GammaBase.ActiveProductionTasks.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID);
+                DateTime? maxDate;
+                if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == ProductionTaskID) != null)
+                    maxDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == ProductionTaskID)?.Max(p => p.Docs.Date);
+                else
+                    maxDate = null;
+                var previousProductionTaskID = GammaBase.ProductionTasks.FirstOrDefault(t => t.ProductionTaskID == ProductionTaskID).PreviousProductionTaskID;
+                DateTime? minDate;
+                if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == previousProductionTaskID) != null)
+                    minDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == previousProductionTaskID)?.Max(p => p.Docs.Date);
+                else
+                    minDate = GammaBase.ProductionTasks.FirstOrDefault(t => t.ProductionTaskID == previousProductionTaskID).ActualStartDate;
+                var model = new SetDateDialogViewModel("Укажите дату/время начала производства " + Environment.NewLine + "(для изменения даты окончания в следующем задании измените дату начала)", "Период производства", new DateParam("Начало", ActualStartDate, minDate, maxDate));//, new DateParam("Окончание", ActualEndDate, maxDate));
                 var okCommand = new UICommand()
                 {
                     Caption = "OK",
@@ -842,11 +883,6 @@ namespace Gamma.ViewModels
                 //dialog.ShowDialog();
                 //if (dialog.DialogResult == true)
                 {
-                    string addResult = "";
-                    if (model.IsVisibleStartDate)
-                        ActualStartDate = model.StartDate;
-                    if (model.IsVisibleEndDate)
-                        ActualEndDate = model.EndDate;
                     var productionTask =
                     GammaBase.ProductionTasks
                         .First(pt => pt.ProductionTaskID == ProductionTaskID);
@@ -859,17 +895,24 @@ namespace Gamma.ViewModels
                         //ProductionTasks productionTask = productionTaskBatch.ProductionTasks.First();
                         try
                         {
-                            if (model.IsVisibleStartDate)
-                                productionTask.ActualStartDate = model.StartDate;
-                            if (model.IsVisibleEndDate)
-                                productionTask.ActualEndDate = model.EndDate;
-                            GammaBase.SaveChanges();
-                            if (model.IsVisibleStartDate)
-                                ActualStartDate = model.StartDate;
-                            if (model.IsVisibleEndDate)
-                                ActualEndDate = model.EndDate;
+                            if (model.IsVisibleStartDate && productionTask.ActualStartDate != model.StartDate)
+                            {
+                                //    productionTask.ActualStartDate = model.StartDate;
+                                //    if (productionTask.PreviousProductionTaskID != null)
+                                //        GammaBase.ProductionTasks.First(pt => pt.ProductionTaskID == productionTask.PreviousProductionTaskID).ActualEndDate = model.StartDate;
+                                //}
+                                //if (model.IsVisibleEndDate && productionTask.ActualEndDate != model.EndDate)
+                                //    productionTask.ActualEndDate = model.EndDate;
+                                // GammaBase.SaveChanges();
+                                addResult = GammaBase.SetDateActualStartInProductionTasks(ProductionTaskID, model.StartDate).FirstOrDefault();
+                                if (addResult == "")
+                             //   if (model.IsVisibleStartDate && productionTask.ActualStartDate != model.StartDate)
+                                    ActualStartDate = model.StartDate;
+                            }
+                            //if (model.IsVisibleEndDate && productionTask.ActualEndDate != model.EndDate)
+                            //    ActualEndDate = model.EndDate;
                         }
-                        catch
+                        catch (Exception e)
                         {
                             addResult = "Ошибка при сохранении! Фактическая дата не изменена! " + Environment.NewLine + "Попробуйте еще раз.";
                         }
@@ -878,7 +921,11 @@ namespace Gamma.ViewModels
             }
             else
             {
-                MessageBox.Show("Ошибка при сохранении! Недостаточно прав!");
+                addResult = "Ошибка! Недостаточно прав!";
+            }
+            if (addResult != "")
+            {
+                Functions.ShowMessageError(addResult, "Error SetActualDate in ProductionTaskSGIViewModel", ProductionTaskID);
             }
         }
 

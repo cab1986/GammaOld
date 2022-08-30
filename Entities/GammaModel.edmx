@@ -6742,6 +6742,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="NomenclatureID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="CharacteristicID" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="SetDateActualStartInProductionTasks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductionTaskID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ActualStartDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="UnpackGroupPack" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="PrintName" Type="varchar" Mode="In" />
@@ -11211,6 +11215,10 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <End Role="ProductionTasks" EntitySet="ProductionTasks" />
             <End Role="ProductionTasks1" EntitySet="ProductionTasks" />
           </AssociationSet>
+          <FunctionImport Name="SetDateActualStartInProductionTasks" ReturnType="Collection(String)">
+            <Parameter Name="ProductionTaskID" Mode="In" Type="Guid" />
+            <Parameter Name="ActualStartDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="CreateUnloadSpools_Result">
           <Property Type="Guid" Name="DocID" Nullable="true" />
@@ -21177,6 +21185,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="ValidateSpoolBeforeSave" FunctionName="GammaDBModel.ValidateSpoolBeforeSave" />
           <FunctionImportMapping FunctionImportName="MakeProductionTaskActive" FunctionName="GammaDBModel.MakeProductionTaskActive" />
+          <FunctionImportMapping FunctionImportName="SetDateActualStartInProductionTasks" FunctionName="GammaDBModel.SetDateActualStartInProductionTasks" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

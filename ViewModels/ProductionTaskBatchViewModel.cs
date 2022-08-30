@@ -744,13 +744,13 @@ namespace Gamma.ViewModels
         {
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
-                /*var productionTask =
+                var productionTask =
                     gammaBase.ProductionTasks.Include(d => d.ActiveProductionTasks).FirstOrDefault(
                         p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
                              ((p.PlaceID != null && p.PlaceID == WorkSession.PlaceID) || (p.PlaceID == null && p.PlaceGroupID == (byte)WorkSession.PlaceGroup)));
-                GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null);
+                GrantPermissionOnProductionTaskActiveForPlace = (productionTask != null && ProductionTaskStateID == (int)ProductionTaskStates.InProduction);
                 if (productionTask == null)
-                    return false;*/
+                    return false;
                 return false; // Всегда ложь для того, чтобы активировать задание надо было каждый раз вручную (productionTask.ActiveProductionTasks != null);
             }
         }
@@ -760,7 +760,6 @@ namespace Gamma.ViewModels
             DB.AddLogMessageInformation("Выбран пункт Сделать активным задание по производству " + Number, "Start MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel", ProductionTaskBatchID);
             using (var gammaBase = DB.GammaDbWithNoCheckConnection)
             {
-                gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
                 var productionTask =
                     gammaBase.ProductionTasks.FirstOrDefault(
                         p => p.ProductionTaskBatches.Any(ptb => ptb.ProductionTaskBatchID == ProductionTaskBatchID) &&
@@ -770,6 +769,37 @@ namespace Gamma.ViewModels
                     DB.AddLogMessageInformation("Не найдено задание по производству " + Number + " для передела", "Error MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel: productionTask == null", ProductionTaskBatchID);
                     return;
                 }
+                DateTime? startDate = null;
+                if (WorkSession.IsClosePreviousTaskWithActivateCurrentTask && productionTask.ActualStartDate == null)
+                {
+                    //запрос даты начала текущего задания
+                    DateTime? minDate;
+                    var previousTask = gammaBase.ActiveProductionTasks.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID);
+                    if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == previousTask.ProductionTaskID) != null)
+                        minDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == previousTask.ProductionTaskID)?.Max(p => p.Docs.Date);
+                    else
+                        minDate = gammaBase.ProductionTasks.FirstOrDefault(t => t.ProductionTaskID == previousTask.ProductionTaskID).ActualStartDate;
+                    DateTime? maxDate;
+                    if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == productionTask.ProductionTaskID) != null)
+                        maxDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)?.Max(p => p.Docs.Date);
+                    else
+                        maxDate = null;
+                    startDate = GetStartDate(minDate, maxDate);
+                    if (startDate == null)
+                    {
+                        DB.AddLogMessageInformation("Не указана дата начала задания по производству " + Number + " для передела", "Error MakeProductionTaskActiveForPlace in ProductionTaskBatchViewModel: StartDate == null", ProductionTaskBatchID);
+                        return;
+                    }
+                    //productionTask.ActualStartDate = startDate;
+                }
+                gammaBase.MakeProductionTaskActive(WorkSession.PlaceID, productionTask.ProductionTaskID, startDate);
+                if (CurrentView is ProductionTaskSGIViewModel)
+                {
+                    (CurrentView as ProductionTaskSGIViewModel).ActualStartDate = startDate;
+                    (CurrentView as ProductionTaskSGIViewModel).PreviousTaskNumber = gammaBase.ProductionTasks.FirstOrDefault(p => p.ProductionTaskID == gammaBase.ProductionTasks.FirstOrDefault(pt => pt.ProductionTaskID == productionTask.ProductionTaskID).PreviousProductionTaskID)?.Number;
+                    (CurrentView as ProductionTaskSGIViewModel).NextTaskNumber = gammaBase.ProductionTasks.FirstOrDefault(pt => pt.PreviousProductionTaskID == productionTask.ProductionTaskID)?.Number;
+                }
+                //gammaBase.MakeProductionTaskActiveForPlace(WorkSession.PlaceID, ProductionTaskBatchID);
                 //VisiblityMakeProductionTaskActiveForPlace = Visibility.Collapsed;
                 IsProductionTaskActiveForPlace = true;
                 CheckGroupAndTransportPackLabel(productionTask.ProductionTaskID, WorkSession.EndpointAddressOnGroupPackService ?? WorkSession.EndpointAddressOnTransportPackService);
@@ -2064,9 +2094,53 @@ namespace Gamma.ViewModels
             }
             else
             {
-                DB.AddLogMessageError("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
+                DB.AddLogMessageInformation("Успешно удален простой в Задании на производство " + Number, "End DeleteDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
                 RefreshDowntime();
             }
+        }
+
+        public DateTime? GetStartDate(DateTime? minDate = null, DateTime? maxDate = null)
+        {
+            DateTime? startDate = null;
+            if (DB.HaveWriteAccess("ProductionTasks") || DB.HaveWriteAccess("ActiveProductionTasks"))
+            {
+                var model = new SetDateDialogViewModel("Укажите дату/время начала производства", "Начало производства", new DateParam("Начало", DateTime.Now, minDate, maxDate));
+                var okCommand = new UICommand()
+                {
+                    Caption = "OK",
+                    IsCancel = false,
+                    IsDefault = true,
+                    Command = new DelegateCommand<CancelEventArgs>(
+                        x => DebugFunc(),
+                        x => true),// model.IsValid && (model.DateEnd - model.DateBegin).TotalMinutes > 0 && (model.DateEnd - model.DateBegin).TotalMinutes <= 14 * 60),
+                };
+                var cancelCommand = new UICommand()
+                {
+                    Id = MessageBoxResult.Cancel,
+                    Caption = "Отмена",
+                    IsCancel = true,
+                    IsDefault = false,
+                };
+                var dialogService = GetService<IDialogService>("SetDateDialog");
+                var result = dialogService.ShowDialog(
+                    dialogCommands: new List<UICommand>() { okCommand, cancelCommand },
+                    title: "Определение начала производства",
+                    viewModel: model);
+                if (result == okCommand)
+                //var dialog = new AddDowntimeDialog();
+                //dialog.ShowDialog();
+                //if (dialog.DialogResult == true)
+                {
+                    string addResult = "";
+                    if (model.IsVisibleStartDate)
+                        startDate = model.StartDate;
+                }
+            }
+            else
+            {
+                Functions.ShowMessageError("Ошибка при сохранении! Недостаточно прав!", "Error GetStartDate in ProductionTaskBatchViewModel", ProductionTaskBatchID);
+            }
+            return startDate;
         }
 
     }

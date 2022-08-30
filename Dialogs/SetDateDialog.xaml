@@ -12,14 +12,16 @@
         d:DesignHeight="350" d:DesignWidth="600"
         d:DataContext="{d:DesignInstance Type=dialogViewModels:SetDateDialogViewModel, IsDesignTimeCreatable=False}">
     <dxlc:LayoutControl Orientation="Vertical">
-        <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
-        <dxlc:LayoutItem Width="270" Label="{Binding Label}">
+        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Margin="0,0,0,-5"/>
+        <TextBlock Text="{Binding ErrorStartDate}" TextWrapping="Wrap" Foreground="Red"/>
+        <TextBlock Text="{Binding ErrorEndDate}" TextWrapping="Wrap" Foreground="Red"/>
+        <dxlc:LayoutItem Width="270" Label="{Binding Label}" Margin="0,-5,0,-5">
             <dxlc:LayoutGroup View="Group" >
                 <dxlc:LayoutItem Label="{Binding LabelStartDate}" LabelPosition="Top" Width="130">
                     <dxe:DateEdit Name="EdtDateBegin" EditValue="{Binding StartDate}" Width="130" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm"/>
                 </dxlc:LayoutItem>
-                <dxlc:LayoutItem Label="{Binding LabelEndDate}" LabelPosition="Top" Width="130">
+                <dxlc:LayoutItem Label="{Binding LabelEndDate}" LabelPosition="Top" Width="130" Visibility="{Binding IsVisibleEndDate,Converter={StaticResource BooleanToVisibilityConverter}}">
                     <dxe:DateEdit Name="EdtDateEnd" EditValue="{Binding EndDate}" Width="130" MaskType="DateTime" Mask="dd-MMM-yyyy HH:mm"
                                                DisplayFormatString="dd-MMM-yyyy HH:mm" />
                 </dxlc:LayoutItem>

@@ -198,6 +198,8 @@ namespace Gamma
 
         public static bool IsUsedInOneDocMaterialDirectCalcAndComposition { get; private set; }
 
+        public static bool IsClosePreviousTaskWithActivateCurrentTask { get; private set;  }
+
         public static DateTime? LastActualLocalVsServerDateDiff { get; private set; }
         private static double? _localVsServerDateDiff;
         public static double? LocalVsServerDateDiff=> _localVsServerDateDiff ?? RefreshLocalVsServerDateDiff();
@@ -295,6 +297,7 @@ namespace Gamma
                 BranchID = userInfo.BranchID;
                 ShiftID = userInfo.ShiftID;
                 PlaceGroup = (PlaceGroup)userInfo.placeGroupID;
+                IsClosePreviousTaskWithActivateCurrentTask = PlaceGroup == PlaceGroup.Convertings;
                 RoleName = userInfo.RoleName;
                 ProgramAdmin = (userInfo.programAdmin ?? false);
                 UnwindersCount = userInfo.UnwindersCount ?? 0;

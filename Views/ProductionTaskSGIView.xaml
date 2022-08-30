@@ -28,7 +28,7 @@
             <dx:DialogService.DialogStyle>
                 <Style TargetType="dx:DXDialogWindow">
                     <Setter Property="Width" Value="380"/>
-                    <Setter Property="Height" Value="220"/>
+                    <Setter Property="Height" Value="290"/>
                 </Style>
             </dx:DialogService.DialogStyle>
         </dx:DialogService>
@@ -78,6 +78,14 @@
                                                    DisplayFormatString="dd-MMM-yyyy HH:mm"/>
                             </dxlc:LayoutItem>
                             <Button Content="..." Height="22" VerticalAlignment="Top" Width="30" Margin="0,18,0,0"  Command="{Binding SetActualDateCommand}"/>
+                        </dxlc:LayoutGroup>
+                        <dxlc:LayoutGroup Header="Порядок заданий" Orientation="Horizontal" Margin="7,0,0,0">
+                            <dxlc:LayoutItem Label="Предыдущее задание" LabelPosition="Top" Width="130">
+                                <dxe:TextEdit EditValue="{Binding PreviousTaskNumber}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label=" следующее задание" LabelPosition="Top" Width="130">
+                                <dxe:TextEdit EditValue="{Binding NextTaskNumber}" IsReadOnly="True"/>
+                            </dxlc:LayoutItem>
                         </dxlc:LayoutGroup>
                         <dxlc:LayoutGroup HorizontalAlignment="Right">
                             <dxlc:LayoutItem Label="ОЕЕ" LabelPosition="Top" Width="80">

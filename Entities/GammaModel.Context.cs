@@ -1788,5 +1788,18 @@ namespace Gamma.Entities
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MakeProductionTaskActive", placeIDParameter, productionTaskIDParameter, dateParameter);
         }
+    
+        public virtual ObjectResult<string> SetDateActualStartInProductionTasks(Nullable<System.Guid> productionTaskID, Nullable<System.DateTime> actualStartDate)
+        {
+            var productionTaskIDParameter = productionTaskID.HasValue ?
+                new ObjectParameter("ProductionTaskID", productionTaskID) :
+                new ObjectParameter("ProductionTaskID", typeof(System.Guid));
+    
+            var actualStartDateParameter = actualStartDate.HasValue ?
+                new ObjectParameter("ActualStartDate", actualStartDate) :
+                new ObjectParameter("ActualStartDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SetDateActualStartInProductionTasks", productionTaskIDParameter, actualStartDateParameter);
+        }
     }
 }
