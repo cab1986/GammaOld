@@ -128,6 +128,9 @@
                         <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding ForAllProductsProkeDecision.Comment, UpdateSourceTrigger=PropertyChanged}" />
                         </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Место принятия решения" LabelPosition="Top">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ForAllProductsProkeDecision.ProductPlaceList}" EditValue="{Binding ForAllProductsProkeDecision.PlaceID, UpdateSourceTrigger=PropertyChanged}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
+                        </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" IsEnabled="{Binding Path=ForAllProductsProkeDecision.NomenclatureEnabled}">
                             <dxe:ButtonEdit EditValue="{Binding Path=ForAllProductsProkeDecision.NomenclatureName}" AllowDefaultButton="False" IsReadOnly="True">
                                 <dxe:ButtonInfo Command="{Binding ForAllProductsProkeDecision.ChooseNomenclatureCommand}" Content="..."/>

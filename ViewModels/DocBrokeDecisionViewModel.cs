@@ -888,7 +888,8 @@ namespace Gamma.ViewModels
                 var selectedBrokeDecisionProduct = SelectedBrokeDecisionProduct;
                 foreach (var brokeDecisionProduct in BrokeDecisionProducts)
                 {
-
+                    //MessageBox.Show(forAllProductsProkeDecision.PlaceID.ToString());
+                    if (forAllProductsProkeDecision.PlaceID.ToString() != "") brokeDecisionProduct.DecisionPlaceId = forAllProductsProkeDecision.PlaceID;
                     brokeDecisionProduct.ProductState = (ProductState)forAllProductsProkeDecision.ProductStateID.Key;
                     brokeDecisionProduct.Comment = forAllProductsProkeDecision.Comment;
                     brokeDecisionProduct.Quantity = brokeDecisionProduct.ProductQuantity;
