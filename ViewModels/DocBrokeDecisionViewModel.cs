@@ -884,12 +884,11 @@ namespace Gamma.ViewModels
         {
             if (BrokeDecisionProducts != null)
             {
-                DB.AddLogMessageInformation("Изменено для всех решение '" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', " + forAllProductsProkeDecision.NomenclatureName + "', комментарий '" + forAllProductsProkeDecision.Comment + "' в Акте о браке DocID", "SetDecisionForAllProduct (ProductState='" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', NomenclatureId='" + forAllProductsProkeDecision.NomenclatureID + "', CharacteristicID='" + forAllProductsProkeDecision.CharacteristicID + "', Comment='" + forAllProductsProkeDecision.Comment + "')", DocBrokeID);
+                DB.AddLogMessageInformation("Изменено для всех решение '" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', " + forAllProductsProkeDecision.NomenclatureName + "', комментарий '" + forAllProductsProkeDecision.Comment + "', место решения '" + forAllProductsProkeDecision.PlaceID + "' в Акте о браке DocID", "SetDecisionForAllProduct (ProductState='" + (ProductState)forAllProductsProkeDecision.ProductStateID.Key + "', NomenclatureId='" + forAllProductsProkeDecision.NomenclatureID + "', CharacteristicID='" + forAllProductsProkeDecision.CharacteristicID + "', Comment='" + forAllProductsProkeDecision.Comment + "', Decision Place '" + forAllProductsProkeDecision.PlaceID + "')", DocBrokeID);
                 var selectedBrokeDecisionProduct = SelectedBrokeDecisionProduct;
                 foreach (var brokeDecisionProduct in BrokeDecisionProducts)
                 {
-                    //MessageBox.Show(forAllProductsProkeDecision.PlaceID.ToString());
-                    if (forAllProductsProkeDecision.PlaceID.ToString() != "") brokeDecisionProduct.DecisionPlaceId = forAllProductsProkeDecision.PlaceID;
+                    if (forAllProductsProkeDecision.PlaceID != null) brokeDecisionProduct.DecisionPlaceId = forAllProductsProkeDecision.PlaceID;
                     brokeDecisionProduct.ProductState = (ProductState)forAllProductsProkeDecision.ProductStateID.Key;
                     brokeDecisionProduct.Comment = forAllProductsProkeDecision.Comment;
                     brokeDecisionProduct.Quantity = brokeDecisionProduct.ProductQuantity;

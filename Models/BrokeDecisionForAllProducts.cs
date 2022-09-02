@@ -20,7 +20,7 @@ namespace Gamma.Models
                {
                    PlaceID = p.PlaceID,
                    PlaceName = p.Name
-               })
+               }) 
                .ToList();
         }
 

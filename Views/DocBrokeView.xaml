@@ -121,7 +121,7 @@
                     <dxlc:LayoutGroup Header="Решение" Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding IsVisibleSetDecisionForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxlc:LayoutItem Label="Решение" LabelPosition="Top">
                             <dxe:ComboBoxEdit SelectedItem="{Binding ForAllProductsProkeDecision.ProductStateID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ForAllProductsProkeDecision.ProductStateList}" DisplayMember="Value" ValueMember="Key"/>
-                        </dxlc:LayoutItem>
+                        </dxlc:LayoutItem> 
                         <dxlc:LayoutItem Label="Кол-во">
                             <dxe:TextEdit EditValue="Полностью" IsEnabled="False" />
                         </dxlc:LayoutItem>
