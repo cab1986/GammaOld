@@ -121,12 +121,15 @@
                     <dxlc:LayoutGroup Header="Решение" Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding IsVisibleSetDecisionForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <dxlc:LayoutItem Label="Решение" LabelPosition="Top">
                             <dxe:ComboBoxEdit SelectedItem="{Binding ForAllProductsProkeDecision.ProductStateID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ForAllProductsProkeDecision.ProductStateList}" DisplayMember="Value" ValueMember="Key"/>
-                        </dxlc:LayoutItem>
+                        </dxlc:LayoutItem> 
                         <dxlc:LayoutItem Label="Кол-во">
                             <dxe:TextEdit EditValue="Полностью" IsEnabled="False" />
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Примечание">
                             <dxe:TextEdit EditValue="{Binding ForAllProductsProkeDecision.Comment, UpdateSourceTrigger=PropertyChanged}" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Место принятия решения" LabelPosition="Top">
+                            <dxe:ComboBoxEdit ItemsSource="{Binding ForAllProductsProkeDecision.ProductPlaceList}" EditValue="{Binding ForAllProductsProkeDecision.PlaceID, UpdateSourceTrigger=PropertyChanged}" ValueMember="PlaceID" DisplayMember="PlaceName"/>
                         </dxlc:LayoutItem>
                         <dxlc:LayoutItem Label="Номенклатура" LabelPosition="Top" IsEnabled="{Binding Path=ForAllProductsProkeDecision.NomenclatureEnabled}">
                             <dxe:ButtonEdit EditValue="{Binding Path=ForAllProductsProkeDecision.NomenclatureName}" AllowDefaultButton="False" IsReadOnly="True">

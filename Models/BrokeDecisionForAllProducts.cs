@@ -15,6 +15,13 @@ namespace Gamma.Models
         {
             //ProductState = productState;
             //Comment = comment;
+            ProductPlaceList = WorkSession.Places.Where(p => ((p.IsProductionPlace ?? false) || (p.IsWarehouse ?? false)) && WorkSession.BranchIds.Contains(p.BranchID))
+               .Select(p => new Place
+               {
+                   PlaceID = p.PlaceID,
+                   PlaceName = p.Name
+               }) 
+               .ToList();
         }
 
 
@@ -38,6 +45,19 @@ namespace Gamma.Models
         public bool NomenclatureEnabled { get; private set; } = true;
 
         public string Comment { get; set; }
+
+        public List<Place> ProductPlaceList { get; set; }
+        private int? _placeID;
+
+        public int? PlaceID
+        {
+            get { return _placeID; }
+            set
+            {
+                _placeID = value;
+                RaisePropertyChanged("PlaceID");
+            }
+        }
 
         private KeyValuePair<int, string> _productStateID { get; set; }
         public KeyValuePair<int, string> ProductStateID
