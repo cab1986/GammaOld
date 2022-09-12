@@ -773,15 +773,16 @@ namespace Gamma.ViewModels
                 if (WorkSession.IsClosePreviousTaskWithActivateCurrentTask && productionTask.ActualStartDate == null)
                 {
                     //запрос даты начала текущего задания
+                    DB.AddLogMessageInformation("Запрос даты фактического начала в Задании на производство " + Number, "Start GetActualDate in ProductionTaskBatchViewModel", ProductionTaskBatchID);
                     DateTime? minDate;
                     var previousTask = gammaBase.ActiveProductionTasks.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID);
-                    if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == previousTask.ProductionTaskID) != null)
-                        minDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == previousTask.ProductionTaskID)?.Max(p => p.Docs.Date);
+                    if (gammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == previousTask.ProductionTaskID) != null)
+                        minDate = gammaBase.DocProduction.Where(p => p.ProductionTaskID == previousTask.ProductionTaskID)?.Max(p => p.Docs.Date);
                     else
                         minDate = gammaBase.ProductionTasks.FirstOrDefault(t => t.ProductionTaskID == previousTask.ProductionTaskID).ActualStartDate;
                     DateTime? maxDate;
-                    if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == productionTask.ProductionTaskID) != null)
-                        maxDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)?.Max(p => p.Docs.Date);
+                    if (gammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == productionTask.ProductionTaskID) != null)
+                        maxDate = gammaBase.DocProduction.Where(p => p.ProductionTaskID == productionTask.ProductionTaskID)?.Min(p => p.Docs.Date);
                     else
                         maxDate = null;
                     startDate = GetStartDate(minDate, maxDate);

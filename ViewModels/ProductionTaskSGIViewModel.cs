@@ -841,13 +841,13 @@ namespace Gamma.ViewModels
 
         public void SetActualDate()
         {
+            DB.AddLogMessageInformation("Выбран пункт Изменить фактическое начало в Задании на производство " + Number, "Start SetActualDate in ProductionTaskSGIViewModel", ProductionTaskID);
             string addResult = "";
             if (DB.HaveWriteAccess("ProductionTasks") || DB.HaveWriteAccess("ActiveProductionTasks"))
             {
-                var previousTask = GammaBase.ActiveProductionTasks.FirstOrDefault(p => p.PlaceID == WorkSession.PlaceID);
                 DateTime? maxDate;
                 if (GammaBase.DocProduction.FirstOrDefault(p => p.ProductionTaskID == ProductionTaskID) != null)
-                    maxDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == ProductionTaskID)?.Max(p => p.Docs.Date);
+                    maxDate = GammaBase.DocProduction.Where(p => p.ProductionTaskID == ProductionTaskID)?.Min(p => p.Docs.Date);
                 else
                     maxDate = null;
                 var previousProductionTaskID = GammaBase.ProductionTasks.FirstOrDefault(t => t.ProductionTaskID == ProductionTaskID).PreviousProductionTaskID;
