@@ -82,6 +82,8 @@ namespace Gamma.ViewModels
                         Nomenclature = pt.Nomenclature + "\r\n" + pt.Characteristic,
                         Place = pt.Place,
                         Number = pt.Number,
+                        Comment = pt.Comment,
+                        CommentPlus = (pt.Comment == null) ? null : "!",
                         MadeQuantity = pt.MadeQuantity,
                         EnumColor = (byte?)pt.EnumColor ?? 0 // Если 3, то как на СГБ розовым цветить будем(активные задания)
                     }
@@ -185,6 +187,8 @@ namespace Gamma.ViewModels
             public string Number { get; set; }
             public string MadeQuantity { get; set; }
             public byte EnumColor { get; set; }
+            public string Comment { get; set; }
+            public string CommentPlus { get; set; }
         }        
     }
 }
