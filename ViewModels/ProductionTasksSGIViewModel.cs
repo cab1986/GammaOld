@@ -83,7 +83,7 @@ namespace Gamma.ViewModels
                         Place = pt.Place,
                         Number = pt.Number,
                         Comment = pt.Comment,
-                        CommentPlus = (pt.Comment == null) ? null : "!",
+                        CommentPlus = (pt.Comment == null || pt.Comment == String.Empty) ? null : "!",
                         MadeQuantity = pt.MadeQuantity,
                         EnumColor = (byte?)pt.EnumColor ?? 0 // Если 3, то как на СГБ розовым цветить будем(активные задания)
                     }

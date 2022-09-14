@@ -63,6 +63,14 @@ namespace Gamma.DialogViewModels
                                     }
                       ).ToList();
             EquipmentNodeDetailsFiltered = new List<EquipmentNode>(EquipmentNodeDetails);
+
+            DowntimeShiftsList = new List<KeyValuePair<byte, string>>();
+            foreach (var shiftItem in WorkSession.Shifts)
+            {
+                DowntimeShiftsList.Add(new KeyValuePair<byte, string>(shiftItem.ShiftID, shiftItem.Name));
+            }
+            if (WorkSession.ShiftID > 0) { ShiftID = WorkSession.ShiftID; EnabledChangeShift = false; }
+            else { ShiftID = 1; EnabledChangeShift = true; }
         }
 
         public AddDowntimeDialogModel(int? placeID, Guid? downtimeTypeID, Guid? downtimeTypeDetailID = null, Guid? equipmentNodeID = null, Guid? equipmentNodeDetailID = null, int? duration = null, string comment = null) : this(placeID)
@@ -141,6 +149,16 @@ namespace Gamma.DialogViewModels
             }
         }
         private bool _enabledChangeDuration = false;
+        public bool EnabledChangeShift
+        {
+            get { return _enabledChangeShift; }
+            set
+            {
+                _enabledChangeShift = value;
+                RaisePropertyChanged("EnabledChangeShift");
+            }
+        }
+        private bool _enabledChangeShift;
 
 
         public List<DowntimeType> Types { get; private set; }
@@ -224,5 +242,25 @@ namespace Gamma.DialogViewModels
                     }
                 }
                 */
+        private byte? _shiftID { get; set; }
+        public byte? ShiftID
+        {
+            get { return _shiftID; }
+            set
+            {
+                _shiftID = value;
+                RaisePropertyChanged("ShiftID");
+            }
+        }
+        private List<KeyValuePair<byte, string>> _downtimeShiftsList { get; set; }
+        public List<KeyValuePair<byte, string>> DowntimeShiftsList
+        {
+            get { return _downtimeShiftsList; }
+            set
+            {
+                _downtimeShiftsList = value;
+                RaisePropertyChanged("DowntimeShiftsList");
+            }
+        }
     }
 }
