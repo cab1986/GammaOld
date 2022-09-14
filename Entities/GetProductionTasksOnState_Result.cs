@@ -22,5 +22,6 @@ namespace Gamma.Entities
         public Nullable<int> EnumColor { get; set; }
         public string Place { get; set; }
         public string MadeQuantity { get; set; }
+        public string Comment { get; set; }
     }
 }

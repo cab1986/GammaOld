@@ -612,6 +612,7 @@
           <Property Name="1CSecondRejectionReasonID" Type="uniqueidentifier" />
           <Property Name="RejectionReasonComment" Type="varchar" MaxLength="1000" />
           <Property Name="PlaceID" Type="int" />
+          <Property Name="StateID" Type="tinyint" />
         </EntityType>
         <EntityType Name="DocChangeStateProducts">
           <Key>
@@ -6193,6 +6194,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Parameter Name="Comment" Type="varchar" Mode="In" />
           <Parameter Name="EquipmentNodeID" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="EquipmentNodeDetailID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ShiftID" Type="int" Mode="In" />
         </Function>
         <Function Name="CreateGroupPackWithSpool" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ProductID" Type="uniqueidentifier" Mode="In" />
@@ -11050,6 +11052,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
             <Parameter Name="Comment" Mode="In" Type="String" />
             <Parameter Name="EquipmentNodeID" Mode="In" Type="Guid" />
             <Parameter Name="EquipmentNodeDetailID" Mode="In" Type="Guid" />
+            <Parameter Name="ShiftID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="DeleteDowntime" ReturnType="Collection(String)">
           <Parameter Name="ProductionTaskDowntimeID" Mode="In" Type="Guid" />
@@ -11379,6 +11382,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <Property Type="Int32" Name="EnumColor" Nullable="true" />
           <Property Type="String" Name="Place" Nullable="true" MaxLength="64" />
           <Property Type="String" Name="MadeQuantity" Nullable="true" MaxLength="8000" />
+          <Property Type="String" Name="Comment" Nullable="true" MaxLength="255" />
         </ComplexType>
         <ComplexType Name="GetProductRelations_Result">
           <Property Type="String" Name="RelationKind" Nullable="false" MaxLength="15" />
@@ -13025,6 +13029,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <NavigationProperty Name="C1CRejectionReasons" Relationship="GammaModel.FK_DocBrokeProducts_1CRejectionReasons" FromRole="DocBrokeProducts" ToRole="C1CRejectionReasons" />
           <NavigationProperty Name="C1CRejectionReasons1" Relationship="GammaModel.FK_DocBrokeProducts_1CRejectionReasons_Second" FromRole="DocBrokeProducts" ToRole="C1CRejectionReasons" />
           <NavigationProperty Name="Places1" Relationship="GammaModel.FK_DocBrokeProducts_Places1" FromRole="DocBrokeProducts" ToRole="Places" />
+          <Property Name="StateID" Type="Byte" />
         </EntityType>
         <Association Name="FK_DocBrokeProducts_DocBroke">
           <End Type="GammaModel.DocBroke" Role="DocBroke" Multiplicity="1" />
@@ -18319,6 +18324,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
                 <ScalarProperty Name="EnumColor" ColumnName="EnumColor" />
                 <ScalarProperty Name="Place" ColumnName="Place" />
                 <ScalarProperty Name="MadeQuantity" ColumnName="MadeQuantity" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -19241,6 +19247,7 @@ warning 6002: The table/view 'GammaNew.dbo.vRobotNomenclatures' does not have a 
           <EntitySetMapping Name="DocBrokeProducts">
             <EntityTypeMapping TypeName="GammaModel.DocBrokeProducts">
               <MappingFragment StoreEntitySet="DocBrokeProducts">
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
                 <ScalarProperty Name="PlaceID" ColumnName="PlaceID" />
                 <ScalarProperty Name="RejectionReasonComment" ColumnName="RejectionReasonComment" />
                 <ScalarProperty Name="C1CSecondRejectionReasonID" ColumnName="1CSecondRejectionReasonID" />

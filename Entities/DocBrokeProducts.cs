@@ -31,6 +31,7 @@ namespace Gamma.Entities
         public Nullable<System.Guid> C1CSecondRejectionReasonID { get; set; }
         public string RejectionReasonComment { get; set; }
         public Nullable<int> PlaceID { get; set; }
+        public Nullable<byte> StateID { get; set; }
     
         public virtual DocBroke DocBroke { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
