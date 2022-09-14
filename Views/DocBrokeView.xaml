@@ -116,6 +116,15 @@
                         <dxlc:LayoutItem Label="Причина">
                             <dxe:TextEdit EditValue="{Binding ForAllProductRejectionReasonComment, UpdateSourceTrigger=PropertyChanged}" />
                         </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Участок-виновник" LabelPosition="Top">
+                            <dxe:ComboBoxEdit  EditValue="{Binding ForAllProductsProkePlace.PlaceID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ForAllProductsProkePlace.BrokePlaceList}" ValueMember="PlaceID" DisplayMember="PlaceName" />
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="Смена-виновник" LabelPosition="Top">
+                            <dxe:ComboBoxEdit   EditValue="{Binding ForAllProductsProkePlace.ForAllProductBrokeShiftID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ForAllProductsProkePlace.BrokeShiftsList}" DisplayMember="Value" ValueMember="Key"/>
+                        </dxlc:LayoutItem>
+                        <dxlc:LayoutItem Label="ФИО-виновник" LabelPosition="Top">
+                            <dxe:TextEdit EditValue="{Binding ForAllProductsProkePlace.ForAllProductBrokeFIO, UpdateSourceTrigger=PropertyChanged}" />
+                        </dxlc:LayoutItem>
                         <Button Content="Изменить для всех" Grid.Row="1" Command="{Binding SetRejectionReasonForAllProductCommand}" HorizontalAlignment="Right" Height="26" Margin="0,0,0,0"/>
                     </dxlc:LayoutGroup>
                     <dxlc:LayoutGroup Header="Решение" Orientation="Vertical" VerticalAlignment="Bottom" Visibility="{Binding IsVisibleSetDecisionForAllProduct, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -179,6 +188,7 @@
                                                     </dxg:GridColumn.EditSettings>
                                                 </dxg:GridColumn>
                                                 <dxg:GridColumn FieldName="NomenclatureName" VisibleIndex="5" Header="Номенклатура" AllowEditing="False" AllowBestFit="True"/>
+                                                <dxg:GridColumn FieldName="State" VisibleIndex="6" Header="Качество" Width="80" FixedWidth="True" AllowEditing="False"/>
                                                 <dxg:GridColumn FieldName="RejectionReasonName" VisibleIndex="6" dxg:BandBase.GridRow="1" Header="Несоответствия, дефекты">
                                                     <dxg:GridColumn.EditSettings>
                                                         <dxe:ButtonEditSettings AllowDefaultButton="False" IsTextEditable="False">

@@ -75,6 +75,13 @@
                     <dxe:TextEditSettings MaskType="Numeric" MaskUseAsDisplayFormat="True"/>
                 </dxg:GridColumn.EditSettings>
             </dxg:GridColumn>
+            <dxg:GridColumn Binding="{Binding Comment}" Header="Комментарий" Width="50" FixedWidth="True" >
+            <dxg:GridColumn.CellTemplate>
+                <DataTemplate>
+                        <TextBlock Text="{Binding RowData.Row.CommentPlus}"  ToolTip="{Binding RowData.Row.Comment}" TextAlignment="Center" Foreground="Red"></TextBlock>
+                </DataTemplate>
+            </dxg:GridColumn.CellTemplate>
+            </dxg:GridColumn>
             <dxg:GridColumn Binding="{Binding EnumColor}" Visible="False" />
         </dxg:GridControl>
     </Grid>

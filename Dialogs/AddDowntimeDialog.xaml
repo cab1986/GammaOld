@@ -9,7 +9,7 @@
              xmlns:dialogViewModels="clr-namespace:Gamma.DialogViewModels"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="400"
+             d:DesignHeight="480" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance Type=dialogViewModels:AddDowntimeDialogModel, IsDesignTimeCreatable=False}">
 
     <Grid>
@@ -42,6 +42,12 @@
 
         </dxlc:LayoutControl>
         <dxlc:LayoutControl Name="lcDowntimeType" Grid.Row="1"  Orientation="Vertical" >
+            <dxlc:LayoutGroup Header="Смена" View="GroupBox" Orientation="Vertical" Margin="-12,-12,-12,0"  Visibility="{Binding VisiblityAddDT}">
+                <dxlc:LayoutItem >
+                    <dxe:ComboBoxEdit Name="Shift" ItemsSource="{Binding DowntimeShiftsList}" EditValue="{Binding ShiftID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMember="Value" ValueMember="Key" IsEnabled="{Binding EnabledChangeShift}"/>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
             <dxlc:LayoutGroup Header="Виды простоя" View="GroupBox" Orientation="Vertical" Margin="-12,-12,-12,0">
                 <dxlc:LayoutItem Label="Основной" LabelPosition="Top">
                     <dxe:ComboBoxEdit Name="EdtType" ItemsSource="{Binding Types}" EditValue="{Binding TypeID, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"

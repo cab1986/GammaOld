@@ -125,9 +125,10 @@ namespace Gamma.ViewModels
                 IsReadOnly = (!IsEditable || !DB.HaveWriteAccess("DocBroke"));
             }
             Messenger.Default.Register<PrintReportMessage>(this, PrintReport);
-            SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && SelectedTabIndex != 1 && ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty);
+            SetRejectionReasonForAllProductCommand = new DelegateCommand(SetRejectionReasonForAllProduct, () => !IsReadOnly && SelectedTabIndex != 1 && (ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonID?.RejectionReasonID != Guid.Empty && ForAllProductRejectionReasonComment != null && ForAllProductRejectionReasonComment != String.Empty) || (ForAllProductsProkePlace.PlaceID != null) || (ForAllProductsProkePlace.ForAllProductBrokeShiftID != null));
             SetDecisionForAllProductCommand = new DelegateCommand(SetDecisionForAllProduct, () => !IsReadOnly && SelectedTabIndex != 0 && !DocBrokeDecision.BrokeDecisionProducts.Any(p => p.ProductState != ProductState.NeedsDecision));
             DB.AddLogMessageInformation("Открыт Акта о браке DocID", "Opened DocBrokeViewModel (docBrokeId = '" + docBrokeId + "', productId='" + productIDs.ToString() + "', isInFuturePeriod='" + isInFuturePeriod + "')", docBrokeId);
+            
         }
 
         private List<int> RWPlaces = new List<int>() { 3, 4, 5, 22, 23 };
@@ -229,6 +230,7 @@ namespace Gamma.ViewModels
                 var docBrokeProductInfo =
                         gammaBase.DocBrokeProducts.Include(d => d.DocBrokeProductRejectionReasons)
                         .FirstOrDefault(d => d.DocID == docId && d.ProductID == productId);
+                var BrokeProdState = docBrokeProductInfo == null ? null : gammaBase.ProductStates.FirstOrDefault(d=>d.StateID == docBrokeProductInfo.StateID);
                 var brokeProduct = new BrokeProduct(docBrokeProductInfo?.C1CRejectionReasonID, docBrokeProductInfo?.C1CSecondRejectionReasonID, docBrokeProductInfo?.RejectionReasonComment, docBrokeProductInfo?.PlaceID, docBrokeProductInfo?.BrokePlaceID, docBrokeProductInfo?.BrokeShiftID, docBrokeProductInfo?.BrokePrintName)
                 /*new BrokeProduct(docBrokeProductInfo == null ? new ItemsChangeObservableCollection<RejectionReason>() :
                     new ItemsChangeObservableCollection<RejectionReason>(docBrokeProductInfo.DocBrokeProductRejectionReasons
@@ -250,6 +252,8 @@ namespace Gamma.ViewModels
                     ProductKind = (ProductKind)product.ProductKindID,
                     Quantity = docBrokeProductInfo == null ? product.BaseMeasureUnitQuantity ?? 0 : docBrokeProductInfo.Quantity ?? 0,
                     PlaceId = docBrokeProductInfo == null ? product.CurrentPlaceID : docBrokeProductInfo.PlaceID,
+                    StateID = docBrokeProductInfo?.StateID,
+                    State = BrokeProdState == null ? "" : BrokeProdState.Name,
                     IsChanged = isChanged
                 };
                 if (brokeProduct.BrokePlaceId == brokeProduct.ProductionPlaceId && brokeProduct.PrintName == null)
@@ -450,7 +454,7 @@ namespace Gamma.ViewModels
         }
         
         public bool IsEnabledDecisionTab => !(BrokeProducts.Any(
-                        dp =>
+                        dp => 
                             (dp.RejectionReasonID == null
                             || dp.RejectionReasonComment == null || dp.RejectionReasonComment.Length == 0)));
         
@@ -525,6 +529,8 @@ namespace Gamma.ViewModels
             }
         }
 
+        public BrokePlace ForAllProductsProkePlace { get; private set; } = new BrokePlace();
+
         private void RefreshRejectionReasonsList()
         {
             if (BrokeProducts?.Count > 0)
@@ -558,13 +564,13 @@ namespace Gamma.ViewModels
             {
                 RejectionReasonsList = new List<RejectionReason>();
             }
-        }
+           
 
+        }
         private void SetRejectionReasonForAllProduct()
         {
             if (BrokeProducts != null)
             {
-                DB.AddLogMessageInformation("Изменен для всех дефект '" + ForAllProductRejectionReasonID.Description+"' и причина '"+ ForAllProductRejectionReasonComment + "' в Акте о браке DocID", "SetRejectionReasonForAllProduct (RejectionReasonID='" + ForAllProductRejectionReasonID.RejectionReasonID + "', RejectionReasonComment" + ForAllProductRejectionReasonComment + "')", DocId);
                 foreach (var brokeProduct in BrokeProducts)
                 {
                     /*brokeProduct.RejectionReasons.Clear();
@@ -573,9 +579,40 @@ namespace Gamma.ViewModels
                         RejectionReasonID = ForAllProductRejectionReasonID.RejectionReasonID,
                         Comment = ForAllProductRejectionReasonComment
                     });*/
-                    brokeProduct.RejectionReasonID = ForAllProductRejectionReasonID.RejectionReasonID;
-                    brokeProduct.RejectionReasonComment = ForAllProductRejectionReasonComment;
+                    if (ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonComment != String.Empty && ForAllProductRejectionReasonComment != null)
+                    {
+                        brokeProduct.RejectionReasonID = ForAllProductRejectionReasonID.RejectionReasonID;
+                        brokeProduct.RejectionReasonComment = ForAllProductRejectionReasonComment;
+                    }
+                    if (ForAllProductsProkePlace.PlaceID != null) brokeProduct.BrokePlaceId = ForAllProductsProkePlace.PlaceID;
+                    if (ForAllProductsProkePlace.ForAllProductBrokeShiftID != null) brokeProduct.BrokeShiftId = ForAllProductsProkePlace.ForAllProductBrokeShiftID;
+                    if ((ForAllProductsProkePlace.PlaceID != null) || (ForAllProductsProkePlace.ForAllProductBrokeShiftID != null))brokeProduct.PrintName = ForAllProductsProkePlace.ForAllProductBrokeFIO;
+                    
                 }
+                string str = "Изменен для всех";
+                string str1 = "ChandeForAll";
+                if (ForAllProductRejectionReasonID?.RejectionReasonID != null && ForAllProductRejectionReasonComment != String.Empty && ForAllProductRejectionReasonComment != null)
+                {
+                    str += " дефект '" + ForAllProductRejectionReasonID.Description + "' и причина '" + ForAllProductRejectionReasonComment + "' в Акте о браке DocID";
+                    str1 += " SetRejectionReasonForAllProduct (RejectionReasonID='" + ForAllProductRejectionReasonID.RejectionReasonID + "', RejectionReasonComment" + ForAllProductRejectionReasonComment + "')";
+                }
+                if ((ForAllProductsProkePlace.PlaceID != null) || (ForAllProductsProkePlace.ForAllProductBrokeShiftID != null))
+                {
+                    str += "  Виновник-ФИО='" + ForAllProductsProkePlace.ForAllProductBrokeFIO;
+                    str1 += " SetBrokePlaceForAllProduct (PrintName='" + ForAllProductsProkePlace.ForAllProductBrokeFIO;
+                }
+                if (ForAllProductsProkePlace.PlaceID != null)
+                {
+                    str += " Виновник-Передел='" + ForAllProductsProkePlace.PlaceID;
+                    str1 += " PlaceID='" + ForAllProductsProkePlace.PlaceID;
+                }
+                if (ForAllProductsProkePlace.ForAllProductBrokeShiftID != null)
+                {
+                    str += "  Виновник-Смена='" + ForAllProductsProkePlace.ForAllProductBrokeShiftID;
+                    str1 += " ShiftID='" + ForAllProductsProkePlace.ForAllProductBrokeShiftID;
+                }
+                DB.AddLogMessageInformation(str + "' в Акте о браке DocID", str1 + "')", DocId);
+
             }
         }
 
@@ -1057,7 +1094,8 @@ namespace Gamma.ViewModels
                             DocBrokeProductRejectionReasons = new List<DocBrokeProductRejectionReasons>(),
                             C1CRejectionReasonID = docBrokeProduct.RejectionReasonID,
                             C1CSecondRejectionReasonID = docBrokeProduct.SecondRejectionReasonID,
-                            RejectionReasonComment = docBrokeProduct.RejectionReasonComment
+                            RejectionReasonComment = docBrokeProduct.RejectionReasonComment,
+                            StateID = docBrokeProduct.StateID
                         };
                         /*foreach (var reason in docBrokeProduct.RejectionReasons)
                         {

@@ -55,6 +55,8 @@ namespace Gamma.Models
         public string Number { get; set; }
         public string BaseMeasureUnit { get; set; }
         public decimal Quantity { get; set; }
+        public byte? StateID { get; set; }
+        public string State { get; set; }
 
         public bool IsChanged { get; set; } = false;
 

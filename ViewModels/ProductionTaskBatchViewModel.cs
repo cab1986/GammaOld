@@ -651,7 +651,7 @@ namespace Gamma.ViewModels
                      ?? (productionTaskBatch != null && productionTaskBatch.ProductionTasks.Any(p => (p.PlaceID == null) && (p.PlaceGroupID == (int?)WorkSession.PlaceGroup)) ? WorkSession.Places.FirstOrDefault(pl => pl.PlaceID == WorkSession.PlaceID) : (Places)null);
             IsEnabledSamples = place?.IsEnabledSamplesInDocCloseShift ?? true;
             IsEnabledRepack = place?.IsEnabledRepackInProductionTask ?? true;
-            IsEnabledDowntimes = place?.IsEnabledDowntimes ?? false;
+            IsEnabledDowntimes = true;/*place?.IsEnabledDowntimes ?? false;*/
         }
 
         private void ChangeCurrentView(BatchKinds batchKind)
@@ -2046,7 +2046,7 @@ namespace Gamma.ViewModels
                 string addResult = "";
                 if (DB.HaveWriteAccess("ProductionTaskDowntimes"))
                 {
-                    addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, model.TypeID, model.TypeDetailID, model.DateBegin, result == setCurrentTimeEndAndOkCommand ? DateTime.Now : model.DateEnd, model.Comment, model.EquipmentNodeID, model.EquipmentNodeDetailID).FirstOrDefault();
+                    addResult = GammaBase.CreateDowntime(ProductionTaskBatchID, null, model.TypeID, model.TypeDetailID, model.DateBegin, result == setCurrentTimeEndAndOkCommand ? DateTime.Now : model.DateEnd, model.Comment, model.EquipmentNodeID, model.EquipmentNodeDetailID, model.ShiftID).FirstOrDefault();
                 }
                 else
                 {
@@ -2061,6 +2061,7 @@ namespace Gamma.ViewModels
                 {
                     DB.AddLogMessageError("Успешно добавлен простой в Задании на производство " + Number, "End AddDowntime in ProductionTaskBatchViewModel: successed", ProductionTaskBatchID);
                     RefreshDowntime();
+                    if (WorkSession.ShiftID == 0) MessageBox.Show("Не забудьте перезаполнить рапорт закрытия смены.");
                 }
             }
         }
